@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Pages.SettingsPages;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -31,6 +33,7 @@ namespace CoolapkLite
             {
                 Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             }
+            UIHelper.CheckTheme();
             hamburgerMenuControl.ItemsSource = MenuItem.GetMainItems();
             hamburgerMenuControl.OptionsItemsSource = MenuItem.GetOptionsItems();
         }
@@ -95,7 +98,7 @@ namespace CoolapkLite
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
                  new MenuItem() { Icon = Symbol.Contact, Name = string.Empty/*, PageType = typeof(UserPage)*/, Index = -1},
-                 new MenuItem() { Icon = Symbol.Setting, Name = "设置"/*, PageType = typeof(SettingPage)*/, Index = 0}
+                 new MenuItem() { Icon = Symbol.Setting, Name = "设置", PageType = typeof(SettingsPage), Index = 0}
             };
             return items;
         }
