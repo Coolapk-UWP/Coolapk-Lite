@@ -121,6 +121,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DataSource\DataSourceBase.cs" />
+    <Compile Include="Helpers\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -202,6 +204,12 @@
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>4.0.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Coolapk-Lite\CoolapkLite.Core\CoolapkLite.Core.csproj">
+      <Project>{2e9152d3-e23a-4ec8-8d20-99f7fcc37bca}</Project>
+      <Name>CoolapkLite.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
