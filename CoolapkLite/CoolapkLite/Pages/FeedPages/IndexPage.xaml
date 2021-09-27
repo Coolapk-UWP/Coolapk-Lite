@@ -7,5 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:CoolapkLite.Controls"
     mc:Ignorable="d">
     <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
     </Grid>
 </Page>

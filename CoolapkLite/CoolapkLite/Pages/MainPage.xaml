@@ -103,19 +103,23 @@
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <SymbolIcon Symbol="{x:Bind Icon}"/>
+                    <Viewbox
+                        Width="16"
+                        Height="16">
+                        <SymbolIcon Symbol="{x:Bind Icon}"/>
+                    </Viewbox>
                     <Ellipse
-                        Width="28"
-                        Height="28"
+                        Width="16"
+                        Height="16"
                         Grid.RowSpan="2"
                         Margin="10,0,0,0"
-                        HorizontalAlignment="Left" >
+                        HorizontalAlignment="Left">
                         <Ellipse.Fill>
                             <ImageBrush ImageSource="{x:Bind Image, Mode=OneWay}"/>
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBlock
-                        FontSize="16"
+                        FontSize="14"
                         Grid.Column="1"
                         Text="{x:Bind Name}"
                         VerticalAlignment="Center"/>
@@ -221,6 +225,11 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <controls:HamburgerMenu
             DisplayMode="Inline"
             x:Name="HamburgerMenu"
@@ -235,11 +244,12 @@
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}">
             <Grid>
                 <Frame
-                x:Name="HamburgerMenuFrame"
-                Background="{ThemeResource SystemChromeMediumLowColor}"/>
+                    x:FieldModifier="Public"
+                    x:Name="HamburgerMenuFrame"
+                    Background="{ThemeResource SystemChromeMediumLowColor}"/>
                 <control:TitleBar
-                    x:Name="TitleBar"
                     Title="酷安"
+                    x:Name="TitleBar"
                     BackButtonVisibility="Collapsed"
                     RefreshButtonVisibility="Visible"/>
             </Grid>

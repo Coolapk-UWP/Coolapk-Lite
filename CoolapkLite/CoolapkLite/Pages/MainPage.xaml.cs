@@ -33,6 +33,7 @@ namespace CoolapkLite
         public MainPage()
         {
             InitializeComponent();
+            UIHelper.MainPage = this;
             if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
             {
                 Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
@@ -64,6 +65,10 @@ namespace CoolapkLite
                         SetTitle(item.Name);
                         HamburgerMenu.SelectedIndex = -1;
                         HamburgerMenu.SelectedOptionsIndex = item.Index;
+                    }
+                    else if(e.SourcePageType == typeof(TestPage))
+                    {
+                        SetTitle("测试");
                     }
                 }
             }
@@ -260,7 +265,10 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = Symbol.Home, Name = "首页", PageType = typeof(IndexPage), Index = 0}
+                new MenuItem() { Icon = Symbol.Home, Name = "主页", PageType = typeof(IndexPage), Index = 0},
+                new MenuItem() { Icon = Symbol.People, Name = "圈子", PageType = null, Index = 1},
+                new MenuItem() { Icon = Symbol.Favorite, Name = "关注", PageType = null, Index = 2},
+                new MenuItem() { Icon = Symbol.Calendar, Name = "历史", PageType = null, Index = 3},
             };
             return items;
         }
@@ -269,7 +277,7 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem() { Icon = Symbol.Contact, Name = string.Empty/*, PageType = typeof(UserPage)*/, Index = 0},
+                 new MenuItem() { Icon = Symbol.Contact, Name = "用户", PageType = null, Index = 0},
                  new MenuItem() { Icon = Symbol.Setting, Name = "设置", PageType = typeof(SettingsPage), Index = 1}
             };
             return items;

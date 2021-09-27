@@ -41,7 +41,7 @@
                 <SymbolIcon Symbol="Back"/>
             </Button>
             <TextBlock
-                Margin="2,12"
+                Margin="0,12"
                 FontSize="18"
                 Grid.Column="1"
                 x:Name="TitleBlock"
