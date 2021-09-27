@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:local="using:CoolapkLite"
+    xmlns:local="using:CoolapkLite" xmlns:control="using:CoolapkLite.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource SystemChromeMediumLowColor}">
     <Page.Resources>
@@ -126,6 +126,7 @@
                     <SplitView
                         IsTabStop="False"
                         x:Name="MainSplitView"
+                        PaneClosing="MainSplitView_PaneClosing"
                         DisplayMode="{TemplateBinding DisplayMode}"
                         PanePlacement="{TemplateBinding PanePlacement}"
                         OpenPaneLength="{TemplateBinding OpenPaneLength}"
@@ -144,7 +145,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid
                                     Grid.Row="0"
-                                    Margin="0,0,0,8"
+                                    Margin="0,32,0,8"
                                     Height="{TemplateBinding HamburgerHeight}"/>
                                 <ListView
                                     Grid.Row="1"
@@ -165,6 +166,7 @@
                                             QueryIcon="Find"
                                             IsTabStop ="True"
                                             Margin="10,0,10,8"
+                                            x:Name="AutoSuggestBox"
                                             VerticalAlignment="Center"
                                             TextChanged="AutoSuggestBox_TextChanged"
                                             QuerySubmitted="AutoSuggestBox_QuerySubmitted"
@@ -198,7 +200,7 @@
                     <Button
                         Padding="0"
                         TabIndex="0"
-                        Margin="0,0,0,8"
+                        Margin="0,32,0,8"
                         BorderThickness="0"
                         VerticalAlignment="Top"
                         x:Name="HamburgerButton"
@@ -220,16 +222,28 @@
     </Page.Resources>
     <Grid>
         <controls:HamburgerMenu
-            SelectedIndex="0"
             DisplayMode="Inline"
-            ItemClick="OnMenuItemClick"
-            x:Name="hamburgerMenuControl"
+            x:Name="HamburgerMenu"
+            Loaded="HamburgerMenu_Loaded"
             HamburgerVisibility="Visible"
-            OptionsItemClick="OnMenuItemClick"
+            ItemClick="HamburgerMenu_ItemInvoked"
+            SizeChanged="HamburgerMenu_SizeChanged"
+            OptionsItemClick="HamburgerMenu_ItemInvoked"
             ItemTemplate="{StaticResource DefaultTemplate}"
             Template="{StaticResource HamburgerMenuTemplate}"
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
-            PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+            PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}">
+            <Grid>
+                <Frame
+                x:Name="HamburgerMenuFrame"
+                Background="{ThemeResource SystemChromeMediumLowColor}"/>
+                <control:TitleBar
+                    x:Name="TitleBar"
+                    Title="酷安"
+                    BackButtonVisibility="Collapsed"
+                    RefreshButtonVisibility="Visible"/>
+            </Grid>
+        </controls:HamburgerMenu>
         <ProgressBar
             x:Name="ProgressBar"
             IsIndeterminate="False"
