@@ -52,6 +52,7 @@ namespace CoolapkLite
                 MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                 if (item != default)
                 {
+                    SetTitle(item.Name);
                     HamburgerMenu.SelectedOptionsIndex = -1;
                     HamburgerMenu.SelectedIndex = item.Index;
                 }
@@ -60,6 +61,7 @@ namespace CoolapkLite
                     item = (HamburgerMenu.OptionsItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                     if (item != default)
                     {
+                        SetTitle(item.Name);
                         HamburgerMenu.SelectedIndex = -1;
                         HamburgerMenu.SelectedOptionsIndex = item.Index;
                     }
@@ -145,19 +147,25 @@ namespace CoolapkLite
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
-            if (AutoSuggestBox != null)
+            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.Overlay)
             {
-                AutoSuggestBox.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
+                FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
+                if (AutoSuggestBox != null)
+                {
+                    AutoSuggestBox.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
+                }
             }
         }
 
         private void MainSplitView_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
         {
-            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName(sender, "AutoSuggestBox");
-            if (AutoSuggestBox != null && AutoSuggestBox.Visibility == Visibility.Visible)
+            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.Overlay)
             {
-                AutoSuggestBox.Visibility = Visibility.Collapsed;
+                FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName(sender, "AutoSuggestBox");
+                if (AutoSuggestBox != null && AutoSuggestBox.Visibility == Visibility.Visible)
+                {
+                    AutoSuggestBox.Visibility = Visibility.Collapsed;
+                }
             }
         }
 
@@ -176,6 +184,9 @@ namespace CoolapkLite
             return AppViewBackButtonVisibility.Visible;
         }
 
+        public void SetTitle(string Title) => TitleBar.Title = Title;
+
+        #region 搜索框
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
 
@@ -190,6 +201,41 @@ namespace CoolapkLite
         {
 
         }
+        #endregion
+
+        #region 进度条
+        public void ShowProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+        }
+
+        public void PausedProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = true;
+        }
+
+        public void ErrorProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.ShowError = true;
+        }
+
+        public void HideProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Collapsed;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+        }
+        #endregion
     }
 
     public class MenuItem : INotifyPropertyChanged

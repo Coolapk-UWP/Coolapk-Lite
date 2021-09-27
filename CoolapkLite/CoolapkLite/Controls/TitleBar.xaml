@@ -21,7 +21,7 @@
             Visibility="Visible"
             x:Name="TitleBackground"
             Height="{StaticResource PageTitleHeight}"
-            Background="Black"/>
+            Background="{ThemeResource SystemChromeMediumLowColor}"/>
         <Grid
             VerticalAlignment="Top"
             Height="{StaticResource PageTitleHeight}">
