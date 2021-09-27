@@ -55,11 +55,12 @@
             <ProgressRing
                 Width="24"
                 Height="24"
+                Margin="8,12"
                 Grid.Column="3"
                 IsActive="False"
-                Margin="8,40,8,2"
                 x:Name="ProgressRing"
-                Visibility="Collapsed"/>
+                Visibility="Collapsed"
+                VerticalAlignment="Bottom"/>
             <Button
                 Grid.Column="4"
                 x:Name="RefreshButton"
