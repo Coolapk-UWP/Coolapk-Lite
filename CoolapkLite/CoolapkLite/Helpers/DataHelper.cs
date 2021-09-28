@@ -1,7 +1,9 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Core.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,7 +52,7 @@ namespace CoolapkLite.Helpers
             return Utils.GetDataAsync(uri, forceRefresh, GetCoolapkCookies(uri));
         }
 
-        public static Task GetEntity(this Core.Providers.CoolapkListProvider provider, int p = 1)
+        public static Task<ObservableCollection<Entity>> GetEntity(this Core.Providers.CoolapkListProvider provider, int p = 1)
         {
             return provider.GetEntity(GetCoolapkCookies(UriHelper.BaseUri), p);
         }

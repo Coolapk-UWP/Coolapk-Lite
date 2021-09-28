@@ -124,6 +124,7 @@
     <Compile Include="Controls\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataSource\IndexDS.cs" />
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\DataSource\DataSourceBase.cs" />
     <Compile Include="Helpers\DataSource\IncrementalLoadingBase.cs" />
@@ -151,6 +152,8 @@
       <DependentUpon>ShowImagePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\IndexPageViewModel.cs" />
+    <Compile Include="ViewModels\Interfaces.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

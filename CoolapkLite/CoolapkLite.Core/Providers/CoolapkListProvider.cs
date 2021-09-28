@@ -67,12 +67,12 @@ namespace CoolapkLite.Core.Providers
                                     : (token as JObject).TryGetValue("id", out JToken v2) ? v2.ToString() : throw new ArgumentException(nameof(_idName));
         }
 
-        public async Task GetEntity(IEnumerable<(string, string)> cookies, int p = -1)
+        public async Task<ObservableCollection<Entity>> GetEntity(IEnumerable<(string, string)> cookies, int p = -1)
         {
             if (p == -2) { Reset(0); }
 
             (bool isSucceed, JToken result) = await Utils.GetDataAsync(_getUri(p, page, _firstItem, _lastItem), p == -2, cookies);
-            if (!isSucceed) { return; }
+            if (!isSucceed) { return null; }
 
             JArray array = (JArray)result;
             if (p == -1) { page++; }
@@ -141,12 +141,15 @@ namespace CoolapkLite.Core.Providers
                         }
                     }
                 }
+                return Models;
             }
             else if (p == -1)
             {
                 page--;
                 Utils.ShowInAppMessage(_messageType);
             }
+
+            return null;
         }
     }
 }
