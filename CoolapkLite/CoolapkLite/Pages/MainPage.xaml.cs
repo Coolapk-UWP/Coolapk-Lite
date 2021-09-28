@@ -119,7 +119,7 @@ namespace CoolapkLite
             // Only navigate if the selected page isn't currently loaded.
             if (!(_page is null) && !Equals(PreNavPageType, _page))
             {
-                _ = HamburgerMenuFrame.Navigate(_page, vs, TransitionInfo);
+                _ = HamburgerMenuFrame.Navigate(_page, vs != null ? vs : MenuItem.ViewModels, TransitionInfo);
             }
         }
 
@@ -257,15 +257,16 @@ namespace CoolapkLite
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
             }
         }
+        public int Index { get; set; }
         public string Name { get; set; }
         public Type PageType { get; set; }
-        public int Index { get; set; }
+        public object ViewModels { get; set; }
 
         public static ObservableCollection<MenuItem> GetMainItems()
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = Symbol.Home, Name = "主页", PageType = typeof(IndexPage), Index = 0},
+                new MenuItem() { Icon = Symbol.Home, Name = "主页", PageType = typeof(IndexPage), ViewModels= new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
                 new MenuItem() { Icon = Symbol.People, Name = "圈子", PageType = null, Index = 1},
                 new MenuItem() { Icon = Symbol.Favorite, Name = "关注", PageType = null, Index = 2},
                 new MenuItem() { Icon = Symbol.Calendar, Name = "历史", PageType = null, Index = 3},

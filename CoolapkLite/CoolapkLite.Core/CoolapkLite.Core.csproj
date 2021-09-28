@@ -124,8 +124,6 @@
     <Compile Include="DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="Exceptions\CoolapkMessageException.cs" />
     <Compile Include="Exceptions\UserNameErrorException.cs" />
-    <Compile Include="Helpers\DataHelper.cs" />
-    <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />

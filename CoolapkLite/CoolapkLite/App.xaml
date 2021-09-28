@@ -16,6 +16,11 @@
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="Background" Value="Transparent"/>
             </Style>
+            <Style x:Key="FixedListViewItemStyle" TargetType="ListViewItem">
+                <Setter Property="Margin" Value="0"/>
+                <Setter Property="Padding" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

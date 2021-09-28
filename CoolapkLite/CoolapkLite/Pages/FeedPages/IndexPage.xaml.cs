@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -23,9 +24,21 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class IndexPage : Page
     {
-        public IndexPage()
+        private ViewModels.IndexPage.ViewModel Provider;
+
+        public IndexPage() => InitializeComponent();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            this.InitializeComponent();
+            base.OnNavigatedTo(e);
+            if (e.Parameter is ViewModels.IndexPage.ViewModel ViewModel)
+            {
+                Provider = ViewModel;
+                ListView.ItemsSource = Provider.IndexDS;
+                _ = Refresh(-2);
+            }
         }
+
+        private async Task Refresh(int p = -1) => await Provider.Refresh(p);
     }
 }

@@ -24,7 +24,7 @@ namespace CoolapkLite.ViewModels.IndexPage
         public string Title { get; protected set; }
         public double[] VerticalOffsets { get; set; } = new double[1];
 
-        internal ViewModel(string uri, bool showTitleBar)
+        internal ViewModel(string uri, bool showTitleBar = true)
         {
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;

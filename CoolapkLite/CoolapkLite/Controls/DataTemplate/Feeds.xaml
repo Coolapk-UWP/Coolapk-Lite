@@ -1,0 +1,86 @@
+﻿<ResourceDictionary
+    x:Class="CoolapkLite.Controls.DataTemplate.Feeds"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CoolapkLite.Controls.DataTemplate"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
+    mc:Ignorable="d">
+    <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    
+    <DataTemplate x:Key="Feed">
+        <ListViewItem
+            Style="{StaticResource FixedListViewItemStyle}">
+            <UserControl>
+                <Grid
+                    Padding="8,4"
+                    BorderThickness="1"
+                    BorderBrush="{StaticResource SystemControlForegroundBaseLowBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel
+                        x:Name="StickUp"
+                        Orientation="Horizontal"
+                        Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}">
+                        <FontIcon
+                            Foreground="Red"
+                            FontSize="16"
+                            Margin="4,0,0,0"
+                            Glyph=""/>
+                        <TextBlock
+                            x:Uid="/Feed/stickUp"
+                            Margin="5,4,5,5"
+                            Foreground="Red"/>
+                    </StackPanel>
+                    <StackPanel
+                        Grid.Row="1"
+                        x:Name="UserBar"
+                        Orientation="Horizontal"
+                        Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}">
+                        <Button
+                            Padding="0"
+                            Margin="0,4"
+                            Tag="{Binding Uurl}"
+                            Background="Transparent"
+                            Style="{ThemeResource ButtonRevealStyle}">
+                            <Ellipse
+                                Width="36"
+                                Height="36">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding UserSmallAvatar.Pic, Mode=OneWay}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                        </Button>
+                        <StackPanel
+                            Margin="8,0"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                VerticalAlignment="Top"
+                                Text="{Binding UserName}"
+                                HorizontalAlignment="Left"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="0,0,5,0"
+                                    x:Name="DateLineTxb"
+                                    Text="{Binding Dateline}"
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                    Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}"/>
+                                <TextBlock
+                                    Text="{Binding Info}"
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
+                                <TextBlock
+                                    Margin="5,0,0,0"
+                                    Text="{Binding DeviceTitle}"
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                    Visibility="{Binding DeviceTitle, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='string'}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+            </UserControl>
+        </ListViewItem>
+    </DataTemplate>
+</ResourceDictionary>

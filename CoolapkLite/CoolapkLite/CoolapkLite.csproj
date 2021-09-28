@@ -121,6 +121,13 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplate\DataTemplateSelectors.cs" />
+    <Compile Include="Controls\DataTemplate\Feeds.xaml.cs">
+      <DependentUpon>Feeds.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataTemplate\Feeds.xaml.cs">
+      <DependentUpon>Feeds.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
@@ -136,6 +143,10 @@
     <Compile Include="Helpers\ValueConverters\HasValueConverter.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
     <Compile Include="Helpers\ValueConverters\TrueToFalseConverter.cs" />
+    <Compile Include="Models\Feeds\FeedModel.cs" />
+    <Compile Include="Models\Feeds\FeedModelBase.cs" />
+    <Compile Include="Models\Feeds\SourceFeedModel.cs" />
+    <Compile Include="Models\Interfaces.cs" />
     <Compile Include="Pages\FeedPages\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
@@ -219,6 +230,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\DataTemplate\Feeds.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\TitleBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
