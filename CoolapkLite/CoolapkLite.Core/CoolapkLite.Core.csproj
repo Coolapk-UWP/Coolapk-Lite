@@ -120,13 +120,33 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DataSource\DataSourceBase.cs" />
+    <Compile Include="DataSource\IncrementalLoadingBase.cs" />
+    <Compile Include="Exceptions\CoolapkMessageException.cs" />
+    <Compile Include="Exceptions\UserNameErrorException.cs" />
+    <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Helpers\ImageCacheHelper.cs" />
+    <Compile Include="Helpers\NetworkHelper.cs" />
+    <Compile Include="Helpers\UriHelper.cs" />
+    <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Providers\CoolapkListProvider.cs" />
     <Compile Include="WeakEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\CoolapkLite.Core.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Html2Markdown">
+      <Version>4.0.0.427</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.12</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
