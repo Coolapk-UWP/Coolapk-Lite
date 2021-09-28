@@ -1,23 +1,12 @@
 ﻿using CoolapkLite.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -35,6 +24,8 @@ namespace CoolapkLite.Pages.SettingsPages
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
+
+        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
 
@@ -139,6 +130,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
 #if DEBUG
             GoToTestPage.Visibility = Visibility.Visible;
 #endif

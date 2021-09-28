@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Core.Models;
+using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace CoolapkLite.Models.Feeds
     {
         public string Url { get; private set; }
         public string UserName { get; private set; }
+        public string Dateline { get; private set; }
 
         public SourceFeedModel(JObject o) : base(o)
         {
@@ -27,6 +29,11 @@ namespace CoolapkLite.Models.Feeds
             if (o.TryGetValue("username", out JToken username) && !string.IsNullOrEmpty(username.ToString()))
             {
                 UserName = username.ToString();
+            }
+
+            if (o.TryGetValue("dateline", out JToken dateline) && !string.IsNullOrEmpty(dateline.ToString()))
+            {
+                Dateline = double.Parse(dateline.ToString()).ConvertUnixTimeStampToReadable();
             }
         }
     }

@@ -1,22 +1,16 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -47,13 +41,13 @@ namespace CoolapkLite
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
+            HideProgressBar();
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
             if (HamburgerMenuFrame.SourcePageType != null)
             {
                 MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                 if (item != default)
                 {
-                    SetTitle(item.Name);
                     HamburgerMenu.SelectedOptionsIndex = -1;
                     HamburgerMenu.SelectedIndex = item.Index;
                 }
@@ -62,13 +56,8 @@ namespace CoolapkLite
                     item = (HamburgerMenu.OptionsItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                     if (item != default)
                     {
-                        SetTitle(item.Name);
                         HamburgerMenu.SelectedIndex = -1;
                         HamburgerMenu.SelectedOptionsIndex = item.Index;
-                    }
-                    else if(e.SourcePageType == typeof(TestPage))
-                    {
-                        SetTitle("测试");
                     }
                 }
             }
@@ -135,17 +124,14 @@ namespace CoolapkLite
             if (Window.Current.Bounds.Width >= 1008)
             {
                 HamburgerMenu.IsPaneOpen = true;
-                TitleBar.RightMargin = new GridLength(16);
                 HamburgerMenu.DisplayMode = SplitViewDisplayMode.CompactInline;
             }
             else if (Window.Current.Bounds.Width <= 640)
             {
-                TitleBar.RightMargin = new GridLength(48);
                 HamburgerMenu.DisplayMode = SplitViewDisplayMode.Overlay;
             }
             else
             {
-                TitleBar.RightMargin = new GridLength(16);
                 HamburgerMenu.DisplayMode = SplitViewDisplayMode.CompactOverlay;
             }
         }
@@ -188,8 +174,6 @@ namespace CoolapkLite
             HamburgerMenuFrame.GoBack();
             return AppViewBackButtonVisibility.Visible;
         }
-
-        public void SetTitle(string Title) => TitleBar.Title = Title;
 
         #region 搜索框
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
@@ -262,14 +246,16 @@ namespace CoolapkLite
         public Type PageType { get; set; }
         public object ViewModels { get; set; }
 
+        private static readonly ResourceLoader loader = ResourceLoader.GetForCurrentView("MainPage");
+
         public static ObservableCollection<MenuItem> GetMainItems()
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = Symbol.Home, Name = "主页", PageType = typeof(IndexPage), ViewModels= new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
-                new MenuItem() { Icon = Symbol.People, Name = "圈子", PageType = null, Index = 1},
-                new MenuItem() { Icon = Symbol.Favorite, Name = "关注", PageType = null, Index = 2},
-                new MenuItem() { Icon = Symbol.Calendar, Name = "历史", PageType = null, Index = 3},
+                new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
+                new MenuItem() { Icon = Symbol.People, Name = loader.GetString("Circle"), PageType = null, Index = 1},
+                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = null, Index = 2},
+                new MenuItem() { Icon = Symbol.Calendar, Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new ViewModels.HistoryPage.ViewModel("浏览历史"), Index = 3},
             };
             return items;
         }
@@ -278,8 +264,8 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem() { Icon = Symbol.Contact, Name = "用户", PageType = null, Index = 0},
-                 new MenuItem() { Icon = Symbol.Setting, Name = "设置", PageType = typeof(SettingsPage), Index = 1}
+                 new MenuItem() { Icon = Symbol.Contact, Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new object[]{ true}, Index = 0},
+                 new MenuItem() { Icon = Symbol.Setting, Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
             };
             return items;
         }

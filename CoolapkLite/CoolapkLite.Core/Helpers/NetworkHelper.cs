@@ -20,7 +20,7 @@ namespace CoolapkLite.Core.Helpers
     public static class NetworkHelper
     {
         public static readonly HttpClientHandler ClientHandler = new HttpClientHandler();
-        private static readonly HttpClient Client = new HttpClient(ClientHandler);
+        public static readonly HttpClient Client = new HttpClient(ClientHandler);
         private static readonly string Guid = System.Guid.NewGuid().ToString();
 
         static NetworkHelper()

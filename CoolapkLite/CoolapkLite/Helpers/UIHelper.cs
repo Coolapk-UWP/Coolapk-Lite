@@ -17,6 +17,23 @@ namespace CoolapkLite.Helpers
         public static bool IsShowingProgressBar, IsShowingMessage;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
 
+        public static GridLength HeaderTitleMargin { get; set; }
+        public static double PageTitleHeight => HasStatusBar ? 40 : 80;
+        public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
+
+        private static CoreDispatcher shellDispatcher;
+        public static CoreDispatcher ShellDispatcher
+        {
+            get => shellDispatcher;
+            set
+            {
+                if (shellDispatcher == null)
+                {
+                    shellDispatcher = value;
+                }
+            }
+        }
+
         private static readonly ObservableCollection<string> MessageList = new ObservableCollection<string>();
 
         public static bool IsDarkTheme(ElementTheme theme)

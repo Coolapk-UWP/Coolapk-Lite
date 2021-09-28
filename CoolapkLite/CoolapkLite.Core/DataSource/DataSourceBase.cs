@@ -18,7 +18,7 @@ namespace CoolapkLite.Core.DataSource
         /// <summary>
         /// The refresh will clear current items, and re-fetch from beginning, so that we will keep a correct page number.
         /// </summary>
-        public virtual async Task Refresh()
+        public virtual async Task Reset()
         {
             //reset
             _currentPage = 1;

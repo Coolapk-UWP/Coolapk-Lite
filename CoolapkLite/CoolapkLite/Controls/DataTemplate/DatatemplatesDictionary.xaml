@@ -1,0 +1,54 @@
+﻿<ResourceDictionary
+    x:Class="CoolapkLite.Controls.DataTemplate.DatatemplatesDictionary"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CoolapkLite.Controls.DataTemplate"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <DataTemplate x:Key="History">
+        <ListViewItem
+            MaxHeight="105"
+            Tag="{Binding Url}"
+            Style="{StaticResource FixedListViewItemStyle}">
+            <Grid
+                Padding="4,8"
+                BorderThickness="1"
+                BorderBrush="{StaticResource SystemControlForegroundBaseLowBrush}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="56"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Border
+                    Margin="8,0"
+                    Grid.RowSpan="2"
+                    CornerRadius="8"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left">
+                    <Image
+                        Width="40"
+                        Height="40"
+                        Source="{Binding Pic.Pic, Mode=OneWay}"/>
+                </Border>
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Title}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"/>
+                <!--<ctrl:TextBlockEx
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                        MaxLine="2"
+                        MessageText="{x:Bind Description}"/>-->
+            </Grid>
+        </ListViewItem>
+    </DataTemplate>
+</ResourceDictionary>

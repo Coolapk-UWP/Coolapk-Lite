@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CoolapkLite.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -45,6 +46,10 @@ namespace CoolapkLite.Models.Feeds
 
         public string ID => EntityId;
         public bool Liked { get; set; }
+        public string Info { get; private set; }
+        public string DeviceTitle { get; private set; }
+        public bool ShowUser { get; private set; } = true;
+        public ImageModel UserAvatar { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,7 +60,24 @@ namespace CoolapkLite.Models.Feeds
 
         public FeedModelBase(JObject token) : base(token)
         {
+            if (token.TryGetValue("info", out JToken info) && !string.IsNullOrEmpty(info.ToString()))
+            {
+                Info = info.ToString();
+            }
+            else if(token.TryGetValue("feedTypeName", out JToken feedTypeName))
+            {
+                Info = feedTypeName.ToString();
+            }
 
+            if (token.TryGetValue("device_title", out JToken device_title))
+            {
+                DeviceTitle = device_title.ToString();
+            }
+
+            if (token.TryGetValue("userAvatar", out JToken userAvatar) && !string.IsNullOrEmpty(userAvatar.ToString()))
+            {
+                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.SmallAvatar);
+            }
         }
     }
 }

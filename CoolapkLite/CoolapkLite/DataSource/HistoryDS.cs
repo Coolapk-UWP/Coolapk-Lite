@@ -8,20 +8,17 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.DataSource
 {
-    internal class IndexDS : DataSourceBase<Entity>
+    internal class HistoryDS : DataSourceBase<Entity>
     {
         private CoolapkListProvider _provider;
 
         public async Task Refresh()
         {
-            if (_currentPage >= 1)
-            {
-                _provider.Clear();
-            }
+            _provider.Clear();
             await Reset();
         }
 
-        internal IndexDS(CoolapkListProvider provider)
+        internal HistoryDS(CoolapkListProvider provider)
         {
             _provider = provider;
         }

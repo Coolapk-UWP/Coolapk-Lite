@@ -79,12 +79,12 @@ namespace CoolapkLite.Helpers
         }
 #pragma warning restore 0612
 
-        public static string ConvertUnixTimeStampToReadable(double time)
+        public static string ConvertUnixTimeStampToReadable(this double time)
         {
             return ConvertUnixTimeStampToReadable(time, DateTime.Now);
         }
 
-        public static string ConvertUnixTimeStampToReadable(double time, DateTime baseTime)
+        public static string ConvertUnixTimeStampToReadable(this double time, DateTime baseTime)
         {
             (Utils.TimeIntervalType type, object obj) = Utils.ConvertUnixTimeStampToReadable(time, baseTime);
             switch (type)

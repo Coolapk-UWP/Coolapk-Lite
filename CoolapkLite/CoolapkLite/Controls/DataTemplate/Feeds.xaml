@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
     x:Class="CoolapkLite.Controls.DataTemplate.Feeds"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CoolapkLite.Controls.DataTemplate"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     mc:Ignorable="d">
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     
@@ -43,13 +43,12 @@
                             Padding="0"
                             Margin="0,4"
                             Tag="{Binding Uurl}"
-                            Background="Transparent"
-                            Style="{ThemeResource ButtonRevealStyle}">
+                            Background="Transparent">
                             <Ellipse
                                 Width="36"
                                 Height="36">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding UserSmallAvatar.Pic, Mode=OneWay}"/>
+                                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}"/>
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Button>

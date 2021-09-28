@@ -4,9 +4,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:control="using:CoolapkLite.Controls"
     xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:local="using:CoolapkLite.Pages.SettingsPages"
     mc:Ignorable="d">
     <Page.Resources>
         <converter:TrueToFalseConverter x:Key="TrueToFalseConverter"/>
@@ -26,7 +26,7 @@
         <ScrollViewer>
             <StackPanel
                 Padding="16,0"
-                Margin="{StaticResource StackPanelMargin}">
+                Margin="{x:Bind StackPanelMargin}">
                 <controls:HeaderedContentControl
                     Style="{StaticResource HeaderStyle}"
                     x:Uid="/SettingsPage/ThemeSettingsHeader">
@@ -185,5 +185,10 @@
                 </controls:HeaderedContentControl>
             </StackPanel>
         </ScrollViewer>
+        <control:TitleBar
+            x:Name="TitleBar"
+            BackgroundVisibility="Visible"
+            BackButtonVisibility="Collapsed"
+            RefreshButtonVisibility="Collapsed"/>
     </Grid>
 </Page>

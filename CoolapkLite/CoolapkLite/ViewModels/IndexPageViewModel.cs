@@ -3,6 +3,7 @@ using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.DataSource;
+using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace CoolapkLite.ViewModels.IndexPage
 {
     internal class ViewModel : IViewModel
     {
-        internal IndexDS IndexDS;
+        internal IndexDS DataSource;
 
         private readonly string Uri;
         protected bool IsInitPage => Uri == "/main/init";
@@ -28,18 +29,20 @@ namespace CoolapkLite.ViewModels.IndexPage
         {
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;
-            IndexDS = new IndexDS(GetProvider(Uri));
+            DataSource = new IndexDS(GetProvider(Uri));
+            DataSource.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+            DataSource.OnLoadMoreCompleted += UIHelper.HideProgressBar;
         }
 
         public async Task Refresh(int p = -1)
         {
             if (p == -2)
             {
-                await IndexDS.Refresh();
+                await DataSource.Refresh();
             }
             else if (p == -1)
             {
-                _ = await IndexDS.LoadMoreItemsAsync(20);
+                _ = await DataSource.LoadMoreItemsAsync(20);
             }
         }
 

@@ -62,9 +62,9 @@ namespace CoolapkLite.Core.Providers
                 ? string.Empty
                 : (token as JObject).TryGetValue(_idName, out JToken jToken)
                     ? jToken.ToString()
-                    : (token as JObject).TryGetValue("entityId", out JToken v1)
-                                    ? v1.ToString()
-                                    : (token as JObject).TryGetValue("id", out JToken v2) ? v2.ToString() : throw new ArgumentException(nameof(_idName));
+                    : (token as JObject).TryGetValue("entityId", out JToken entityId)
+                                    ? entityId.ToString()
+                                    : (token as JObject).TryGetValue("id", out JToken id) ? id.ToString() : throw new ArgumentException(nameof(_idName));
         }
 
         public async Task<ObservableCollection<Entity>> GetEntity(IEnumerable<(string, string)> cookies, int p = -1)

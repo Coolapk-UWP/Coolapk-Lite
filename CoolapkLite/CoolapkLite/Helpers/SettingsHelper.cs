@@ -1,4 +1,6 @@
-﻿using Windows.Storage;
+﻿using CoolapkLite.Core.Helpers;
+using System;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
@@ -6,6 +8,7 @@ namespace CoolapkLite.Helpers
 {
     internal static partial class SettingsHelper
     {
+        public const string Uid = "Uid";
         public const string TileUrl = "TileUrl";
         public const string IsFirstRun = "IsFirstRun";
         public const string IsDarkMode = "IsDarkMode";
@@ -21,6 +24,10 @@ namespace CoolapkLite.Helpers
 
         public static void SetDefaultSettings()
         {
+            if (!LocalSettings.Values.ContainsKey(Uid))
+            {
+                LocalSettings.Values.Add(Uid, string.Empty);
+            }
             if (!LocalSettings.Values.ContainsKey(TileUrl))
             {
                 LocalSettings.Values.Add(TileUrl, "https://www.wpxap.com/");
@@ -87,6 +94,64 @@ namespace CoolapkLite.Helpers
                 Set(IsDarkMode, value);
                 UISettingChanged.Invoke(value ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
             }
+        }
+
+        public static bool CheckLoginInfo()
+        {
+            try
+            {
+                using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
+                {
+                    Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
+                    string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                    foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(new Uri("http://coolapk.com")))
+                    {
+                        switch (item.Name)
+                        {
+                            case "uid":
+                                uid = item.Value;
+                                break;
+
+                            case "username":
+                                userName = item.Value;
+                                break;
+
+                            case "token":
+                                token = item.Value;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName))
+                    {
+                        Logout();
+                        return false;
+                    }
+                    else
+                    {
+                        Set(Uid, uid);
+
+                        return true;
+                    }
+                }
+            }
+            catch { throw; }
+        }
+
+        public static void Logout()
+        {
+            using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
+            {
+                Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
+                foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(UriHelper.BaseUri))
+                {
+                    cookieManager.DeleteCookie(item);
+                }
+            }
+            Set(Uid, string.Empty);
         }
     }
 }

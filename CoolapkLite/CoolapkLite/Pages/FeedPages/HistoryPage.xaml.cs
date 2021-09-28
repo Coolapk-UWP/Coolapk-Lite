@@ -12,21 +12,22 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class IndexPage : Page
+    public sealed partial class HistoryPage : Page
     {
-        private ViewModels.IndexPage.ViewModel Provider;
+        private ViewModels.HistoryPage.ViewModel Provider;
 
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
-        public IndexPage() => InitializeComponent();
+        public HistoryPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
-            if (e.Parameter is ViewModels.IndexPage.ViewModel ViewModel)
+            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
+            if (e.Parameter is ViewModels.HistoryPage.ViewModel ViewModel)
             {
                 Provider = ViewModel;
+                ListView.ItemsSource = Provider.DataSource;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {
@@ -35,10 +36,7 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private async Task Refresh(int p = -1)
-        {
-            await Provider.Refresh(p);
-        }
+        private async Task Refresh(int p = -1) => await Provider.Refresh(p);
 
         private void TitleBar_RefreshEvent(object sender, RoutedEventArgs e) => _ = Refresh(-2);
 

@@ -9,6 +9,10 @@ namespace CoolapkLite.Models.Feeds
 {
     internal class FeedModel : FeedModelBase
     {
+        public string Uurl { get; private set; }
+        public bool IsStickTop { get; private set; }
+        public bool ShowDateline { get; private set; } = true;
+
         internal enum FeedDisplayMode
         {
             normal = 0,
@@ -19,7 +23,7 @@ namespace CoolapkLite.Models.Feeds
 
         public FeedModel(JObject token, FeedDisplayMode mode = FeedDisplayMode.normal) : base(token)
         {
-
+            IsStickTop = token.TryGetValue("isStickTop", out JToken j) && int.Parse(j.ToString()) == 1;
         }
     }
 }
