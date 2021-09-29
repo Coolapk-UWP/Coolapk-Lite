@@ -67,7 +67,34 @@ namespace CoolapkLite.Core.Providers
                                     : (token as JObject).TryGetValue("id", out JToken id) ? id.ToString() : throw new ArgumentException(nameof(_idName));
         }
 
-        public async Task<ObservableCollection<Entity>> GetEntity(IEnumerable<(string, string)> cookies, int p = -1)
+        public async Task<ObservableCollection<Entity>> GetEntity(IEnumerable<(string, string)> cookies, int p)
+        {
+            (bool isSucceed, JToken result) = await Utils.GetDataAsync(_getUri(p, page, _firstItem, _lastItem), true, cookies);
+            if (!isSucceed) { return null; }
+
+            JArray array = (JArray)result;
+
+            if (array != null && array.Count > 0)
+            {
+                ObservableCollection<Entity> Models = new ObservableCollection<Entity>();
+                foreach (JObject item in array)
+                {
+                    IEnumerable<Entity> entities = _getEntities(item);
+                    if (entities == null) { continue; }
+
+                    foreach (Entity i in entities)
+                    {
+                        if (i == null) { continue; }
+                        Models.Add(i);
+                    }
+                }
+                return Models;
+            }
+
+            return null;
+        }
+
+        public async Task<ObservableCollection<Entity>> GetEntityOld(IEnumerable<(string, string)> cookies, int p = -1)
         {
             if (p == -2) { Reset(0); }
 

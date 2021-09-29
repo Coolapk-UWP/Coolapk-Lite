@@ -31,7 +31,7 @@
             x:Name="TitleBackground"
             VerticalAlignment="Stretch"
             HorizontalAlignment="Stretch"
-            Background="{ThemeResource SystemChromeMediumLowColor}"/>
+            Background="{ThemeResource SystemControlPageBackgroundChromeMediumLowBrush}"/>
         <Button
             Grid.Column="0"
             x:Name="BackButton"

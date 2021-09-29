@@ -135,7 +135,7 @@
                         PanePlacement="{TemplateBinding PanePlacement}"
                         OpenPaneLength="{TemplateBinding OpenPaneLength}"
                         CompactPaneLength="{TemplateBinding CompactPaneLength}"
-                        PaneBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
+                        PaneBackground="{ThemeResource SystemControlBackgroundChromeMediumBrush}"
                         IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}">
                         <SplitView.Pane>
                             <Grid
@@ -246,7 +246,7 @@
                 <Frame
                     x:FieldModifier="Public"
                     x:Name="HamburgerMenuFrame"
-                    Background="{ThemeResource SystemChromeMediumLowColor}"/>
+                    Background="{ThemeResource SystemControlPageBackgroundChromeMediumLowBrush}"/>
                 <Grid
                     Height="80"
                     VerticalAlignment="Top">

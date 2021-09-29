@@ -12,9 +12,7 @@
             Tag="{Binding Url}"
             Style="{StaticResource FixedListViewItemStyle}">
             <Grid
-                Padding="4,8"
-                BorderThickness="1"
-                BorderBrush="{StaticResource SystemControlForegroundBaseLowBrush}">
+                Padding="4,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="56"/>
                     <ColumnDefinition/>

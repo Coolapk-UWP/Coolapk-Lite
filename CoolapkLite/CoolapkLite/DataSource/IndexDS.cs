@@ -1,7 +1,7 @@
-﻿using CoolapkLite.Core.DataSource;
-using CoolapkLite.Core.Models;
+﻿using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.DataSource;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -14,10 +14,6 @@ namespace CoolapkLite.DataSource
 
         public async Task Refresh()
         {
-            if (_currentPage >= 1)
-            {
-                _provider.Clear();
-            }
             await Reset();
         }
 
@@ -36,10 +32,9 @@ namespace CoolapkLite.DataSource
         {
             if (items != null)
             {
-                foreach (Entity item in items)
+                foreach (var item in items)
                 {
-                    if (!Contains(item))
-                    { Add(item); }
+                    Add(item);
                 }
             }
         }

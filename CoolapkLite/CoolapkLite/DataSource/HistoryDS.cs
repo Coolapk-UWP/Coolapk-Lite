@@ -1,7 +1,7 @@
-﻿using CoolapkLite.Core.DataSource;
-using CoolapkLite.Core.Models;
+﻿using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.DataSource;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

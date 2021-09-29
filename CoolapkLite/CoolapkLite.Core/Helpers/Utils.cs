@@ -275,45 +275,46 @@ namespace CoolapkLite.Core.Helpers
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool forceRefresh, IEnumerable<(string, string)> cookies)
         {
             string json;
-            if (forceRefresh || !responseCache.ContainsKey(uri))
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, cookies);
+            json = await NetworkHelper.GetSrtingAsync(uri, cookies);
+            //if (forceRefresh || !responseCache.ContainsKey(uri))
+            //{
+            //    json = await NetworkHelper.GetSrtingAsync(uri, cookies);
 
-                lock (locker)
-                {
-                    if (responseCache.ContainsKey(uri))
-                    {
-                        responseCache[uri] = (DateTime.Now, json);
+            //    lock (locker)
+            //    {
+            //        if (responseCache.ContainsKey(uri))
+            //        {
+            //            responseCache[uri] = (DateTime.Now, json);
 
-                        int i = uri.PathAndQuery.IndexOf("page=", StringComparison.Ordinal);
-                        if (i != -1)
-                        {
-                            string u = uri.PathAndQuery.Substring(i);
+            //            int i = uri.PathAndQuery.IndexOf("page=", StringComparison.Ordinal);
+            //            if (i != -1)
+            //            {
+            //                string u = uri.PathAndQuery.Substring(i);
 
-                            KeyValuePair<Uri, (DateTime, string)>[] needDelete = (from item in responseCache
-                                                                                  where item.Key != uri
-                                                                                  where item.Key.PathAndQuery.IndexOf(u, StringComparison.Ordinal) == 0
-                                                                                  select item).ToArray();
-                            foreach (KeyValuePair<Uri, (DateTime, string)> item in needDelete)
-                            {
-                                _ = responseCache.Remove(item.Key);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        responseCache.Add(uri, (DateTime.Now, json));
-                    }
-                }
-            }
-            else
-            {
-                lock (locker)
-                {
-                    json = responseCache[uri].Item2;
-                    responseCache[uri] = (DateTime.Now, json);
-                }
-            }
+            //                KeyValuePair<Uri, (DateTime, string)>[] needDelete = (from item in responseCache
+            //                                                                      where item.Key != uri
+            //                                                                      where item.Key.PathAndQuery.IndexOf(u, StringComparison.Ordinal) == 0
+            //                                                                      select item).ToArray();
+            //                foreach (KeyValuePair<Uri, (DateTime, string)> item in needDelete)
+            //                {
+            //                    _ = responseCache.Remove(item.Key);
+            //                }
+            //            }
+            //        }
+            //        else
+            //        {
+            //            responseCache.Add(uri, (DateTime.Now, json));
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    lock (locker)
+            //    {
+            //        json = responseCache[uri].Item2;
+            //        responseCache[uri] = (DateTime.Now, json);
+            //    }
+            //}
 
             return GetResult(json);
         }

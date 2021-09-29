@@ -13,7 +13,8 @@ namespace CoolapkLite.Core.Models
         {
             if (o == null)
             {
-                throw new ArgumentNullException(nameof(o));
+                //throw new ArgumentNullException(nameof(o));
+                return;
             }
 
             if (o.TryGetValue("entityId", out JToken v1))

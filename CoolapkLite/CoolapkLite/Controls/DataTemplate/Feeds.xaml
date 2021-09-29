@@ -7,15 +7,10 @@
     xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     mc:Ignorable="d">
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-    
     <DataTemplate x:Key="Feed">
-        <ListViewItem
-            Style="{StaticResource FixedListViewItemStyle}">
+        <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
             <UserControl>
-                <Grid
-                    Padding="8,4"
-                    BorderThickness="1"
-                    BorderBrush="{StaticResource SystemControlForegroundBaseLowBrush}">
+                <Grid Padding="8,4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -25,14 +20,14 @@
                         Orientation="Horizontal"
                         Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}">
                         <FontIcon
-                            Foreground="Red"
+                            Glyph=""
                             FontSize="16"
                             Margin="4,0,0,0"
-                            Glyph=""/>
-                        <TextBlock
-                            x:Uid="/Feed/stickUp"
-                            Margin="5,4,5,5"
                             Foreground="Red"/>
+                        <TextBlock
+                            Margin="5,4,5,5"
+                            Foreground="Red"
+                            x:Uid="/Feed/stickUp"/>
                     </StackPanel>
                     <StackPanel
                         Grid.Row="1"

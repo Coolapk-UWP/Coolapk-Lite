@@ -1,10 +1,14 @@
-﻿using System;
+﻿using CoolapkLite.Core.Exceptions;
+using CoolapkLite.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI;
@@ -30,8 +34,9 @@ namespace CoolapkLite
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
-            this.Suspending += OnSuspending;
+            InitializeComponent();
+            Suspending += OnSuspending;
+            UnhandledException += Application_UnhandledException;
         }
 
         /// <summary>
@@ -41,6 +46,7 @@ namespace CoolapkLite
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            RegisterExceptionHandlingSynchronizationContext();
             ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
             view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
 
@@ -100,6 +106,57 @@ namespace CoolapkLite
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        private void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            if (!(!SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException) || e.Exception is TaskCanceledException || e.Exception is OperationCanceledException))
+            {
+                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+                UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)}\n(0x{Convert.ToString(e.Exception.HResult, 16)})"
+#if DEBUG
+                                    + $"\n{e.Exception.StackTrace}"
+#endif
+                                );
+            }
+            SettingsHelper.LogManager.GetLogger(e.Exception.GetType()).Error($"\nMessage: {e.Exception.Message}\n{e.Exception.HResult}(0x{Convert.ToString(e.Exception.HResult, 16)}){e.Exception.HelpLink}", e.Exception);
+        }
+
+        /// <summary>
+        /// Should be called from OnActivated and OnLaunched
+        /// </summary>
+        private void RegisterExceptionHandlingSynchronizationContext()
+        {
+            ExceptionHandlingSynchronizationContext
+                .Register()
+                .UnhandledException += SynchronizationContext_UnhandledException;
+        }
+
+        private void SynchronizationContext_UnhandledException(object sender, Core.Exceptions.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))
+            {
+                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+                if (e.Exception is System.Net.Http.HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
+                {
+                    UIHelper.ShowMessage($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+                }
+                else if (e.Exception is CoolapkMessageException)
+                {
+                    UIHelper.ShowMessage(e.Exception.Message);
+                }
+                else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
+                {
+                    UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)}\n(0x{Convert.ToString(e.Exception.HResult, 16)})"
+#if DEBUG
+                                            + $"\n{e.Exception.StackTrace}"
+#endif
+                                        );
+                }
+            }
+            SettingsHelper.LogManager.GetLogger(e.Exception.GetType()).Error($"\nMessage: {e.Exception.Message}\n{e.Exception.HResult}(0x{Convert.ToString(e.Exception.HResult, 16)}){e.Exception.HelpLink}", e.Exception);
         }
     }
 }
