@@ -76,6 +76,12 @@ namespace CoolapkLite.Core.Providers
 
             if (array != null && array.Count > 0)
             {
+                if (string.IsNullOrEmpty(_firstItem))
+                {
+                    _firstItem = GetId(array.First);
+                }
+                _lastItem = GetId(array.Last);
+
                 ObservableCollection<Entity> Models = new ObservableCollection<Entity>();
                 foreach (JObject item in array)
                 {
