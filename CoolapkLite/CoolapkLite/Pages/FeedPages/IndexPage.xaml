@@ -26,7 +26,9 @@
             SelectionMode="None"
             Padding="{x:Bind StackPanelMargin}"
             ItemTemplate="{StaticResource Feed}"
-            RefreshRequested="ListView_RefreshRequested"/>
+            RefreshRequested="ListView_RefreshRequested"
+            ScrollViewer.IsDeferredScrollingEnabled="True"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         <control:TitleBar
             x:Name="TitleBar"
             BackgroundVisibility="Visible"
