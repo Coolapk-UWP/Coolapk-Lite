@@ -10,9 +10,9 @@ namespace CoolapkLite.Helpers.ValueConverters
         {
             switch ((string)parameter)
             {
-                case "bool": return (bool)value ? Visibility.Visible : Visibility.Collapsed;
-                case "!bool": return (bool)value ? Visibility.Collapsed : Visibility.Visible;
-                case "string": return !string.IsNullOrEmpty((string)value) ? Visibility.Visible : Visibility.Collapsed;
+                case "bool": return (value is bool) ? (bool)value ? Visibility.Visible : Visibility.Collapsed : Visibility.Collapsed;
+                case "!bool": return (value is bool) ? (bool)value ? Visibility.Collapsed : Visibility.Visible : Visibility.Collapsed;
+                case "string": return (value is string) ? !string.IsNullOrEmpty((string)value) ? Visibility.Visible : Visibility.Collapsed : !string.IsNullOrEmpty(value.ToString()) ? Visibility.Visible : Visibility.Collapsed;
                 default: return value is bool boolean ? boolean ? Visibility.Visible : Visibility.Collapsed : value != null ? Visibility.Visible : Visibility.Collapsed;
             }
         }

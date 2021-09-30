@@ -17,8 +17,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel
                         x:Name="StickUp"
-                        Orientation="Horizontal"
-                        Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}">
+                        Orientation="Horizontal">
                         <FontIcon
                             Glyph=""
                             FontSize="16"
@@ -32,18 +31,16 @@
                     <StackPanel
                         Grid.Row="1"
                         x:Name="UserBar"
-                        Orientation="Horizontal"
-                        Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}">
+                        Orientation="Horizontal">
                         <Button
                             Padding="0"
                             Margin="0,4"
-                            Tag="{Binding Uurl}"
                             Background="Transparent">
                             <Ellipse
                                 Width="36"
                                 Height="36">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}"/>
+                                    <ImageBrush/>
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Button>
@@ -52,24 +49,17 @@
                             VerticalAlignment="Center">
                             <TextBlock
                                 VerticalAlignment="Top"
-                                Text="{Binding UserName}"
-                                HorizontalAlignment="Left"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"/>
+                                HorizontalAlignment="Left"/>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock
                                     Margin="0,0,5,0"
                                     x:Name="DateLineTxb"
-                                    Text="{Binding Dateline}"
-                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                                    Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='bool'}"/>
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                 <TextBlock
-                                    Text="{Binding Info}"
                                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                                 <TextBlock
                                     Margin="5,0,0,0"
-                                    Text="{Binding DeviceTitle}"
-                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                                    Visibility="{Binding DeviceTitle, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='string'}"/>
+                                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"/>
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
