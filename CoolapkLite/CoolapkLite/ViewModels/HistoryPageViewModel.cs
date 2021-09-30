@@ -19,37 +19,37 @@ namespace CoolapkLite.ViewModels.HistoryPage
 
         internal ViewModel(string title)
         {
-            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
+            //if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
 
-            Title = title;
-            UriType type = UriType.CheckLoginInfo;
+            //Title = title;
+            //UriType type = UriType.CheckLoginInfo;
 
-            switch (title)
-            {
-                case "我的常去":
-                    type = UriType.GetUserRecentHistory;
-                    break;
-                case "浏览历史":
-                    type = UriType.GetUserHistory;
-                    break;
-                default: throw new ArgumentException(nameof(title));
-            }
+            //switch (title)
+            //{
+            //    case "我的常去":
+            //        type = UriType.GetUserRecentHistory;
+            //        break;
+            //    case "浏览历史":
+            //        type = UriType.GetUserHistory;
+            //        break;
+            //    default: throw new ArgumentException(nameof(title));
+            //}
 
-            CoolapkListProvider provider;
-            provider =
-                    new CoolapkListProvider(
-                        (p, page, firstItem, lastItem) =>
-                            UriHelper.GetUri(
-                                type,
-                                p < 0 ? ++page : p,
-                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
-                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                        (o) => new Entity[] { new HistoryModel(o) },
-                        "id");
+            //CoolapkListProvider provider;
+            //provider =
+            //        new CoolapkListProvider(
+            //            (p, page, firstItem, lastItem) =>
+            //                UriHelper.GetUri(
+            //                    type,
+            //                    p < 0 ? ++page : p,
+            //                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+            //                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+            //            (o) => new Entity[] { new HistoryModel(o) },
+            //            "id");
 
-            DataSource = new HistoryDS(provider);
-            DataSource.OnLoadMoreStarted += UIHelper.ShowProgressBar;
-            DataSource.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+            //DataSource = new HistoryDS(provider);
+            //DataSource.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+            //DataSource.OnLoadMoreCompleted += UIHelper.HideProgressBar;
         }
 
         public async Task Refresh(int p = -1)

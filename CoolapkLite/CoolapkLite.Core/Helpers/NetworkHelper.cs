@@ -92,6 +92,23 @@ namespace CoolapkLite.Core.Helpers
             Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
         }
 
+        public static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
+        {
+            using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
+            {
+                Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
+                foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(NetworkHelper.GetHost(uri)))
+                {
+                    if (item.Name == "uid" ||
+                        item.Name == "username" ||
+                        item.Name == "token")
+                    {
+                        yield return (item.Name, item.Value);
+                    }
+                }
+            }
+        }
+
         private static string GetCoolapkDeviceID()
         {
             Guid easId = new EasClientDeviceInformation().Id;
@@ -177,24 +194,22 @@ namespace CoolapkLite.Core.Helpers
             catch { throw; }
         }
 
-        public static async Task<string> GetSrtingAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies)
-        {
-            try
-            {
-                BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
-                return await Client.GetStringAsync(uri);
-            }
-            catch { throw; }
-        }
-
-        public static async Task<string> GetHtmlAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request)
+        public static async Task<string> GetSrtingAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request, bool isBackground)
         {
             try
             {
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStringAsync(uri);
             }
-            catch { throw; }
+            catch (HttpRequestException e)
+            {
+                if (!isBackground) { Utils.ShowHttpExceptionMessage(e); }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary> 通过用户名获取UID。 </summary>

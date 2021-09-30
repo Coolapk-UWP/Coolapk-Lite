@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,6 +29,14 @@ namespace CoolapkLite.Core.Helpers
         internal static void ShowInAppMessage(MessageType type, string message = null)
         {
             NeedShowInAppMessageEvent?.Invoke(null, (type, message));
+        }
+
+        public static void ShowHttpExceptionMessage(HttpRequestException e)
+        {
+            if (e.Message.IndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
+            { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message,$"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}")); }
+            else if (e.Message == "An error occurred while sending the request.") { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message, "无法连接网络。")); }
+            else { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message, $"请检查网络连接。 {e.Message}")); }
         }
 
         public static string GetMD5(string input)
@@ -211,24 +220,22 @@ namespace CoolapkLite.Core.Helpers
 
     public static partial class Utils
     {
-        private static readonly Dictionary<Uri, (DateTime, string)> responseCache = new Dictionary<Uri, (DateTime, string)>();
-
-        private static readonly object locker = new object();
-
-        private static readonly Timer cleanCacheTimer = new Timer(o =>
+        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground)
         {
-            lock (locker)
+            string json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+            return GetResult(json);
+        }
+
+        public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, bool isBackground)
+        {
+            string json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+            if (string.IsNullOrEmpty(json))
             {
-                DateTime now = DateTime.Now;
-                Uri[] needDelete = (from i in responseCache
-                                    where (now - i.Value.Item1).TotalMinutes > 2
-                                    select i.Key).ToArray();
-                foreach (Uri item in needDelete)
-                {
-                    _ = responseCache.Remove(item);
-                }
+                ShowInAppMessage(MessageType.Message, "获取失败");
+                return (false, null);
             }
-        }, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+            else { return (true, json); }
+        }
 
         private static (bool, JToken) GetResult(string json)
         {
@@ -242,84 +249,6 @@ namespace CoolapkLite.Core.Helpers
                 return (false, null);
             }
             else { return (true, token); }
-        }
-
-        public static async Task<(bool isSucceed, string result)> PostHtmlAsync(Uri uri, System.Net.Http.HttpContent content, IEnumerable<(string, string)> cookies)
-        {
-            string json = await NetworkHelper.PostAsync(uri, content, cookies);
-            if (string.IsNullOrEmpty(json))
-            {
-                ShowInAppMessage(MessageType.Message, "获取失败");
-                return (false, null);
-            }
-            else { return (true, json); }
-        }
-
-        public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, System.Net.Http.HttpContent content, IEnumerable<(string, string)> cookies)
-        {
-            string json = await NetworkHelper.PostAsync(uri, content, cookies);
-            return GetResult(json);
-        }
-
-        public static async Task<(bool isSucceed, string result)> GetHtmlAsync(Uri uri, IEnumerable<(string, string)> cookies, string request)
-        {
-            string json = await NetworkHelper.GetHtmlAsync(uri, cookies, request);
-            if (string.IsNullOrEmpty(json))
-            {
-                ShowInAppMessage(MessageType.Message, "获取失败");
-                return (false, null);
-            }
-            else { return (true, json); }
-        }
-
-        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool forceRefresh, IEnumerable<(string, string)> cookies)
-        {
-            string json;
-            if (forceRefresh || !responseCache.ContainsKey(uri))
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, cookies);
-                MakeCache(uri, json);
-            }
-            else
-            {
-                lock (locker)
-                {
-                    json = responseCache[uri].Item2;
-                    responseCache[uri] = (DateTime.Now, json);
-                }
-            }
-
-            return GetResult(json);
-        }
-
-        private static async void MakeCache(Uri uri, string json)
-        {
-            lock (locker)
-            {
-                if (responseCache.ContainsKey(uri))
-                {
-                    responseCache[uri] = (DateTime.Now, json);
-
-                    int i = uri.PathAndQuery.IndexOf("page=", StringComparison.Ordinal);
-                    if (i != -1)
-                    {
-                        string u = uri.PathAndQuery.Substring(i);
-
-                        KeyValuePair<Uri, (DateTime, string)>[] needDelete = (from item in responseCache
-                                                                              where item.Key != uri
-                                                                              where item.Key.PathAndQuery.IndexOf(u, StringComparison.Ordinal) == 0
-                                                                              select item).ToArray();
-                        foreach (KeyValuePair<Uri, (DateTime, string)> item in needDelete)
-                        {
-                            _ = responseCache.Remove(item.Key);
-                        }
-                    }
-                }
-                else
-                {
-                    responseCache.Add(uri, (DateTime.Now, json));
-                }
-            }
         }
     }
 }

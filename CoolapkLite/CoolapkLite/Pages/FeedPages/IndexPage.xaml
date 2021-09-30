@@ -26,8 +26,7 @@
             SelectionMode="None"
             Padding="{x:Bind StackPanelMargin}"
             ItemTemplate="{StaticResource Feed}"
-            RefreshRequested="ListView_RefreshRequested"
-            ItemsSource="{x:Bind Provider.DataSource, Mode=OneWay}"/>
+            RefreshRequested="ListView_RefreshRequested"/>
         <control:TitleBar
             x:Name="TitleBar"
             BackgroundVisibility="Visible"

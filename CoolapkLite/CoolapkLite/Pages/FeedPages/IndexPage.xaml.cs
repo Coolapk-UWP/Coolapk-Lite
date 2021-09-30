@@ -27,6 +27,9 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is ViewModels.IndexPage.ViewModel ViewModel)
             {
                 Provider = ViewModel;
+                ListView.ItemsSource = Provider;
+                Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {

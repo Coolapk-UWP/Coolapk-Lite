@@ -24,7 +24,7 @@ namespace CoolapkLite.DataSource
 
         protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
         {
-            ObservableCollection<Entity> Models = await _provider.GetEntity(_currentPage);
+            ObservableCollection<Entity> Models = new ObservableCollection<Entity>() /*await _provider.GetEntity(_currentPage)*/;
             return Models;
         }
 

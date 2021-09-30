@@ -4,17 +4,17 @@ using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.DataSource;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.DataSource;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.IndexPage
 {
-    internal class ViewModel : IViewModel
+    internal class ViewModel : DataSourceBase<Entity>, IViewModel
     {
-        internal IndexDS DataSource;
-
         private readonly string Uri;
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains("?");
@@ -29,20 +29,17 @@ namespace CoolapkLite.ViewModels.IndexPage
         {
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;
-            DataSource = new IndexDS(GetProvider(Uri));
-            DataSource.OnLoadMoreStarted += UIHelper.ShowProgressBar;
-            DataSource.OnLoadMoreCompleted += UIHelper.HideProgressBar;
         }
 
         public async Task Refresh(int p = -1)
         {
             if (p == -2)
             {
-                await DataSource.Refresh();
+                await Reset();
             }
             else if (p == -1)
             {
-                _ = await DataSource.LoadMoreItemsAsync(20);
+                
             }
         }
 
@@ -63,24 +60,6 @@ namespace CoolapkLite.ViewModels.IndexPage
                 uri = uri.Replace("/page", "/page/dataList");
             }
             return uri.Replace("#", "%23");
-        }
-
-        private CoolapkListProvider GetProvider(string uri)
-        {
-            return new CoolapkListProvider(
-                    GetUri(uri, IsIndexPage),
-                    GetEntities,
-                    "entityId");
-        }
-
-        internal static Func<int, int, string, string, Uri> GetUri(string uri, bool isHotFeedPage)
-        {
-            return (p, page, _, __) =>
-                UriHelper.GetUri(
-                    UriType.GetIndexPage,
-                    uri,
-                    isHotFeedPage ? "?" : "&",
-                    p < 0 ? ++page : p);
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)
@@ -108,6 +87,45 @@ namespace CoolapkLite.ViewModels.IndexPage
                 yield return EntityTemplateSelector.GetEntity(jo, IsHotFeedPage);
             }
             yield break;
+        }
+
+        protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
+        {
+            ObservableCollection<Entity> Models = new ObservableCollection<Entity>();
+            (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", _currentPage), false);
+            if (result.isSucceed)
+            {
+                JArray array = (JArray)result.result;
+
+                foreach (JObject item in array)
+                {
+                    IEnumerable<Entity> entities = GetEntities(item);
+                    if (entities == null) { continue; }
+
+                    foreach (Entity i in entities)
+                    {
+                        if (i == null) { continue; }
+                        Models.Add(i);
+                    }
+                }
+            }
+            else
+            {
+                Models.Add(new NullModel());
+            }
+            return Models;
+        }
+
+        protected override void AddItems(IList<Entity> items)
+        {
+            if (items != null)
+            {
+                foreach (Entity item in items)
+                {
+                    if(item is NullModel) { continue; }
+                    Add(item);
+                }
+            }
         }
     }
 }

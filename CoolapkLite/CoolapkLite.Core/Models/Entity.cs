@@ -37,4 +37,12 @@ namespace CoolapkLite.Core.Models
             }
         }
     }
+
+    public class NullModel : Entity
+    {
+        public NullModel(JObject o = null): base(o)
+        {
+
+        }
+    }
 }

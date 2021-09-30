@@ -15,48 +15,6 @@ namespace CoolapkLite.Helpers
 {
     internal static class DataHelper
     {
-        private static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
-        {
-            using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
-            {
-                Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(NetworkHelper.GetHost(uri)))
-                {
-                    if (item.Name == "uid" ||
-                        item.Name == "username" ||
-                        item.Name == "token")
-                    {
-                        yield return (item.Name, item.Value);
-                    }
-                }
-            }
-        }
-
-        public static Task<(bool isSucceed, string result)> PostHtmlAsync(Uri uri, System.Net.Http.HttpContent content = null)
-        {
-            return Utils.PostHtmlAsync(uri, content, GetCoolapkCookies(uri));
-        }
-
-        public static Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, System.Net.Http.HttpContent content)
-        {
-            return Utils.PostDataAsync(uri, content, GetCoolapkCookies(uri));
-        }
-
-        public static Task<(bool isSucceed, string result)> GetHtmlAsync(Uri uri, string request)
-        {
-            return Utils.GetHtmlAsync(uri, GetCoolapkCookies(uri), request);
-        }
-
-        public static Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool forceRefresh)
-        {
-            return Utils.GetDataAsync(uri, forceRefresh, GetCoolapkCookies(uri));
-        }
-
-        public static Task<ObservableCollection<Entity>> GetEntity(this Core.Providers.CoolapkListProvider provider, int p = 1)
-        {
-            return provider.GetEntity(GetCoolapkCookies(UriHelper.BaseUri), p);
-        }
-
         //public static Task Search(this Core.Providers.SearchListProvider provider, string keyWord)
         //{
         //    return provider.Search(keyWord, GetCoolapkCookies(UriHelper.BaseUri));
@@ -68,7 +26,7 @@ namespace CoolapkLite.Helpers
             Windows.Storage.StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha);
             Windows.Storage.StorageFile file = await folder.CreateFileAsync(Utils.GetMD5(uri));
 
-            Stream s = await NetworkHelper.GetStreamAsync(new Uri(uri), GetCoolapkCookies(new Uri(uri)));
+            Stream s = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)));
 
             using (Stream ss = await file.OpenStreamForWriteAsync())
             {
