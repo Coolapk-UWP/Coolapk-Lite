@@ -5,6 +5,7 @@ using CoolapkLite.Core.Providers;
 using CoolapkLite.DataSource;
 using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.DataSource;
+using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -91,27 +92,35 @@ namespace CoolapkLite.ViewModels.IndexPage
 
         protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
         {
-            ObservableCollection<Entity> Models = new ObservableCollection<Entity>();
-            (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", _currentPage), false);
-            if (result.isSucceed)
+            List<Entity> Models = new List<Entity>();
+            while (Models.Count < count)
             {
-                JArray array = (JArray)result.result;
-
-                foreach (JObject item in array)
+                if (Models.Count > 0)
                 {
-                    IEnumerable<Entity> entities = GetEntities(item);
-                    if (entities == null) { continue; }
+                    _currentPage++;
+                }
+                (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", _currentPage), false);
+                if (result.isSucceed)
+                {
+                    JArray array = (JArray)result.result;
 
-                    foreach (Entity i in entities)
+                    foreach (JObject item in array)
                     {
-                        if (i == null) { continue; }
-                        Models.Add(i);
+                        IEnumerable<Entity> entities = GetEntities(item);
+                        if (entities == null) { continue; }
+
+                        foreach (Entity i in entities)
+                        {
+                            if (i == null) { continue; }
+                            Models.Add(i);
+                        }
                     }
                 }
-            }
-            else
-            {
-                Models.Add(new NullModel());
+                else
+                {
+                    Models.Add(new NullModel());
+                    break;
+                }
             }
             return Models;
         }
