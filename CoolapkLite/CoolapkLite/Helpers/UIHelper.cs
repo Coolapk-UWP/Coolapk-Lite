@@ -18,7 +18,7 @@ namespace CoolapkLite.Helpers
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
 
         public static GridLength HeaderTitleMargin { get; set; }
-        public static double PageTitleHeight => HasStatusBar ? 40 : 80;
+        public static double PageTitleHeight => HasStatusBar ? 48 : 80;
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
 
         private static CoreDispatcher shellDispatcher;
@@ -68,14 +68,14 @@ namespace CoolapkLite.Helpers
                         StatusBar statusBar = StatusBar.GetForCurrentView();
                         statusBar.BackgroundColor = AccentColor;
                         statusBar.ForegroundColor = Colors.White;
-                        statusBar.BackgroundOpacity = 0; // 透明度
+                        statusBar.BackgroundOpacity = 0.8; // 透明度
                     }
                     else
                     {
                         StatusBar statusBar = StatusBar.GetForCurrentView();
                         statusBar.BackgroundColor = AccentColor;
                         statusBar.ForegroundColor = Colors.Black;
-                        statusBar.BackgroundOpacity = 0; // 透明度
+                        statusBar.BackgroundOpacity = 0.8; // 透明度
                     }
                 }
                 else if (IsDark)

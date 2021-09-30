@@ -149,7 +149,8 @@
                                 </Grid.RowDefinitions>
                                 <Grid
                                     Grid.Row="0"
-                                    Margin="0,32,0,8"
+                                    Margin="0,32,0,0"
+                                    Loading="FrameworkElement_Loading"
                                     Height="{TemplateBinding HamburgerHeight}"/>
                                 <ListView
                                     Grid.Row="1"
@@ -166,16 +167,44 @@
                                     SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}">
                                     <ListView.Header>
-                                        <AutoSuggestBox
-                                            QueryIcon="Find"
-                                            IsTabStop ="True"
-                                            Margin="10,0,10,8"
-                                            x:Name="AutoSuggestBox"
-                                            VerticalAlignment="Center"
-                                            TextChanged="AutoSuggestBox_TextChanged"
-                                            QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                                            SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                                            Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                        <Grid>
+                                            <AutoSuggestBox
+                                                Margin="10,8"
+                                                QueryIcon="Find"
+                                                IsTabStop="True"
+                                                Visibility="Collapsed"
+                                                x:Name="AutoSuggestBox"
+                                                VerticalAlignment="Center"
+                                                x:Uid="/MainPage/SearchBox"
+                                                Loaded="FrameworkElement_Loaded"
+                                                TextChanged="AutoSuggestBox_TextChanged"
+                                                QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                                                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                                                Foreground="{ThemeResource ApplicationForegroundThemeBrush}"/>
+                                            <ListViewItem
+                                                x:Name="SearchList"
+                                                Visibility="Collapsed"
+                                                Tapped="SearchList_Tapped"
+                                                Loaded="FrameworkElement_Loaded"
+                                                Style="{StaticResource HamburgerMenuItemStyle}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="48" />
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Viewbox
+                                                        Width="16"
+                                                        Height="16">
+                                                        <SymbolIcon Symbol="Find"/>
+                                                    </Viewbox>
+                                                    <TextBlock
+                                                        FontSize="14"
+                                                        Grid.Column="1"
+                                                        x:Uid="/MainPage/Search"
+                                                        VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </ListViewItem>
+                                        </Grid>
                                     </ListView.Header>
                                 </ListView>
                                 <ListView
@@ -204,12 +233,13 @@
                     <Button
                         Padding="0"
                         TabIndex="0"
-                        Margin="0,32,0,8"
+                        Margin="0,32,0,0"
                         BorderThickness="0"
                         VerticalAlignment="Top"
                         x:Name="HamburgerButton"
                         Background="Transparent"
                         Click="HamburgerButton_Click"
+                        Loading="FrameworkElement_Loading"
                         AutomationProperties.Name="Main button"
                         Width="{TemplateBinding HamburgerWidth}"
                         Height="{TemplateBinding HamburgerHeight}"
@@ -246,7 +276,7 @@
                 <Frame
                     x:FieldModifier="Public"
                     x:Name="HamburgerMenuFrame"
-                    Background="{ThemeResource SystemControlPageBackgroundChromeMediumLowBrush}"/>
+                    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
                 <Grid
                     Height="80"
                     VerticalAlignment="Top">

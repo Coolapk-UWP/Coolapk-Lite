@@ -108,7 +108,7 @@ namespace CoolapkLite
             // Only navigate if the selected page isn't currently loaded.
             if (!(_page is null) && !Equals(PreNavPageType, _page))
             {
-                _ = HamburgerMenuFrame.Navigate(_page, vs != null ? vs : MenuItem.ViewModels, TransitionInfo);
+                _ = HamburgerMenuFrame.Navigate(_page, vs ?? MenuItem.ViewModels, TransitionInfo);
             }
         }
 
@@ -116,11 +116,14 @@ namespace CoolapkLite
         {
             MenuItem MenuItem = e.ClickedItem as MenuItem;
             HamburgerMenu_Navigate(MenuItem, null);
+            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.CompactInline)
+            {
+                HamburgerMenu.IsPaneOpen = false;
+            }
         }
 
         private void HamburgerMenu_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-
             if (Window.Current.Bounds.Width >= 1008)
             {
                 HamburgerMenu.IsPaneOpen = true;
@@ -138,26 +141,61 @@ namespace CoolapkLite
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
-            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.Overlay)
+            FrameworkElement SearchList = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "SearchList");
+            if (SearchList != null)
             {
-                FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
-                if (AutoSuggestBox != null)
-                {
-                    AutoSuggestBox.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
-                }
+                SearchList.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+            }
+            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
+            if (AutoSuggestBox != null)
+            {
+                AutoSuggestBox.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
         private void MainSplitView_PaneClosing(SplitView sender, SplitViewPaneClosingEventArgs args)
         {
-            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.Overlay)
+            FrameworkElement SearchList = VisualTree.FindDescendantByName(sender, "SearchList");
+            if (SearchList != null && SearchList.Visibility == Visibility.Collapsed)
             {
-                FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName(sender, "AutoSuggestBox");
-                if (AutoSuggestBox != null && AutoSuggestBox.Visibility == Visibility.Visible)
-                {
-                    AutoSuggestBox.Visibility = Visibility.Collapsed;
-                }
+                SearchList.Visibility = Visibility.Visible;
             }
+            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName(sender, "AutoSuggestBox");
+            if (AutoSuggestBox != null && AutoSuggestBox.Visibility == Visibility.Visible)
+            {
+                AutoSuggestBox.Visibility = Visibility.Collapsed;
+            }
+        }
+        
+        private void SearchList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            HamburgerMenu.IsPaneOpen = true;
+            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
+            if (AutoSuggestBox != null)
+            {
+                AutoSuggestBox.Visibility = Visibility.Visible;
+                (sender as FrameworkElement).Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void FrameworkElement_Loaded(object sender, RoutedEventArgs e)
+        {
+            switch((sender as FrameworkElement).Name)
+            {
+                case "SearchList":
+                    (sender as FrameworkElement).Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
+                    break;
+                case "AutoSuggestBox":
+                    (sender as FrameworkElement).Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void FrameworkElement_Loading(FrameworkElement sender, object args)
+        {
+            sender.Margin = new Thickness(0, UIHelper.HasStatusBar ? 0 : 32, 0, 0);
         }
 
         private AppViewBackButtonVisibility TryGoBack()
@@ -252,7 +290,7 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
+                new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = null, ViewModels = new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
                 new MenuItem() { Icon = Symbol.People, Name = loader.GetString("Circle"), PageType = null, Index = 1},
                 new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = null, Index = 2},
                 new MenuItem() { Icon = Symbol.Calendar, Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new ViewModels.HistoryPage.ViewModel("浏览历史"), Index = 3},

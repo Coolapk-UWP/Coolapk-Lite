@@ -132,6 +132,12 @@
   <data name="Home" xml:space="preserve">
     <value>主页</value>
   </data>
+  <data name="Search.Text" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="SearchBox.PlaceholderText" xml:space="preserve">
+    <value>搜索</value>
+  </data>
   <data name="Setting" xml:space="preserve">
     <value>设置</value>
   </data>

@@ -4,6 +4,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
     mc:Ignorable="d"
     d:DesignHeight="80"
     d:DesignWidth="400"
@@ -25,13 +26,20 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-        <Border
+        <Grid
             Grid.ColumnSpan="5"
-            Visibility="Collapsed"
             x:Name="TitleBackground"
             VerticalAlignment="Stretch"
-            HorizontalAlignment="Stretch"
-            Background="{ThemeResource SystemControlPageBackgroundChromeMediumLowBrush}"/>
+            HorizontalAlignment="Stretch">
+            <Border
+                Opacity="0.8"
+                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"/>
+            <Border>
+                <Border.Background>
+                    <media:BackdropBlurBrush Amount="10"/>
+                </Border.Background>
+            </Border>
+        </Grid>
         <Button
             Grid.Column="0"
             x:Name="BackButton"
