@@ -256,7 +256,18 @@ namespace CoolapkLite.Core.Helpers
                 ShowInAppMessage(MessageType.Message, message.ToString());
                 return (false, null);
             }
-            else { return (true, token); }
+            else { return (!string.IsNullOrEmpty(token.ToString()), token); }
+        }
+
+        public static string GetId(JToken token, string _idName)
+        {
+            return token == null
+                ? string.Empty
+                : (token as JObject).TryGetValue(_idName, out JToken jToken)
+                    ? jToken.ToString()
+                    : (token as JObject).TryGetValue("entityId", out JToken v1)
+                                    ? v1.ToString()
+                                    : (token as JObject).TryGetValue("id", out JToken v2) ? v2.ToString() : throw new ArgumentException(nameof(_idName));
         }
     }
 }

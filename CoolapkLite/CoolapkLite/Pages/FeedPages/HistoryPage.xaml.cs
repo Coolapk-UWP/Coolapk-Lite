@@ -27,7 +27,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is ViewModels.HistoryPage.ViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider.DataSource;
+                ListView.ItemsSource = Provider;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {

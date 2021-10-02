@@ -132,6 +132,12 @@
   <data name="Home" xml:space="preserve">
     <value>主页</value>
   </data>
+  <data name="ListView.PullToRefreshContent" xml:space="preserve">
+    <value>下拉刷新</value>
+  </data>
+  <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
+    <value>松手刷新</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>搜索</value>
   </data>

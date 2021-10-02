@@ -44,6 +44,7 @@ namespace CoolapkLite.Controls.DataTemplates
             {
                 case "feed":
                 case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.isFirstPageFeed : FeedDisplayMode.normal);
+                case "history": return new HistoryModel(jo);
                 default:
                     if (jo.TryGetValue("entityTemplate", out JToken entityTemplate)&&!string.IsNullOrEmpty(entityTemplate.ToString()))
                     {

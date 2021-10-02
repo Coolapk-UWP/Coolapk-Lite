@@ -31,6 +31,7 @@
         <controls:PullToRefreshListView
             x:Name="ListView"
             SelectionMode="None"
+            x:Uid="/MainPage/ListView"
             Padding="{x:Bind StackPanelMargin}"
             RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"

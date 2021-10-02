@@ -1,66 +1,110 @@
-﻿using CoolapkLite.Core.Helpers;
+﻿using CoolapkLite.Controls.DataTemplates;
+using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.DataSource;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.DataSource;
 using CoolapkLite.Models;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.HistoryPage
 {
-    internal class ViewModel : IViewModel
+    internal class ViewModel : DataSourceBase<Entity>, IViewModel
     {
-        internal HistoryDS DataSource;
-
-        public double[] VerticalOffsets { get; set; } = new double[1];
         public string Title { get; }
+        public double[] VerticalOffsets { get; set; } = new double[1];
+
+        private readonly UriType _type = UriType.CheckLoginInfo;
+        private string _firstItem, _lastItem;
 
         internal ViewModel(string title)
         {
-            //if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
+            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
+            Title = title;
+            switch (title)
+            {
+                case "我的常去":
+                    _type = UriType.GetUserRecentHistory;
+                    break;
+                case "浏览历史":
+                    _type = UriType.GetUserHistory;
+                    break;
+                default: throw new ArgumentException(nameof(title));
+            }
+            OnLoadMoreStarted += UIHelper.ShowProgressBar;
+            OnLoadMoreCompleted += UIHelper.HideProgressBar;
+        }
 
-            //Title = title;
-            //UriType type = UriType.CheckLoginInfo;
-
-            //switch (title)
-            //{
-            //    case "我的常去":
-            //        type = UriType.GetUserRecentHistory;
-            //        break;
-            //    case "浏览历史":
-            //        type = UriType.GetUserHistory;
-            //        break;
-            //    default: throw new ArgumentException(nameof(title));
-            //}
-
-            //CoolapkListProvider provider;
-            //provider =
-            //        new CoolapkListProvider(
-            //            (p, page, firstItem, lastItem) =>
-            //                UriHelper.GetUri(
-            //                    type,
-            //                    p < 0 ? ++page : p,
-            //                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
-            //                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-            //            (o) => new Entity[] { new HistoryModel(o) },
-            //            "id");
-
-            //DataSource = new HistoryDS(provider);
-            //DataSource.OnLoadMoreStarted += UIHelper.ShowProgressBar;
-            //DataSource.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+        private IEnumerable<Entity> GetEntities(JObject jo)
+        {
+            yield return EntityTemplateSelector.GetEntity(jo);
         }
 
         public async Task Refresh(int p = -1)
         {
             if (p == -2)
             {
-                await DataSource.Refresh();
+                await Reset();
             }
             else if (p == -1)
             {
-                _ = await DataSource.LoadMoreItemsAsync(20);
+                _ = await LoadMoreItemsAsync(20);
+            }
+        }
+
+        protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
+        {
+            List<Entity> Models = new List<Entity>();
+            while (Models.Count < count)
+            {
+                if (Models.Count > 0)
+                {
+                    _currentPage++;
+                }
+                (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(_type, _currentPage, _firstItem, _lastItem), false);
+                if (result.isSucceed)
+                {
+                    JArray array = (JArray)result.result;
+                    if (array.Count < 1) { break; }
+                    if (string.IsNullOrEmpty(_firstItem))
+                    {
+                        _firstItem = Utils.GetId(array.First, "id");
+                    }
+                    _lastItem = Utils.GetId(array.Last, "id");
+                    foreach (JObject item in array)
+                    {
+                        IEnumerable<Entity> entities = GetEntities(item);
+                        if (entities == null) { continue; }
+
+                        foreach (Entity i in entities)
+                        {
+                            if (i == null) { continue; }
+                            Models.Add(i);
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return Models;
+        }
+
+        protected override void AddItems(IList<Entity> items)
+        {
+            if (items != null)
+            {
+                foreach (Entity item in items)
+                {
+                    if (item is NullModel) { continue; }
+                    Add(item);
+                }
             }
         }
     }

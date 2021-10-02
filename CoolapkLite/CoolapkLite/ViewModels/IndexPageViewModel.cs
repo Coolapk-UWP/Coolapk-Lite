@@ -103,7 +103,7 @@ namespace CoolapkLite.ViewModels.IndexPage
                 if (result.isSucceed)
                 {
                     JArray array = (JArray)result.result;
-
+                    if (array.Count < 1) { break; }
                     foreach (JObject item in array)
                     {
                         IEnumerable<Entity> entities = GetEntities(item);
@@ -115,6 +115,10 @@ namespace CoolapkLite.ViewModels.IndexPage
                             Models.Add(i);
                         }
                     }
+                }
+                else
+                {
+                    break;
                 }
             }
             return Models;
