@@ -5,6 +5,17 @@
     xmlns:local="using:CoolapkLite">
     <Application.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="HighContrast">
+                    <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="SystemChromeMediumHighColor">#FFE6E6E6</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
             <x:Double x:Key="PageTitleHeight">80</x:Double>
             <Thickness x:Key="StackPanelMargin">0,80,0,0</Thickness>
             <Style TargetType="Button" x:Key="IconButtonStyle">

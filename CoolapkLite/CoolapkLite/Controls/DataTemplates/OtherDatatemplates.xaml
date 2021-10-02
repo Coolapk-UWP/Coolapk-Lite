@@ -10,7 +10,6 @@
     <DataTemplate x:Key="Null"/>
     <DataTemplate x:Key="History">
         <ListViewItem
-            MaxHeight="105"
             Tag="{Binding Url}"
             Style="{StaticResource FixedListViewItemStyle}">
             <Grid

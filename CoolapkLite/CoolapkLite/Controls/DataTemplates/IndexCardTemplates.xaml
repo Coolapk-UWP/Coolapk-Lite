@@ -9,7 +9,7 @@
     mc:Ignorable="d">
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <DataTemplate x:Key="ImageCard">
-        <ListViewItem>
+        <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -41,7 +41,6 @@
                 </Grid>
                 <FlipView
                     Grid.Row="1"
-                    Margin="-12,0"
                     x:Name="FlipView"
                     Loaded="FlipView_Loaded"
                     Background="Transparent"

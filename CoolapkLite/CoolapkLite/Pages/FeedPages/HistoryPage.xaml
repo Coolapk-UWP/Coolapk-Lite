@@ -24,9 +24,12 @@
         <controls:PullToRefreshListView
             x:Name="ListView"
             SelectionMode="None"
+            x:Uid="/MainPage/ListView"
             Padding="{x:Bind StackPanelMargin}"
             ItemTemplate="{StaticResource History}"
-            RefreshRequested="ListView_RefreshRequested"/>
+            RefreshRequested="ListView_RefreshRequested"
+            ScrollViewer.IsDeferredScrollingEnabled="True"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"/>
         <control:TitleBar
             x:Name="TitleBar"
             BackgroundVisibility="Visible"
