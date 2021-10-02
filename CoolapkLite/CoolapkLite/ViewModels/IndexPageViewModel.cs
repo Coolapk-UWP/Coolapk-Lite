@@ -1,4 +1,4 @@
-﻿using CoolapkLite.Controls.DataTemplate;
+﻿using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
@@ -115,11 +115,6 @@ namespace CoolapkLite.ViewModels.IndexPage
                             Models.Add(i);
                         }
                     }
-                }
-                else
-                {
-                    Models.Add(new NullModel());
-                    break;
                 }
             }
             return Models;

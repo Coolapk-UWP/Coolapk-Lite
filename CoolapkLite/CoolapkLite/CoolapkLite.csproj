@@ -129,12 +129,18 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplate\DatatemplatesDictionary.xaml.cs">
-      <DependentUpon>DatatemplatesDictionary.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\DataTemplate\DataTemplateSelectors.cs" />
-    <Compile Include="Controls\DataTemplate\Feeds.xaml.cs">
+    <Compile Include="Controls\DataTemplates\DataTemplateSelectors.cs" />
+    <Compile Include="Controls\DataTemplates\Feeds.xaml.cs">
       <DependentUpon>Feeds.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataTemplates\IndexCardTemplates.xaml.cs">
+      <DependentUpon>IndexCardTemplates.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
+      <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBlockEx.xaml.cs">
+      <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
@@ -157,7 +163,9 @@
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
     <Compile Include="Models\Feeds\SourceFeedModel.cs" />
     <Compile Include="Models\HistoryModel.cs" />
-    <Compile Include="Models\ImageModel.cs" />
+    <Compile Include="Models\Images\BackgroundImageModel.cs" />
+    <Compile Include="Models\Images\ImageModel.cs" />
+    <Compile Include="Models\IndexPageModel.cs" />
     <Compile Include="Models\Interfaces.cs" />
     <Compile Include="Pages\BrowserPage.xaml.cs">
       <DependentUpon>BrowserPage.xaml</DependentUpon>
@@ -252,13 +260,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\DataTemplate\DatatemplatesDictionary.xaml">
+    <Page Include="Controls\DataTemplates\Feeds.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\DataTemplate\Feeds.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Controls\DataTemplates\IndexCardTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\DataTemplates\OtherDatatemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TextBlockEx.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\TitleBar.xaml">
       <SubType>Designer</SubType>
@@ -294,6 +310,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ksemenenko.ColorThief">
+      <Version>1.1.1.4</Version>
+    </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
     </PackageReference>
@@ -332,6 +351,9 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\MainPage.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\zh-CN\FeedListPage.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

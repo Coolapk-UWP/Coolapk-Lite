@@ -1,22 +1,32 @@
-﻿using CoolapkLite.Helpers;
+﻿using ColorThiefDotNet;
+using CoolapkLite.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
+using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace CoolapkLite.Models
+namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : INotifyPropertyChanged
+    public class BackgroundImageModel : INotifyPropertyChanged
     {
-        private bool isLongPic;
-        private bool isWidePic;
         private WeakReference<BitmapImage> pic;
-        private ImmutableArray<ImageModel> contextArray;
+        private static readonly Windows.UI.Color fallbackColor = Windows.UI.Color.FromArgb(0x99, 0, 0, 0);
+        private static readonly ColorThief thief = new ColorThief();
+        private Windows.UI.Color backgroundColor = fallbackColor;
+
+        public Windows.UI.Color BackgroundColor
+        {
+            get => backgroundColor;
+            private set
+            {
+                backgroundColor = value;
+                RaisePropertyChangedEvent();
+            }
+        }
 
         public BitmapImage Pic
         {
@@ -41,50 +51,21 @@ namespace CoolapkLite.Models
                 else
                 {
                     pic.SetTarget(value);
+                    if (value.UriSource is null)
+                    {
+                        SetBrush();
+                    }
+                    else { BackgroundColor = fallbackColor; }
                 }
                 RaisePropertyChangedEvent();
             }
         }
-
-        public bool IsLongPic
-        {
-            get => isLongPic;
-            private set
-            {
-                isLongPic = value;
-                RaisePropertyChangedEvent();
-            }
-        }
-
-        public bool IsWidePic
-        {
-            get => isWidePic;
-            private set
-            {
-                isWidePic = value;
-                RaisePropertyChangedEvent();
-            }
-        }
-
-        public ImmutableArray<ImageModel> ContextArray
-        {
-            get => contextArray;
-            set
-            {
-                if (contextArray.IsDefaultOrEmpty)
-                {
-                    contextArray = value;
-                }
-            }
-        }
-
-        public bool IsGif { get => Uri.Substring(Uri.LastIndexOf('.')).ToUpperInvariant().Contains("GIF"); }
 
         public string Uri { get; }
 
         public ImageType Type { get; }
 
-        public ImageModel(string uri, ImageType type)
+        public BackgroundImageModel(string uri, ImageType type)
         {
             Uri = uri;
             Type = type;
@@ -130,12 +111,23 @@ namespace CoolapkLite.Models
             BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { return; }
             Pic = bitmapImage;
-            IsLongPic =
-                ((bitmapImage.PixelHeight * Window.Current.Bounds.Width) > bitmapImage.PixelWidth * Window.Current.Bounds.Height * 1.5)
-                && bitmapImage.PixelHeight > bitmapImage.PixelWidth * 1.5;
-            IsWidePic =
-                ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
-                && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
+        }
+
+        private async void SetBrush()
+        {
+            Windows.Storage.StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+            if (file is null) { return; }
+            using (Windows.Storage.Streams.IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+            {
+                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                QuantizedColor color = await thief.GetColor(decoder);
+                BackgroundColor =
+                    Windows.UI.Color.FromArgb(
+                        color.Color.A,
+                        color.Color.R,
+                        color.Color.G,
+                        color.Color.B);
+            }
         }
     }
 }

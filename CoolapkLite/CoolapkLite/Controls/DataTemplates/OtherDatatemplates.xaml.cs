@@ -15,13 +15,13 @@ using Windows.UI.Xaml.Navigation;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
-namespace CoolapkLite.Controls.DataTemplate
+namespace CoolapkLite.Controls.DataTemplates
 {
-    public sealed partial class DatatemplatesDictionary : ResourceDictionary
+    public sealed partial class OtherDatatemplates : ResourceDictionary
     {
-        public DatatemplatesDictionary()
+        public OtherDatatemplates()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

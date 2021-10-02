@@ -133,6 +133,7 @@
     <Compile Include="Exceptions\CoolapkMessageException.cs" />
     <Compile Include="Exceptions\ExceptionHandlingSynchronizationContext.cs" />
     <Compile Include="Exceptions\UserNameErrorException.cs" />
+    <Compile Include="Helpers\HtmlToText.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />

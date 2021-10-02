@@ -5,13 +5,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:CoolapkLite.Controls"
-    xmlns:templates="using:CoolapkLite.Controls.DataTemplate"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:DatatemplatesDictionary/>
+                <templates:OtherDatatemplates/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>

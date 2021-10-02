@@ -154,7 +154,7 @@ namespace CoolapkLite.Core.Helpers
             return $"{num:N2}{str}";
         }
 
-        public static string CSStoMarkDown(string text)
+        public static string CSStoMarkDown(this string text)
         {
             try
             {
@@ -204,17 +204,25 @@ namespace CoolapkLite.Core.Helpers
             }
         }
 
-        public static string CSStoString(string str)
+        public static string CSStoString(this string str)
         {
-            //换行和段落
-            string s = str.Replace("<br>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br/>", "\n").Replace("<p>", "").Replace("</p>", "\n").Replace("&nbsp;", " ").Replace("<br />", "").Replace("<br />", "");
-            //链接彻底删除！
-            while (s.IndexOf("<a", StringComparison.Ordinal) > 0)
+            try
             {
-                s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", "");
-                s = s.Replace("</a>", "");
+                HtmlToText HtmlToText = new HtmlToText();
+                return HtmlToText.Convert(str);
             }
-            return s;
+            catch
+            {
+                //换行和段落
+                string s = str.Replace("<br>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br/>", "\n").Replace("<p>", "").Replace("</p>", "\n").Replace("&nbsp;", " ").Replace("<br />", "").Replace("<br />", "");
+                //链接彻底删除！
+                while (s.IndexOf("<a", StringComparison.Ordinal) > 0)
+                {
+                    s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", "");
+                    s = s.Replace("</a>", "");
+                }
+                return s;
+            }
         }
     }
 

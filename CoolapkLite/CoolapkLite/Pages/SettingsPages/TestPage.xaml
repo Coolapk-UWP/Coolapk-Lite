@@ -119,12 +119,14 @@
                     <StackPanel>
                         <TextBox
                             Margin="0,2"
-                            Header="输入HTML"
+                            Header="输入文本"
                             TextWrapping="Wrap"
                             AcceptsReturn="True"
                             x:Name="UnformattedText"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
+                        <control:TextBlockEx
+                            Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}"/>
                     </StackPanel>
                 </controls:HeaderedContentControl>
             </StackPanel>

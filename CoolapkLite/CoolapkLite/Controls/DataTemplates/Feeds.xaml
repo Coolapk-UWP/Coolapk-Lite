@@ -1,10 +1,10 @@
 ﻿<ResourceDictionary
-    x:Class="CoolapkLite.Controls.DataTemplate.Feeds"
+    x:Class="CoolapkLite.Controls.DataTemplates.Feeds"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
+    xmlns:converter="using:CoolapkLite.Helpers.ValueConverters" xmlns:ctrl="using:CoolapkLite.Controls"
     mc:Ignorable="d">
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <DataTemplate x:Key="Feed">
@@ -12,6 +12,8 @@
             <UserControl>
                 <Grid Padding="8,4">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -73,6 +75,10 @@
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
+                    <ctrl:TextBlockEx
+                        Margin="4"
+                        Grid.Row="3"
+                        Text="{Binding Message}" />
                 </Grid>
             </UserControl>
         </ListViewItem>

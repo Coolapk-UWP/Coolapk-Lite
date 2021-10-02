@@ -5,14 +5,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:control="using:CoolapkLite.Controls"
-    xmlns:templates="using:CoolapkLite.Controls.DataTemplate"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:Feeds/>
+                <templates:IndexCardTemplates/>
+                <templates:OtherDatatemplates/>
             </ResourceDictionary.MergedDictionaries>
+            <templates:CardTemplateSelector
+                x:Key="CardTemplateSelector"
+                Feed="{StaticResource Feed}"
+                Others="{StaticResource Null}"
+                Images="{StaticResource ImageCard}"/>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -25,10 +32,10 @@
             x:Name="ListView"
             SelectionMode="None"
             Padding="{x:Bind StackPanelMargin}"
-            ItemTemplate="{StaticResource Feed}"
             RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ItemTemplateSelector="{StaticResource CardTemplateSelector}"/>
         <control:TitleBar
             x:Name="TitleBar"
             BackgroundVisibility="Visible"
