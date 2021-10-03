@@ -22,6 +22,7 @@ namespace CoolapkLite.ViewModels.IndexPage
         protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
 
         internal bool ShowTitleBar { get; }
+        private readonly CoolapkListProvider Provider;
 
         public string Title { get; protected set; }
         public double[] VerticalOffsets { get; set; } = new double[1];
@@ -30,6 +31,10 @@ namespace CoolapkLite.ViewModels.IndexPage
         {
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;
+            Provider = new CoolapkListProvider(
+                (p, _, _) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", p),
+                GetEntities,
+                "entityId");
         }
 
         public async Task Refresh(int p = -1)
@@ -40,7 +45,7 @@ namespace CoolapkLite.ViewModels.IndexPage
             }
             else if (p == -1)
             {
-                
+                _ = await LoadItemsAsync(20);
             }
         }
 
@@ -95,31 +100,9 @@ namespace CoolapkLite.ViewModels.IndexPage
             List<Entity> Models = new List<Entity>();
             while (Models.Count < count)
             {
-                if (Models.Count > 0)
-                {
-                    _currentPage++;
-                }
-                (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", _currentPage), false);
-                if (result.isSucceed)
-                {
-                    JArray array = (JArray)result.result;
-                    if (array.Count < 1) { break; }
-                    foreach (JObject item in array)
-                    {
-                        IEnumerable<Entity> entities = GetEntities(item);
-                        if (entities == null) { continue; }
-
-                        foreach (Entity i in entities)
-                        {
-                            if (i == null) { continue; }
-                            Models.Add(i);
-                        }
-                    }
-                }
-                else
-                {
-                    break;
-                }
+                if (Models.Count > 0) { _currentPage++; }
+                Models = await Provider.GetEntity(Models, _currentPage);
+                if (Models.Count <= 0) { break; }
             }
             return Models;
         }

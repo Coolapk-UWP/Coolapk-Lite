@@ -306,7 +306,7 @@ namespace CoolapkLite
             {
                 new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
                 new MenuItem() { Icon = Symbol.People, Name = loader.GetString("Circle"), PageType = null, Index = 1},
-                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = null, Index = 2},
+                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = typeof(FeedListPage), Index = 2},
                 new MenuItem() { Icon = Symbol.Calendar, Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new ViewModels.HistoryPage.ViewModel("浏览历史"), Index = 3},
             };
             return items;

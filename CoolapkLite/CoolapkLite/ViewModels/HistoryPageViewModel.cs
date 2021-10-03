@@ -19,8 +19,8 @@ namespace CoolapkLite.ViewModels.HistoryPage
         public string Title { get; }
         public double[] VerticalOffsets { get; set; } = new double[1];
 
+        private readonly CoolapkListProvider Provider;
         private readonly UriType _type = UriType.CheckLoginInfo;
-        private string _firstItem, _lastItem;
 
         internal ViewModel(string title)
         {
@@ -36,6 +36,11 @@ namespace CoolapkLite.ViewModels.HistoryPage
                     break;
                 default: throw new ArgumentException(nameof(title));
             }
+
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) => UriHelper.GetUri(_type, p, firstItem, lastItem),
+                GetEntities,
+                "id");
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)
@@ -60,36 +65,9 @@ namespace CoolapkLite.ViewModels.HistoryPage
             List<Entity> Models = new List<Entity>();
             while (Models.Count < count)
             {
-                if (Models.Count > 0)
-                {
-                    _currentPage++;
-                }
-                (bool isSucceed, JToken result) result = await Utils.GetDataAsync(UriHelper.GetUri(_type, _currentPage, _firstItem, _lastItem), false);
-                if (result.isSucceed)
-                {
-                    JArray array = (JArray)result.result;
-                    if (array.Count < 1) { break; }
-                    if (string.IsNullOrEmpty(_firstItem))
-                    {
-                        _firstItem = Utils.GetId(array.First, "id");
-                    }
-                    _lastItem = Utils.GetId(array.Last, "id");
-                    foreach (JObject item in array)
-                    {
-                        IEnumerable<Entity> entities = GetEntities(item);
-                        if (entities == null) { continue; }
-
-                        foreach (Entity i in entities)
-                        {
-                            if (i == null) { continue; }
-                            Models.Add(i);
-                        }
-                    }
-                }
-                else
-                {
-                    break;
-                }
+                if (Models.Count > 0) { _currentPage++; }
+                Models = await Provider.GetEntity(Models, _currentPage);
+                if (Models.Count <= 0) { break; }
             }
             return Models;
         }
