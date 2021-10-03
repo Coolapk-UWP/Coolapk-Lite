@@ -8,9 +8,7 @@
     mc:Ignorable="d">
     <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     <DataTemplate x:Key="Feed">
-        <ListViewItem
-            HorizontalAlignment="Stretch"
-            Background="{ThemeResource SystemChromeMediumHighColor}">
+        <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
             <UserControl>
                 <Grid Padding="8,4">
                     <Grid.RowDefinitions>
