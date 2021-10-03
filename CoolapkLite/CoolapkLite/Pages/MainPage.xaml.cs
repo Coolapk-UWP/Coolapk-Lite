@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using static CoolapkLite.ViewModels.FeedListPageViewModelBase;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -306,7 +307,7 @@ namespace CoolapkLite
             {
                 new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new ViewModels.IndexPage.ViewModel("/main/indexV8"), Index = 0},
                 new MenuItem() { Icon = Symbol.People, Name = loader.GetString("Circle"), PageType = null, Index = 1},
-                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = typeof(FeedListPage), Index = 2},
+                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Follow"), PageType = typeof(FeedListPage),ViewModels = new UserViewModel("536381"), Index = 2},
                 new MenuItem() { Icon = Symbol.Calendar, Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new ViewModels.HistoryPage.ViewModel("浏览历史"), Index = 3},
             };
             return items;

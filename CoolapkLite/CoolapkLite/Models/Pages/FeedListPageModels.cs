@@ -37,9 +37,14 @@ namespace CoolapkLite.Models.Pages
 
     internal class UserDetail : FeedListDetailBase
     {
+        public string UserName { get; private set; }
+
         internal UserDetail(JObject o) : base(o)
         {
-
+            if (o.TryGetValue("username", out JToken username))
+            {
+                UserName = username.ToString();
+            }
         }
     }
 }

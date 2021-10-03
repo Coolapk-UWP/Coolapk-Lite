@@ -24,17 +24,6 @@ namespace CoolapkLite.Core.Providers
             _idName = string.IsNullOrEmpty(idName) ? throw new ArgumentException($"{nameof(idName)}不能为空") : idName;
         }
 
-        private string GetId(JToken token)
-        {
-            return token == null
-                ? string.Empty
-                : (token as JObject).TryGetValue(_idName, out JToken jToken)
-                    ? jToken.ToString()
-                    : (token as JObject).TryGetValue("entityId", out JToken v1)
-                                    ? v1.ToString()
-                                    : (token as JObject).TryGetValue("id", out JToken v2) ? v2.ToString() : throw new ArgumentException(nameof(_idName));
-        }
-
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
         public async Task<List<Entity>> GetEntity(List<Entity> Models, int p = 1)

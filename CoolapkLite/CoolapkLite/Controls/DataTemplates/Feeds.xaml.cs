@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,9 +20,17 @@ namespace CoolapkLite.Controls.DataTemplates
 {
     public partial class Feeds : ResourceDictionary
     {
-        public Feeds()
+        public Feeds() => InitializeComponent();
+
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            this.InitializeComponent();
+            FrameworkElement element = sender as FrameworkElement;
+            switch (element.Name)
+            {
+                default:
+                    UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    break;
+            }
         }
     }
 }

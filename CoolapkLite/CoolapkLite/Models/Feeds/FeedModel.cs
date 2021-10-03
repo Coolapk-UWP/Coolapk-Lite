@@ -24,6 +24,19 @@ namespace CoolapkLite.Models.Feeds
         public FeedModel(JObject token, FeedDisplayMode mode = FeedDisplayMode.normal) : base(token)
         {
             IsStickTop = token.TryGetValue("isStickTop", out JToken j) && int.Parse(j.ToString()) == 1;
+
+            if (token.TryGetValue("userInfo", out JToken v1))
+            {
+                JObject userInfo = (JObject)v1;
+                if (userInfo.TryGetValue("url", out JToken url))
+                {
+                    Uurl = url.ToString();
+                }
+            }
+            else if (token.TryGetValue("uid", out JToken uid))
+            {
+                Uurl = $"/u/{uid}";
+            }
         }
     }
 }

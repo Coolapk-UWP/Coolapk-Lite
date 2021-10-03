@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels;
+using System;
+using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -222,6 +225,41 @@ namespace CoolapkLite.Helpers
                 default:
                     _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
                     break;
+            }
+        }
+
+        private static readonly ImmutableArray<string> routes = new string[]
+        {
+            "/u/",
+        }.ToImmutableArray();
+
+        private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
+
+        private static string Replace(this string str, int oldText)
+        {
+            return oldText == -1
+                ? str.Replace("https://www.coolapk.com", string.Empty)
+                : oldText == -2
+                    ? str.Replace("http://www.coolapk.com", string.Empty)
+                    : oldText == -3
+                                    ? str.Replace("www.coolapk.com", string.Empty)
+                                    : oldText < 0 ? throw new Exception($"i = {oldText}") : str.Replace(routes[oldText], string.Empty);
+        }
+
+        public static async void OpenLinkAsync(string str)
+        {
+            string rawstr = str;
+            if (string.IsNullOrWhiteSpace(str)) { return; }
+            int i = 0;
+            if (str.IsFirst(i++))
+            {
+                string u = str.Replace(i - 1);
+                string uid = int.TryParse(u, out _) ? u : await Core.Helpers.NetworkHelper.GetUserIDByNameAsync(u);
+                FeedListPageViewModelBase f = FeedListPageViewModelBase.GetProvider(FeedListType.UserPageList, uid);
+                if (f != null)
+                {
+                    Navigate(typeof(FeedListPage), f);
+                }
             }
         }
     }
