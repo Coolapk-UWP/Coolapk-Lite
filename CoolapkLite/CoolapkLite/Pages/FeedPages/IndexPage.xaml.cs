@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -36,6 +37,13 @@ namespace CoolapkLite.Pages.FeedPages
                     TitleBar.Title = Provider.Title;
                 }
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
+            Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
         private async Task Refresh(int p = -1)

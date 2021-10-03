@@ -7,7 +7,8 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
     <Page.Resources>
         <converter:TrueToFalseConverter x:Key="TrueToFalseConverter"/>
         <Style x:Key="HeaderStyle" TargetType="controls:HeaderedContentControl">
@@ -16,7 +17,6 @@
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         </Style>
     </Page.Resources>
-
     <Grid>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
@@ -110,6 +110,26 @@
                                 Tag="OpenEdge"
                                 Click="Button_Click"
                                 Content="打开系统浏览器"/>
+                        </StackPanel>
+                    </StackPanel>
+                </controls:HeaderedContentControl>
+                <controls:HeaderedContentControl
+                    Header="界面测试"
+                    Style="{StaticResource HeaderStyle}">
+                    <StackPanel>
+                        <StackPanel
+                            Margin="0,2"
+                            Orientation="Horizontal">
+                            <Button
+                                Tag="EnterPIP"
+                                Margin="0,0,2,0"
+                                Click="Button_Click"
+                                Content="进入画中画模式"/>
+                            <Button
+                                Margin="2,0"
+                                Tag="OutPIP"
+                                Content="退出"
+                                Click="Button_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </controls:HeaderedContentControl>

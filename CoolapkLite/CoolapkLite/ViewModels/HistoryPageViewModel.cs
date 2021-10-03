@@ -36,8 +36,6 @@ namespace CoolapkLite.ViewModels.HistoryPage
                     break;
                 default: throw new ArgumentException(nameof(title));
             }
-            OnLoadMoreStarted += UIHelper.ShowProgressBar;
-            OnLoadMoreCompleted += UIHelper.HideProgressBar;
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)

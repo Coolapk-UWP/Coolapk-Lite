@@ -16,9 +16,9 @@ namespace CoolapkLite.Helpers
         public const int Duration = 3000;
         public static bool IsShowingProgressBar, IsShowingMessage;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
-
-        public static GridLength HeaderTitleMargin { get; set; }
-        public static double PageTitleHeight => HasStatusBar ? 48 : 80;
+        
+        public static double TitleBarHeight => 32;
+        public static double PageTitleHeight => HasStatusBar ? 48 : 48 + TitleBarHeight;
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
 
         private static CoreDispatcher shellDispatcher;
@@ -173,7 +173,17 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        break;
+                        if (!string.IsNullOrEmpty(MessageList[0]))
+                        {
+                            string messages = $"[{MessageList.Count}]{MessageList[0].Replace("\n", " ")}";
+                            MainPage.AppTitle.Text = message;
+                            await Task.Delay(3000);
+                        }
+                        MessageList.RemoveAt(0);
+                        if (MessageList.Count == 0)
+                        {
+                            MainPage.AppTitle.Text = string.Empty;
+                        }
                     }
                 }
                 IsShowingMessage = false;

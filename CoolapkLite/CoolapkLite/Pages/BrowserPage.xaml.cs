@@ -69,6 +69,12 @@ namespace CoolapkLite.Pages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            WebView.NavigationStarting -= WebView_NavigationStarting;
+        }
+
         private void LoadUri(Uri uri)
         {
             using (Windows.Web.Http.HttpRequestMessage httpRequestMessage = new Windows.Web.Http.HttpRequestMessage(Windows.Web.Http.HttpMethod.Get, uri))

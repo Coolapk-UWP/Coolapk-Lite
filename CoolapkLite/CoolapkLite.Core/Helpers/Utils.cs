@@ -247,6 +247,7 @@ namespace CoolapkLite.Core.Helpers
 
         private static (bool, JToken) GetResult(string json)
         {
+            if(json == null) { return(false, null); }
             JObject o = JObject.Parse(json);
             JToken token = null;
             if (!string.IsNullOrEmpty(json) &&

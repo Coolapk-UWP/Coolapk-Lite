@@ -7,6 +7,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -28,15 +29,23 @@ namespace CoolapkLite
         {
             InitializeComponent();
             UIHelper.MainPage = this;
-            if (Windows.System.Profile.AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop")
-            {
-                Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-            }
+            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+            TitleBar.ExtendViewIntoTitleBar = true;
+            Window.Current.SetTitleBar(CustomTitleBar);
+            UpdateTitleBarLayout(TitleBar);
+            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             UIHelper.CheckTheme();
         }
 
-        private void OnNavigated(object sender, NavigationEventArgs e)
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            base.OnNavigatedFrom(e);
+            SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+            TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
+            TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
+            HamburgerMenuFrame.Navigated -= On_Navigated;
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -195,7 +204,7 @@ namespace CoolapkLite
 
         private void FrameworkElement_Loading(FrameworkElement sender, object args)
         {
-            sender.Margin = new Thickness(0, UIHelper.HasStatusBar ? 0 : 32, 0, 0);
+            sender.Margin = new Thickness(0, UIHelper.HasStatusBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
         }
 
         private AppViewBackButtonVisibility TryGoBack()
@@ -203,15 +212,20 @@ namespace CoolapkLite
             if (!HamburgerMenuFrame.CanGoBack)
             { return AppViewBackButtonVisibility.Disabled; }
 
-            // Don't go back if the nav pane is overlayed.
-            if (HamburgerMenu.IsPaneOpen &&
-                (HamburgerMenu.DisplayMode == SplitViewDisplayMode.Overlay ||
-                 HamburgerMenu.DisplayMode == SplitViewDisplayMode.CompactOverlay))
-            { return AppViewBackButtonVisibility.Disabled; }
-
             HamburgerMenuFrame.GoBack();
             return AppViewBackButtonVisibility.Visible;
         }
+
+        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
+        {
+            Thickness TitleMargin = CustomTitleBar.Margin;
+            CustomTitleBar.Height = TitleBar.Height;
+            CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+        }
+
+        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+
+        private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
         #region 搜索框
         private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)

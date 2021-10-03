@@ -2,6 +2,7 @@
 using System;
 using Windows.ApplicationModel.Resources;
 using Windows.System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -26,6 +27,12 @@ namespace CoolapkLite.Pages.SettingsPages
         {
             switch ((sender as FrameworkElement).Tag as string)
             {
+                case "OutPIP":
+                    _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                    break;
+                case "EnterPIP":
+                    _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
+                    break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
                     break;
@@ -35,7 +42,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    //_ = Frame.Navigate(typeof(BrowserPage), new object[] { WebUrl.Text });
+                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { WebUrl.Text });
                     break;
                 case "ShowAsyncError":
                     //Thread thread = new Thread(() => throw new WFunMessageException(NotifyMessage.Text));

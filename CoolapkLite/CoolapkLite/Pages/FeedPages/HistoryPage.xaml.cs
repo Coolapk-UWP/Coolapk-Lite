@@ -28,12 +28,21 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Provider = ViewModel;
                 ListView.ItemsSource = Provider;
+                Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {
                     TitleBar.Title = Provider.Title;
                 }
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
+            Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
         private async Task Refresh(int p = -1) => await Provider.Refresh(p);

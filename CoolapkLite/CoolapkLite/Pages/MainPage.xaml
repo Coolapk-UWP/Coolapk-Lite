@@ -7,6 +7,7 @@
     xmlns:local="using:CoolapkLite"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
+    NavigationCacheMode="Required"
     Background="{ThemeResource SystemChromeMediumLowColor}">
     <Page.Resources>
         <ResourceDictionary>
@@ -260,6 +261,22 @@
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
+        <Border
+            Canvas.ZIndex="1"
+            Visibility="Visible"
+            x:Name="CustomTitleBar"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left">
+            <TextBlock
+                MaxLines="1"
+                x:Name="AppTitle"
+                Padding="16,0,0,0"
+                x:FieldModifier="public"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Left"
+                TextTrimming="CharacterEllipsis"
+                Style="{StaticResource CaptionTextBlockStyle}"/>
+        </Border>
         <controls:HamburgerMenu
             DisplayMode="Inline"
             x:Name="HamburgerMenu"

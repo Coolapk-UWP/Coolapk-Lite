@@ -69,7 +69,7 @@ namespace CoolapkLite.Controls
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(16) : new GridLength(48);
+            Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(16) : new GridLength(64);
         }
     }
 }
