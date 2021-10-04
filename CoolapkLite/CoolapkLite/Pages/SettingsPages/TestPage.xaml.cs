@@ -42,7 +42,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { WebUrl.Text });
+                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, WebUrl.Text });
                     break;
                 case "ShowAsyncError":
                     //Thread thread = new Thread(() => throw new WFunMessageException(NotifyMessage.Text));

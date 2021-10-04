@@ -149,6 +149,27 @@
                             Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}"/>
                     </StackPanel>
                 </controls:HeaderedContentControl>
+                <Grid
+                        Background="#212121">
+                    <FontIcon
+                        FontSize="900"
+                        Glyph=""/>
+                    <Border
+                        Width="531"
+                        Height="406"
+                        Margin="0,0,90,62"
+                        CornerRadius="90"
+                        BorderBrush="#212121"
+                        Background="#212121"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"/>
+                    <FontIcon
+                        Glyph=""
+                        FontSize="500"
+                        Margin="0,0,90,0"
+                        VerticalAlignment="Bottom"
+                        HorizontalAlignment="Right"/>
+                </Grid>
             </StackPanel>
         </ScrollViewer>
         <control:TitleBar

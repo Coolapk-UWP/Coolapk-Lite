@@ -58,13 +58,15 @@ namespace CoolapkLite.Pages
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Browser");
             object[] vs = e.Parameter as object[];
             IsLoginPage = (bool)vs[0];
-            if (IsLoginPage)
+            if (vs[0] is bool && (bool)vs[0])
             {
+                IsLoginPage = (bool)vs[0];
                 WebView.Navigate(new Uri(loginUri));
             }
-            else if (!string.IsNullOrEmpty(vs[1] as string))
+            else if (vs[1] is string && !string.IsNullOrEmpty(vs[1] as string))
             {
                 uri = vs[1] as string;
+                if (!uri.Contains("://")) { uri = $"https://{uri}"; }
                 WebView.Navigate(new Uri(uri));
             }
         }
