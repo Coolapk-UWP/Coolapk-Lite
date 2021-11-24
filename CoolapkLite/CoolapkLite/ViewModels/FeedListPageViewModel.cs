@@ -9,8 +9,6 @@ using CoolapkLite.Pages.FeedPages;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels
@@ -18,7 +16,7 @@ namespace CoolapkLite.ViewModels
     internal abstract class FeedListPageViewModelBase : DataSourceBase<Entity>, IViewModel
     {
         protected const string idName = "id";
-        private string _firstItem, _lastItem;
+        private readonly string _firstItem, _lastItem;
         private CoolapkListProvider Provider;
 
         public string Id { get; }
@@ -179,7 +177,7 @@ namespace CoolapkLite.ViewModels
             {
                 _ = await LoadMoreItemsAsync(20);
             }
-            if(this[0] is FeedListDetailBase Model)
+            if (this[0] is FeedListDetailBase Model)
             {
                 Title = GetTitleBarText(Model);
             }
@@ -199,7 +197,7 @@ namespace CoolapkLite.ViewModels
                     idName);
             }
 
-            protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
+            protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
             {
                 List<Entity> Models = new List<Entity>();
                 if (_currentPage == 1) { Models.Add(await GetDetail()); }

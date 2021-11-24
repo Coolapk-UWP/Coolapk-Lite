@@ -3,9 +3,6 @@ using CoolapkLite.Core.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Core.Providers
@@ -14,7 +11,7 @@ namespace CoolapkLite.Core.Providers
     {
         private readonly string _idName;
         private string _firstItem, _lastItem;
-        private Func<int, string, string, Uri> _getUri;
+        private readonly Func<int, string, string, Uri> _getUri;
         private readonly Func<JObject, IEnumerable<Entity>> _getEntities;
 
         public CoolapkListProvider(Func<int, string, string, Uri> getUri, Func<JObject, IEnumerable<Entity>> getEntities, string idName)

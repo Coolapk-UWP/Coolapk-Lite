@@ -19,10 +19,12 @@ namespace CoolapkLite.Helpers
         public const int Duration = 3000;
         public static bool IsShowingProgressBar, IsShowingMessage;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
-        
+
         public static double TitleBarHeight => 32;
         public static double PageTitleHeight => HasStatusBar ? 48 : 48 + TitleBarHeight;
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
+        public static Thickness ScrollViewerMargin => new Thickness(0, PageTitleHeight, 0, 0);
+        public static Thickness ScrollViewerPadding => new Thickness(0, -PageTitleHeight, 0, 0);
 
         private static CoreDispatcher shellDispatcher;
         public static CoreDispatcher ShellDispatcher

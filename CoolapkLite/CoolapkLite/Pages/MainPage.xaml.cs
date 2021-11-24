@@ -176,7 +176,7 @@ namespace CoolapkLite
                 AutoSuggestBox.Visibility = Visibility.Collapsed;
             }
         }
-        
+
         private void SearchList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             HamburgerMenu.IsPaneOpen = true;
@@ -190,7 +190,7 @@ namespace CoolapkLite
 
         private void FrameworkElement_Loaded(object sender, RoutedEventArgs e)
         {
-            switch((sender as FrameworkElement).Name)
+            switch ((sender as FrameworkElement).Name)
             {
                 case "SearchList":
                     (sender as FrameworkElement).Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;

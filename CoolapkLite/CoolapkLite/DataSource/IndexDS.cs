@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
-using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.DataSource;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +9,7 @@ namespace CoolapkLite.DataSource
 {
     internal class IndexDS : DataSourceBase<Entity>
     {
-        private CoolapkListProvider _provider;
+        private readonly CoolapkListProvider _provider;
 
         public async Task Refresh()
         {
@@ -22,7 +21,7 @@ namespace CoolapkLite.DataSource
             _provider = provider;
         }
 
-        protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
+        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
             ObservableCollection<Entity> Models = new ObservableCollection<Entity>() /*await _provider.GetEntity(_currentPage)*/;
             return Models;
@@ -32,7 +31,7 @@ namespace CoolapkLite.DataSource
         {
             if (items != null)
             {
-                foreach (var item in items)
+                foreach (Entity item in items)
                 {
                     Add(item);
                 }

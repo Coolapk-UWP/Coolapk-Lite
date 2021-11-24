@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json.Linq;
-using System;
 
 namespace CoolapkLite.Core.Models
 {
@@ -40,7 +39,7 @@ namespace CoolapkLite.Core.Models
 
     public class NullModel : Entity
     {
-        public NullModel(JObject o = null): base(o)
+        public NullModel(JObject o = null) : base(o)
         {
 
         }

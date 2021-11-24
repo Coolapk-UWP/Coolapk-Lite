@@ -1,14 +1,7 @@
 ﻿using CoolapkLite.Core.Helpers;
-using CoolapkLite.Core.Models;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Helpers

@@ -16,6 +16,8 @@ namespace CoolapkLite.Pages.SettingsPages
     public sealed partial class TestPage : Page
     {
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
+        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
+        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         public TestPage()
         {
@@ -37,7 +39,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
                     break;
                 case "ShowError":
-                    //throw new WFunMessageException(NotifyMessage.Text);
+                //throw new WFunMessageException(NotifyMessage.Text);
                 case "ShowMessage":
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;

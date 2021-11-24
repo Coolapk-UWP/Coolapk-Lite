@@ -154,11 +154,8 @@
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Helpers\ValueConverters\BoolToVisibilityConverter.cs" />
     <Compile Include="Helpers\ValueConverters\GetWeakValue.cs" />
-    <Compile Include="Helpers\ValueConverters\HasValueConverter.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
-    <Compile Include="Helpers\ValueConverters\TrueToFalseConverter.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
     <Compile Include="Models\Feeds\SourceFeedModel.cs" />
@@ -326,7 +323,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.12</Version>
+      <Version>6.2.13</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
       <Version>4.0.0</Version>

@@ -2,14 +2,10 @@
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
-using CoolapkLite.DataSource;
-using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.DataSource;
-using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.IndexPage
@@ -95,7 +91,7 @@ namespace CoolapkLite.ViewModels.IndexPage
             yield break;
         }
 
-        protected async override Task<IList<Entity>> LoadItemsAsync(uint count)
+        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
             List<Entity> Models = new List<Entity>();
             while (Models.Count < count)
@@ -113,7 +109,7 @@ namespace CoolapkLite.ViewModels.IndexPage
             {
                 foreach (Entity item in items)
                 {
-                    if(item is NullModel) { continue; }
+                    if (item is NullModel) { continue; }
                     Add(item);
                 }
             }

@@ -1,13 +1,10 @@
 ﻿using Html2Markdown;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Core.Helpers
@@ -34,7 +31,7 @@ namespace CoolapkLite.Core.Helpers
         public static void ShowHttpExceptionMessage(HttpRequestException e)
         {
             if (e.Message.IndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
-            { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message,$"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}")); }
+            { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message, $"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}")); }
             else if (e.Message == "An error occurred while sending the request.") { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message, "无法连接网络。")); }
             else { NeedShowInAppMessageEvent?.Invoke(null, (MessageType.Message, $"请检查网络连接。 {e.Message}")); }
         }
@@ -247,7 +244,7 @@ namespace CoolapkLite.Core.Helpers
 
         private static (bool, JToken) GetResult(string json)
         {
-            if(json == null) { return(false, null); }
+            if (json == null) { return (false, null); }
             JObject o = JObject.Parse(json);
             JToken token = null;
             if (!string.IsNullOrEmpty(json) &&

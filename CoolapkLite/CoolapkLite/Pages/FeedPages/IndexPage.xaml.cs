@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -16,8 +17,6 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class IndexPage : Page
     {
         private ViewModels.IndexPage.ViewModel Provider;
-
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         public IndexPage() => InitializeComponent();
 
@@ -53,6 +52,22 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TitleBar_RefreshEvent(object sender, RoutedEventArgs e) => _ = Refresh(-2);
 
-        private async void ListView_RefreshRequested(object sender, System.EventArgs e) => await Refresh(-2);
+        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(-2);
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
+            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+            if (StackPanel != null)
+            {
+                StackPanel.Margin = UIHelper.StackPanelMargin;
+                StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            }
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
+                ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
+            }
+        }
     }
 }

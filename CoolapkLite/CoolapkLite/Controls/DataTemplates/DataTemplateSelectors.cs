@@ -2,11 +2,6 @@
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static CoolapkLite.Models.Feeds.FeedModel;
@@ -46,7 +41,7 @@ namespace CoolapkLite.Controls.DataTemplates
                 case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.isFirstPageFeed : FeedDisplayMode.normal);
                 case "history": return new HistoryModel(jo);
                 default:
-                    if (jo.TryGetValue("entityTemplate", out JToken entityTemplate)&&!string.IsNullOrEmpty(entityTemplate.ToString()))
+                    if (jo.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))
                     {
                         switch (entityTemplate.ToString())
                         {

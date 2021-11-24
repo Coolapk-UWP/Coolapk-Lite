@@ -1,19 +1,10 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -66,5 +57,20 @@ namespace CoolapkLite.Pages.FeedPages
         private void TitleBar_RefreshEvent(object sender, RoutedEventArgs e) => _ = Refresh(-2);
 
         private async void ListView_RefreshRequested(object sender, System.EventArgs e) => await Refresh(-2);
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
+            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+            if (StackPanel != null)
+            {
+                StackPanel.Margin = UIHelper.StackPanelMargin;
+            }
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
+                ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
+            }
+        }
     }
 }
