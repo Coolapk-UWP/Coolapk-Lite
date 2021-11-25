@@ -123,8 +123,8 @@
   <data name="Circle" xml:space="preserve">
     <value>圈子</value>
   </data>
-  <data name="Follow" xml:space="preserve">
-    <value>关注</value>
+  <data name="Favorite" xml:space="preserve">
+    <value>收藏</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>历史</value>
