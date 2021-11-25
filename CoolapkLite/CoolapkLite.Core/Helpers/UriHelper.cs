@@ -49,6 +49,7 @@ namespace CoolapkLite.Core.Helpers
         GetUserRecentHistory,
         GetUserSpace,
         GetUserProfile,
+        GetUserFollows,
         OperateFollow,
         OperateLike,
         OperateUnfollow,
@@ -141,6 +142,7 @@ namespace CoolapkLite.Core.Helpers
                 case UriType.GetUserRecentHistory: return "/v6/user/recentHistoryList?page={0}{1}{2}";
                 case UriType.GetUserSpace: return "/v6/user/space?uid={0}";
                 case UriType.GetUserProfile: return "/v6/user/profile?uid={0}";
+                case UriType.GetUserFollows: return "/v6/user/{0}?uid={1}&page={2}";
                 case UriType.OperateFollow: return "/v6/user/follow?uid={0}";
                 case UriType.OperateLike: return "/v6/feed/like{0}?id={1}&detail=0";
                 case UriType.OperateUnfollow: return "/v6/user/follow?uid={0}";

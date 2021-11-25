@@ -24,6 +24,11 @@
         </Grid.ChildrenTransitions>
         <ScrollViewer Margin="{x:Bind ScrollViewerMargin}" Padding="{x:Bind ScrollViewerPadding}">
             <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="16,0">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
                 <controls:HeaderedContentControl Header="通知测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <TextBox

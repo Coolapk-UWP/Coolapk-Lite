@@ -27,7 +27,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedListPage : Page
     {
-        private FeedListPageViewModelBase Provider;
+        private FeedListViewModel Provider;
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         public FeedListPage() => InitializeComponent();
@@ -35,7 +35,7 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is FeedListPageViewModelBase ViewModel)
+            if (e.Parameter is FeedListViewModel ViewModel)
             {
                 Provider = ViewModel;
                 ListView.ItemsSource = Provider;

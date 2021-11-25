@@ -257,7 +257,7 @@ namespace CoolapkLite.Helpers
             {
                 string u = str.Replace(i - 1);
                 string uid = int.TryParse(u, out _) ? u : await Core.Helpers.NetworkHelper.GetUserIDByNameAsync(u);
-                FeedListPageViewModelBase f = FeedListPageViewModelBase.GetProvider(FeedListType.UserPageList, uid);
+                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
                 if (f != null)
                 {
                     Navigate(typeof(FeedListPage), f);

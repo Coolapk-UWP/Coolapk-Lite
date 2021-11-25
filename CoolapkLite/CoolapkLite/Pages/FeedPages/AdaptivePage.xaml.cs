@@ -1,8 +1,8 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -14,27 +14,22 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class HistoryPage : Page
+    public sealed partial class AdaptivePage : Page
     {
-        private HistoryViewModel Provider;
+        private AdaptiveViewModel Provider;
 
-        public HistoryPage() => InitializeComponent();
+        public AdaptivePage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
-            if (e.Parameter is HistoryViewModel ViewModel)
+            if (e.Parameter is AdaptiveViewModel ViewModel)
             {
                 Provider = ViewModel;
                 ListView.ItemsSource = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
-                if (!string.IsNullOrEmpty(Provider.Title))
-                {
-                    TitleBar.Title = Provider.Title;
-                }
             }
         }
 
@@ -45,25 +40,17 @@ namespace CoolapkLite.Pages.FeedPages
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
-        private async Task Refresh(int p = -1) => await Provider.Refresh(p);
+        private async Task Refresh(int p = -1)
+        {
+            await Provider.Refresh(p);
+        }
 
-        private void TitleBar_RefreshEvent(object sender, RoutedEventArgs e) => _ = Refresh(-2);
-
-        private async void ListView_RefreshRequested(object sender, System.EventArgs e) => await Refresh(-2);
+        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(-2);
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
             ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
-            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
-            if (StackPanel != null)
-            {
-                StackPanel.Margin = UIHelper.StackPanelMargin;
-            }
-            if (ScrollViewer != null)
-            {
-                ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
-                ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
-            }
+            if (StackPanel != null) { StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch; }
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels
 {
-    internal abstract class FeedListPageViewModelBase : DataSourceBase<Entity>, IViewModel
+    internal abstract class FeedListViewModel : DataSourceBase<Entity>, IViewModel
     {
         protected const string idName = "id";
         private readonly string _firstItem, _lastItem;
@@ -36,7 +36,7 @@ namespace CoolapkLite.ViewModels
 
         public event EventHandler TitleUpdate;
 
-        protected FeedListPageViewModelBase(string id, FeedListType type)
+        protected FeedListViewModel(string id, FeedListType type)
         {
             Id = string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
@@ -44,7 +44,7 @@ namespace CoolapkLite.ViewModels
             ListType = type;
         }
 
-        public static FeedListPageViewModelBase GetProvider(FeedListType type, string id)
+        public static FeedListViewModel GetProvider(FeedListType type, string id)
         {
             if (string.IsNullOrEmpty(id) || id == "0") { return null; }
             switch (type)
@@ -183,7 +183,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        internal class UserViewModel : FeedListPageViewModelBase, ICanComboBoxChangeSelectedIndex
+        internal class UserViewModel : FeedListViewModel, ICanComboBoxChangeSelectedIndex
         {
             public int ComboBoxSelectedIndex { get; private set; }
 
@@ -203,9 +203,10 @@ namespace CoolapkLite.ViewModels
                 if (_currentPage == 1) { Models.Add(await GetDetail()); }
                 while (Models.Count < count)
                 {
+                    int temp = Models.Count;
                     if (Models.Count > 0) { _currentPage++; }
                     Models = await Provider.GetEntity(Models, _currentPage);
-                    if (Models.Count <= 0) { break; }
+                    if (Models.Count <= 0 || Models.Count <= temp) { break; }
                 }
                 return Models;
             }

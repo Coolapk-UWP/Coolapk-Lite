@@ -15,29 +15,33 @@ namespace CoolapkLite.Models
 
         public HistoryModel(JObject o) : base(o)
         {
-            if (o.TryGetValue("id", out JToken v1) && !string.IsNullOrEmpty(v1.ToString()))
+            if (o.TryGetValue("id", out JToken id) && !string.IsNullOrEmpty(id.ToString()))
             {
-                Id = v1.ToString();
+                Id = id.ToString();
             }
-            if (o.TryGetValue("title", out JToken v2) && !string.IsNullOrEmpty(v2.ToString()))
+            if (o.TryGetValue("title", out JToken title) && !string.IsNullOrEmpty(title.ToString()))
             {
-                Title = v2.ToString();
+                Title = title.ToString();
             }
-            if (o.TryGetValue("url", out JToken v3) && !string.IsNullOrEmpty(v3.ToString()))
+            if (o.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
             {
-                Url = v3.ToString();
+                Url = url.ToString();
             }
-            if (o.TryGetValue("description", out JToken v4) && !string.IsNullOrEmpty(v4.ToString()))
+            if (o.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
             {
-                Description = v4.ToString();
+                Description = description.ToString();
             }
-            else if (o.TryGetValue("target_type_title", out JToken v7) && !string.IsNullOrEmpty(v7.ToString()))
+            else if (o.TryGetValue("target_type_title", out JToken target_type_title) && !string.IsNullOrEmpty(target_type_title.ToString()))
             {
-                Description = v7.ToString();
+                Description = target_type_title.ToString();
             }
-            if (o.TryGetValue("logo", out JToken v6) && !string.IsNullOrEmpty(v6.ToString()))
+            else if (o.TryGetValue("dateline", out JToken dateline) && !string.IsNullOrEmpty(dateline.ToString()))
             {
-                Pic = new ImageModel(v6.ToString(), ImageType.Icon);
+                Description = double.Parse(dateline.ToString()).ConvertUnixTimeStampToReadable();
+            }
+            if (o.TryGetValue("logo", out JToken logo) && !string.IsNullOrEmpty(logo.ToString()))
+            {
+                Pic = new ImageModel(logo.ToString(), ImageType.Icon);
             }
         }
     }

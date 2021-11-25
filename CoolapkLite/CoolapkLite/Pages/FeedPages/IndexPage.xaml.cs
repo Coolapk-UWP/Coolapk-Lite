@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class IndexPage : Page
     {
-        private ViewModels.IndexPage.ViewModel Provider;
+        private IndexViewModel Provider;
 
         public IndexPage() => InitializeComponent();
 
@@ -24,7 +25,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             base.OnNavigatedTo(e);
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
-            if (e.Parameter is ViewModels.IndexPage.ViewModel ViewModel)
+            if (e.Parameter is IndexViewModel ViewModel)
             {
                 Provider = ViewModel;
                 ListView.ItemsSource = Provider;

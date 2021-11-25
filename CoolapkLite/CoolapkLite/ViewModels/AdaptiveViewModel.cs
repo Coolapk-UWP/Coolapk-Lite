@@ -8,27 +8,27 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoolapkLite.ViewModels.IndexPage
+namespace CoolapkLite.ViewModels
 {
-    internal class ViewModel : DataSourceBase<Entity>, IViewModel
+    internal class AdaptiveViewModel : DataSourceBase<Entity>, IViewModel
     {
         private readonly string Uri;
+        private readonly List<Type> EntityTypes;
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains("?");
         protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
 
-        internal bool ShowTitleBar { get; }
         private readonly CoolapkListProvider Provider;
 
         public string Title { get; protected set; }
         public double[] VerticalOffsets { get; set; } = new double[1];
 
-        internal ViewModel(string uri, bool showTitleBar = true)
+        internal AdaptiveViewModel(string uri, List<Type> types = null)
         {
             Uri = GetUri(uri);
-            ShowTitleBar = showTitleBar;
+            EntityTypes = types;
             Provider = new CoolapkListProvider(
-                (p, _, _) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsHotFeedPage ? "?" : "&", p),
+                (p, _, _) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
                 GetEntities,
                 "entityId");
         }
@@ -96,9 +96,10 @@ namespace CoolapkLite.ViewModels.IndexPage
             List<Entity> Models = new List<Entity>();
             while (Models.Count < count)
             {
+                int temp = Models.Count;
                 if (Models.Count > 0) { _currentPage++; }
                 Models = await Provider.GetEntity(Models, _currentPage);
-                if (Models.Count <= 0) { break; }
+                if (Models.Count <= 0 || Models.Count <= temp) { break; }
             }
             return Models;
         }
@@ -110,7 +111,7 @@ namespace CoolapkLite.ViewModels.IndexPage
                 foreach (Entity item in items)
                 {
                     if (item is NullModel) { continue; }
-                    Add(item);
+                    if (EntityTypes == null || EntityTypes.Contains(item.GetType())) { Add(item); }
                 }
             }
         }
