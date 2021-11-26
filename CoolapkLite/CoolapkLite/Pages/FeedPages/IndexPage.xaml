@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -32,6 +33,7 @@
         <controls:PullToRefreshListView
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
+            ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"

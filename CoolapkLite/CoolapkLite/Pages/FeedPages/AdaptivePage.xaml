@@ -7,6 +7,7 @@
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -30,6 +31,7 @@
         </Grid.ChildrenTransitions>
         <controls:PullToRefreshListView
             x:Name="ListView"
+            ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             Loaded="ListView_Loaded"
             ScrollViewer.IsDeferredScrollingEnabled="True"

@@ -31,7 +31,7 @@
             Grid.ColumnSpan="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
-            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Opacity="0.8" />
+            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Opacity="0.91" />
             <Border>
                 <Border.Background>
                     <media:BackdropBlurBrush Amount="10" />

@@ -18,7 +18,7 @@ namespace CoolapkLite.ViewModels
         internal FavoriteViewModel()
         {
             Provider = new CoolapkListProvider(
-                (p, _, _) => UriHelper.GetUri(UriType.GetUserFollows, "apkFollowList", string.Empty, p),
+                (p, _, __) => UriHelper.GetUri(UriType.GetUserFollows, "apkFollowList", string.Empty, p),
                 GetEntities,
                 "entityId");
         }

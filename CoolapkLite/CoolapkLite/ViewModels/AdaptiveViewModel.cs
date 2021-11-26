@@ -28,7 +28,7 @@ namespace CoolapkLite.ViewModels
             Uri = GetUri(uri);
             EntityTypes = types;
             Provider = new CoolapkListProvider(
-                (p, _, _) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
+                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
                 GetEntities,
                 "entityId");
         }

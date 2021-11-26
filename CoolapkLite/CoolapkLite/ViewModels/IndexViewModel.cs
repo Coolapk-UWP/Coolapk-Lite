@@ -30,7 +30,7 @@ namespace CoolapkLite.ViewModels
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;
             Provider = new CoolapkListProvider(
-                (p, _, _) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
+                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
                 GetEntities,
                 "entityId");
         }
