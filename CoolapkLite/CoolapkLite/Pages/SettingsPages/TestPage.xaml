@@ -23,7 +23,7 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <ScrollViewer Margin="{x:Bind ScrollViewerMargin}" Padding="{x:Bind ScrollViewerPadding}">
-            <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="16,0">
+            <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="12,0">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <ReorderThemeTransition />
@@ -105,6 +105,7 @@
                 </controls:HeaderedContentControl>
                 <controls:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
+                        <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind IsExtendsTitleBar, Mode=TwoWay}" />
                         <StackPanel Margin="0,2" Orientation="Horizontal">
                             <Button
                                 Margin="0,0,2,0"

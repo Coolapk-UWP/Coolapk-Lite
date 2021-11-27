@@ -34,6 +34,7 @@
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             Loaded="ListView_Loaded"
+            RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectionMode="None" />

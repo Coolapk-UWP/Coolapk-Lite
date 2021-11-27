@@ -263,7 +263,7 @@
             Visibility="Visible">
             <TextBlock
                 x:Name="AppTitle"
-                Padding="16,0,0,0"
+                Padding="12,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 x:FieldModifier="public"
@@ -288,18 +288,6 @@
                     x:Name="HamburgerMenuFrame"
                     x:FieldModifier="Public"
                     Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
-                <Grid Height="80" VerticalAlignment="Top">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition x:Name="RightBlock" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock
-                        x:Name="Header"
-                        Grid.Column="1"
-                        Margin="0,12"
-                        VerticalAlignment="Bottom"
-                        FontSize="18" />
-                </Grid>
             </Grid>
         </controls:HamburgerMenu>
         <ProgressBar

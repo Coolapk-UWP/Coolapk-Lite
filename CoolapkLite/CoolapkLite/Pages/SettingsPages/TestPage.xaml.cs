@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using System;
+using System.ComponentModel;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.System;
 using Windows.UI.ViewManagement;
@@ -13,11 +15,28 @@ namespace CoolapkLite.Pages.SettingsPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class TestPage : Page
+    public sealed partial class TestPage : Page, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
         private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
+
+        internal bool IsExtendsTitleBar
+        {
+            get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+            set
+            {
+                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
+                RaisePropertyChangedEvent();
+            }
+        }
 
         public TestPage()
         {

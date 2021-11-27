@@ -40,6 +40,8 @@ namespace CoolapkLite.Pages.FeedPages
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
+        public void Refresh() => _ = Refresh(-2);
+
         private async Task Refresh(int p = -1)
         {
             await Provider.Refresh(p);

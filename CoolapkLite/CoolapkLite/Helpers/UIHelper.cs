@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
@@ -25,6 +26,7 @@ namespace CoolapkLite.Helpers
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
         public static Thickness ScrollViewerMargin => new Thickness(0, PageTitleHeight, 0, 0);
         public static Thickness ScrollViewerPadding => new Thickness(0, -PageTitleHeight, 0, 0);
+        public static Thickness PivotTitleMargin => new Thickness(0, HasStatusBar ? 0 : TitleBarHeight, 0, 0);
 
         private static CoreDispatcher shellDispatcher;
         public static CoreDispatcher ShellDispatcher
@@ -167,7 +169,7 @@ namespace CoolapkLite.Helpers
                         StatusBar statusBar = StatusBar.GetForCurrentView();
                         if (!string.IsNullOrEmpty(MessageList[0]))
                         {
-                            statusBar.ProgressIndicator.Text = $"[{MessageList.Count}]{MessageList[0].Replace("\n", " ")}";
+                            statusBar.ProgressIndicator.Text = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
                             statusBar.ProgressIndicator.ProgressValue = IsShowingProgressBar ? null : (double?)0;
                             await statusBar.ProgressIndicator.ShowAsync();
                             await Task.Delay(3000);
@@ -180,14 +182,14 @@ namespace CoolapkLite.Helpers
                     {
                         if (!string.IsNullOrEmpty(MessageList[0]))
                         {
-                            string messages = $"[{MessageList.Count}]{MessageList[0].Replace("\n", " ")}";
-                            MainPage.AppTitle.Text = message;
+                            string messages = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
+                            MainPage.AppTitle.Text = messages;
                             await Task.Delay(3000);
                         }
                         MessageList.RemoveAt(0);
                         if (MessageList.Count == 0)
                         {
-                            MainPage.AppTitle.Text = string.Empty;
+                            MainPage.AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ??"酷安 Lite";
                         }
                     }
                 }
