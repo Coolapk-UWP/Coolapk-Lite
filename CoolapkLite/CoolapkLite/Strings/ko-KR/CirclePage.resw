@@ -117,40 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Browser" xml:space="preserve">
-    <value>浏览器</value>
+  <data name="apk" xml:space="preserve">
+    <value>应用</value>
   </data>
-  <data name="Circle" xml:space="preserve">
-    <value>圈子</value>
+  <data name="circle" xml:space="preserve">
+    <value>好友</value>
   </data>
-  <data name="Favorite" xml:space="preserve">
-    <value>收藏</value>
+  <data name="product" xml:space="preserve">
+    <value>数码</value>
   </data>
-  <data name="History" xml:space="preserve">
-    <value>历史</value>
+  <data name="question" xml:space="preserve">
+    <value>问题</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>主页</value>
+  <data name="topic" xml:space="preserve">
+    <value>话题</value>
   </data>
-  <data name="ListView.PullToRefreshContent" xml:space="preserve">
-    <value>下拉刷新</value>
-  </data>
-  <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
-    <value>松手刷新</value>
-  </data>
-  <data name="Search.Text" xml:space="preserve">
-    <value>搜索</value>
-  </data>
-  <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>搜索</value>
-  </data>
-  <data name="Setting" xml:space="preserve">
-    <value>设置</value>
-  </data>
-  <data name="Test" xml:space="preserve">
-    <value>测试</value>
-  </data>
-  <data name="User" xml:space="preserve">
-    <value>用户</value>
+  <data name="V9_HOME_TAB_FOLLOW" xml:space="preserve">
+    <value>全部</value>
   </data>
 </root>
