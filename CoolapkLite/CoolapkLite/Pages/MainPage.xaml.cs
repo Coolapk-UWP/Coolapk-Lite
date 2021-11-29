@@ -117,7 +117,7 @@ namespace CoolapkLite
             Type PreNavPageType = HamburgerMenuFrame.CurrentSourcePageType;
 
             // Only navigate if the selected page isn't currently loaded.
-            if (!(_page is null) && !Equals(PreNavPageType, _page))
+            if (_page is not null && !Equals(PreNavPageType, _page))
             {
                 _ = HamburgerMenuFrame.Navigate(_page, vs ?? MenuItem.ViewModels, TransitionInfo);
             }

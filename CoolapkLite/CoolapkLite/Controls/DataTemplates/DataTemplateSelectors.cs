@@ -13,21 +13,21 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate Feed { get; set; }
         public DataTemplate Images { get; set; }
         public DataTemplate Others { get; set; }
+        public DataTemplate History { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is FeedModel f)
+            switch (item.GetType().Name)
             {
-                return Feed;
+                case "FeedModel": return Feed;
+                case "HistoryModel": return History;
+                case "IndexPageHasEntitiesModel":
+                    switch ((item as IndexPageHasEntitiesModel).EntitiesType)
+                    {
+                        case EntityType.Image: return Images;
+                        default: return Others;
+                    }
+                default: return Others;
             }
-            else if (item is IndexPageHasEntitiesModel m)
-            {
-                switch (m.EntitiesType)
-                {
-                    case EntityType.Image: return Images;
-                    default: return Others;
-                }
-            }
-            return Others;
         }
     }
 

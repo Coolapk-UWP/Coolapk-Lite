@@ -5,6 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
@@ -14,6 +15,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:Feeds />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="Null" />
+            <local:CardTemplateSelector
+                x:Key="CardTemplateSelector"
+                Feed="{StaticResource Feed}"
+                Others="{StaticResource Null}"
+                UserDetail="{StaticResource Null}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -26,7 +33,7 @@
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ItemTemplate="{StaticResource Feed}"
+            ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"

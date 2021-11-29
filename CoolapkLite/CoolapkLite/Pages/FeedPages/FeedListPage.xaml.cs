@@ -1,4 +1,6 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
@@ -70,6 +72,22 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
                 ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
+            }
+        }
+    }
+
+    internal class CardTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate Feed { get; set; }
+        public DataTemplate Others { get; set; }
+        public DataTemplate UserDetail { get; set; }
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            switch (item.GetType().Name)
+            {
+                case "FeedModel": return Feed;
+                case "UserDetail": return UserDetail;
+                default: return Others;
             }
         }
     }
