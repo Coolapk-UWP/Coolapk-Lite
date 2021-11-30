@@ -36,9 +36,9 @@
                                     HorizontalAlignment="Left"
                                     VerticalAlignment="Center"
                                     Fill="{ThemeResource SystemControlForegroundAccentBrush}"
-                                    Opacity="0.0"
                                     RadiusX="1"
-                                    RadiusY="1" />
+                                    RadiusY="1"
+                                    Visibility="Collapsed" />
                                 <ContentPresenter
                                     x:Name="ContentPresenter"
                                     Grid.Column="1"
@@ -50,6 +50,20 @@
                                     ContentTransitions="{TemplateBinding ContentTransitions}" />
                                 <VisualStateManager.VisualStateGroups>
                                     <VisualStateGroup x:Name="PointerStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition
+                                                GeneratedDuration="0:0:0.001"
+                                                From="Selected"
+                                                To="Normal">
+                                                <VisualTransition.Storyboard>
+                                                    <Storyboard>
+                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectionIndicator" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.001" Value="Visible" />
+                                                        </ObjectAnimationUsingKeyFrames>
+                                                    </Storyboard>
+                                                </VisualTransition.Storyboard>
+                                            </VisualTransition>
+                                        </VisualStateGroup.Transitions>
                                         <VisualState x:Name="Normal" />
                                         <VisualState x:Name="Pressed">
                                             <VisualState.Setters>
@@ -59,7 +73,7 @@
                                         </VisualState>
                                         <VisualState x:Name="Selected">
                                             <VisualState.Setters>
-                                                <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                                <Setter Target="SelectionIndicator.Visibility" Value="Visible" />
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="PointerOver">
@@ -70,14 +84,14 @@
                                         </VisualState>
                                         <VisualState x:Name="PressedSelected">
                                             <VisualState.Setters>
-                                                <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                                <Setter Target="SelectionIndicator.Visibility" Value="Visible" />
                                                 <Setter Target="LayoutRoot.Background" Value="{ThemeResource SystemControlHighlightListMediumBrush}" />
                                                 <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                             </VisualState.Setters>
                                         </VisualState>
                                         <VisualState x:Name="PointerOverSelected">
                                             <VisualState.Setters>
-                                                <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                                <Setter Target="SelectionIndicator.Visibility" Value="Visible" />
                                                 <Setter Target="LayoutRoot.Background" Value="{ThemeResource SystemControlHighlightListLowBrush}" />
                                                 <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
                                             </VisualState.Setters>
