@@ -153,6 +153,7 @@
     <Compile Include="Helpers\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
+    <Compile Include="Helpers\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\GetWeakValue.cs" />

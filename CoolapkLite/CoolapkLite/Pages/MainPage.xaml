@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource SystemChromeMediumLowColor}"
@@ -27,17 +28,17 @@
                                 Height="40"
                                 Background="{TemplateBinding Background}"
                                 Control.IsTemplateFocusTarget="True">
-                                <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    <Rectangle
-                                        x:Name="SelectionIndicator"
-                                        Width="2"
-                                        Height="24"
-                                        Margin="4,0"
-                                        Fill="{ThemeResource SystemControlForegroundAccentBrush}"
-                                        Opacity="0.0"
-                                        RadiusX="1"
-                                        RadiusY="1" />
-                                </Grid>
+                                <Rectangle
+                                    x:Name="SelectionIndicator"
+                                    Width="2"
+                                    Height="24"
+                                    Margin="4,0"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Fill="{ThemeResource SystemControlForegroundAccentBrush}"
+                                    Opacity="0.0"
+                                    RadiusX="1"
+                                    RadiusY="1" />
                                 <ContentPresenter
                                     x:Name="ContentPresenter"
                                     Grid.Column="1"
@@ -153,6 +154,7 @@
                                     x:Name="ButtonsListView"
                                     Grid.Row="1"
                                     Width="{TemplateBinding OpenPaneLength}"
+                                    helper:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Menu items"
                                     IsItemClickEnabled="True"
                                     ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
@@ -208,6 +210,7 @@
                                     Width="{TemplateBinding OpenPaneLength}"
                                     Margin="0,20,0,8"
                                     VerticalAlignment="Bottom"
+                                    helper:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Option items"
                                     IsItemClickEnabled="True"
                                     ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
