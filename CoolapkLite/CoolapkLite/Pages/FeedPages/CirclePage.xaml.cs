@@ -1,11 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
 using GalaSoft.MvvmLight.Command;
-using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

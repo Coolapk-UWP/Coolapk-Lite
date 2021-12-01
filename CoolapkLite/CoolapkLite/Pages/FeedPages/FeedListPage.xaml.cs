@@ -1,6 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Feeds;
-using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;

@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -13,10 +11,14 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
 {
+    /// <summary>
+    /// Based on <see cref="Material Libs" href="https://github.com/cnbluefire/MaterialLibs"./>
+    /// </summary>
     public class TipsRectangleHelper : DependencyObject
     {
-        private static Dictionary<string, TipsRectangleServiceItem> TokenRectangles = new Dictionary<string, TipsRectangleServiceItem>();
-        private static Collection<WeakReference<Selector>> Selectors = new Collection<WeakReference<Selector>>();
+        private static readonly Dictionary<string, TipsRectangleServiceItem> TokenRectangles = new Dictionary<string, TipsRectangleServiceItem>();
+        private static readonly Collection<WeakReference<Selector>> Selectors = new Collection<WeakReference<Selector>>();
+        private static readonly Collection<WeakReference<Pivot>> Pivots = new Collection<WeakReference<Pivot>>();
 
         public static string GetToken(FrameworkElement obj)
         {
@@ -44,6 +46,19 @@ namespace CoolapkLite.Helpers
         public static readonly DependencyProperty StateProperty =
             DependencyProperty.RegisterAttached("State", typeof(TipsRectangleServiceStates), typeof(TipsRectangleHelper), new PropertyMetadata(TipsRectangleServiceStates.None, StatePropertyChanged));
 
+        public static TipsRectangleServiceConfig GetConfig(DependencyObject obj)
+        {
+            return (TipsRectangleServiceConfig?)obj.GetValue(ConfigProperty) ?? TipsRectangleServiceConfig.Default;
+        }
+
+        public static void SetConfig(DependencyObject obj, TipsRectangleServiceConfig value)
+        {
+            obj.SetValue(ConfigProperty, value);
+        }
+
+        public static readonly DependencyProperty ConfigProperty =
+            DependencyProperty.RegisterAttached("Config", typeof(TipsRectangleServiceConfig), typeof(TipsRectangleHelper), new PropertyMetadata(null));
+
         public static string GetTipTargetName(DependencyObject obj)
         {
             return (string)obj.GetValue(TipTargetNameProperty);
@@ -61,17 +76,21 @@ namespace CoolapkLite.Helpers
         {
             if ((int)e.NewValue != (int)e.OldValue && e.NewValue != null)
             {
-                var state = (TipsRectangleServiceStates)e.NewValue;
+                TipsRectangleServiceStates state = (TipsRectangleServiceStates)e.NewValue;
                 if (d is FrameworkElement ele)
                 {
-                    var token = GetToken(ele);
+                    string token = GetToken(ele);
+                    TipsRectangleServiceConfig config = GetConfig(ele);
                     if (!string.IsNullOrWhiteSpace(token))
                     {
                         switch (state)
                         {
                             case TipsRectangleServiceStates.None:
                                 {
-                                    if (TokenRectangles.ContainsKey(token)) TokenRectangles.Remove(token);
+                                    if (TokenRectangles.ContainsKey(token))
+                                    {
+                                        TokenRectangles.Remove(token);
+                                    }
                                 }
                                 break;
                             case TipsRectangleServiceStates.From:
@@ -82,7 +101,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].TargetItem != null)
                                     {
-                                        TryStartAnimation(token, ele, TokenRectangles[token].TargetItem);
+                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
@@ -95,7 +114,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].SourceItem != null)
                                     {
-                                        TryStartAnimation(token, TokenRectangles[token].SourceItem, ele);
+                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
@@ -114,7 +133,7 @@ namespace CoolapkLite.Helpers
                 {
                     bool IsIn = false;
                     WeakReference<Selector> weak_tmp = null;
-                    foreach (var item in Selectors)
+                    foreach (WeakReference<Selector> item in Selectors)
                     {
                         if (item.TryGetTarget(out Selector tmp))
                         {
@@ -145,25 +164,64 @@ namespace CoolapkLite.Helpers
                             }
                         }
                     }
-
+                }
+                else if (d is Pivot pivot)
+                {
+                    bool IsIn = false;
+                    WeakReference<Pivot> weak_tmp = null;
+                    foreach (WeakReference<Pivot> item in Pivots)
+                    {
+                        if (item.TryGetTarget(out Pivot tmp))
+                        {
+                            if (tmp == pivot)
+                            {
+                                IsIn = true;
+                                weak_tmp = item;
+                            }
+                        }
+                    }
+                    if (string.IsNullOrEmpty(TargetName))
+                    {
+                        if (IsIn)
+                        {
+                            Pivots.Remove(weak_tmp);
+                            pivot.SelectionChanged -= Pivot_SelectionChanged;
+                        }
+                    }
+                    else
+                    {
+                        if (!IsIn)
+                        {
+                            weak_tmp = new WeakReference<Pivot>(pivot);
+                            Pivots.Add(weak_tmp);
+                            pivot.SelectionChanged += Pivot_SelectionChanged;
+                        }
+                    }
                 }
             }
         }
 
         private static void Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var selector = (Selector)sender;
+            Selector selector = (Selector)sender;
             if (selector is ListViewBase listView)
             {
-                if (listView.SelectionMode == ListViewSelectionMode.None || listView.SelectionMode == ListViewSelectionMode.Multiple) return;
+                if (listView.SelectionMode == ListViewSelectionMode.None || listView.SelectionMode == ListViewSelectionMode.Multiple)
+                {
+                    return;
+                }
             }
             else if (selector is ListBox listBox)
             {
-                if (listBox.SelectionMode == SelectionMode.Multiple) return;
+                if (listBox.SelectionMode == SelectionMode.Multiple)
+                {
+                    return;
+                }
             }
 
-            var name = GetTipTargetName(selector);
-            var token = GetToken(selector);
+            string name = GetTipTargetName(selector);
+            string token = GetToken(selector);
+            TipsRectangleServiceConfig config = GetConfig(selector);
 
             DependencyObject SourceItemContainer = null;
             DependencyObject TargetItemContainer = null;
@@ -172,34 +230,90 @@ namespace CoolapkLite.Helpers
 
             if (e.AddedItems.Count == 1 && e.RemovedItems.Count == 1)
             {
-                var targetItem = e.AddedItems.FirstOrDefault();
+                object targetItem = e.AddedItems.FirstOrDefault();
                 TargetItemContainer = selector.ContainerFromItem(targetItem);
                 TargetItemTips = TargetItemContainer?.FindDescendantByName(name);
 
-                var sourceItem = e.RemovedItems.FirstOrDefault();
+                object sourceItem = e.RemovedItems.FirstOrDefault();
                 SourceItemContainer = selector.ContainerFromItem(sourceItem);
                 SourceItemTips = SourceItemContainer?.FindDescendantByName(name);
             }
             if (SourceItemTips != null && TargetItemTips != null)
             {
-                if (string.IsNullOrWhiteSpace(token)) token = selector.GetHashCode().ToString();
-                TryStartAnimation(token, SourceItemTips, TargetItemTips);
-            }
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    token = selector.GetHashCode().ToString();
+                }
 
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
+            }
         }
 
-        private static void TryStartAnimation(string token, FrameworkElement source, FrameworkElement target)
+        private static void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Pivot pivot = (Pivot)sender;
+
+            string name = GetTipTargetName(pivot);
+            string token = GetToken(pivot);
+            TipsRectangleServiceConfig config = GetConfig(pivot);
+
+            DependencyObject SourceItemContainer = null;
+            DependencyObject TargetItemContainer = null;
+            FrameworkElement SourceItemTips = null;
+            FrameworkElement TargetItemTips = null;
+
+            if (e.AddedItems.Count == 1 && e.RemovedItems.Count == 1)
+            {
+                object targetItem = e.AddedItems.FirstOrDefault();
+                TargetItemContainer = pivot.ContainerFromItem(targetItem);
+                if (TargetItemContainer == null) { return; }
+                UIElementCollection targetItemHeaders = pivot?.FindDescendant<PivotHeaderPanel>().Children;
+                foreach (UIElement header in targetItemHeaders)
+                {
+                    if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (TargetItemContainer as PivotItem).Header.ToString())
+                    {
+                        TargetItemTips = item?.FindDescendantByName(name);
+                        break;
+                    }
+                }
+
+                object sourceItem = e.RemovedItems.FirstOrDefault();
+                SourceItemContainer = pivot.ContainerFromItem(sourceItem);
+                if (SourceItemContainer == null) { return; }
+                UIElementCollection sourceItemHeaders = pivot?.FindDescendant<PivotHeaderPanel>().Children;
+                foreach (UIElement header in sourceItemHeaders)
+                {
+                    if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (SourceItemContainer as PivotItem).Header.ToString())
+                    {
+                        SourceItemTips = item?.FindDescendantByName(name);
+                        break;
+                    }
+                }
+            }
+            if (SourceItemTips != null && TargetItemTips != null)
+            {
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    token = pivot.GetHashCode().ToString();
+                }
+
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
+            }
+        }
+
+        private static void TryStartAnimation(string token, TipsRectangleServiceConfig config, FrameworkElement source, FrameworkElement target)
         {
             try
             {
                 if (source.ActualHeight > 0 && source.ActualWidth > 0)
                 {
-                    var service = ConnectedAnimationService.GetForCurrentView();
+                    ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
                     if (source != target)
                     {
                         service.GetAnimation(token)?.Cancel();
                         service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
-                        var animation = service.PrepareToAnimate(token, source);
+                        ConnectedAnimation animation = service.PrepareToAnimate(token, source);
+                        animation.Configuration = GetConfiguration(config);
                         animation.TryStart(target);
                     }
                 }
@@ -208,6 +322,22 @@ namespace CoolapkLite.Helpers
             {
                 Debug.WriteLine(ex.Message);
                 Debug.WriteLine(ex.StackTrace);
+            }
+        }
+
+        private static ConnectedAnimationConfiguration GetConfiguration(TipsRectangleServiceConfig selectedName)
+        {
+            switch (selectedName)
+            {
+                case TipsRectangleServiceConfig.Gravity:
+                    return new GravityConnectedAnimationConfiguration();
+                case TipsRectangleServiceConfig.Direct:
+                    return new DirectConnectedAnimationConfiguration();
+                case TipsRectangleServiceConfig.Basic:
+                    return new BasicConnectedAnimationConfiguration();
+                case TipsRectangleServiceConfig.Default:
+                default:
+                    return new BasicConnectedAnimationConfiguration();
             }
         }
     }
@@ -226,5 +356,10 @@ namespace CoolapkLite.Helpers
     public enum TipsRectangleServiceStates
     {
         None, From, To
+    }
+
+    public enum TipsRectangleServiceConfig
+    {
+        Default, Gravity, Direct, Basic
     }
 }

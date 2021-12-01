@@ -189,7 +189,7 @@ namespace CoolapkLite.Helpers
                         MessageList.RemoveAt(0);
                         if (MessageList.Count == 0)
                         {
-                            MainPage.AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ??"酷安 Lite";
+                            MainPage.AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
                         }
                     }
                 }
