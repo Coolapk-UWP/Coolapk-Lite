@@ -307,14 +307,20 @@ namespace CoolapkLite.Helpers
             {
                 if (source.ActualHeight > 0 && source.ActualWidth > 0)
                 {
-                    ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
-                    if (source != target)
+                    if (SettingsHelper.WindowsVersion >= 14332)
                     {
-                        service.GetAnimation(token)?.Cancel();
-                        service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
-                        ConnectedAnimation animation = service.PrepareToAnimate(token, source);
-                        animation.Configuration = GetConfiguration(config);
-                        animation.TryStart(target);
+                        ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
+                        if (source != target)
+                        {
+                            service.GetAnimation(token)?.Cancel();
+                            service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
+                            ConnectedAnimation animation = service.PrepareToAnimate(token, source);
+                            if (SettingsHelper.WindowsVersion >= 17677)
+                            {
+                                animation.Configuration = GetConfiguration(config);
+                            }
+                            animation.TryStart(target);
+                        }
                     }
                 }
             }
