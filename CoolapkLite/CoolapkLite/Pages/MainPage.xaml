@@ -12,6 +12,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <local:DisplayModeToBool x:Key="DisplayModeToBool"/>
             <Style x:Key="HamburgerMenuItemStyle" TargetType="ListViewItem">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="MinHeight" Value="0" />
@@ -168,6 +169,7 @@
                                     x:Name="ButtonsListView"
                                     Grid.Row="1"
                                     Width="{TemplateBinding OpenPaneLength}"
+                                    helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Menu items"
                                     IsItemClickEnabled="True"

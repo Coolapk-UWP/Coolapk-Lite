@@ -32,6 +32,19 @@ namespace CoolapkLite.Helpers
 
         public static readonly DependencyProperty TokenProperty =
             DependencyProperty.RegisterAttached("Token", typeof(string), typeof(TipsRectangleHelper), new PropertyMetadata(null));
+        
+        public static bool GetIsEnable(FrameworkElement obj)
+        {
+            return (bool)obj.GetValue(IsEnableProperty);
+        }
+
+        public static void SetIsEnable(FrameworkElement obj, bool value)
+        {
+            obj.SetValue(IsEnableProperty, value);
+        }
+
+        public static readonly DependencyProperty IsEnableProperty =
+            DependencyProperty.RegisterAttached("IsEnable", typeof(bool), typeof(TipsRectangleHelper), new PropertyMetadata(true));
 
         public static TipsRectangleServiceStates GetState(FrameworkElement obj)
         {
@@ -48,7 +61,7 @@ namespace CoolapkLite.Helpers
 
         public static TipsRectangleServiceConfig GetConfig(DependencyObject obj)
         {
-            return (TipsRectangleServiceConfig?)obj.GetValue(ConfigProperty) ?? TipsRectangleServiceConfig.Default;
+            return (TipsRectangleServiceConfig)obj.GetValue(ConfigProperty);
         }
 
         public static void SetConfig(DependencyObject obj, TipsRectangleServiceConfig value)
@@ -57,7 +70,7 @@ namespace CoolapkLite.Helpers
         }
 
         public static readonly DependencyProperty ConfigProperty =
-            DependencyProperty.RegisterAttached("Config", typeof(TipsRectangleServiceConfig), typeof(TipsRectangleHelper), new PropertyMetadata(null));
+            DependencyProperty.RegisterAttached("Config", typeof(TipsRectangleServiceConfig), typeof(TipsRectangleHelper), new PropertyMetadata(TipsRectangleServiceConfig.Default));
 
         public static string GetTipTargetName(DependencyObject obj)
         {
@@ -80,6 +93,7 @@ namespace CoolapkLite.Helpers
                 if (d is FrameworkElement ele)
                 {
                     string token = GetToken(ele);
+                    bool isenable = GetIsEnable(ele);
                     TipsRectangleServiceConfig config = GetConfig(ele);
                     if (!string.IsNullOrWhiteSpace(token))
                     {
@@ -101,7 +115,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].TargetItem != null)
                                     {
-                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem);
+                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem, isenable);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
@@ -114,7 +128,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].SourceItem != null)
                                     {
-                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele);
+                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele, isenable);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
@@ -221,6 +235,7 @@ namespace CoolapkLite.Helpers
 
             string name = GetTipTargetName(selector);
             string token = GetToken(selector);
+            bool isenable = GetIsEnable(selector);
             TipsRectangleServiceConfig config = GetConfig(selector);
 
             DependencyObject SourceItemContainer = null;
@@ -245,7 +260,7 @@ namespace CoolapkLite.Helpers
                     token = selector.GetHashCode().ToString();
                 }
 
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips, isenable);
             }
         }
 
@@ -255,6 +270,7 @@ namespace CoolapkLite.Helpers
 
             string name = GetTipTargetName(pivot);
             string token = GetToken(pivot);
+            bool isenable = GetIsEnable(pivot);
             TipsRectangleServiceConfig config = GetConfig(pivot);
 
             DependencyObject SourceItemContainer = null;
@@ -297,15 +313,15 @@ namespace CoolapkLite.Helpers
                     token = pivot.GetHashCode().ToString();
                 }
 
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips, isenable);
             }
         }
 
-        private static void TryStartAnimation(string token, TipsRectangleServiceConfig config, FrameworkElement source, FrameworkElement target)
+        private static void TryStartAnimation(string token, TipsRectangleServiceConfig config, FrameworkElement source, FrameworkElement target, bool isenable = true)
         {
             try
             {
-                if (source.ActualHeight > 0 && source.ActualWidth > 0)
+                if (isenable && source.ActualHeight > 0 && source.ActualWidth > 0)
                 {
                     if (SettingsHelper.WindowsVersion >= 14332)
                     {

@@ -8,11 +8,13 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -323,5 +325,21 @@ namespace CoolapkLite
             };
             return items;
         }
+    }
+
+    public class DisplayModeToBool : IValueConverter
+    {
+        private bool IsEnableConnectAnimation = SettingsHelper.WindowsVersion < 14332 && SettingsHelper.WindowsVersion >= 17677;
+
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (IsEnableConnectAnimation && value is SplitViewDisplayMode split && parameter is string mode)
+            {
+                return !(split.ToString() == mode);
+            }
+            return IsEnableConnectAnimation;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
     }
 }
