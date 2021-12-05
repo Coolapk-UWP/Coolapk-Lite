@@ -102,7 +102,7 @@
                                 Tag="OpenEdge" />
                         </StackPanel>
                         <Button
-                            Margin="2,0"
+                            Margin="0,2"
                             Click="Button_Click"
                             Content="获取内容"
                             Tag="GetContent" />
