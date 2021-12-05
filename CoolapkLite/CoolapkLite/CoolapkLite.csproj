@@ -167,6 +167,7 @@
     <Compile Include="Models\IndexPageModel.cs" />
     <Compile Include="Models\Interfaces.cs" />
     <Compile Include="Models\Pages\FeedListPageModels.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Pages\BrowserPage.xaml.cs">
       <DependentUpon>BrowserPage.xaml</DependentUpon>
     </Compile>

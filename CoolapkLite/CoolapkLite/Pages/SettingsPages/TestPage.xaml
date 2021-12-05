@@ -101,6 +101,11 @@
                                 Content="打开系统浏览器"
                                 Tag="OpenEdge" />
                         </StackPanel>
+                        <Button
+                            Margin="2,0"
+                            Click="Button_Click"
+                            Content="获取内容"
+                            Tag="GetContent" />
                     </StackPanel>
                 </controls:HeaderedContentControl>
                 <controls:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">

@@ -238,7 +238,7 @@ namespace CoolapkLite.Core.Helpers
             }
         }
 
-        public static string ExpandShortUrl(Uri ShortUrl)
+        public static string ExpandShortUrl(this Uri ShortUrl)
         {
             string NativeUrl = null;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ShortUrl);
@@ -250,6 +250,19 @@ namespace CoolapkLite.Core.Helpers
                 { NativeUrl = res.Headers["Location"]; }
             }
             return NativeUrl ?? ShortUrl.ToString();
+        }
+
+        public static Uri ValidateAndGetUri(this string uriString)
+        {
+            Uri uri = null;
+            try
+            {
+                uri = new Uri(uriString);
+            }
+            catch (FormatException)
+            {
+            }
+            return uri;
         }
     }
 }

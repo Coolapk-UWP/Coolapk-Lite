@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Helpers;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
@@ -44,7 +45,7 @@ namespace CoolapkLite.Pages.SettingsPages
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             switch ((sender as FrameworkElement).Tag as string)
             {
@@ -58,7 +59,35 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
                     break;
                 case "ShowError":
-                //throw new WFunMessageException(NotifyMessage.Text);
+                    //throw new WFunMessageException(NotifyMessage.Text);
+                    break;
+                case "GetContent":
+                    Uri uri = WebUrl.Text.ValidateAndGetUri();
+                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await Utils.GetStringAsync(uri, false);
+                    if (!isSucceed)
+                    {
+                        result = "网络错误";
+                    }
+                    ContentDialog GetJsonDialog = new ContentDialog
+                    {
+                        Title = WebUrl.Text,
+                        Content = new ScrollViewer
+                        {
+                            Content = new TextBlock
+                            {
+                                IsTextSelectionEnabled = true,
+                                Text = result.ConvertJsonString()
+                            },
+                            VerticalScrollMode = ScrollMode.Enabled,
+                            HorizontalScrollMode = ScrollMode.Enabled,
+                            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                        },
+                        CloseButtonText = "好的",
+                        DefaultButton = ContentDialogButton.Close
+                    };
+                    _ = await GetJsonDialog.ShowAsync();
+                    break;
                 case "ShowMessage":
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
