@@ -70,7 +70,7 @@ namespace CoolapkLite.Models.Feeds
                 DeviceTitle = device_title.ToString();
             }
 
-            if (token.TryGetValue("userAvatar", out JToken userAvatar) && !string.IsNullOrEmpty(userAvatar.ToString()))
+            if (token.TryGetValue("userAvatar", out JToken userAvatar))
             {
                 UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.SmallAvatar);
             }

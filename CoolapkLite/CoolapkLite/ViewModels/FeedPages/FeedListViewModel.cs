@@ -1,9 +1,9 @@
 ﻿using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Core.Helpers;
+using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.DataSource;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
 using Newtonsoft.Json.Linq;
@@ -11,12 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoolapkLite.ViewModels
+namespace CoolapkLite.ViewModels.FeedPages
 {
     internal abstract class FeedListViewModel : DataSourceBase<Entity>, IViewModel
     {
         protected const string idName = "id";
-        private readonly string _firstItem, _lastItem;
         private CoolapkListProvider Provider;
 
         public string Id { get; }
@@ -205,7 +204,7 @@ namespace CoolapkLite.ViewModels
                 {
                     int temp = Models.Count;
                     if (Models.Count > 0) { _currentPage++; }
-                    Models = await Provider.GetEntity(Models, _currentPage);
+                    await Provider.GetEntity(Models, _currentPage);
                     if (Models.Count <= 0 || Models.Count <= temp) { break; }
                 }
                 return Models;

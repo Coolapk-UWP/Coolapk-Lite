@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.FeedPages;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Resources;

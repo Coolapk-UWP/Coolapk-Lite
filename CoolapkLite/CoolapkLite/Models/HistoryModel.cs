@@ -5,43 +5,42 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class HistoryModel : Entity
+    public class HistoryModel : Entity, IListWithSubtitle
     {
-        public string Title { get; private set; }
         public string Url { get; private set; }
+        public string Title { get; private set; }
+        public string SubTitle { get; private set; }
         public string Description { get; private set; }
-        public ImageModel Pic { get; private set; }
-        public string Id { get; private set; }
+        public BackgroundImageModel Pic { get; private set; }
 
-        public HistoryModel(JObject o) : base(o)
+        public HistoryModel(JObject token) : base(token)
         {
-            if (o.TryGetValue("id", out JToken id) && !string.IsNullOrEmpty(id.ToString()))
-            {
-                Id = id.ToString();
-            }
-            if (o.TryGetValue("title", out JToken title) && !string.IsNullOrEmpty(title.ToString()))
+            if (token.TryGetValue("title", out JToken title))
             {
                 Title = title.ToString();
             }
-            if (o.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
+
+            if (token.TryGetValue("url", out JToken url))
             {
                 Url = url.ToString();
             }
-            if (o.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
+
+            if (token.TryGetValue("description", out JToken description))
             {
                 Description = description.ToString();
             }
-            else if (o.TryGetValue("target_type_title", out JToken target_type_title) && !string.IsNullOrEmpty(target_type_title.ToString()))
+            else if (token.TryGetValue("target_type_title", out JToken target_type_title) && !string.IsNullOrEmpty(target_type_title.ToString()))
             {
                 Description = target_type_title.ToString();
             }
-            else if (o.TryGetValue("dateline", out JToken dateline) && !string.IsNullOrEmpty(dateline.ToString()))
+            else if (token.TryGetValue("dateline", out JToken dateline))
             {
                 Description = double.Parse(dateline.ToString()).ConvertUnixTimeStampToReadable();
             }
-            if (o.TryGetValue("logo", out JToken logo) && !string.IsNullOrEmpty(logo.ToString()))
+
+            if (token.TryGetValue("logo", out JToken logo))
             {
-                Pic = new ImageModel(logo.ToString(), ImageType.Icon);
+                Pic = new BackgroundImageModel(logo.ToString(), ImageType.Icon);
             }
         }
     }

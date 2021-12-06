@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CoolapkLite.Helpers.DataSource
+namespace CoolapkLite.Core.Helpers.DataSource
 {
     public delegate void OnDataRequestError(int code);
 

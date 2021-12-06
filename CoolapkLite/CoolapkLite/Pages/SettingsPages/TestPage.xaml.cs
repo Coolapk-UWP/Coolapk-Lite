@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Pages.ToolPages;
+using CoolapkLite.ViewModels.ToolPages;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
@@ -8,8 +10,6 @@ using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
-using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -121,6 +121,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         UIHelper.ShowProgressBar();
                     }
+                    break;
+                case "GoToFansAnalyzePage":
+                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("2315244"));
                     break;
                 default:
                     break;

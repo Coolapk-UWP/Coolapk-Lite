@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml.Data;
 
-namespace CoolapkLite.Helpers.DataSource
+namespace CoolapkLite.Core.Helpers.DataSource
 {
     /// <summary>
     /// A incremental loading class base on the data binding sample on

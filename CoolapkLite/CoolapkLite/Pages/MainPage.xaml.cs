@@ -2,13 +2,12 @@
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
-using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
@@ -257,6 +256,15 @@ namespace CoolapkLite
             ProgressBar.ShowPaused = false;
         }
 
+        public void ShowProgressBar(double value)
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.Value = value;
+        }
+
         public void PausedProgressBar()
         {
             ProgressBar.Visibility = Visibility.Visible;
@@ -279,6 +287,7 @@ namespace CoolapkLite
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
             ProgressBar.ShowPaused = false;
+            ProgressBar.Value = 0;
         }
         #endregion
     }
@@ -329,7 +338,7 @@ namespace CoolapkLite
 
     public class DisplayModeToBool : IValueConverter
     {
-        private bool IsEnableConnectAnimation = SettingsHelper.WindowsVersion < 14332 && SettingsHelper.WindowsVersion >= 17677;
+        private readonly bool IsEnableConnectAnimation = SettingsHelper.WindowsVersion < 14332 && SettingsHelper.WindowsVersion >= 17677;
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {

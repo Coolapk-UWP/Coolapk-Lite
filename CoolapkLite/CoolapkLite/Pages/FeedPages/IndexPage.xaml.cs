@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Threading.Tasks;

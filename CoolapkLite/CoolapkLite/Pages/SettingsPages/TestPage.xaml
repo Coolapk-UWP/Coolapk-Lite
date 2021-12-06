@@ -123,6 +123,11 @@
                                 Content="退出"
                                 Tag="OutPIP" />
                         </StackPanel>
+                        <Button
+                            Margin="0,2"
+                            Click="Button_Click"
+                            Content="前往粉丝分析页面"
+                            Tag="GoToFansAnalyzePage" />
                     </StackPanel>
                 </controls:HeaderedContentControl>
                 <controls:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">

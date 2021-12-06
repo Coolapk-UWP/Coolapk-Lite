@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -100,10 +100,9 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        /// <summary>
-        /// 显示进度条-正常
-        /// </summary>
-        public static async void ShowProgressBar(uint count = 0)
+        public static void ShowProgressBar(uint _) => ShowProgressBar();
+
+        public static async void ShowProgressBar()
         {
             IsShowingProgressBar = true;
             if (HasStatusBar)
@@ -117,9 +116,20 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        /// <summary>
-        /// 显示进度条-暂停
-        /// </summary>
+        public static async void ShowProgressBar(double value = 0)
+        {
+            IsShowingProgressBar = true;
+            if (HasStatusBar)
+            {
+                StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
+                await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+            }
+            else
+            {
+                MainPage?.ShowProgressBar(value);
+            }
+        }
+
         public static async void PausedProgressBar()
         {
             IsShowingProgressBar = true;
@@ -130,9 +140,6 @@ namespace CoolapkLite.Helpers
             MainPage?.PausedProgressBar();
         }
 
-        /// <summary>
-        /// 显示进度条-错误
-        /// </summary>
         public static async void ErrorProgressBar()
         {
             IsShowingProgressBar = true;
@@ -143,10 +150,7 @@ namespace CoolapkLite.Helpers
             MainPage?.ErrorProgressBar();
         }
 
-        /// <summary>
-        /// 隐藏进度条
-        /// </summary>
-        public static async void HideProgressBar(int count = 0)
+        public static async void HideProgressBar(int _ = 0)
         {
             IsShowingProgressBar = false;
             if (HasStatusBar)

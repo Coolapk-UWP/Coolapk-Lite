@@ -32,10 +32,10 @@ namespace CoolapkLite.Helpers
 
         public static readonly DependencyProperty TokenProperty =
             DependencyProperty.RegisterAttached("Token", typeof(string), typeof(TipsRectangleHelper), new PropertyMetadata(null));
-        
+
         public static bool GetIsEnable(FrameworkElement obj)
         {
-            return (bool)obj.GetValue(IsEnableProperty);
+            return SettingsHelper.WindowsVersion >= 14332 && (bool)obj.GetValue(IsEnableProperty);
         }
 
         public static void SetIsEnable(FrameworkElement obj, bool value)
@@ -218,6 +218,7 @@ namespace CoolapkLite.Helpers
         private static void Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Selector selector = (Selector)sender;
+            if (!GetIsEnable(selector)) { return; }
             if (selector is ListViewBase listView)
             {
                 if (listView.SelectionMode == ListViewSelectionMode.None || listView.SelectionMode == ListViewSelectionMode.Multiple)
@@ -235,7 +236,6 @@ namespace CoolapkLite.Helpers
 
             string name = GetTipTargetName(selector);
             string token = GetToken(selector);
-            bool isenable = GetIsEnable(selector);
             TipsRectangleServiceConfig config = GetConfig(selector);
 
             DependencyObject SourceItemContainer = null;
@@ -260,17 +260,17 @@ namespace CoolapkLite.Helpers
                     token = selector.GetHashCode().ToString();
                 }
 
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips, isenable);
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
             }
         }
 
         private static void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Pivot pivot = (Pivot)sender;
+            if (!GetIsEnable(pivot)) { return; }
 
             string name = GetTipTargetName(pivot);
             string token = GetToken(pivot);
-            bool isenable = GetIsEnable(pivot);
             TipsRectangleServiceConfig config = GetConfig(pivot);
 
             DependencyObject SourceItemContainer = null;
@@ -313,7 +313,7 @@ namespace CoolapkLite.Helpers
                     token = pivot.GetHashCode().ToString();
                 }
 
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips, isenable);
+                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
             }
         }
 
@@ -323,20 +323,17 @@ namespace CoolapkLite.Helpers
             {
                 if (isenable && source.ActualHeight > 0 && source.ActualWidth > 0)
                 {
-                    if (SettingsHelper.WindowsVersion >= 14332)
+                    ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
+                    if (source != target)
                     {
-                        ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
-                        if (source != target)
+                        service.GetAnimation(token)?.Cancel();
+                        service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
+                        ConnectedAnimation animation = service.PrepareToAnimate(token, source);
+                        if (SettingsHelper.WindowsVersion >= 17677)
                         {
-                            service.GetAnimation(token)?.Cancel();
-                            service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
-                            ConnectedAnimation animation = service.PrepareToAnimate(token, source);
-                            if (SettingsHelper.WindowsVersion >= 17677)
-                            {
-                                animation.Configuration = GetConfiguration(config);
-                            }
-                            animation.TryStart(target);
+                            animation.Configuration = GetConfiguration(config);
                         }
+                        animation.TryStart(target);
                     }
                 }
             }

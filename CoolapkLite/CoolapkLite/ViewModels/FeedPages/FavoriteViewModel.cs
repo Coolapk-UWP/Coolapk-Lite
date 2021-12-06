@@ -1,47 +1,33 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
-using CoolapkLite.Helpers.DataSource;
 using CoolapkLite.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CoolapkLite.ViewModels
+namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class HistoryViewModel : DataSourceBase<Entity>, IViewModel
+    internal class FavoriteViewModel : DataSourceBase<Entity>, IViewModel
     {
         public string Title { get; }
         public double[] VerticalOffsets { get; set; } = new double[1];
 
-        private readonly CoolapkListProvider Provider;
-        private readonly UriType _type = UriType.CheckLoginInfo;
-
-        internal HistoryViewModel(string title)
+        internal FavoriteViewModel()
         {
-            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
-            Title = title;
-            switch (title)
-            {
-                case "我的常去":
-                    _type = UriType.GetUserRecentHistory;
-                    break;
-                case "浏览历史":
-                    _type = UriType.GetUserHistory;
-                    break;
-                default: throw new ArgumentException(nameof(title));
-            }
-
             Provider = new CoolapkListProvider(
-                (p, firstItem, lastItem) => UriHelper.GetUri(_type, p, firstItem, lastItem),
+                (p, _, __) => UriHelper.GetUri(UriType.GetUserFollows, "apkFollowList", string.Empty, p),
                 GetEntities,
-                "id");
+                "entityId");
         }
+
+        private readonly CoolapkListProvider Provider;
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
-            yield return jo.Value<string>("entityType") == "history" ? new HistoryModel(jo) : null;
+            yield return new IndexPageModel(jo);
         }
 
         public async Task Refresh(int p = -1)
@@ -63,7 +49,7 @@ namespace CoolapkLite.ViewModels
             {
                 int temp = Models.Count;
                 if (Models.Count > 0) { _currentPage++; }
-                Models = await Provider.GetEntity(Models, _currentPage);
+                await Provider.GetEntity(Models, _currentPage);
                 if (Models.Count <= 0 || Models.Count <= temp) { break; }
             }
             return Models;

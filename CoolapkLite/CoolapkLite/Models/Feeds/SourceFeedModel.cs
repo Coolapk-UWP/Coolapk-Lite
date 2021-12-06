@@ -11,30 +11,30 @@ namespace CoolapkLite.Models.Feeds
         public string UserName { get; private set; }
         public string Dateline { get; private set; }
 
-        public SourceFeedModel(JObject o) : base(o)
+        public SourceFeedModel(JObject token) : base(token)
         {
-            if (o.TryGetValue("url", out JToken uri) && !string.IsNullOrEmpty(uri.ToString()))
+            if (token.TryGetValue("url", out JToken uri) && !string.IsNullOrEmpty(uri.ToString()))
             {
                 Url = uri.ToString();
             }
-            else if (o.TryGetValue("id", out JToken id) && !string.IsNullOrEmpty(id.ToString()))
+            else if (token.TryGetValue("id", out JToken id))
             {
                 Url = $"/feed/{id.ToString().Replace("\"", string.Empty)}";
             }
 
-            if (o.TryGetValue("message", out JToken message) && !string.IsNullOrEmpty(message.ToString()))
+            if (token.TryGetValue("message", out JToken message))
             {
                 Message = message.ToString();
             }
 
-            if (o.TryGetValue("username", out JToken username) && !string.IsNullOrEmpty(username.ToString()))
+            if (token.TryGetValue("username", out JToken username))
             {
                 UserName = username.ToString();
             }
 
-            if (o.TryGetValue("dateline", out JToken dateline) && !string.IsNullOrEmpty(dateline.ToString()))
+            if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = double.Parse(dateline.ToString()).ConvertUnixTimeStampToReadable();
+                Dateline = dateline.ToObject<double>().ConvertUnixTimeStampToReadable();
             }
         }
     }
