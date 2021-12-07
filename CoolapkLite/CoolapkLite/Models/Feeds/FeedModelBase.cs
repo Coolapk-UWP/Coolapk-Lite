@@ -7,8 +7,8 @@ namespace CoolapkLite.Models.Feeds
 {
     public class FeedModelBase : SourceFeedModel, INotifyPropertyChanged, ICanChangeLikeModel, ICanChangeReplyNum, ICanCopy
     {
-        private string likeNum;
-        public string LikeNum
+        private int likeNum;
+        public int LikeNum
         {
             get => likeNum;
             set
@@ -18,8 +18,8 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        private string replyNum;
-        public string ReplyNum
+        private int replyNum;
+        public int ReplyNum
         {
             get => replyNum;
             set
@@ -40,7 +40,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public string ID => EntityId;
+        public int ID => EntityId;
         public bool Liked { get; set; }
         public string Info { get; private set; }
         public string DeviceTitle { get; private set; }

@@ -163,7 +163,8 @@
     <Compile Include="Models\IndexPageModel.cs" />
     <Compile Include="Models\Interfaces.cs" />
     <Compile Include="Models\Pages\FeedListPageModels.cs" />
-    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\Users\ContactModel.cs" />
+    <Compile Include="Models\Users\UserModel.cs" />
     <Compile Include="Pages\BrowserPage.xaml.cs">
       <DependentUpon>BrowserPage.xaml</DependentUpon>
     </Compile>
@@ -352,6 +353,9 @@
     <PackageReference Include="ksemenenko.ColorThief">
       <Version>1.1.1.4</Version>
     </PackageReference>
+    <PackageReference Include="LiteDB">
+      <Version>5.0.11</Version>
+    </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
     </PackageReference>
@@ -366,6 +370,9 @@
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="WinRTXamlToolkit.Controls.DataVisualization">
+      <Version>2.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

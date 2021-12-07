@@ -1,0 +1,36 @@
+﻿using CoolapkLite.Core.Models;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CoolapkLite.Models.Users
+{
+    public class ContactModel : Entity
+    {
+        public int DateLine { get; private set; }
+        public bool IsFriend { get; private set; }
+        public UserModel UserInfo { get; private set; }
+
+        public ContactModel(JObject token) : base(token)
+        {
+            if (token.TryGetValue("dateline", out JToken dateline))
+            {
+                DateLine = dateline.ToObject<int>();
+            }
+
+            if (token.TryGetValue("isfriend", out JToken isfriend))
+            {
+                IsFriend = Convert.ToBoolean(isfriend.ToObject<int>());
+            }
+
+            if (token.TryGetValue("userInfo", out JToken v1))
+            {
+                JObject userInfo = (JObject)v1;
+                UserInfo = new UserModel(userInfo);
+            }
+        }
+    }
+}

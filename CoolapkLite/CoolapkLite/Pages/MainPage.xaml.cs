@@ -3,6 +3,7 @@ using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
+using LiteDB;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.ObjectModel;

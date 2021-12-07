@@ -1,11 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 
 namespace CoolapkLite.Core.Models
 {
     public class Entity
     {
         public bool EntityFixed { get; set; }
-        public string EntityId { get; private set; }
+        public int EntityId { get; private set; }
         public string EntityType { get; private set; }
 
         public Entity(JObject o)
@@ -16,23 +17,19 @@ namespace CoolapkLite.Core.Models
                 return;
             }
 
-            if (o.TryGetValue("entityId", out JToken v1))
+            if (o.TryGetValue("entityId", out JToken entityId))
             {
-                EntityId = v1.ToString().Replace("\"", string.Empty);
+                EntityId = entityId.ToObject<int>();
             }
 
-            if (o.TryGetValue("entityType", out JToken v2))
+            if (o.TryGetValue("entityType", out JToken entityType))
             {
-                EntityType = v2.ToString();
+                EntityType = entityType.ToString();
             }
 
-            if (o.TryGetValue("entityFixed", out JToken v3))
+            if (o.TryGetValue("entityFixed", out JToken entityFixed))
             {
-                try
-                {
-                    if (v3.ToObject<int>() == 1) { EntityFixed = true; }
-                }
-                catch { }
+                EntityFixed = Convert.ToBoolean(entityFixed.ToObject<int>());
             }
         }
     }

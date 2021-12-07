@@ -1,5 +1,7 @@
-﻿using CoolapkLite.Pages.FeedPages;
+﻿using CoolapkLite.Models.Images;
+using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
+using LiteDB;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -42,6 +44,20 @@ namespace CoolapkLite.Helpers
         }
 
         private static readonly ObservableCollection<string> MessageList = new ObservableCollection<string>();
+
+        static UIHelper()
+        {
+            BsonMapper.Global.RegisterType
+                (
+                serialize: (pic) => pic.Uri,
+                deserialize: (bson) => new ImageModel(bson.ToString(), ImageType.OriginImage)
+                );
+            BsonMapper.Global.RegisterType
+                (
+                serialize: (pic) => pic.Uri,
+                deserialize: (bson) => new BackgroundImageModel(bson.ToString(), ImageType.OriginImage)
+                );
+        }
 
         public static bool IsDarkTheme(ElementTheme theme)
         {

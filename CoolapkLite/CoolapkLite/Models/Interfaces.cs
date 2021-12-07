@@ -32,13 +32,13 @@ namespace CoolapkLite.Models
 
     internal interface ICanChangeReplyNum
     {
-        string ReplyNum { get; set; }
+        int ReplyNum { get; set; }
     }
 
     internal interface ICanChangeLikeModel
     {
-        string ID { get; }
+        int ID { get; }
         bool Liked { get; set; }
-        string LikeNum { get; set; }
+        int LikeNum { get; set; }
     }
 }

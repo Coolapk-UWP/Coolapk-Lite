@@ -3,6 +3,8 @@ using CoolapkLite.Helpers;
 using System;
 using System.ComponentModel;
 using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
@@ -10,8 +12,8 @@ namespace CoolapkLite.Models.Images
     public class BackgroundImageModel : INotifyPropertyChanged
     {
         private WeakReference<BitmapImage> pic;
-        private static readonly Windows.UI.Color fallbackColor = Windows.UI.Color.FromArgb(0x99, 0, 0, 0);
         private static readonly ColorThief thief = new ColorThief();
+        private static readonly Windows.UI.Color fallbackColor = Windows.UI.Color.FromArgb(0x99, 0, 0, 0);
         private Windows.UI.Color backgroundColor = fallbackColor;
 
         public Windows.UI.Color BackgroundColor
@@ -111,9 +113,9 @@ namespace CoolapkLite.Models.Images
 
         private async void SetBrush()
         {
-            Windows.Storage.StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
             if (file is null) { return; }
-            using (Windows.Storage.Streams.IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
                 BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
                 QuantizedColor color = await thief.GetColor(decoder);
