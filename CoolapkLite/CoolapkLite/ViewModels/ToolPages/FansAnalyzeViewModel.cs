@@ -2,7 +2,6 @@
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
-using CoolapkLite.Models;
 using CoolapkLite.Models.Users;
 using LiteDB;
 using Newtonsoft.Json.Linq;
@@ -25,12 +24,22 @@ namespace CoolapkLite.ViewModels.ToolPages
         public double[] VerticalOffsets { get; set; } = new double[1];
         public ObservableCollection<ChartValueItem> FanNumListByDate { get; set; }
 
+        public delegate void LoadMoreStarted();
+        public delegate void LoadMoreCompleted();
+        public delegate void LoadMoreProgressChanged(double value);
+
+        public event LoadMoreStarted OnLoadMoreStarted;
+        public event LoadMoreCompleted OnLoadMoreCompleted;
+        public event LoadMoreProgressChanged OnLoadMoreProgressChanged;
+
         public delegate void FanNumListByDateChanged();
         public event FanNumListByDateChanged OnFanNumListByDateChanged;
 
         private readonly string _id;
         private readonly CoolapkListProvider Provider;
         private readonly string LiteDBPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "FanLists.db");
+
+        private void InvokeProgressChanged<T>(T item, IList<T> items) => OnLoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
 
         internal FansAnalyzeViewModel(string id)
         {
@@ -54,6 +63,7 @@ namespace CoolapkLite.ViewModels.ToolPages
 
         private async Task GetFanList()
         {
+            OnLoadMoreStarted?.Invoke();
             int page = 1;
             FanList.Clear();
             while (true)
@@ -71,6 +81,7 @@ namespace CoolapkLite.ViewModels.ToolPages
                     foreach (Entity entity in FanList)
                     {
                         _ = DateBaseResults.Upsert(entity.EntityId, entity);
+                        InvokeProgressChanged(entity, FanList);
                     }
                 }
                 catch (IOException e)
@@ -79,10 +90,12 @@ namespace CoolapkLite.ViewModels.ToolPages
                 }
             }
             OrderFanList();
+            OnLoadMoreCompleted?.Invoke();
         }
 
         private void LoadFanList()
         {
+            OnLoadMoreStarted?.Invoke();
             using (LiteDatabase db = new(LiteDBPath))
             {
                 try
@@ -99,12 +112,14 @@ namespace CoolapkLite.ViewModels.ToolPages
                     FanList = new ObservableCollection<Entity>();
                 }
             }
+            OnLoadMoreCompleted?.Invoke();
         }
 
         private void OrderFanList()
         {
+            OnLoadMoreStarted?.Invoke();
             FanNumListByDate = FanNumListByDate ?? new ObservableCollection<ChartValueItem>();
-            if(FanList.Count > 0) { FanNumListByDate.Clear(); }
+            if (FanList.Count > 0) { FanNumListByDate.Clear(); }
             ObservableCollection<Entity> FanListByDate = new ObservableCollection<Entity>(FanList.OrderBy(item => (item as ContactModel).DateLine));
             int temp = (FanListByDate.First() as ContactModel).DateLine, num = 0;
             foreach (ContactModel contact in FanListByDate)
@@ -115,9 +130,11 @@ namespace CoolapkLite.ViewModels.ToolPages
                     temp = contact.DateLine;
                 }
                 num++;
+                InvokeProgressChanged(contact, FanListByDate);
             }
             FanNumListByDate.Add(new ChartValueItem(temp, num));
             OnFanNumListByDateChanged?.Invoke();
+            OnLoadMoreCompleted?.Invoke();
         }
 
         private string NumToLetter(string nums)

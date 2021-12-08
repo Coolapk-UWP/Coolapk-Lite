@@ -116,8 +116,6 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static void ShowProgressBar(uint _) => ShowProgressBar();
-
         public static async void ShowProgressBar()
         {
             IsShowingProgressBar = true;
@@ -166,7 +164,7 @@ namespace CoolapkLite.Helpers
             MainPage?.ErrorProgressBar();
         }
 
-        public static async void HideProgressBar(int _ = 0)
+        public static async void HideProgressBar()
         {
             IsShowingProgressBar = false;
             if (HasStatusBar)

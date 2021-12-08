@@ -55,7 +55,7 @@ namespace CoolapkLite.Core.Helpers.DataSource
             try
             {
                 // We are going to load more.
-                OnLoadMoreStarted?.Invoke(count);
+                OnLoadMoreStarted?.Invoke();
 
                 // Data loading will different for sub-class.
                 IList<T> items = await LoadMoreItemsOverrideAsync(c, count);
@@ -63,7 +63,7 @@ namespace CoolapkLite.Core.Helpers.DataSource
                 AddItems(items);
 
                 // We finished loading operation.
-                OnLoadMoreCompleted?.Invoke(items == null ? 0 : items.Count);
+                OnLoadMoreCompleted?.Invoke();
 
                 return new LoadMoreItemsResult { Count = items == null ? 0 : (uint)items.Count };
             }
@@ -75,11 +75,14 @@ namespace CoolapkLite.Core.Helpers.DataSource
 
 
 
-        public delegate void LoadMoreStarted(uint count);
-        public delegate void LoadMoreCompleted(int count);
+        public delegate void LoadMoreStarted();
+        public delegate void LoadMoreCompleted();
+        public delegate void LoadMoreProgressChanged(double value);
 
         public event LoadMoreStarted OnLoadMoreStarted;
         public event LoadMoreCompleted OnLoadMoreCompleted;
+        public event LoadMoreProgressChanged OnLoadMoreProgressChanged;
+
 
         #region Overridable methods
         /// <summary>
@@ -92,9 +95,12 @@ namespace CoolapkLite.Core.Helpers.DataSource
                 foreach (T item in items)
                 {
                     Add(item);
+                    InvokeProgressChanged(item, items);
                 }
             }
         }
+
+        protected virtual void InvokeProgressChanged(T item, IList<T> items) => OnLoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
 
         protected abstract Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count);
 

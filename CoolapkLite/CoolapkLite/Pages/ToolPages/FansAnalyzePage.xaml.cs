@@ -3,7 +3,7 @@ using CoolapkLite.ViewModels.ToolPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -21,6 +21,7 @@ namespace CoolapkLite.Pages.ToolPages
     public sealed partial class FansAnalyzePage : Page
     {
         private FansAnalyzeViewModel Provider;
+        private readonly EventDelayer _delayer = new EventDelayer();
 
         public FansAnalyzePage() => InitializeComponent();
 
@@ -31,9 +32,13 @@ namespace CoolapkLite.Pages.ToolPages
             if (e.Parameter is FansAnalyzeViewModel ViewModel)
             {
                 Provider = ViewModel;
+                _delayer.Arrived += OnArrived;
+                Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
                 Provider.OnFanNumListByDateChanged += FanNumListByDateChanged;
                 await Refresh(-2);
-                ((LineSeries)this.LineChart.Series[0]).ItemsSource = Provider.FanNumListByDate;
+                ((LineSeries)LineChart.Series[0]).ItemsSource = Provider.FanNumListByDate;
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {
                     TitleBar.Title = Provider.Title;
@@ -41,25 +46,48 @@ namespace CoolapkLite.Pages.ToolPages
             }
         }
 
-        private async void FanNumListByDateChanged()
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            await Task.Delay(500);
+            base.OnNavigatedFrom(e);
+            _delayer.Arrived -= OnArrived;
+            Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
+            Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
+            Provider.OnLoadMoreProgressChanged -= UIHelper.ShowProgressBar;
+            Provider.OnFanNumListByDateChanged -= FanNumListByDateChanged;
+        }
+
+        private async void OnArrived(object sender, EventArgs e)
+        {
             FrameworkElement AxisGrid = LineChart.FindDescendantByName("AxisGrid");
-            if (AxisGrid != null)
+            while (AxisGrid == null)
             {
-                IEnumerable<NumericAxisLabel> NumericAxisLabels = AxisGrid.FindDescendants<NumericAxisLabel>();
-                if (NumericAxisLabels != null)
+                await Task.Delay(10);
+                AxisGrid = LineChart.FindDescendantByName("AxisGrid");
+            }
+            IEnumerable<NumericAxisLabel> NumericAxisLabels = AxisGrid?.FindDescendants<NumericAxisLabel>();
+            if (NumericAxisLabels != null)
+            {
+                foreach (NumericAxisLabel NumericAxisLabel in NumericAxisLabels)
                 {
-                    foreach (NumericAxisLabel NumericAxisLabel in NumericAxisLabels)
+                    TextBlock TextBlock = NumericAxisLabel?.FindDescendant<TextBlock>();
+                    if (TextBlock != null)
                     {
-                        TextBlock TextBlock = NumericAxisLabel.FindDescendant<TextBlock>();
-                        if (TextBlock != null)
+                        if (NumericAxisLabel == NumericAxisLabels.First() || NumericAxisLabel == NumericAxisLabels.Last())
                         {
                             TextBlock.Text = Convert.ToDouble(TextBlock.Text).ConvertUnixTimeStampToReadable();
+                        }
+                        else
+                        {
+                            TextBlock.Visibility = Visibility.Collapsed;
                         }
                     }
                 }
             }
+        }
+
+        private void FanNumListByDateChanged()
+        {
+            _delayer.Delay();
         }
 
         private async Task Refresh(int p = -1) => await Provider.Refresh(p);

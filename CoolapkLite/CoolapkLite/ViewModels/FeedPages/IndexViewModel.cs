@@ -135,6 +135,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     if (item is NullModel) { continue; }
                     Add(item);
+                    InvokeProgressChanged(item, items);
                 }
             }
         }

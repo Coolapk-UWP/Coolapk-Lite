@@ -147,6 +147,7 @@
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />

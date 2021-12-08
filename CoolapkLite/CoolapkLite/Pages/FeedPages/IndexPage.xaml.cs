@@ -31,6 +31,7 @@ namespace CoolapkLite.Pages.FeedPages
                 ListView.ItemsSource = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {

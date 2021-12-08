@@ -10,6 +10,7 @@ using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -123,11 +124,13 @@ namespace CoolapkLite.Pages.SettingsPages
                     }
                     break;
                 case "GoToFansAnalyzePage":
-                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
+                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("2315244"));
                     break;
                 default:
                     break;
             }
         }
+
+        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => UIHelper.ShowProgressBar(e.NewValue);
     }
 }

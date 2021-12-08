@@ -81,6 +81,11 @@
                                 Content="关闭"
                                 Tag="HideProgressBar" />
                         </StackPanel>
+                        <Slider
+                            Header="修改进度条数值"
+                            TickFrequency="10"
+                            TickPlacement="Outside"
+                            ValueChanged="Slider_ValueChanged" />
                     </StackPanel>
                 </controls:HeaderedContentControl>
                 <controls:HeaderedContentControl Header="网络测试" Style="{StaticResource HeaderStyle}">
