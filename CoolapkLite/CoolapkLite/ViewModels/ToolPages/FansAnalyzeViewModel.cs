@@ -9,7 +9,9 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -21,6 +23,10 @@ namespace CoolapkLite.ViewModels.ToolPages
         public string Title { get; protected set; }
         public ObservableCollection<Entity> FanList { get; set; }
         public double[] VerticalOffsets { get; set; } = new double[1];
+        public ObservableCollection<ChartValueItem> FanNumListByDate { get; set; }
+
+        public delegate void FanNumListByDateChanged();
+        public event FanNumListByDateChanged OnFanNumListByDateChanged;
 
         private readonly string _id;
         private readonly CoolapkListProvider Provider;
@@ -71,7 +77,8 @@ namespace CoolapkLite.ViewModels.ToolPages
                 {
                     throw new CoolapkMessageException(e.Message);
                 }
-        }
+            }
+            OrderFanList();
         }
 
         private void LoadFanList()
@@ -94,6 +101,25 @@ namespace CoolapkLite.ViewModels.ToolPages
             }
         }
 
+        private void OrderFanList()
+        {
+            FanNumListByDate = FanNumListByDate ?? new ObservableCollection<ChartValueItem>();
+            if(FanList.Count > 0) { FanNumListByDate.Clear(); }
+            ObservableCollection<Entity> FanListByDate = new ObservableCollection<Entity>(FanList.OrderBy(item => (item as ContactModel).DateLine));
+            int temp = (FanListByDate.First() as ContactModel).DateLine, num = 0;
+            foreach (ContactModel contact in FanListByDate)
+            {
+                if (temp != contact.DateLine)
+                {
+                    FanNumListByDate.Add(new ChartValueItem(temp, num));
+                    temp = contact.DateLine;
+                }
+                num++;
+            }
+            FanNumListByDate.Add(new ChartValueItem(temp, num));
+            OnFanNumListByDateChanged?.Invoke();
+        }
+
         private string NumToLetter(string nums)
         {
             string letter = string.Empty;
@@ -109,6 +135,56 @@ namespace CoolapkLite.ViewModels.ToolPages
                 }
             }
             return letter;
+        }
+    }
+
+    internal class ChartValueItem : INotifyPropertyChanged
+    {
+        private int _valueX;
+        public int ValueX
+        {
+            get
+            {
+                return _valueX;
+            }
+            set
+            {
+                if (_valueX != value)
+                {
+                    _valueX = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        private int _valueY;
+        public int ValueY
+        {
+            get
+            {
+                return _valueY;
+            }
+            set
+            {
+                if (_valueY != value)
+                {
+                    _valueY = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        public ChartValueItem(int X, int Y)
+        {
+            ValueX = X;
+            ValueY = Y;
         }
     }
 }

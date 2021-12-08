@@ -123,7 +123,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     }
                     break;
                 case "GoToFansAnalyzePage":
-                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("2315244"));
+                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
                     break;
                 default:
                     break;
