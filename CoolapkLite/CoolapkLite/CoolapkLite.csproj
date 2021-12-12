@@ -274,6 +274,8 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <None Include="Resources\MainPage.resw" />
+    <None Include="Resources\NotificationsPage.resw" />
+    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
   </ItemGroup>
   <ItemGroup>

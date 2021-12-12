@@ -26,7 +26,7 @@ namespace CoolapkLite.Core.Helpers
 
     public static partial class Utils
     {
-        public static event EventHandler<(MessageType, string)> NeedShowInAppMessageEvent;
+        public static event EventHandler<(MessageType Type, string Message)> NeedShowInAppMessageEvent;
 
         internal static void ShowInAppMessage(MessageType type, string message = null)
         {

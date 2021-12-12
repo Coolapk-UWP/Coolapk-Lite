@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using LiteDB;
@@ -115,7 +116,10 @@ namespace CoolapkLite.Helpers
                 }
             }
         }
+    }
 
+    internal static partial class UIHelper
+    { 
         public static async void ShowProgressBar()
         {
             IsShowingProgressBar = true;
@@ -212,6 +216,29 @@ namespace CoolapkLite.Helpers
                     }
                 }
                 IsShowingMessage = false;
+            }
+        }
+
+        public static string ConvertMessageTypeToMessage(this MessageType type)
+        {
+            switch (type)
+            {
+                case MessageType.NoMore:
+                    return ResourceLoader.GetForViewIndependentUse("NotificationsPage").GetString("NoMore");
+
+                case MessageType.NoMoreShare:
+                    return ResourceLoader.GetForViewIndependentUse("NotificationsPage").GetString("NoMoreShare");
+
+                case MessageType.NoMoreReply:
+                    return ResourceLoader.GetForViewIndependentUse("NotificationsPage").GetString("NoMoreReply");
+
+                case MessageType.NoMoreHotReply:
+                    return ResourceLoader.GetForViewIndependentUse("NotificationsPage").GetString("NoMoreHotReply");
+
+                case MessageType.NoMoreLikeUser:
+                    return ResourceLoader.GetForViewIndependentUse("NotificationsPage").GetString("NoMoreLikeUser");
+
+                default: return string.Empty;
             }
         }
     }
