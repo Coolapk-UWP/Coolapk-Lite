@@ -6,7 +6,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
-using InAppNotify = Microsoft.Toolkit.Uwp.UI.Controls.InAppNotification;
 
 namespace CoolapkLite.Helpers
 {
@@ -31,7 +30,7 @@ namespace CoolapkLite.Helpers
             ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
         }
 
-        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ImageModel model = null, InAppNotify notify = null)
+        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ImageModel model = null)
         {
             if (string.IsNullOrEmpty(url)) { return NoPic; }
 
@@ -63,17 +62,7 @@ namespace CoolapkLite.Helpers
                 catch
                 {
                     string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                    if (notify == null)
-                    {
-                        UIHelper.ShowMessage(str);
-                    }
-                    else
-                    {
-                        _ = notify.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            notify.Show(str, UIHelper.Duration);
-                        });
-                    }
+                    UIHelper.ShowMessage(str);
                     return NoPic;
                 }
                 finally
@@ -144,7 +133,7 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ImageModel model = null, InAppNotify notify = null)
+        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ImageModel model = null)
         {
             if (string.IsNullOrEmpty(url)) { return null; }
 
@@ -169,7 +158,7 @@ namespace CoolapkLite.Helpers
                 if (item is null)
                 {
                     StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-                    return await DownloadImageAsync(file, url, model, notify);
+                    return await DownloadImageAsync(file, url, model);
                 }
                 else
                 {
@@ -192,7 +181,7 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, Pages.ImageModel model, InAppNotify notify)
+        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, Pages.ImageModel model)
         {
             try
             {
@@ -212,14 +201,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException)
             {
                 string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                if (notify == null)
-                {
                     UIHelper.ShowMessage(str);
-                }
-                else
-                {
-                    notify.Show(str, UIHelper.Duration);
-                }
                 return NoPic;
             }
             finally

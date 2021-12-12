@@ -34,11 +34,11 @@ namespace CoolapkLite
             UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.ExtendViewIntoTitleBar = true;
-            Window.Current.SetTitleBar(CustomTitleBar);
-            UpdateTitleBarLayout(TitleBar);
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+            Window.Current.SetTitleBar(CustomTitleBar);
+            TitleBar.ExtendViewIntoTitleBar = true;
+            UpdateTitleBarLayout(TitleBar);
             UIHelper.CheckTheme();
         }
 

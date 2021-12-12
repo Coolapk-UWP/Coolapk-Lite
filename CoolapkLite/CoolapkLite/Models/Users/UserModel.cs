@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Core.Models;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace CoolapkLite.Models.Users
 {

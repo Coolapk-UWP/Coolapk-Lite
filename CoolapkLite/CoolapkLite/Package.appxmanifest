@@ -8,7 +8,7 @@
 
   <Identity
     Name="18184wherewhere.CoolapkLite"
-    Publisher="CN=2C3A37C0-35FC-4839-B08C-751C1C1AFBF5"
+    Publisher="CN=where"
     Version="0.0.1.0" />
 
   <mp:PhoneIdentity PhoneProductId="df7eabc3-b409-41c6-ad34-9d9df1f4a338" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>

@@ -12,7 +12,7 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <local:DisplayModeToBool x:Key="DisplayModeToBool"/>
+            <local:DisplayModeToBool x:Key="DisplayModeToBool" />
             <Style x:Key="HamburgerMenuItemStyle" TargetType="ListViewItem">
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="MinHeight" Value="0" />

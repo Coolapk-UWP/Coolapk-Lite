@@ -20,7 +20,7 @@
                     <StackPanel
                         x:Name="StickUp"
                         Orientation="Horizontal"
-                        Visibility="{Binding IsStickTop}">
+                        Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}}">
                         <FontIcon
                             Margin="4,0,0,0"
                             FontSize="16"
@@ -35,7 +35,7 @@
                         x:Name="UserBar"
                         Grid.Row="1"
                         Orientation="Horizontal"
-                        Visibility="{Binding ShowUser}">
+                        Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Button
                             Margin="0,4"
                             Padding="0"
@@ -60,7 +60,7 @@
                                     Margin="0,0,5,0"
                                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
                                     Text="{Binding Dateline}"
-                                    Visibility="{Binding ShowDateline}" />
+                                    Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{Binding Info}" />
                                 <TextBlock
                                     Margin="5,0,0,0"

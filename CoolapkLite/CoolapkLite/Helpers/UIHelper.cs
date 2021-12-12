@@ -200,7 +200,7 @@ namespace CoolapkLite.Helpers
                         if (MessageList.Count == 0 && !IsShowingProgressBar) { await statusBar.ProgressIndicator.HideAsync(); }
                         statusBar.ProgressIndicator.Text = string.Empty;
                     }
-                    else
+                    else if (MainPage != null)
                     {
                         if (!string.IsNullOrEmpty(MessageList[0]))
                         {

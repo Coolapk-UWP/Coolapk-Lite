@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
-using InAppNotify = Microsoft.Toolkit.Uwp.UI.Controls.InAppNotification;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -26,7 +25,6 @@ namespace CoolapkLite.Pages
     {
         private bool isProgressRingActived;
         private WeakReference<BitmapImage> pic;
-        private readonly InAppNotify inAppNotify;
         private readonly CoreDispatcher dispatcher;
 
         public string Uri { get; }
@@ -84,11 +82,10 @@ namespace CoolapkLite.Pages
             });
         }
 
-        public ImageModel(string uri, ImageType type, InAppNotify notify, CoreDispatcher dispatcher)
+        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
         {
             Uri = uri;
             Type = IsGif || SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ChangeType(type) : type;
-            inAppNotify = notify;
             this.dispatcher = dispatcher;
         }
 
@@ -102,7 +99,7 @@ namespace CoolapkLite.Pages
             while (bitmapImage is null)
             {
 #pragma warning disable 0612
-                bitmapImage = await ImageCacheHelper.GetImageAsyncOld(Type, Uri, this, inAppNotify);
+                bitmapImage = await ImageCacheHelper.GetImageAsyncOld(Type, Uri, this);
 #pragma warning restore 0612
             }
             await Task.Delay(20);

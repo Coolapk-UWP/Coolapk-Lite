@@ -59,43 +59,43 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay);
                     break;
                 case "OpenEdge":
-                    _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
+                    //_ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
                     break;
                 case "ShowError":
                     //throw new WFunMessageException(NotifyMessage.Text);
                     break;
                 case "GetContent":
-                    Uri uri = WebUrl.Text.ValidateAndGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await Utils.GetStringAsync(uri, false);
-                    if (!isSucceed)
-                    {
-                        result = "网络错误";
-                    }
-                    ContentDialog GetJsonDialog = new ContentDialog
-                    {
-                        Title = WebUrl.Text,
-                        Content = new ScrollViewer
-                        {
-                            Content = new TextBlock
-                            {
-                                IsTextSelectionEnabled = true,
-                                Text = result.ConvertJsonString()
-                            },
-                            VerticalScrollMode = ScrollMode.Enabled,
-                            HorizontalScrollMode = ScrollMode.Enabled,
-                            VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                            HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
-                        },
-                        CloseButtonText = "好的",
-                        DefaultButton = ContentDialogButton.Close
-                    };
-                    _ = await GetJsonDialog.ShowAsync();
+                    //Uri uri = WebUrl.Text.ValidateAndGetUri();
+                    //(bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await Utils.GetStringAsync(uri, false);
+                    //if (!isSucceed)
+                    //{
+                    //    result = "网络错误";
+                    //}
+                    //ContentDialog GetJsonDialog = new ContentDialog
+                    //{
+                    //    Title = WebUrl.Text,
+                    //    Content = new ScrollViewer
+                    //    {
+                    //        Content = new TextBlock
+                    //        {
+                    //            IsTextSelectionEnabled = true,
+                    //            Text = result.ConvertJsonString()
+                    //        },
+                    //        VerticalScrollMode = ScrollMode.Enabled,
+                    //        HorizontalScrollMode = ScrollMode.Enabled,
+                    //        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    //        HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    //    },
+                    //    CloseButtonText = "好的",
+                    //    DefaultButton = ContentDialogButton.Close
+                    //};
+                    //_ = await GetJsonDialog.ShowAsync();
                     break;
                 case "ShowMessage":
-                    UIHelper.ShowMessage(NotifyMessage.Text);
+                    //UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, WebUrl.Text });
+                    //_ = Frame.Navigate(typeof(BrowserPage), new object[] { false, WebUrl.Text });
                     break;
                 case "ShowAsyncError":
                     //Thread thread = new Thread(() => throw new WFunMessageException(NotifyMessage.Text));
