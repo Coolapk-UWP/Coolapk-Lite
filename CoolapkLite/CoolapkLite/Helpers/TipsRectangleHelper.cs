@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -20,6 +21,9 @@ namespace CoolapkLite.Helpers
         private static readonly Collection<WeakReference<Selector>> Selectors = new Collection<WeakReference<Selector>>();
         private static readonly Collection<WeakReference<Pivot>> Pivots = new Collection<WeakReference<Pivot>>();
 
+        private static bool HasConnectedAnimation => ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
+        private static bool HasConnectedAnimationConfiguration => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
+
         public static string GetToken(FrameworkElement obj)
         {
             return (string)obj.GetValue(TokenProperty);
@@ -35,7 +39,7 @@ namespace CoolapkLite.Helpers
 
         public static bool GetIsEnable(FrameworkElement obj)
         {
-            return SettingsHelper.WindowsVersion >= 14332 && (bool)obj.GetValue(IsEnableProperty);
+            return HasConnectedAnimation && (bool)obj.GetValue(IsEnableProperty);
         }
 
         public static void SetIsEnable(FrameworkElement obj, bool value)
@@ -329,7 +333,7 @@ namespace CoolapkLite.Helpers
                         service.GetAnimation(token)?.Cancel();
                         service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
                         ConnectedAnimation animation = service.PrepareToAnimate(token, source);
-                        if (SettingsHelper.WindowsVersion >= 17677)
+                        if (HasConnectedAnimationConfiguration)
                         {
                             animation.Configuration = GetConfiguration(config);
                         }

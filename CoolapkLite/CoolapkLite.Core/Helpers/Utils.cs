@@ -93,13 +93,9 @@ namespace CoolapkLite.Core.Helpers
             }
         }
 
-        public static double ConvertDateTimeToUnixTimeStamp(DateTime time)
-        {
-            return Math.Round(
-                time.ToUniversalTime()
-                    .Subtract(unixDateBase)
-                    .TotalSeconds);
-        }
+        public static DateTime ConvertUnixTimeStampToDateTime(this double time) => unixDateBase.Add(new TimeSpan((long)time * 1000_0000));
+
+        public static double ConvertDateTimeToUnixTimeStamp(this DateTime time) => Math.Round(time.ToUniversalTime().Subtract(unixDateBase).TotalSeconds);
     }
 
     public static partial class Utils

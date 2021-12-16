@@ -30,7 +30,7 @@ namespace CoolapkLite.Helpers
             ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
         }
 
-        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ImageModel model = null)
+        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ShowImageModel model = null)
         {
             if (string.IsNullOrEmpty(url)) { return NoPic; }
 
@@ -133,7 +133,7 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ImageModel model = null)
+        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ShowImageModel model = null)
         {
             if (string.IsNullOrEmpty(url)) { return null; }
 
@@ -181,7 +181,7 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, Pages.ImageModel model)
+        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, Pages.ShowImageModel model)
         {
             try
             {

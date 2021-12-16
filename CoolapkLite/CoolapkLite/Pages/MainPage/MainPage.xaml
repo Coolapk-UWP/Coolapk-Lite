@@ -226,6 +226,7 @@
                                     Width="{TemplateBinding OpenPaneLength}"
                                     Margin="0,20,0,8"
                                     VerticalAlignment="Bottom"
+                                    helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Option items"
                                     IsItemClickEnabled="True"
@@ -285,9 +286,9 @@
                 Padding="12,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                x:FieldModifier="public"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
+                Text=""
                 TextTrimming="CharacterEllipsis" />
         </Border>
         <controls:HamburgerMenu

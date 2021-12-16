@@ -28,13 +28,14 @@ namespace CoolapkLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class PivotPage : Page
+    public sealed partial class PivotPage : Page, IHaveTitleBar
     {
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public PivotPage()
         {
             InitializeComponent();
+            UIHelper.AppTitle = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -85,6 +86,52 @@ namespace CoolapkLite.Pages
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
+
+        #region 进度条
+        public void ShowProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+        }
+
+        public void ShowProgressBar(double value)
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.Value = value;
+        }
+
+        public void PausedProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = true;
+        }
+
+        public void ErrorProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.ShowError = true;
+        }
+
+        public void HideProgressBar()
+        {
+            ProgressBar.Visibility = Visibility.Collapsed;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.Value = 0;
+        }
+
+        public void ShowMessage(string message = null) => AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+        #endregion
     }
 
     public class MenuItem

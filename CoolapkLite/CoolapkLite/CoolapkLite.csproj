@@ -146,6 +146,7 @@
     <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\GridPanel.cs" />
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -175,6 +176,7 @@
     <Compile Include="Pages\FeedPages\AdapListPage.xaml.cs">
       <DependentUpon>AdapListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Interfaces.cs" />
     <Compile Include="Pages\MainPage\PivotPage.xaml.cs">
       <DependentUpon>PivotPage.xaml</DependentUpon>
     </Compile>
@@ -394,8 +396,8 @@
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
     </PackageReference>
-    <PackageReference Include="WinRTXamlToolkit.Controls.DataVisualization">
-      <Version>2.3.0</Version>
+    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
+      <Version>1.0.2.7</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

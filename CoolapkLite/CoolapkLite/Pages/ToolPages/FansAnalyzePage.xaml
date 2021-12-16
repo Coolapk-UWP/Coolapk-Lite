@@ -9,6 +9,7 @@
     xmlns:datavis="using:WinRTXamlToolkit.Controls.DataVisualization"
     xmlns:local="using:CoolapkLite.Pages.ToolPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     mc:Ignorable="d">
     <Grid>
@@ -17,42 +18,71 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <GridView Margin="0,80,0,0" ui:ListViewExtensions.StretchItemContainerDirection="Horizontal">
-            <GridView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <controls:StaggeredPanel HorizontalAlignment="Stretch" DesiredColumnWidth="500" />
-                </ItemsPanelTemplate>
-            </GridView.ItemsPanel>
-            <GridViewItem>
-                <charting:Chart x:Name="LineChart" Title="粉丝增长">
-                    <charting:Chart.LegendStyle>
-                        <Style TargetType="datavis:Legend">
-                            <Setter Property="Width" Value="0" />
-                        </Style>
-                    </charting:Chart.LegendStyle>
-                    <charting:LineSeries
-                        DependentValueBinding="{Binding ValueY}"
-                        IndependentValueBinding="{Binding ValueX}"
-                        IsSelectionEnabled="True">
-                        <charting:LineSeries.DataPointStyle>
-                            <Style TargetType="charting:LineDataPoint">
-                                <Setter Property="Width" Value="0" />
-                                <Setter Property="Height" Value="0" />
-                                <Setter Property="IsTabStop" Value="False" />
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="charting:LineDataPoint">
-                                            <Grid x:Name="Root" Opacity="0" />
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </charting:LineSeries.DataPointStyle>
-                    </charting:LineSeries>
-                </charting:Chart>
-            </GridViewItem>
-        </GridView>
+        <Grid Margin="12,80,12,0">
+            <Grid.Resources>
+                <DataTemplate x:Key="IntersectionPointTemplate">
+                    <Ellipse
+                        Width="8"
+                        Height="8"
+                        Stroke="Black"
+                        StrokeThickness="2" />
+                </DataTemplate>
+                <DataTemplate x:Key="EmptyTemplate" />
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock FontSize="16" Text="粉丝增长折线图" />
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <TextBlock
+                    Width="80"
+                    FontSize="12"
+                    Text="{x:Bind Provider.DateLabel, Mode=OneWay}" />
+                <TextBlock
+                    Margin="2,0,2,0"
+                    FontSize="12"
+                    Text="粉丝数：" />
+                <TextBlock
+                    FontSize="12"
+                    Foreground="{ThemeResource ResourceKey=SystemAccentColor}"
+                    Text="{x:Bind Provider.FansValue, Mode=OneWay}" />
+            </StackPanel>
+            <telerikChart:RadCartesianChart
+                x:Name="Chart"
+                Grid.Row="2"
+                Margin="0,0,0,50">
+                <telerikChart:RadCartesianChart.VerticalAxis>
+                    <telerikChart:LinearAxis />
+                </telerikChart:RadCartesianChart.VerticalAxis>
+                <telerikChart:RadCartesianChart.HorizontalAxis>
+                    <telerikChart:DateTimeContinuousAxis
+                        LabelFitMode="MultiLine"
+                        LabelFormat="{}{0:MM.dd}"
+                        MaximumTicks="10" />
+                </telerikChart:RadCartesianChart.HorizontalAxis>
+                <telerikChart:RadCartesianChart.Grid>
+                    <telerikChart:CartesianChartGrid MajorLinesVisibility="Y" />
+                </telerikChart:RadCartesianChart.Grid>
+                <telerikChart:AreaSeries
+                    x:Name="AreaSeries"
+                    telerikChart:ChartTrackBallBehavior.IntersectionTemplate="{StaticResource IntersectionPointTemplate}"
+                    telerikChart:ChartTrackBallBehavior.TrackInfoTemplate="{StaticResource EmptyTemplate}"
+                    Transitions="{x:Null}">
+                    <telerikChart:AreaSeries.ValueBinding>
+                        <telerikChart:PropertyNameDataPointBinding PropertyName="Value" />
+                    </telerikChart:AreaSeries.ValueBinding>
+                    <telerikChart:AreaSeries.CategoryBinding>
+                        <telerikChart:PropertyNameDataPointBinding PropertyName="Date" />
+                    </telerikChart:AreaSeries.CategoryBinding>
+                </telerikChart:AreaSeries>
+                <telerikChart:RadCartesianChart.Behaviors>
+                    <telerikChart:ChartPanAndZoomBehavior PanMode="Horizontal" ZoomMode="Horizontal" />
+                    <telerikChart:ChartTrackBallBehavior ShowIntersectionPoints="True" TrackInfoUpdated="ChartTrackBallBehavior_TrackInfoUpdated" />
+                </telerikChart:RadCartesianChart.Behaviors>
+            </telerikChart:RadCartesianChart>
+        </Grid>
         <control:TitleBar
             x:Name="TitleBar"
             BackButtonVisibility="Collapsed"

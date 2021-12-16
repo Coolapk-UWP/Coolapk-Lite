@@ -37,7 +37,6 @@
                             Header="输入信息" />
                         <StackPanel Margin="0,2" Orientation="Horizontal">
                             <Button
-                                Margin="0,0,2,0"
                                 Click="Button_Click"
                                 Content="应用内通知"
                                 Tag="ShowMessage" />
@@ -148,23 +147,25 @@
                         <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" />
                     </StackPanel>
                 </controls:HeaderedContentControl>
-                <Grid Background="#212121" Visibility="Collapsed">
-                    <FontIcon FontSize="900" Glyph="" />
-                    <Border
-                        Width="531"
-                        Height="406"
-                        Margin="0,0,90,62"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        Background="#212121"
-                        BorderBrush="#212121"
-                        CornerRadius="90" />
-                    <FontIcon
-                        Margin="0,0,90,0"
-                        HorizontalAlignment="Right"
-                        VerticalAlignment="Bottom"
-                        FontSize="500"
-                        Glyph="" />
+                <Grid Background="#181819" Visibility="Visible">
+                    <FontIcon FontSize="900" Glyph="" />
+                    <Grid Visibility="Collapsed">
+                        <Border
+                            Width="531"
+                            Height="406"
+                            Margin="0,0,90,62"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Background="#212121"
+                            BorderBrush="#212121"
+                            CornerRadius="90" />
+                        <FontIcon
+                            Margin="0,0,90,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontSize="500"
+                            Glyph="" />
+                    </Grid>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

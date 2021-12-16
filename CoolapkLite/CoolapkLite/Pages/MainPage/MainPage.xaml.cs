@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Linq;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,12 +27,12 @@ namespace CoolapkLite
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page,IHaveTitleBar
     {
         public MainPage()
         {
             InitializeComponent();
-            UIHelper.MainPage = this;
+            UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -290,6 +291,8 @@ namespace CoolapkLite
             ProgressBar.ShowPaused = false;
             ProgressBar.Value = 0;
         }
+
+        public void ShowMessage(string message = null) => AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
         #endregion
     }
 
@@ -339,15 +342,16 @@ namespace CoolapkLite
 
     public class DisplayModeToBool : IValueConverter
     {
-        private readonly bool IsEnableConnectAnimation = SettingsHelper.WindowsVersion < 14332 && SettingsHelper.WindowsVersion >= 17677;
+        private static bool HasConnectedAnimation => ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
+        private static bool HasConnectedAnimationConfiguration => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (IsEnableConnectAnimation && value is SplitViewDisplayMode split && parameter is string mode)
+            if (!HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode)
             {
-                return !(split.ToString() == mode);
+                return !(split.ToString() == mode) && HasConnectedAnimation;
             }
-            return IsEnableConnectAnimation;
+            return HasConnectedAnimation;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language) => null;

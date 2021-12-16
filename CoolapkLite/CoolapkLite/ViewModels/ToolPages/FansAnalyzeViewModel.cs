@@ -13,17 +13,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telerik.UI.Xaml.Controls.Chart;
 using Windows.Storage;
 
 namespace CoolapkLite.ViewModels.ToolPages
 {
-    internal class FansAnalyzeViewModel : IViewModel
+    internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged
     {
-        public string Title { get; protected set; }
-        public ObservableCollection<Entity> FanList { get; set; }
-        public double[] VerticalOffsets { get; set; } = new double[1];
-        public ObservableCollection<ChartValueItem> FanNumListByDate { get; set; }
-
         public delegate void LoadMoreStarted();
         public delegate void LoadMoreCompleted();
         public delegate void LoadMoreProgressChanged(double value);
@@ -32,12 +28,12 @@ namespace CoolapkLite.ViewModels.ToolPages
         public event LoadMoreCompleted OnLoadMoreCompleted;
         public event LoadMoreProgressChanged OnLoadMoreProgressChanged;
 
-        public delegate void FanNumListByDateChanged();
-        public event FanNumListByDateChanged OnFanNumListByDateChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly string _id;
-        private readonly CoolapkListProvider Provider;
-        private readonly string LiteDBPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "FanLists.db");
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
 
         private void InvokeProgressChanged<T>(T item, IList<T> items) => OnLoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
 
@@ -50,6 +46,17 @@ namespace CoolapkLite.ViewModels.ToolPages
                 GetEntities,
                 "id");
         }
+    }
+
+    internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged
+    {
+        public string Title { get; protected set; }
+        public ObservableCollection<Entity> FanList { get; set; }
+        public double[] VerticalOffsets { get; set; } = new double[1];
+
+        private readonly string _id;
+        private readonly CoolapkListProvider Provider;
+        private readonly string LiteDBPath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "FanLists.db");
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
@@ -115,28 +122,6 @@ namespace CoolapkLite.ViewModels.ToolPages
             OnLoadMoreCompleted?.Invoke();
         }
 
-        private void OrderFanList()
-        {
-            OnLoadMoreStarted?.Invoke();
-            FanNumListByDate = FanNumListByDate ?? new ObservableCollection<ChartValueItem>();
-            if (FanList.Count > 0) { FanNumListByDate.Clear(); }
-            ObservableCollection<Entity> FanListByDate = new ObservableCollection<Entity>(FanList.OrderBy(item => (item as ContactModel).DateLine));
-            int temp = (FanListByDate.First() as ContactModel).DateLine, num = 0;
-            foreach (ContactModel contact in FanListByDate)
-            {
-                if (temp != contact.DateLine)
-                {
-                    FanNumListByDate.Add(new ChartValueItem(temp, num));
-                    temp = contact.DateLine;
-                }
-                num++;
-                InvokeProgressChanged(contact, FanListByDate);
-            }
-            FanNumListByDate.Add(new ChartValueItem(temp, num));
-            OnFanNumListByDateChanged?.Invoke();
-            OnLoadMoreCompleted?.Invoke();
-        }
-
         private string NumToLetter(string nums)
         {
             string letter = string.Empty;
@@ -155,39 +140,107 @@ namespace CoolapkLite.ViewModels.ToolPages
         }
     }
 
-    internal class ChartValueItem : INotifyPropertyChanged
+    internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged
     {
-        private int _valueX;
-        public int ValueX
+        public List<DateData> FanNumListByDate { get; set; }
+
+        public delegate void FanNumListByDateChanged();
+        public event FanNumListByDateChanged OnFanNumListByDateChanged;
+
+        private string _dateLabel;
+        public string DateLabel
         {
-            get
-            {
-                return _valueX;
-            }
+            get { return _dateLabel; }
             set
             {
-                if (_valueX != value)
-                {
-                    _valueX = value;
-                    RaisePropertyChangedEvent();
-                }
+                _dateLabel = value;
+                RaisePropertyChangedEvent();
             }
         }
 
-        private int _valueY;
-        public int ValueY
+        private double _fansValue;
+        public double FansValue
         {
-            get
-            {
-                return _valueY;
-            }
+            get { return _fansValue; }
             set
             {
-                if (_valueY != value)
+                _fansValue = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+
+        private ChartDataContext fanNumListByDateTrack;
+        public ChartDataContext FanNumListByDateTrack
+        {
+            get { return fanNumListByDateTrack; }
+            set
+            {
+                fanNumListByDateTrack = value;
+                RaisePropertyChangedEvent();
+                FanNumListByDateUpdate(fanNumListByDateTrack);
+            }
+        }
+
+        private void OrderFanList()
+        {
+            OnLoadMoreStarted?.Invoke();
+            FanNumListByDate = FanNumListByDate ?? new List<DateData>();
+            if (FanList.Count > 0) { FanNumListByDate.Clear(); }
+            ObservableCollection<Entity> FanListByDate = new ObservableCollection<Entity>(FanList.OrderBy(item => (item as ContactModel).DateLine));
+            int temp = (FanListByDate.First() as ContactModel).DateLine, num = 0;
+            foreach (ContactModel contact in FanListByDate)
+            {
+                if (temp != contact.DateLine)
                 {
-                    _valueY = value;
-                    RaisePropertyChangedEvent();
+                    FanNumListByDate.Add(new DateData() { Date = Convert.ToDouble(temp).ConvertUnixTimeStampToDateTime(), Value = num });
+                    temp = contact.DateLine;
                 }
+                num++;
+                InvokeProgressChanged(contact, FanListByDate);
+            }
+            FanNumListByDate.Add(new DateData() { Date = Convert.ToDouble(temp).ConvertUnixTimeStampToDateTime(), Value = num });
+            OnFanNumListByDateChanged?.Invoke();
+            OnLoadMoreCompleted?.Invoke();
+        }
+
+        private void FanNumListByDateUpdate(ChartDataContext fanNumListByDateTrack)
+        {
+            var item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
+            DateLabel = item.Date.ToString("yyyy.MM.dd");
+            FansValue = item.Value;
+        }
+    }
+
+    public class DateData: INotifyPropertyChanged
+    {
+        private DateTime _date;
+        public DateTime Date
+        {
+            get => _date;
+            set
+            {
+                if (_date == value)
+                {
+                    return;
+                }
+                _date = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        private double _value;
+        public double Value
+        {
+            get => _value;
+            set
+            {
+                if (_value == value)
+                {
+                    return;
+                }
+                _value = value;
+                RaisePropertyChangedEvent();
             }
         }
 
@@ -196,12 +249,6 @@ namespace CoolapkLite.ViewModels.ToolPages
         private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
-        }
-
-        public ChartValueItem(int X, int Y)
-        {
-            ValueX = X;
-            ValueY = Y;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Core.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using LiteDB;
@@ -119,7 +120,9 @@ namespace CoolapkLite.Helpers
     }
 
     internal static partial class UIHelper
-    { 
+    {
+        public static IHaveTitleBar AppTitle;
+
         public static async void ShowProgressBar()
         {
             IsShowingProgressBar = true;
@@ -130,7 +133,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                MainPage?.ShowProgressBar();
+                AppTitle?.ShowProgressBar();
             }
         }
 
@@ -144,7 +147,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                MainPage?.ShowProgressBar(value);
+                AppTitle?.ShowProgressBar(value);
             }
         }
 
@@ -155,7 +158,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            MainPage?.PausedProgressBar();
+            AppTitle?.PausedProgressBar();
         }
 
         public static async void ErrorProgressBar()
@@ -165,7 +168,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            MainPage?.ErrorProgressBar();
+            AppTitle?.ErrorProgressBar();
         }
 
         public static async void HideProgressBar()
@@ -175,7 +178,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            MainPage?.HideProgressBar();
+            AppTitle?.HideProgressBar();
         }
 
         public static async void ShowMessage(string message)
@@ -200,18 +203,18 @@ namespace CoolapkLite.Helpers
                         if (MessageList.Count == 0 && !IsShowingProgressBar) { await statusBar.ProgressIndicator.HideAsync(); }
                         statusBar.ProgressIndicator.Text = string.Empty;
                     }
-                    else if (MainPage != null)
+                    else if (AppTitle != null)
                     {
                         if (!string.IsNullOrEmpty(MessageList[0]))
                         {
                             string messages = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
-                            MainPage.AppTitle.Text = messages;
+                            AppTitle.ShowMessage(messages);
                             await Task.Delay(3000);
                         }
                         MessageList.RemoveAt(0);
                         if (MessageList.Count == 0)
                         {
-                            MainPage.AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+                            AppTitle.ShowMessage();
                         }
                     }
                 }

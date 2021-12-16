@@ -56,5 +56,10 @@
                 </Button>
             </Pivot.RightHeader>
         </Pivot>
+        <ProgressBar
+            x:Name="ProgressBar"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            IsIndeterminate="False" />
     </Grid>
 </Page>

@@ -21,7 +21,7 @@ namespace CoolapkLite.Pages
         }
     }
 
-    internal class ImageModel : INotifyPropertyChanged
+    internal class ShowImageModel : INotifyPropertyChanged
     {
         private bool isProgressRingActived;
         private WeakReference<BitmapImage> pic;
@@ -82,7 +82,7 @@ namespace CoolapkLite.Pages
             });
         }
 
-        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
+        public ShowImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
         {
             Uri = uri;
             Type = IsGif || SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ChangeType(type) : type;
