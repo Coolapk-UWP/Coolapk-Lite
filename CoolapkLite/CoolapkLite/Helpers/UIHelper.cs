@@ -7,6 +7,7 @@ using LiteDB;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -312,6 +313,25 @@ namespace CoolapkLite.Helpers
                 {
                     Navigate(typeof(FeedListPage), f);
                 }
+            }
+        }
+
+        public static bool IsTypePresent(string AssemblyName, string TypeName)
+        {
+            try
+            {
+                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
+                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
+                if (supType != null)
+                {
+                    try { Activator.CreateInstance(supType); }
+                    catch (MissingMethodException) { }
+                }
+                return supType != null;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

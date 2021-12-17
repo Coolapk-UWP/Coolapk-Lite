@@ -157,6 +157,7 @@
     <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
+    <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
