@@ -80,7 +80,7 @@ namespace CoolapkLite.ViewModels.ToolPages
                 if (FanList.Count <= 0 || FanList.Count <= temp) { break; }
                 page++;
             }
-            using (LiteDatabase db = new(LiteDBPath))
+            using (LiteDatabase db = new LiteDatabase(LiteDBPath))
             {
                 try
                 {
@@ -103,7 +103,7 @@ namespace CoolapkLite.ViewModels.ToolPages
         private void LoadFanList()
         {
             OnLoadMoreStarted?.Invoke();
-            using (LiteDatabase db = new(LiteDBPath))
+            using (LiteDatabase db = new LiteDatabase(LiteDBPath))
             {
                 try
                 {
@@ -147,7 +147,7 @@ namespace CoolapkLite.ViewModels.ToolPages
         public delegate void FanNumListByDateChanged();
         public event FanNumListByDateChanged OnFanNumListByDateChanged;
 
-        private string _dateLabel;
+        private string _dateLabel = "长按选择";
         public string DateLabel
         {
             get { return _dateLabel; }

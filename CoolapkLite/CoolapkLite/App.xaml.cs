@@ -2,11 +2,13 @@
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages;
+using Microsoft.Toolkit.Uwp.UI.Media;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -69,11 +71,12 @@ namespace CoolapkLite
                     // 当导航堆栈尚未还原时，导航到第一页，
                     // 并通过将所需信息作为导航参数传入来配置
                     // 参数
-                    if (SettingsHelper.WindowsVersion > 10586)
+                    try
                     {
+                        new BackdropBlurBrush();
                         rootFrame.Navigate(typeof(MainPage), e.Arguments);
                     }
-                    else
+                    catch
                     {
                         rootFrame.Navigate(typeof(PivotPage), e.Arguments);
                     }
