@@ -147,6 +147,7 @@
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\GridPanel.cs" />
+    <Compile Include="Controls\HeaderedContentControl.cs" />
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -373,6 +374,14 @@
     <Page Include="Pages\ToolPages\FansAnalyzePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\HeaderedContentControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

@@ -7,10 +7,11 @@
     xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource SystemChromeMediumLowColor}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style x:Key="HeaderStyle" TargetType="controls:HeaderedContentControl">
+        <Style x:Key="HeaderStyle" TargetType="control:HeaderedContentControl">
             <Setter Property="Margin" Value="0,8" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -29,7 +30,7 @@
                         <ReorderThemeTransition />
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <controls:HeaderedContentControl Header="通知测试" Style="{StaticResource HeaderStyle}">
+                <control:HeaderedContentControl Header="通知测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <TextBox
                             x:Name="NotifyMessage"
@@ -86,8 +87,8 @@
                             TickPlacement="Outside"
                             ValueChanged="Slider_ValueChanged" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl Header="网络测试" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl Header="网络测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <TextBox
                             x:Name="WebUrl"
@@ -111,8 +112,8 @@
                             Content="获取内容"
                             Tag="GetContent" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind IsExtendsTitleBar, Mode=TwoWay}" />
                         <StackPanel Margin="0,2" Orientation="Horizontal">
@@ -133,8 +134,8 @@
                             Content="前往粉丝分析页面"
                             Tag="GoToFansAnalyzePage" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <TextBox
                             x:Name="UnformattedText"
@@ -146,7 +147,7 @@
                             TextWrapping="Wrap" />
                         <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
+                </control:HeaderedContentControl>
                 <Grid Background="#181819" Visibility="Visible">
                     <FontIcon FontSize="900" Glyph="" />
                     <Grid Visibility="Collapsed">

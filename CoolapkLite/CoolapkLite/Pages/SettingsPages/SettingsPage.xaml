@@ -7,10 +7,11 @@
     xmlns:converter="using:CoolapkLite.Helpers.ValueConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource SystemChromeMediumLowColor}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style x:Key="HeaderStyle" TargetType="controls:HeaderedContentControl">
+        <Style x:Key="HeaderStyle" TargetType="control:HeaderedContentControl">
             <Setter Property="Margin" Value="0,8" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -30,7 +31,7 @@
                         <ReorderThemeTransition />
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <controls:HeaderedContentControl x:Uid="/SettingsPage/ThemeSettingsHeader" Style="{StaticResource HeaderStyle}">
+                <control:HeaderedContentControl x:Uid="/SettingsPage/ThemeSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <RadioButton
                             x:Name="Light"
@@ -45,8 +46,8 @@
                             x:Uid="/SettingsPage/ThemeModeDefault"
                             Checked="Button_Checked" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl x:Uid="/SettingsPage/ContentSettingsHeader" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl x:Uid="/SettingsPage/ContentSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
@@ -79,8 +80,8 @@
                             HorizontalAlignment="Left"
                             IsActive="{x:Bind IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </Grid>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl x:Uid="/SettingsPage/UpdateSettingsHeader" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl x:Uid="/SettingsPage/UpdateSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
@@ -122,8 +123,8 @@
                             HorizontalAlignment="Left"
                             IsActive="{x:Bind IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </Grid>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl x:Uid="/SettingsPage/OthersSettingsHeader" Style="{StaticResource HeaderStyle}">
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl x:Uid="/SettingsPage/OthersSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <StackPanel>
                         <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{x:Bind ShowOtherException, Mode=TwoWay}" />
                         <Button
@@ -162,18 +163,13 @@
                             Click="Button_Click"
                             Tag="TestPage" />
                     </StackPanel>
-                </controls:HeaderedContentControl>
-                <controls:HeaderedContentControl x:Uid="/SettingsPage/AboutSettingsHeader" Style="{StaticResource HeaderStyle}">
-                    <Grid>
-                        <controls:MarkdownTextBlock
-                            x:Uid="/MarkDown/about"
-                            Margin="0,2"
-                            HorizontalAlignment="Left"
-                            Background="Transparent"
-                            FontSize="{x:Bind Path=GoToTestPage.FontSize, Mode=OneWay}"
-                            LinkClicked="MarkdownTextBlock_LinkClicked" />
-                    </Grid>
-                </controls:HeaderedContentControl>
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl x:Uid="/SettingsPage/AboutSettingsHeader" Style="{StaticResource HeaderStyle}">
+                    <Grid
+                        x:Name="Readme"
+                        Margin="0,2"
+                        Loaded="Readme_Loaded"/>
+                </control:HeaderedContentControl>
             </StackPanel>
         </ScrollViewer>
         <control:TitleBar

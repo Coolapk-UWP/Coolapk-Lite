@@ -50,6 +50,14 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.TitleUpdate -= Provider_TitleUpdate;
+            Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
+            Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
+        }
+
         private void Provider_TitleUpdate(object sender, EventArgs e) => TitleBar.Title = Provider.Title;
 
         private async Task Refresh(int p = -1) => await Provider.Refresh(p);

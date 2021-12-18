@@ -1,12 +1,15 @@
 ﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -18,6 +21,8 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
+        private MarkdownTextBlock Markdown;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
@@ -150,6 +155,15 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (Markdown != null)
+            {
+                Markdown.LinkClicked -= MarkdownTextBlock_LinkClicked;
+            }
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             switch ((sender as FrameworkElement).Tag as string)
@@ -210,9 +224,30 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
-        private void MarkdownTextBlock_LinkClicked(object sender, Microsoft.Toolkit.Uwp.UI.Controls.LinkClickedEventArgs e)
+        private void Readme_Loaded(object sender, RoutedEventArgs e)
         {
-            _ = Launcher.LaunchUriAsync(new Uri(e.Link));
+            if (UIHelper.IsTypePresent("Microsoft.Toolkit.Uwp.UI", "Media.BackdropBlurBrush"))
+            {
+                Markdown = new MarkdownTextBlock()
+                {
+                    FontSize = GoToTestPage.FontSize,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Background = new SolidColorBrush(Colors.Transparent),
+                    Text = ResourceLoader.GetForViewIndependentUse("MarkDown").GetString("about")
+                };
+                Markdown.LinkClicked += MarkdownTextBlock_LinkClicked;
+                (sender as Grid).Children.Add(Markdown);
+            }
+            else
+            {
+                (sender as Grid).Children.Add(new HyperlinkButton()
+                {
+                    Content = "查看更多",
+                    NavigateUri = new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite/blob/master/About.md")
+                });
+            }
         }
+
+        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = Launcher.LaunchUriAsync(new Uri(e.Link));
     }
 }

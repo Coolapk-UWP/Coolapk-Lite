@@ -1,4 +1,6 @@
 ﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Media;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -59,6 +61,14 @@ namespace CoolapkLite.Controls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(12) : new GridLength(60);
+        }
+
+        private void TitleBlur_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (UIHelper.IsTypePresent("Microsoft.Toolkit.Uwp.UI", "Media.BackdropBlurBrush"))
+            {
+                (sender as Border).Background = new BackdropBlurBrush() { Amount = 10, FallbackColor = Colors.Transparent };
+            }
         }
     }
 }

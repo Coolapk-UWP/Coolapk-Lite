@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
 using GalaSoft.MvvmLight.Command;
 using System;
@@ -48,7 +49,18 @@ namespace CoolapkLite.Pages
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
         {
+            // You can also add items in code.
             Pivot.ItemsSource = MenuItem.GetMainItems();
+
+            // Add handler for ContentFrame navigation.
+            Frame.Navigated += On_Navigated;
+        }
+
+        private void On_Navigated(object sender, NavigationEventArgs e)
+        {
+            HideProgressBar();
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
@@ -56,6 +68,14 @@ namespace CoolapkLite.Pages
             Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
             CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+        }
+
+        private void System_BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = TryGoBack() == AppViewBackButtonVisibility.Visible;
+            }
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -81,6 +101,19 @@ namespace CoolapkLite.Pages
 
             Frame.GoBack();
             return AppViewBackButtonVisibility.Visible;
+        }
+
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as FrameworkElement).Tag as string)
+            {
+                case "User":
+                    Frame.Navigate(typeof(BrowserPage), new object[] { true });
+                    break;
+                case "Setting":
+                    Frame.Navigate(typeof(SettingsPage));
+                    break;
+            }
         }
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;

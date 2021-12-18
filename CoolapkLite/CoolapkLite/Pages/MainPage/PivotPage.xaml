@@ -8,7 +8,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{ThemeResource SystemChromeMediumLowColor}"
     mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="PivotItem">
@@ -196,8 +196,13 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
         <Border
             x:Name="CustomTitleBar"
+            Grid.Row="0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Canvas.ZIndex="1"
@@ -214,6 +219,7 @@
         </Border>
         <Pivot
             x:Name="Pivot"
+            Grid.Row="0"
             Margin="{x:Bind PivotTitleMargin}"
             helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
             Loaded="Pivot_Loaded"
@@ -232,8 +238,22 @@
         </Pivot>
         <ProgressBar
             x:Name="ProgressBar"
+            Grid.Row="0"
             VerticalAlignment="Top"
             Background="Transparent"
             IsIndeterminate="False" />
+        <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
+            <AppBarButton
+                Click="AppBarButton_Click"
+                Icon="Contact"
+                Label="用户"
+                Tag="User" />
+            <AppBarSeparator />
+            <AppBarButton
+                Click="AppBarButton_Click"
+                Icon="Setting"
+                Label="设置"
+                Tag="Setting" />
+        </CommandBar>
     </Grid>
 </Page>

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:statetrigger="using:CoolapkLite.Helpers.StateTrigger"
     d:DesignHeight="80"
     d:DesignWidth="400"
     SizeChanged="UserControl_SizeChanged"
@@ -31,12 +32,8 @@
             Grid.ColumnSpan="5"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
-            <Border Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" Opacity="0.91" />
-            <Border>
-                <Border.Background>
-                    <media:BackdropBlurBrush Amount="10" />
-                </Border.Background>
-            </Border>
+            <Border x:Name="TitleColor" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
+            <Border x:Name="TitleBlur" Loaded="TitleBlur_Loaded"/>
         </Grid>
         <Button
             x:Name="BackButton"
@@ -76,5 +73,32 @@
             Visibility="Collapsed">
             <SymbolIcon Symbol="Refresh" />
         </Button>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="IsPresent">
+                    <VisualState.StateTriggers>
+                        <statetrigger:IsTypePresentTrigger
+                            AssemblyName="Microsoft.Toolkit.Uwp.UI"
+                            ClassTypeName="Media.BackdropBlurBrush"
+                            IsPresent="True" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TitleColor.Opacity" Value="0.91" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="IsNotPresent">
+                    <VisualState.StateTriggers>
+                        <statetrigger:IsTypePresentTrigger
+                            AssemblyName="Microsoft.Toolkit.Uwp.UI"
+                            ClassTypeName="Media.BackdropBlurBrush"
+                            IsPresent="False" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="TitleColor.Opacity" Value="1" />
+                        <Setter Target="TitleBlur.Background" Value="Transparent" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>
