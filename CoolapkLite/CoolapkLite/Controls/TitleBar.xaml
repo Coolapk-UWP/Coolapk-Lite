@@ -33,7 +33,7 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch">
             <Border x:Name="TitleColor" Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" />
-            <Border x:Name="TitleBlur" Loaded="TitleBlur_Loaded"/>
+            <Border x:Name="TitleBlur" Loaded="TitleBlur_Loaded" />
         </Grid>
         <Button
             x:Name="BackButton"

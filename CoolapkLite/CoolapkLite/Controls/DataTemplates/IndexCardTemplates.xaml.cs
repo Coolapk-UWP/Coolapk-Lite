@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using System;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,28 +16,34 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private void FlipView_Loaded(object sender, RoutedEventArgs e)
         {
-            FlipView view = sender as FlipView;
-            view.MaxHeight = view.ActualWidth / 3;
-            DispatcherTimer timer = new DispatcherTimer
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
-                Interval = TimeSpan.FromSeconds(20)
-            };
-            timer.Tick += (o, a) =>
+                (sender as FrameworkElement).Visibility = Visibility.Collapsed;
+            }
+            else
             {
-                if (view.SelectedIndex + 1 >= view.Items.Count())
+                FlipView view = sender as FlipView;
+                view.MaxHeight = view.ActualWidth / 3;
+                DispatcherTimer timer = new DispatcherTimer
                 {
-                    while (view.SelectedIndex > 0)
+                    Interval = TimeSpan.FromSeconds(20)
+                };
+                timer.Tick += (o, a) =>
+                {
+                    if (view.SelectedIndex + 1 >= view.Items.Count())
                     {
-                        view.SelectedIndex -= 1;
+                        while (view.SelectedIndex > 0)
+                        {
+                            view.SelectedIndex -= 1;
+                        }
                     }
-                }
-                else
-                {
-                    view.SelectedIndex += 1;
-                }
-            };
-
-            timer.Start();
+                    else
+                    {
+                        view.SelectedIndex += 1;
+                    }
+                };
+                timer.Start();
+            }
         }
     }
 }

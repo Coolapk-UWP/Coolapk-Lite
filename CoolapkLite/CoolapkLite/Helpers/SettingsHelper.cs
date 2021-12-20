@@ -14,6 +14,7 @@ namespace CoolapkLite.Helpers
         public const string IsFirstRun = "IsFirstRun";
         public const string IsDarkMode = "IsDarkMode";
         public const string IsNoPicsMode = "IsNoPicsMode";
+        public const string IsUseOldEmojiMode = "IsUseOldEmojiMode";
         public const string ShowOtherException = "ShowOtherException";
         public const string IsDisplayOriginPicture = "IsDisplayOriginPicture";
         public const string CheckUpdateWhenLuanching = "CheckUpdateWhenLuanching";
@@ -44,6 +45,10 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
             {
                 LocalSettings.Values.Add(IsNoPicsMode, false);
+            }
+            if (!LocalSettings.Values.ContainsKey(IsUseOldEmojiMode))
+            {
+                LocalSettings.Values.Add(IsUseOldEmojiMode, false);
             }
             if (!LocalSettings.Values.ContainsKey(ShowOtherException))
             {
