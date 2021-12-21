@@ -44,9 +44,9 @@
                             <VisualStateGroup x:Name="PointerStates">
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition
-                                                GeneratedDuration="0:0:0.001"
-                                                From="Selected"
-                                                To="Normal">
+                                        GeneratedDuration="0:0:0.001"
+                                        From="Selected"
+                                        To="Normal">
                                         <VisualTransition.Storyboard>
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectionIndicator" Storyboard.TargetProperty="(UIElement.Opacity)">
