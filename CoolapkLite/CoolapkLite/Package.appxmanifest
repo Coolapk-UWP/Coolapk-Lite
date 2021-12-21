@@ -1,6 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="18184wherewhere.CoolapkLite" Publisher="CN=2C3A37C0-35FC-4839-B08C-751C1C1AFBF5" Version="0.0.1.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+		 xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+		 xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+		 xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+		 IgnorableNamespaces="uap uap5 mp">
+  <Identity Name="18184wherewhere.CoolapkLite" Publisher="CN=where" Version="0.0.1.0" />
   <mp:PhoneIdentity PhoneProductId="ab2e1ffd-c9cb-4a9d-af5c-546f2f9584dc" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Coolapk Lite</DisplayName>
@@ -23,7 +27,7 @@
             <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" uap5:Optional="true" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="portrait" />
           <uap:Rotation Preference="landscape" />
