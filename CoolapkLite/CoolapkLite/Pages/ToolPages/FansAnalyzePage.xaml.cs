@@ -1,9 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.ToolPages;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Telerik.UI.Xaml.Controls.Chart;
 using Windows.ApplicationModel.Resources;

@@ -1,16 +1,10 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using System;
-using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 

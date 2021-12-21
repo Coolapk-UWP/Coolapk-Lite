@@ -147,7 +147,21 @@
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\GridPanel.cs" />
-    <Compile Include="Controls\HeaderedContentControl.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Events.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.HamburgerButton.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Options.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Properties.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenuItemInvokedEventArgs.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemStyleSelector.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemTemplateSelector.cs" />
+    <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuGlyphItem.cs" />
+    <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuImageItem.cs" />
+    <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItem.cs" />
+    <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItemCollection.cs" />
+    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
+    <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
+    <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -176,9 +190,6 @@
     <Compile Include="Models\Pages\FeedListPageModels.cs" />
     <Compile Include="Models\Users\ContactModel.cs" />
     <Compile Include="Models\Users\UserModel.cs" />
-    <Compile Include="Pages\FeedPages\AdapListPage.xaml.cs">
-      <DependentUpon>AdapListPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Interfaces.cs" />
     <Compile Include="Pages\MainPage\PivotPage.xaml.cs">
       <DependentUpon>PivotPage.xaml</DependentUpon>
@@ -805,8 +816,6 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <None Include="Resources\MainPage.resw" />
-    <None Include="Resources\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-CN\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
   </ItemGroup>
@@ -827,6 +836,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\HamburgerMenu\HamburgerMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\HamburgerMenu\HamburgerMenuNavViewTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\HamburgerMenu\HamburgerMenuTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PullToRefreshListView\PullToRefreshListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PullToRefreshListView\PullToRefreshListViewRefreshContainerTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PullToRefreshListView\PullToRefreshListViewTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -834,10 +867,6 @@
     <Page Include="Controls\TitleBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\FeedPages\AdapListPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\MainPage\PivotPage.xaml">
       <SubType>Designer</SubType>
@@ -891,7 +920,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\HeaderedContentControl.xaml">
+    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -958,6 +987,7 @@
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Feed.resw" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

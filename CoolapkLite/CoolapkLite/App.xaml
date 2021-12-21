@@ -8,13 +8,25 @@
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceDictionary x:Key="Default">
+                    <Color x:Key="LayerFillColorDefault">#4C3A3A3A</Color>
                     <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+                    <Color x:Key="TitleBarBackgroundThemeColor">#FF272727</Color>
+                    <Color x:Key="SolidBackgroundFillColorBase">#FF202020</Color>
+                    <Color x:Key="CardBackgroundFillColorDefault">#0DFFFFFF</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="HighContrast">
                     <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+                    <Color x:Key="SolidBackgroundFillColorBase">#FF000000</Color>
+                    <StaticResource x:Key="LayerFillColorDefault" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="TitleBarBackgroundThemeColor" ResourceKey="SystemColorWindowColor" />
+                    <StaticResource x:Key="CardBackgroundFillColorDefault" ResourceKey="SystemColorButtonFaceColor" />
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Light">
+                    <Color x:Key="LayerFillColorDefault">#80FFFFFF</Color>
                     <Color x:Key="SystemChromeMediumHighColor">#FFE6E6E6</Color>
+                    <Color x:Key="TitleBarBackgroundThemeColor">#FFF9F9F9</Color>
+                    <Color x:Key="SolidBackgroundFillColorBase">#FFF3F3F3</Color>
+                    <Color x:Key="CardBackgroundFillColorDefault">#B3FFFFFF</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
             <x:Double x:Key="PageTitleHeight">80</x:Double>
@@ -30,21 +42,24 @@
                 <Setter Property="Padding" Value="1" />
                 <Setter Property="Margin" Value="12,0" />
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="Background" Value="{ThemeResource SystemChromeMediumHighColor}" />
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
             </Style>
             <Style x:Key="FixedListViewItemStyle" TargetType="ListViewItem">
                 <Setter Property="Margin" Value="1" />
                 <Setter Property="Padding" Value="0" />
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                <Setter Property="Background" Value="{ThemeResource SystemChromeMediumHighColor}" />
+                <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
             </Style>
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
             <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+            <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{ThemeResource LayerFillColorDefault}" />
+            <SolidColorBrush x:Key="TitleBarBackgroundThemeBrush" Color="{ThemeResource TitleBarBackgroundThemeColor}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{ThemeResource CardBackgroundFillColorDefault}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -24,7 +24,7 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <controls:PullToRefreshListView
+        <control:PullToRefreshListView
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplate="{StaticResource History}"

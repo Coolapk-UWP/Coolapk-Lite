@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -60,7 +59,7 @@ namespace CoolapkLite.Core.Helpers
         }
     }
 
-        public static partial class Utils
+    public static partial class Utils
     {
         public enum TimeIntervalType
         {

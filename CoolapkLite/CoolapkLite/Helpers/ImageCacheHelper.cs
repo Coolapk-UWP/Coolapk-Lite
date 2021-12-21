@@ -201,7 +201,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException)
             {
                 string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                    UIHelper.ShowMessage(str);
+                UIHelper.ShowMessage(str);
                 return NoPic;
             }
             finally

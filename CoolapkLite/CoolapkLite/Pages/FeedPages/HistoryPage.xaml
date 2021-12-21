@@ -23,7 +23,7 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <controls:PullToRefreshListView
+        <control:PullToRefreshListView
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"

@@ -24,14 +24,15 @@ namespace CoolapkLite.Helpers
     {
         public const int Duration = 3000;
         public static bool IsShowingProgressBar, IsShowingMessage;
+        public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
 
         public static double TitleBarHeight => 32;
-        public static double PageTitleHeight => HasStatusBar ? 48 : 48 + TitleBarHeight;
+        public static double PageTitleHeight => HasStatusBar || HasTitleBar ? 48 : 48 + TitleBarHeight;
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
         public static Thickness ScrollViewerMargin => new Thickness(0, PageTitleHeight, 0, 0);
         public static Thickness ScrollViewerPadding => new Thickness(0, -PageTitleHeight, 0, 0);
-        public static Thickness PivotTitleMargin => new Thickness(0, HasStatusBar ? 0 : TitleBarHeight, 0, 0);
+        public static Thickness PivotTitleMargin => new Thickness(0, HasStatusBar || HasTitleBar ? 0 : TitleBarHeight, 0, 0);
 
         private static CoreDispatcher shellDispatcher;
         public static CoreDispatcher ShellDispatcher
@@ -107,14 +108,24 @@ namespace CoolapkLite.Helpers
                 else if (IsDark)
                 {
                     ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
-                    view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
+                    view.ButtonBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
                     view.ButtonForegroundColor = Colors.White;
+                    if (HasTitleBar)
+                    {
+                        view.ForegroundColor = Colors.White;
+                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor;
+                    }
                 }
                 else
                 {
                     ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
-                    view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
+                    view.ButtonBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
                     view.ButtonForegroundColor = Colors.Black;
+                    if (HasTitleBar)
+                    {
+                        view.ForegroundColor = Colors.Black;
+                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor;
+                    }
                 }
             }
         }

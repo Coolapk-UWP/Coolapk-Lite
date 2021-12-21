@@ -3,23 +3,14 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
 using GalaSoft.MvvmLight.Command;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
+using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -42,7 +33,10 @@ namespace CoolapkLite.Pages
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             Window.Current.SetTitleBar(CustomTitleBar);
-            TitleBar.ExtendViewIntoTitleBar = true;
+            if (SettingsHelper.WindowsVersion >= 10586)
+            {
+                TitleBar.ExtendViewIntoTitleBar = true;
+            }
             UpdateTitleBarLayout(TitleBar);
             UIHelper.CheckTheme();
         }
@@ -54,13 +48,19 @@ namespace CoolapkLite.Pages
 
             // Add handler for ContentFrame navigation.
             Frame.Navigated += On_Navigated;
+
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed += System_BackPressed;
+            }
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             HideProgressBar();
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
         }
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
@@ -78,18 +78,26 @@ namespace CoolapkLite.Pages
             }
         }
 
+        private void System_BackPressed(object sender, BackPressedEventArgs e)
+        {
+            if (!e.Handled)
+            {
+                e.Handled = TryGoBack() == AppViewBackButtonVisibility.Visible;
+            }
+        }
+
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
-                Frame.Navigate(typeof(AdapListPage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
-                RelayCommand RefreshButtonCommand = new RelayCommand((Frame.Content as AdapListPage).Refresh);
+                Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                RelayCommand RefreshButtonCommand = new RelayCommand((Frame.Content as AdaptivePage).Refresh);
                 RefreshButton.Command = RefreshButtonCommand;
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdapListPage AdapListPage)
+            else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
             {
-                RelayCommand RefreshButtonCommand = new RelayCommand(AdapListPage.Refresh);
+                RelayCommand RefreshButtonCommand = new RelayCommand(AdaptivePage.Refresh);
                 RefreshButton.Command = RefreshButtonCommand;
             }
         }

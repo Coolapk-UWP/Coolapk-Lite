@@ -217,6 +217,7 @@
                 Style="{StaticResource CaptionTextBlockStyle}"
                 TextTrimming="CharacterEllipsis" />
         </Border>
+        <control:HamburgerMenu/>
         <Pivot
             x:Name="Pivot"
             Grid.Row="0"

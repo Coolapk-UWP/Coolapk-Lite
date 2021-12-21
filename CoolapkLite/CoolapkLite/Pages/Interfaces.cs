@@ -1,7 +1,4 @@
-﻿using CoolapkLite.Models.Images;
-using System.ComponentModel;
-
-namespace CoolapkLite.Pages
+﻿namespace CoolapkLite.Pages
 {
     internal interface IHaveTitleBar
     {

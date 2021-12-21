@@ -206,13 +206,13 @@ namespace CoolapkLite.ViewModels.ToolPages
 
         private void FanNumListByDateUpdate(ChartDataContext fanNumListByDateTrack)
         {
-            var item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
+            DateData item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
             DateLabel = item.Date.ToString("yyyy.MM.dd");
             FansValue = item.Value;
         }
     }
 
-    public class DateData: INotifyPropertyChanged
+    public class DateData : INotifyPropertyChanged
     {
         private DateTime _date;
         public DateTime Date
