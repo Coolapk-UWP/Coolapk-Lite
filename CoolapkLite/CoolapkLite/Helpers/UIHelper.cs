@@ -16,6 +16,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
@@ -86,21 +87,21 @@ namespace CoolapkLite.Helpers
                 }
 
                 bool IsDark = IsDarkTheme(SettingsHelper.Theme);
-                Color AccentColor = (Color)Application.Current.Resources["SystemChromeMediumLowColor"];
+                SolidColorBrush AccentColor = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
 
                 if (HasStatusBar)
                 {
                     if (IsDark)
                     {
                         StatusBar statusBar = StatusBar.GetForCurrentView();
-                        statusBar.BackgroundColor = AccentColor;
+                        statusBar.BackgroundColor = AccentColor.Color;
                         statusBar.ForegroundColor = Colors.White;
                         statusBar.BackgroundOpacity = 0; // 透明度
                     }
                     else
                     {
                         StatusBar statusBar = StatusBar.GetForCurrentView();
-                        statusBar.BackgroundColor = AccentColor;
+                        statusBar.BackgroundColor = AccentColor.Color;
                         statusBar.ForegroundColor = Colors.Black;
                         statusBar.BackgroundOpacity = 0; // 透明度
                     }
@@ -113,7 +114,7 @@ namespace CoolapkLite.Helpers
                     if (HasTitleBar)
                     {
                         view.ForegroundColor = Colors.White;
-                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor;
+                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor.Color;
                     }
                 }
                 else
@@ -124,7 +125,7 @@ namespace CoolapkLite.Helpers
                     if (HasTitleBar)
                     {
                         view.ForegroundColor = Colors.Black;
-                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor;
+                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor.Color;
                     }
                 }
             }
