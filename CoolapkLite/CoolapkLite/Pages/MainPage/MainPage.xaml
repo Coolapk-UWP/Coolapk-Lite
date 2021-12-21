@@ -208,9 +208,7 @@
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
             SizeChanged="HamburgerMenu_SizeChanged"
             Template="{StaticResource HamburgerMenuTemplate}">
-            <Frame
-                x:Name="HamburgerMenuFrame"
-                x:FieldModifier="Public"/>
+            <Frame x:Name="HamburgerMenuFrame" x:FieldModifier="Public" />
         </controls:HamburgerMenu>
         <ProgressBar
             x:Name="ProgressBar"

@@ -91,20 +91,10 @@ namespace CoolapkLite.Helpers
 
                 if (HasStatusBar)
                 {
-                    if (IsDark)
-                    {
-                        StatusBar statusBar = StatusBar.GetForCurrentView();
-                        statusBar.BackgroundColor = AccentColor.Color;
-                        statusBar.ForegroundColor = Colors.White;
-                        statusBar.BackgroundOpacity = 0; // 透明度
-                    }
-                    else
-                    {
-                        StatusBar statusBar = StatusBar.GetForCurrentView();
-                        statusBar.BackgroundColor = AccentColor.Color;
-                        statusBar.ForegroundColor = Colors.Black;
-                        statusBar.BackgroundOpacity = 0; // 透明度
-                    }
+                    StatusBar StatusBar = StatusBar.GetForCurrentView();
+                    StatusBar.ForegroundColor = IsDark ? Colors.White : Colors.Black;
+                    StatusBar.BackgroundColor = AccentColor.Color;
+                    StatusBar.BackgroundOpacity = 0; // 透明度
                 }
                 else if (IsDark)
                 {
@@ -319,7 +309,7 @@ namespace CoolapkLite.Helpers
             if (str.IsFirst(i++))
             {
                 string u = str.Replace(i - 1);
-                string uid = int.TryParse(u, out _) ? u : await Core.Helpers.NetworkHelper.GetUserIDByNameAsync(u);
+                string uid = int.TryParse(u, out _) ? u : await NetworkHelper.GetUserIDByNameAsync(u);
                 FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
                 if (f != null)
                 {
