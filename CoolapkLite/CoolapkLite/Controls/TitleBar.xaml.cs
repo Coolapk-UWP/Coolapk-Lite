@@ -4,6 +4,7 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -12,6 +13,8 @@ namespace CoolapkLite.Controls
     public sealed partial class TitleBar : UserControl
     {
         public bool IsBackButtonEnabled { get => BackButton.IsEnabled; set => BackButton.IsEnabled = value; }
+
+        private Brush ApplicationPageBackgroundThemeAcrylicElementBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicElementBrush;
 
         public string Title
         {
@@ -61,14 +64,6 @@ namespace CoolapkLite.Controls
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(12) : new GridLength(60);
-        }
-
-        private void TitleBlur_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (UIHelper.IsTypePresent("Microsoft.Toolkit.Uwp.UI", "Media.BackdropBlurBrush"))
-            {
-                (sender as Border).Background = new BackdropBlurBrush() { Amount = 10, FallbackColor = Colors.Transparent };
-            }
         }
     }
 }

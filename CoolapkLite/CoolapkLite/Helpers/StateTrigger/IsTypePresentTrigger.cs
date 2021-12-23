@@ -1,11 +1,12 @@
-﻿using Windows.UI.Xaml;
+﻿using Windows.Foundation.Metadata;
+using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers.StateTrigger
 {
     public class IsTypePresentTrigger : StateTriggerBase
     {
-        public string ClassTypeName { get; set; }
         public string AssemblyName { get; set; }
+        public string ClassTypeName { get; set; }
 
         private bool _isPresent;
         private bool? _isPropertyPresent = null;
@@ -19,8 +20,9 @@ namespace CoolapkLite.Helpers.StateTrigger
                 if (_isPropertyPresent == null)
                 {
                     // Call into ApiInformation method to determine if property is present.
-                    _isPropertyPresent =
-                    UIHelper.IsTypePresent(AssemblyName, ClassTypeName);
+                    _isPropertyPresent = string.IsNullOrEmpty(AssemblyName)
+                        ? ApiInformation.IsTypePresent(ClassTypeName)
+                        : UIHelper.IsTypePresent(AssemblyName, ClassTypeName);
                 }
 
                 // If the property presence matches _isPresent then the trigger will be activated;

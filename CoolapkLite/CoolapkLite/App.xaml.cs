@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
-using CoolapkLite.Pages;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;

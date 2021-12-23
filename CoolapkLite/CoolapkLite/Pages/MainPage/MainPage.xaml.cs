@@ -30,6 +30,9 @@ namespace CoolapkLite
     /// </summary>
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
+        private Brush ApplicationPageBackgroundThemeAcrylicWindowBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicWindowBrush;
+        private Brush ApplicationPageBackgroundThemeAcrylicElementBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicElementBrush;
+
         public MainPage()
         {
             InitializeComponent();
@@ -44,6 +47,7 @@ namespace CoolapkLite
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
+            UIHelper.InitializeBrush();
             UIHelper.CheckTheme();
         }
 
@@ -155,6 +159,18 @@ namespace CoolapkLite
 
         private void HamburgerMenu_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            FrameworkElement SearchList = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "SearchList");
+            if (SearchList != null)
+            {
+                SearchList.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Collapsed : Visibility.Visible;
+            }
+
+            FrameworkElement AutoSuggestBox = VisualTree.FindDescendantByName((sender as FrameworkElement).Parent, "AutoSuggestBox");
+            if (AutoSuggestBox != null)
+            {
+                AutoSuggestBox.Visibility = HamburgerMenu.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
+            }
+
             if (Window.Current.Bounds.Width >= 1008)
             {
                 HamburgerMenu.IsPaneOpen = true;

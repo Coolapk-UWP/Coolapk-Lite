@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:statetrigger="using:CoolapkLite.Helpers.StateTrigger"
     d:DesignHeight="80"
     d:DesignWidth="400"
     SizeChanged="UserControl_SizeChanged"
@@ -30,10 +29,8 @@
             x:Name="TitleBackground"
             Grid.ColumnSpan="5"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch">
-            <Border x:Name="TitleColor" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-            <Border x:Name="TitleBlur" Loaded="TitleBlur_Loaded" />
-        </Grid>
+            VerticalAlignment="Stretch"
+            Background="{x:Bind ApplicationPageBackgroundThemeAcrylicElementBrush}" />
         <Button
             x:Name="BackButton"
             Grid.Column="0"
@@ -72,32 +69,5 @@
             Visibility="Collapsed">
             <SymbolIcon Symbol="Refresh" />
         </Button>
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="IsPresent">
-                    <VisualState.StateTriggers>
-                        <statetrigger:IsTypePresentTrigger
-                            AssemblyName="Microsoft.Toolkit.Uwp.UI"
-                            ClassTypeName="Media.BackdropBlurBrush"
-                            IsPresent="True" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TitleColor.Opacity" Value="0.91" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="IsNotPresent">
-                    <VisualState.StateTriggers>
-                        <statetrigger:IsTypePresentTrigger
-                            AssemblyName="Microsoft.Toolkit.Uwp.UI"
-                            ClassTypeName="Media.BackdropBlurBrush"
-                            IsPresent="False" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="TitleColor.Opacity" Value="1" />
-                        <Setter Target="TitleBlur.Background" Value="Transparent" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
     </Grid>
 </UserControl>

@@ -181,6 +181,7 @@
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\GetWeakValue.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
+    <Compile Include="Media\BackdropBlurBrush.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
     <Compile Include="Models\Feeds\SourceFeedModel.cs" />

@@ -5,6 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:CoolapkLite.Media"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -145,7 +146,7 @@
                         <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" />
                     </StackPanel>
                 </control:HeaderedContentControl>
-                <Grid Background="#181819" Visibility="Visible">
+                <Grid Background="#181819" Visibility="Collapsed">
                     <FontIcon FontSize="900" Glyph="" />
                     <Grid Visibility="Collapsed">
                         <Border

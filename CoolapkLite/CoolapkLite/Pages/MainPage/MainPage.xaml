@@ -7,7 +7,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Background="{x:Bind ApplicationPageBackgroundThemeAcrylicWindowBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -179,22 +179,22 @@
                 <EntranceThemeTransition />
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <Border
+        <Grid
             x:Name="CustomTitleBar"
-            HorizontalAlignment="Left"
+            HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
-            Canvas.ZIndex="1"
-            Visibility="Visible">
+            Background="Transparent"
+            Canvas.ZIndex="1">
             <TextBlock
                 x:Name="AppTitle"
-                Padding="12,0,0,0"
+                Padding="12,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 MaxLines="1"
                 Style="{StaticResource CaptionTextBlockStyle}"
-                Text=""
+                Text="酷安 Lite"
                 TextTrimming="CharacterEllipsis" />
-        </Border>
+        </Grid>
         <controls:HamburgerMenu
             x:Name="HamburgerMenu"
             DisplayMode="Inline"
@@ -204,7 +204,7 @@
             Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
-            PaneBackground="{StaticResource ApplicationPageBackgroundThemeBrush}"
+            PaneBackground="{x:Bind ApplicationPageBackgroundThemeAcrylicElementBrush}"
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
             SizeChanged="HamburgerMenu_SizeChanged"
             Template="{StaticResource HamburgerMenuTemplate}">

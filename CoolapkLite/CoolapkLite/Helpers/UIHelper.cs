@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Media;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
@@ -21,6 +22,64 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
 {
+    internal static partial class UIHelper
+    {
+        public static Brush ApplicationPageBackgroundThemeAcrylicWindowBrush;
+        public static Brush ApplicationPageBackgroundThemeAcrylicElementBrush;
+
+        public static void InitializeBrush()
+        {
+            SolidColorBrush ApplicationPageBackgroundThemeBrush = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+            {
+                ApplicationPageBackgroundThemeAcrylicElementBrush = new AcrylicBrush()
+                {
+                    BackgroundSource = AcrylicBackgroundSource.Backdrop,
+                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
+                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
+                    TintOpacity = 0.9
+                };
+                ApplicationPageBackgroundThemeAcrylicWindowBrush = new AcrylicBrush()
+                {
+                    BackgroundSource = AcrylicBackgroundSource.HostBackdrop,
+                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
+                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
+                    TintOpacity = 1
+                };
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
+            {
+                ApplicationPageBackgroundThemeAcrylicElementBrush = new BackdropBlurBrush()
+                {
+                    BackgroundSource = BlurBackgroundSource.Backdrop,
+                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
+                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
+                    TintOpacity = 0.91,
+                    Amount = 10
+                };
+                if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
+                {
+                    ApplicationPageBackgroundThemeAcrylicWindowBrush = new BackdropBlurBrush()
+                    {
+                        BackgroundSource = BlurBackgroundSource.HostBackdrop,
+                        TintColor = ApplicationPageBackgroundThemeBrush.Color,
+                        FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
+                        TintOpacity = 0.9,
+                        Amount = 10
+                    };
+                }
+                else
+                {
+                    ApplicationPageBackgroundThemeAcrylicWindowBrush = ApplicationPageBackgroundThemeBrush;
+                }
+            }
+            else
+            {
+                ApplicationPageBackgroundThemeAcrylicElementBrush = ApplicationPageBackgroundThemeAcrylicWindowBrush = ApplicationPageBackgroundThemeBrush;
+            }
+        }
+    }
+
     internal static partial class UIHelper
     {
         public const int Duration = 3000;
