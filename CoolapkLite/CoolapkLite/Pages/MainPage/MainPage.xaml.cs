@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Media;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -30,9 +31,6 @@ namespace CoolapkLite
     /// </summary>
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
-        private Brush ApplicationPageBackgroundThemeAcrylicWindowBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicWindowBrush;
-        private Brush ApplicationPageBackgroundThemeAcrylicElementBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicElementBrush;
-
         public MainPage()
         {
             InitializeComponent();
@@ -47,7 +45,6 @@ namespace CoolapkLite
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
-            UIHelper.InitializeBrush();
             UIHelper.CheckTheme();
         }
 
@@ -254,6 +251,27 @@ namespace CoolapkLite
             Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
             CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+        }
+
+        private void HamburgerListView_Loading(FrameworkElement sender, object args)
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            dict.Source = new Uri("ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml");
+            Style Style = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.RevealBrush") ? (Style)dict["HamburgerMenuItemRevealStyle"] : (Style)dict["HamburgerMenuItemStyle"];
+            if (sender is ListView ListView)
+            {
+                ListView.ItemContainerStyle = Style;
+            }
+            else if (sender is ListViewItem ListViewItem)
+            {
+                ListViewItem.Style = Style;
+            }
+        }
+
+        private void Page_Loading(FrameworkElement sender, object args)
+        {
+            Background = UIHelper.ApplicationPageBackgroundThemeWindowBrush();
+            HamburgerMenu.PaneBackground = UIHelper.ApplicationPageBackgroundThemeElementBrush();
         }
 
         private void FrameworkElement_Loading(FrameworkElement sender, object args) => sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);

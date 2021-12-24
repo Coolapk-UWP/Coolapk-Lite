@@ -7,7 +7,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{x:Bind ApplicationPageBackgroundThemeAcrylicWindowBrush}"
+    Loading="Page_Loading"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -77,10 +77,10 @@
                                     helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Menu items"
                                     IsItemClickEnabled="True"
-                                    ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                                     ItemTemplate="{TemplateBinding ItemTemplate}"
                                     ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                     ItemsSource="{TemplateBinding ItemsSource}"
+                                    Loading="HamburgerListView_Loading"
                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
@@ -103,7 +103,7 @@
                                             <ListViewItem
                                                 x:Name="SearchList"
                                                 Loaded="FrameworkElement_Loaded"
-                                                Style="{StaticResource HamburgerMenuItemStyle}"
+                                                Loading="HamburgerListView_Loading"
                                                 Tapped="SearchList_Tapped"
                                                 Visibility="Collapsed">
                                                 <Grid>
@@ -134,10 +134,10 @@
                                     helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                                     AutomationProperties.Name="Option items"
                                     IsItemClickEnabled="True"
-                                    ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                                     ItemTemplate="{TemplateBinding OptionsItemTemplate}"
                                     ItemTemplateSelector="{TemplateBinding OptionsItemTemplateSelector}"
                                     ItemsSource="{TemplateBinding OptionsItemsSource}"
+                                    Loading="HamburgerListView_Loading"
                                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                     SelectedIndex="{Binding SelectedOptionsIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                                     SelectedItem="{Binding SelectedOptionsItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
@@ -204,7 +204,6 @@
             Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
-            PaneBackground="{x:Bind ApplicationPageBackgroundThemeAcrylicElementBrush}"
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
             SizeChanged="HamburgerMenu_SizeChanged"
             Template="{StaticResource HamburgerMenuTemplate}">

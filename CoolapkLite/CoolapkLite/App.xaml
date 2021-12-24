@@ -6,7 +6,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
+                <ResourceDictionary x:Key="Dark">
                     <Color x:Key="LayerFillColorDefault">#4C3A3A3A</Color>
                     <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
                     <Color x:Key="TitleBarBackgroundThemeColor">#FF272727</Color>

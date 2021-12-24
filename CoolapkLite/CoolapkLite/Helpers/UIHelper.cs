@@ -17,6 +17,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -24,58 +25,39 @@ namespace CoolapkLite.Helpers
 {
     internal static partial class UIHelper
     {
-        public static Brush ApplicationPageBackgroundThemeAcrylicWindowBrush;
-        public static Brush ApplicationPageBackgroundThemeAcrylicElementBrush;
-
-        public static void InitializeBrush()
+        public static Brush ApplicationPageBackgroundThemeWindowBrush()
         {
-            SolidColorBrush ApplicationPageBackgroundThemeBrush = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
+            ResourceDictionary dict = new ResourceDictionary();
+            dict.Source = new Uri("ms-appx:///Themes/Color.xaml");
             if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
-                ApplicationPageBackgroundThemeAcrylicElementBrush = new AcrylicBrush()
-                {
-                    BackgroundSource = AcrylicBackgroundSource.Backdrop,
-                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
-                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
-                    TintOpacity = 0.9
-                };
-                ApplicationPageBackgroundThemeAcrylicWindowBrush = new AcrylicBrush()
-                {
-                    BackgroundSource = AcrylicBackgroundSource.HostBackdrop,
-                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
-                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
-                    TintOpacity = 1
-                };
+                return (AcrylicBrush)dict["ApplicationPageBackgroundThemeAcrylicWindowBrush"];
             }
-            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
+            else if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
             {
-                ApplicationPageBackgroundThemeAcrylicElementBrush = new BackdropBlurBrush()
-                {
-                    BackgroundSource = BlurBackgroundSource.Backdrop,
-                    TintColor = ApplicationPageBackgroundThemeBrush.Color,
-                    FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
-                    TintOpacity = 0.91,
-                    Amount = 10
-                };
-                if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
-                {
-                    ApplicationPageBackgroundThemeAcrylicWindowBrush = new BackdropBlurBrush()
-                    {
-                        BackgroundSource = BlurBackgroundSource.HostBackdrop,
-                        TintColor = ApplicationPageBackgroundThemeBrush.Color,
-                        FallbackColor = ApplicationPageBackgroundThemeBrush.Color,
-                        TintOpacity = 0.9,
-                        Amount = 10
-                    };
-                }
-                else
-                {
-                    ApplicationPageBackgroundThemeAcrylicWindowBrush = ApplicationPageBackgroundThemeBrush;
-                }
+                return (BackdropBlurBrush)dict["ApplicationPageBackgroundThemeBlurWindowBrush"];
             }
             else
             {
-                ApplicationPageBackgroundThemeAcrylicElementBrush = ApplicationPageBackgroundThemeAcrylicWindowBrush = ApplicationPageBackgroundThemeBrush;
+                return (SolidColorBrush)dict["ApplicationPageBackgroundThemeBrush"];
+            }
+        }
+
+        public static Brush ApplicationPageBackgroundThemeElementBrush()
+        {
+            ResourceDictionary dict = new ResourceDictionary();
+            dict.Source = new Uri("ms-appx:///Themes/Color.xaml");
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+            {
+                return (AcrylicBrush)dict["ApplicationPageBackgroundThemeAcrylicElementBrush"];
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
+            {
+                return (BackdropBlurBrush)dict["ApplicationPageBackgroundThemeBlurElementBrush"];
+            }
+            else
+            {
+                return (SolidColorBrush)dict["ApplicationPageBackgroundThemeBrush"];
             }
         }
     }

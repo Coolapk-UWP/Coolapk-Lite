@@ -14,8 +14,6 @@ namespace CoolapkLite.Controls
     {
         public bool IsBackButtonEnabled { get => BackButton.IsEnabled; set => BackButton.IsEnabled = value; }
 
-        private Brush ApplicationPageBackgroundThemeAcrylicElementBrush => UIHelper.ApplicationPageBackgroundThemeAcrylicElementBrush;
-
         public string Title
         {
             get => TitleBlock.Text;
@@ -61,9 +59,8 @@ namespace CoolapkLite.Controls
             ProgressRing.IsActive = false;
         }
 
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(12) : new GridLength(60);
-        }
+        private void TitleBackground_Loading(FrameworkElement sender, object args) => (sender as Grid).Background = UIHelper.ApplicationPageBackgroundThemeElementBrush();
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(12) : new GridLength(60);
     }
 }

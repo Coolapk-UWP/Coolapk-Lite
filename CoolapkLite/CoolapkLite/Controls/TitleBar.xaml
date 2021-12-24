@@ -28,9 +28,9 @@
         <Grid
             x:Name="TitleBackground"
             Grid.ColumnSpan="5"
+            Loading="TitleBackground_Loading"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="{x:Bind ApplicationPageBackgroundThemeAcrylicElementBrush}" />
+            VerticalAlignment="Stretch" />
         <Button
             x:Name="BackButton"
             Grid.Column="0"
