@@ -57,7 +57,7 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 SettingsHelper.Set(SettingsHelper.IsDarkMode, value);
                 isDarkMode = SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
-                UIHelper.CheckTheme();
+                UIHelper.ChangeTheme();
                 RaisePropertyChangedEvent();
             }
         }

@@ -59,7 +59,15 @@ namespace CoolapkLite.Controls
             ProgressRing.IsActive = false;
         }
 
-        private void TitleBackground_Loading(FrameworkElement sender, object args) => (sender as Grid).Background = UIHelper.ApplicationPageBackgroundThemeElementBrush();
+        private void CheckTheme(object sender, ElementTheme e) => CheckTheme();
+
+        private void TitleBackground_Loading(FrameworkElement sender, object args) => CheckTheme();
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) => UIHelper.AppThemeChanged += CheckTheme;
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e) => UIHelper.AppThemeChanged -= CheckTheme;
+
+        private void CheckTheme() => TitleBackground.Background = UIHelper.ApplicationPageBackgroundThemeElementBrush();
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? new GridLength(12) : new GridLength(60);
     }

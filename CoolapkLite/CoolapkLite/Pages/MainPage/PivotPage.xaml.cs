@@ -38,7 +38,7 @@ namespace CoolapkLite.Pages
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
-            UIHelper.CheckTheme();
+            UIHelper.ChangeTheme();
         }
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)

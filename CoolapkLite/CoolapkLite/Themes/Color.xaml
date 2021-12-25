@@ -4,39 +4,29 @@
     xmlns:media="using:CoolapkLite.Media">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Dark">
+            <Color x:Key="LayerFillColorDefault">#4C3A3A3A</Color>
+            <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+            <Color x:Key="TitleBarBackgroundThemeColor">#FF272727</Color>
             <Color x:Key="SolidBackgroundFillColorBase">#FF202020</Color>
+            <Color x:Key="CardBackgroundFillColorDefault">#0DFFFFFF</Color>
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
+            <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
             <Color x:Key="SolidBackgroundFillColorBase">#FF000000</Color>
+            <StaticResource x:Key="LayerFillColorDefault" ResourceKey="SystemColorWindowColor" />
+            <StaticResource x:Key="TitleBarBackgroundThemeColor" ResourceKey="SystemColorWindowColor" />
+            <StaticResource x:Key="CardBackgroundFillColorDefault" ResourceKey="SystemColorButtonFaceColor" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
+            <Color x:Key="LayerFillColorDefault">#80FFFFFF</Color>
+            <Color x:Key="SystemChromeMediumHighColor">#FFE6E6E6</Color>
+            <Color x:Key="TitleBarBackgroundThemeColor">#FFF9F9F9</Color>
             <Color x:Key="SolidBackgroundFillColorBase">#FFF3F3F3</Color>
+            <Color x:Key="CardBackgroundFillColorDefault">#B3FFFFFF</Color>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-    <AcrylicBrush
-        x:Key="ApplicationPageBackgroundThemeAcrylicWindowBrush"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="1" />
-    <media:BackdropBlurBrush
-        x:Key="ApplicationPageBackgroundThemeBlurWindowBrush"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        Amount="10"
-        TintOpacity="0.9" />
-    <AcrylicBrush
-        x:Key="ApplicationPageBackgroundThemeAcrylicElementBrush"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="0.9" />
-    <media:BackdropBlurBrush
-        x:Key="ApplicationPageBackgroundThemeBlurElementBrush"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        Amount="10"
-        TintOpacity="0.91" />
+    <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{ThemeResource LayerFillColorDefault}" />
+    <SolidColorBrush x:Key="TitleBarBackgroundThemeBrush" Color="{ThemeResource TitleBarBackgroundThemeColor}" />
+    <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+    <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{ThemeResource CardBackgroundFillColorDefault}" />
 </ResourceDictionary>

@@ -6,8 +6,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="80"
     d:DesignWidth="400"
+    Loaded="UserControl_Loaded"
     SizeChanged="UserControl_SizeChanged"
     Tapped="TitleGrid_Tapped"
+    Unloaded="UserControl_Unloaded"
     mc:Ignorable="d">
     <Grid
         x:Name="TitleGrid"
@@ -28,9 +30,9 @@
         <Grid
             x:Name="TitleBackground"
             Grid.ColumnSpan="5"
-            Loading="TitleBackground_Loading"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
+            VerticalAlignment="Stretch"
+            Loading="TitleBackground_Loading" />
         <Button
             x:Name="BackButton"
             Grid.Column="0"

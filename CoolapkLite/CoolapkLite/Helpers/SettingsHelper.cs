@@ -2,6 +2,7 @@
 using System;
 using Windows.Storage;
 using Windows.System.Profile;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
@@ -89,9 +90,9 @@ namespace CoolapkLite.Helpers
         static SettingsHelper()
         {
             SetDefaultSettings();
+            UIHelper.ChangeTheme();
             SetBackgroundTheme(UISettings, null);
             UISettings.ColorValuesChanged += SetBackgroundTheme;
-            UIHelper.CheckTheme();
         }
 
         private static void SetBackgroundTheme(UISettings o, object _)
@@ -101,6 +102,7 @@ namespace CoolapkLite.Helpers
                 bool value = o.GetColorValue(UIColorType.Background) == Windows.UI.Colors.Black;
                 Set(IsDarkMode, value);
                 UISettingChanged.Invoke(value ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
+                _ = UIHelper.ShellDispatcher?.RunAsync(CoreDispatcherPriority.Normal, () => UIHelper.CheckTheme(value, true));
             }
         }
 

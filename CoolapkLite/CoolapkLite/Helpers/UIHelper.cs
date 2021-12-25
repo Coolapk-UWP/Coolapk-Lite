@@ -25,39 +25,45 @@ namespace CoolapkLite.Helpers
 {
     internal static partial class UIHelper
     {
+        public static event EventHandler<ElementTheme> AppThemeChanged;
+
         public static Brush ApplicationPageBackgroundThemeWindowBrush()
         {
-            ResourceDictionary dict = new ResourceDictionary();
-            dict.Source = new Uri("ms-appx:///Themes/Color.xaml");
             if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
-                return (AcrylicBrush)dict["ApplicationPageBackgroundThemeAcrylicWindowBrush"];
+                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
+                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
+                return (AcrylicBrush)AcrylicBrushs["ApplicationPageBackgroundThemeAcrylicWindowBrush"];
             }
             else if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
             {
-                return (BackdropBlurBrush)dict["ApplicationPageBackgroundThemeBlurWindowBrush"];
+                ResourceDictionary BlurBrushs = new ResourceDictionary();
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
+                return (BackdropBlurBrush)BlurBrushs["ApplicationPageBackgroundThemeBlurWindowBrush"];
             }
             else
             {
-                return (SolidColorBrush)dict["ApplicationPageBackgroundThemeBrush"];
+                return (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
             }
         }
 
         public static Brush ApplicationPageBackgroundThemeElementBrush()
         {
-            ResourceDictionary dict = new ResourceDictionary();
-            dict.Source = new Uri("ms-appx:///Themes/Color.xaml");
             if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
-                return (AcrylicBrush)dict["ApplicationPageBackgroundThemeAcrylicElementBrush"];
+                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
+                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
+                return (AcrylicBrush)AcrylicBrushs["ApplicationPageBackgroundThemeAcrylicElementBrush"];
             }
             else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
             {
-                return (BackdropBlurBrush)dict["ApplicationPageBackgroundThemeBlurElementBrush"];
+                ResourceDictionary BlurBrushs = new ResourceDictionary();
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
+                return (BackdropBlurBrush)BlurBrushs["ApplicationPageBackgroundThemeBlurElementBrush"];
             }
             else
             {
-                return (SolidColorBrush)dict["ApplicationPageBackgroundThemeBrush"];
+                return (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
             }
         }
     }
@@ -93,6 +99,7 @@ namespace CoolapkLite.Helpers
 
         static UIHelper()
         {
+            AppThemeChanged += (_, _) => CheckTheme();
             BsonMapper.Global.RegisterType
                 (
                 serialize: (pic) => pic.Uri,
@@ -110,14 +117,14 @@ namespace CoolapkLite.Helpers
             return theme == ElementTheme.Default ? Application.Current.RequestedTheme == ApplicationTheme.Dark : theme == ElementTheme.Dark;
         }
 
-        public static async void CheckTheme()
+        public static async void ChangeTheme()
         {
             while (Window.Current?.Content is null)
             {
                 await Task.Delay(100);
             }
 
-            if (Window.Current.Content is FrameworkElement frameworkElement)
+            if (Window.Current?.Content is FrameworkElement frameworkElement)
             {
                 foreach (CoreApplicationView item in CoreApplication.Views)
                 {
@@ -126,40 +133,38 @@ namespace CoolapkLite.Helpers
                         (Window.Current.Content as FrameworkElement).RequestedTheme = SettingsHelper.Theme;
                     });
                 }
-
-                bool IsDark = IsDarkTheme(SettingsHelper.Theme);
-                SolidColorBrush AccentColor = (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
-
-                if (HasStatusBar)
-                {
-                    StatusBar StatusBar = StatusBar.GetForCurrentView();
-                    StatusBar.ForegroundColor = IsDark ? Colors.White : Colors.Black;
-                    StatusBar.BackgroundColor = AccentColor.Color;
-                    StatusBar.BackgroundOpacity = 0; // 透明度
-                }
-                else if (IsDark)
-                {
-                    ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
-                    view.ButtonBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
-                    view.ButtonForegroundColor = Colors.White;
-                    if (HasTitleBar)
-                    {
-                        view.ForegroundColor = Colors.White;
-                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor.Color;
-                    }
-                }
-                else
-                {
-                    ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
-                    view.ButtonBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
-                    view.ButtonForegroundColor = Colors.Black;
-                    if (HasTitleBar)
-                    {
-                        view.ForegroundColor = Colors.Black;
-                        view.BackgroundColor = view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = AccentColor.Color;
-                    }
-                }
             }
+
+            AppThemeChanged?.Invoke(Window.Current?.Content, SettingsHelper.Theme);
+        }
+
+        public static void CheckTheme()
+        {
+            bool IsDark = IsDarkTheme(SettingsHelper.Theme);
+            CheckTheme(IsDark, false);
+        }
+
+        public static void CheckTheme(bool IsDark, bool IsInvoke = false)
+        {
+            Color ForegroundColor = IsDark ? Colors.White : Colors.Black;
+            Color BackgroundColor = new AccessibilitySettings().HighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
+
+            if (HasStatusBar)
+            {
+                StatusBar StatusBar = StatusBar.GetForCurrentView();
+                StatusBar.ForegroundColor = ForegroundColor;
+                StatusBar.BackgroundColor = BackgroundColor;
+                StatusBar.BackgroundOpacity = 0; // 透明度
+            }
+            else
+            {
+                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
+                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+                TitleBar.BackgroundColor = TitleBar.ButtonBackgroundColor = TitleBar.InactiveBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = BackgroundColor;
+            }
+
+            if (IsInvoke) { AppThemeChanged?.Invoke(Window.Current?.Content, SettingsHelper.Theme); }
         }
     }
 

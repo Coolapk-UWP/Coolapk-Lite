@@ -34,6 +34,8 @@ namespace CoolapkLite
         public MainPage()
         {
             InitializeComponent();
+            UIHelper.ShellDispatcher = Dispatcher;
+            UIHelper.AppThemeChanged += CheckTheme;
             UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -45,7 +47,7 @@ namespace CoolapkLite
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
-            UIHelper.CheckTheme();
+            UIHelper.ChangeTheme();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -56,6 +58,7 @@ namespace CoolapkLite
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             HamburgerMenuFrame.Navigated -= On_Navigated;
+            UIHelper.AppThemeChanged -= CheckTheme;
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -237,6 +240,14 @@ namespace CoolapkLite
             }
         }
 
+        private void CheckTheme(object sender, ElementTheme e) => CheckTheme();
+
+        private void CheckTheme()
+        {
+            Background = UIHelper.ApplicationPageBackgroundThemeWindowBrush();
+            HamburgerMenu.PaneBackground = UIHelper.ApplicationPageBackgroundThemeElementBrush();
+        }
+
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!HamburgerMenuFrame.CanGoBack)
@@ -268,11 +279,7 @@ namespace CoolapkLite
             }
         }
 
-        private void Page_Loading(FrameworkElement sender, object args)
-        {
-            Background = UIHelper.ApplicationPageBackgroundThemeWindowBrush();
-            HamburgerMenu.PaneBackground = UIHelper.ApplicationPageBackgroundThemeElementBrush();
-        }
+        private void Page_Loading(FrameworkElement sender, object args) => CheckTheme();
 
         private void FrameworkElement_Loading(FrameworkElement sender, object args) => sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
 

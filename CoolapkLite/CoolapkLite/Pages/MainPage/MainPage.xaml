@@ -12,9 +12,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml" />
-            </ResourceDictionary.MergedDictionaries>
             <local:DisplayModeToBool x:Key="DisplayModeToBool" />
             <DataTemplate x:Key="DefaultTemplate" x:DataType="local:MenuItem">
                 <Grid>
