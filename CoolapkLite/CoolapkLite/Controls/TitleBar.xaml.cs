@@ -1,10 +1,7 @@
 ﻿using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Media;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 

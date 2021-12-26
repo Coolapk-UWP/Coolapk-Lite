@@ -6,7 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SystemChromeMediumLowColor}"
+    Loading="Page_Loading"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="PivotItem">

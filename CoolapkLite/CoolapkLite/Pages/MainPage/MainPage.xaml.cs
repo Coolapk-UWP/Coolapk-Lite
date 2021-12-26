@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Media;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -15,6 +14,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -347,7 +347,17 @@ namespace CoolapkLite
             ProgressBar.Value = 0;
         }
 
-        public void ShowMessage(string message = null) => AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+        public void ShowMessage(string message = null)
+        {
+            if (CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar)
+            {
+                AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+            }
+            else
+            {
+                ApplicationView.GetForCurrentView().Title = message ?? string.Empty;
+            }
+        }
         #endregion
     }
 
