@@ -1,10 +1,14 @@
-﻿using CoolapkLite.Core.Exceptions;
+﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
 using Windows.UI;
 using Windows.UI.ViewManagement;
@@ -37,6 +41,7 @@ namespace CoolapkLite
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
             ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
             view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
@@ -161,6 +166,37 @@ namespace CoolapkLite
                 }
             }
             SettingsHelper.LogManager.GetLogger(e.Exception.GetType()).Error($"\nMessage: {e.Exception.Message}\n{e.Exception.HResult}(0x{Convert.ToString(e.Exception.HResult, 16)}){e.Exception.HelpLink}", e.Exception);
+        }
+
+        private static async void RegisterBackgroundTask()
+        {
+            #region LiveTileTask
+            // Check for background access (optional)
+            await BackgroundExecutionManager.RequestAccessAsync();
+
+            // Register (Single Process)
+            BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+            #endregion
+        }
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+
+            BackgroundTaskDeferral deferral = args.TaskInstance.GetDeferral();
+
+            switch (args.TaskInstance.Task.Name)
+            {
+                case "LiveTileTask":
+                    new LiveTileTask().Run(args.TaskInstance);
+                    break;
+
+                default:
+                    deferral.Complete();
+                    break;
+            }
+
+            deferral.Complete();
         }
     }
 }

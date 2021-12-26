@@ -33,7 +33,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalSettings.Values.ContainsKey(TileUrl))
             {
-                LocalSettings.Values.Add(TileUrl, "https://www.wpxap.com/");
+                LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
             }
             if (!LocalSettings.Values.ContainsKey(IsFirstRun))
             {
