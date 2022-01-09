@@ -4,8 +4,8 @@
 		 xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
 		 xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
 		 IgnorableNamespaces="uap uap5 mp">
-  <Identity Name="18184wherewhere.CoolapkLite" Publisher="CN=where" Version="0.0.1.0" />
-  <mp:PhoneIdentity PhoneProductId="ab2e1ffd-c9cb-4a9d-af5c-546f2f9584dc" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="18184wherewhere.CoolapkLite" Publisher="CN=2C3A37C0-35FC-4839-B08C-751C1C1AFBF5" Version="0.0.1.0" />
+  <mp:PhoneIdentity PhoneProductId="6b25e764-0799-45e5-a0c5-c7ccf3925d0d" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Coolapk Lite</DisplayName>
     <PublisherDisplayName>wherewhere</PublisherDisplayName>

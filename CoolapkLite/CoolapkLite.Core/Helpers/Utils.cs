@@ -208,6 +208,8 @@ namespace CoolapkLite.Core.Helpers
             }
         }
 
+        public static string MarkDowntoCSS(this string text) => CommonMark.CommonMarkConverter.Convert(text);
+
         public static string CSStoString(this string str)
         {
             try

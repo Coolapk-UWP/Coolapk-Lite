@@ -4,7 +4,6 @@ using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -171,10 +170,12 @@ namespace CoolapkLite
         private static async void RegisterBackgroundTask()
         {
             #region LiveTileTask
+            if (BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask))) { return; }
+
             // Check for background access (optional)
             await BackgroundExecutionManager.RequestAccessAsync();
 
-            // Register (Single Process)
+            // Register (Multi Process)
             BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
             #endregion
         }

@@ -159,8 +159,8 @@ namespace CoolapkLite.Helpers
             {
                 ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
                 TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
-                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
-                TitleBar.BackgroundColor = TitleBar.ButtonBackgroundColor = TitleBar.InactiveBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = BackgroundColor;
+                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
+                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = HasTitleBar ? BackgroundColor : Colors.Transparent;
             }
 
             if (IsInvoke) { AppThemeChanged?.Invoke(Window.Current?.Content, SettingsHelper.Theme); }

@@ -180,7 +180,7 @@
     <Compile Include="Helpers\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Helpers\ValueConverters\GetWeakValue.cs" />
+    <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
     <Compile Include="Media\BackdropBlurBrush.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
@@ -812,7 +812,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <None Include="CoolapkLite_StoreKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />

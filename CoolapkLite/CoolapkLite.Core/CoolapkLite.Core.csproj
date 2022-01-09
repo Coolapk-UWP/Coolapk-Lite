@@ -146,6 +146,9 @@
     <EmbeddedResource Include="Properties\CoolapkLite.Core.rd.xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommonMark.NET">
+      <Version>0.15.1</Version>
+    </PackageReference>
     <PackageReference Include="Html2Markdown">
       <Version>4.0.0.427</Version>
     </PackageReference>

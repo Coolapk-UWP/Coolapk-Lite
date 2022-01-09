@@ -1,17 +1,11 @@
 ﻿using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Feeds;
-using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
-using Windows.Storage;
 using Windows.UI.Notifications;
 
 namespace CoolapkLite.BackgroundTasks
@@ -38,7 +32,7 @@ namespace CoolapkLite.BackgroundTasks
             {
                 JArray array = (JArray)result;
                 if (array.Count < 1) { return; }
-                    int i = 0;
+                int i = 0;
                 foreach (JObject item in array)
                 {
                     if (i >= 5) { break; }
