@@ -41,6 +41,7 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    MaxLines="3"
                     Text="{Binding Description}" />
             </Grid>
         </ListViewItem>

@@ -6,6 +6,7 @@ namespace CoolapkLite.Models.Feeds
     {
         public string Uurl { get; private set; }
         public bool IsStickTop { get; private set; }
+        public bool ShowLikes { get; private set; } = true;
         public bool ShowDateline { get; private set; } = true;
 
         internal enum FeedDisplayMode

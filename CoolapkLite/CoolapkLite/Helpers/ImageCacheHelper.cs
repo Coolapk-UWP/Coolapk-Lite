@@ -32,7 +32,7 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ShowImageModel model = null)
         {
-            if (string.IsNullOrEmpty(url)) { return NoPic; }
+            try { new Uri(url); } catch { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
@@ -77,7 +77,7 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
-            if (string.IsNullOrEmpty(url)) { return null; }
+            try { new Uri(url); } catch { return null; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
@@ -135,7 +135,7 @@ namespace CoolapkLite.Helpers
         [Obsolete]
         internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ShowImageModel model = null)
         {
-            if (string.IsNullOrEmpty(url)) { return null; }
+            try { new Uri(url); } catch { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {

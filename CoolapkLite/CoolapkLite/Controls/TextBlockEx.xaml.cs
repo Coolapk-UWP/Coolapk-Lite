@@ -23,8 +23,6 @@ namespace CoolapkLite.Controls
     /// </summary>
     public sealed partial class TextBlockEx : UserControl
     {
-        private const string AuthorBorder = "<div class=\"author-border\"></div>";
-
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
             typeof(string),
@@ -32,18 +30,19 @@ namespace CoolapkLite.Controls
             new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged))
         );
 
-        /// <summary>
-        /// 用于Hyperlink传递href参数
-        /// </summary>
-        public static readonly DependencyProperty HrefClickParam = DependencyProperty.Register(
-            "HrefParam",
-            typeof(string),
-            typeof(Hyperlink),
+        public static readonly DependencyProperty MaxLinesProperty = DependencyProperty.Register(
+            "MaxLines",
+            typeof(int),
+            typeof(TextBlockEx),
             null
         );
 
-        public event RoutedEventHandler LinkClicked;
-        private void Hyperlink_Click(Hyperlink sender, HyperlinkClickEventArgs args) => LinkClicked?.Invoke(sender, args);
+        public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
+            "IsTextSelectionEnabled",
+            typeof(bool),
+            typeof(TextBlockEx),
+            new PropertyMetadata(false, null)
+        );
 
         public string Text
         {
@@ -51,10 +50,21 @@ namespace CoolapkLite.Controls
             set => SetValue(TextProperty, value);
         }
 
+        public int MaxLines
+        {
+            get => (int)GetValue(MaxLinesProperty);
+            set => SetValue(MaxLinesProperty, value);
+        }
+
+        public bool IsTextSelectionEnabled
+        {
+            get => (bool)GetValue(IsTextSelectionEnabledProperty);
+            set => SetValue(IsTextSelectionEnabledProperty, value);
+        }
+
         private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            TextBlockEx rtb = d as TextBlockEx;
-            rtb.GetTextBlock();
+            (d as TextBlockEx).GetTextBlock();
         }
 
         public TextBlockEx() => InitializeComponent();
@@ -63,12 +73,11 @@ namespace CoolapkLite.Controls
         {
             Paragraph paragraph = new Paragraph();
             HtmlDocument doc = new HtmlDocument();
-            RichTextBlock block = new RichTextBlock();
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
             doc.LoadHtml(Text.Replace("<!--break-->", string.Empty));
             void NewLine()
             {
-                block.Blocks.Add(paragraph);
+                RichTextBlock.Blocks.Add(paragraph);
                 paragraph = new Paragraph();
             }
             void AddText(string item) => paragraph.Inlines.Add(new Run() { Text = WebUtility.HtmlDecode(item) });
@@ -163,12 +172,13 @@ namespace CoolapkLite.Controls
                         }
                         break;
                     case HtmlNodeType.Element:
+                        string content = node.InnerText;
                         if (node.OriginalName == "a")
                         {
-                            Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
+                            string tag = node.GetAttributeValue("t", string.Empty);
                             string href = node.GetAttributeValue("href", string.Empty);
                             string type = node.GetAttributeValue("type", string.Empty);
-                            string content = node.InnerText;
+                            Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
                             if (!string.IsNullOrEmpty(href))
                             {
                                 ToolTipService.SetToolTip(hyperlink, new ToolTip { Content = href });
@@ -184,19 +194,38 @@ namespace CoolapkLite.Controls
                                 Run run2 = new Run { Text = "\uE158", FontFamily = new FontFamily("Segoe MDL2 Assets") };
                                 hyperlink.Inlines.Add(run2);
                             }
-                            else if (href.Contains("emoticons") && (href.EndsWith(".png") || href.EndsWith(".jpg") || href.EndsWith(".jpeg") || href.EndsWith(".gif") || href.EndsWith(".bmp") || href.EndsWith(".PNG") || href.EndsWith(".JPG") || href.EndsWith(".JPEG") || href.EndsWith(".GIF") || href.EndsWith(".BMP")))
+                            else
                             {
-                                InlineUIContainer container = new InlineUIContainer();
-                                ImageModel imageModel = new ImageModel(href, ImageType.OriginImage);
+                                hyperlink.Click += (sender, e) => UIHelper.OpenLinkAsync(href);
+                            }
+                            Run run3 = new Run { Text = WebUtility.HtmlDecode(content) };
+                            hyperlink.Inlines.Add(run3);
+                            paragraph.Inlines.Add(hyperlink);
+                        }
+                        else if (node.OriginalName == "img")
+                        {
+                            string alt = node.GetAttributeValue("alt", string.Empty);
+                            string src = node.GetAttributeValue("src", string.Empty);
+                            int width = Convert.ToInt32(node.GetAttributeValue("width", "-1").Replace("\"", string.Empty));
+                            int height = Convert.ToInt32(node.GetAttributeValue("height", "-1").Replace("\"", string.Empty));
 
-                                Image image = new Image();
+                            Image image = new Image();
+                            InlineUIContainer container = new InlineUIContainer();
+
+                            if (!string.IsNullOrEmpty(src))
+                            {
+                                ImageModel imageModel = new ImageModel(src, ImageType.OriginImage);
                                 image.SetBinding(Image.SourceProperty, new Binding
                                 {
                                     Source = imageModel,
                                     Mode = BindingMode.OneWay,
                                     Path = new PropertyPath(nameof(imageModel.Pic))
                                 });
+                                ToolTipService.SetToolTip(image, new ToolTip { Content = string.IsNullOrEmpty(alt) ? content : alt });
+                            }
 
+                            if (src.Contains("emoticons"))
+                            {
                                 Viewbox viewbox = new Viewbox
                                 {
                                     Child = image,
@@ -210,22 +239,27 @@ namespace CoolapkLite.Controls
                                     Converter = new FontSizeToLineHeight(),
                                     Path = new PropertyPath(nameof(FontSize))
                                 });
-
-                                ToolTipService.SetToolTip(image, new ToolTip { Content = content });
                                 container.Child = viewbox;
-                                paragraph.Inlines.Add(container);
                             }
-                            Run run3 = new Run { Text = WebUtility.HtmlDecode(content) };
-                            hyperlink.Inlines.Add(run3);
-                            hyperlink.Click += Hyperlink_Click;
-                            hyperlink.SetValue(HrefClickParam, href);
-                            paragraph.Inlines.Add(hyperlink);
+                            else
+                            {
+                                Viewbox viewbox = new Viewbox
+                                {
+                                    Child = image,
+                                    Margin = new Thickness(0, 0, 0, -4),
+                                    VerticalAlignment = VerticalAlignment.Center
+                                };
+                                if (width != -1) { viewbox.MaxWidth = width; }
+                                if (height != -1) { viewbox.MaxHeight = height; }
+                                container.Child = viewbox;
+                            }
+                            paragraph.Inlines.Add(container);
                         }
                         break;
                 }
             }
-            block.Blocks.Add(paragraph);
-            Content = block;
+            RichTextBlock.Blocks.Add(paragraph);
+            Content = RichTextBlock;
         }
     }
 }

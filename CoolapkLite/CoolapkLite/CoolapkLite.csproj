@@ -149,6 +149,7 @@
     <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplates\Pic.xaml.cs" />
     <Compile Include="Controls\GridPanel.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Events.cs" />
@@ -165,6 +166,9 @@
     <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
     <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
+    <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
+      <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -840,6 +844,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\DataTemplates\Pic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\HamburgerMenu\HamburgerMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -861,6 +869,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\PullToRefreshListView\PullToRefreshListViewTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ShowQRCodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -969,6 +981,9 @@
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="QRCoder">
+      <Version>1.4.3</Version>
     </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
       <Version>1.0.2.7</Version>

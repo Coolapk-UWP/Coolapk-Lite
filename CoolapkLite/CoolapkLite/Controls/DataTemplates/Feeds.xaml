@@ -4,13 +4,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrl="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:CoolapkLite.Controls.DataTemplates"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <ResourceDictionary.MergedDictionaries>
+        <local:Pic />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="FeedOpButtonStyle" TargetType="Button">
+        <Setter Property="Height" Value="34" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="Grid.Row" Value="10" />
+    </Style>
+
     <DataTemplate x:Key="Feed">
         <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
-            <UserControl>
+            <UserControl Loaded="UserControl_Loaded" SizeChanged="UserControl_SizeChanged">
                 <Grid Padding="8,4">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
@@ -18,6 +32,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel
                         x:Name="StickUp"
+                        Grid.Row="0"
                         Orientation="Horizontal"
                         Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}}">
                         <FontIcon
@@ -53,7 +68,7 @@
                                 VerticalAlignment="Top"
                                 IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding UserName}" />
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Margin="-1,0" Orientation="Horizontal">
                                 <TextBlock
                                     x:Name="DateLineTxb"
                                     Margin="0,0,5,0"
@@ -69,10 +84,116 @@
                             </StackPanel>
                         </StackPanel>
                     </StackPanel>
+                    <StackPanel
+                        x:Name="BtnsPanel"
+                        Grid.Row="10"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal">
+                        <Button
+                            x:Name="LikeButton"
+                            Click="FeedButton_Click"
+                            Style="{StaticResource FeedOpButtonStyle}"
+                            Tag="{Binding}"
+                            ToolTipService.ToolTip="点赞"
+                            Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon
+                                    Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                    Symbol="Like"
+                                    Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <SymbolIcon Symbol="Like" Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                <TextBlock Margin="3,0" Text="{Binding LikeNum}" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            x:Name="MakeReplyButton"
+                            Click="FeedButton_Click"
+                            Style="{StaticResource FeedOpButtonStyle}"
+                            Tag="{Binding}"
+                            ToolTipService.ToolTip="回复"
+                            Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Comment" />
+                                <TextBlock
+                                    Margin="3,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding ReplyNum}" />
+                            </StackPanel>
+                        </Button>
+                        <Button
+                            x:Name="ShareButton"
+                            Click="FeedButton_Click"
+                            Style="{StaticResource FeedOpButtonStyle}"
+                            Tag="{Binding ShareUrl}"
+                            ToolTipService.ToolTip="分享"
+                            Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel Orientation="Horizontal">
+                                <SymbolIcon Symbol="Share" />
+                                <TextBlock
+                                    Margin="3,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding ShareNum}" />
+                            </StackPanel>
+                            <Button.Flyout>
+                                <Flyout Opened="Flyout_Opened">
+                                    <Flyout.FlyoutPresenterStyle>
+                                        <Style TargetType="FlyoutPresenter">
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                        </Style>
+                                    </Flyout.FlyoutPresenterStyle>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                        <Button
+                            x:Name="MoreButton"
+                            Style="{StaticResource FeedOpButtonStyle}"
+                            ToolTipService.ToolTip="更多">
+                            <SymbolIcon Symbol="More" />
+                            <Button.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutSubItem Text="复制">
+                                        <MenuFlyoutItem Text="复制全部内容" />
+                                        <ToggleMenuFlyoutItem
+                                            x:Name="CopyButton"
+                                            x:Uid="/Feed/Copy"
+                                            IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
+                                        <MenuFlyoutItem Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
+                                    </MenuFlyoutSubItem>
+                                    <MenuFlyoutItem
+                                        x:Name="ReportButton"
+                                        x:Uid="/Feed/report"
+                                        Click="FeedButton_Click"
+                                        Tag="{Binding ID}" />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
                     <ctrl:TextBlockEx
                         Grid.Row="3"
                         Margin="4"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled}"
                         Text="{Binding Message}" />
+                    <GridView
+                        Grid.Row="4"
+                        MinHeight="0"
+                        Margin="4,8,4,4"
+                        Padding="0"
+                        HorizontalContentAlignment="Left"
+                        ItemTemplate="{StaticResource Pic}"
+                        ItemsSource="{Binding PicArr}"
+                        ScrollViewer.VerticalScrollMode="Disabled"
+                        SelectionChanged="GridView_SelectionChanged"
+                        Visibility="{Binding PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        <GridView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsWrapGrid MaximumRowsOrColumns="3" Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </GridView.ItemsPanel>
+                    </GridView>
                 </Grid>
             </UserControl>
         </ListViewItem>

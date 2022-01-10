@@ -146,15 +146,6 @@
                         <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" />
                     </StackPanel>
                 </control:HeaderedContentControl>
-                <RichTextBlock>
-                    <Paragraph>
-                        <Run>铺路根据地</Run>
-                        <InlineUIContainer>
-                            <Image Width="20" Height="20" Source="ms-appx:///Assets/Emoji/(cos滑稽.png"/>
-                        </InlineUIContainer>
-                        <Run>铺路根据地</Run>
-                    </Paragraph>
-                </RichTextBlock>
                 <Grid Background="#181819" Visibility="Collapsed">
                     <FontIcon FontSize="900" Glyph="" />
                     <Grid Visibility="Collapsed">

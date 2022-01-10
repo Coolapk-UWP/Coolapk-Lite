@@ -1,0 +1,60 @@
+﻿<ResourceDictionary
+    x:Class="CoolapkLite.Controls.DataTemplates.Pic"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <DataTemplate x:Key="Pic">
+        <Border
+            Width="102"
+            Height="102"
+            CornerRadius="8"
+            KeyDown="Image_KeyDown"
+            Tapped="Image_Tapped">
+            <Border.Background>
+                <ImageBrush ImageSource="{Binding Pic, Mode=OneWay}" Stretch="UniformToFill" />
+            </Border.Background>
+            <Grid>
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Border
+                        x:Name="gif"
+                        Background="#0F9D58"
+                        CornerRadius="0,8,0,0"
+                        Visibility="{Binding IsGif, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            Margin="2,0"
+                            Foreground="White"
+                            Text="GIF" />
+                    </Border>
+                </StackPanel>
+                <StackPanel
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Orientation="Horizontal">
+                    <Border
+                        x:Name="longPic"
+                        Background="#0F9D58"
+                        CornerRadius="8,0,0,0"
+                        Visibility="{Binding IsLongPic, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            x:Uid="/Feed/longPic"
+                            Margin="2,0"
+                            Foreground="White" />
+                    </Border>
+                    <Border
+                        x:Name="widePic"
+                        Background="#0F9D58"
+                        CornerRadius="8,0,0,0"
+                        Visibility="{Binding IsWidePic, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <TextBlock
+                            x:Uid="/Feed/widePic"
+                            Margin="2,0"
+                            Foreground="White" />
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </DataTemplate>
+</ResourceDictionary>

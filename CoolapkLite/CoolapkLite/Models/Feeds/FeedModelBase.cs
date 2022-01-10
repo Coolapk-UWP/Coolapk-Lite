@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel;
 
 namespace CoolapkLite.Models.Feeds
@@ -43,6 +44,7 @@ namespace CoolapkLite.Models.Feeds
         public int ID => EntityId;
         public bool Liked { get; set; }
         public string Info { get; private set; }
+        public int ShareNum { get; private set; }
         public string DeviceTitle { get; private set; }
         public bool ShowUser { get; private set; } = true;
         public ImageModel UserAvatar { get; private set; }
@@ -63,6 +65,21 @@ namespace CoolapkLite.Models.Feeds
             else if (token.TryGetValue("feedTypeName", out JToken feedTypeName))
             {
                 Info = feedTypeName.ToString();
+            }
+
+            if (token.TryGetValue("likenum", out JToken likenum))
+            {
+                LikeNum = Convert.ToInt32(likenum.ToString());
+            }
+
+            if (token.TryGetValue("replynum", out JToken replynum))
+            {
+                ReplyNum = Convert.ToInt32(replynum.ToString());
+            }
+
+            if (token.TryGetValue("forwardnum", out JToken forwardnum))
+            {
+                ShareNum = Convert.ToInt32(forwardnum.ToString());
             }
 
             if (token.TryGetValue("device_title", out JToken device_title))
