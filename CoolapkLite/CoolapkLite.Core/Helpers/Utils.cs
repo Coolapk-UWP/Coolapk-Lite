@@ -365,7 +365,7 @@ namespace CoolapkLite.Core.Helpers
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
 
-            (bool isSucceed, string result) GetResult(string json)
+            (bool isSucceed, string result) GetResult()
             {
                 if (string.IsNullOrEmpty(json))
                 {
@@ -374,7 +374,7 @@ namespace CoolapkLite.Core.Helpers
                 }
                 else { return (true, json); }
             }
-            (bool isSucceed, string result) result = GetResult(json);
+            (bool isSucceed, string result) result = GetResult();
 
             if (forceRefresh)
             {
@@ -384,7 +384,7 @@ namespace CoolapkLite.Core.Helpers
             if (!ResponseCache.ContainsKey(info.uri))
             {
                 json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult(json);
+                result = GetResult();
                 if (!result.isSucceed) { return result; }
                 ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
                 ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
@@ -392,21 +392,21 @@ namespace CoolapkLite.Core.Helpers
             else if (!ResponseCache[info.uri].ContainsKey(info.page))
             {
                 json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult(json);
+                result = GetResult();
                 if (!result.isSucceed) { return result; }
                 ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
             }
             else if ((DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes > 2 && Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult(json);
+                result = GetResult();
                 if (!result.isSucceed) { return result; }
                 ResponseCache[info.uri][info.page] = (DateTime.Now, json);
             }
             else
             {
                 json = ResponseCache[info.uri][info.page].data;
-                result = GetResult(json);
+                result = GetResult();
                 if (!result.isSucceed) { return result; }
             }
             return result;
@@ -415,9 +415,16 @@ namespace CoolapkLite.Core.Helpers
         private static (int page,Uri uri) GetPage(this Uri uri)
         {
             Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
-            int pagenum = Convert.ToInt32(pageregex.Match(uri.ToString()).Groups[2].Value);
-            Uri baseuri = new Uri(pageregex.Match(uri.ToString()).Groups[3].Value == "?" ? pageregex.Replace(uri.ToString(), pageregex.Match(uri.ToString()).Groups[1].Value) : pageregex.Replace(uri.ToString(), string.Empty));
-            return (pagenum, baseuri);
+            if (pageregex.IsMatch(uri.ToString()))
+            {
+                int pagenum = Convert.ToInt32(pageregex.Match(uri.ToString()).Groups[2].Value);
+                Uri baseuri = new Uri(pageregex.Match(uri.ToString()).Groups[3].Value == "?" ? pageregex.Replace(uri.ToString(), pageregex.Match(uri.ToString()).Groups[1].Value) : pageregex.Replace(uri.ToString(), string.Empty));
+                return (pagenum, baseuri);
+            }
+            else
+            {
+                return (0, uri);
+            }
         }
 
         private static (bool isSucceed, JToken result) GetResult(string json)

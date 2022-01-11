@@ -18,7 +18,6 @@
         <Setter Property="Height" Value="34" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Grid.Row" Value="10" />
     </Style>
 
     <DataTemplate x:Key="Feed">
@@ -89,7 +88,6 @@
                     </StackPanel>
                     <StackPanel
                         x:Name="BtnsPanel"
-                        Grid.Row="10"
                         HorizontalAlignment="Right"
                         Orientation="Horizontal">
                         <Button
@@ -131,7 +129,7 @@
                             ToolTipService.ToolTip="分享"
                             Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                             <StackPanel Orientation="Horizontal">
-                                <SymbolIcon Symbol="Share" />
+                                <FontIcon Glyph="&#xE72D;" />
                                 <TextBlock
                                     Margin="3,0"
                                     VerticalAlignment="Center"
@@ -159,14 +157,18 @@
                             <Button.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutSubItem Text="复制">
-                                        <MenuFlyoutItem
-                                            Click="CopyMenuItem_Click"
-                                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}"
-                                            Text="复制全部内容" />
                                         <ToggleMenuFlyoutItem
                                             x:Name="CopyButton"
                                             x:Uid="/Feed/Copy"
                                             IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
+                                        <MenuFlyoutItem
+                                            Click="CopyMenuItem_Click"
+                                            Tag="{Binding ShareUrl}"
+                                            Text="复制链接" />
+                                        <MenuFlyoutItem
+                                            Click="CopyMenuItem_Click"
+                                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}"
+                                            Text="复制全部内容" />
                                         <MenuFlyoutItem
                                             Click="CopyMenuItem_Click"
                                             Tag="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}'}"

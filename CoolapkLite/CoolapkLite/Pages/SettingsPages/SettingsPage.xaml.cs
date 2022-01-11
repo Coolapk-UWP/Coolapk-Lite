@@ -35,66 +35,56 @@ namespace CoolapkLite.Pages.SettingsPages
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
-
-        private bool isNoPicsMode = SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode);
+        
         internal bool IsNoPicsMode
         {
-            get => isNoPicsMode;
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode);
             set
             {
                 SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
-                isNoPicsMode = SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode);
                 RaisePropertyChangedEvent();
                 SettingsHelper.UISettingChanged?.Invoke(UISettingChangedType.NoPicChanged);
             }
         }
-
-        private bool isDarkMode = SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
+        
         internal bool IsDarkMode
         {
-            get => isDarkMode;
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
             set
             {
                 SettingsHelper.Set(SettingsHelper.IsDarkMode, value);
-                isDarkMode = SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
                 UIHelper.ChangeTheme();
                 RaisePropertyChangedEvent();
             }
         }
-
-        private bool isBackgroundColorFollowSystem = SettingsHelper.Get<bool>(SettingsHelper.IsBackgroundColorFollowSystem);
+        
         internal bool IsBackgroundColorFollowSystem
         {
-            get => isBackgroundColorFollowSystem;
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsBackgroundColorFollowSystem);
             set
             {
                 SettingsHelper.Set(SettingsHelper.IsBackgroundColorFollowSystem, value);
-                isBackgroundColorFollowSystem = SettingsHelper.Get<bool>(SettingsHelper.IsBackgroundColorFollowSystem);
                 RaisePropertyChangedEvent();
-                IsDarkMode = SettingsHelper.UISettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).Equals(Windows.UI.Colors.Black);
+                IsDarkMode = SettingsHelper.UISettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).Equals(Colors.Black);
             }
         }
-
-        private bool? showOtherException = SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException);
+        
         internal bool? ShowOtherException
         {
-            get => showOtherException;
+            get => SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException);
             set
             {
                 SettingsHelper.Set(SettingsHelper.ShowOtherException, value);
-                showOtherException = SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException);
                 RaisePropertyChangedEvent();
             }
         }
-
-        private bool? checkUpdateWhenLuanching = SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLuanching);
+        
         internal bool? CheckUpdateWhenLuanching
         {
-            get => checkUpdateWhenLuanching;
+            get => SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLuanching);
             set
             {
                 SettingsHelper.Set(SettingsHelper.CheckUpdateWhenLuanching, value);
-                checkUpdateWhenLuanching = SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLuanching);
                 RaisePropertyChangedEvent();
             }
         }
@@ -182,14 +172,14 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Frame.Navigate(typeof(TestPage));
                     break;
                 case "FeedBack":
-                    //UIHelper.OpenLinkAsync(IssuePath);
+                    UIHelper.OpenLinkAsync(IssuePath);
                     break;
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
                     IsCleanCacheButtonEnabled = false;
-                    //await ImageCacheHelper.CleanCacheAsync();
+                    await ImageCacheHelper.CleanCacheAsync();
                     IsCleanCacheButtonEnabled = true;
                     break;
                 case "CheckUpdate":

@@ -98,7 +98,7 @@ namespace CoolapkLite.Helpers
 
         static UIHelper()
         {
-            AppThemeChanged += (_, _) => CheckTheme();
+            AppThemeChanged += (_, __) => CheckTheme();
             BsonMapper.Global.RegisterType
                 (
                 serialize: (pic) => pic.Uri,

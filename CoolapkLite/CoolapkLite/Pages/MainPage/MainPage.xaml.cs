@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Helpers;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -47,6 +48,7 @@ namespace CoolapkLite
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
+            LiveTileTask.UpdateTile();
             UIHelper.ChangeTheme();
         }
 

@@ -25,7 +25,7 @@ namespace CoolapkLite.BackgroundTasks
             try { await GetData(uri); } catch { }
         }
 
-        public static async Task GetData(Uri uri)
+        private static async Task GetData(Uri uri)
         {
             (bool isSucceed, JToken result) = await Utils.GetDataAsync(uri, true);
             if (isSucceed)
