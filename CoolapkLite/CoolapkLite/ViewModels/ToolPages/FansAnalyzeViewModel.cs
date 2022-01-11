@@ -97,6 +97,7 @@ namespace CoolapkLite.ViewModels.ToolPages
                 }
             }
             OrderFanList();
+            SortFanListByLevel();
             OnLoadMoreCompleted?.Invoke();
         }
 
@@ -143,9 +144,6 @@ namespace CoolapkLite.ViewModels.ToolPages
     internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged
     {
         public List<DateData> FanNumListByDate { get; set; }
-
-        public delegate void FanNumListByDateChanged();
-        public event FanNumListByDateChanged OnFanNumListByDateChanged;
 
         private string _dateLabel = "长按选择";
         public string DateLabel
@@ -200,7 +198,6 @@ namespace CoolapkLite.ViewModels.ToolPages
                 InvokeProgressChanged(contact, FanListByDate);
             }
             FanNumListByDate.Add(new DateData() { Date = Convert.ToDouble(temp).ConvertUnixTimeStampToDateTime(), Value = num });
-            OnFanNumListByDateChanged?.Invoke();
             OnLoadMoreCompleted?.Invoke();
         }
 
@@ -209,6 +206,73 @@ namespace CoolapkLite.ViewModels.ToolPages
             DateData item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
             DateLabel = item.Date.ToString("yyyy.MM.dd");
             FansValue = item.Value;
+        }
+    }
+
+    internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged
+    {
+        public List<NumData> FanSortListByLevel { get; set; }
+
+        private void SortFanListByLevel()
+        {
+            OnLoadMoreStarted?.Invoke();
+            FanSortListByLevel = FanSortListByLevel ?? new List<NumData>();
+            if (FanList.Count > 0) { FanSortListByLevel.Clear(); }
+            ObservableCollection<Entity> FanListByLevel = new ObservableCollection<Entity>(FanList.OrderBy(item => (item as ContactModel).UserInfo.Level));
+            int temp = (FanListByLevel.First() as ContactModel).UserInfo.Level, num = 0;
+            foreach (ContactModel contact in FanListByLevel)
+            {
+                if (temp != contact.UserInfo.Level)
+                {
+                    FanSortListByLevel.Add(new NumData() { Num = temp, Value = num });
+                    temp = contact.UserInfo.Level;
+                    num = 0;
+                }
+                num++;
+                InvokeProgressChanged(contact, FanListByLevel);
+            }
+            FanSortListByLevel.Add(new NumData() { Num = temp, Value = num });
+            OnLoadMoreCompleted?.Invoke();
+        }
+    }
+
+    public class NumData : INotifyPropertyChanged
+    {
+        private int _num;
+        public int Num
+        {
+            get => _num;
+            set
+            {
+                if (_num == value)
+                {
+                    return;
+                }
+                _num = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        private double _value;
+        public double Value
+        {
+            get => _value;
+            set
+            {
+                if (_value == value)
+                {
+                    return;
+                }
+                _value = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
     }
 

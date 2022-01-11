@@ -18,7 +18,6 @@ namespace CoolapkLite.Pages.ToolPages
     public sealed partial class FansAnalyzePage : Page
     {
         private FansAnalyzeViewModel Provider;
-        private readonly EventDelayer _delayer = new EventDelayer();
 
         public FansAnalyzePage() => InitializeComponent();
 
@@ -29,37 +28,24 @@ namespace CoolapkLite.Pages.ToolPages
             if (e.Parameter is FansAnalyzeViewModel ViewModel)
             {
                 Provider = ViewModel;
-                _delayer.Arrived += OnArrived;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
-                Provider.OnFanNumListByDateChanged += FanNumListByDateChanged;
                 await Refresh(-2);
                 if (!string.IsNullOrEmpty(Provider.Title))
                 {
                     TitleBar.Title = Provider.Title;
                 }
             }
+            DataContext = Provider;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            _delayer.Arrived -= OnArrived;
             Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
             Provider.OnLoadMoreProgressChanged -= UIHelper.ShowProgressBar;
-            Provider.OnFanNumListByDateChanged -= FanNumListByDateChanged;
-        }
-
-        private void OnArrived(object sender, EventArgs e)
-        {
-            AreaSeries.ItemsSource = Provider.FanNumListByDate;
-        }
-
-        private void FanNumListByDateChanged()
-        {
-            _delayer.Delay();
         }
 
         private void ChartTrackBallBehavior_TrackInfoUpdated(object sender, TrackBallInfoEventArgs e)
