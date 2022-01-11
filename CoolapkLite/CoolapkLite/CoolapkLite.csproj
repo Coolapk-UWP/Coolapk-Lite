@@ -185,6 +185,7 @@
     <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
+    <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
     <Compile Include="Media\BackdropBlurBrush.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />

@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Core.Helpers
@@ -99,7 +100,7 @@ namespace CoolapkLite.Core.Helpers
 
     public static partial class Utils
     {
-        public static string GetSizeString(double size)
+        public static string GetSizeString(this double size)
         {
             int index = 0;
             while (index <= 11)
@@ -133,10 +134,10 @@ namespace CoolapkLite.Core.Helpers
                 default:
                     break;
             }
-            return $"{size:N2}{str}";
+            return $"{size:0.##}{str}";
         }
 
-        public static string GetNumString(double num)
+        public static string GetNumString(this double num)
         {
             string str = string.Empty;
             if (num < 1000) { }
@@ -292,31 +293,144 @@ namespace CoolapkLite.Core.Helpers
 
     public static partial class Utils
     {
-        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground)
+        private static bool IsInternetAvailable => Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
+        private static readonly Dictionary<Uri, Dictionary<int,(DateTime date,string data)>> ResponseCache = new Dictionary<Uri, Dictionary<int, (DateTime, string)>>();
+
+        internal static readonly Timer CleanCacheTimer = new Timer(o =>
         {
-            string json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-            return GetResult(json);
+            if (IsInternetAvailable)
+            {
+                DateTime now = DateTime.Now;
+                foreach (KeyValuePair<Uri, Dictionary<int, (DateTime date, string data)>> i in ResponseCache)
+                {
+                    int[] needDelete = (from j in i.Value
+                                        where (now - j.Value.date).TotalMinutes > 2
+                                        select j.Key).ToArray();
+                    foreach (int item in needDelete)
+                    {
+                        _ = ResponseCache[i.Key].Remove(item);
+                    }
+                }
+            }
+        }, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
+
+        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground, bool forceRefresh = false)
+        {
+            string json = string.Empty;
+            (int page, Uri uri) info = uri.GetPage();
+            (bool isSucceed, JToken result) result = GetResult(json);
+
+            void ReadCache()
+            {
+                json = ResponseCache[info.uri][info.page].data;
+                result = GetResult(json);
+            }
+
+            if (forceRefresh && IsInternetAvailable)
+            {
+                ResponseCache.Remove(info.uri);
+            }
+
+            if (!ResponseCache.ContainsKey(info.uri))
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+                ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
+                ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+            }
+            else if (!ResponseCache[info.uri].ContainsKey(info.page))
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+                ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+            }
+            else if ((DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes > 2 && IsInternetAvailable)
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { ReadCache(); }
+                ResponseCache[info.uri][info.page] = (DateTime.Now, json);
+            }
+            else
+            {
+                ReadCache();
+            }
+            return result;
         }
 
-        public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, bool isBackground)
+        public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, bool isBackground, bool forceRefresh = false)
         {
-            string json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-            if (string.IsNullOrEmpty(json))
+            string json = string.Empty;
+            (int page, Uri uri) info = uri.GetPage();
+
+            (bool isSucceed, string result) GetResult(string json)
             {
-                ShowInAppMessage(MessageType.Message, "获取失败");
+                if (string.IsNullOrEmpty(json))
+                {
+                    ShowInAppMessage(MessageType.Message, "加载失败");
+                    return (false, null);
+                }
+                else { return (true, json); }
+            }
+            (bool isSucceed, string result) result = GetResult(json);
+
+            if (forceRefresh)
+            {
+                ResponseCache.Remove(info.uri);
+            }
+
+            if (!ResponseCache.ContainsKey(info.uri))
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+                ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
+                ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+            }
+            else if (!ResponseCache[info.uri].ContainsKey(info.page))
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+                ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+            }
+            else if ((DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes > 2 && Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+                ResponseCache[info.uri][info.page] = (DateTime.Now, json);
+            }
+            else
+            {
+                json = ResponseCache[info.uri][info.page].data;
+                result = GetResult(json);
+                if (!result.isSucceed) { return result; }
+            }
+            return result;
+        }
+
+        private static (int page,Uri uri) GetPage(this Uri uri)
+        {
+            Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
+            int pagenum = Convert.ToInt32(pageregex.Match(uri.ToString()).Groups[2].Value);
+            Uri baseuri = new Uri(pageregex.Match(uri.ToString()).Groups[3].Value == "?" ? pageregex.Replace(uri.ToString(), pageregex.Match(uri.ToString()).Groups[1].Value) : pageregex.Replace(uri.ToString(), string.Empty));
+            return (pagenum, baseuri);
+        }
+
+        private static (bool isSucceed, JToken result) GetResult(string json)
+        {
+            if (string.IsNullOrEmpty(json)) { return (false, null); }
+            JObject o;
+            try { o = JObject.Parse(json); }
+            catch
+            {
+                ShowInAppMessage(MessageType.Message, "加载失败");
                 return (false, null);
             }
-            else { return (true, json); }
-        }
-
-        private static (bool, JToken) GetResult(string json)
-        {
-            if (json == null) { return (false, null); }
-            JObject o = JObject.Parse(json);
-            JToken token = null;
-            if (!string.IsNullOrEmpty(json) &&
-                !o.TryGetValue("data", out token) &&
-                o.TryGetValue("message", out JToken message))
+            if (!o.TryGetValue("data", out JToken token) && o.TryGetValue("message", out JToken message))
             {
                 ShowInAppMessage(MessageType.Message, message.ToString());
                 return (false, null);

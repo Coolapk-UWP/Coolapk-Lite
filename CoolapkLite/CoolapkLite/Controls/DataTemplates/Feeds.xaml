@@ -6,10 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:CoolapkLite.Controls.DataTemplates"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:valueconverters="using:CoolapkLite.Helpers.ValueConverters"
     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
         <local:Pic />
     </ResourceDictionary.MergedDictionaries>
+
+    <valueconverters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
 
     <Style x:Key="FeedOpButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="34" />
@@ -156,12 +159,18 @@
                             <Button.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutSubItem Text="复制">
-                                        <MenuFlyoutItem Text="复制全部内容" />
+                                        <MenuFlyoutItem
+                                            Click="CopyMenuItem_Click"
+                                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}"
+                                            Text="复制全部内容" />
                                         <ToggleMenuFlyoutItem
                                             x:Name="CopyButton"
                                             x:Uid="/Feed/Copy"
                                             IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
-                                        <MenuFlyoutItem Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
+                                        <MenuFlyoutItem
+                                            Click="CopyMenuItem_Click"
+                                            Tag="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}'}"
+                                            Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
                                     </MenuFlyoutSubItem>
                                     <MenuFlyoutItem
                                         x:Name="ReportButton"
@@ -173,6 +182,7 @@
                         </Button>
                     </StackPanel>
                     <ctrl:TextBlockEx
+                        x:Name="Message"
                         Grid.Row="3"
                         Margin="4"
                         IsTextSelectionEnabled="{Binding IsCopyEnabled}"

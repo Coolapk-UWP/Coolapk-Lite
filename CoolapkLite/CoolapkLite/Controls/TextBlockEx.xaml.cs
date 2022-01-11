@@ -71,6 +71,7 @@ namespace CoolapkLite.Controls
 
         private void GetTextBlock()
         {
+            RichTextBlock.Blocks.Clear();
             Paragraph paragraph = new Paragraph();
             HtmlDocument doc = new HtmlDocument();
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
@@ -90,7 +91,7 @@ namespace CoolapkLite.Controls
                         string[] list = emojis.Split(node.InnerText);
                         foreach (string item in list)
                         {
-                            if (string.IsNullOrEmpty(item)) { break; }
+                            if (string.IsNullOrEmpty(item)) { continue; }
                             switch (item[0])
                             {
                                 case '#':

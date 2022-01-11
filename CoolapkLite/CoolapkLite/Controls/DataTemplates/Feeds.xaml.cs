@@ -1,7 +1,9 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkUWP.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -81,6 +83,14 @@ namespace CoolapkLite.Controls.DataTemplates
                     UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
             }
+        }
+
+        private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            DataPackage dp = new DataPackage();
+            dp.SetText(element.Tag.ToString());
+            Clipboard.SetContent(dp);
         }
 
         private void Flyout_Opened(object sender, object _)
