@@ -149,13 +149,25 @@
     <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplates\Pic.xaml.cs" />
+    <Compile Include="Controls\DataTemplates\Pic.xaml.cs">
+      <DependentUpon>Pic.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GridPanel.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Events.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.HamburgerButton.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Options.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Properties.cs" />
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs">
+      <DependentUpon>HamburgerMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Events.cs">
+      <DependentUpon>HamburgerMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.HamburgerButton.cs">
+      <DependentUpon>HamburgerMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Options.cs">
+      <DependentUpon>HamburgerMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\HamburgerMenu\HamburgerMenu.Properties.cs">
+      <DependentUpon>HamburgerMenu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\HamburgerMenu\HamburgerMenuItemInvokedEventArgs.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemStyleSelector.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemTemplateSelector.cs" />
@@ -163,8 +175,12 @@
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuImageItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItemCollection.cs" />
-    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
-    <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs" />
+    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs">
+      <DependentUpon>HeaderedContentControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs">
+      <DependentUpon>PullToRefreshListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PullToRefreshListView\RefreshProgressEventArgs.cs" />
     <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
       <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
@@ -174,6 +190,15 @@
     </Compile>
     <Compile Include="Controls\TitleBar.xaml.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TwoPaneView\TwoPaneView.cs">
+      <DependentUpon>TwoPaneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TwoPaneView\TwoPaneView.Enum.cs">
+      <DependentUpon>TwoPaneView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TwoPaneView\TwoPaneView.Properties.cs">
+      <DependentUpon>TwoPaneView.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\EmojiHelper.cs" />
@@ -882,6 +907,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\TitleBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TwoPaneView\TwoPaneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
