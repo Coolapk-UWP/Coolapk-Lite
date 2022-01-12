@@ -35,57 +35,72 @@ namespace CoolapkLite.Pages.SettingsPages
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
-        
+
         internal bool IsNoPicsMode
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode);
             set
             {
-                SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
-                RaisePropertyChangedEvent();
-                SettingsHelper.UISettingChanged?.Invoke(UISettingChangedType.NoPicChanged);
+                if (IsNoPicsMode != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
+                    RaisePropertyChangedEvent();
+                    SettingsHelper.UISettingChanged?.Invoke(UISettingChangedType.NoPicChanged);
+                }
             }
         }
-        
+
         internal bool IsDarkMode
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
             set
             {
-                SettingsHelper.Set(SettingsHelper.IsDarkMode, value);
-                UIHelper.ChangeTheme();
-                RaisePropertyChangedEvent();
+                if (IsDarkMode != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsDarkMode, value);
+                    UIHelper.ChangeTheme();
+                    RaisePropertyChangedEvent();
+                }
             }
         }
-        
+
         internal bool IsBackgroundColorFollowSystem
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsBackgroundColorFollowSystem);
             set
             {
-                SettingsHelper.Set(SettingsHelper.IsBackgroundColorFollowSystem, value);
-                RaisePropertyChangedEvent();
-                IsDarkMode = SettingsHelper.UISettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).Equals(Colors.Black);
+                if (IsBackgroundColorFollowSystem != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsBackgroundColorFollowSystem, value);
+                    RaisePropertyChangedEvent();
+                    IsDarkMode = SettingsHelper.UISettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).Equals(Colors.Black);
+                }
             }
         }
-        
+
         internal bool? ShowOtherException
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException);
             set
             {
-                SettingsHelper.Set(SettingsHelper.ShowOtherException, value);
-                RaisePropertyChangedEvent();
+                if (ShowOtherException != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.ShowOtherException, value);
+                    RaisePropertyChangedEvent();
+                }
             }
         }
-        
+
         internal bool? CheckUpdateWhenLuanching
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLuanching);
             set
             {
-                SettingsHelper.Set(SettingsHelper.CheckUpdateWhenLuanching, value);
-                RaisePropertyChangedEvent();
+                if (CheckUpdateWhenLuanching != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.CheckUpdateWhenLuanching, value);
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -95,8 +110,11 @@ namespace CoolapkLite.Pages.SettingsPages
             get => isCleanCacheButtonEnabled;
             set
             {
-                isCleanCacheButtonEnabled = value;
-                RaisePropertyChangedEvent();
+                if (isCleanCacheButtonEnabled != value)
+                {
+                    isCleanCacheButtonEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -106,8 +124,11 @@ namespace CoolapkLite.Pages.SettingsPages
             get => isCheckUpdateButtonEnabled;
             set
             {
-                isCheckUpdateButtonEnabled = value;
-                RaisePropertyChangedEvent();
+                if (isCheckUpdateButtonEnabled != value)
+                {
+                    isCheckUpdateButtonEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 

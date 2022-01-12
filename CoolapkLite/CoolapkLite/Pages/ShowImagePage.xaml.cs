@@ -64,8 +64,11 @@ namespace CoolapkLite.Pages
             get => isProgressRingActived;
             set
             {
-                isProgressRingActived = value;
-                RaisePropertyChangedEvent();
+                if (isProgressRingActived != value)
+                {
+                    isProgressRingActived = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 

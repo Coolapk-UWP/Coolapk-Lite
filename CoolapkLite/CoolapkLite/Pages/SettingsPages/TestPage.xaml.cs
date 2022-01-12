@@ -34,13 +34,29 @@ namespace CoolapkLite.Pages.SettingsPages
         private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
+        internal string Version
+        {
+            get => SettingsHelper.Get<string>(SettingsHelper.Version);
+            set
+            {
+                if (Version != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.Version, value.ToString());
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         internal bool IsExtendsTitleBar
         {
             get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
             set
             {
-                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
-                RaisePropertyChangedEvent();
+                if (IsExtendsTitleBar != value)
+                {
+                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 

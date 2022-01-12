@@ -148,22 +148,28 @@ namespace CoolapkLite.ViewModels.ToolPages
         private string _dateLabel = "长按选择";
         public string DateLabel
         {
-            get { return _dateLabel; }
+            get => _dateLabel;
             set
             {
-                _dateLabel = value;
-                RaisePropertyChangedEvent();
+                if (_dateLabel != value)
+                {
+                    _dateLabel = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
         private double _fansValue;
         public double FansValue
         {
-            get { return _fansValue; }
+            get => _fansValue;
             set
             {
-                _fansValue = value;
-                RaisePropertyChangedEvent();
+                if (_fansValue != value)
+                {
+                    _fansValue = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -171,12 +177,15 @@ namespace CoolapkLite.ViewModels.ToolPages
         private ChartDataContext fanNumListByDateTrack;
         public ChartDataContext FanNumListByDateTrack
         {
-            get { return fanNumListByDateTrack; }
+            get => fanNumListByDateTrack;
             set
             {
-                fanNumListByDateTrack = value;
-                RaisePropertyChangedEvent();
-                FanNumListByDateUpdate(fanNumListByDateTrack);
+                if (fanNumListByDateTrack != value)
+                {
+                    fanNumListByDateTrack = value;
+                    RaisePropertyChangedEvent();
+                    FanNumListByDateUpdate(fanNumListByDateTrack);
+                }
             }
         }
 

@@ -26,8 +26,8 @@ namespace CoolapkLite.Core.Helpers
         static NetworkHelper()
         {
             CultureInfo Culture = null;
-            string Version = "V11";
             ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
+            string Version = ApplicationData.Current.LocalSettings.Values["Version"].ToString();
             try { Culture = GlobalizationPreferences.Languages.Count > 0 ? new CultureInfo(GlobalizationPreferences.Languages.First()) : null; } catch { }
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
             Client.DefaultRequestHeaders.Add("X-Sdk-Int", "30");
@@ -37,8 +37,6 @@ namespace CoolapkLite.Core.Helpers
             Client.DefaultRequestHeaders.Add("X-Sdk-Locale", Culture == null ? "zh-CN" : Culture.ToString());
             Client.DefaultRequestHeaders.Add("X-Dark-Mode", Application.Current.RequestedTheme.ToString() == "Dark" ? "1" : "0");
             Client.DefaultRequestHeaders.UserAgent.ParseAdd("Dalvik/2.1.0 (Windows NT " + (ushort)((version & 0xFFFF000000000000L) >> 48) + "." + (ushort)((version & 0x0000FFFF00000000L) >> 32) + (Package.Current.Id.Architecture.ToString().Contains("64") ? "; Win64; " : "; Win32; ") + Package.Current.Id.Architecture.ToString().Replace("X", "x") + "; WebView/3.0) (#Build; " + deviceInfo.SystemManufacturer + "; " + deviceInfo.SystemProductName + "; CoolapkUWP; " + (ushort)((version & 0xFFFF000000000000L) >> 48) + "." + (ushort)((version & 0x0000FFFF00000000L) >> 32) + "." + (ushort)((version & 0x00000000FFFF0000L) >> 16) + "." + (ushort)(version & 0x000000000000FFFFL) + ")");
-            if (ApplicationData.Current.LocalSettings.Values["Version"] != null)
-            { Version = ApplicationData.Current.LocalSettings.Values["Version"].ToString(); }
             switch (Version)
             {
                 case "V6":
@@ -77,10 +75,17 @@ namespace CoolapkLite.Core.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "10");
                     break;
                 case "V11":
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/11.2-2105201-universal");
-                    Client.DefaultRequestHeaders.Add("X-App-Version", "11.2");
-                    Client.DefaultRequestHeaders.Add("X-App-Code", "2105201");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/11.4.7-2112231-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "11.4.7");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2112231");
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "11");
+                    break;
+                case "V12":
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.0.0-beta4-2201111-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "12.0.0-beta4");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2201111");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2201111");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 default:
                     Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/9.2.2-1905301-universal");
@@ -111,14 +116,18 @@ namespace CoolapkLite.Core.Helpers
 
         private static string GetCoolapkDeviceID()
         {
-            Guid easId = new EasClientDeviceInformation().Id;
-            string md5_easID = Utils.GetMD5(easId.ToString());
-            string base64 = md5_easID;
-            for (int i = 0; i < 5; i++)
+            string token = ApplicationData.Current.LocalSettings.Values["DeviceID"].ToString();
+            if (string.IsNullOrEmpty(token))
             {
-                base64 = Utils.GetBase64(base64);
+                Guid easId = new EasClientDeviceInformation().Id;
+                string md5_easID = Utils.GetMD5(easId.ToString());
+                string base64 = md5_easID;
+                for (int i = 0; i < 5; i++)
+                {
+                    base64 = Utils.GetBase64(base64);
+                }
+                token = base64.Replace("=", "");
             }
-            string token = base64.Replace("=", "");
             return token;
         }
 
@@ -175,10 +184,18 @@ namespace CoolapkLite.Core.Helpers
         {
             try
             {
+                HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
-                _ = Client.DefaultRequestHeaders.Remove("X-App-Device");
-                HttpResponseMessage response = await Client.PostAsync(uri, content);
-                Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
+                if (string.IsNullOrEmpty(ApplicationData.Current.LocalSettings.Values["DeviceID"].ToString()))
+                {
+                    _ = Client.DefaultRequestHeaders.Remove("X-App-Device");
+                    response = await Client.PostAsync(uri, content);
+                    Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
+                }
+                else
+                {
+                    response = await Client.PostAsync(uri, content);
+                }
                 return await response.Content.ReadAsStringAsync();
             }
             catch { throw; }

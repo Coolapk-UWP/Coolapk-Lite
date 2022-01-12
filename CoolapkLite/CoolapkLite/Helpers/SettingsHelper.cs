@@ -12,6 +12,8 @@ namespace CoolapkLite.Helpers
     {
         public const string Uid = "Uid";
         public const string TileUrl = "TileUrl";
+        public const string Version = "Version";
+        public const string DeviceID = "DeviceID";
         public const string IsFirstRun = "IsFirstRun";
         public const string IsDarkMode = "IsDarkMode";
         public const string IsNoPicsMode = "IsNoPicsMode";
@@ -34,6 +36,14 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(TileUrl))
             {
                 LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
+            }
+            if (!LocalSettings.Values.ContainsKey(Version))
+            {
+                LocalSettings.Values.Add(Version, "V9");
+            }
+            if (!LocalSettings.Values.ContainsKey(DeviceID))
+            {
+                LocalSettings.Values.Add(DeviceID, string.Empty);
             }
             if (!LocalSettings.Values.ContainsKey(IsFirstRun))
             {

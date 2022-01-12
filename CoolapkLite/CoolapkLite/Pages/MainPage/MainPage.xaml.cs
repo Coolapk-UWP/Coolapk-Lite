@@ -373,8 +373,11 @@ namespace CoolapkLite
             get => image;
             set
             {
-                image = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
+                if (image != value)
+                {
+                    image = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
+                }
             }
         }
         public int Index { get; set; }

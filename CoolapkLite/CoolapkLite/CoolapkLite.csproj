@@ -152,6 +152,12 @@
     <Compile Include="Controls\DataTemplates\Pic.xaml.cs">
       <DependentUpon>Pic.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\FeedShellDetailControl.xaml.cs">
+      <DependentUpon>FeedShellDetailControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\FeedShellListControl.xaml.cs">
+      <DependentUpon>FeedShellListControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\GridPanel.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs">
       <DependentUpon>HamburgerMenu.xaml</DependentUpon>
@@ -207,12 +213,12 @@
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />
-    <Compile Include="Helpers\UIDataHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
     <Compile Include="Media\BackdropBlurBrush.cs" />
+    <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
     <Compile Include="Models\Feeds\SourceFeedModel.cs" />
@@ -224,6 +230,9 @@
     <Compile Include="Models\Pages\FeedListPageModels.cs" />
     <Compile Include="Models\Users\ContactModel.cs" />
     <Compile Include="Models\Users\UserModel.cs" />
+    <Compile Include="Pages\FeedPages\FeedShellPage.xaml.cs">
+      <DependentUpon>FeedShellPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Interfaces.cs" />
     <Compile Include="Pages\MainPage\PivotPage.xaml.cs">
       <DependentUpon>PivotPage.xaml</DependentUpon>
@@ -874,6 +883,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\FeedShellDetailControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\FeedShellListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\HamburgerMenu\HamburgerMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -911,6 +928,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TwoPaneView\TwoPaneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FeedPages\FeedShellPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

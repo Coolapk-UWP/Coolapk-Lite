@@ -294,7 +294,7 @@ namespace CoolapkLite.Core.Helpers
     public static partial class Utils
     {
         private static bool IsInternetAvailable => Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
-        private static readonly Dictionary<Uri, Dictionary<int,(DateTime date,string data)>> ResponseCache = new Dictionary<Uri, Dictionary<int, (DateTime, string)>>();
+        private static readonly Dictionary<Uri, Dictionary<int, (DateTime date, string data)>> ResponseCache = new Dictionary<Uri, Dictionary<int, (DateTime, string)>>();
 
         internal static readonly Timer CleanCacheTimer = new Timer(o =>
         {
@@ -412,7 +412,7 @@ namespace CoolapkLite.Core.Helpers
             return result;
         }
 
-        private static (int page,Uri uri) GetPage(this Uri uri)
+        private static (int page, Uri uri) GetPage(this Uri uri)
         {
             Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
             if (pageregex.IsMatch(uri.ToString()))

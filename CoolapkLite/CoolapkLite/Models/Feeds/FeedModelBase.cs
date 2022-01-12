@@ -14,8 +14,11 @@ namespace CoolapkLite.Models.Feeds
             get => likeNum;
             set
             {
-                likeNum = value;
-                RaisePropertyChangedEvent();
+                if (likeNum != value)
+                {
+                    likeNum = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -25,8 +28,11 @@ namespace CoolapkLite.Models.Feeds
             get => replyNum;
             set
             {
-                replyNum = value;
-                RaisePropertyChangedEvent();
+                if (replyNum != value)
+                {
+                    replyNum = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -36,8 +42,11 @@ namespace CoolapkLite.Models.Feeds
             get => isCopyEnabled;
             set
             {
-                isCopyEnabled = value;
-                RaisePropertyChangedEvent();
+                if (isCopyEnabled != value)
+                {
+                    isCopyEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 

@@ -8,11 +8,11 @@ using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
-namespace CoolapkLite.Controls.DataTemplates
+namespace CoolapkLite.Controls
 {
-    public partial class Feeds : ResourceDictionary
+    public sealed partial class FeedShellDetailControl : UserControl
     {
-        public Feeds() => InitializeComponent();
+        public FeedShellDetailControl() => InitializeComponent();
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

@@ -12,8 +12,11 @@ namespace CoolapkLite.Models.Pages
             get => isCopyEnabled;
             set
             {
-                isCopyEnabled = value;
-                RaisePropertyChangedEvent();
+                if (isCopyEnabled != value)
+                {
+                    isCopyEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 

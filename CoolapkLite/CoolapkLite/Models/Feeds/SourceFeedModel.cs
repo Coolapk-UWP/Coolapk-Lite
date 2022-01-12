@@ -10,6 +10,7 @@ namespace CoolapkLite.Models.Feeds
     public class SourceFeedModel : Entity
     {
         public string Url { get; private set; }
+        public string Uurl { get; private set; }
         public string Message { get; private set; }
         public string UserName { get; private set; }
         public string Dateline { get; private set; }
@@ -26,6 +27,19 @@ namespace CoolapkLite.Models.Feeds
             else if (token.TryGetValue("id", out JToken id))
             {
                 Url = $"/feed/{id.ToString().Replace("\"", string.Empty)}";
+            }
+
+            if (token.TryGetValue("userInfo", out JToken v1))
+            {
+                JObject userInfo = (JObject)v1;
+                if (userInfo.TryGetValue("url", out JToken url))
+                {
+                    Uurl = url.ToString();
+                }
+            }
+            else if (token.TryGetValue("uid", out JToken uid))
+            {
+                Uurl = $"/u/{uid}";
             }
 
             if (token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString()))

@@ -109,6 +109,21 @@
                             Click="Button_Click"
                             Content="获取内容"
                             Tag="GetContent" />
+                        <ComboBox
+                            x:Name="ComboBoxVersion"
+                            Grid.Row="13"
+                            Header="选择兼容版本号(需要重启)"
+                            PlaceholderText="选择版本号"
+                            SelectedItem="{x:Bind Version, Mode=TwoWay}">
+                            <x:String>V6</x:String>
+                            <x:String>V7</x:String>
+                            <x:String>V8</x:String>
+                            <x:String>V9</x:String>
+                            <x:String>V10</x:String>
+                            <x:String>V11</x:String>
+                            <x:String>V12</x:String>
+                            <x:String>小程序</x:String>
+                        </ComboBox>
                     </StackPanel>
                 </control:HeaderedContentControl>
                 <control:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">

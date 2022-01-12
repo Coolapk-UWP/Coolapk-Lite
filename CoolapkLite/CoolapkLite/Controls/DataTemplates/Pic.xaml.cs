@@ -1,6 +1,4 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates

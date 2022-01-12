@@ -47,8 +47,11 @@ namespace CoolapkLite.Models.Images
             get => isLongPic;
             private set
             {
-                isLongPic = value;
-                RaisePropertyChangedEvent();
+                if (isLongPic != value)
+                {
+                    isLongPic = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
@@ -57,8 +60,11 @@ namespace CoolapkLite.Models.Images
             get => isWidePic;
             private set
             {
-                isWidePic = value;
-                RaisePropertyChangedEvent();
+                if (isWidePic != value)
+                {
+                    isWidePic = value;
+                    RaisePropertyChangedEvent();
+                }
             }
         }
 
