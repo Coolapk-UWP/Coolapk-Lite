@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    d:DataContext="{d:DesignInstance Type=feedpages:AdaptiveViewModel}"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -32,6 +34,7 @@
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+            ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"

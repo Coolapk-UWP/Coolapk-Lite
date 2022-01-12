@@ -1,7 +1,9 @@
 ﻿using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.ToolPages;
+using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.ToolPages;
 using System;
 using System.ComponentModel;
@@ -122,6 +124,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "HideProgressBar":
                     UIHelper.HideProgressBar();
+                    break;
+                case "GoToTestingPage":
+                    _ = Frame.Navigate(typeof(FeedShellPage), new FeedDetailViewModel("32779966"));
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();

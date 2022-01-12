@@ -24,19 +24,18 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             if (e.Parameter is IndexViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider;
+                DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
                 await Refresh(-2);
-                if (!string.IsNullOrEmpty(Provider.Title))
-                {
-                    TitleBar.Title = Provider.Title;
-                }
+            }
+            else
+            {
+                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             }
         }
 

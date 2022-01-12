@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class AdaptiveViewModel : DataSourceBase<Entity>, IViewModel
+    public class AdaptiveViewModel : DataSourceBase<Entity>, IViewModel
     {
         private readonly string Uri;
         private readonly List<Type> EntityTypes;

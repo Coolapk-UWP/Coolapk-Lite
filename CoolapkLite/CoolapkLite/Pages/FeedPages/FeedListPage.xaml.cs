@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace CoolapkLite.Pages.FeedPages
 {
-    internal enum FeedListType
+    public enum FeedListType
     {
         TagPageList,
         DyhPageList,
@@ -38,15 +38,11 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is FeedListViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider;
+                DataContext = Provider;
                 Provider.TitleUpdate += Provider_TitleUpdate;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
-                if (!string.IsNullOrEmpty(Provider.Title))
-                {
-                    TitleBar.Title = Provider.Title;
-                }
             }
         }
 

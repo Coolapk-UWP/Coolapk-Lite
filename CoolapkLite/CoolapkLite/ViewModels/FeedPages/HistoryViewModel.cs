@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -20,6 +21,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         internal HistoryViewModel(string title)
         {
+            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
             if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
             Title = title;
             switch (title)

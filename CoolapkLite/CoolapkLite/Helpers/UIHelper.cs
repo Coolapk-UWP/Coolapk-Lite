@@ -5,6 +5,7 @@ using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using LiteDB;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
@@ -17,6 +18,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
@@ -270,6 +272,20 @@ namespace CoolapkLite.Helpers
             }
         }
 
+        public static bool IsOriginSource(object source, object originalSource)
+        {
+            bool r = false;
+            DependencyObject DependencyObject = originalSource as DependencyObject;
+            if (DependencyObject.FindAscendant<Button>() == null && DependencyObject.FindAscendant<AppBarButton>() == null && originalSource.GetType() != typeof(Button) && originalSource.GetType() != typeof(AppBarButton) && originalSource.GetType() != typeof(RichEditBox))
+            {
+                if (source is FrameworkElement FrameworkElement)
+                {
+                    r = source == DependencyObject.FindAscendantByName(FrameworkElement.Name);
+                }
+            }
+            return source == originalSource || r;
+        }
+
         public static string ConvertMessageTypeToMessage(this MessageType type)
         {
             switch (type)
@@ -331,6 +347,8 @@ namespace CoolapkLite.Helpers
         private static readonly ImmutableArray<string> routes = new string[]
         {
             "/u/",
+            "/feed/",
+            "/picture/",
         }.ToImmutableArray();
 
         private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
@@ -360,6 +378,11 @@ namespace CoolapkLite.Helpers
                 {
                     Navigate(typeof(FeedListPage), f);
                 }
+            }
+            else if (str.IsFirst(i++) || str.IsFirst(i++))
+            {
+                if (str == "/feed/writer") { ShowMessage("暂不支持"); }
+                else { Navigate(typeof(FeedShellPage), new FeedDetailViewModel(str.Replace(i - 1))); }
             }
         }
 

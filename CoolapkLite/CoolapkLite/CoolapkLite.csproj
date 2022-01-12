@@ -277,6 +277,7 @@
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FavoriteViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />

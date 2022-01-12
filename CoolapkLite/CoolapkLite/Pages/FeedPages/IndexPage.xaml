@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    d:DataContext="{d:DesignInstance Type=feedpages:IndexViewModel}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -35,6 +37,7 @@
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+            ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ScrollViewer.IsDeferredScrollingEnabled="True"
@@ -42,6 +45,7 @@
             SelectionMode="None" />
         <control:TitleBar
             x:Name="TitleBar"
+            Title="{Binding Title}"
             BackButtonVisibility="Collapsed"
             BackgroundVisibility="Visible"
             RefreshButtonVisibility="Visible"

@@ -146,6 +146,11 @@
                             Click="Button_Click"
                             Content="前往粉丝分析页面"
                             Tag="GoToFansAnalyzePage" />
+                        <Button
+                            Margin="0,2"
+                            Click="Button_Click"
+                            Content="前往测试中的页面"
+                            Tag="GoToTestingPage" />
                     </StackPanel>
                 </control:HeaderedContentControl>
                 <control:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">

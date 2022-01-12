@@ -25,7 +25,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
+    <Grid DataContext="{x:Bind FeedDetail, Mode=OneWay}">
         <UserControl Loaded="UserControl_Loaded" SizeChanged="UserControl_SizeChanged">
             <Grid Padding="8,4">
                 <Grid.RowDefinitions>

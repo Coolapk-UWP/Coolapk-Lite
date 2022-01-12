@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -17,6 +18,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         internal FavoriteViewModel()
         {
+            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Favorite");
             Provider = new CoolapkListProvider(
                 (p, _, __) => UriHelper.GetUri(UriType.GetUserFollows, "apkFollowList", string.Empty, p),
                 GetEntities,

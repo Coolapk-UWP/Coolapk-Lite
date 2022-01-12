@@ -21,7 +21,11 @@
     </Style>
 
     <DataTemplate x:Key="Feed">
-        <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
+        <ListViewItem
+            x:Name="Root"
+            Style="{StaticResource FixedListViewItemStyle}"
+            Tag="{Binding Url}"
+            Tapped="OnTapped">
             <UserControl Loaded="UserControl_Loaded" SizeChanged="UserControl_SizeChanged">
                 <Grid Padding="8,4">
                     <Grid.RowDefinitions>

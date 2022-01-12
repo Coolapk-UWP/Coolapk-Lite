@@ -318,7 +318,7 @@ namespace CoolapkLite.Core.Helpers
         {
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
-            (bool isSucceed, JToken result) result = GetResult(json);
+            (bool isSucceed, JToken result) result;
 
             void ReadCache()
             {
@@ -364,6 +364,7 @@ namespace CoolapkLite.Core.Helpers
         {
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
+            (bool isSucceed, string result) result;
 
             (bool isSucceed, string result) GetResult()
             {
@@ -374,7 +375,6 @@ namespace CoolapkLite.Core.Helpers
                 }
                 else { return (true, json); }
             }
-            (bool isSucceed, string result) result = GetResult();
 
             if (forceRefresh)
             {

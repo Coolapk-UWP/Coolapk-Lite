@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal abstract class FeedListViewModel : DataSourceBase<Entity>, IViewModel
+    public abstract class FeedListViewModel : DataSourceBase<Entity>, IViewModel
     {
         protected const string idName = "id";
         private CoolapkListProvider Provider;

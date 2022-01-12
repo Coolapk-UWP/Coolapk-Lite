@@ -1,5 +1,8 @@
-﻿using Windows.UI.Xaml;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels.FeedPages;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
 using TwoPaneViewMode = CoolapkLite.Controls.TwoPaneViewMode;
 
@@ -12,9 +15,34 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedShellPage : Page
     {
-        public FeedShellPage()
+        private FeedShellViewModel Provider;
+        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
+
+        public FeedShellPage() => InitializeComponent();
+
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            InitializeComponent();
+            base.OnNavigatedTo(e);
+            if (e.Parameter is FeedShellViewModel ViewModel)
+            {
+                Provider = ViewModel;
+                DataContext = Provider;
+                await Provider.Refresh(-2);
+                if (Provider.FeedDetail != null)
+                {
+                    SetLayout();
+                }
+            }
+            await System.Threading.Tasks.Task.Delay(30);
+        }
+
+        private void SetLayout()
+        {
+            //ListControl.ReplyDS = new Controls.ReplyDS(FeedDetailModel);
+            //TwoPaneView.MinWideModeWidth = FeedDetailModel?.IsFeedArticle ?? false ? 876 : 804;
+            //TwoPaneView.Pane1Length = new GridLength(FeedDetailModel?.IsFeedArticle ?? false ? 520 : 420);
+            //UIHelper.MainPage.SetTitle(FeedDetailModel.IsFeedArticle ? $"{FeedDetailModel.UserName}的图文" : $"{FeedDetailModel.UserName}的动态");
+            //_ = ListControl.Refresh(-2);
         }
 
         #region 界面模式切换

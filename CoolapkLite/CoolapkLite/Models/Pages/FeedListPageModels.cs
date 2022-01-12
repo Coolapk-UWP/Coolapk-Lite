@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace CoolapkLite.Models.Pages
 {
-    internal abstract class FeedListDetailBase : Entity, INotifyPropertyChanged
+    public abstract class FeedListDetailBase : Entity, INotifyPropertyChanged
     {
         private bool isCopyEnabled;
         public bool IsCopyEnabled

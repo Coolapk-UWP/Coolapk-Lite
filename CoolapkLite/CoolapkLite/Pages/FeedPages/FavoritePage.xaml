@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    d:DataContext="{d:DesignInstance Type=feedpages:FavoriteViewModel}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -26,12 +28,14 @@
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ItemTemplate="{StaticResource History}"
+            ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             ScrollViewer.IsDeferredScrollingEnabled="True"
             ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectionMode="None" />
         <control:TitleBar
             x:Name="TitleBar"
+            Title="{Binding Title}"
             BackButtonVisibility="Collapsed"
             BackgroundVisibility="Visible"
             RefreshButtonVisibility="Visible"

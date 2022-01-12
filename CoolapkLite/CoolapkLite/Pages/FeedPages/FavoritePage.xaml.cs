@@ -26,18 +26,17 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Favorite");
             if (e.Parameter is FavoriteViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider;
+                DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
-                if (!string.IsNullOrEmpty(Provider.Title))
-                {
-                    TitleBar.Title = Provider.Title;
-                }
+            }
+            else
+            {
+                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Favorite");
             }
         }
 

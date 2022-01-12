@@ -23,18 +23,18 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
             if (e.Parameter is HistoryViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider;
+                DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
                 await Refresh(-2);
-                if (!string.IsNullOrEmpty(Provider.Title))
-                {
-                    TitleBar.Title = Provider.Title;
-                }
+            }
+            else
+            {
+                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
             }
         }
 
@@ -43,6 +43,7 @@ namespace CoolapkLite.Pages.FeedPages
             base.OnNavigatedFrom(e);
             Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
+            Provider.OnLoadMoreProgressChanged -= UIHelper.ShowProgressBar;
         }
 
         private async Task Refresh(int p = -1) => await Provider.Refresh(p);

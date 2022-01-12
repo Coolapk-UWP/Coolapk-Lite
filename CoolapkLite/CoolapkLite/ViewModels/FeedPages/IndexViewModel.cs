@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using static CoolapkLite.Models.Feeds.FeedModel;
 
 namespace CoolapkLite.ViewModels.FeedPages
@@ -29,6 +30,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             Uri = GetUri(uri);
             ShowTitleBar = showTitleBar;
+            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             Provider = new CoolapkListProvider(
                 (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
                 GetEntities,

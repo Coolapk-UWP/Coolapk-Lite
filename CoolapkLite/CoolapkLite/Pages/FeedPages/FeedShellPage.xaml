@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:CoolapkLite.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:control="using:CoolapkLite.Controls" xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages" d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
     mc:Ignorable="d">
     <Grid>
         <Grid.ChildrenTransitions>
@@ -16,6 +16,7 @@
             x:Name="TwoPaneView"
             Loaded="TwoPaneView_Loaded"
             MinWideModeWidth="804"
+            Margin="{x:Bind StackPanelMargin}"
             ModeChanged="TwoPaneView_ModeChanged"
             Pane1Length="420"
             PanePriority="Pane2"
@@ -23,7 +24,7 @@
             <control:TwoPaneView.Pane1>
                 <ScrollViewer x:Name="DetailScrollViewer" VerticalAlignment="Top">
                     <Grid x:Name="Pane1Grid">
-                        <control:FeedShellDetailControl x:Name="DetailControl" />
+                        <control:FeedShellDetailControl FeedDetail="{Binding FeedDetail}" x:Name="DetailControl" />
                     </Grid>
                 </ScrollViewer>
             </control:TwoPaneView.Pane1>
@@ -37,6 +38,7 @@
         </control:TwoPaneView>
         <control:TitleBar
             x:Name="TitleBar"
+            Title="{Binding Title}"
             BackButtonVisibility="Collapsed"
             BackgroundVisibility="Visible"
             RefreshButtonVisibility="Visible" />

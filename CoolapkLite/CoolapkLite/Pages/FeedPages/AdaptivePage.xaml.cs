@@ -26,7 +26,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is AdaptiveViewModel ViewModel)
             {
                 Provider = ViewModel;
-                ListView.ItemsSource = Provider;
+                DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(-2);
