@@ -45,7 +45,7 @@
                             Margin="4,0,0,0"
                             FontSize="16"
                             Foreground="Red"
-                            Glyph="" />
+                            Glyph="&#xE840;" />
                         <TextBlock
                             x:Uid="/Feed/stickUp"
                             Margin="5,4,5,5"

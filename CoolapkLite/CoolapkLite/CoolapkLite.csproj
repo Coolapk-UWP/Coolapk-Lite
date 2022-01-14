@@ -139,6 +139,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
+    <Compile Include="BlankPage.xaml.cs">
+      <DependentUpon>BlankPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\DataTemplateSelectors.cs" />
     <Compile Include="Controls\DataTemplates\Feeds.xaml.cs">
       <DependentUpon>Feeds.xaml</DependentUpon>
@@ -184,6 +187,7 @@
     <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs">
       <DependentUpon>HeaderedContentControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PivotHeader\PivotHeader.cs" />
     <Compile Include="Controls\PullToRefreshListView\PullToRefreshListView.cs">
       <DependentUpon>PullToRefreshListView.xaml</DependentUpon>
     </Compile>
@@ -191,6 +195,7 @@
     <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
       <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ShyHeaderPivot\ShyHeaderPivot.cs" />
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -210,6 +215,7 @@
     <Compile Include="Helpers\EmojiHelper.cs" />
     <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
+    <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />
@@ -221,6 +227,7 @@
     <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
+    <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\Feeds\SourceFeedModel.cs" />
     <Compile Include="Models\HistoryModel.cs" />
     <Compile Include="Models\Images\BackgroundImageModel.cs" />
@@ -868,6 +875,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="BlankPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\Feeds.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -904,6 +915,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\PivotHeader\PivotHeader.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PullToRefreshListView\PullToRefreshListView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -919,6 +934,10 @@
     <Page Include="Controls\ShowQRCodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ShyHeaderPivot\ShyHeaderPivot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>

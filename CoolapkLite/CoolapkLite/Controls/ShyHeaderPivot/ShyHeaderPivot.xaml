@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CoolapkLite.Controls">
+    <Style TargetType="local:ShyHeaderPivot">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Background" Value="{ThemeResource PivotBackground}" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:ShyHeaderPivot">
+                    <Grid>
+                        <Grid x:Name="Header" VerticalAlignment="Top">
+                            <ContentPresenter />
+                        </Grid>
+                        <local:PivotHeader
+                            x:Name="PivotHeader"
+                            Canvas.ZIndex="1"/>
+                        <ContentPresenter Content="{TemplateBinding Content}"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

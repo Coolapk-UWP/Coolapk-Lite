@@ -33,6 +33,12 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityId");
         }
 
+        internal AdaptiveViewModel(CoolapkListProvider provider, List<Type> types = null)
+        {
+            Provider = provider;
+            EntityTypes = types;
+        }
+
         public async Task Refresh(int p = -1)
         {
             if (p == -2)

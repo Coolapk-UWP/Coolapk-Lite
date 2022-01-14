@@ -1,4 +1,7 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Core.Helpers.DataSource;
+using CoolapkLite.Core.Models;
+using CoolapkLite.Core.Providers;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using System;
@@ -58,7 +61,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     internal class FeedDetailViewModel : FeedShellViewModel
     {
-        //public FeedDetailList.ViewModel ReplyListVM { get; private set; }
+        public AdaptiveViewModel ReplyViewModel { get; private set; }
 
         internal FeedDetailViewModel(string id) : base(id)
         {
@@ -70,10 +73,20 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 FeedDetailModel feedDetail = await GetFeedDetailAsync(id);
                 //Title = feedDetail.Title;
-                //if (ReplyListVM == null || ReplyListVM.Id != id)
-                //{
-                //    //ReplyListVM = new FeedDetailList.ViewModel(id, feedDetail);
-                //}
+                if (ReplyViewModel == null)
+                {
+                    ReplyViewModel = new AdaptiveViewModel(new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                        UriHelper.GetUri(
+                            UriType.GetFeedReplies,
+                            id,
+                            "lastupdate_desc",
+                            p,
+                            $"&firstItem={firstItem}&lastItem={lastItem}",
+                            0),
+                        (o) => new Entity[] { new FeedReplyModel(o) },
+                        "id"));
+                }
                 FeedDetail = feedDetail;
             }
             //await ReplyListVM?.Refresh(p);
