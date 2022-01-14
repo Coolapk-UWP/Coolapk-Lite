@@ -126,7 +126,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     UIHelper.HideProgressBar();
                     break;
                 case "GoToTestingPage":
-                    _ = Frame.Navigate(typeof(FeedShellPage), new FeedDetailViewModel("32779966"));
+                    _ = Frame.Navigate(typeof(BlankPage));
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();

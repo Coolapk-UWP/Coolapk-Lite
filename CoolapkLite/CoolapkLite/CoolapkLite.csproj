@@ -139,7 +139,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
-    <Compile Include="BlankPage.xaml.cs">
+    <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\DataTemplateSelectors.cs" />
@@ -875,7 +875,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BlankPage.xaml">
+    <Page Include="Pages\SettingsPages\BlankPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers.Providers;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Providers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -19,31 +22,122 @@ using Windows.UI.Xaml.Media;
 namespace CoolapkLite.Controls
 {
     [TemplatePart(Name = "Header", Type = typeof(Grid))]
-    [TemplatePart(Name = "PivotHeader", Type = typeof(PivotHeader))]
+    [TemplatePart(Name = "PivotHeader", Type = typeof(Grid))]
+    [TemplatePart(Name = "ContentPresenter", Type = typeof(ContentPresenter))]
     public sealed class ShyHeaderPivot : ContentControl
     {
-        private Pivot _pivot;
         private Grid _header;
-        private PivotHeader _pivotHeader;
+        private Grid _pivotHeader;
+        private ContentPresenter _contentPresenter;
 
-        private HashSet<ScrollViewer> ScrollViewers;
+        private CancellationTokenSource Token;
         private ScrollProgressProvider Provider;
         private SpinLock SpinLock = new SpinLock();
-        private CancellationTokenSource Token;
+        private HashSet<ScrollViewer> ScrollViewers;
+
+        public static readonly DependencyProperty PivotProperty = DependencyProperty.Register(
+           "Pivot",
+           typeof(Pivot),
+           typeof(ShyHeaderPivot),
+           new PropertyMetadata(null, OnPivotPropertyChanged));
+
+        public static readonly DependencyProperty TopPanelProperty = DependencyProperty.Register(
+           "TopPanel",
+           typeof(object),
+           typeof(ShyHeaderPivot),
+           null);
+
+        public static readonly DependencyProperty LeftHeaderProperty = DependencyProperty.Register(
+           "LeftHeader",
+           typeof(object),
+           typeof(ShyHeaderPivot),
+           null);
+
+        public static readonly DependencyProperty RightHeaderProperty = DependencyProperty.Register(
+           "RightHeader",
+           typeof(object),
+           typeof(ShyHeaderPivot),
+           null);
+
+        public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
+           "HeaderHeight",
+           typeof(double),
+           typeof(ShyHeaderPivot),
+           new PropertyMetadata(double.NaN, null));
+
+        public static readonly DependencyProperty HeaderBackgroundProperty = DependencyProperty.Register(
+           "HeaderBackground",
+           typeof(Brush),
+           typeof(ShyHeaderPivot),
+           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush(), null));
+
+        public static readonly DependencyProperty TopPanelBackgroundProperty = DependencyProperty.Register(
+           "TopPanelBackground",
+           typeof(Brush),
+           typeof(ShyHeaderPivot),
+           null);
+
+        public Pivot Pivot
+        {
+            get => (Pivot)GetValue(PivotProperty);
+            set => SetValue(PivotProperty, value);
+        }
+
+        public object TopPanel
+        {
+            get => GetValue(TopPanelProperty);
+            set => SetValue(TopPanelProperty, value);
+        }
+
+        public object LeftHeader
+        {
+            get => GetValue(LeftHeaderProperty);
+            set => SetValue(LeftHeaderProperty, value);
+        }
+
+        public object RightHeader
+        {
+            get => GetValue(RightHeaderProperty);
+            set => SetValue(RightHeaderProperty, value);
+        }
+
+        public double HeaderHeight
+        {
+            get => (double)GetValue(HeaderHeightProperty);
+            set => SetValue(HeaderHeightProperty, value);
+        }
+
+        public Brush HeaderBackground
+        {
+            get => (Brush)GetValue(HeaderBackgroundProperty);
+            set => SetValue(HeaderBackgroundProperty, value);
+        }
+
+        public Brush TopPanelBackground
+        {
+            get => (Brush)GetValue(TopPanelBackgroundProperty);
+            set => SetValue(TopPanelBackgroundProperty, value);
+        }
+
+        private static void OnPivotPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            (d as ShyHeaderPivot).UpdatePivot();
+        }
+
+        public event TypedEventHandler<object, double> ProgressChanged;
 
         public ShyHeaderPivot()
         {
             this.DefaultStyleKey = typeof(ShyHeaderPivot);
+
+            Provider = new ScrollProgressProvider();
+            ScrollViewers = new HashSet<ScrollViewer>();
+            Provider.ProgressChanged += Provider_ProgressChanged;
+            VisualStateManager.GoToState(this, "BeforeThreshold", false);
         }
 
         protected override void OnApplyTemplate()
         {
-            if (_pivot != null)
-            {
-                _pivot.PivotItemLoaded -= Pivot_PivotItemLoaded;
-                _pivot.SelectionChanged -= Pivot_SelectionChanged;
-                _pivot.PivotItemUnloading -= Pivot_PivotItemUnloading;
-            }
             if (_header != null)
             {
                 _header.SizeChanged -= Header_SizeChanged;
@@ -51,21 +145,13 @@ namespace CoolapkLite.Controls
             if (_pivotHeader != null)
             {
                 _pivotHeader.Loaded -= PivotHeader_Loaded;
+                _pivotHeader.SizeChanged -= Header_SizeChanged;
             }
 
-            Provider = new ScrollProgressProvider();
-            ScrollViewers = new HashSet<ScrollViewer>();
-            Provider.ProgressChanged += Provider_ProgressChanged;
             _header = (Grid)GetTemplateChild("Header");
-            _pivotHeader = (PivotHeader)GetTemplateChild("PivotHeader");
-            _pivot = (Content as FrameworkElement).FindDescendant<Pivot>();
+            _pivotHeader = (Grid)GetTemplateChild("PivotHeader");
+            _contentPresenter = (ContentPresenter)GetTemplateChild("ContentPresenter");
 
-            if (_pivot != null)
-            {
-                _pivot.PivotItemLoaded += Pivot_PivotItemLoaded;
-                _pivot.SelectionChanged += Pivot_SelectionChanged;
-                _pivot.PivotItemUnloading += Pivot_PivotItemUnloading;
-            }
             if (_header != null)
             {
                 _header.SizeChanged += Header_SizeChanged;
@@ -73,14 +159,45 @@ namespace CoolapkLite.Controls
             if (_pivotHeader != null)
             {
                 _pivotHeader.Loaded += PivotHeader_Loaded;
+                _pivotHeader.SizeChanged += Header_SizeChanged;
             }
+            if(TopPanelBackground == null)
+            {
+                TopPanelBackground = Background;
+            }
+
+            UpdatePivot();
 
             base.OnApplyTemplate();
         }
 
+        private async void UpdatePivot()
+        {
+            if (Pivot == null)
+            {
+                if (Token != null) Token.Cancel();
+                Token = new CancellationTokenSource(TimeSpan.FromSeconds(20));
+                Pivot = await WaitForLoaded(_contentPresenter, () => _contentPresenter?.FindDescendant<Pivot>(), c => c != null, Token.Token);
+            }
+
+            if (Pivot != null)
+            {
+                Pivot.PivotItemLoaded -= Pivot_PivotItemLoaded;
+                Pivot.PivotItemLoaded += Pivot_PivotItemLoaded;
+                Pivot.SelectionChanged -= Pivot_SelectionChanged;
+                Pivot.SelectionChanged += Pivot_SelectionChanged;
+                Pivot.PivotItemUnloading -= Pivot_PivotItemUnloading;
+                Pivot.PivotItemUnloading += Pivot_PivotItemUnloading;
+
+                Pivot_SelectionChanged(Pivot, null);
+                await Task.Delay(1);
+                Pivot_PivotItemLoaded(Pivot, new PivotItemEventArgs() { Item = (PivotItem)Pivot.SelectedItem });
+            }
+        }
+
         private async void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PivotItem PivotItem = _pivot.ContainerFromItem(_pivot.SelectedItem) as PivotItem;
+            PivotItem PivotItem = Pivot.ContainerFromItem(Pivot.SelectedItem) as PivotItem;
 
             if (Token != null) Token.Cancel();
             Token = new CancellationTokenSource(TimeSpan.FromSeconds(20));
@@ -108,9 +225,17 @@ namespace CoolapkLite.Controls
             try
             {
                 SpinLock.Enter(ref lockTaken);
-                foreach (ScrollViewer sv in ScrollViewers)
+                foreach (ScrollViewer ScrollViewer in ScrollViewers)
                 {
-                    sv.ChangeView(null, Provider.Progress * Provider.Threshold, null, true);
+                    ScrollViewer.ChangeView(null, Provider.Progress * Provider.Threshold, null, true);
+                }
+                if (Provider.Progress == 1)
+                {
+                    VisualStateManager.GoToState(this, "OnThreshold", true);
+                }
+                else
+                {
+                    VisualStateManager.GoToState(this, "BeforeThreshold", true);
                 }
             }
             finally
@@ -118,6 +243,7 @@ namespace CoolapkLite.Controls
                 if (lockTaken)
                     SpinLock.Exit();
             }
+            ProgressChanged?.Invoke(sender, args);
         }
 
         private void Pivot_PivotItemLoaded(Pivot sender, PivotItemEventArgs args)
@@ -128,6 +254,7 @@ namespace CoolapkLite.Controls
             {
                 FrameworkElement.Margin = new Thickness(0, _header.ActualHeight + _pivotHeader.ActualHeight, 0, 0);
             }
+
             if (ScrollViewer != Provider.ScrollViewer)
             {
                 ScrollViewer.ChangeView(null, Provider.Progress * Provider.Threshold, null, true);
@@ -148,14 +275,15 @@ namespace CoolapkLite.Controls
 
         private void Pivot_PivotItemUnloading(Pivot sender, PivotItemEventArgs args)
         {
-            var sv = (args.Item.ContentTemplateRoot as FrameworkElement).FindDescendant<ScrollViewer>();
-            if (sv != null)
+            ScrollViewer ScrollViewer = (args.Item.ContentTemplateRoot as FrameworkElement).FindDescendant<ScrollViewer>();
+
+            if (ScrollViewer != null)
             {
-                var lockTaken = false;
+                bool lockTaken = false;
                 try
                 {
                     SpinLock.Enter(ref lockTaken);
-                    ScrollViewers.Remove(sv);
+                    ScrollViewers.Remove(ScrollViewer);
                 }
                 finally
                 {
@@ -172,7 +300,7 @@ namespace CoolapkLite.Controls
 
         private void Header_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            _pivotHeader.Margin = new Thickness(0, e.NewSize.Height, 0, 0);
+            _pivotHeader.Margin = new Thickness(0, _header.ActualHeight, 0, 0);
             bool lockTaken = false;
             try
             {
