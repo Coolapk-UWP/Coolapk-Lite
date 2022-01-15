@@ -38,20 +38,6 @@ namespace CoolapkLite.Pages.SettingsPages
             InitializeComponent();
             _ = ItemsSource.LoadMoreItemsAsync(20);
         }
-
-        private void ShyHeaderPivot_ProgressChanged(object sender, double arg)
-        {
-            Provider ??= sender as ScrollProgressProvider;
-            Block.Width = Window.Current.Bounds.Width > 640 ? 0 : Provider.Threshold * (1 - arg) > 48 ? 0 : 48;
-        }
-
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Provider != null)
-            {
-                Block.Width = Window.Current.Bounds.Width > 640 ? 0 : Provider.Threshold * (1 - Provider.Progress) > 48 ? 0 : 48;
-            }
-        }
     }
 
     internal class NewDS : DataSourceBase<string>

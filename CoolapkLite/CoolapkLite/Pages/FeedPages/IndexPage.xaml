@@ -36,6 +36,7 @@
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+            ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"

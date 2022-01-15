@@ -7,6 +7,7 @@
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
     mc:Ignorable="d">
     <Grid>
@@ -25,7 +26,10 @@
             PanePriority="Pane2"
             TallModeConfiguration="SinglePane">
             <control:TwoPaneView.Pane1>
-                <ScrollViewer x:Name="DetailScrollViewer" VerticalAlignment="Top">
+                <ScrollViewer
+                    x:Name="DetailScrollViewer"
+                    VerticalAlignment="Top"
+                    ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
                     <Grid x:Name="Pane1Grid">
                         <control:FeedShellDetailControl x:Name="DetailControl" FeedDetail="{Binding FeedDetail}" />
                     </Grid>
@@ -34,7 +38,9 @@
             <control:TwoPaneView.Pane2>
                 <Grid x:Name="RightGrid">
                     <control:FeedShellListControl x:Name="ListControl">
-                        <Grid x:Name="Pane2Grid" />
+                        <control:FeedShellListControl.Header>
+                            <Grid x:Name="Pane2Grid" />
+                        </control:FeedShellListControl.Header>
                     </control:FeedShellListControl>
                 </Grid>
             </control:TwoPaneView.Pane2>

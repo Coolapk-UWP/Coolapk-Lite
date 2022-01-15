@@ -43,7 +43,7 @@
                         <ContentPresenter x:Name="ContentPresenter" Content="{TemplateBinding Content}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
-                                <VisualState x:Name="OnThreshold"/>
+                                <VisualState x:Name="OnThreshold" />
                                 <VisualState x:Name="BeforeThreshold">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PivotHeader" Storyboard.TargetProperty="Background">

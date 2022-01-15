@@ -5,8 +5,10 @@ using CoolapkLite.Core.Providers;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -62,9 +64,11 @@ namespace CoolapkLite.ViewModels.FeedPages
     internal class FeedDetailViewModel : FeedShellViewModel
     {
         public AdaptiveViewModel ReplyViewModel { get; private set; }
+        public ObservableCollection<PivotItem> PivotItemSourse { get; private set; }
 
         internal FeedDetailViewModel(string id) : base(id)
         {
+            PivotItemSourse = new ObservableCollection<PivotItem>();
         }
 
         public override async Task Refresh(int p = -1)
@@ -86,6 +90,12 @@ namespace CoolapkLite.ViewModels.FeedPages
                             0),
                         (o) => new Entity[] { new FeedReplyModel(o) },
                         "id"));
+                    PivotItemSourse.Add(new PivotItem()
+                    {
+                        Header = "回复",
+                        Tag = ReplyViewModel,
+                        Content = new Frame()
+                    });
                 }
                 FeedDetail = feedDetail;
             }

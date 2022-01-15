@@ -8,29 +8,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Margin="0,32,0,0">
-        <controls:ShyHeaderPivot ProgressChanged="ShyHeaderPivot_ProgressChanged">
-            <controls:ShyHeaderPivot.TopPanel>
-                <Border Height="160" />
-            </controls:ShyHeaderPivot.TopPanel>
-            <controls:ShyHeaderPivot.LeftHeader>
-                <Border x:Name="Block" Height="48" />
-            </controls:ShyHeaderPivot.LeftHeader>
-            <controls:ShyHeaderPivot.RightHeader>
-                <Button
-                    x:Name="RefreshButton"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource IconButtonStyle}">
-                    <SymbolIcon Symbol="Refresh" />
-                </Button>
-            </controls:ShyHeaderPivot.RightHeader>
-            <Pivot x:Name="Pivot" SizeChanged="Pivot_SizeChanged">
-                <PivotItem Header="Test1">
-                    <ListView ItemsSource="{x:Bind ItemsSource}" />
-                </PivotItem>
-                <PivotItem Header="Test2">
-                    <ListView ItemsSource="{x:Bind ItemsSource}" />
-                </PivotItem>
-            </Pivot>
-        </controls:ShyHeaderPivot>
+        <controls:ShyHeaderListView ItemsSource="{x:Bind ItemsSource}">
+            <controls:ShyHeaderListView.TopHeader>
+                <Border Height="600"/>
+            </controls:ShyHeaderListView.TopHeader>
+        </controls:ShyHeaderListView>
     </Grid>
 </Page>
