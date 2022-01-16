@@ -140,6 +140,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
+    <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>

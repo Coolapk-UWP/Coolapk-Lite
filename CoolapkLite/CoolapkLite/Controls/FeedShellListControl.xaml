@@ -11,7 +11,7 @@
     <Grid>
         <local:ShyHeaderListView>
             <local:ShyHeaderListView.TopHeader>
-                <ContentPresenter Content="{x:Bind Header}"/>
+                <ContentPresenter Content="{x:Bind Header}" />
             </local:ShyHeaderListView.TopHeader>
             <local:ShyHeaderListView.LeftHeader>
                 <Border x:Name="Block" Height="48" />

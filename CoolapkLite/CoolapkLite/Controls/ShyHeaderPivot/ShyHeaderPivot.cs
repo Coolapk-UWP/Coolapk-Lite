@@ -63,13 +63,13 @@ namespace CoolapkLite.Controls
            "HeaderHeight",
            typeof(double),
            typeof(ShyHeaderPivot),
-           new PropertyMetadata(double.NaN, null));
+           new PropertyMetadata(double.NaN));
 
         public static readonly DependencyProperty HeaderBackgroundProperty = DependencyProperty.Register(
            "HeaderBackground",
            typeof(Brush),
            typeof(ShyHeaderPivot),
-           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush(), null));
+           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush()));
 
         public static readonly DependencyProperty TopPanelBackgroundProperty = DependencyProperty.Register(
            "TopPanelBackground",

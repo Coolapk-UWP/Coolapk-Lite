@@ -41,7 +41,7 @@ namespace CoolapkLite.Controls
             "IsTextSelectionEnabled",
             typeof(bool),
             typeof(TextBlockEx),
-            new PropertyMetadata(false, null)
+            new PropertyMetadata(false)
         );
 
         public string Text

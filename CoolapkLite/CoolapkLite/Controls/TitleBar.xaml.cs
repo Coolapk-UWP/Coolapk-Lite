@@ -14,19 +14,19 @@ namespace CoolapkLite.Controls
            "Title",
            typeof(string),
            typeof(TitleBar),
-           new PropertyMetadata(default(string), null));
+           new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty TitleHeightProperty = DependencyProperty.Register(
            "TitleHeight",
            typeof(double),
            typeof(TitleBar),
-           new PropertyMetadata(UIHelper.PageTitleHeight, null));
+           new PropertyMetadata(UIHelper.PageTitleHeight));
 
         public static readonly DependencyProperty IsBackEnableProperty = DependencyProperty.Register(
            "IsBackEnable",
            typeof(bool),
            typeof(TitleBar),
-           new PropertyMetadata(true, null));
+           new PropertyMetadata(true));
 
         public static readonly DependencyProperty RightAreaContentProperty = DependencyProperty.Register(
            "RightAreaContent",
@@ -38,19 +38,19 @@ namespace CoolapkLite.Controls
            "BackgroundVisibility",
            typeof(Visibility),
            typeof(TitleBar),
-           new PropertyMetadata(Visibility.Collapsed, null));
+           new PropertyMetadata(Visibility.Collapsed));
 
         public static readonly DependencyProperty BackButtonVisibilityProperty = DependencyProperty.Register(
            "BackButtonVisibility",
            typeof(Visibility),
            typeof(TitleBar),
-           new PropertyMetadata(Visibility.Visible, null));
+           new PropertyMetadata(Visibility.Visible));
 
         public static readonly DependencyProperty RefreshButtonVisibilityProperty = DependencyProperty.Register(
            "RefreshButtonVisibility",
            typeof(Visibility),
            typeof(TitleBar),
-           new PropertyMetadata(Visibility.Collapsed, null));
+           new PropertyMetadata(Visibility.Collapsed));
 
         [Localizable(true)]
         public string Title

@@ -63,18 +63,15 @@
                                 FooterTransitions="{TemplateBinding FooterTransitions}"
                                 HeaderTransitions="{TemplateBinding HeaderTransitions}">
                                 <ItemsPresenter.Header>
-                                    <Grid x:Name="ListViewHeader">
+                                    <Grid x:Name="ListViewHeader" Background="{TemplateBinding HeaderBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <Grid x:Name="TopHeader" Background="{TemplateBinding TopHeaderBackground}">
+                                        <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />
                                         </Grid>
-                                        <Grid
-                                            Grid.Row="1"
-                                            Height="{TemplateBinding HeaderHeight}"
-                                            Background="{TemplateBinding HeaderBackground}">
+                                        <Grid Grid.Row="1" Height="{TemplateBinding HeaderHeight}">
                                             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="auto" />
@@ -85,7 +82,10 @@
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"
                                                     Content="{TemplateBinding LeftHeader}" />
-                                                <local:PivotHeader Grid.Column="1" VerticalAlignment="Center" />
+                                                <local:PivotHeader
+                                                    x:Name="PivotHeader"
+                                                    Grid.Column="1"
+                                                    VerticalAlignment="Center" />
                                                 <ContentPresenter
                                                     Grid.Column="2"
                                                     VerticalAlignment="Center"
@@ -96,6 +96,18 @@
                                 </ItemsPresenter.Header>
                             </ItemsPresenter>
                         </ScrollViewer>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState x:Name="OnThreshold" />
+                                <VisualState x:Name="BeforeThreshold">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ListViewHeader" Storyboard.TargetProperty="Background">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{TemplateBinding TopHeaderBackground}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

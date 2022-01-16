@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Core.Helpers.DataSource;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Helpers.Providers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
@@ -31,11 +32,27 @@ namespace CoolapkLite.Pages.SettingsPages
     public sealed partial class BlankPage : Page
     {
         private NewDS ItemsSource = new NewDS();
-        private ScrollProgressProvider Provider;
 
         public BlankPage()
         {
             InitializeComponent();
+            List<ShyHeaderItem> ShyHeaderItemSource = new List<ShyHeaderItem>()
+            {
+                new ShyHeaderItem()
+                {
+                    Header = "Test1",
+                    ItemSource = ItemsSource
+                },
+                new ShyHeaderItem()
+                {
+                    Header = "Test2",
+                    ItemSource = new List<double>()
+                    {
+                        1,2,3,4,5,6
+                    }
+                },
+            };
+            ShyHeaderListView.ShyHeaderItemSource = ShyHeaderItemSource;
             _ = ItemsSource.LoadMoreItemsAsync(20);
         }
     }

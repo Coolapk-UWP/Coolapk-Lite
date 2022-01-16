@@ -47,7 +47,10 @@ namespace CoolapkLite.Controls
 
         private static void OnPivotPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((PivotHeader)d).SetPivot();
+            if (e.NewValue != e.OldValue)
+            {
+                ((PivotHeader)d).SetPivot();
+            }
         }
 
         public PivotHeader()
@@ -59,6 +62,7 @@ namespace CoolapkLite.Controls
 
         public async void SetPivot()
         {
+            if(Pivot == null) { return; }
             SetBinding(SelectedIndexProperty, new Binding()
             {
                 Source = Pivot,
