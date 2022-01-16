@@ -2,11 +2,14 @@
 using CoolapkLite.Helpers.ValueConverters;
 using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
+using Microsoft.Toolkit.Uwp.UI.Converters;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Windows.ApplicationModel.Resources;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -23,6 +26,8 @@ namespace CoolapkLite.Controls
     /// </summary>
     public sealed partial class TextBlockEx : UserControl
     {
+        private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
+
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text",
             typeof(string),
@@ -72,14 +77,14 @@ namespace CoolapkLite.Controls
         private void GetTextBlock()
         {
             RichTextBlock.Blocks.Clear();
-            Paragraph paragraph = new Paragraph();
             HtmlDocument doc = new HtmlDocument();
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
             doc.LoadHtml(Text.Replace("<!--break-->", string.Empty));
+            Paragraph paragraph = new Paragraph() { LineHeight = FontSize + 10 };
             void NewLine()
             {
                 RichTextBlock.Blocks.Add(paragraph);
-                paragraph = new Paragraph();
+                paragraph = new Paragraph() { LineHeight = FontSize + 10 };
             }
             void AddText(string item) => paragraph.Inlines.Add(new Run() { Text = WebUtility.HtmlDecode(item) });
             HtmlNodeCollection nodes = doc.DocumentNode.ChildNodes;
@@ -168,7 +173,9 @@ namespace CoolapkLite.Controls
                                         else { AddText(item); }
                                         break;
                                     }
-                                default: AddText(item); break;
+                                default:
+                                    AddText(item);
+                                    break;
                             }
                         }
                         break;
@@ -210,19 +217,20 @@ namespace CoolapkLite.Controls
                             int width = Convert.ToInt32(node.GetAttributeValue("width", "-1").Replace("\"", string.Empty));
                             int height = Convert.ToInt32(node.GetAttributeValue("height", "-1").Replace("\"", string.Empty));
 
+                            ImageModel imageModel;
                             Image image = new Image();
                             InlineUIContainer container = new InlineUIContainer();
 
-                            if (!string.IsNullOrEmpty(src))
+                            imageModel = new ImageModel(src, ImageType.OriginImage);
+                            image.SetBinding(Image.SourceProperty, new Binding
                             {
-                                ImageModel imageModel = new ImageModel(src, ImageType.OriginImage);
-                                image.SetBinding(Image.SourceProperty, new Binding
-                                {
-                                    Source = imageModel,
-                                    Mode = BindingMode.OneWay,
-                                    Path = new PropertyPath(nameof(imageModel.Pic))
-                                });
-                                ToolTipService.SetToolTip(image, new ToolTip { Content = string.IsNullOrEmpty(alt) ? content : alt });
+                                Source = imageModel,
+                                Mode = BindingMode.OneWay,
+                                Path = new PropertyPath(nameof(imageModel.Pic))
+                            });
+                            if (!string.IsNullOrEmpty(alt))
+                            {
+                                ToolTipService.SetToolTip(image, new ToolTip { Content = alt });
                             }
 
                             if (src.Contains("emoticons"))
@@ -241,9 +249,89 @@ namespace CoolapkLite.Controls
                                     Path = new PropertyPath(nameof(FontSize))
                                 });
                                 container.Child = viewbox;
+                                paragraph.Inlines.Add(container);
                             }
                             else
                             {
+                                NewLine();
+                                Grid Grid = new Grid
+                                {
+                                    CornerRadius = new CornerRadius(4)
+                                };
+
+                                StackPanel IsGIFPanel = new StackPanel
+                                {
+                                    Orientation = Orientation.Horizontal,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    HorizontalAlignment = HorizontalAlignment.Left
+                                };
+
+                                StackPanel PicSizePanel = new StackPanel
+                                {
+                                    Orientation = Orientation.Horizontal,
+                                    VerticalAlignment = VerticalAlignment.Top,
+                                    HorizontalAlignment = HorizontalAlignment.Right
+                                };
+
+                                Border GIFBorder = new Border
+                                {
+                                    CornerRadius = new CornerRadius(0, 0, 4, 0),
+                                    Child = new TextBlock
+                                    {
+                                        Text = _loader.GetString("GIF"),
+                                        Margin = new Thickness(2, 0, 2, 0)
+                                    },
+                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                };
+                                GIFBorder.SetBinding(VisibilityProperty, new Binding
+                                {
+                                    Source = imageModel,
+                                    Mode = BindingMode.OneWay,
+                                    Converter = new BoolToVisibilityConverter(),
+                                    Path = new PropertyPath(nameof(imageModel.IsGif))
+                                });
+
+                                IsGIFPanel.Children.Add(GIFBorder);
+
+                                Border WidePicBorder = new Border
+                                {
+                                    CornerRadius = new CornerRadius(0, 0, 0, 4),
+                                    Child = new TextBlock
+                                    {
+                                        Margin = new Thickness(2, 0, 2, 0),
+                                        Text = _loader.GetString("widePicText")
+                                    },
+                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                };
+                                WidePicBorder.SetBinding(VisibilityProperty, new Binding
+                                {
+                                    Source = imageModel,
+                                    Mode = BindingMode.OneWay,
+                                    Converter = new BoolToVisibilityConverter(),
+                                    Path = new PropertyPath(nameof(imageModel.IsWidePic))
+                                });
+
+                                Border LongPicTextBorder = new Border
+                                {
+                                    CornerRadius = new CornerRadius(0, 0, 0, 4),
+                                    Child = new TextBlock
+                                    {
+                                        Margin = new Thickness(2, 0, 2, 0),
+                                        Text = _loader.GetString("longPicText")
+                                    },
+                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                };
+                                LongPicTextBorder.SetBinding(VisibilityProperty, new Binding
+                                {
+                                    Source = imageModel,
+                                    Mode = BindingMode.OneWay,
+                                    Converter = new BoolToVisibilityConverter(),
+                                    Path = new PropertyPath(nameof(imageModel.IsLongPic))
+                                });
+
+                                PicSizePanel.Children.Add(WidePicBorder);
+                                PicSizePanel.Children.Add(LongPicTextBorder);
+
                                 Viewbox viewbox = new Viewbox
                                 {
                                     Child = image,
@@ -252,9 +340,27 @@ namespace CoolapkLite.Controls
                                 };
                                 if (width != -1) { viewbox.MaxWidth = width; }
                                 if (height != -1) { viewbox.MaxHeight = height; }
-                                container.Child = viewbox;
+
+                                Grid.Children.Add(viewbox);
+                                Grid.Children.Add(PicSizePanel);
+
+                                container.Child = Grid;
+                                Paragraph paragraph1 = new Paragraph { TextAlignment = TextAlignment.Center };
+                                paragraph1.Inlines.Add(container);
+                                RichTextBlock.Blocks.Add(paragraph1);
+
+                                if (!string.IsNullOrEmpty(alt))
+                                {
+                                    Paragraph paragraph2 = new Paragraph
+                                    {
+                                        LineHeight = FontSize + 10,
+                                        TextAlignment = TextAlignment.Center,
+                                    };
+                                    Run run = new Run { Text = WebUtility.HtmlDecode(alt) };
+                                    paragraph2.Inlines.Add(run);
+                                    RichTextBlock.Blocks.Add(paragraph2);
+                                }
                             }
-                            paragraph.Inlines.Add(container);
                         }
                         break;
                 }

@@ -17,6 +17,11 @@
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Background" Value="Transparent" />
             </Style>
+            <Style x:Key="FeedOpButtonStyle" TargetType="Button">
+                <Setter Property="Height" Value="34" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+            </Style>
             <Style x:Key="AppListViewItemStyle" TargetType="ListViewItem">
                 <Setter Property="Padding" Value="1" />
                 <Setter Property="Margin" Value="12,0" />

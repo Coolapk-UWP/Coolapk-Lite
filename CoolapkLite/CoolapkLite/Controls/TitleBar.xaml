@@ -52,7 +52,8 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             FontSize="18"
-            Text="{x:Bind Title, Mode=OneWay}" />
+            Text="{x:Bind Title, Mode=OneWay}"
+            TextTrimming="CharacterEllipsis" />
         <ContentPresenter
             x:Name="UserContentPresenter"
             Grid.Column="2"

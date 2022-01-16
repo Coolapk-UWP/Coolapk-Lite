@@ -18,7 +18,7 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = "ListViewHeader", Type = typeof(Grid))]
     [TemplatePart(Name = "PivotHeader", Type = typeof(PivotHeader))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
-    public sealed class ShyHeaderListView : ListView, IShyHeader
+    public sealed class ShyHeaderListView : ListView
     {
         private Grid _topHeader;
         private Grid _listViewHeader;
@@ -26,7 +26,7 @@ namespace CoolapkLite.Controls
         private ScrollViewer _scrollViewer;
 
         private CompositionPropertySet _propSet;
-        private ScrollProgressProvider _progressProvider;
+        private readonly ScrollProgressProvider _progressProvider;
 
         public static readonly DependencyProperty TopHeaderProperty = DependencyProperty.Register(
            "TopHeader",
@@ -161,7 +161,7 @@ namespace CoolapkLite.Controls
 
         public ShyHeaderListView()
         {
-            this.DefaultStyleKey = typeof(ShyHeaderListView);
+            DefaultStyleKey = typeof(ShyHeaderListView);
             _progressProvider = new ScrollProgressProvider();
             ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
             _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
@@ -266,7 +266,7 @@ namespace CoolapkLite.Controls
 
             Visual _headerVisual = ElementCompositionPreview.GetElementVisual(ListViewHeader);
             CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
-            
+
             _propSet ??= Window.Current.Compositor.CreatePropertySet();
             _propSet.InsertScalar("height", (float)_topHeader.ActualHeight);
 

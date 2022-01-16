@@ -2,7 +2,6 @@
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkUWP.Controls;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -115,19 +114,6 @@ namespace CoolapkLite.Controls
                     QRCodeText = (string)flyout.Target.Tag
                 };
             }
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            UserControl_SizeChanged(sender, null);
-        }
-
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UserControl UserControl = sender as UserControl;
-            StackPanel StackPanel = UserControl.FindChildByName("BtnsPanel") as StackPanel;
-            double width = e is null ? UserControl.Width : e.NewSize.Width;
-            StackPanel.SetValue(Grid.RowProperty, width > 600 ? 1 : 5);
         }
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;

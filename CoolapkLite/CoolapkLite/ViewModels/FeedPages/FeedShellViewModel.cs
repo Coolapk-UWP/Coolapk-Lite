@@ -1,22 +1,33 @@
-﻿using CoolapkLite.Core.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Core.Helpers;
 using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
     public abstract class FeedShellViewModel : IViewModel, INotifyPropertyChanged
     {
         protected string id;
-        public string Title { get; protected set; } = string.Empty;
         public double[] VerticalOffsets { get; set; } = new double[3];
+
+        private string title = string.Empty;
+        public string Title
+        {
+            get => title;
+            protected set
+            {
+                title = value;
+                RaisePropertyChangedEvent();
+            }
+        }
 
         private FeedDetailModel feedDetail;
         public FeedDetailModel FeedDetail
@@ -59,16 +70,21 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         public abstract Task Refresh(int p = -1);
+        public ObservableCollection<ShyHeaderItem> ShyHeaderItemSource { get; set; }
     }
 
-    internal class FeedDetailViewModel : FeedShellViewModel
+    public class FeedDetailViewModel : FeedShellViewModel
     {
-        public AdaptiveViewModel ReplyViewModel { get; private set; }
-        public ObservableCollection<PivotItem> PivotItemSourse { get; private set; }
+        public ReplyItemSourse ReplyItemSourse { get; private set; }
 
         internal FeedDetailViewModel(string id) : base(id)
         {
-            PivotItemSourse = new ObservableCollection<PivotItem>();
+            ShyHeaderItemSource = new ObservableCollection<ShyHeaderItem>()
+            {
+                new ShyHeaderItem() { Header = "回复", ItemSource = ReplyItemSourse },
+                new ShyHeaderItem() { Header = "点赞", },
+                new ShyHeaderItem() { Header = "转发", },
+            };
         }
 
         public override async Task Refresh(int p = -1)
@@ -76,10 +92,67 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (FeedDetail == null || p == 1)
             {
                 FeedDetailModel feedDetail = await GetFeedDetailAsync(id);
-                //Title = feedDetail.Title;
-                if (ReplyViewModel == null)
+                Title = feedDetail.Title;
+                if (ReplyItemSourse == null)
                 {
-                    ReplyViewModel = new AdaptiveViewModel(new CoolapkListProvider(
+                    ReplyItemSourse = new ReplyItemSourse(id);
+                }
+                FeedDetail = feedDetail;
+            }
+            await ReplyItemSourse?.Refresh(p);
+        }
+    }
+
+    public abstract class EntityItemSourse : DataSourceBase<Entity>
+    {
+        protected CoolapkListProvider Provider;
+
+        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
+        {
+            List<Entity> Models = new List<Entity>();
+            while (Models.Count < count)
+            {
+                int temp = Models.Count;
+                if (Models.Count > 0) { _currentPage++; }
+                await Provider.GetEntity(Models, _currentPage);
+                if (Models.Count <= 0 || Models.Count <= temp) { break; }
+            }
+            return Models;
+        }
+
+        protected override void AddItems(IList<Entity> items)
+        {
+            if (items != null)
+            {
+                foreach (Entity item in items)
+                {
+                    if (item is NullModel) { continue; }
+                    Add(item);
+                }
+            }
+        }
+
+        public virtual async Task Refresh(int p = -1)
+        {
+            if (p == -2)
+            {
+                await Reset();
+            }
+            else if (p == -1)
+            {
+                _ = await LoadMoreItemsAsync(20);
+            }
+        }
+    }
+
+    public class ReplyItemSourse : EntityItemSourse
+    {
+        public string ID;
+
+        public ReplyItemSourse(string id)
+        {
+            ID = id;
+            Provider = new CoolapkListProvider(
                         (p, firstItem, lastItem) =>
                         UriHelper.GetUri(
                             UriType.GetFeedReplies,
@@ -88,18 +161,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                             p,
                             $"&firstItem={firstItem}&lastItem={lastItem}",
                             0),
-                        (o) => new Entity[] { new FeedReplyModel(o) },
-                        "id"));
-                    PivotItemSourse.Add(new PivotItem()
-                    {
-                        Header = "回复",
-                        Tag = ReplyViewModel,
-                        Content = new Frame()
-                    });
-                }
-                FeedDetail = feedDetail;
-            }
-            //await ReplyListVM?.Refresh(p);
+                        GetEntities,
+                        "id");
+        }
+
+        private IEnumerable<Entity> GetEntities(JObject jo)
+        {
+            yield return new FeedReplyModel(jo);
         }
     }
 }

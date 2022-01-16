@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedModelBase : SourceFeedModel, INotifyPropertyChanged, ICanChangeLikeModel, ICanChangeReplyNum, ICanCopy
+    public class FeedModelBase : SourceFeedModel, INotifyPropertyChanged, ICanChangeLikeModel, ICanChangeReplyNum, ICanChangeStarModel, ICanCopy
     {
         private int likeNum;
         public int LikeNum
@@ -36,6 +36,20 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        private int starNum;
+        public int StarNum
+        {
+            get => starNum;
+            set
+            {
+                if (starNum != value)
+                {
+                    starNum = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         private bool isCopyEnabled;
         public bool IsCopyEnabled
         {
@@ -52,6 +66,7 @@ namespace CoolapkLite.Models.Feeds
 
         public int ID => EntityId;
         public bool Liked { get; set; }
+        public bool Stared { get; set; }
         public string Info { get; private set; }
         public int ShareNum { get; private set; }
         public string DeviceTitle { get; private set; }
@@ -79,6 +94,11 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("likenum", out JToken likenum))
             {
                 LikeNum = Convert.ToInt32(likenum.ToString());
+            }
+
+            if (token.TryGetValue("favnum", out JToken favnum))
+            {
+                StarNum = Convert.ToInt32(favnum.ToString());
             }
 
             if (token.TryGetValue("replynum", out JToken replynum))

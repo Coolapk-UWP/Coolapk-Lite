@@ -2,6 +2,7 @@
 using CoolapkLite.ViewModels.FeedPages;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
 using TwoPaneViewMode = CoolapkLite.Controls.TwoPaneViewMode;
@@ -17,6 +18,9 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private FeedShellViewModel Provider;
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
+        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
+        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
+        private readonly Brush ApplicationPageBackgroundThemeElementBrush = UIHelper.ApplicationPageBackgroundThemeElementBrush();
 
         public FeedShellPage() => InitializeComponent();
 
@@ -39,9 +43,8 @@ namespace CoolapkLite.Pages.FeedPages
         private void SetLayout()
         {
             //ListControl.ReplyDS = new Controls.ReplyDS(FeedDetailModel);
-            //TwoPaneView.MinWideModeWidth = FeedDetailModel?.IsFeedArticle ?? false ? 876 : 804;
-            //TwoPaneView.Pane1Length = new GridLength(FeedDetailModel?.IsFeedArticle ?? false ? 520 : 420);
-            //UIHelper.MainPage.SetTitle(FeedDetailModel.IsFeedArticle ? $"{FeedDetailModel.UserName}的图文" : $"{FeedDetailModel.UserName}的动态");
+            TwoPaneView.MinWideModeWidth = Provider.FeedDetail?.IsFeedArticle ?? false ? 876 : 804;
+            TwoPaneView.Pane1Length = new GridLength(Provider.FeedDetail?.IsFeedArticle ?? false ? 520 : 420);
             //_ = ListControl.Refresh(-2);
         }
 
@@ -51,17 +54,30 @@ namespace CoolapkLite.Pages.FeedPages
         {
             // Remove details content from it's parent panel.
             _ = (DetailControl.Parent as Panel).Children.Remove(DetailControl);
+            _ = (BtnsPanel.Parent as Panel).Children.Remove(BtnsPanel);
+            _ = (TitleBar.Parent as Panel).Children.Remove(TitleBar);
+
 
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
+                ListControl.HeaderHeight = double.NaN;
+                TitleBar.RefreshButtonVisibility = Visibility.Visible;
+                ListControl.RefreshButtonVisibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
+                RightGrid.Children.Add(TitleBar);
+                RightGrid.Children.Add(BtnsPanel);
                 Pane2Grid.Children.Add(DetailControl);
             }
             // Dual pane.
             else
             {
+                ListControl.HeaderHeight = UIHelper.PageTitleHeight;
+                TitleBar.RefreshButtonVisibility = Visibility.Collapsed;
+                ListControl.RefreshButtonVisibility = Visibility.Visible;
                 // Put details content in Pane2.
+                LeftGrid.Children.Add(TitleBar);
+                LeftGrid.Children.Add(BtnsPanel);
                 Pane1Grid.Children.Add(DetailControl);
             }
         }

@@ -3,18 +3,12 @@ using CoolapkLite.Helpers.Providers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
@@ -31,9 +25,9 @@ namespace CoolapkLite.Controls
         private ContentPresenter _contentPresenter;
 
         private CancellationTokenSource Token;
-        private ScrollProgressProvider Provider;
+        private readonly ScrollProgressProvider Provider;
         private SpinLock SpinLock = new SpinLock();
-        private HashSet<ScrollViewer> ScrollViewers;
+        private readonly HashSet<ScrollViewer> ScrollViewers;
 
         public static readonly DependencyProperty PivotProperty = DependencyProperty.Register(
            "Pivot",
@@ -128,7 +122,7 @@ namespace CoolapkLite.Controls
 
         public ShyHeaderPivot()
         {
-            this.DefaultStyleKey = typeof(ShyHeaderPivot);
+            DefaultStyleKey = typeof(ShyHeaderPivot);
 
             Provider = new ScrollProgressProvider();
             ScrollViewers = new HashSet<ScrollViewer>();
@@ -161,7 +155,7 @@ namespace CoolapkLite.Controls
                 _pivotHeader.Loaded += PivotHeader_Loaded;
                 _pivotHeader.SizeChanged += Header_SizeChanged;
             }
-            if(TopPanelBackground == null)
+            if (TopPanelBackground == null)
             {
                 TopPanelBackground = Background;
             }
@@ -175,7 +169,11 @@ namespace CoolapkLite.Controls
         {
             if (Pivot == null)
             {
-                if (Token != null) Token.Cancel();
+                if (Token != null)
+                {
+                    Token.Cancel();
+                }
+
                 Token = new CancellationTokenSource(TimeSpan.FromSeconds(20));
                 Pivot = await WaitForLoaded(_contentPresenter, () => _contentPresenter?.FindDescendant<Pivot>(), c => c != null, Token.Token);
             }
@@ -199,7 +197,11 @@ namespace CoolapkLite.Controls
         {
             PivotItem PivotItem = Pivot.ContainerFromItem(Pivot.SelectedItem) as PivotItem;
 
-            if (Token != null) Token.Cancel();
+            if (Token != null)
+            {
+                Token.Cancel();
+            }
+
             Token = new CancellationTokenSource(TimeSpan.FromSeconds(20));
             FrameworkElement ContentTemplateRoot = await WaitForLoaded(PivotItem, () => PivotItem.ContentTemplateRoot as FrameworkElement, c => c != null, Token.Token);
 
@@ -241,7 +243,9 @@ namespace CoolapkLite.Controls
             finally
             {
                 if (lockTaken)
+                {
                     SpinLock.Exit();
+                }
             }
             ProgressChanged?.Invoke(sender, args);
         }
@@ -259,7 +263,7 @@ namespace CoolapkLite.Controls
             {
                 ScrollViewer.ChangeView(null, Provider.Progress * Provider.Threshold, null, true);
 
-                var lockTaken = false;
+                bool lockTaken = false;
                 try
                 {
                     SpinLock.Enter(ref lockTaken);
@@ -268,7 +272,9 @@ namespace CoolapkLite.Controls
                 finally
                 {
                     if (lockTaken)
+                    {
                         SpinLock.Exit();
+                    }
                 }
             }
         }
@@ -288,7 +294,9 @@ namespace CoolapkLite.Controls
                 finally
                 {
                     if (lockTaken)
+                    {
                         SpinLock.Exit();
+                    }
                 }
             }
         }
@@ -317,7 +325,9 @@ namespace CoolapkLite.Controls
             finally
             {
                 if (lockTaken)
+                {
                     SpinLock.Exit();
+                }
             }
         }
 
@@ -328,9 +338,11 @@ namespace CoolapkLite.Controls
             {
                 tcs = new TaskCompletionSource<T>();
                 cancellationToken.ThrowIfCancellationRequested();
-                var result = func.Invoke();
-                if (pre(result)) return result;
-
+                T result = func.Invoke();
+                if (pre(result))
+                {
+                    return result;
+                }
 
                 element.Loaded += Element_Loaded;
 
@@ -340,8 +352,11 @@ namespace CoolapkLite.Controls
             catch
             {
                 element.Loaded -= Element_Loaded;
-                var result = func.Invoke();
-                if (pre(result)) return result;
+                T result = func.Invoke();
+                if (pre(result))
+                {
+                    return result;
+                }
             }
 
             return default;
@@ -349,14 +364,24 @@ namespace CoolapkLite.Controls
 
             void Element_Loaded(object sender, RoutedEventArgs e)
             {
-                if (tcs == null) return;
+                if (tcs == null)
+                {
+                    return;
+                }
+
                 try
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     element.Loaded -= Element_Loaded;
-                    var _result = func.Invoke();
-                    if (pre(_result)) tcs.SetResult(_result);
-                    else tcs.SetCanceled();
+                    T _result = func.Invoke();
+                    if (pre(_result))
+                    {
+                        tcs.SetResult(_result);
+                    }
+                    else
+                    {
+                        tcs.SetCanceled();
+                    }
                 }
                 catch
                 {

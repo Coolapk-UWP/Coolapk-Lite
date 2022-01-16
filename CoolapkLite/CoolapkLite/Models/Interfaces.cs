@@ -32,6 +32,7 @@ namespace CoolapkLite.Models
 
     internal interface ICanChangeReplyNum
     {
+        int ID { get; }
         int ReplyNum { get; set; }
     }
 
@@ -40,5 +41,12 @@ namespace CoolapkLite.Models
         int ID { get; }
         bool Liked { get; set; }
         int LikeNum { get; set; }
+    }
+
+    internal interface ICanChangeStarModel
+    {
+        int ID { get; }
+        bool Stared { get; set; }
+        int StarNum { get; set; }
     }
 }

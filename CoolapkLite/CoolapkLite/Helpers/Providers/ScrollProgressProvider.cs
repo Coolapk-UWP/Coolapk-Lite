@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -75,11 +72,17 @@ namespace CoolapkLite.Helpers.Providers
                 readyToScroll = true;
 
                 if (newSv.VerticalOffset == 0 && (oldSv == null || oldSv != null && oldSv.VerticalOffset == 0))
+                {
                     StartScrollProgressAnimation(newSv, false);
+                }
                 else if (newSv.VerticalOffset > Threshold && lastOffset > Threshold) // 前后进度都为1时 增加延迟防止闪烁
+                {
                     StartScrollProgressAnimation(newSv, true);
+                }
                 else if (newSv.VerticalOffset == lastOffset)
+                {
                     StartScrollProgressAnimation(newSv, false);
+                }
                 else if (newSv.VerticalOffset < Threshold || lastOffset < Threshold) //前后状态不同时 先设置滚动条位置再绑定动画
                 {
                     await SyncScrollView(newSv);
@@ -98,9 +101,11 @@ namespace CoolapkLite.Helpers.Providers
                 {
                     if (s is ScrollProgressProvider sender)
                     {
-                        var val = (double)a.NewValue;
+                        double val = (double)a.NewValue;
                         if (val < 0)
+                        {
                             throw new ArgumentException($"{nameof(Threshold)}不能小于0");
+                        }
 
                         sender.propSet.InsertScalar("threshold", (float)val);
                         sender.OnProgressChanged();
@@ -115,10 +120,14 @@ namespace CoolapkLite.Helpers.Providers
                 if (a.NewValue != a.OldValue)
                 {
                     if ((double)a.NewValue > 1)
+                    {
                         throw new ArgumentException($"{nameof(Progress)}不能大于1");
+                    }
 
                     if ((double)a.NewValue < 0)
+                    {
                         throw new ArgumentException($"{nameof(Progress)}不能小于0");
+                    }
 
                     if (s is ScrollProgressProvider sender)
                     {
@@ -178,20 +187,25 @@ namespace CoolapkLite.Helpers.Providers
             }
 
             if (delay)
+            {
                 delayCancellationTokenSource = new CancellationTokenSource();
+            }
 
             try
             {
                 scrollPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(sv);
 
-                var exp = Window.Current.Compositor.CreateExpressionAnimation($"(prop.delayprogress >= 0) ? prop.delayprogress : clamp(-sv.Translation.Y, 0f, prop.threshold) / prop.threshold");
+                ExpressionAnimation exp = Window.Current.Compositor.CreateExpressionAnimation($"(prop.delayprogress >= 0) ? prop.delayprogress : clamp(-sv.Translation.Y, 0f, prop.threshold) / prop.threshold");
                 exp.SetReferenceParameter("sv", scrollPropertySet);
                 exp.SetReferenceParameter("prop", propSet);
 
                 propSet.StartAnimation("progress", exp);
 
                 if (delay)
+                {
                     await Task.Delay(150, delayCancellationTokenSource.Token);
+                }
+
                 propSet.InsertScalar("delayprogress", -1f);
 
             }
@@ -207,9 +221,12 @@ namespace CoolapkLite.Helpers.Providers
         /// <param name="sv"></param>
         private async Task SyncScrollView(ScrollViewer sv)
         {
-            if (sv == null) return;
+            if (sv == null)
+            {
+                return;
+            }
 
-            var tcs = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
 
             sv.ViewChanged += Sv_ViewChanged;
             sv.ChangeView(null, Threshold * Progress, null, true);
@@ -228,7 +245,7 @@ namespace CoolapkLite.Helpers.Providers
 
         public CompositionPropertySet GetProgressPropertySet()
         {
-            var _propSet = Window.Current.Compositor.CreatePropertySet();
+            CompositionPropertySet _propSet = Window.Current.Compositor.CreatePropertySet();
             _propSet.InsertScalar("progress", (float)innerProgress);
             _propSet.InsertScalar("threshold", (float)Threshold);
             _propSet.StartAnimation("progress", progressBind);
@@ -275,7 +292,11 @@ namespace CoolapkLite.Helpers.Providers
 
         private static double GetProgress(double offset, double threshold)
         {
-            if (threshold == 0) return 0;
+            if (threshold == 0)
+            {
+                return 0;
+            }
+
             return Math.Min(1, Math.Max(0, offset / threshold));
         }
 

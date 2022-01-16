@@ -1,6 +1,5 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -10,9 +9,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
@@ -22,7 +19,7 @@ namespace CoolapkLite.Controls
 {
     public sealed class PivotHeader : ListBox
     {
-        CancellationTokenSource cts;
+        private CancellationTokenSource cts;
 
         #region Const Values
 
@@ -55,14 +52,14 @@ namespace CoolapkLite.Controls
 
         public PivotHeader()
         {
-            this.DefaultStyleKey = typeof(PivotHeader);
+            DefaultStyleKey = typeof(PivotHeader);
 
-            this.SelectionChanged += ShyHeader_SelectionChanged;
+            SelectionChanged += ShyHeader_SelectionChanged;
         }
 
         public async void SetPivot()
         {
-            if(Pivot == null) { return; }
+            if (Pivot == null) { return; }
             SetBinding(SelectedIndexProperty, new Binding()
             {
                 Source = Pivot,
@@ -73,7 +70,11 @@ namespace CoolapkLite.Controls
             ItemsSource = (from item in items
                            where item is PivotItem
                            select ((PivotItem)item).Header ?? string.Empty).ToArray();
-            if (cts != null) cts.Cancel();
+            if (cts != null)
+            {
+                cts.Cancel();
+            }
+
             cts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
             PivotPanel PivotPanel = (PivotPanel)await WaitForLoaded(Pivot, () => Pivot?.FindDescendant<PivotPanel>() as FrameworkElement, c => c != null, cts.Token);
             Grid PivotLayoutElement = PivotPanel?.FindDescendant<Grid>();
@@ -85,24 +86,45 @@ namespace CoolapkLite.Controls
 
         private void ShyHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (this.SelectionMode != SelectionMode.Single) return;
+            if (SelectionMode != SelectionMode.Single)
+            {
+                return;
+            }
 
-            var oldIndicator = GetIndicator(e.RemovedItems.FirstOrDefault());
-            if (oldIndicator == null) return;
-            var newIndicator = GetIndicator(e.AddedItems.FirstOrDefault());
-            if (newIndicator == null) return;
+            Rectangle oldIndicator = GetIndicator(e.RemovedItems.FirstOrDefault());
+            if (oldIndicator == null)
+            {
+                return;
+            }
+
+            Rectangle newIndicator = GetIndicator(e.AddedItems.FirstOrDefault());
+            if (newIndicator == null)
+            {
+                return;
+            }
 
             TryStartAnimationWithScale(newIndicator, oldIndicator);
         }
 
         private Rectangle GetIndicator(object item)
         {
-            if (item == null) return null;
-            var container = ContainerFromItem(item);
-            if (container == null) return null;
+            if (item == null)
+            {
+                return null;
+            }
 
-            var grid = VisualTreeHelper.GetChild(container, 0) as Grid;
-            if (grid == null) return null;
+            DependencyObject container = ContainerFromItem(item);
+            if (container == null)
+            {
+                return null;
+            }
+
+            Grid grid = VisualTreeHelper.GetChild(container, 0) as Grid;
+            if (grid == null)
+            {
+                return null;
+            }
+
             return grid.FindName("Indicator") as Rectangle;
         }
 
@@ -114,8 +136,10 @@ namespace CoolapkLite.Controls
                 tcs = new TaskCompletionSource<T>();
                 cancellationToken.ThrowIfCancellationRequested();
                 T result = func.Invoke();
-                if (pre(result)) return result;
-
+                if (pre(result))
+                {
+                    return result;
+                }
 
                 element.Loaded += Element_Loaded;
 
@@ -126,7 +150,10 @@ namespace CoolapkLite.Controls
             {
                 element.Loaded -= Element_Loaded;
                 T result = func.Invoke();
-                if (pre(result)) return result;
+                if (pre(result))
+                {
+                    return result;
+                }
             }
 
             return default;
@@ -134,14 +161,24 @@ namespace CoolapkLite.Controls
 
             void Element_Loaded(object sender, RoutedEventArgs e)
             {
-                if (tcs == null) return;
+                if (tcs == null)
+                {
+                    return;
+                }
+
                 try
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     element.Loaded -= Element_Loaded;
                     T _result = func.Invoke();
-                    if (pre(_result)) tcs.SetResult(_result);
-                    else tcs.SetCanceled();
+                    if (pre(_result))
+                    {
+                        tcs.SetResult(_result);
+                    }
+                    else
+                    {
+                        tcs.SetCanceled();
+                    }
                 }
                 catch
                 {
@@ -153,22 +190,25 @@ namespace CoolapkLite.Controls
 
         private void TryStartAnimationWithScale(FrameworkElement newIndicator, FrameworkElement oldIndicator)
         {
-            var compositor = Window.Current.Compositor;
+            Windows.UI.Composition.Compositor compositor = Window.Current.Compositor;
 
-            var old_target = ElementCompositionPreview.GetElementVisual(oldIndicator);
-            var new_target = ElementCompositionPreview.GetElementVisual(newIndicator);
+            Windows.UI.Composition.Visual old_target = ElementCompositionPreview.GetElementVisual(oldIndicator);
+            Windows.UI.Composition.Visual new_target = ElementCompositionPreview.GetElementVisual(newIndicator);
 
             old_target.Offset = Vector3.Zero;
             old_target.CenterPoint = Vector3.Zero;
             old_target.Scale = Vector3.One;
 
-            var oldSize = new Vector2((float)oldIndicator.ActualWidth, (float)oldIndicator.ActualHeight);
-            var newSize = new Vector2((float)newIndicator.ActualWidth, (float)newIndicator.ActualHeight);
+            Vector2 oldSize = new Vector2((float)oldIndicator.ActualWidth, (float)oldIndicator.ActualHeight);
+            Vector2 newSize = new Vector2((float)newIndicator.ActualWidth, (float)newIndicator.ActualHeight);
 
-            var oldScale = oldSize / newSize;
-            if (oldScale.Y < 0) return;
+            Vector2 oldScale = oldSize / newSize;
+            if (oldScale.Y < 0)
+            {
+                return;
+            }
 
-            var oldOffset = newIndicator.TransformToVisual(oldIndicator).TransformPoint(new Windows.Foundation.Point(0, 0)).ToVector2();
+            Vector2 oldOffset = newIndicator.TransformToVisual(oldIndicator).TransformPoint(new Windows.Foundation.Point(0, 0)).ToVector2();
 
             float startx = 0, endx = 0, starty = 0, endy = 0;
 
@@ -192,14 +232,14 @@ namespace CoolapkLite.Controls
                 oldOffset.Y = oldOffset.Y + newSize.Y - oldSize.Y;
             }
 
-            var duration = TimeSpan.FromSeconds(0.6d);
+            TimeSpan duration = TimeSpan.FromSeconds(0.6d);
 
-            var standard = compositor.CreateCubicBezierEasingFunction(new Vector2(0.8f, 0.0f), new Vector2(0.2f, 1.0f));
+            Windows.UI.Composition.CubicBezierEasingFunction standard = compositor.CreateCubicBezierEasingFunction(new Vector2(0.8f, 0.0f), new Vector2(0.2f, 1.0f));
 
-            var singleStep = compositor.CreateStepEasingFunction();
+            Windows.UI.Composition.StepEasingFunction singleStep = compositor.CreateStepEasingFunction();
             singleStep.IsFinalStepSingleFrame = true;
 
-            var centerAnimation = compositor.CreateVector3KeyFrameAnimation();
+            Windows.UI.Composition.Vector3KeyFrameAnimation centerAnimation = compositor.CreateVector3KeyFrameAnimation();
             centerAnimation.InsertExpressionKeyFrame(0f, "Vector3(startx,starty,0f)", singleStep);
             centerAnimation.InsertExpressionKeyFrame(0.333f, "Vector3(endx,endy,0f)", singleStep);
             centerAnimation.SetScalarParameter("startx", startx);
@@ -208,13 +248,13 @@ namespace CoolapkLite.Controls
             centerAnimation.SetScalarParameter("endy", endy);
             centerAnimation.Duration = duration;
 
-            var offsetAnimation = compositor.CreateVector2KeyFrameAnimation();
+            Windows.UI.Composition.Vector2KeyFrameAnimation offsetAnimation = compositor.CreateVector2KeyFrameAnimation();
             offsetAnimation.InsertExpressionKeyFrame(0f, "-oldOffset", singleStep);
             offsetAnimation.InsertExpressionKeyFrame(0.333f, "This.StartingValue", singleStep);
             offsetAnimation.SetVector2Parameter("oldOffset", oldOffset);
             offsetAnimation.Duration = duration;
 
-            var scaleAnimation = compositor.CreateVector2KeyFrameAnimation();
+            Windows.UI.Composition.Vector2KeyFrameAnimation scaleAnimation = compositor.CreateVector2KeyFrameAnimation();
             scaleAnimation.InsertExpressionKeyFrame(0f, "oldScale", standard);
             scaleAnimation.InsertExpressionKeyFrame(0.333f, "(target.Size + abs(oldOffset)) / target.Size",
                 compositor.CreateCubicBezierEasingFunction(c_frame1point1, c_frame1point2));

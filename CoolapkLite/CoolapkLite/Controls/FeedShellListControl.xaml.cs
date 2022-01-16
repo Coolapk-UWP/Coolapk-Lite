@@ -1,6 +1,4 @@
-﻿using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels.FeedPages;
-using GalaSoft.MvvmLight.Command;
+﻿using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -16,10 +14,46 @@ namespace CoolapkLite.Controls
            typeof(FeedShellListControl),
            null);
 
+        public static readonly DependencyProperty ItemSourceProperty = DependencyProperty.Register(
+           "ItemSource",
+           typeof(IList<ShyHeaderItem>),
+           typeof(FeedShellListControl),
+           null);
+
+        public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
+           "HeaderHeight",
+           typeof(double),
+           typeof(FeedShellListControl),
+           null);
+
+        public static readonly DependencyProperty RefreshButtonVisibilityProperty = DependencyProperty.Register(
+           "RefreshButtonVisibility",
+           typeof(Visibility),
+           typeof(FeedShellListControl),
+           new PropertyMetadata(Visibility.Visible));
+
         public object Header
         {
             get => GetValue(HeaderProperty);
             set => SetValue(HeaderProperty, value);
+        }
+
+        public double HeaderHeight
+        {
+            get => (double)GetValue(HeaderHeightProperty);
+            set => SetValue(HeaderHeightProperty, value);
+        }
+
+        public IList<ShyHeaderItem> ItemSource
+        {
+            get => (IList<ShyHeaderItem>)GetValue(ItemSourceProperty);
+            set => SetValue(ItemSourceProperty, value);
+        }
+
+        public Visibility RefreshButtonVisibility
+        {
+            get => (Visibility)GetValue(RefreshButtonVisibilityProperty);
+            set => SetValue(RefreshButtonVisibilityProperty, value);
         }
 
         public FeedShellListControl()

@@ -1,9 +1,7 @@
 ﻿using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
-using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.ToolPages;
-using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.ToolPages;
 using System;
 using System.ComponentModel;

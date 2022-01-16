@@ -1,26 +1,8 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Core.Helpers.DataSource;
-using CoolapkLite.Helpers.Providers;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Composition;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Hosting;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -31,7 +13,7 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class BlankPage : Page
     {
-        private NewDS ItemsSource = new NewDS();
+        private readonly NewDS ItemsSource = new NewDS();
 
         public BlankPage()
         {
@@ -60,7 +42,7 @@ namespace CoolapkLite.Pages.SettingsPages
     internal class NewDS : DataSourceBase<string>
     {
         private int _loadnum = 0;
-        protected async override Task<IList<string>> LoadItemsAsync(uint count)
+        protected override async Task<IList<string>> LoadItemsAsync(uint count)
         {
             List<string> items = new();
             await Task.Run(() =>
