@@ -11,7 +11,7 @@ namespace CoolapkUWP.Controls
     public sealed partial class ShowQRCodeControl : UserControl
     {
         public static readonly DependencyProperty QRCodeTextProperty = DependencyProperty.Register(
-            "QRCodeText",
+            nameof(QRCodeText),
             typeof(string),
             typeof(ShowQRCodeControl),
             new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnQRCodeTextChanged))

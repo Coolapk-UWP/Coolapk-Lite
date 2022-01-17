@@ -14,12 +14,15 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate Images { get; set; }
         public DataTemplate Others { get; set; }
         public DataTemplate History { get; set; }
+        public DataTemplate FeedReply { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item.GetType().Name)
             {
                 case "FeedModel": return Feed;
+                case "UserModel":
                 case "HistoryModel": return History;
+                case "FeedReplyModel": return FeedReply;
                 case "IndexPageHasEntitiesModel":
                     switch ((item as IndexPageHasEntitiesModel).EntitiesType)
                     {

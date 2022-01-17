@@ -9,9 +9,9 @@ namespace CoolapkLite.Models
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
+        public ImageModel Pic { get; private set; }
         public string SubTitle { get; private set; }
         public string Description { get; private set; }
-        public BackgroundImageModel Pic { get; private set; }
 
         public HistoryModel(JObject token) : base(token)
         {
@@ -40,7 +40,7 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("logo", out JToken logo))
             {
-                Pic = new BackgroundImageModel(logo.ToString(), ImageType.Icon);
+                Pic = new ImageModelWithColor(logo.ToString(), ImageType.Icon);
             }
         }
     }

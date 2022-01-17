@@ -34,8 +34,7 @@
                 <StackPanel
                     x:Name="UserBar"
                     Grid.Row="1"
-                    Orientation="Horizontal"
-                    Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Orientation="Horizontal">
                     <Button
                         Margin="0,4"
                         Padding="0"

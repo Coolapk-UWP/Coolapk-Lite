@@ -21,6 +21,7 @@
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource Feed}"
+                FeedReply="{StaticResource FeedReply}"
                 History="{StaticResource History}"
                 Images="{StaticResource ImageCard}"
                 Others="{StaticResource Null}" />

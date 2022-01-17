@@ -31,7 +31,7 @@ namespace CoolapkLite.Controls
         #endregion Const Values
 
         public static readonly DependencyProperty PivotProperty = DependencyProperty.Register(
-           "Pivot",
+           nameof(Pivot),
            typeof(Pivot),
            typeof(PivotHeader),
            new PropertyMetadata(null, OnPivotPropertyChanged));
@@ -57,7 +57,7 @@ namespace CoolapkLite.Controls
             SelectionChanged += ShyHeader_SelectionChanged;
         }
 
-        public async void SetPivot()
+        private void SetPivot()
         {
             if (Pivot == null) { return; }
             SetBinding(SelectedIndexProperty, new Binding()
@@ -70,6 +70,11 @@ namespace CoolapkLite.Controls
             ItemsSource = (from item in items
                            where item is PivotItem
                            select ((PivotItem)item).Header ?? string.Empty).ToArray();
+            HidePivotHeader();
+        }
+
+        private async void HidePivotHeader()
+        {
             if (cts != null)
             {
                 cts.Cancel();

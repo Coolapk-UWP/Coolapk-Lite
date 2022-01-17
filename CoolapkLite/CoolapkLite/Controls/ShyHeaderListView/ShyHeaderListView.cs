@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.Providers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -18,7 +19,7 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = "ListViewHeader", Type = typeof(Grid))]
     [TemplatePart(Name = "PivotHeader", Type = typeof(PivotHeader))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
-    public sealed class ShyHeaderListView : ListView
+    public sealed class ShyHeaderListView : ListView, IShyHeader
     {
         private Grid _topHeader;
         private Grid _listViewHeader;
@@ -29,55 +30,61 @@ namespace CoolapkLite.Controls
         private readonly ScrollProgressProvider _progressProvider;
 
         public static readonly DependencyProperty TopHeaderProperty = DependencyProperty.Register(
-           "TopHeader",
+           nameof(TopHeader),
            typeof(object),
            typeof(ShyHeaderListView),
            null);
 
         public static readonly DependencyProperty LeftHeaderProperty = DependencyProperty.Register(
-           "LeftHeader",
+           nameof(LeftHeader),
            typeof(object),
            typeof(ShyHeaderListView),
            null);
 
         public static readonly DependencyProperty RightHeaderProperty = DependencyProperty.Register(
-           "RightHeader",
+           nameof(RightHeader),
            typeof(object),
            typeof(ShyHeaderListView),
            null);
 
+        public static readonly DependencyProperty HeaderMarginProperty = DependencyProperty.Register(
+           nameof(HeaderMargin),
+           typeof(double),
+           typeof(ShyHeaderListView),
+           new PropertyMetadata(0d));
+
         public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-           "HeaderHeight",
+           nameof(HeaderHeight),
            typeof(double),
            typeof(ShyHeaderListView),
            new PropertyMetadata(double.NaN));
 
         public static readonly DependencyProperty HeaderBackgroundProperty = DependencyProperty.Register(
-           "HeaderBackground",
+           nameof(HeaderBackground),
            typeof(Brush),
            typeof(ShyHeaderListView),
            new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush(), null));
 
         public static readonly DependencyProperty TopHeaderBackgroundProperty = DependencyProperty.Register(
-           "TopHeaderBackground",
+           nameof(TopHeaderBackground),
            typeof(Brush),
            typeof(ShyHeaderListView),
            null);
 
         public static readonly DependencyProperty ShyHeaderItemSourceProperty = DependencyProperty.Register(
-           "ShyHeaderItemSource",
+           nameof(ShyHeaderItemSource),
            typeof(IList<ShyHeaderItem>),
            typeof(ShyHeaderListView),
            new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
 
         public static readonly DependencyProperty ShyHeaderSelectedIndexProperty = DependencyProperty.Register(
-           "ShyHeaderSelectedIndex",
+           nameof(ShyHeaderSelectedIndex),
            typeof(int),
            typeof(ShyHeaderListView),
            new PropertyMetadata(-1, OnShyHeaderSelectedIndexPropertyChanged));
 
         public static readonly DependencyProperty ShyHeaderSelectedItemProperty = DependencyProperty.Register(
-           "ShyHeaderSelectedItem",
+           nameof(ShyHeaderSelectedItem),
            typeof(object),
            typeof(ShyHeaderListView),
            null);
@@ -105,6 +112,12 @@ namespace CoolapkLite.Controls
         {
             get => GetValue(RightHeaderProperty);
             set => SetValue(RightHeaderProperty, value);
+        }
+
+        public double HeaderMargin
+        {
+            get => (double)GetValue(HeaderMarginProperty);
+            set => SetValue(HeaderMarginProperty, value);
         }
 
         public double HeaderHeight
@@ -210,7 +223,7 @@ namespace CoolapkLite.Controls
 
         private void ProgressProvider_ProgressChanged(object sender, double args)
         {
-            if (args == 1)
+            if (args == 1 || _progressProvider.Threshold == 0)
             {
                 VisualStateManager.GoToState(this, "OnThreshold", true);
             }
@@ -254,9 +267,18 @@ namespace CoolapkLite.Controls
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
-            _progressProvider.Threshold = TopHeader.ActualHeight;
+            _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
             _propSet ??= Window.Current.Compositor.CreatePropertySet();
-            _propSet.InsertScalar("height", (float)TopHeader.ActualHeight);
+            _propSet.InsertScalar("height", (float)Math.Max(0, TopHeader.ActualHeight - HeaderMargin));
+
+            if (_progressProvider.Threshold == 0)
+            {
+                VisualStateManager.GoToState(this, "OnThreshold", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "BeforeThreshold", true);
+            }
         }
 
         private void ListViewHeader_Loaded(object sender, RoutedEventArgs e)
@@ -268,7 +290,7 @@ namespace CoolapkLite.Controls
             CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
 
             _propSet ??= Window.Current.Compositor.CreatePropertySet();
-            _propSet.InsertScalar("height", (float)_topHeader.ActualHeight);
+            _propSet.InsertScalar("height", (float)Math.Max(0, _topHeader.ActualHeight - HeaderMargin));
 
             Compositor _compositor = Window.Current.Compositor;
             ExpressionAnimation _headerAnimation = _compositor.CreateExpressionAnimation("_manipulationPropertySet.Translation.Y > -_propSet.height ? 0: -_propSet.height -_manipulationPropertySet.Translation.Y");

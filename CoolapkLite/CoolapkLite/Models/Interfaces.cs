@@ -1,13 +1,22 @@
-﻿using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models
 {
+    internal interface IPic
+    {
+        string Uri { get; }
+        ImageType Type { get; }
+        BitmapImage Pic { get; }
+    }
+
     internal interface IList
     {
         string Url { get; }
         string Title { get; }
         string Description { get; }
-        BackgroundImageModel Pic { get; }
+        ImageModelWithColor Pic { get; }
     }
 
     internal interface IHasUriAndTitle
@@ -20,9 +29,9 @@ namespace CoolapkLite.Models
     {
         string Url { get; }
         string Title { get; }
+        ImageModel Pic { get; }
         string SubTitle { get; }
         string Description { get; }
-        BackgroundImageModel Pic { get; }
     }
 
     internal interface ICanCopy

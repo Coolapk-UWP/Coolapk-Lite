@@ -15,7 +15,7 @@ namespace CoolapkLite.Models
         public string Description { get; private set; }
         public string EntityForward { get; private set; }
         public string EntityTemplate { get; private set; }
-        public BackgroundImageModel Pic { get; private set; }
+        public ImageModelWithColor Pic { get; private set; }
 
         public IndexPageModel(JObject token) : base(token)
         {
@@ -133,19 +133,19 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("cover_pic", out JToken cover_pic) && !string.IsNullOrEmpty(cover_pic.ToString()))
             {
-                Pic = new BackgroundImageModel(cover_pic.ToString(), ImageType.OriginImage);
+                Pic = new ImageModelWithColor(cover_pic.ToString(), ImageType.OriginImage);
             }
             else if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
-                Pic = new BackgroundImageModel(pic.ToString(), ImageType.OriginImage);
+                Pic = new ImageModelWithColor(pic.ToString(), ImageType.OriginImage);
             }
             else if (token.TryGetValue("logo", out JToken logo) && !string.IsNullOrEmpty(logo.ToString()))
             {
-                Pic = new BackgroundImageModel(logo.ToString(), ImageType.Icon);
+                Pic = new ImageModelWithColor(logo.ToString(), ImageType.Icon);
             }
             else if (token.TryGetValue("pic_url", out JToken pic_url))
             {
-                Pic = new BackgroundImageModel(pic_url.ToString(), ImageType.Icon);
+                Pic = new ImageModelWithColor(pic_url.ToString(), ImageType.Icon);
             }
         }
     }
@@ -252,7 +252,7 @@ namespace CoolapkLite.Models
         public string Description { get; private set; }
         public string EntityTemplate { get; private set; }
         public EntityType EntitiesType { get; private set; }
-        public BackgroundImageModel Pic { get; private set; }
+        public ImageModelWithColor Pic { get; private set; }
         public ImmutableArray<Entity> Entities { get; private set; }
 
         public IndexPageHasEntitiesModel(JObject token, EntityType type) : base(token)
@@ -343,7 +343,7 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
-                Pic = new BackgroundImageModel(pic.ToString(), ImageType.OriginImage);
+                Pic = new ImageModelWithColor(pic.ToString(), ImageType.OriginImage);
             }
             else { ShowPic = false; }
 

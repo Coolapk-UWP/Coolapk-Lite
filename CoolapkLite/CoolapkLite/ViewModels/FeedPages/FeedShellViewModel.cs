@@ -4,6 +4,8 @@ using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.DataSource;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public abstract class FeedShellViewModel : IViewModel, INotifyPropertyChanged
     {
-        protected string id;
+        protected string ID;
         public double[] VerticalOffsets { get; set; } = new double[3];
 
         private string title = string.Empty;
@@ -40,9 +42,20 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        private List<ShyHeaderItem> itemSource;
+        public List<ShyHeaderItem> ItemSource
+        {
+            get => itemSource;
+            protected set
+            {
+                itemSource = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
@@ -50,7 +63,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         protected FeedShellViewModel(string id)
         {
             if (string.IsNullOrEmpty(id)) { throw new ArgumentException(nameof(id)); }
-            this.id = id;
+            this.ID = id;
         }
 
         internal static async Task<FeedShellViewModel> GetViewModelAsync(string id)
@@ -70,78 +83,43 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         public abstract Task Refresh(int p = -1);
-        public ObservableCollection<ShyHeaderItem> ShyHeaderItemSource { get; set; }
     }
 
     public class FeedDetailViewModel : FeedShellViewModel
     {
         public ReplyItemSourse ReplyItemSourse { get; private set; }
+        public LikeItemSourse LikeItemSourse { get; private set; }
 
-        internal FeedDetailViewModel(string id) : base(id)
-        {
-            ShyHeaderItemSource = new ObservableCollection<ShyHeaderItem>()
-            {
-                new ShyHeaderItem() { Header = "回复", ItemSource = ReplyItemSourse },
-                new ShyHeaderItem() { Header = "点赞", },
-                new ShyHeaderItem() { Header = "转发", },
-            };
-        }
+        internal FeedDetailViewModel(string id) : base(id) { }
 
         public override async Task Refresh(int p = -1)
         {
             if (FeedDetail == null || p == 1)
             {
-                FeedDetailModel feedDetail = await GetFeedDetailAsync(id);
-                Title = feedDetail.Title;
-                if (ReplyItemSourse == null)
+                FeedDetail = await GetFeedDetailAsync(ID);
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                Title = FeedDetail.Title;
+                if (ReplyItemSourse == null || ReplyItemSourse.ID != ID)
                 {
-                    ReplyItemSourse = new ReplyItemSourse(id);
+                    ReplyItemSourse = new ReplyItemSourse(ID);
+                    ItemSource.Add(new ShyHeaderItem()
+                    {
+                        Header = "回复",
+                        ItemSource = ReplyItemSourse
+                    });
                 }
-                FeedDetail = feedDetail;
+                if (LikeItemSourse == null || LikeItemSourse.ID != ID)
+                {
+                    LikeItemSourse = new LikeItemSourse(ID);
+                    ItemSource.Add(new ShyHeaderItem()
+                    {
+                        Header = "点赞",
+                        ItemSource = LikeItemSourse
+                    });
+                }
+                base.ItemSource = ItemSource;
             }
             await ReplyItemSourse?.Refresh(p);
-        }
-    }
-
-    public abstract class EntityItemSourse : DataSourceBase<Entity>
-    {
-        protected CoolapkListProvider Provider;
-
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-        {
-            List<Entity> Models = new List<Entity>();
-            while (Models.Count < count)
-            {
-                int temp = Models.Count;
-                if (Models.Count > 0) { _currentPage++; }
-                await Provider.GetEntity(Models, _currentPage);
-                if (Models.Count <= 0 || Models.Count <= temp) { break; }
-            }
-            return Models;
-        }
-
-        protected override void AddItems(IList<Entity> items)
-        {
-            if (items != null)
-            {
-                foreach (Entity item in items)
-                {
-                    if (item is NullModel) { continue; }
-                    Add(item);
-                }
-            }
-        }
-
-        public virtual async Task Refresh(int p = -1)
-        {
-            if (p == -2)
-            {
-                await Reset();
-            }
-            else if (p == -1)
-            {
-                _ = await LoadMoreItemsAsync(20);
-            }
         }
     }
 
@@ -153,21 +131,45 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             ID = id;
             Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) =>
-                        UriHelper.GetUri(
-                            UriType.GetFeedReplies,
-                            id,
-                            "lastupdate_desc",
-                            p,
-                            $"&firstItem={firstItem}&lastItem={lastItem}",
-                            0),
-                        GetEntities,
-                        "id");
+                (p, firstItem, lastItem) =>
+                UriHelper.GetUri(
+                    UriType.GetFeedReplies,
+                    id,
+                    "lastupdate_desc",
+                    p,
+                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty,
+                    0),
+                GetEntities,
+                "id");
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
             yield return new FeedReplyModel(jo);
+        }
+    }
+
+    public class LikeItemSourse : EntityItemSourse
+    {
+        public string ID;
+
+        public LikeItemSourse(string id)
+        {
+            ID = id;
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) =>
+                UriHelper.GetUri(
+                    UriType.GetLikeList,
+                    id,
+                    p,
+                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                GetEntities,
+                "uid");
+        }
+
+        private IEnumerable<Entity> GetEntities(JObject jo)
+        {
+            yield return new UserModel(jo);
         }
     }
 }

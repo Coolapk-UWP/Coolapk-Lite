@@ -13,7 +13,7 @@ namespace CoolapkLite.Controls
     public sealed partial class FeedShellDetailControl : UserControl
     {
         public static readonly DependencyProperty FeedDetailProperty = DependencyProperty.Register(
-           "FeedDetail",
+           nameof(FeedDetail),
            typeof(FeedDetailModel),
            typeof(FeedShellDetailControl),
            null);

@@ -109,7 +109,7 @@ namespace CoolapkLite.Helpers
             BsonMapper.Global.RegisterType
                 (
                 serialize: (pic) => pic.Uri,
-                deserialize: (bson) => new BackgroundImageModel(bson.ToString(), ImageType.OriginImage)
+                deserialize: (bson) => new ImageModelWithColor(bson.ToString(), ImageType.OriginImage)
                 );
         }
 

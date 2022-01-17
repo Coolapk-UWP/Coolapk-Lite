@@ -15,7 +15,7 @@ namespace CoolapkLite.Models.Feeds
         public string UserName { get; private set; }
         public string Dateline { get; private set; }
         public string ShareUrl { get; private set; }
-        public BackgroundImageModel Pic { get; private set; }
+        public ImageModelWithColor Pic { get; private set; }
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
         public SourceFeedModel(JObject token) : base(token)
@@ -78,7 +78,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
-                Pic = new BackgroundImageModel(pic.ToString(), ImageType.SmallImage);
+                Pic = new ImageModelWithColor(pic.ToString(), ImageType.SmallImage);
             }
         }
     }

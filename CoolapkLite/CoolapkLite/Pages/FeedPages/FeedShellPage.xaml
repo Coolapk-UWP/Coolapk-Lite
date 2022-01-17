@@ -115,7 +115,10 @@
             </control:TwoPaneView.Pane1>
             <control:TwoPaneView.Pane2>
                 <Grid x:Name="RightGrid">
-                    <control:FeedShellListControl Padding="0,0,0,40" x:Name="ListControl" ItemSource="{Binding ShyHeaderItemSource}">
+                    <control:FeedShellListControl
+                        x:Name="ListControl"
+                        Padding="0,0,0,40"
+                        ItemSource="{Binding ItemSource, Mode=TwoWay}">
                         <control:FeedShellListControl.Header>
                             <Grid x:Name="Pane2Grid" />
                         </control:FeedShellListControl.Header>

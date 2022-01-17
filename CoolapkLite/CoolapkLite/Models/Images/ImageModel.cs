@@ -7,12 +7,12 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : INotifyPropertyChanged
+    public class ImageModel : INotifyPropertyChanged, IPic
     {
         private bool isLongPic;
         private bool isWidePic;
-        private WeakReference<BitmapImage> pic;
-        private ImmutableArray<ImageModel> contextArray;
+        protected WeakReference<BitmapImage> pic;
+        protected ImmutableArray<ImageModel> contextArray;
 
         public BitmapImage Pic
         {
@@ -28,7 +28,7 @@ namespace CoolapkLite.Models.Images
                     return ImageCacheHelper.NoPic;
                 }
             }
-            private set
+            protected set
             {
                 if (pic == null)
                 {
@@ -37,6 +37,7 @@ namespace CoolapkLite.Models.Images
                 else
                 {
                     pic.SetTarget(value);
+                    SetBrush(value);
                 }
                 RaisePropertyChangedEvent();
             }
@@ -138,6 +139,11 @@ namespace CoolapkLite.Models.Images
             IsWidePic =
                 ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
                 && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
+        }
+
+        protected virtual void SetBrush(BitmapImage value)
+        {
+            return;
         }
     }
 }

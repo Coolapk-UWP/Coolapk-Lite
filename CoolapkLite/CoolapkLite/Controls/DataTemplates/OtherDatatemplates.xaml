@@ -12,37 +12,39 @@
             <Grid Padding="4,8">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="56" />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                </Grid.RowDefinitions>
                 <Border
-                    Grid.RowSpan="2"
                     Margin="8,0"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
+                    VerticalAlignment="Center"
                     CornerRadius="8">
                     <Image
                         Width="40"
                         Height="40"
                         Source="{Binding Pic.Pic, Mode=OneWay}" />
                 </Border>
-                <TextBlock
-                    Grid.Row="0"
+                <Grid
                     Grid.Column="1"
                     HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Text="{Binding Title}" />
-                <ctrl:TextBlockEx
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top"
-                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                    MaxLines="3"
-                    Text="{Binding Description}" />
+                    VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+                    <TextBlock
+                        Grid.Row="0"
+                        VerticalAlignment="Center"
+                        Text="{Binding Title}"
+                        Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    <ctrl:TextBlockEx
+                        Grid.Row="1"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                        MaxLines="3"
+                        Text="{Binding Description}"
+                        Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                </Grid>
             </Grid>
         </ListViewItem>
     </DataTemplate>

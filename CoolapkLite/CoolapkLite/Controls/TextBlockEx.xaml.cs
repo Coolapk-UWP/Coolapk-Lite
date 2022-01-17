@@ -26,24 +26,25 @@ namespace CoolapkLite.Controls
     /// </summary>
     public sealed partial class TextBlockEx : UserControl
     {
+        public const string AuthorBorder = "<div class=\"author-border\"/>";
         private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text",
+            nameof(Text),
             typeof(string),
             typeof(TextBlockEx),
             new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged))
         );
 
         public static readonly DependencyProperty MaxLinesProperty = DependencyProperty.Register(
-            "MaxLines",
+            nameof(MaxLines),
             typeof(int),
             typeof(TextBlockEx),
             null
         );
 
         public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
-            "IsTextSelectionEnabled",
+            nameof(IsTextSelectionEnabled),
             typeof(bool),
             typeof(TextBlockEx),
             new PropertyMetadata(false)
@@ -181,186 +182,212 @@ namespace CoolapkLite.Controls
                         break;
                     case HtmlNodeType.Element:
                         string content = node.InnerText;
-                        if (node.OriginalName == "a")
+                        switch (node.OriginalName)
                         {
-                            string tag = node.GetAttributeValue("t", string.Empty);
-                            string href = node.GetAttributeValue("href", string.Empty);
-                            string type = node.GetAttributeValue("type", string.Empty);
-                            Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
-                            if (!string.IsNullOrEmpty(href))
-                            {
-                                ToolTipService.SetToolTip(hyperlink, new ToolTip { Content = href });
-                            }
-                            if (content.IndexOf('@') != 0 && content.IndexOf('#') != 0 && !(type == "user-detail"))
-                            {
-                                Run run2 = new Run { Text = "\uE167", FontFamily = new FontFamily("Segoe MDL2 Assets") };
-                                hyperlink.Inlines.Add(run2);
-                            }
-                            else if (content == "查看图片" && (href.IndexOf("http://image.coolapk.com", StringComparison.Ordinal) == 0 || href.IndexOf("https://image.coolapk.com", StringComparison.Ordinal) == 0))
-                            {
-                                content = "查看图片";
-                                Run run2 = new Run { Text = "\uE158", FontFamily = new FontFamily("Segoe MDL2 Assets") };
-                                hyperlink.Inlines.Add(run2);
-                            }
-                            else
-                            {
-                                hyperlink.Click += (sender, e) => UIHelper.OpenLinkAsync(href);
-                            }
-                            Run run3 = new Run { Text = WebUtility.HtmlDecode(content) };
-                            hyperlink.Inlines.Add(run3);
-                            paragraph.Inlines.Add(hyperlink);
-                        }
-                        else if (node.OriginalName == "img")
-                        {
-                            string alt = node.GetAttributeValue("alt", string.Empty);
-                            string src = node.GetAttributeValue("src", string.Empty);
-                            int width = Convert.ToInt32(node.GetAttributeValue("width", "-1").Replace("\"", string.Empty));
-                            int height = Convert.ToInt32(node.GetAttributeValue("height", "-1").Replace("\"", string.Empty));
-
-                            ImageModel imageModel;
-                            Image image = new Image();
-                            InlineUIContainer container = new InlineUIContainer();
-
-                            imageModel = new ImageModel(src, ImageType.OriginImage);
-                            image.SetBinding(Image.SourceProperty, new Binding
-                            {
-                                Source = imageModel,
-                                Mode = BindingMode.OneWay,
-                                Path = new PropertyPath(nameof(imageModel.Pic))
-                            });
-                            if (!string.IsNullOrEmpty(alt))
-                            {
-                                ToolTipService.SetToolTip(image, new ToolTip { Content = alt });
-                            }
-
-                            if (src.Contains("emoticons"))
-                            {
-                                Viewbox viewbox = new Viewbox
+                            case "a":
+                                string tag = node.GetAttributeValue("t", string.Empty);
+                                string href = node.GetAttributeValue("href", string.Empty);
+                                string type = node.GetAttributeValue("type", string.Empty);
+                                Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
+                                if (!string.IsNullOrEmpty(href))
                                 {
-                                    Child = image,
-                                    Margin = new Thickness(0, 0, 0, -4),
-                                    VerticalAlignment = VerticalAlignment.Center
-                                };
-                                viewbox.SetBinding(WidthProperty, new Binding
+                                    ToolTipService.SetToolTip(hyperlink, new ToolTip { Content = href });
+                                }
+                                if (content.IndexOf('@') != 0 && content.IndexOf('#') != 0 && !(type == "user-detail"))
                                 {
-                                    Source = this,
-                                    Mode = BindingMode.OneWay,
-                                    Converter = new FontSizeToLineHeight(),
-                                    Path = new PropertyPath(nameof(FontSize))
-                                });
-                                container.Child = viewbox;
-                                paragraph.Inlines.Add(container);
-                            }
-                            else
-                            {
-                                NewLine();
-                                Grid Grid = new Grid
+                                    Run run2 = new Run { Text = "\uE167", FontFamily = new FontFamily("Segoe MDL2 Assets") };
+                                    hyperlink.Inlines.Add(run2);
+                                }
+                                else if (content == "查看图片" && (href.IndexOf("http://image.coolapk.com", StringComparison.Ordinal) == 0 || href.IndexOf("https://image.coolapk.com", StringComparison.Ordinal) == 0))
                                 {
-                                    CornerRadius = new CornerRadius(4)
-                                };
+                                    content = "查看图片";
+                                    Run run2 = new Run { Text = "\uE158", FontFamily = new FontFamily("Segoe MDL2 Assets") };
+                                    hyperlink.Inlines.Add(run2);
+                                }
+                                else
+                                {
+                                    hyperlink.Click += (sender, e) => UIHelper.OpenLinkAsync(href);
+                                }
+                                Run run3 = new Run { Text = WebUtility.HtmlDecode(content) };
+                                hyperlink.Inlines.Add(run3);
+                                paragraph.Inlines.Add(hyperlink);
+                                break;
 
-                                StackPanel IsGIFPanel = new StackPanel
-                                {
-                                    Orientation = Orientation.Horizontal,
-                                    VerticalAlignment = VerticalAlignment.Top,
-                                    HorizontalAlignment = HorizontalAlignment.Left
-                                };
+                            case "img":
+                                string alt = node.GetAttributeValue("alt", string.Empty);
+                                string src = node.GetAttributeValue("src", string.Empty);
+                                int width = Convert.ToInt32(node.GetAttributeValue("width", "-1").Replace("\"", string.Empty));
+                                int height = Convert.ToInt32(node.GetAttributeValue("height", "-1").Replace("\"", string.Empty));
 
-                                StackPanel PicSizePanel = new StackPanel
-                                {
-                                    Orientation = Orientation.Horizontal,
-                                    VerticalAlignment = VerticalAlignment.Top,
-                                    HorizontalAlignment = HorizontalAlignment.Right
-                                };
+                                ImageModel imageModel;
+                                Image image = new Image();
+                                InlineUIContainer container = new InlineUIContainer();
 
-                                Border GIFBorder = new Border
-                                {
-                                    CornerRadius = new CornerRadius(0, 0, 4, 0),
-                                    Child = new TextBlock
-                                    {
-                                        Text = _loader.GetString("GIF"),
-                                        Margin = new Thickness(2, 0, 2, 0)
-                                    },
-                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
-                                };
-                                GIFBorder.SetBinding(VisibilityProperty, new Binding
+                                imageModel = new ImageModel(src, ImageType.OriginImage);
+                                image.SetBinding(Image.SourceProperty, new Binding
                                 {
                                     Source = imageModel,
                                     Mode = BindingMode.OneWay,
-                                    Converter = new BoolToVisibilityConverter(),
-                                    Path = new PropertyPath(nameof(imageModel.IsGif))
+                                    Path = new PropertyPath(nameof(imageModel.Pic))
                                 });
-
-                                IsGIFPanel.Children.Add(GIFBorder);
-
-                                Border WidePicBorder = new Border
-                                {
-                                    CornerRadius = new CornerRadius(0, 0, 0, 4),
-                                    Child = new TextBlock
-                                    {
-                                        Margin = new Thickness(2, 0, 2, 0),
-                                        Text = _loader.GetString("widePicText")
-                                    },
-                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
-                                };
-                                WidePicBorder.SetBinding(VisibilityProperty, new Binding
-                                {
-                                    Source = imageModel,
-                                    Mode = BindingMode.OneWay,
-                                    Converter = new BoolToVisibilityConverter(),
-                                    Path = new PropertyPath(nameof(imageModel.IsWidePic))
-                                });
-
-                                Border LongPicTextBorder = new Border
-                                {
-                                    CornerRadius = new CornerRadius(0, 0, 0, 4),
-                                    Child = new TextBlock
-                                    {
-                                        Margin = new Thickness(2, 0, 2, 0),
-                                        Text = _loader.GetString("longPicText")
-                                    },
-                                    Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
-                                };
-                                LongPicTextBorder.SetBinding(VisibilityProperty, new Binding
-                                {
-                                    Source = imageModel,
-                                    Mode = BindingMode.OneWay,
-                                    Converter = new BoolToVisibilityConverter(),
-                                    Path = new PropertyPath(nameof(imageModel.IsLongPic))
-                                });
-
-                                PicSizePanel.Children.Add(WidePicBorder);
-                                PicSizePanel.Children.Add(LongPicTextBorder);
-
-                                Viewbox viewbox = new Viewbox
-                                {
-                                    Child = image,
-                                    Margin = new Thickness(0, 0, 0, -4),
-                                    VerticalAlignment = VerticalAlignment.Center
-                                };
-                                if (width != -1) { viewbox.MaxWidth = width; }
-                                if (height != -1) { viewbox.MaxHeight = height; }
-
-                                Grid.Children.Add(viewbox);
-                                Grid.Children.Add(PicSizePanel);
-
-                                container.Child = Grid;
-                                Paragraph paragraph1 = new Paragraph { TextAlignment = TextAlignment.Center };
-                                paragraph1.Inlines.Add(container);
-                                RichTextBlock.Blocks.Add(paragraph1);
-
                                 if (!string.IsNullOrEmpty(alt))
                                 {
-                                    Paragraph paragraph2 = new Paragraph
-                                    {
-                                        LineHeight = FontSize + 10,
-                                        TextAlignment = TextAlignment.Center,
-                                    };
-                                    Run run = new Run { Text = WebUtility.HtmlDecode(alt) };
-                                    paragraph2.Inlines.Add(run);
-                                    RichTextBlock.Blocks.Add(paragraph2);
+                                    ToolTipService.SetToolTip(image, new ToolTip { Content = alt });
                                 }
-                            }
+
+                                if (src.Contains("emoticons"))
+                                {
+                                    Viewbox viewbox = new Viewbox
+                                    {
+                                        Child = image,
+                                        Margin = new Thickness(0, 0, 0, -4),
+                                        VerticalAlignment = VerticalAlignment.Center
+                                    };
+                                    viewbox.SetBinding(WidthProperty, new Binding
+                                    {
+                                        Source = this,
+                                        Mode = BindingMode.OneWay,
+                                        Converter = new FontSizeToLineHeight(),
+                                        Path = new PropertyPath(nameof(FontSize))
+                                    });
+                                    container.Child = viewbox;
+                                    paragraph.Inlines.Add(container);
+                                }
+                                else
+                                {
+                                    NewLine();
+                                    Grid Grid = new Grid
+                                    {
+                                        CornerRadius = new CornerRadius(4)
+                                    };
+
+                                    StackPanel IsGIFPanel = new StackPanel
+                                    {
+                                        Orientation = Orientation.Horizontal,
+                                        VerticalAlignment = VerticalAlignment.Top,
+                                        HorizontalAlignment = HorizontalAlignment.Left
+                                    };
+
+                                    StackPanel PicSizePanel = new StackPanel
+                                    {
+                                        Orientation = Orientation.Horizontal,
+                                        VerticalAlignment = VerticalAlignment.Top,
+                                        HorizontalAlignment = HorizontalAlignment.Right
+                                    };
+
+                                    Border GIFBorder = new Border
+                                    {
+                                        CornerRadius = new CornerRadius(0, 0, 4, 0),
+                                        Child = new TextBlock
+                                        {
+                                            Text = _loader.GetString("GIF"),
+                                            Margin = new Thickness(2, 0, 2, 0)
+                                        },
+                                        Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                    };
+                                    GIFBorder.SetBinding(VisibilityProperty, new Binding
+                                    {
+                                        Source = imageModel,
+                                        Mode = BindingMode.OneWay,
+                                        Converter = new BoolToVisibilityConverter(),
+                                        Path = new PropertyPath(nameof(imageModel.IsGif))
+                                    });
+
+                                    IsGIFPanel.Children.Add(GIFBorder);
+
+                                    Border WidePicBorder = new Border
+                                    {
+                                        CornerRadius = new CornerRadius(0, 0, 0, 4),
+                                        Child = new TextBlock
+                                        {
+                                            Margin = new Thickness(2, 0, 2, 0),
+                                            Text = _loader.GetString("widePicText")
+                                        },
+                                        Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                    };
+                                    WidePicBorder.SetBinding(VisibilityProperty, new Binding
+                                    {
+                                        Source = imageModel,
+                                        Mode = BindingMode.OneWay,
+                                        Converter = new BoolToVisibilityConverter(),
+                                        Path = new PropertyPath(nameof(imageModel.IsWidePic))
+                                    });
+
+                                    Border LongPicTextBorder = new Border
+                                    {
+                                        CornerRadius = new CornerRadius(0, 0, 0, 4),
+                                        Child = new TextBlock
+                                        {
+                                            Margin = new Thickness(2, 0, 2, 0),
+                                            Text = _loader.GetString("longPicText")
+                                        },
+                                        Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
+                                    };
+                                    LongPicTextBorder.SetBinding(VisibilityProperty, new Binding
+                                    {
+                                        Source = imageModel,
+                                        Mode = BindingMode.OneWay,
+                                        Converter = new BoolToVisibilityConverter(),
+                                        Path = new PropertyPath(nameof(imageModel.IsLongPic))
+                                    });
+
+                                    PicSizePanel.Children.Add(WidePicBorder);
+                                    PicSizePanel.Children.Add(LongPicTextBorder);
+
+                                    Viewbox viewbox = new Viewbox
+                                    {
+                                        Child = image,
+                                        Margin = new Thickness(0, 0, 0, -4),
+                                        VerticalAlignment = VerticalAlignment.Center
+                                    };
+                                    if (width != -1) { viewbox.MaxWidth = width; }
+                                    if (height != -1) { viewbox.MaxHeight = height; }
+
+                                    Grid.Children.Add(viewbox);
+                                    Grid.Children.Add(PicSizePanel);
+
+                                    container.Child = Grid;
+                                    Paragraph paragraph1 = new Paragraph { TextAlignment = TextAlignment.Center };
+                                    paragraph1.Inlines.Add(container);
+                                    RichTextBlock.Blocks.Add(paragraph1);
+
+                                    if (!string.IsNullOrEmpty(alt))
+                                    {
+                                        Paragraph paragraph2 = new Paragraph
+                                        {
+                                            LineHeight = FontSize + 10,
+                                            TextAlignment = TextAlignment.Center,
+                                        };
+                                        Run run = new Run { Text = WebUtility.HtmlDecode(alt) };
+                                        paragraph2.Inlines.Add(run);
+                                        RichTextBlock.Blocks.Add(paragraph2);
+                                    }
+                                }
+                                break;
+
+                            case "div":
+                                container = new InlineUIContainer();
+                                Border border = new Border
+                                {
+                                    Margin = new Thickness(4, 0, 4, -4),
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                    //BorderBrush = (SolidColorBrush)Application.Current.Resources["GrayText"],
+                                    BorderThickness = new Thickness(1),
+                                    CornerRadius = new CornerRadius(4),
+                                };
+                                TextBlock textBlock = new TextBlock
+                                {
+                                    Margin = new Thickness(1),
+                                    FontSize = 12,
+                                    Text = _loader.GetString("feedAuthorText"),
+                                };
+
+                                border.Child = textBlock;
+                                container.Child = border;
+                                paragraph.Inlines.Add(container);
+                                break;
+
+                            default: break;
                         }
                         break;
                 }

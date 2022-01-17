@@ -11,43 +11,43 @@ namespace CoolapkLite.Controls
     public sealed partial class TitleBar : UserControl
     {
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-           "Title",
+           nameof(Title),
            typeof(string),
            typeof(TitleBar),
            new PropertyMetadata(default(string)));
 
         public static readonly DependencyProperty TitleHeightProperty = DependencyProperty.Register(
-           "TitleHeight",
+           nameof(TitleHeight),
            typeof(double),
            typeof(TitleBar),
            new PropertyMetadata(UIHelper.PageTitleHeight));
 
         public static readonly DependencyProperty IsBackEnableProperty = DependencyProperty.Register(
-           "IsBackEnable",
+           nameof(IsBackEnable),
            typeof(bool),
            typeof(TitleBar),
            new PropertyMetadata(true));
 
         public static readonly DependencyProperty RightAreaContentProperty = DependencyProperty.Register(
-           "RightAreaContent",
+           nameof(RightAreaContent),
            typeof(object),
            typeof(TitleBar),
            null);
 
         public static readonly DependencyProperty BackgroundVisibilityProperty = DependencyProperty.Register(
-           "BackgroundVisibility",
+           nameof(BackgroundVisibility),
            typeof(Visibility),
            typeof(TitleBar),
            new PropertyMetadata(Visibility.Collapsed));
 
         public static readonly DependencyProperty BackButtonVisibilityProperty = DependencyProperty.Register(
-           "BackButtonVisibility",
+           nameof(BackButtonVisibility),
            typeof(Visibility),
            typeof(TitleBar),
            new PropertyMetadata(Visibility.Visible));
 
         public static readonly DependencyProperty RefreshButtonVisibilityProperty = DependencyProperty.Register(
-           "RefreshButtonVisibility",
+           nameof(RefreshButtonVisibility),
            typeof(Visibility),
            typeof(TitleBar),
            new PropertyMetadata(Visibility.Collapsed));

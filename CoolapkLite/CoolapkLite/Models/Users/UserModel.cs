@@ -4,24 +4,41 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models.Users
 {
-    public class UserModel : Entity
+    public class UserModel : Entity, IListWithSubtitle
     {
         public int UID { get; private set; }
         public int Level { get; private set; }
         public int Status { get; private set; }
         public int RegDate { get; private set; }
+        public int FansNum { get; private set; }
         public int LoginTime { get; private set; }
+        public int FollowNum { get; private set; }
         public int Experience { get; private set; }
         public int BlockStatus { get; private set; }
+
+        public string Bio { get; private set; }
         public string UserName { get; private set; }
+        public string SubTitle { get; private set; }
+        public string Description { get; private set; }
+
         public ImageModel UserAvatar { get; private set; }
-        public BackgroundImageModel Cover { get; private set; }
+        public ImageModelWithColor Cover { get; private set; }
+
+        public string Url => $"/u/{UID}";
+        public string Title => UserName;
+
+        public ImageModel Pic => UserAvatar;
 
         public UserModel(JObject token) : base(token)
         {
             if (token.TryGetValue("uid", out JToken uid))
             {
                 UID = uid.ToObject<int>();
+            }
+
+            if (token.TryGetValue("bio", out JToken bio))
+            {
+                Bio = bio.ToString();
             }
 
             if (token.TryGetValue("level", out JToken level))
@@ -31,7 +48,7 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("cover", out JToken cover))
             {
-                Cover = new BackgroundImageModel(cover.ToString(), Helpers.ImageType.OriginImage);
+                Cover = new ImageModelWithColor(cover.ToString(), Helpers.ImageType.OriginImage);
             }
 
             if (token.TryGetValue("status", out JToken status))
@@ -44,6 +61,11 @@ namespace CoolapkLite.Models.Users
                 RegDate = regdate.ToObject<int>();
             }
 
+            if (token.TryGetValue("fans", out JToken fans))
+            {
+                FansNum = fans.ToObject<int>();
+            }
+
             if (token.TryGetValue("username", out JToken username))
             {
                 UserName = username.ToString();
@@ -52,6 +74,11 @@ namespace CoolapkLite.Models.Users
             if (token.TryGetValue("logintime", out JToken logintime))
             {
                 LoginTime = logintime.ToObject<int>();
+            }
+
+            if (token.TryGetValue("follow", out JToken follow))
+            {
+                FollowNum = follow.ToObject<int>();
             }
 
             if (token.TryGetValue("experience", out JToken experience))

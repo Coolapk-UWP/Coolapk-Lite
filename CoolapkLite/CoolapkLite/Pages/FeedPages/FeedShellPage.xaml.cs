@@ -62,6 +62,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 ListControl.HeaderHeight = double.NaN;
+                ListControl.HeaderMargin = UIHelper.PageTitleHeight;
                 TitleBar.RefreshButtonVisibility = Visibility.Visible;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
@@ -72,6 +73,7 @@ namespace CoolapkLite.Pages.FeedPages
             // Dual pane.
             else
             {
+                ListControl.HeaderMargin = 0d;
                 ListControl.HeaderHeight = UIHelper.PageTitleHeight;
                 TitleBar.RefreshButtonVisibility = Visibility.Collapsed;
                 ListControl.RefreshButtonVisibility = Visibility.Visible;
