@@ -248,7 +248,7 @@ namespace CoolapkLite.Controls
 
         private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
         {
-            items ??= ShyHeaderItemSource;
+            items = items ?? ShyHeaderItemSource;
             if (_pivotHeader != null)
             {
                 _pivotHeader.ItemsSource = (from item in items
@@ -258,7 +258,7 @@ namespace CoolapkLite.Controls
 
         private void UpdateShyHeaderSelectedIndex(int? index = null)
         {
-            index ??= SelectedIndex;
+            index = index ?? SelectedIndex;
             if (index == -1) { return; }
             ShyHeaderSelectedItem = ShyHeaderItemSource[(int)index];
             ItemsSource = ShyHeaderItemSource[(int)index].ItemSource;
@@ -268,7 +268,7 @@ namespace CoolapkLite.Controls
         {
             Grid TopHeader = sender as Grid;
             _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            _propSet ??= Window.Current.Compositor.CreatePropertySet();
+            _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
             _propSet.InsertScalar("height", (float)Math.Max(0, TopHeader.ActualHeight - HeaderMargin));
 
             if (_progressProvider.Threshold == 0)
@@ -289,7 +289,7 @@ namespace CoolapkLite.Controls
             Visual _headerVisual = ElementCompositionPreview.GetElementVisual(ListViewHeader);
             CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
 
-            _propSet ??= Window.Current.Compositor.CreatePropertySet();
+            _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
             _propSet.InsertScalar("height", (float)Math.Max(0, _topHeader.ActualHeight - HeaderMargin));
 
             Compositor _compositor = Window.Current.Compositor;

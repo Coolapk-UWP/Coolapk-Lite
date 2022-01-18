@@ -44,7 +44,7 @@ namespace CoolapkLite.Pages.SettingsPages
         private int _loadnum = 0;
         protected override async Task<IList<string>> LoadItemsAsync(uint count)
         {
-            List<string> items = new();
+            List<string> items = new List<string>();
             await Task.Run(() =>
             {
                 for (int i = 0; i < count; i++)
