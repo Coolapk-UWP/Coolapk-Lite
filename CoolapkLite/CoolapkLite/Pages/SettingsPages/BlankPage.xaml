@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Margin="0,32,0,0">
+        <controls:PivotHeader/>
         <controls:ShyHeaderListView x:Name="ShyHeaderListView">
             <controls:ShyHeaderListView.TopHeader>
                 <Border Height="600" />

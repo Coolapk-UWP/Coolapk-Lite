@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Core.Helpers;
-using CoolapkLite.Core.Helpers.DataSource;
 using CoolapkLite.Core.Models;
 using CoolapkLite.Core.Providers;
 using CoolapkLite.Models.Feeds;
@@ -9,9 +8,9 @@ using CoolapkLite.ViewModels.DataSource;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -63,7 +62,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         protected FeedShellViewModel(string id)
         {
             if (string.IsNullOrEmpty(id)) { throw new ArgumentException(nameof(id)); }
-            this.ID = id;
+            ID = id;
         }
 
         internal static async Task<FeedShellViewModel> GetViewModelAsync(string id)
@@ -89,6 +88,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public ReplyItemSourse ReplyItemSourse { get; private set; }
         public LikeItemSourse LikeItemSourse { get; private set; }
+        public ShareItemSourse ShareItemSourse { get; private set; }
 
         internal FeedDetailViewModel(string id) : base(id) { }
 
@@ -117,35 +117,120 @@ namespace CoolapkLite.ViewModels.FeedPages
                         ItemSource = LikeItemSourse
                     });
                 }
+                if (ShareItemSourse == null || ShareItemSourse.ID != ID)
+                {
+                    ShareItemSourse = new ShareItemSourse(ID, FeedDetail.FeedType);
+                    ItemSource.Add(new ShyHeaderItem()
+                    {
+                        Header = "转发",
+                        ItemSource = ShareItemSourse
+                    });
+                }
                 base.ItemSource = ItemSource;
             }
             await ReplyItemSourse?.Refresh(p);
         }
     }
 
-    public class ReplyItemSourse : EntityItemSourse
+    public class ReplyItemSourse : EntityItemSourse, INotifyPropertyChanged, ICanComboBoxChangeSelectedIndex, ICanToggleChangeSelectedIndex
     {
         public string ID;
+        public List<string> ItemSource { get; private set; }
+        private readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedShellPage");
+
+        private bool toggleIsOn;
+        public bool ToggleIsOn
+        {
+            get => toggleIsOn;
+            set
+            {
+                toggleIsOn = value;
+                SetProvider();
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        private string replyListType = "lastupdate_desc";
+        public string ReplyListType
+        {
+            get => replyListType;
+            set
+            {
+                replyListType = value;
+                SetProvider();
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public int comboBoxSelectedIndex;
+        public int ComboBoxSelectedIndex
+        {
+            get => comboBoxSelectedIndex;
+            set
+            {
+                comboBoxSelectedIndex = value;
+                SetComboBoxSelectedIndex(value);
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public new event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
 
         public ReplyItemSourse(string id)
         {
             ID = id;
+            ItemSource = new List<string>()
+            {
+                loader.GetString("lastupdate_desc"),
+                loader.GetString("dateline_desc"),
+                loader.GetString("popular")
+            };
+            SetProvider();
+        }
+
+        private async void SetProvider()
+        {
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
                     UriType.GetFeedReplies,
-                    id,
-                    "lastupdate_desc",
+                    ID,
+                    ReplyListType,
                     p,
                     p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty,
-                    0),
+                    toggleIsOn ? 1 : 0),
                 GetEntities,
                 "id");
+            await Refresh(-2);
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
             yield return new FeedReplyModel(jo);
+        }
+
+        public void SetComboBoxSelectedIndex(int value)
+        {
+            switch (value)
+            {
+                case -1: return;
+                case 0:
+                    ReplyListType = "lastupdate_desc";
+                    break;
+
+                case 1:
+                    ReplyListType = "dateline_desc";
+                    break;
+
+                case 2:
+                    ReplyListType = "popular";
+                    break;
+            }
         }
     }
 
@@ -170,6 +255,30 @@ namespace CoolapkLite.ViewModels.FeedPages
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
             yield return new UserModel(jo);
+        }
+    }
+
+    public class ShareItemSourse : EntityItemSourse
+    {
+        public string ID;
+
+        public ShareItemSourse(string id, string feedtype = "feed")
+        {
+            ID = id;
+            Provider = new CoolapkListProvider(
+                (p, _, __) =>
+                UriHelper.GetUri(
+                    UriType.GetShareList,
+                    id,
+                    feedtype,
+                    p),
+                GetEntities,
+                "id");
+        }
+
+        private IEnumerable<Entity> GetEntities(JObject jo)
+        {
+            yield return new FeedModel(jo);
         }
     }
 }

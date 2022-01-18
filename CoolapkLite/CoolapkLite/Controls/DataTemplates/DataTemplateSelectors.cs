@@ -11,17 +11,16 @@ namespace CoolapkLite.Controls.DataTemplates
     public sealed class CardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Feed { get; set; }
+        public DataTemplate List { get; set; }
         public DataTemplate Images { get; set; }
         public DataTemplate Others { get; set; }
-        public DataTemplate History { get; set; }
         public DataTemplate FeedReply { get; set; }
+        public DataTemplate ListWithSubtitle { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item.GetType().Name)
             {
                 case "FeedModel": return Feed;
-                case "UserModel":
-                case "HistoryModel": return History;
                 case "FeedReplyModel": return FeedReply;
                 case "IndexPageHasEntitiesModel":
                     switch ((item as IndexPageHasEntitiesModel).EntitiesType)
@@ -29,7 +28,19 @@ namespace CoolapkLite.Controls.DataTemplates
                         case EntityType.Image: return Images;
                         default: return Others;
                     }
-                default: return Others;
+                default:
+                    if (item is IList)
+                    {
+                        return List;
+                    }
+                    else if (item is IListWithSubtitle)
+                    {
+                        return ListWithSubtitle;
+                    }
+                    else
+                    {
+                        return Others;
+                    }
             }
         }
     }

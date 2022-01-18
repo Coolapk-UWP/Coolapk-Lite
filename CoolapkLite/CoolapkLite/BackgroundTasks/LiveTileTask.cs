@@ -79,7 +79,7 @@ namespace CoolapkLite.BackgroundTasks
                             {
                                 new AdaptiveText()
                                 {
-                                    Text = FeedDetail.UserName,
+                                    Text = FeedDetail.UserInfo.UserName,
                                     HintStyle = AdaptiveTextStyle.Caption,
                                 },
 
@@ -110,7 +110,7 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveImage()
                                                 {
-                                                    Source = FeedDetail.UserAvatar.Uri,
+                                                    Source = FeedDetail.UserInfo.UserAvatar.Uri,
                                                     HintCrop = AdaptiveImageCrop.Circle
                                                 }
                                             },
@@ -121,7 +121,7 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveText()
                                                 {
-                                                    Text = FeedDetail.UserName,
+                                                    Text = FeedDetail.UserInfo.UserName,
                                                     HintStyle = AdaptiveTextStyle.Caption,
                                                 },
 
@@ -147,7 +147,7 @@ namespace CoolapkLite.BackgroundTasks
                             {
                                 new AdaptiveText()
                                 {
-                                    Text = FeedDetail.UserName,
+                                    Text = FeedDetail.UserInfo.UserName,
                                     HintStyle = AdaptiveTextStyle.Base,
                                 },
 

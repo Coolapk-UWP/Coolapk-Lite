@@ -131,7 +131,7 @@ namespace CoolapkLite.Core.Helpers
                 case UriType.GetNotificationNumbers: return "/v6/notification/checkCount";
                 case UriType.GetReplyReplies: return "/v6/feed/replyList?id={0}&listType=&page={1}{2}&discussMode=0&feedType=feed_reply&blockStatus=0&fromFeedAuthor=0";
                 case UriType.GetSearchWords: return "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
-                case UriType.GetShareList: return "/v6/feed/forwardList?id={0}&type=feed&page={1}";
+                case UriType.GetShareList: return "/v6/feed/forwardList?id={0}&type={1}&page={2}";
                 case UriType.GetTagDetail: return "/v6/topic/newTagDetail?tag={0}";
                 case UriType.GetTagFeeds: return "/v6/topic/tagFeedList?tag={0}&page={1}{2}{3}&listType={4}&blockStatus=0";
                 case UriType.GetTopicDetail: return "/v6/topic/tagDetail?tag={0}";

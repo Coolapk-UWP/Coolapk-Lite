@@ -36,7 +36,7 @@
                             <control:FeedShellDetailControl
                                 x:Name="DetailControl"
                                 Padding="{x:Bind StackPanelMargin}"
-                                FeedDetail="{Binding FeedDetail}" />
+                                DataContext="{Binding FeedDetail}" />
                         </Grid>
                     </ScrollViewer>
                     <Grid

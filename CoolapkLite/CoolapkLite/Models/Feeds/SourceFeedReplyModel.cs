@@ -1,21 +1,20 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Core.Models;
+using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
-using System;
 
 namespace CoolapkLite.Models.Feeds
 {
     public class SourceFeedReplyModel : Entity
     {
         public int ID { get; private set; }
-        public string Uurl { get; private set; }
         public string Rurl { get; private set; }
         public string PicUri { get; private set; }
         public string Message { get; private set; }
         public int BlockStatus { get; private set; }
-        public string UserName { get; private set; }
         public string Rusername { get; private set; }
         public bool IsFeedAuthor { get; private set; }
+        public UserModel UserInfo { get; private set; }
 
         public SourceFeedReplyModel(JObject token) : base(token)
         {
@@ -24,14 +23,10 @@ namespace CoolapkLite.Models.Feeds
                 ID = id.ToObject<int>();
             }
 
-            if (token.TryGetValue("uid", out JToken uid))
+            if (token.TryGetValue("userInfo", out JToken v1))
             {
-                Uurl = $"/u/{uid}";
-            }
-
-            if (token.TryGetValue("username", out JToken username))
-            {
-                UserName = username.ToString();
+                JObject userInfo = (JObject)v1;
+                UserInfo = new UserModel(userInfo);
             }
 
             if (token.TryGetValue("isFeedAuthor", out JToken isFeedAuthor))
@@ -55,11 +50,11 @@ namespace CoolapkLite.Models.Feeds
             {
                 Message =
                 string.IsNullOrEmpty(Rusername)
-                ? $"{GetUserLink(Uurl, UserName) + GetAuthorString(IsFeedAuthor)}: {message}"
-                : $"{GetUserLink(Uurl, UserName) + GetAuthorString(IsFeedAuthor)}@{GetUserLink(Rurl, Rusername)}: {message}";
+                ? $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}: {message}"
+                : $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}@{GetUserLink(Rurl, Rusername)}: {message}";
             }
 
-            if(token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
+            if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
                 PicUri = pic.ToString();
                 Message += $" <a href=\"{PicUri}\">{loader.GetString("seePic")}</a>";

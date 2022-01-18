@@ -23,90 +23,87 @@ namespace CoolapkLite.Models.Feeds
 
             if (EntityType != "article")
             {
-                if (token.TryGetValue("feedType", out JToken feedType))
+                switch (FeedType)
                 {
-                    switch (feedType.ToString())
-                    {
-                        case "answer":
-                            IsAnswerFeed = true;
-                            if (token.TryGetValue("extraData", out JToken extraData))
+                    case "answer":
+                        IsAnswerFeed = true;
+                        if (token.TryGetValue("extraData", out JToken extraData))
+                        {
+                            JObject j = JObject.Parse(extraData.ToString());
+                            if (j.TryGetValue("questionUrl", out JToken questionUrl))
                             {
-                                JObject j = JObject.Parse(extraData.ToString());
-                                if (j.TryGetValue("questionUrl", out JToken questionUrl))
-                                {
-                                    QuestionUrl = questionUrl.ToString();
-                                }
+                                QuestionUrl = questionUrl.ToString();
                             }
+                        }
 
-                            MessageRawOutput = string.Empty;
-                            StringBuilder builder = new StringBuilder();
-                            if (token.TryGetValue("message_raw_output", out JToken message_raw_output))
+                        MessageRawOutput = string.Empty;
+                        StringBuilder builder = new StringBuilder();
+                        if (token.TryGetValue("message_raw_output", out JToken message_raw_output))
+                        {
+                            foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
                             {
-                                foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
+                                if (item.TryGetValue("type", out JToken type))
                                 {
-                                    if (item.TryGetValue("type", out JToken type))
+                                    switch (type.ToString())
                                     {
-                                        switch (type.ToString())
-                                        {
-                                            case "text":
-                                                if (item.TryGetValue("message", out JToken message))
-                                                {
-                                                    builder.Append(message.ToString());
-                                                }
-                                                break;
+                                        case "text":
+                                            if (item.TryGetValue("message", out JToken message))
+                                            {
+                                                builder.Append(message.ToString());
+                                            }
+                                            break;
 
-                                            case "image":
-                                                if (item.TryGetValue("uri", out JToken uri))
-                                                {
-                                                    item.TryGetValue("description", out JToken description);
-                                                    builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\">{description}</a>\n");
-                                                }
-                                                break;
-                                        }
+                                        case "image":
+                                            if (item.TryGetValue("uri", out JToken uri))
+                                            {
+                                                item.TryGetValue("description", out JToken description);
+                                                builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\">{description}</a>\n");
+                                            }
+                                            break;
                                     }
                                 }
                             }
-                            MessageRawOutput = builder.ToString();
-                            break;
+                        }
+                        MessageRawOutput = builder.ToString();
+                        break;
 
-                        case "feedArticle":
-                            IsFeedArticle = true;
-                            if (token.TryGetValue("message_cover", out JToken message_cover) && !string.IsNullOrEmpty(message_cover.ToString()))
-                            {
-                                MessageCover = new ImageModel(message_cover.ToString(), ImageType.SmallImage);
-                            }
+                    case "feedArticle":
+                        IsFeedArticle = true;
+                        if (token.TryGetValue("message_cover", out JToken message_cover) && !string.IsNullOrEmpty(message_cover.ToString()))
+                        {
+                            MessageCover = new ImageModel(message_cover.ToString(), ImageType.SmallImage);
+                        }
 
-                            MessageRawOutput = string.Empty;
-                            builder = new StringBuilder();
-                            if (token.TryGetValue("message_raw_output", out message_raw_output))
+                        MessageRawOutput = string.Empty;
+                        builder = new StringBuilder();
+                        if (token.TryGetValue("message_raw_output", out message_raw_output))
+                        {
+                            foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
                             {
-                                foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
+                                if (item.TryGetValue("type", out JToken type))
                                 {
-                                    if (item.TryGetValue("type", out JToken type))
+                                    switch (type.ToString())
                                     {
-                                        switch (type.ToString())
-                                        {
-                                            case "text":
-                                                if (item.TryGetValue("message", out JToken message))
-                                                {
-                                                    builder.Append(message.ToString());
-                                                }
-                                                break;
+                                        case "text":
+                                            if (item.TryGetValue("message", out JToken message))
+                                            {
+                                                builder.Append(message.ToString());
+                                            }
+                                            break;
 
-                                            case "image":
-                                                if (item.TryGetValue("url", out JToken uri))
-                                                {
-                                                    item.TryGetValue("description", out JToken description);
-                                                    builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\"/>\n");
-                                                }
-                                                break;
-                                        }
+                                        case "image":
+                                            if (item.TryGetValue("url", out JToken uri))
+                                            {
+                                                item.TryGetValue("description", out JToken description);
+                                                builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\"/>\n");
+                                            }
+                                            break;
                                     }
                                 }
                             }
-                            MessageRawOutput = builder.ToString();
-                            break;
-                    }
+                        }
+                        MessageRawOutput = builder.ToString();
+                        break;
                 }
             }
         }

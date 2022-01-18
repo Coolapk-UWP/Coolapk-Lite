@@ -186,6 +186,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             public int ComboBoxSelectedIndex { get; private set; }
 
+            public List<string> ItemSource { get; private set; }
+
             private string sortType = "feed";
 
             internal UserViewModel(string uid) : base(uid, FeedListType.UserPageList)
@@ -217,7 +219,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as UserDetail).UserName;
 
-            public async Task SetComboBoxSelectedIndex(int value)
+            public void SetComboBoxSelectedIndex(int value)
             {
                 switch (value)
                 {

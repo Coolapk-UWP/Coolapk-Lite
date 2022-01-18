@@ -21,8 +21,8 @@ namespace CoolapkLite.Models.Users
         public string SubTitle { get; private set; }
         public string Description { get; private set; }
 
+        public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
-        public ImageModelWithColor Cover { get; private set; }
 
         public string Url => $"/u/{UID}";
         public string Title => UserName;
@@ -48,7 +48,7 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("cover", out JToken cover))
             {
-                Cover = new ImageModelWithColor(cover.ToString(), Helpers.ImageType.OriginImage);
+                Cover = new ImageModel(cover.ToString(), Helpers.ImageType.OriginImage);
             }
 
             if (token.TryGetValue("status", out JToken status))

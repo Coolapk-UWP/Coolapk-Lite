@@ -20,10 +20,10 @@
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
-                Feed="{StaticResource Feed}"
-                FeedReply="{StaticResource FeedReply}"
-                History="{StaticResource History}"
-                Images="{StaticResource ImageCard}"
+                Feed="{StaticResource FeedDefaultTemplate}"
+                FeedReply="{StaticResource FeedReplyDefaultTemplate}"
+                List="{StaticResource ListDefaultTemplate}"
+                Images="{StaticResource ImageCardDefaultTemplate}"
                 Others="{StaticResource Null}" />
         </ResourceDictionary>
     </Page.Resources>

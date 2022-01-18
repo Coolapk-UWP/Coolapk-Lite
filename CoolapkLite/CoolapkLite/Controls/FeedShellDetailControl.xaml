@@ -20,7 +20,7 @@
             <valueconverters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid Padding="{x:Bind Padding, Mode=TwoWay}" DataContext="{x:Bind FeedDetail, Mode=OneWay}">
+    <Grid Padding="{x:Bind Padding, Mode=TwoWay}">
         <UserControl>
             <Grid Padding="8,4">
                 <Grid.RowDefinitions>
@@ -40,10 +40,10 @@
                         Padding="0"
                         Background="Transparent"
                         Click="Button_Click"
-                        Tag="{Binding Uurl}">
+                        Tag="{Binding UserInfo.Url}">
                         <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
                         </Ellipse>
                     </Button>
@@ -52,7 +52,7 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
                             IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                            Text="{Binding UserName}" />
+                            Text="{Binding UserInfo.UserName}" />
                         <StackPanel Margin="-1,0" Orientation="Horizontal">
                             <TextBlock
                                 x:Name="DateLineTxb"
@@ -90,7 +90,7 @@
                     Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
                     <GridView
                         HorizontalContentAlignment="Left"
-                        ItemTemplate="{StaticResource Pic}"
+                        ItemTemplate="{StaticResource PicDefaultTemplate}"
                         ItemsSource="{Binding PicArr}"
                         ScrollViewer.VerticalScrollMode="Disabled"
                         SelectionChanged="GridView_SelectionChanged"

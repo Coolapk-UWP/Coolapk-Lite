@@ -5,12 +5,11 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class HistoryModel : Entity, IListWithSubtitle
+    public class HistoryModel : Entity, IList
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
         public ImageModel Pic { get; private set; }
-        public string SubTitle { get; private set; }
         public string Description { get; private set; }
 
         public HistoryModel(JObject token) : base(token)
@@ -40,7 +39,7 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("logo", out JToken logo))
             {
-                Pic = new ImageModelWithColor(logo.ToString(), ImageType.Icon);
+                Pic = new ImageModel(logo.ToString(), ImageType.Icon);
             }
         }
     }

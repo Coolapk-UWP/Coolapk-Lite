@@ -59,7 +59,6 @@ namespace CoolapkLite.Models.Feeds
         public new string Message { get; private set; }
         public double ReplyRowsMore { get; private set; }
         public double ReplyRowsCount { get; private set; }
-        public ImageModel UserAvatar { get; private set; }
         public bool ShowReplyRowsMore => ReplyRowsMore > 0;
         public List<SourceFeedReplyModel> ReplyRows { get; private set; }
 
@@ -80,11 +79,6 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("message", out JToken message))
             {
                 Message = message.ToString();
-            }
-
-            if (token.TryGetValue("userAvatar", out JToken userAvatar))
-            {
-                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
             }
 
             if (token.TryGetValue("likenum", out JToken likenum))

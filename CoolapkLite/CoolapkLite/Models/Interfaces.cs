@@ -15,8 +15,8 @@ namespace CoolapkLite.Models
     {
         string Url { get; }
         string Title { get; }
+        ImageModel Pic { get; }
         string Description { get; }
-        ImageModelWithColor Pic { get; }
     }
 
     internal interface IHasUriAndTitle

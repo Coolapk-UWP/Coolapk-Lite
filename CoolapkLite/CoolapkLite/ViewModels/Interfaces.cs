@@ -1,11 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels
 {
     internal interface ICanComboBoxChangeSelectedIndex
     {
+        List<string> ItemSource { get; }
         int ComboBoxSelectedIndex { get; }
-        Task SetComboBoxSelectedIndex(int value);
+        void SetComboBoxSelectedIndex(int value);
+    }
+
+    internal interface ICanToggleChangeSelectedIndex
+    {
+        bool ToggleIsOn { get; }
     }
 
     internal interface IViewModel

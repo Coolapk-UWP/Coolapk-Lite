@@ -28,7 +28,7 @@
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
-            ItemTemplate="{StaticResource History}"
+            ItemTemplate="{StaticResource ListDefaultTemplate}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             ScrollViewer.IsDeferredScrollingEnabled="True"

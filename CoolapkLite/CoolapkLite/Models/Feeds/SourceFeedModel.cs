@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Core.Models;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Linq;
@@ -10,12 +11,12 @@ namespace CoolapkLite.Models.Feeds
     public class SourceFeedModel : Entity
     {
         public string Url { get; private set; }
-        public string Uurl { get; private set; }
         public string Message { get; private set; }
-        public string UserName { get; private set; }
+        public ImageModel Pic { get; private set; }
         public string Dateline { get; private set; }
         public string ShareUrl { get; private set; }
-        public ImageModelWithColor Pic { get; private set; }
+        public UserModel UserInfo { get; private set; }
+        public string FeedType { get; private set; } = "feed";
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
         public SourceFeedModel(JObject token) : base(token)
@@ -32,14 +33,7 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("userInfo", out JToken v1))
             {
                 JObject userInfo = (JObject)v1;
-                if (userInfo.TryGetValue("url", out JToken url))
-                {
-                    Uurl = url.ToString();
-                }
-            }
-            else if (token.TryGetValue("uid", out JToken uid))
-            {
-                Uurl = $"/u/{uid}";
+                UserInfo = new UserModel(userInfo);
             }
 
             if (token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString()))
@@ -56,9 +50,9 @@ namespace CoolapkLite.Models.Feeds
                 Message = message.ToString();
             }
 
-            if (token.TryGetValue("username", out JToken username))
+            if (token.TryGetValue("feedType", out JToken feedType))
             {
-                UserName = username.ToString();
+                FeedType = feedType.ToString();
             }
 
             if (token.TryGetValue("dateline", out JToken dateline))
@@ -78,7 +72,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
-                Pic = new ImageModelWithColor(pic.ToString(), ImageType.SmallImage);
+                Pic = new ImageModel(pic.ToString(), ImageType.SmallImage);
             }
         }
     }

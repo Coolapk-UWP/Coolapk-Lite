@@ -18,21 +18,24 @@
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
-                Feed="{StaticResource Feed}"
-                FeedReply="{StaticResource FeedReply}"
-                History="{StaticResource History}"
-                Images="{StaticResource ImageCard}"
+                Feed="{StaticResource FeedDefaultTemplate}"
+                FeedReply="{StaticResource FeedReplyDefaultTemplate}"
+                Images="{StaticResource ImageCardDefaultTemplate}"
+                List="{StaticResource ListDefaultTemplate}"
+                ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
                 Others="{StaticResource Null}" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <local:ShyHeaderListView
+            x:Name="ShyHeaderListView"
             Padding="{x:Bind Padding, Mode=TwoWay}"
             HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
             HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             SelectionMode="None"
-            ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}">
+            ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
+            ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged">
             <local:ShyHeaderListView.TopHeader>
                 <ContentPresenter Content="{x:Bind Header, Mode=TwoWay}" />
             </local:ShyHeaderListView.TopHeader>
@@ -40,13 +43,17 @@
                 <Border x:Name="Block" Height="48" />
             </local:ShyHeaderListView.LeftHeader>
             <local:ShyHeaderListView.RightHeader>
-                <Button
-                    x:Name="RefreshButton"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource IconButtonStyle}"
-                    Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}">
-                    <SymbolIcon Symbol="Refresh" />
-                </Button>
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <ToggleSwitch x:Name="ToggleSwitch" HorizontalAlignment="Left"/>
+                    <ComboBox x:Name="ComboBox" VerticalAlignment="Center" Margin="4,0"/>
+                    <Button
+                        x:Name="RefreshButton"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource IconButtonStyle}"
+                        Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}">
+                        <SymbolIcon Symbol="Refresh" />
+                    </Button>
+                </StackPanel>
             </local:ShyHeaderListView.RightHeader>
         </local:ShyHeaderListView>
     </Grid>

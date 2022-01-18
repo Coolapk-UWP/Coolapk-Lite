@@ -1,6 +1,4 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel;
 
@@ -71,7 +69,6 @@ namespace CoolapkLite.Models.Feeds
         public int ShareNum { get; private set; }
         public string DeviceTitle { get; private set; }
         public bool ShowUser { get; private set; } = true;
-        public ImageModel UserAvatar { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -114,11 +111,6 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("device_title", out JToken device_title))
             {
                 DeviceTitle = device_title.ToString();
-            }
-
-            if (token.TryGetValue("userAvatar", out JToken userAvatar))
-            {
-                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.SmallAvatar);
             }
         }
     }

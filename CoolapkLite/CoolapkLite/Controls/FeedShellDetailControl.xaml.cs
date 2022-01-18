@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Feeds;
 using CoolapkUWP.Controls;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
@@ -12,18 +11,6 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class FeedShellDetailControl : UserControl
     {
-        public static readonly DependencyProperty FeedDetailProperty = DependencyProperty.Register(
-           nameof(FeedDetail),
-           typeof(FeedDetailModel),
-           typeof(FeedShellDetailControl),
-           null);
-
-        public FeedDetailModel FeedDetail
-        {
-            get => (FeedDetailModel)GetValue(FeedDetailProperty);
-            set => SetValue(FeedDetailProperty, value);
-        }
-
         public FeedShellDetailControl() => InitializeComponent();
 
         private void Button_Click(object sender, RoutedEventArgs e)

@@ -18,6 +18,7 @@ namespace CoolapkLite.Models.Feeds
 
         public FeedModel(JObject token, FeedDisplayMode mode = FeedDisplayMode.normal) : base(token)
         {
+            ShowLikes = !(EntityType == "forwardFeed");
             IsStickTop = token.TryGetValue("isStickTop", out JToken j) && int.Parse(j.ToString()) == 1;
         }
     }

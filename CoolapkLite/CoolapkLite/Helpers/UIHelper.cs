@@ -106,11 +106,6 @@ namespace CoolapkLite.Helpers
                 serialize: (pic) => pic.Uri,
                 deserialize: (bson) => new ImageModel(bson.ToString(), ImageType.OriginImage)
                 );
-            BsonMapper.Global.RegisterType
-                (
-                serialize: (pic) => pic.Uri,
-                deserialize: (bson) => new ImageModelWithColor(bson.ToString(), ImageType.OriginImage)
-                );
         }
 
         public static bool IsDarkTheme(ElementTheme theme)

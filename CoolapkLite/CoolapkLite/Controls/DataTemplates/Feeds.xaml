@@ -20,7 +20,7 @@
         <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
 
-    <DataTemplate x:Key="Feed">
+    <DataTemplate x:Key="FeedDefaultTemplate">
         <ListViewItem
             x:Name="Root"
             Style="{StaticResource FixedListViewItemStyle}"
@@ -61,10 +61,10 @@
                             Padding="0"
                             Background="Transparent"
                             Click="Button_Click"
-                            Tag="{Binding Uurl}">
+                            Tag="{Binding UserInfo.Url}">
                             <Ellipse Width="36" Height="36">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                    <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Button>
@@ -73,7 +73,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding UserName}" />
+                                Text="{Binding UserInfo.UserName}" />
                             <StackPanel Margin="-1,0" Orientation="Horizontal">
                                 <TextBlock
                                     x:Name="DateLineTxb"
@@ -199,7 +199,7 @@
                         Margin="4,8,4,4"
                         Padding="0"
                         HorizontalContentAlignment="Left"
-                        ItemTemplate="{StaticResource Pic}"
+                        ItemTemplate="{StaticResource PicDefaultTemplate}"
                         ItemsSource="{Binding PicArr}"
                         ScrollViewer.VerticalScrollMode="Disabled"
                         SelectionChanged="GridView_SelectionChanged"
@@ -215,7 +215,7 @@
         </ListViewItem>
     </DataTemplate>
 
-    <DataTemplate x:Key="FeedReply">
+    <DataTemplate x:Key="FeedReplyDefaultTemplate">
         <ListViewItem x:Name="Root" Style="{StaticResource FixedListViewItemStyle}">
             <UserControl>
                 <Grid Padding="8,4">
@@ -235,10 +235,10 @@
                             Padding="0"
                             Background="Transparent"
                             Click="Button_Click"
-                            Tag="{Binding Uurl}">
+                            Tag="{Binding UserInfo.Url}">
                             <Ellipse Width="36" Height="36">
                                 <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                    <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                                 </Ellipse.Fill>
                             </Ellipse>
                         </Button>
@@ -247,7 +247,7 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Top"
                                 Orientation="Horizontal">
-                                <TextBlock IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" Text="{Binding UserName}" />
+                                <TextBlock IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" Text="{Binding UserInfo.UserName}" />
                                 <Border
                                     Margin="6,0"
                                     VerticalAlignment="Center"
@@ -297,7 +297,7 @@
                         Padding="0"
                         HorizontalContentAlignment="Left"
                         Content="{Binding Pic}"
-                        ContentTemplate="{StaticResource Pic}"
+                        ContentTemplate="{StaticResource PicDefaultTemplate}"
                         Visibility="{Binding PicUri, Converter={StaticResource StringVisibilityConverter}}" />
                 </Grid>
             </UserControl>

@@ -19,7 +19,7 @@
             <DataTemplate x:Key="Null" />
             <local:CardTemplateSelector
                 x:Key="CardTemplateSelector"
-                Feed="{StaticResource Feed}"
+                Feed="{StaticResource FeedDefaultTemplate}"
                 Others="{StaticResource Null}"
                 UserDetail="{StaticResource Null}" />
         </ResourceDictionary>

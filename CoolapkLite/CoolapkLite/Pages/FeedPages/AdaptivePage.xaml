@@ -19,9 +19,9 @@
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
-                Feed="{StaticResource Feed}"
-                FeedReply="{StaticResource FeedReply}"
-                Images="{StaticResource ImageCard}"
+                Feed="{StaticResource FeedDefaultTemplate}"
+                FeedReply="{StaticResource FeedReplyDefaultTemplate}"
+                Images="{StaticResource ImageCardDefaultTemplate}"
                 Others="{StaticResource Null}" />
         </ResourceDictionary>
     </Page.Resources>

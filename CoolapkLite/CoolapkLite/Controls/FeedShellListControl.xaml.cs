@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using CoolapkLite.ViewModels;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -71,6 +74,40 @@ namespace CoolapkLite.Controls
         public FeedShellListControl()
         {
             InitializeComponent();
+        }
+
+        private void ShyHeaderListView_ShyHeaderSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ShyHeaderListView.ItemsSource is ICanToggleChangeSelectedIndex ToggleItemsSource)
+            {
+                ToggleSwitch.Visibility = Visibility.Visible;
+                ToggleSwitch.SetBinding(ToggleSwitch.IsOnProperty, new Binding()
+                {
+                    Mode = BindingMode.TwoWay,
+                    Source = ToggleItemsSource,
+                    Path = new PropertyPath("ToggleIsOn")
+                });
+            }
+            else
+            {
+                ComboBox.Visibility = Visibility.Collapsed;
+            }
+
+            if (ShyHeaderListView.ItemsSource is ICanComboBoxChangeSelectedIndex ComboBoxItemsSource)
+            {
+                ComboBox.Visibility = Visibility.Visible;
+                ComboBox.ItemsSource = ComboBoxItemsSource.ItemSource;
+                ComboBox.SetBinding(Selector.SelectedIndexProperty, new Binding()
+                {
+                    Mode = BindingMode.TwoWay,
+                    Source = ComboBoxItemsSource,
+                    Path = new PropertyPath("ComboBoxSelectedIndex")
+                });
+            }
+            else
+            {
+                ComboBox.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }
