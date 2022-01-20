@@ -175,9 +175,12 @@ namespace CoolapkLite.Controls
         public ShyHeaderListView()
         {
             DefaultStyleKey = typeof(ShyHeaderListView);
-            _progressProvider = new ScrollProgressProvider();
-            ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
-            _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+            if (UIHelper.IsTypePresent("CoolapkLite", "Helpers.Providers.ScrollProgressProvider"))
+            {
+                _progressProvider = new ScrollProgressProvider();
+                ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
+                _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+            }
         }
 
         protected override void OnApplyTemplate()
@@ -209,7 +212,7 @@ namespace CoolapkLite.Controls
                     UpdateShyHeaderItem();
                 }
             }
-            if (_scrollViewer != null)
+            if (_scrollViewer != null&& _progressProvider!=null)
             {
                 _progressProvider.ScrollViewer = _scrollViewer;
             }
@@ -243,7 +246,10 @@ namespace CoolapkLite.Controls
                                           where e.RemovedItems.Contains(item.Header)
                                           select (object)item).ToList();
             ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
-            _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
+            if (_progressProvider != null)
+            {
+                _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
+            }
         }
 
         private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
@@ -267,11 +273,14 @@ namespace CoolapkLite.Controls
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
-            _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+            if (_progressProvider != null)
+            {
+                _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+            }
             _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
             _propSet.InsertScalar("height", (float)Math.Max(0, TopHeader.ActualHeight - HeaderMargin));
 
-            if (_progressProvider.Threshold == 0)
+            if (Math.Max(0, TopHeader.ActualHeight - HeaderMargin) == 0)
             {
                 VisualStateManager.GoToState(this, "OnThreshold", true);
             }

@@ -75,6 +75,12 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive()
                         {
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            {
+                                Source = FeedDetail.Pic.Uri,
+                                HintOverlay = 70
+                            },
+
                             Children =
                             {
                                 new AdaptiveText()
@@ -97,6 +103,12 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive()
                         {
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            {
+                                Source = FeedDetail.Pic.Uri,
+                                HintOverlay = 70
+                            },
+
                             Children =
                             {
                                 new AdaptiveGroup()
@@ -143,6 +155,12 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive()
                         {
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            {
+                                Source = FeedDetail.Pic.Uri,
+                                HintOverlay = 70
+                            },
+
                             Children =
                             {
                                 new AdaptiveText()

@@ -15,7 +15,6 @@
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -33,7 +32,7 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Template">
+        <!--<Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ShyHeaderListView">
                     <Border
@@ -82,10 +81,10 @@
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"
                                                     Content="{TemplateBinding LeftHeader}" />
-                                                <local:PivotHeader
+                                                --><!--<local:PivotHeader
                                                     x:Name="PivotHeader"
                                                     Grid.Column="1"
-                                                    VerticalAlignment="Center" />
+                                                    VerticalAlignment="Center" />--><!--
                                                 <ContentPresenter
                                                     Grid.Column="2"
                                                     VerticalAlignment="Center"
@@ -111,6 +110,6 @@
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>
+        </Setter>-->
     </Style>
 </ResourceDictionary>
