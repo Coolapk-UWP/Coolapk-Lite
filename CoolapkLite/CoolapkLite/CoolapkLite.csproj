@@ -225,7 +225,6 @@
     <Compile Include="Helpers\EmojiHelper.cs" />
     <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
-    <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />

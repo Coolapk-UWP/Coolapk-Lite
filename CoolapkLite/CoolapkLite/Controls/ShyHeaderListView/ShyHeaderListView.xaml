@@ -32,14 +32,13 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-        <!--<Setter Property="Template">
+        <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ShyHeaderListView">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer
                             x:Name="ScrollViewer"
                             AutomationProperties.AccessibilityView="Raw"
@@ -65,7 +64,7 @@
                                     <Grid x:Name="ListViewHeader" Background="{TemplateBinding HeaderBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
-                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
                                         <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />
@@ -81,10 +80,10 @@
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"
                                                     Content="{TemplateBinding LeftHeader}" />
-                                                --><!--<local:PivotHeader
+                                                <local:PivotHeader
                                                     x:Name="PivotHeader"
                                                     Grid.Column="1"
-                                                    VerticalAlignment="Center" />--><!--
+                                                    VerticalAlignment="Center" />
                                                 <ContentPresenter
                                                     Grid.Column="2"
                                                     VerticalAlignment="Center"
@@ -110,6 +109,6 @@
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
-        </Setter>-->
+        </Setter>
     </Style>
 </ResourceDictionary>

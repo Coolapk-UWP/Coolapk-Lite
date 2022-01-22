@@ -35,6 +35,7 @@
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
             ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
+            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"

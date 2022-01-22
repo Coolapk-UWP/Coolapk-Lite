@@ -9,90 +9,86 @@
     <DataTemplate x:Key="Null" />
 
     <DataTemplate x:Key="ListDefaultTemplate">
-        <ListViewItem Style="{StaticResource FixedListViewItemStyle}" Tag="{Binding Url}">
-            <Grid Padding="0,8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="56" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Border
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    CornerRadius="8">
-                    <Image
-                        Width="40"
-                        Height="40"
-                        Source="{Binding Pic.Pic, Mode=OneWay}" />
-                </Border>
-                <Grid
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        VerticalAlignment="Center"
-                        Text="{Binding Title}"
-                        Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
-                    <ctrl:TextBlockEx
-                        Grid.Row="1"
-                        VerticalAlignment="Center"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        MaxLines="1"
-                        Text="{Binding Description}"
-                        Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                </Grid>
+        <Grid Padding="0,8" Tag="{Binding Url}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="56" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                CornerRadius="8">
+                <Image
+                    Width="40"
+                    Height="40"
+                    Source="{Binding Pic.Pic, Mode=OneWay}" />
+            </Border>
+            <Grid
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Title}"
+                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                <ctrl:TextBlockEx
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    MaxLines="1"
+                    Text="{Binding Description}"
+                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
-        </ListViewItem>
+        </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="ListWithSubtitleDefaultTemplate">
-        <ListViewItem Style="{StaticResource FixedListViewItemStyle}" Tag="{Binding Url}">
-            <Grid Padding="0,8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="56" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Ellipse
-                    Width="40"
-                    Height="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" />
-                    </Ellipse.Fill>
-                </Ellipse>
-                <Grid
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock
-                        Grid.Row="0"
-                        VerticalAlignment="Center"
-                        Text="{Binding Title}"
-                        Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
-                    <TextBlock
-                        Grid.Row="1"
-                        VerticalAlignment="Center"
-                        Text="{Binding SubTitle}"
-                        Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                    <ctrl:TextBlockEx
-                        Grid.Row="2"
-                        VerticalAlignment="Center"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                        MaxLines="1"
-                        Text="{Binding Description}"
-                        Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                </Grid>
+        <Grid Padding="0,8" Tag="{Binding Url}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="56" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Ellipse
+                Width="40"
+                Height="40"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" />
+                </Ellipse.Fill>
+            </Ellipse>
+            <Grid
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Text="{Binding Title}"
+                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                <TextBlock
+                    Grid.Row="1"
+                    VerticalAlignment="Center"
+                    Text="{Binding SubTitle}"
+                    Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                <ctrl:TextBlockEx
+                    Grid.Row="2"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    MaxLines="1"
+                    Text="{Binding Description}"
+                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
-        </ListViewItem>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

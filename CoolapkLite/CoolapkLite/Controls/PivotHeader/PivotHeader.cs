@@ -108,7 +108,7 @@ namespace CoolapkLite.Controls
                 return;
             }
 
-            TryStartAnimationWithScale(newIndicator, oldIndicator);
+            try { TryStartAnimationWithScale(newIndicator, oldIndicator); } catch { }
         }
 
         private Rectangle GetIndicator(object item)

@@ -32,6 +32,7 @@
             Padding="{x:Bind Padding, Mode=TwoWay}"
             HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
             HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
+            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             SelectionMode="None"
             ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
@@ -44,8 +45,11 @@
             </local:ShyHeaderListView.LeftHeader>
             <local:ShyHeaderListView.RightHeader>
                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                    <ToggleSwitch x:Name="ToggleSwitch" HorizontalAlignment="Left"/>
-                    <ComboBox x:Name="ComboBox" VerticalAlignment="Center" Margin="4,0"/>
+                    <ToggleSwitch x:Name="ToggleSwitch" HorizontalAlignment="Left" />
+                    <ComboBox
+                        x:Name="ComboBox"
+                        Margin="4,0"
+                        VerticalAlignment="Center" />
                     <Button
                         x:Name="RefreshButton"
                         VerticalAlignment="Center"
