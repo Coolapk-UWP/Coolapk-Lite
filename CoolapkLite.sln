@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolapkLite", "CoolapkLite\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolapkLite.Core", "CoolapkLite\CoolapkLite.Core\CoolapkLite.Core.csproj", "{2E9152D3-E23A-4EC8-8D20-99F7FCC37BCA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{ACFA33A7-08CF-4F7A-BE6C-ADE8F18D1272}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicaForUWP", "..\Mica-For-UWP\MicaForUWP\MicaForUWP.csproj", "{3C349FC8-039C-4418-9951-5F5527047F98}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,32 +67,9 @@ Global
 		{2E9152D3-E23A-4EC8-8D20-99F7FCC37BCA}.Release|x64.Build.0 = Release|x64
 		{2E9152D3-E23A-4EC8-8D20-99F7FCC37BCA}.Release|x86.ActiveCfg = Release|x86
 		{2E9152D3-E23A-4EC8-8D20-99F7FCC37BCA}.Release|x86.Build.0 = Release|x86
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|ARM.ActiveCfg = Debug|ARM
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|ARM.Build.0 = Debug|ARM
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|ARM64.ActiveCfg = Debug|ARM64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|ARM64.Build.0 = Debug|ARM64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|x64.ActiveCfg = Debug|x64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|x64.Build.0 = Debug|x64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|x86.ActiveCfg = Debug|x86
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Debug|x86.Build.0 = Debug|x86
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|ARM.ActiveCfg = Release|ARM
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|ARM.Build.0 = Release|ARM
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|ARM64.ActiveCfg = Release|ARM64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|ARM64.Build.0 = Release|ARM64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|x64.ActiveCfg = Release|x64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|x64.Build.0 = Release|x64
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|x86.ActiveCfg = Release|x86
-		{3C349FC8-039C-4418-9951-5F5527047F98}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{3C349FC8-039C-4418-9951-5F5527047F98} = {ACFA33A7-08CF-4F7A-BE6C-ADE8F18D1272}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C1C97E-ABB1-4869-9EDC-DCD85B98AEBB}

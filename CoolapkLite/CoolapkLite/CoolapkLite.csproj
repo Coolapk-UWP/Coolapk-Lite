@@ -1083,10 +1083,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Mica-For-UWP\MicaForUWP\MicaForUWP.csproj">
-      <Project>{3c349fc8-039c-4418-9951-5f5527047f98}</Project>
-      <Name>MicaForUWP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\CoolapkLite.Core\CoolapkLite.Core.csproj">
       <Project>{2e9152d3-e23a-4ec8-8d20-99f7fcc37bca}</Project>
       <Name>CoolapkLite.Core</Name>
