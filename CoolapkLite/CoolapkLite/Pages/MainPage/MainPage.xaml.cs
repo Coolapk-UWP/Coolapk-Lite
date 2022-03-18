@@ -50,6 +50,8 @@ namespace CoolapkLite
             UpdateTitleBarLayout(TitleBar);
             LiveTileTask.UpdateTile();
             UIHelper.ChangeTheme();
+            Windows.UI.Composition.Compositor m_compositor = Window.Current.Compositor;
+            Windows.UI.Composition.CompositionBackdropBrush bursh = m_compositor.TryCreateBlurredWallpaperBackdropBrush();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -5,7 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:media="using:CoolapkLite.Media"
+    xmlns:media="using:MicaForUWP.Media"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
