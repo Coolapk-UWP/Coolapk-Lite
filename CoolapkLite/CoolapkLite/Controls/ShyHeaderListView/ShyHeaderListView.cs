@@ -234,8 +234,20 @@ namespace CoolapkLite.Controls
             {
                 _listViewHeader.Loaded += ListViewHeader_Loaded;
             }
-
             base.OnApplyTemplate();
+        }
+
+        protected override void OnItemsChanged(object e)
+        {
+            if (_progressProvider != null)
+            {
+                _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
+            }
+            else
+            {
+                _scrollViewer.ChangeView(null, Math.Min(_offset, _topheight), null, true);
+            }
+            base.OnItemsChanged(e);
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -275,14 +287,6 @@ namespace CoolapkLite.Controls
                                           where e.RemovedItems.Contains(item.Header)
                                           select (object)item).ToList();
             ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
-            if (_progressProvider != null)
-            {
-                _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
-            }
-            else
-            {
-                _scrollViewer.ChangeView(null, Math.Min(_offset, _topheight), null, true);
-            }
         }
 
         private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
@@ -310,20 +314,17 @@ namespace CoolapkLite.Controls
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
+            _topheight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
             if (_progressProvider != null)
             {
-                _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+                _progressProvider.Threshold = _topheight;
             }
             if (HasGetElementVisual)
             {
                 _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
-                _propSet.InsertScalar("height", (float)Math.Max(0, TopHeader.ActualHeight - HeaderMargin));
+                _propSet.InsertScalar("height", (float)_topheight);
             }
-            else
-            {
-                _topheight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            }
-            if (Math.Max(0, TopHeader.ActualHeight - HeaderMargin) == 0)
+            if (_scrollViewer.VerticalOffset >= _topheight || _topheight == 0)
             {
                 VisualStateManager.GoToState(this, "OnThreshold", true);
             }
