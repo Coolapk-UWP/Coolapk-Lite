@@ -59,7 +59,7 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -120,7 +120,10 @@
   <data name="dateline_desc" xml:space="preserve">
     <value>按时间排序</value>
   </data>
-  <data name="isFromAuthor" xml:space="preserve">
+  <data name="IsFromAuthorBox.Content" xml:space="preserve">
+    <value>只看楼主</value>
+  </data>
+  <data name="IsFromAuthorToggle.Header" xml:space="preserve">
     <value>只看楼主</value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
