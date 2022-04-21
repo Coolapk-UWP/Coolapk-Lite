@@ -124,7 +124,7 @@
     <value>只看楼主</value>
   </data>
   <data name="IsFromAuthorToggle.Header" xml:space="preserve">
-    <value>只看楼主</value>
+    <value>只看楼主：</value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
     <value>最近回复</value>
