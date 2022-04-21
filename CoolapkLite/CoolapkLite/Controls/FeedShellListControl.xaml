@@ -32,10 +32,12 @@
             Padding="{x:Bind Padding, Mode=TwoWay}"
             HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
             HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
+            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             SelectionMode="None"
             ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
-            ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged">
+            ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged"
+            SizeChanged="ShyHeaderListView_SizeChanged">
             <local:ShyHeaderListView.TopHeader>
                 <ContentPresenter Content="{x:Bind Header, Mode=TwoWay}" />
             </local:ShyHeaderListView.TopHeader>
@@ -44,8 +46,36 @@
             </local:ShyHeaderListView.LeftHeader>
             <local:ShyHeaderListView.RightHeader>
                 <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
-                    <ToggleSwitch x:Name="ToggleSwitch" HorizontalAlignment="Left"/>
-                    <ComboBox x:Name="ComboBox" VerticalAlignment="Center" Margin="4,0"/>
+                    <Border
+                        x:Name="ToggleSwitchBorder"
+                        Margin="4,0"
+                        HorizontalAlignment="Right"
+                        Visibility="Collapsed">
+                        <ToggleSwitch
+                            x:Name="ToggleSwitch"
+                            x:Uid="/FeedShellPage/IsFromAuthorToggle"
+                            Margin="4,0"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource ToggleSwitchSettingStyle}"
+                            Visibility="Collapsed" />
+                    </Border>
+                    <Border
+                        x:Name="CheckBoxBorder"
+                        Margin="4,0"
+                        HorizontalAlignment="Right"
+                        Visibility="Collapsed">
+                        <CheckBox
+                            x:Name="CheckBox"
+                            x:Uid="/FeedShellPage/IsFromAuthorBox"
+                            MinWidth="0"
+                            HorizontalAlignment="Right"
+                            Visibility="Collapsed" />
+                    </Border>
+                    <ComboBox
+                        x:Name="ComboBox"
+                        Margin="4,0"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed" />
                     <Button
                         x:Name="RefreshButton"
                         VerticalAlignment="Center"

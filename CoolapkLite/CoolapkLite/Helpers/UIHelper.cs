@@ -1,10 +1,10 @@
 ﻿using CoolapkLite.Core.Helpers;
-using CoolapkLite.Media;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using LiteDB;
+using MicaForUWP.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Immutable;
@@ -30,7 +30,13 @@ namespace CoolapkLite.Helpers
 
         public static Brush ApplicationPageBackgroundThemeWindowBrush()
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+            if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+            {
+                ResourceDictionary BlurBrushs = new ResourceDictionary();
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
+                return (BackdropMicaBrush)BlurBrushs["ApplicationPageBackgroundThemeMicaWallpaperBrush"];
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
                 ResourceDictionary AcrylicBrushs = new ResourceDictionary();
                 AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
@@ -50,7 +56,13 @@ namespace CoolapkLite.Helpers
 
         public static Brush ApplicationPageBackgroundThemeElementBrush()
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+            if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+            {
+                ResourceDictionary BlurBrushs = new ResourceDictionary();
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
+                return (BackdropMicaBrush)BlurBrushs["ApplicationPageBackgroundThemeMicaWallpaperBrush"];
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
                 ResourceDictionary AcrylicBrushs = new ResourceDictionary();
                 AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
@@ -108,10 +120,9 @@ namespace CoolapkLite.Helpers
                 );
         }
 
-        public static bool IsDarkTheme(ElementTheme theme)
-        {
-            return theme == ElementTheme.Default ? Application.Current.RequestedTheme == ApplicationTheme.Dark : theme == ElementTheme.Dark;
-        }
+        public static bool IsDarkTheme() => IsDarkTheme(SettingsHelper.Theme);
+
+        public static bool IsDarkTheme(ElementTheme theme) => theme == ElementTheme.Default ? Application.Current.RequestedTheme == ApplicationTheme.Dark : theme == ElementTheme.Dark;
 
         public static async void ChangeTheme()
         {

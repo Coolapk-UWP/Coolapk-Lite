@@ -14,7 +14,11 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <ScrollViewer Margin="12,80,12,0">
-            <StackPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="2*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <Grid>
                     <Grid.Resources>
                         <DataTemplate x:Key="IntersectionPointTemplate">
@@ -80,7 +84,7 @@
                         </telerikChart:RadCartesianChart.Behaviors>
                     </telerikChart:RadCartesianChart>
                 </Grid>
-                <Grid>
+                <Grid Grid.Row="1">
                     <telerikChart:RadPieChart PaletteName="DefaultLight">
                         <telerikChart:PieSeries ItemsSource="{Binding FanSortListByLevel}" RadiusFactor="0.5">
                             <telerikChart:PieSeries.ValueBinding>
@@ -92,7 +96,7 @@
                         </telerikChart:PieSeries>
                     </telerikChart:RadPieChart>
                 </Grid>
-            </StackPanel>
+            </Grid>
         </ScrollViewer>
         <control:TitleBar
             x:Name="TitleBar"

@@ -1,10 +1,11 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Providers;
+﻿using CoolapkLite.Core.Helpers.Providers;
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.Foundation.Metadata;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,8 +27,11 @@ namespace CoolapkLite.Controls
         private PivotHeader _pivotHeader;
         private ScrollViewer _scrollViewer;
 
+        private double _offset;
+        private double _topheight;
         private CompositionPropertySet _propSet;
         private readonly ScrollProgressProvider _progressProvider;
+        private bool HasGetElementVisual => ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         public static readonly DependencyProperty TopHeaderProperty = DependencyProperty.Register(
            nameof(TopHeader),
@@ -63,7 +67,7 @@ namespace CoolapkLite.Controls
            nameof(HeaderBackground),
            typeof(Brush),
            typeof(ShyHeaderListView),
-           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush(), null));
+           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush()));
 
         public static readonly DependencyProperty TopHeaderBackgroundProperty = DependencyProperty.Register(
            nameof(TopHeaderBackground),
@@ -90,11 +94,6 @@ namespace CoolapkLite.Controls
            null);
 
         public event SelectionChangedEventHandler ShyHeaderSelectionChanged;
-
-        public new object Header
-        {
-            get => _listViewHeader;
-        }
 
         public object TopHeader
         {
@@ -175,9 +174,12 @@ namespace CoolapkLite.Controls
         public ShyHeaderListView()
         {
             DefaultStyleKey = typeof(ShyHeaderListView);
-            _progressProvider = new ScrollProgressProvider();
-            ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
-            _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+            if (HasGetElementVisual)
+            {
+                _progressProvider = new ScrollProgressProvider();
+                ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
+                _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+            }
         }
 
         protected override void OnApplyTemplate()
@@ -185,6 +187,14 @@ namespace CoolapkLite.Controls
             if (_topHeader != null)
             {
                 _topHeader.SizeChanged -= TopHeader_SizeChanged;
+            }
+            if (_pivotHeader != null)
+            {
+                _pivotHeader.SelectionChanged -= PivotHeader_SelectionChanged;
+            }
+            if (_scrollViewer != null)
+            {
+                _scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
             }
             if (_listViewHeader != null)
             {
@@ -202,7 +212,7 @@ namespace CoolapkLite.Controls
             }
             if (_pivotHeader != null)
             {
-                _pivotHeader.SelectedIndex = 0;
+                try { _pivotHeader.SelectedIndex = 0; } catch { }
                 _pivotHeader.SelectionChanged += PivotHeader_SelectionChanged;
                 if (ShyHeaderItemSource != null)
                 {
@@ -211,14 +221,48 @@ namespace CoolapkLite.Controls
             }
             if (_scrollViewer != null)
             {
-                _progressProvider.ScrollViewer = _scrollViewer;
+                if (_progressProvider != null)
+                {
+                    _progressProvider.ScrollViewer = _scrollViewer;
+                }
+                else
+                {
+                    _scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                }
             }
             if (_listViewHeader != null)
             {
                 _listViewHeader.Loaded += ListViewHeader_Loaded;
             }
-
             base.OnApplyTemplate();
+        }
+
+        protected override void OnItemsChanged(object e)
+        {
+            if (_progressProvider != null)
+            {
+                _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
+            }
+            else
+            {
+                _scrollViewer.ChangeView(null, Math.Min(_offset, _topheight), null, true);
+            }
+            base.OnItemsChanged(e);
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            _offset = _scrollViewer.VerticalOffset;
+            double Translation = _scrollViewer.VerticalOffset < _topheight ? 0 : -_topheight + _scrollViewer.VerticalOffset;
+            _listViewHeader.RenderTransform = new TranslateTransform() { Y = Translation };
+            if (_scrollViewer.VerticalOffset >= _topheight || _topheight == 0)
+            {
+                VisualStateManager.GoToState(this, "OnThreshold", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "BeforeThreshold", true);
+            }
         }
 
         private void ProgressProvider_ProgressChanged(object sender, double args)
@@ -243,7 +287,6 @@ namespace CoolapkLite.Controls
                                           where e.RemovedItems.Contains(item.Header)
                                           select (object)item).ToList();
             ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
-            _scrollViewer.ChangeView(null, _progressProvider.Progress * _progressProvider.Threshold, null, true);
         }
 
         private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
@@ -253,6 +296,10 @@ namespace CoolapkLite.Controls
             {
                 _pivotHeader.ItemsSource = (from item in items
                                             select item?.Header ?? string.Empty).ToArray();
+            }
+            if (_pivotHeader.SelectedIndex == -1)
+            {
+                try { _pivotHeader.SelectedIndex = 0; } catch { }
             }
         }
 
@@ -267,11 +314,17 @@ namespace CoolapkLite.Controls
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
-            _progressProvider.Threshold = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
-            _propSet.InsertScalar("height", (float)Math.Max(0, TopHeader.ActualHeight - HeaderMargin));
-
-            if (_progressProvider.Threshold == 0)
+            _topheight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+            if (_progressProvider != null)
+            {
+                _progressProvider.Threshold = _topheight;
+            }
+            if (HasGetElementVisual)
+            {
+                _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
+                _propSet.InsertScalar("height", (float)_topheight);
+            }
+            if (_scrollViewer.VerticalOffset >= _topheight || _topheight == 0)
             {
                 VisualStateManager.GoToState(this, "OnThreshold", true);
             }
@@ -286,19 +339,26 @@ namespace CoolapkLite.Controls
             Grid ListViewHeader = sender as Grid;
             Canvas.SetZIndex(ItemsPanelRoot, -1);
 
-            Visual _headerVisual = ElementCompositionPreview.GetElementVisual(ListViewHeader);
-            CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
+            if (HasGetElementVisual)
+            {
+                Visual _headerVisual = ElementCompositionPreview.GetElementVisual(ListViewHeader);
+                CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
 
-            _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
-            _propSet.InsertScalar("height", (float)Math.Max(0, _topHeader.ActualHeight - HeaderMargin));
+                _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
+                _propSet.InsertScalar("height", (float)Math.Max(0, _topHeader.ActualHeight - HeaderMargin));
 
-            Compositor _compositor = Window.Current.Compositor;
-            ExpressionAnimation _headerAnimation = _compositor.CreateExpressionAnimation("_manipulationPropertySet.Translation.Y > -_propSet.height ? 0: -_propSet.height -_manipulationPropertySet.Translation.Y");
+                Compositor _compositor = Window.Current.Compositor;
+                ExpressionAnimation _headerAnimation = _compositor.CreateExpressionAnimation("_manipulationPropertySet.Translation.Y > -_propSet.height ? 0: -_propSet.height -_manipulationPropertySet.Translation.Y");
 
-            _headerAnimation.SetReferenceParameter("_propSet", _propSet);
-            _headerAnimation.SetReferenceParameter("_manipulationPropertySet", _manipulationPropertySet);
+                _headerAnimation.SetReferenceParameter("_propSet", _propSet);
+                _headerAnimation.SetReferenceParameter("_manipulationPropertySet", _manipulationPropertySet);
 
-            _headerVisual.StartAnimation("Offset.Y", _headerAnimation);
+                _headerVisual.StartAnimation("Offset.Y", _headerAnimation);
+            }
+            else
+            {
+                _topheight = Math.Max(0, _topHeader.ActualHeight - HeaderMargin);
+            }
         }
     }
 

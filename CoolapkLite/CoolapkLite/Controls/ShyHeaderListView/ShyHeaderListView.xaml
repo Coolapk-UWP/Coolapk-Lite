@@ -15,7 +15,6 @@
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-        <Setter Property="UseSystemFocusVisuals" Value="{StaticResource UseSystemFocusVisuals}" />
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -39,8 +38,7 @@
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}">
+                        BorderThickness="{TemplateBinding BorderThickness}">
                         <ScrollViewer
                             x:Name="ScrollViewer"
                             AutomationProperties.AccessibilityView="Raw"
@@ -66,7 +64,7 @@
                                     <Grid x:Name="ListViewHeader" Background="{TemplateBinding HeaderBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
-                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
                                         <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />

@@ -1,5 +1,5 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Providers;
+﻿using CoolapkLite.Core.Helpers.Providers;
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Generic;

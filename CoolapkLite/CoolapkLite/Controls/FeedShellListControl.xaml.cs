@@ -80,6 +80,13 @@ namespace CoolapkLite.Controls
         {
             if (ShyHeaderListView.ItemsSource is ICanToggleChangeSelectedIndex ToggleItemsSource)
             {
+                CheckBox.Visibility = Visibility.Visible;
+                CheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding()
+                {
+                    Mode = BindingMode.TwoWay,
+                    Source = ToggleItemsSource,
+                    Path = new PropertyPath("ToggleIsOn")
+                });
                 ToggleSwitch.Visibility = Visibility.Visible;
                 ToggleSwitch.SetBinding(ToggleSwitch.IsOnProperty, new Binding()
                 {
@@ -90,7 +97,7 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                ComboBox.Visibility = Visibility.Collapsed;
+                ToggleSwitch.Visibility = CheckBox.Visibility = Visibility.Collapsed;
             }
 
             if (ShyHeaderListView.ItemsSource is ICanComboBoxChangeSelectedIndex ComboBoxItemsSource)
@@ -107,6 +114,20 @@ namespace CoolapkLite.Controls
             else
             {
                 ComboBox.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ShyHeaderListView_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if ((sender as ShyHeaderListView).ActualWidth < 424 + RefreshButton.ActualWidth)
+            {
+                ToggleSwitchBorder.Visibility = Visibility.Collapsed;
+                CheckBoxBorder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ToggleSwitchBorder.Visibility = Visibility.Visible;
+                CheckBoxBorder.Visibility = Visibility.Collapsed;
             }
         }
     }

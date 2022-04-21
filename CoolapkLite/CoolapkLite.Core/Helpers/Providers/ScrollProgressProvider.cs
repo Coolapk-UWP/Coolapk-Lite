@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
-namespace CoolapkLite.Helpers.Providers
+namespace CoolapkLite.Core.Helpers.Providers
 {
     public class ScrollProgressProvider : DependencyObject
     {

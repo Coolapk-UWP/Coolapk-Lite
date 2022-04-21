@@ -7,6 +7,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
+                <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <x:Double x:Key="PageTitleHeight">80</x:Double>
             <Thickness x:Key="StackPanelMargin">0,80,0,0</Thickness>

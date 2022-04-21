@@ -11,7 +11,7 @@
     <AssemblyName>CoolapkLite</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.19041.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22000.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -30,6 +30,7 @@
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <Win32Resource>Assets\MiddleClickScrolling-CursorType.res</Win32Resource>
+    <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -225,7 +226,6 @@
     <Compile Include="Helpers\EmojiHelper.cs" />
     <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
-    <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\TipsRectangleHelper.cs" />
@@ -233,7 +233,6 @@
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
-    <Compile Include="Media\BackdropBlurBrush.cs" />
     <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
@@ -1035,6 +1034,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\MicaBrushs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ToggleSwitch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Color.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1053,6 +1060,9 @@
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="MicaForUWP">
+      <Version>0.0.3</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>
@@ -1073,7 +1083,7 @@
       <Version>1.4.3</Version>
     </PackageReference>
     <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.2.7</Version>
+      <Version>1.0.2.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -1081,11 +1091,6 @@
       <Project>{2e9152d3-e23a-4ec8-8d20-99f7fcc37bca}</Project>
       <Name>CoolapkLite.Core</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="WindowsMobile, Version=10.0.19041.0">
-      <Name>Windows Mobile Extensions for the UWP</Name>
-    </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
@@ -1108,7 +1113,11 @@
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Feed.resw" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="WindowsMobile, Version=10.0.22000.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
