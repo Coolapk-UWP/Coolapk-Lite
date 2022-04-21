@@ -120,8 +120,11 @@
   <data name="dateline_desc" xml:space="preserve">
     <value>按时间排序</value>
   </data>
-  <data name="isFromAuthor" xml:space="preserve">
+  <data name="IsFromAuthorBox.Content" xml:space="preserve">
     <value>只看楼主</value>
+  </data>
+  <data name="IsFromAuthorToggle.Header" xml:space="preserve">
+    <value>只看楼主：</value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
     <value>最近回复</value>
