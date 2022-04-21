@@ -119,7 +119,7 @@ namespace CoolapkLite.Controls
 
         private void ShyHeaderListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if ((sender as ShyHeaderListView).ActualWidth < 402)
+            if ((sender as ShyHeaderListView).ActualWidth < 424 + RefreshButton.ActualWidth)
             {
                 ToggleSwitchBorder.Visibility = Visibility.Collapsed;
                 CheckBoxBorder.Visibility = Visibility.Visible;

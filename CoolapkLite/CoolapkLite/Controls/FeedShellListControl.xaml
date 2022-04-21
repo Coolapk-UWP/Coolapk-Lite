@@ -15,7 +15,6 @@
                 <templates:Feeds />
                 <templates:IndexCardTemplates />
                 <templates:OtherDatatemplates />
-                <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
@@ -75,7 +74,8 @@
                     <ComboBox
                         x:Name="ComboBox"
                         Margin="4,0"
-                        VerticalAlignment="Center" />
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed" />
                     <Button
                         x:Name="RefreshButton"
                         VerticalAlignment="Center"
