@@ -301,7 +301,7 @@ namespace CoolapkLite.Controls
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("widePicText")
+                                            Text = _loader.GetString("WidePic.Text")
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -319,7 +319,7 @@ namespace CoolapkLite.Controls
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("longPicText")
+                                            Text = _loader.GetString("LongPic.Text")
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -379,7 +379,7 @@ namespace CoolapkLite.Controls
                                 {
                                     Margin = new Thickness(1),
                                     FontSize = 12,
-                                    Text = _loader.GetString("feedAuthorText"),
+                                    Text = _loader.GetString("FeedAuthor.Text"),
                                 };
 
                                 border.Child = textBlock;

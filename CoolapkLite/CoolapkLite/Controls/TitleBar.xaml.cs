@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using System.ComponentModel;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -98,7 +99,15 @@ namespace CoolapkLite.Controls
         public event RoutedEventHandler RefreshEvent;
         public event RoutedEventHandler BackRequested;
 
-        public TitleBar() => InitializeComponent();
+        public TitleBar()
+        {
+            InitializeComponent();
+
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "FocusVisualMargin"))
+            {
+                RefreshButton.FocusVisualMargin = new Thickness(0);
+            }
+        }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => RefreshEvent?.Invoke(sender, e);
 

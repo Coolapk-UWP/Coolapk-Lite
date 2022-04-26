@@ -3,6 +3,7 @@ using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 
@@ -106,7 +107,6 @@ namespace CoolapkLite.Models.Feeds
             if (ShowReplyRows)
             {
                 ReplyRows = token["replyRows"].Select(item => new SourceFeedReplyModel((JObject)item)).ToList();
-                ReplyRowsMore = token.Value<int>("replyRowsMore");
             }
 
             Liked = token.TryGetValue("userAction", out JToken userAction) ? userAction.Value<int>("like") == 1 : false;

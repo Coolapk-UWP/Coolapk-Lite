@@ -281,9 +281,16 @@ namespace CoolapkLite
             }
         }
 
-        private void Page_Loading(FrameworkElement sender, object args) => CheckTheme();
+        private void FrameworkElement_Loading(FrameworkElement sender, object args)
+        {
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "FocusVisualMargin"))
+            {
+                sender.FocusVisualMargin = new Thickness(0);
+            }
+            sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
+        }
 
-        private void FrameworkElement_Loading(FrameworkElement sender, object args) => sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
+        private void Page_Loading(FrameworkElement sender, object args) => CheckTheme();
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
 

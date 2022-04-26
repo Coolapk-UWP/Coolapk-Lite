@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -120,49 +120,40 @@
   <data name="Copy.Text" xml:space="preserve">
     <value>自由复制</value>
   </data>
-  <data name="feedAuthor.Text" xml:space="preserve">
-    <value>楼主</value>
-  </data>
-  <data name="feedAuthorText" xml:space="preserve">
+  <data name="FeedAuthor.Text" xml:space="preserve">
     <value>楼主</value>
   </data>
   <data name="GIF" xml:space="preserve">
     <value>GIF</value>
   </data>
-  <data name="longPic.Text" xml:space="preserve">
-    <value>长图</value>
-  </data>
-  <data name="longPicText" xml:space="preserve">
+  <data name="LongPic.Text" xml:space="preserve">
     <value>长图</value>
   </data>
   <data name="QR.Text" xml:space="preserve">
     <value>二维码</value>
   </data>
-  <data name="readmore" xml:space="preserve">
+  <data name="Readmore" xml:space="preserve">
     <value>查看更多</value>
   </data>
-  <data name="report.Text" xml:space="preserve">
+  <data name="Report.Text" xml:space="preserve">
     <value>举报</value>
   </data>
-  <data name="seeAll.Text" xml:space="preserve">
+  <data name="SeeAll.Text" xml:space="preserve">
     <value>查看全部回复</value>
   </data>
-  <data name="seePic" xml:space="preserve">
+  <data name="SeePic" xml:space="preserve">
     <value>查看图片</value>
   </data>
   <data name="Share.Text" xml:space="preserve">
     <value>分享</value>
   </data>
-  <data name="sourceFeedNotFount.Text" xml:space="preserve">
+  <data name="SourceFeedNotFount.Text" xml:space="preserve">
     <value>抱歉，该转发已被删除。</value>
   </data>
-  <data name="stickUp.Text" xml:space="preserve">
+  <data name="StickUp.Text" xml:space="preserve">
     <value>置顶</value>
   </data>
-  <data name="widePic.Text" xml:space="preserve">
-    <value>宽图</value>
-  </data>
-  <data name="widePicText" xml:space="preserve">
+  <data name="WidePic.Text" xml:space="preserve">
     <value>宽图</value>
   </data>
 </root>

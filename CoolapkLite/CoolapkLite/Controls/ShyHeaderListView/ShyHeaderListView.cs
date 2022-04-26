@@ -297,7 +297,7 @@ namespace CoolapkLite.Controls
                 _pivotHeader.ItemsSource = (from item in items
                                             select item?.Header ?? string.Empty).ToArray();
             }
-            if (_pivotHeader.SelectedIndex == -1)
+            if (_pivotHeader?.SelectedIndex == -1)
             {
                 try { _pivotHeader.SelectedIndex = 0; } catch { }
             }

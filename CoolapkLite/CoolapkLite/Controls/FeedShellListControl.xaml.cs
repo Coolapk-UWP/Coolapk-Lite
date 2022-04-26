@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.ViewModels;
 using System.Collections.Generic;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -74,6 +75,11 @@ namespace CoolapkLite.Controls
         public FeedShellListControl()
         {
             InitializeComponent();
+
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "FocusVisualMargin"))
+            {
+                RefreshButton.FocusVisualMargin = new Thickness(0);
+            }
         }
 
         private void ShyHeaderListView_ShyHeaderSelectionChanged(object sender, SelectionChangedEventArgs e)

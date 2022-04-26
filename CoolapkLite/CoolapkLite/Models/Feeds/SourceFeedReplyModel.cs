@@ -1,7 +1,11 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Core.Models;
+using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -15,6 +19,7 @@ namespace CoolapkLite.Models.Feeds
         public string Rusername { get; private set; }
         public bool IsFeedAuthor { get; private set; }
         public UserModel UserInfo { get; private set; }
+        public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
         public SourceFeedReplyModel(JObject token) : base(token)
         {
@@ -57,7 +62,17 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
                 PicUri = pic.ToString();
-                Message += $" <a href=\"{PicUri}\">{loader.GetString("seePic")}</a>";
+                Message += $" <a href=\"{PicUri}\">{loader.GetString("SeePic")}</a>";
+            }
+
+            if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0 && !string.IsNullOrEmpty((picArr as JArray)[0].ToString()))
+            {
+                PicArr = (from item in picArr select new ImageModel(item.ToString(), ImageType.SmallImage)).ToImmutableArray();
+
+                foreach (ImageModel item in PicArr)
+                {
+                    item.ContextArray = PicArr;
+                }
             }
 
             if (token.TryGetValue("block_status", out JToken block_status))
