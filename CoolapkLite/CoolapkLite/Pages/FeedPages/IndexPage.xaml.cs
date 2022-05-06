@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
@@ -51,7 +52,7 @@ namespace CoolapkLite.Pages.FeedPages
             await Provider.Refresh(p);
         }
 
-        private void TitleBar_RefreshEvent(object sender, RoutedEventArgs e) => _ = Refresh(-2);
+        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(-2);
 
         private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(-2);
 

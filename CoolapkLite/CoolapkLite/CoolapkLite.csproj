@@ -145,6 +145,10 @@
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TitleBar\TitleBar.cs" />
+    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
+    <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
@@ -209,9 +213,6 @@
     </Compile>
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\TitleBar.xaml.cs">
-      <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\TwoPaneView\TwoPaneView.cs">
       <DependentUpon>TwoPaneView.xaml</DependentUpon>
@@ -877,6 +878,7 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
     <PRIResource Include="Strings\zh-CN\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
@@ -889,6 +891,14 @@
     <Page Include="Controls\ShyHeaderListView\ShyHeaderListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TitleBar\TitleBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TitleBar\TitleBar_themeresources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\SettingsPages\BlankPage.xaml">
       <SubType>Designer</SubType>
@@ -957,10 +967,6 @@
     <Page Include="Controls\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\TitleBar.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TwoPaneView\TwoPaneView.xaml">
       <SubType>Designer</SubType>
@@ -1035,6 +1041,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\MicaBrushs.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\SolidBrushs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

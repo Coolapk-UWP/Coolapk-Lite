@@ -1,0 +1,13 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <SolidColorBrush
+        x:Key="SolidBackgroundFillColorBaseWindowBrush"
+        Opacity="1"
+        Color="{ThemeResource SolidBackgroundFillColorBase}" />
+    <SolidColorBrush
+        x:Key="SolidBackgroundFillColorBaseElementBrush"
+        Opacity="0.9"
+        Color="{ThemeResource SolidBackgroundFillColorBase}" />
+</ResourceDictionary>

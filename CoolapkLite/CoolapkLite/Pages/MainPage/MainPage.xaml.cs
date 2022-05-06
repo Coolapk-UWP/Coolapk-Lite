@@ -246,8 +246,6 @@ namespace CoolapkLite
 
         private void CheckTheme()
         {
-            Background = UIHelper.ApplicationPageBackgroundThemeWindowBrush();
-            HamburgerMenu.PaneBackground = UIHelper.ApplicationPageBackgroundThemeElementBrush();
         }
 
         private AppViewBackButtonVisibility TryGoBack()

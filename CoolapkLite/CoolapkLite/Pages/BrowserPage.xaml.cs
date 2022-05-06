@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Core.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using System;
 using Windows.ApplicationModel.Resources;
@@ -127,7 +128,7 @@ namespace CoolapkLite.Pages
             _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(uri));
         }
 
-        private void RefreshPage() => WebView.Refresh();
+        private void TitleBar_RefreshEvent(TitleBar sender, object e) => WebView.Refresh();
 
         private void TryLoginButton_Click(object sender, RoutedEventArgs e)
         {

@@ -16,11 +16,6 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <ScrollViewer Margin="{x:Bind ScrollViewerMargin}" Padding="{x:Bind ScrollViewerPadding}">
             <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="12,0">
                 <StackPanel.ChildrenTransitions>
@@ -188,10 +183,6 @@
                 </Grid>
             </StackPanel>
         </ScrollViewer>
-        <control:TitleBar
-            x:Name="TitleBar"
-            BackButtonVisibility="Collapsed"
-            BackgroundVisibility="Visible"
-            RefreshButtonVisibility="Collapsed" />
+        <control:TitleBar x:Name="TitleBar" />
     </Grid>
 </Page>

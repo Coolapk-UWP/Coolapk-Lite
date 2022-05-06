@@ -15,30 +15,28 @@
             NavigationStarting="WebView_NavigationStarting" />
         <control:TitleBar
             x:Name="TitleBar"
-            BackButtonVisibility="Collapsed"
-            BackgroundVisibility="Visible"
-            RefreshButtonVisibility="Visible"
-            RefreshEvent="{x:Bind RefreshPage}">
-            <control:TitleBar.RightAreaContent>
-                <Grid>
-                    <Button
-                        x:Name="TryLoginButton"
-                        x:Uid="/BrowserPage/BackButton"
-                        Height="48"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="TryLoginButton_Click"
-                        Visibility="Collapsed" />
-                    <Button
-                        x:Name="OpenInSystemBrowserButton"
-                        x:Uid="/BrowserPage/OpenInBrowserButton"
-                        Height="48"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Click="GotoSystemBrowserButton_Click"
-                        Visibility="Collapsed" />
-                </Grid>
-            </control:TitleBar.RightAreaContent>
+            IsBackButtonVisible="False"
+            IsRefreshButtonVisible="True"
+            IsRefreshEnabled="True"
+            RefreshRequested="TitleBar_RefreshEvent">
+            <Grid>
+                <Button
+                    x:Name="TryLoginButton"
+                    x:Uid="/BrowserPage/BackButton"
+                    Height="48"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="TryLoginButton_Click"
+                    Visibility="Collapsed" />
+                <Button
+                    x:Name="OpenInSystemBrowserButton"
+                    x:Uid="/BrowserPage/OpenInBrowserButton"
+                    Height="48"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="GotoSystemBrowserButton_Click"
+                    Visibility="Collapsed" />
+            </Grid>
         </control:TitleBar>
     </Grid>
 </Page>

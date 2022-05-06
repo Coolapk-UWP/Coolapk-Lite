@@ -9,6 +9,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -40,6 +41,7 @@ namespace CoolapkLite
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            AddBrushResource();
             RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
             ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
@@ -101,6 +103,34 @@ namespace CoolapkLite
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        private void AddBrushResource()
+        {
+            if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+            {
+                ResourceDictionary MicaBrushs = new ResourceDictionary();
+                MicaBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
+                Resources.MergedDictionaries.Add(MicaBrushs);
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+            {
+                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
+                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
+                Resources.MergedDictionaries.Add(AcrylicBrushs);
+            }
+            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
+            {
+                ResourceDictionary BlurBrushs = new ResourceDictionary();
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
+                Resources.MergedDictionaries.Add(BlurBrushs);
+            }
+            else
+            {
+                ResourceDictionary SolidBrushs = new ResourceDictionary();
+                SolidBrushs.Source = new Uri("ms-appx:///Styles/SolidBrushs.xaml");
+                Resources.MergedDictionaries.Add(SolidBrushs);
+            }
         }
 
         private void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)

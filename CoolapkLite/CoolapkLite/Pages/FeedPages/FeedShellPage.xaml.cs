@@ -20,7 +20,6 @@ namespace CoolapkLite.Pages.FeedPages
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
         private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
-        private readonly Brush ApplicationPageBackgroundThemeElementBrush = UIHelper.ApplicationPageBackgroundThemeElementBrush();
 
         public FeedShellPage() => InitializeComponent();
 
@@ -63,7 +62,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 ListControl.HeaderHeight = double.NaN;
                 ListControl.HeaderMargin = UIHelper.PageTitleHeight;
-                TitleBar.RefreshButtonVisibility = Visibility.Visible;
+                TitleBar.IsRefreshButtonVisible = true;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
                 RightGrid.Children.Add(TitleBar);
@@ -75,7 +74,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 ListControl.HeaderMargin = 0d;
                 ListControl.HeaderHeight = UIHelper.PageTitleHeight;
-                TitleBar.RefreshButtonVisibility = Visibility.Collapsed;
+                TitleBar.IsRefreshButtonVisible = false;
                 ListControl.RefreshButtonVisibility = Visibility.Visible;
                 // Put details content in Pane2.
                 LeftGrid.Children.Add(TitleBar);

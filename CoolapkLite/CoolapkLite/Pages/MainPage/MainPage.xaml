@@ -171,11 +171,6 @@
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <Grid
             x:Name="CustomTitleBar"
             HorizontalAlignment="Stretch"
