@@ -49,7 +49,6 @@
                         IsTabStop="False"
                         OpenPaneLength="{TemplateBinding OpenPaneLength}"
                         PaneBackground="{TemplateBinding PaneBackground}"
-                        PaneClosing="MainSplitView_PaneClosing"
                         PanePlacement="{TemplateBinding PanePlacement}">
                         <SplitView.Pane>
                             <Grid
@@ -91,18 +90,16 @@
                                                 VerticalAlignment="Center"
                                                 Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                                                 IsTabStop="True"
-                                                Loaded="FrameworkElement_Loaded"
                                                 QueryIcon="Find"
                                                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                                                 SuggestionChosen="AutoSuggestBox_SuggestionChosen"
                                                 TextChanged="AutoSuggestBox_TextChanged"
-                                                Visibility="Collapsed" />
+                                                Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}}" />
                                             <ListViewItem
                                                 x:Name="SearchList"
-                                                Loaded="FrameworkElement_Loaded"
                                                 Loading="HamburgerListView_Loading"
                                                 Tapped="SearchList_Tapped"
-                                                Visibility="Collapsed">
+                                                Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="48" />
@@ -156,7 +153,6 @@
                         AutomationProperties.Name="Main button"
                         Background="Transparent"
                         BorderThickness="0"
-                        Click="HamburgerButton_Click"
                         Loading="FrameworkElement_Loading"
                         TabIndex="0"
                         Visibility="{TemplateBinding HamburgerVisibility}">

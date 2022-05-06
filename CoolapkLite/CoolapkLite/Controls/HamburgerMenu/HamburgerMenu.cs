@@ -30,8 +30,6 @@ namespace CoolapkLite.Controls
         private object _navigationView;
         private object _settingsObject;
 
-        private bool UsingNavView => UseNavigationViewWhenPossible && IsNavigationViewSupported;
-
         /// <summary>
         /// Gets a value indicating whether <see cref="NavigationView"/> is supported
         /// </summary>
@@ -70,11 +68,6 @@ namespace CoolapkLite.Controls
                 _optionsListView.ItemClick -= OptionsListView_ItemClick;
             }
 
-            if (UsingNavView)
-            {
-                OnApplyTemplateNavView();
-            }
-
             _hamburgerButton = (Button)GetTemplateChild("HamburgerButton");
             _buttonsListView = (Windows.UI.Xaml.Controls.ListViewBase)GetTemplateChild("ButtonsListView");
             _optionsListView = (Windows.UI.Xaml.Controls.ListViewBase)GetTemplateChild("OptionsListView");
@@ -97,186 +90,12 @@ namespace CoolapkLite.Controls
             base.OnApplyTemplate();
         }
 
-        private void OnApplyTemplateNavView()
-        {
-            if (_navigationView is NavigationView navView)
-            {
-                navView.ItemInvoked -= NavigationViewItemInvoked;
-                navView.SelectionChanged -= NavigationViewSelectionChanged;
-                navView.Loaded -= NavigationViewLoaded;
-            }
-
-            navView = GetTemplateChild("NavView") as NavigationView;
-
-            if (navView != null)
-            {
-                navView.ItemInvoked += NavigationViewItemInvoked;
-                navView.SelectionChanged += NavigationViewSelectionChanged;
-                navView.Loaded += NavigationViewLoaded;
-                navView.MenuItemTemplateSelector = new HamburgerMenuNavViewItemTemplateSelector(this);
-                _navigationView = navView;
-
-                OnItemsSourceChanged(this, null);
-
-                if (SelectedItem != null)
-                {
-                    NavViewSetSelectedItem(SelectedItem);
-                }
-                else if (SelectedOptionsItem != null)
-                {
-                    NavViewSetSelectedItem(SelectedOptionsItem);
-                }
-            }
-        }
-
-        private void NavViewSetItemsSource()
-        {
-            if (UsingNavView && _navigationView is NavigationView navView && navView != null)
-            {
-                IEnumerable<object> items = ItemsSource as IEnumerable<object>;
-                IEnumerable<object> options = OptionsItemsSource as IEnumerable<object>;
-
-                List<object> combined = new List<object>();
-
-                if (items != null)
-                {
-                    foreach (object item in items)
-                    {
-                        combined.Add(item);
-                    }
-                }
-
-                if (options != null)
-                {
-                    if (options.Count() > 0)
-                    {
-                        combined.Add(new NavigationViewItemSeparator());
-                    }
-
-                    foreach (object option in options)
-                    {
-                        if (!UseNavigationViewSettingsWhenPossible)
-                        {
-                            combined.Add(option);
-                        }
-                        else
-                        {
-                            if (_settingsObject == null && IsSettingsItem(option))
-                            {
-                                _settingsObject = option;
-                                navView.IsSettingsVisible = true;
-                            }
-                            else
-                            {
-                                combined.Add(option);
-                            }
-                        }
-                    }
-                }
-
-                navView.MenuItemsSource = combined;
-            }
-        }
-
         private bool IsSettingsItem(object menuItem)
         {
             return menuItem.GetType()
                            .GetProperties()
                            .Any(p => p.GetValue(menuItem).ToString().IndexOf("setting", StringComparison.OrdinalIgnoreCase) >= 0
                                   || p.GetValue(menuItem).ToString() == ((char)Symbol.Setting).ToString());
-        }
-
-        private void NavViewSetSelectedItem(object item)
-        {
-            if (UsingNavView && _navigationView is NavigationView navView)
-            {
-                navView.SelectedItem = item;
-            }
-        }
-
-        private void NavigationViewLoaded(object sender, RoutedEventArgs e)
-        {
-            NavigationView navView = sender as NavigationView;
-            if (navView == null)
-            {
-                return;
-            }
-
-            navView.Loaded -= NavigationViewLoaded;
-
-            if (navView.FindDescendantByName("TogglePaneButton") is Button hamburgerButton)
-            {
-                Binding templateBinding = new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(nameof(HamburgerMenuTemplate)),
-                    Mode = BindingMode.OneWay
-                };
-
-                Binding heightBinding = new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(nameof(HamburgerHeight)),
-                    Mode = BindingMode.OneWay
-                };
-
-                Binding widthBinding = new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(nameof(HamburgerWidth)),
-                    Mode = BindingMode.OneWay
-                };
-
-                Binding marginBinding = new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(nameof(HamburgerMargin)),
-                    Mode = BindingMode.OneWay
-                };
-
-                Binding foregroundMargin = new Binding()
-                {
-                    Source = this,
-                    Path = new PropertyPath(nameof(PaneForeground)),
-                    Mode = BindingMode.OneWay
-                };
-
-                hamburgerButton.SetBinding(Button.ContentTemplateProperty, templateBinding);
-                hamburgerButton.SetBinding(Button.HeightProperty, heightBinding);
-                hamburgerButton.SetBinding(Button.WidthProperty, widthBinding);
-                hamburgerButton.SetBinding(Button.MarginProperty, marginBinding);
-                hamburgerButton.SetBinding(Button.ForegroundProperty, foregroundMargin);
-            }
-        }
-
-        private void NavigationViewSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
-        {
-            if (args.IsSettingsSelected)
-            {
-                SelectedItem = null;
-                SelectedIndex = -1;
-                SelectedOptionsItem = null;
-                SelectedOptionsIndex = -1;
-            }
-            else if (args.SelectedItem != null)
-            {
-                IEnumerable<object> items = ItemsSource as IEnumerable<object>;
-                IEnumerable<object> options = OptionsItemsSource as IEnumerable<object>;
-                if (items != null && items.Contains(args.SelectedItem))
-                {
-                    SelectedItem = args.SelectedItem;
-                    SelectedIndex = items.ToList().IndexOf(SelectedItem);
-                    SelectedOptionsItem = null;
-                    SelectedOptionsIndex = -1;
-                }
-                else if (options != null && options.Contains(args.SelectedItem))
-                {
-                    SelectedItem = null;
-                    SelectedIndex = -1;
-                    SelectedOptionsItem = args.SelectedItem;
-                    SelectedOptionsIndex = options.ToList().IndexOf(SelectedItem);
-                }
-            }
         }
     }
 }

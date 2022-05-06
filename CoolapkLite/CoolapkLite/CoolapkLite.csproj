@@ -189,8 +189,6 @@
       <DependentUpon>HamburgerMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\HamburgerMenu\HamburgerMenuItemInvokedEventArgs.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemStyleSelector.cs" />
-    <Compile Include="Controls\HamburgerMenu\HamburgerMenuNavViewItemTemplateSelector.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuGlyphItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuImageItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItem.cs" />
@@ -932,10 +930,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\HamburgerMenu\HamburgerMenuNavViewTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\HamburgerMenu\HamburgerMenuTemplate.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1072,7 +1066,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MicaForUWP">
-      <Version>0.0.3</Version>
+      <Version>0.0.4</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.13</Version>

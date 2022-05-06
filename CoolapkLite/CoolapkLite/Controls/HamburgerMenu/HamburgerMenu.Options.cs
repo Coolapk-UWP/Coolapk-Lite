@@ -16,7 +16,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Identifies the <see cref="OptionsItemsSource"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty OptionsItemsSourceProperty = DependencyProperty.Register(nameof(OptionsItemsSource), typeof(object), typeof(HamburgerMenu), new PropertyMetadata(null, OnItemsSourceChanged));
+        public static readonly DependencyProperty OptionsItemsSourceProperty = DependencyProperty.Register(nameof(OptionsItemsSource), typeof(object), typeof(HamburgerMenu), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="OptionsItemTemplate"/> dependency property.
@@ -36,12 +36,12 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Identifies the <see cref="SelectedOptionsItem"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SelectedOptionsItemProperty = DependencyProperty.Register(nameof(SelectedOptionsItem), typeof(object), typeof(HamburgerMenu), new PropertyMetadata(null, OnSelectedItemChanged));
+        public static readonly DependencyProperty SelectedOptionsItemProperty = DependencyProperty.Register(nameof(SelectedOptionsItem), typeof(object), typeof(HamburgerMenu), new PropertyMetadata(null));
 
         /// <summary>
         /// Identifies the <see cref="SelectedOptionsIndex"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty SelectedOptionsIndexProperty = DependencyProperty.Register(nameof(SelectedOptionsIndex), typeof(int), typeof(HamburgerMenu), new PropertyMetadata(-1, OnSelectedOptionsIndexChanged));
+        public static readonly DependencyProperty SelectedOptionsIndexProperty = DependencyProperty.Register(nameof(SelectedOptionsIndex), typeof(int), typeof(HamburgerMenu), new PropertyMetadata(-1));
 
         /// <summary>
         /// Gets or sets an object source used to generate the content of the options.
