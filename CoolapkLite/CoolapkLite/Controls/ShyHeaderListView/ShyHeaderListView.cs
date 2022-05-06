@@ -67,7 +67,7 @@ namespace CoolapkLite.Controls
            nameof(HeaderBackground),
            typeof(Brush),
            typeof(ShyHeaderListView),
-           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush()));
+           null);
 
         public static readonly DependencyProperty TopHeaderBackgroundProperty = DependencyProperty.Register(
            nameof(TopHeaderBackground),

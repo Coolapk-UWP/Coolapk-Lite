@@ -7,8 +7,8 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Loading="Page_Loading"
     NavigationCacheMode="Required"
+    Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -196,6 +196,7 @@
             Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
+            PaneBackground="{StaticResource SolidBackgroundFillColorBaseElementBrush}"
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
             SizeChanged="HamburgerMenu_SizeChanged"
             Template="{StaticResource HamburgerMenuTemplate}">

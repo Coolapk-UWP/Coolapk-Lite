@@ -9,7 +9,7 @@
     <Style TargetType="local:TitleBar">
         <Setter Property="VerticalAlignment" Value="Top" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
-        <Setter Property="Background" Value="{StaticResource ApplicationPageBackgroundThemeMicaWallpaperBrush}" />
+        <Setter Property="Background" Value="{StaticResource SolidBackgroundFillColorBaseElementBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:TitleBar">

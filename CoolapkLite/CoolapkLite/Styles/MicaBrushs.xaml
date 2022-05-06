@@ -3,17 +3,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:MicaForUWP.Media">
     <media:BackdropMicaBrush
-        x:Key="ApplicationPageBackgroundThemeMicaElementBrush"
-        BackgroundSource="Backdrop"
+        x:Key="SolidBackgroundFillColorBaseElementBrush"
+        BackgroundSource="MicaBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
     <media:BackdropMicaBrush
-        x:Key="ApplicationPageBackgroundThemeMicaWindowBrush"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
-    <media:BackdropMicaBrush
-        x:Key="ApplicationPageBackgroundThemeMicaWallpaperBrush"
+        x:Key="SolidBackgroundFillColorBaseWindowBrush"
         BackgroundSource="MicaBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}" />

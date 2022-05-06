@@ -6,14 +6,14 @@
         <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <media:BackdropBlurBrush
-        x:Key="ApplicationPageBackgroundThemeBlurWindowBrush"
+        x:Key="SolidBackgroundFillColorBaseWindowBrush"
         Amount="10"
         BackgroundSource="HostBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintOpacity="0.9" />
     <media:BackdropBlurBrush
-        x:Key="ApplicationPageBackgroundThemeBlurElementBrush"
+        x:Key="SolidBackgroundFillColorBaseElementBrush"
         Amount="10"
         BackgroundSource="Backdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"

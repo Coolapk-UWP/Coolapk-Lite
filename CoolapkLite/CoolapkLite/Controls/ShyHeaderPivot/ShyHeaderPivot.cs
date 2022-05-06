@@ -63,7 +63,7 @@ namespace CoolapkLite.Controls
            "HeaderBackground",
            typeof(Brush),
            typeof(ShyHeaderPivot),
-           new PropertyMetadata(UIHelper.ApplicationPageBackgroundThemeElementBrush()));
+           null);
 
         public static readonly DependencyProperty TopPanelBackgroundProperty = DependencyProperty.Register(
            "TopPanelBackground",

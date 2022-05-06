@@ -3,13 +3,13 @@
         <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
     </ResourceDictionary.MergedDictionaries>
     <AcrylicBrush
-        x:Key="ApplicationPageBackgroundThemeAcrylicWindowBrush"
+        x:Key="SolidBackgroundFillColorBaseWindowBrush"
         BackgroundSource="HostBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintOpacity="1" />
     <AcrylicBrush
-        x:Key="ApplicationPageBackgroundThemeAcrylicElementBrush"
+        x:Key="SolidBackgroundFillColorBaseElementBrush"
         BackgroundSource="Backdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}"

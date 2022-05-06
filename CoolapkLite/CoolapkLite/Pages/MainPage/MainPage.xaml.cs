@@ -36,7 +36,6 @@ namespace CoolapkLite
         {
             InitializeComponent();
             UIHelper.ShellDispatcher = Dispatcher;
-            UIHelper.AppThemeChanged += CheckTheme;
             UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
@@ -60,7 +59,6 @@ namespace CoolapkLite
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             HamburgerMenuFrame.Navigated -= On_Navigated;
-            UIHelper.AppThemeChanged -= CheckTheme;
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -242,12 +240,6 @@ namespace CoolapkLite
             }
         }
 
-        private void CheckTheme(object sender, ElementTheme e) => CheckTheme();
-
-        private void CheckTheme()
-        {
-        }
-
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!HamburgerMenuFrame.CanGoBack)
@@ -287,8 +279,6 @@ namespace CoolapkLite
             }
             sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
         }
-
-        private void Page_Loading(FrameworkElement sender, object args) => CheckTheme();
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
 

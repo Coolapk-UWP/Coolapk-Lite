@@ -30,7 +30,6 @@ namespace CoolapkLite.Pages
             InitializeComponent();
             UIHelper.AppTitle = this;
             UIHelper.ShellDispatcher = Dispatcher;
-            UIHelper.AppThemeChanged += CheckTheme;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
@@ -51,7 +50,6 @@ namespace CoolapkLite.Pages
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
-            UIHelper.AppThemeChanged -= CheckTheme;
         }
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
@@ -115,10 +113,6 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private void CheckTheme(object sender, ElementTheme e) => CheckTheme();
-
-        private void CheckTheme() => Background = UIHelper.ApplicationPageBackgroundThemeWindowBrush();
-
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!Frame.CanGoBack)
@@ -140,8 +134,6 @@ namespace CoolapkLite.Pages
                     break;
             }
         }
-
-        private void Page_Loading(FrameworkElement sender, object args) => CheckTheme();
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
 

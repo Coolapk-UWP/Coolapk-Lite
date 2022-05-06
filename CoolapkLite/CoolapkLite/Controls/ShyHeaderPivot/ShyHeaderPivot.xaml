@@ -4,6 +4,7 @@
     xmlns:local="using:CoolapkLite.Controls">
     <Style TargetType="local:ShyHeaderPivot">
         <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="HeaderBackground" Value="{StaticResource SolidBackgroundFillColorBaseElementBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ShyHeaderPivot">

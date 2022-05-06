@@ -27,58 +27,6 @@ namespace CoolapkLite.Helpers
     internal static partial class UIHelper
     {
         public static event EventHandler<ElementTheme> AppThemeChanged;
-
-        public static Brush ApplicationPageBackgroundThemeWindowBrush()
-        {
-            if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
-            {
-                ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
-                return (BackdropMicaBrush)BlurBrushs["ApplicationPageBackgroundThemeMicaWallpaperBrush"];
-            }
-            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
-            {
-                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
-                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
-                return (AcrylicBrush)AcrylicBrushs["ApplicationPageBackgroundThemeAcrylicWindowBrush"];
-            }
-            else if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "CreateHostBackdropBrush"))
-            {
-                ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
-                return (BackdropBlurBrush)BlurBrushs["ApplicationPageBackgroundThemeBlurWindowBrush"];
-            }
-            else
-            {
-                return (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
-            }
-        }
-
-        public static Brush ApplicationPageBackgroundThemeElementBrush()
-        {
-            if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
-            {
-                ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
-                return (BackdropMicaBrush)BlurBrushs["ApplicationPageBackgroundThemeMicaWallpaperBrush"];
-            }
-            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
-            {
-                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
-                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
-                return (AcrylicBrush)AcrylicBrushs["ApplicationPageBackgroundThemeAcrylicElementBrush"];
-            }
-            else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
-            {
-                ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
-                return (BackdropBlurBrush)BlurBrushs["ApplicationPageBackgroundThemeBlurElementBrush"];
-            }
-            else
-            {
-                return (SolidColorBrush)Application.Current.Resources["ApplicationPageBackgroundThemeBrush"];
-            }
-        }
     }
 
     internal static partial class UIHelper
@@ -88,7 +36,7 @@ namespace CoolapkLite.Helpers
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
 
-        public static double TitleBarHeight => 32;
+        public static double TitleBarHeight = 32;
         public static double PageTitleHeight => HasStatusBar || HasTitleBar ? 48 : 48 + TitleBarHeight;
         public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
         public static Thickness ScrollViewerMargin => new Thickness(0, PageTitleHeight, 0, 0);
