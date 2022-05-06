@@ -1,8 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CoolapkLite.Controls"
-    xmlns:statetrigger="using:CoolapkLite.Helpers.StateTrigger">
+    xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:local="using:CoolapkLite.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <local:DisplayModeToBool x:Key="DisplayModeToBool" />
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="HamburgerMenuItemStyle" TargetType="ListViewItem">
         <Setter Property="Padding" Value="0" />
@@ -111,9 +116,10 @@
         <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        <Setter Property="Foreground" Value="{ThemeResource ComboBoxItemForeground}" />
-        <Setter Property="Background" Value="{ThemeResource ComboBoxItemRevealBackground}" />
-        <Setter Property="BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource NavigationViewItemForeground}" />
+        <Setter Property="Background" Value="{ThemeResource NavigationViewItemBackground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource NavigationViewItemBorderThickness}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListViewItem">
@@ -133,7 +139,7 @@
                             Margin="4,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Fill="{ThemeResource SystemControlForegroundAccentBrush}"
+                            Fill="{ThemeResource NavigationViewSelectionIndicatorForeground}"
                             Opacity="0.0"
                             RadiusX="1"
                             RadiusY="1" />
@@ -166,43 +172,43 @@
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
                                         <Setter Target="LayoutRoot.(RevealBrush.State)" Value="PointerOver" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackgroundPointerOver}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundPointerOver}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushPointerOver}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundPointerOver}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
                                         <Setter Target="LayoutRoot.(RevealBrush.State)" Value="Pressed" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackgroundPressed}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundPressed}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushPressed}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundPressed}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushPressed}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackground}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundSelected}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushSelected}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundSelected}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundSelected}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushSelected}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PointerOverSelected">
                                     <VisualState.Setters>
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
                                         <Setter Target="LayoutRoot.(RevealBrush.State)" Value="PointerOver" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackgroundPointerOver}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundSelectedPointerOver}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushSelectedPointerOver}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundSelectedPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundSelectedPointerOver}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushSelectedPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="PressedSelected">
                                     <VisualState.Setters>
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
                                         <Setter Target="LayoutRoot.(RevealBrush.State)" Value="Pressed" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackgroundPressed}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundSelectedPressed}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushSelectedPressed}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundSelectedPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundSelectedPressed}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushSelectedPressed}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -211,9 +217,9 @@
                                 <VisualState x:Name="Disabled">
                                     <VisualState.Setters>
                                         <Setter Target="LayoutRoot.Opacity" Value="{ThemeResource ListViewItemDisabledThemeOpacity}" />
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource ComboBoxItemRevealBackgroundDisabled}" />
-                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource ComboBoxItemForegroundDisabled}" />
-                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource ComboBoxItemRevealBorderBrushDisabled}" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource NavigationViewItemBackgroundDisabled}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource NavigationViewItemForegroundDisabled}" />
+                                        <Setter Target="LayoutRoot.BorderBrush" Value="{ThemeResource NavigationViewItemBorderBrushDisabled}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
@@ -236,51 +242,87 @@
                 x:Name="MainSplitView"
                 CompactPaneLength="{TemplateBinding CompactPaneLength}"
                 DisplayMode="{TemplateBinding DisplayMode}"
-                IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                 IsTabStop="False"
                 OpenPaneLength="{TemplateBinding OpenPaneLength}"
                 PaneBackground="{TemplateBinding PaneBackground}"
                 PanePlacement="{TemplateBinding PanePlacement}">
                 <SplitView.Pane>
-                    <Grid x:Name="PaneGrid" FlowDirection="LeftToRight">
+                    <Grid
+                        x:Name="PaneGrid"
+                        Margin="0,0,0,0"
+                        FlowDirection="LeftToRight">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid
+                            x:Name="ListViewTopPadding"
                             Grid.Row="0"
-                            Height="{TemplateBinding HamburgerHeight}"
-                            Margin="0,0,0,8" />
+                            Height="{TemplateBinding HamburgerHeight}" />
                         <ListView
                             x:Name="ButtonsListView"
                             Grid.Row="1"
                             Width="{TemplateBinding OpenPaneLength}"
+                            helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                             AutomationProperties.Name="Menu items"
                             IsItemClickEnabled="True"
-                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                             ItemsSource="{TemplateBinding ItemsSource}"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                            TabIndex="1" />
+                            SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            TabIndex="1">
+                            <ListView.Header>
+                                <Grid x:Name="AutoSuggestArea">
+                                    <ContentControl
+                                        x:Name="PaneAutoSuggestBoxPresenter"
+                                        Margin="10,8"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        Content="{TemplateBinding AutoSuggestBox}"
+                                        IsTabStop="True"
+                                        Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    <ListViewItem x:Name="PaneAutoSuggestItem" Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="48" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Viewbox Width="16" Height="16">
+                                                <SymbolIcon Symbol="Find" />
+                                            </Viewbox>
+                                            <TextBlock
+                                                x:Uid="/MainPage/Search"
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                FontSize="14" />
+                                        </Grid>
+                                    </ListViewItem>
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
                         <ListView
                             x:Name="OptionsListView"
                             Grid.Row="2"
                             Width="{TemplateBinding OpenPaneLength}"
                             Margin="0,20,0,8"
                             VerticalAlignment="Bottom"
+                            helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                             AutomationProperties.Name="Option items"
                             IsItemClickEnabled="True"
-                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                             ItemTemplate="{TemplateBinding OptionsItemTemplate}"
                             ItemTemplateSelector="{TemplateBinding OptionsItemTemplateSelector}"
                             ItemsSource="{TemplateBinding OptionsItemsSource}"
                             ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                            SelectedIndex="{Binding SelectedOptionsIndex, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                            SelectedItem="{Binding SelectedOptionsItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                            SelectedIndex="{Binding SelectedOptionsIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            SelectedItem="{Binding SelectedOptionsItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
                             TabIndex="2" />
                     </Grid>
                 </SplitView.Pane>
@@ -293,13 +335,13 @@
                 x:Name="HamburgerButton"
                 Width="{TemplateBinding HamburgerWidth}"
                 Height="{TemplateBinding HamburgerHeight}"
-                Margin="0,0,0,8"
                 Padding="0"
                 VerticalAlignment="Top"
                 AutomationProperties.Name="Main button"
                 Background="Transparent"
                 BorderThickness="0"
                 TabIndex="0"
+                helpers:FocusVisualHelper.FocusVisualMargin="0"
                 Visibility="{TemplateBinding HamburgerVisibility}">
                 <ContentControl
                     Margin="{TemplateBinding HamburgerMargin}"
@@ -307,6 +349,25 @@
                     Foreground="{TemplateBinding PaneForeground}"
                     IsTabStop="False" />
             </Button>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="TitleBarVisibilityGroup">
+                    <VisualState x:Name="TitleBarVisible" />
+                    <VisualState x:Name="TitleBarCollapsed">
+                        <VisualState.Setters>
+                            <Setter Target="HamburgerButton.Margin" Value="0,32,0,0" />
+                            <Setter Target="ListViewTopPadding.Margin" Value="0,32,0,0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="AutoSuggestGroup">
+                    <VisualState x:Name="AutoSuggestBoxVisible" />
+                    <VisualState x:Name="AutoSuggestBoxCollapsed">
+                        <VisualState.Setters>
+                            <Setter Target="AutoSuggestArea.Visibility" Value="Collapsed" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
         </Grid>
     </ControlTemplate>
 

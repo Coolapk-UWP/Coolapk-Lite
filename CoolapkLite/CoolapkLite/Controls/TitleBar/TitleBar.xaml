@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="TitleBar_themeresources.xaml" />
@@ -88,6 +89,7 @@
                                         x:Name="RefreshButton"
                                         x:Uid="/TitleBar/RefreshButton"
                                         Grid.Column="2"
+                                        helpers:FocusVisualHelper.FocusVisualMargin="0"
                                         Content="&#xE72C;"
                                         IsEnabled="{TemplateBinding IsRefreshEnabled}"
                                         Style="{StaticResource TitleBarIconButtonStyle}"

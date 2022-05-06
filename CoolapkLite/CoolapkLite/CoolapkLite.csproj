@@ -149,6 +149,7 @@
     <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
+    <Compile Include="Helpers\FocusVisualHelper.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>

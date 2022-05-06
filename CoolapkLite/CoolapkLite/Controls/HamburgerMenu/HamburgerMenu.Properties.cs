@@ -30,7 +30,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Identifies the <see cref="DisplayMode"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register(nameof(DisplayMode), typeof(SplitViewDisplayMode), typeof(HamburgerMenu), new PropertyMetadata(SplitViewDisplayMode.CompactInline));
+        public static readonly DependencyProperty DisplayModeProperty = DependencyProperty.Register(nameof(DisplayMode), typeof(SplitViewDisplayMode), typeof(HamburgerMenu), new PropertyMetadata(SplitViewDisplayMode.CompactInline, OnDisplayModeChanged));
 
         /// <summary>
         /// Identifies the <see cref="CompactPaneLength"/> dependency property.
@@ -50,7 +50,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Identifies the <see cref="IsPaneOpen"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty IsPaneOpenProperty = DependencyProperty.Register(nameof(IsPaneOpen), typeof(bool), typeof(HamburgerMenu), new PropertyMetadata(false));
+        public static readonly DependencyProperty IsPaneOpenProperty = DependencyProperty.Register(nameof(IsPaneOpen), typeof(bool), typeof(HamburgerMenu), new PropertyMetadata(false, OnIsPaneOpenChanged));
 
         /// <summary>
         /// Identifies the <see cref="ItemsSource"/> dependency property.
@@ -76,6 +76,11 @@ namespace CoolapkLite.Controls
         /// Identifies the <see cref="SelectedIndex"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(nameof(SelectedIndex), typeof(int), typeof(HamburgerMenu), new PropertyMetadata(-1));
+
+        /// <summary>
+        /// Identifies the <see cref="AutoSuggestBox"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AutoSuggestBoxProperty = DependencyProperty.Register(nameof(AutoSuggestBox), typeof(AutoSuggestBox), typeof(HamburgerMenu), new PropertyMetadata(null, OnAutoSuggestBoxChanged));
 
         /// <summary>
         /// Gets or sets the width of the pane when it's fully expanded.
@@ -176,6 +181,15 @@ namespace CoolapkLite.Controls
         }
 
         /// <summary>
+        /// Gets or sets an AutoSuggestBox to be displayed in the HamburgerMenu.
+        /// </summary>
+        public AutoSuggestBox AutoSuggestBox
+        {
+            get { return (AutoSuggestBox)GetValue(AutoSuggestBoxProperty); }
+            set { SetValue(AutoSuggestBoxProperty, value); }
+        }
+
+        /// <summary>
         /// Gets the collection used to generate the content of the items list.
         /// </summary>
         /// <exception cref="Exception">
@@ -210,6 +224,21 @@ namespace CoolapkLite.Controls
         {
             get { return (int)GetValue(SelectedIndexProperty); }
             set { SetValue(SelectedIndexProperty, value); }
+        }
+
+        private static void OnIsPaneOpenChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((HamburgerMenu)d).UpdatePaneState();
+        }
+
+        private static void OnDisplayModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((HamburgerMenu)d).UpdateDisplayModeState();
+        }
+
+        private static void OnAutoSuggestBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((HamburgerMenu)d).UpdateAutoSuggestBoxState();
         }
     }
 }

@@ -5,8 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls
 {
@@ -57,19 +59,21 @@ namespace CoolapkLite.Controls
             ItemInvoked?.Invoke(this, new HamburgerMenuItemInvokedEventArgs() { InvokedItem = e.ClickedItem, IsItemOptions = true });
         }
 
-        private void NavigationViewItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        private void HamburgerListView_Loading(FrameworkElement sender, object args)
         {
-            if (args.IsSettingsInvoked && _settingsObject != null)
+            ResourceDictionary dict = new ResourceDictionary();
+            dict.Source = new Uri("ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml");
+            Style Style = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.RevealBrush") ? (Style)dict["HamburgerMenuItemRevealStyle"] : (Style)dict["HamburgerMenuItemStyle"];
+            if (sender is ListView ListView)
             {
-                ItemInvoked?.Invoke(this, new HamburgerMenuItemInvokedEventArgs { InvokedItem = _settingsObject });
+                ListView.ItemContainerStyle = Style;
             }
-            else
+            else if (sender is ListViewItem ListViewItem)
             {
-                IEnumerable<object> options = OptionsItemsSource as IEnumerable<object>;
-                bool isOption = options != null && options.Contains(args.InvokedItem);
-
-                ItemInvoked?.Invoke(this, new HamburgerMenuItemInvokedEventArgs() { InvokedItem = args.InvokedItem, IsItemOptions = isOption });
+                ListViewItem.Style = Style;
             }
         }
+
+        private void PaneAutoSuggestButton_Tapped(object sender, TappedRoutedEventArgs e) => IsPaneOpen = true;
     }
 }

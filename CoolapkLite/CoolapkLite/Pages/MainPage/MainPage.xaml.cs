@@ -174,11 +174,6 @@ namespace CoolapkLite
             }
         }
 
-        private void SearchList_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            HamburgerMenu.IsPaneOpen = true;
-        }
-
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!HamburgerMenuFrame.CanGoBack)
@@ -193,30 +188,6 @@ namespace CoolapkLite
             Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
             CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
-        }
-
-        private void HamburgerListView_Loading(FrameworkElement sender, object args)
-        {
-            ResourceDictionary dict = new ResourceDictionary();
-            dict.Source = new Uri("ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml");
-            Style Style = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.RevealBrush") ? (Style)dict["HamburgerMenuItemRevealStyle"] : (Style)dict["HamburgerMenuItemStyle"];
-            if (sender is ListView ListView)
-            {
-                ListView.ItemContainerStyle = Style;
-            }
-            else if (sender is ListViewItem ListViewItem)
-            {
-                ListViewItem.Style = Style;
-            }
-        }
-
-        private void FrameworkElement_Loading(FrameworkElement sender, object args)
-        {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "FocusVisualMargin"))
-            {
-                sender.FocusVisualMargin = new Thickness(0);
-            }
-            sender.Margin = new Thickness(0, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? 0 : UIHelper.TitleBarHeight, 0, 0);
         }
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
@@ -342,22 +313,5 @@ namespace CoolapkLite
             };
             return items;
         }
-    }
-
-    public class DisplayModeToBool : IValueConverter
-    {
-        private static bool HasConnectedAnimation => ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static bool HasConnectedAnimationConfiguration => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            if (!HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode)
-            {
-                return !(split.ToString() == mode) && HasConnectedAnimation;
-            }
-            return HasConnectedAnimation;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
     }
 }

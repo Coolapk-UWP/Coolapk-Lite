@@ -4,15 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    NavigationCacheMode="Required"
     Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
+    NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <local:DisplayModeToBool x:Key="DisplayModeToBool" />
             <DataTemplate x:Key="DefaultTemplate" x:DataType="local:MenuItem">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -39,131 +37,6 @@
                         Text="{x:Bind Name}" />
                 </Grid>
             </DataTemplate>
-            <ControlTemplate x:Key="HamburgerMenuTemplate" TargetType="controls:HamburgerMenu">
-                <Grid>
-                    <SplitView
-                        x:Name="MainSplitView"
-                        CompactPaneLength="{TemplateBinding CompactPaneLength}"
-                        DisplayMode="{TemplateBinding DisplayMode}"
-                        IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                        IsTabStop="False"
-                        OpenPaneLength="{TemplateBinding OpenPaneLength}"
-                        PaneBackground="{TemplateBinding PaneBackground}"
-                        PanePlacement="{TemplateBinding PanePlacement}">
-                        <SplitView.Pane>
-                            <Grid
-                                x:Name="PaneGrid"
-                                Margin="0,0,0,0"
-                                FlowDirection="LeftToRight">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid
-                                    Grid.Row="0"
-                                    Height="{TemplateBinding HamburgerHeight}"
-                                    Margin="0,32,0,0"
-                                    Loading="FrameworkElement_Loading" />
-                                <ListView
-                                    x:Name="ButtonsListView"
-                                    Grid.Row="1"
-                                    Width="{TemplateBinding OpenPaneLength}"
-                                    helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
-                                    AutomationProperties.Name="Menu items"
-                                    IsItemClickEnabled="True"
-                                    ItemTemplate="{TemplateBinding ItemTemplate}"
-                                    ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                    ItemsSource="{TemplateBinding ItemsSource}"
-                                    Loading="HamburgerListView_Loading"
-                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                    SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    TabIndex="1">
-                                    <ListView.Header>
-                                        <Grid>
-                                            <AutoSuggestBox
-                                                x:Name="AutoSuggestBox"
-                                                x:Uid="/MainPage/SearchBox"
-                                                Margin="10,8"
-                                                VerticalAlignment="Center"
-                                                Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
-                                                IsTabStop="True"
-                                                QueryIcon="Find"
-                                                QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                                                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                                                TextChanged="AutoSuggestBox_TextChanged"
-                                                Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                            <ListViewItem
-                                                x:Name="SearchList"
-                                                Loading="HamburgerListView_Loading"
-                                                Tapped="SearchList_Tapped"
-                                                Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="48" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Viewbox Width="16" Height="16">
-                                                        <SymbolIcon Symbol="Find" />
-                                                    </Viewbox>
-                                                    <TextBlock
-                                                        x:Uid="/MainPage/Search"
-                                                        Grid.Column="1"
-                                                        VerticalAlignment="Center"
-                                                        FontSize="14" />
-                                                </Grid>
-                                            </ListViewItem>
-                                        </Grid>
-                                    </ListView.Header>
-                                </ListView>
-                                <ListView
-                                    x:Name="OptionsListView"
-                                    Grid.Row="2"
-                                    Width="{TemplateBinding OpenPaneLength}"
-                                    Margin="0,20,0,8"
-                                    VerticalAlignment="Bottom"
-                                    helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
-                                    AutomationProperties.Name="Option items"
-                                    IsItemClickEnabled="True"
-                                    ItemTemplate="{TemplateBinding OptionsItemTemplate}"
-                                    ItemTemplateSelector="{TemplateBinding OptionsItemTemplateSelector}"
-                                    ItemsSource="{TemplateBinding OptionsItemsSource}"
-                                    Loading="HamburgerListView_Loading"
-                                    ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                    SelectedIndex="{Binding SelectedOptionsIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    SelectedItem="{Binding SelectedOptionsItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
-                                    TabIndex="2" />
-                            </Grid>
-                        </SplitView.Pane>
-                        <ContentPresenter
-                            x:Name="ContentPart"
-                            AutomationProperties.Name="Content"
-                            Content="{TemplateBinding Content}" />
-                    </SplitView>
-                    <Button
-                        x:Name="HamburgerButton"
-                        Width="{TemplateBinding HamburgerWidth}"
-                        Height="{TemplateBinding HamburgerHeight}"
-                        Margin="0,32,0,0"
-                        Padding="0"
-                        VerticalAlignment="Top"
-                        AutomationProperties.Name="Main button"
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Loading="FrameworkElement_Loading"
-                        TabIndex="0"
-                        Visibility="{TemplateBinding HamburgerVisibility}">
-                        <ContentControl
-                            Margin="{TemplateBinding HamburgerMargin}"
-                            ContentTemplate="{TemplateBinding HamburgerMenuTemplate}"
-                            Foreground="{TemplateBinding PaneForeground}"
-                            IsTabStop="False" />
-                    </Button>
-                </Grid>
-            </ControlTemplate>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -194,8 +67,19 @@
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
             PaneBackground="{StaticResource SolidBackgroundFillColorBaseElementBrush}"
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
-            SizeChanged="HamburgerMenu_SizeChanged"
-            Template="{StaticResource HamburgerMenuTemplate}">
+            SizeChanged="HamburgerMenu_SizeChanged">
+            <controls:HamburgerMenu.AutoSuggestBox>
+                <AutoSuggestBox
+                    x:Name="AutoSuggestBox"
+                    x:Uid="/MainPage/SearchBox"
+                    VerticalAlignment="Center"
+                    Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
+                    IsTabStop="True"
+                    QueryIcon="Find"
+                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                    TextChanged="AutoSuggestBox_TextChanged" />
+            </controls:HamburgerMenu.AutoSuggestBox>
             <Frame x:Name="HamburgerMenuFrame" x:FieldModifier="Public" />
         </controls:HamburgerMenu>
         <ProgressBar
