@@ -29,10 +29,6 @@ namespace CoolapkLite.Controls
         private ListViewBase _optionsListView;
         private ListViewItem _paneAutoSuggestItem;
 
-        private ControlTemplate _previousTemplateUsed;
-        private object _navigationView;
-        private object _settingsObject;
-
         /// <summary>
         /// Gets a value indicating whether <see cref="NavigationView"/> is supported
         /// </summary>
@@ -44,6 +40,7 @@ namespace CoolapkLite.Controls
         public HamburgerMenu()
         {
             DefaultStyleKey = typeof(HamburgerMenu);
+            SizeChanged += OnSizeChanged;
         }
 
         /// <summary>
@@ -122,7 +119,7 @@ namespace CoolapkLite.Controls
 
         private void UpdatePaneState()
         {
-            VisualStateManager.GoToState(this, IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
+            VisualStateManager.GoToState(this, DisplayMode == SplitViewDisplayMode.CompactOverlay && !IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
         }
 
         private void UpdateTitleBarPadding()
@@ -157,8 +154,8 @@ namespace CoolapkLite.Controls
 
     public class DisplayModeToBool : IValueConverter
     {
-        private static bool HasConnectedAnimation => ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static bool HasConnectedAnimationConfiguration => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
+        private static bool HasConnectedAnimation = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
+        private static bool HasConnectedAnimationConfiguration = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {

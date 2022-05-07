@@ -66,6 +66,12 @@ namespace CoolapkLite.Controls
            typeof(TitleBar),
            new PropertyMetadata(default(string), OnTitlePropertyChanged));
 
+        public static readonly DependencyProperty CompactModeThresholdWidthProperty = DependencyProperty.Register(
+            "CompactModeThresholdWidth",
+            typeof(double),
+            typeof(TitleBar),
+            new PropertyMetadata(641.0));
+
         public object CustomContent
         {
             get => GetValue(CustomContentProperty);
@@ -124,6 +130,12 @@ namespace CoolapkLite.Controls
         {
             get => (string)GetValue(TitleProperty);
             set => SetValue(TitleProperty, value);
+        }
+
+        public double CompactModeThresholdWidth
+        {
+            get { return (double)GetValue(CompactModeThresholdWidthProperty); }
+            set { SetValue(CompactModeThresholdWidthProperty, value); }
         }
 
         public event TypedEventHandler<TitleBar, object> BackRequested;

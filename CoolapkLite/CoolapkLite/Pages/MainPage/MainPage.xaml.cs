@@ -157,23 +157,6 @@ namespace CoolapkLite
             }
         }
 
-        private void HamburgerMenu_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Window.Current.Bounds.Width >= 1008)
-            {
-                HamburgerMenu.IsPaneOpen = true;
-                HamburgerMenu.DisplayMode = SplitViewDisplayMode.CompactInline;
-            }
-            else if (Window.Current.Bounds.Width <= 640)
-            {
-                HamburgerMenu.DisplayMode = SplitViewDisplayMode.Overlay;
-            }
-            else
-            {
-                HamburgerMenu.DisplayMode = SplitViewDisplayMode.CompactOverlay;
-            }
-        }
-
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!HamburgerMenuFrame.CanGoBack)

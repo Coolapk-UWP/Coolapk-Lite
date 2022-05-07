@@ -150,6 +150,8 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Helpers\FocusVisualHelper.cs" />
+    <Compile Include="Helpers\ListViewHelper.cs" />
+    <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
@@ -1027,19 +1029,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\AcrylicBrushs.xaml">
+    <Page Include="Styles\Brushes\AcrylicBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\BlurBrushs.xaml">
+    <Page Include="Styles\Brushes\BlurBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\MicaBrushs.xaml">
+    <Page Include="Styles\Brushes\MicaBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\SolidBrushs.xaml">
+    <Page Include="Styles\Brushes\SolidBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

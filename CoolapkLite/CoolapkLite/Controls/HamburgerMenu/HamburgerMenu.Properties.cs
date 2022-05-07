@@ -83,6 +83,16 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty AutoSuggestBoxProperty = DependencyProperty.Register(nameof(AutoSuggestBox), typeof(AutoSuggestBox), typeof(HamburgerMenu), new PropertyMetadata(null, OnAutoSuggestBoxChanged));
 
         /// <summary>
+        /// Identifies the <see cref="CompactModeThresholdWidth"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CompactModeThresholdWidthProperty = DependencyProperty.Register(nameof(CompactModeThresholdWidth), typeof(double), typeof(HamburgerMenu), new PropertyMetadata(641.0));
+
+        /// <summary>
+        /// Identifies the <see cref="ExpandedModeThresholdWidth"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ExpandedModeThresholdWidthProperty = DependencyProperty.Register(nameof(ExpandedModeThresholdWidth), typeof(double), typeof(HamburgerMenu), new PropertyMetadata(1008.0));
+
+        /// <summary>
         /// Gets or sets the width of the pane when it's fully expanded.
         /// </summary>
         public double OpenPaneLength
@@ -187,6 +197,24 @@ namespace CoolapkLite.Controls
         {
             get { return (AutoSuggestBox)GetValue(AutoSuggestBoxProperty); }
             set { SetValue(AutoSuggestBoxProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum window width at which the HamburgerMenu enters Compact display mode.
+        /// </summary>
+        public double CompactModeThresholdWidth
+        {
+            get { return (double)GetValue(CompactModeThresholdWidthProperty); }
+            set { SetValue(CompactModeThresholdWidthProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the minimum window width at which the HamburgerMenu enters Compact display mode.
+        /// </summary>
+        public double ExpandedModeThresholdWidth
+        {
+            get { return (double)GetValue(ExpandedModeThresholdWidthProperty); }
+            set { SetValue(ExpandedModeThresholdWidthProperty, value); }
         }
 
         /// <summary>

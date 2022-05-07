@@ -11,7 +11,7 @@
             <Setter.Value>
                 <DataTemplate>
                     <FontIcon
-                        FontFamily="Segoe MDL2 Assets"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="16"
                         Glyph="&#xE700;" />
                 </DataTemplate>

@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
+    Background="{StaticResource LayerFillColorDefaultBrush}"
     mc:Ignorable="d">
     <Grid>
         <control:TwoPaneView

@@ -230,12 +230,6 @@
         </Setter>
     </Style>
 
-    <!--  Obsolete: The HamburgetMenuItemStyle will be removed caused by a typo. Please use the HamburgerMenuItemStyle instead.  -->
-    <Style
-        x:Key="HamburgetMenuItemStyle"
-        BasedOn="{StaticResource HamburgerMenuItemStyle}"
-        TargetType="ListViewItem" />
-
     <ControlTemplate x:Key="HamburgerMenuTemplate" TargetType="local:HamburgerMenu">
         <Grid>
             <SplitView
@@ -269,6 +263,7 @@
                             helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                             AutomationProperties.Name="Menu items"
                             IsItemClickEnabled="True"
+                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                             ItemTemplate="{TemplateBinding ItemTemplate}"
                             ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                             ItemsSource="{TemplateBinding ItemsSource}"
@@ -288,7 +283,10 @@
                                         Content="{TemplateBinding AutoSuggestBox}"
                                         IsTabStop="True"
                                         Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    <ListViewItem x:Name="PaneAutoSuggestItem" Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                    <ListViewItem
+                                        x:Name="PaneAutoSuggestItem"
+                                        Style="{StaticResource HamburgerMenuItemStyle}"
+                                        Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="48" />
@@ -317,6 +315,7 @@
                             helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
                             AutomationProperties.Name="Option items"
                             IsItemClickEnabled="True"
+                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
                             ItemTemplate="{TemplateBinding OptionsItemTemplate}"
                             ItemTemplateSelector="{TemplateBinding OptionsItemTemplateSelector}"
                             ItemsSource="{TemplateBinding OptionsItemsSource}"
@@ -337,11 +336,11 @@
                 Height="{TemplateBinding HamburgerHeight}"
                 Padding="0"
                 VerticalAlignment="Top"
+                helpers:FocusVisualHelper.FocusVisualMargin="0"
                 AutomationProperties.Name="Main button"
                 Background="Transparent"
                 BorderThickness="0"
                 TabIndex="0"
-                helpers:FocusVisualHelper.FocusVisualMargin="0"
                 Visibility="{TemplateBinding HamburgerVisibility}">
                 <ContentControl
                     Margin="{TemplateBinding HamburgerMargin}"
@@ -350,6 +349,26 @@
                     IsTabStop="False" />
             </Button>
             <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="WindowsSizeGroup">
+                    <VisualState x:Name="OverlaySize">
+                        <VisualState.Setters>
+                            <Setter Target="MainSplitView.IsPaneOpen" Value="False" />
+                            <Setter Target="MainSplitView.DisplayMode" Value="Overlay" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="CompactSize">
+                        <VisualState.Setters>
+                            <Setter Target="MainSplitView.IsPaneOpen" Value="False" />
+                            <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="ExpandedSize">
+                        <VisualState.Setters>
+                            <Setter Target="MainSplitView.IsPaneOpen" Value="True" />
+                            <Setter Target="MainSplitView.DisplayMode" Value="CompactInline" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
                 <VisualStateGroup x:Name="TitleBarVisibilityGroup">
                     <VisualState x:Name="TitleBarVisible" />
                     <VisualState x:Name="TitleBarCollapsed">

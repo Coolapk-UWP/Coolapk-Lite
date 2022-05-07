@@ -34,6 +34,7 @@
             HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
             ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+            Loaded="ListView_Loaded"
             SelectionMode="None"
             ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
             ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged"

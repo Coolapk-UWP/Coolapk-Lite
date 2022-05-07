@@ -8,6 +8,6 @@
         Color="{ThemeResource SolidBackgroundFillColorBase}" />
     <SolidColorBrush
         x:Key="SolidBackgroundFillColorBaseElementBrush"
-        Opacity="0.9"
+        Opacity="0.99"
         Color="{ThemeResource SolidBackgroundFillColorBase}" />
 </ResourceDictionary>

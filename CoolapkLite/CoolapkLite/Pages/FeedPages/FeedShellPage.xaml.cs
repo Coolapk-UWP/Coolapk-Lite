@@ -52,9 +52,9 @@ namespace CoolapkLite.Pages.FeedPages
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
             // Remove details content from it's parent panel.
-            _ = (DetailControl.Parent as Panel).Children.Remove(DetailControl);
-            _ = (BtnsPanel.Parent as Panel).Children.Remove(BtnsPanel);
-            _ = (TitleBar.Parent as Panel).Children.Remove(TitleBar);
+            _ = (DetailControl.Parent as Panel)?.Children.Remove(DetailControl);
+            _ = (BtnsPanel.Parent as Panel)?.Children.Remove(BtnsPanel);
+            _ = (TitleBar.Parent as Panel)?.Children.Remove(TitleBar);
 
 
             // Single pane

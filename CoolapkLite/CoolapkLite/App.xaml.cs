@@ -110,25 +110,25 @@ namespace CoolapkLite
             if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
             {
                 ResourceDictionary MicaBrushs = new ResourceDictionary();
-                MicaBrushs.Source = new Uri("ms-appx:///Styles/MicaBrushs.xaml");
+                MicaBrushs.Source = new Uri("ms-appx:///Styles/Brushes/MicaBrushes.xaml");
                 Resources.MergedDictionaries.Add(MicaBrushs);
             }
             else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
                 ResourceDictionary AcrylicBrushs = new ResourceDictionary();
-                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/AcrylicBrushs.xaml");
+                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/Brushes/AcrylicBrushes.xaml");
                 Resources.MergedDictionaries.Add(AcrylicBrushs);
             }
             else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
             {
                 ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/BlurBrushs.xaml");
+                BlurBrushs.Source = new Uri("ms-appx:///Styles/Brushes/BlurBrushes.xaml");
                 Resources.MergedDictionaries.Add(BlurBrushs);
             }
             else
             {
                 ResourceDictionary SolidBrushs = new ResourceDictionary();
-                SolidBrushs.Source = new Uri("ms-appx:///Styles/SolidBrushs.xaml");
+                SolidBrushs.Source = new Uri("ms-appx:///Styles/Brushes/SolidBrushes.xaml");
                 Resources.MergedDictionaries.Add(SolidBrushs);
             }
         }

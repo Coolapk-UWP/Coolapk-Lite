@@ -122,7 +122,7 @@ namespace CoolapkLite.Controls
 		private void OnSizeChanged(object sender, SizeChangedEventArgs e)
 		{
 			var templateSettings = TemplateSettings;
-			templateSettings.LeftPaddingColumnGridLength = Window.Current.Bounds.Width > 640 ? new GridLength(0) : new GridLength(48);
+			templateSettings.LeftPaddingColumnGridLength = Window.Current.Bounds.Width > CompactModeThresholdWidth ? new GridLength(0) : new GridLength(48);
 		}
 
 		public void OnBackButtonClick(object sender, RoutedEventArgs args)

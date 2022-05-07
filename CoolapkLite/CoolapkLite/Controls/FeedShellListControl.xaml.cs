@@ -1,4 +1,6 @@
-﻿using CoolapkLite.ViewModels;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels;
+using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System.Collections.Generic;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
@@ -134,6 +136,16 @@ namespace CoolapkLite.Controls
             {
                 ToggleSwitchBorder.Visibility = Visibility.Visible;
                 CheckBoxBorder.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            ScrollViewer ScrollViewer = ShyHeaderListView.FindDescendant<ScrollViewer>();
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.Margin = new Thickness(0, UIHelper.ScrollViewerMargin.Top, 0, Padding.Bottom);
+                ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
             }
         }
     }

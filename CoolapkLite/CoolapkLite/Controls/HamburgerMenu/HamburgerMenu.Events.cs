@@ -32,6 +32,22 @@ namespace CoolapkLite.Controls
         /// </summary>
         public event EventHandler<HamburgerMenuItemInvokedEventArgs> ItemInvoked;
 
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Window.Current.Bounds.Width >= ExpandedModeThresholdWidth)
+            {
+                VisualStateManager.GoToState(this, "ExpandedSize", true);
+            }
+            else if (Window.Current.Bounds.Width >= CompactModeThresholdWidth)
+            {
+                VisualStateManager.GoToState(this, "CompactSize", true);
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "OverlaySize", true);
+            }
+        }
+
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)
         {
             IsPaneOpen = !IsPaneOpen;
@@ -61,17 +77,17 @@ namespace CoolapkLite.Controls
 
         private void HamburgerListView_Loading(FrameworkElement sender, object args)
         {
-            ResourceDictionary dict = new ResourceDictionary();
-            dict.Source = new Uri("ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml");
-            Style Style = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.RevealBrush") ? (Style)dict["HamburgerMenuItemRevealStyle"] : (Style)dict["HamburgerMenuItemStyle"];
-            if (sender is ListView ListView)
-            {
-                ListView.ItemContainerStyle = Style;
-            }
-            else if (sender is ListViewItem ListViewItem)
-            {
-                ListViewItem.Style = Style;
-            }
+            //ResourceDictionary dict = new ResourceDictionary();
+            //dict.Source = new Uri("ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml");
+            //Style Style = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.RevealBrush") ? (Style)dict["HamburgerMenuItemRevealStyle"] : (Style)dict["HamburgerMenuItemStyle"];
+            //if (sender is ListView ListView)
+            //{
+            //    ListView.ItemContainerStyle = Style;
+            //}
+            //else if (sender is ListViewItem ListViewItem)
+            //{
+            //    ListViewItem.Style = Style;
+            //}
         }
 
         private void PaneAutoSuggestButton_Tapped(object sender, TappedRoutedEventArgs e) => IsPaneOpen = true;
