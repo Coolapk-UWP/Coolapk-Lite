@@ -36,7 +36,7 @@ namespace CoolapkLite.Helpers
             FrameworkElement Element = (FrameworkElement)d;
             if (Element.IsLoaded == false)
             {
-                Element.Loaded += (sender, e) =>
+                Element.Loaded += (sender, arg) =>
                 {
                     Thickness Margin = GetVerticalScrollBarMargin((FrameworkElement)d);
                     ScrollViewer ScrollViewer = Element is ScrollViewer ? (ScrollViewer)Element : Element?.FindDescendant<ScrollViewer>();

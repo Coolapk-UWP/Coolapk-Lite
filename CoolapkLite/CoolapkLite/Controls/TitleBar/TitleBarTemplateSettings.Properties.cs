@@ -27,7 +27,7 @@ namespace CoolapkLite.Controls
            "TopPaddingColumnGridLength",
            typeof(GridLength),
            typeof(TitleBarTemplateSettings),
-           new PropertyMetadata(new GridLength(UIHelper.TitleBarHeight)));
+           new PropertyMetadata(new GridLength(UIHelper.PageTitleHeight - 48)));
 
         public static readonly DependencyProperty LeftPaddingColumnGridLengthProperty = DependencyProperty.Register(
            "LeftPaddingColumnGridLength",

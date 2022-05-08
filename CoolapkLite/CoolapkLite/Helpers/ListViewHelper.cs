@@ -35,7 +35,7 @@ namespace CoolapkLite.Helpers
             FrameworkElement Element = (FrameworkElement)d;
             if (Element.IsLoaded == false)
             {
-                Element.Loaded += (sender, e) =>
+                Element.Loaded += (sender, arg) =>
                 {
                     Thickness Margin = GetItemsPanelMargin(Element);
                     ItemsStackPanel ItemsStackPanel = Element?.FindDescendant<ItemsStackPanel>();
@@ -76,7 +76,7 @@ namespace CoolapkLite.Helpers
             FrameworkElement Element = (FrameworkElement)d;
             if (Element.IsLoaded == false)
             {
-                Element.Loaded += (sender, e) =>
+                Element.Loaded += (sender, arg) =>
                 {
                     HorizontalAlignment HorizontalAlignment = GetItemsPanelHorizontalAlignment(Element);
                     ItemsStackPanel ItemsStackPanel = Element?.FindDescendant<ItemsStackPanel>();
