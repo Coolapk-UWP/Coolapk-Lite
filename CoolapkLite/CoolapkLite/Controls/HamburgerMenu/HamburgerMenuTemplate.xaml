@@ -231,7 +231,7 @@
     </Style>
 
     <ControlTemplate x:Key="HamburgerMenuTemplate" TargetType="local:HamburgerMenu">
-        <Grid>
+        <Grid x:Name="LayoutRoot">
             <SplitView
                 x:Name="MainSplitView"
                 CompactPaneLength="{TemplateBinding CompactPaneLength}"
@@ -350,24 +350,9 @@
             </Button>
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="WindowsSizeGroup">
-                    <VisualState x:Name="OverlaySize">
-                        <VisualState.Setters>
-                            <Setter Target="MainSplitView.IsPaneOpen" Value="False" />
-                            <Setter Target="MainSplitView.DisplayMode" Value="Overlay" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState x:Name="CompactSize">
-                        <VisualState.Setters>
-                            <Setter Target="MainSplitView.IsPaneOpen" Value="False" />
-                            <Setter Target="MainSplitView.DisplayMode" Value="CompactOverlay" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState x:Name="ExpandedSize">
-                        <VisualState.Setters>
-                            <Setter Target="MainSplitView.IsPaneOpen" Value="True" />
-                            <Setter Target="MainSplitView.DisplayMode" Value="CompactInline" />
-                        </VisualState.Setters>
-                    </VisualState>
+                    <VisualState x:Name="OverlaySize" />
+                    <VisualState x:Name="CompactSize" />
+                    <VisualState x:Name="ExpandedSize" />
                 </VisualStateGroup>
                 <VisualStateGroup x:Name="TitleBarVisibilityGroup">
                     <VisualState x:Name="TitleBarVisible" />

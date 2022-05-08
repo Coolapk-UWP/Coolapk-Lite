@@ -26,11 +26,6 @@ namespace CoolapkLite.Helpers
 {
     internal static partial class UIHelper
     {
-        public static event EventHandler<ElementTheme> AppThemeChanged;
-    }
-
-    internal static partial class UIHelper
-    {
         public const int Duration = 3000;
         public static bool IsShowingProgressBar, IsShowingMessage;
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
@@ -60,7 +55,6 @@ namespace CoolapkLite.Helpers
 
         static UIHelper()
         {
-            AppThemeChanged += (_, __) => CheckTheme();
             BsonMapper.Global.RegisterType
                 (
                 serialize: (pic) => pic.Uri,
@@ -89,8 +83,6 @@ namespace CoolapkLite.Helpers
                     });
                 }
             }
-
-            AppThemeChanged?.Invoke(Window.Current?.Content, SettingsHelper.Theme);
         }
 
         public static void CheckTheme()
@@ -118,8 +110,6 @@ namespace CoolapkLite.Helpers
                 TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
                 TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = HasTitleBar ? BackgroundColor : Colors.Transparent;
             }
-
-            if (IsInvoke) { AppThemeChanged?.Invoke(Window.Current?.Content, SettingsHelper.Theme); }
         }
     }
 

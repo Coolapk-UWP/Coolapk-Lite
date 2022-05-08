@@ -152,6 +152,7 @@
     <Compile Include="Helpers\FocusVisualHelper.cs" />
     <Compile Include="Helpers\ListViewHelper.cs" />
     <Compile Include="Helpers\ScrollBarHelper.cs" />
+    <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>

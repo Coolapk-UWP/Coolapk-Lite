@@ -44,8 +44,6 @@ namespace CoolapkLite
             AddBrushResource();
             RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
-            ApplicationViewTitleBar view = ApplicationView.GetForCurrentView().TitleBar;
-            view.ButtonBackgroundColor = view.InactiveBackgroundColor = view.ButtonInactiveBackgroundColor = Colors.Transparent;
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -55,6 +53,8 @@ namespace CoolapkLite
             {
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
+
+                rootFrame.ActualThemeChanged += (sender, e) => UIHelper.CheckTheme();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
@@ -78,6 +78,7 @@ namespace CoolapkLite
                 }
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
+                UIHelper.CheckTheme();
             }
         }
 

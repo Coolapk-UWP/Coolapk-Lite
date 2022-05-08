@@ -112,7 +112,6 @@ namespace CoolapkLite.Helpers
                 bool value = o.GetColorValue(UIColorType.Background) == Windows.UI.Colors.Black;
                 Set(IsDarkMode, value);
                 UISettingChanged.Invoke(value ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
-                _ = UIHelper.ShellDispatcher?.RunAsync(CoreDispatcherPriority.Normal, () => UIHelper.CheckTheme(value, true));
             }
         }
 

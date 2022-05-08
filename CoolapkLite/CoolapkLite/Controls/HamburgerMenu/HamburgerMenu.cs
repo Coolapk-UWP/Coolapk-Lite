@@ -18,16 +18,19 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// The HamburgerMenu is based on a SplitView control. By default it contains a HamburgerButton and a ListView to display menu items.
     /// </summary>
+    [TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
     [TemplatePart(Name = "HamburgerButton", Type = typeof(Button))]
     [TemplatePart(Name = "ButtonsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "OptionsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "PaneAutoSuggestItem", Type = typeof(ListViewItem))]
     public partial class HamburgerMenu : ContentControl
     {
+        private Grid _layoutRoot;
         private Button _hamburgerButton;
         private ListViewBase _buttonsListView;
         private ListViewBase _optionsListView;
         private ListViewItem _paneAutoSuggestItem;
+        private VisualStateGroup _windowsSizeGroup;
 
         /// <summary>
         /// Gets a value indicating whether <see cref="NavigationView"/> is supported
@@ -76,10 +79,12 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped -= PaneAutoSuggestButton_Tapped;
             }
 
+            _layoutRoot = (Grid)GetTemplateChild("LayoutRoot");
             _hamburgerButton = (Button)GetTemplateChild("HamburgerButton");
             _buttonsListView = (ListViewBase)GetTemplateChild("ButtonsListView");
             _optionsListView = (ListViewBase)GetTemplateChild("OptionsListView");
             _paneAutoSuggestItem = (ListViewItem)GetTemplateChild("PaneAutoSuggestItem");
+            _windowsSizeGroup = _layoutRoot.FindVisualStateGroupByName("WindowsSizeGroup");
 
             if (_hamburgerButton != null)
             {
@@ -104,9 +109,36 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped += PaneAutoSuggestButton_Tapped;
             }
 
+            if (_windowsSizeGroup != null)
+            {
+                _windowsSizeGroup.CurrentStateChanged += WindowsSizeGroup_CurrentStateChanged;
+            }
+
             UpdateTitleBarPadding();
 
             base.OnApplyTemplate();
+        }
+
+        private void WindowsSizeGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        {
+            if(e.NewState != e.OldState)
+            {
+                switch(e.NewState.Name)
+                {
+                    case "OverlaySize":
+                        IsPaneOpen = false;
+                        DisplayMode = SplitViewDisplayMode.Overlay;
+                        break;
+                    case "CompactSize":
+                        IsPaneOpen = false;
+                        DisplayMode = SplitViewDisplayMode.CompactOverlay;
+                        break;
+                    case "ExpandedSize":
+                        IsPaneOpen = true;
+                        DisplayMode = SplitViewDisplayMode.CompactInline;
+                        break;
+                }
+            }
         }
 
         private bool IsSettingsItem(object menuItem)
