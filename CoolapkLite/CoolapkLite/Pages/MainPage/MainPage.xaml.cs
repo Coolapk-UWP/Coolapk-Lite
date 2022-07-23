@@ -1,11 +1,14 @@
 ﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
 using LiteDB;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -178,19 +181,55 @@ namespace CoolapkLite
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
         #region 搜索框
-        private void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
-
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                (bool isSucceed, JToken result) = await Utils.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, sender.Text), true);
+                if (isSucceed && result != null && result is JArray array && array.Count > 0)
+                {
+                    ObservableCollection<object> observableCollection = new ObservableCollection<object>();
+                    sender.ItemsSource = observableCollection;
+                    foreach (JToken token in array)
+                    {
+                        switch (token.Value<string>("entityType"))
+                        {
+                            case "apk":
+                                observableCollection.Add(new SearchWord(token as JObject));
+                                break;
+                            case "searchWord":
+                            default:
+                                observableCollection.Add(new SearchWord(token as JObject));
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-
+            //if (args.ChosenSuggestion is AppModel app)
+            //{
+            //    UIHelper.NavigateInSplitPane(typeof(AppPages.AppPage), "https://www.coolapk.com" + app.Url);
+            //}
+            //else
+            if (args.ChosenSuggestion is SearchWord word)
+            {
+                //HamburgerMenuFrame.Navigate(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(word.Symbol == Symbol.Contact ? 1 : 0, word.GetTitle()));
+            }
+            else if (args.ChosenSuggestion is null)
+            {
+                //UIHelper.NavigateInSplitPane(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(0, sender.Text));
+            }
         }
 
         private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-
+            if (args.SelectedItem is SearchWord searchWord)
+            {
+                sender.Text = searchWord.Title;
+            }
         }
         #endregion
 

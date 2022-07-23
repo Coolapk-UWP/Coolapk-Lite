@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Core.Providers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
@@ -14,11 +15,6 @@ namespace CoolapkLite.Helpers
 {
     internal static class DataHelper
     {
-        //public static Task Search(this Core.Providers.SearchListProvider provider, string keyWord)
-        //{
-        //    return provider.Search(keyWord, GetCoolapkCookies(UriHelper.BaseUri));
-        //}
-
 #pragma warning disable 0612
         public static async Task<BitmapImage> GetImageAsync(string uri)
         {

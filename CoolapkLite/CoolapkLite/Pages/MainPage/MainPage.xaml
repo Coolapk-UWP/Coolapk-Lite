@@ -6,11 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <templates:SearchWord />
+            </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="DefaultTemplate" x:DataType="local:MenuItem">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -73,6 +77,7 @@
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                     IsTabStop="True"
+                    ItemTemplateSelector="{StaticResource SearchWordSelector}"
                     QueryIcon="Find"
                     QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                     SuggestionChosen="AutoSuggestBox_SuggestionChosen"

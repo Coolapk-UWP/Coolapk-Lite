@@ -142,6 +142,7 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Providers\CoolapkListProvider.cs" />
+    <Compile Include="Providers\SearchListProvider.cs" />
     <Compile Include="WeakEvent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\CoolapkLite.Core.rd.xml" />

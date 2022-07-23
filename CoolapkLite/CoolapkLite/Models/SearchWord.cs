@@ -1,0 +1,26 @@
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.UI.Xaml.Controls;
+
+namespace CoolapkLite.Models
+{
+    internal class SearchWord
+    {
+        public Symbol Symbol { get; set; }
+        public string Title { get; set; }
+
+        public SearchWord(JObject keys)
+        {
+            Symbol = keys.Value<string>("logo").Contains("app")
+                ? Symbol.Shop
+                : keys.Value<string>("logo").Contains("cube")
+                    ? Symbol.Shop
+                    : keys.Value<string>("logo").Contains("xitongguanli") ? Symbol.Contact : Symbol.Find;
+            Title = keys.Value<string>("title");
+        }
+    }
+}

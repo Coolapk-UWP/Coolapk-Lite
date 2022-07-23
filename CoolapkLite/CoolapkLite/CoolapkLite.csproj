@@ -141,6 +141,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
+    <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
+      <DependentUpon>SearchWord.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
@@ -154,6 +157,7 @@
     <Compile Include="Helpers\ScrollBarHelper.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
+    <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
@@ -889,6 +893,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\DataTemplates\SearchWord.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ShyHeaderListView\ShyHeaderListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

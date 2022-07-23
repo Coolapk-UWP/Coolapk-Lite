@@ -45,6 +45,18 @@ namespace CoolapkLite.Controls.DataTemplates
         }
     }
 
+    public sealed class SearchTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate App { get; set; }
+        public DataTemplate SearchWord { get; set; }
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            //if (item is AppModel) return App;
+            return SearchWord;
+        }
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
+    }
+
     public static class EntityTemplateSelector
     {
         public static Entity GetEntity(JObject jo, bool isHotFeedPage = false)
