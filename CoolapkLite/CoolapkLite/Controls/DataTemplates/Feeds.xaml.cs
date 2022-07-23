@@ -59,11 +59,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "LikeButton":
                     DisabledCopy();
-                    //await DataHelper.MakeLikeAsync(
-                    //    element.Tag as ICanChangeLikModel,
-                    //    element.Dispatcher,
-                    //    (SymbolIcon)element.FindName("like1"),
-                    //    (SymbolIcon)element.FindName("like2"));
+                    await DataHelper.MakeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
                     break;
 
                 case "ReportButton":
@@ -102,18 +98,6 @@ namespace CoolapkLite.Controls.DataTemplates
             DataPackage dp = new DataPackage();
             dp.SetText(element.Tag.ToString());
             Clipboard.SetContent(dp);
-        }
-
-        private void Flyout_Opened(object sender, object _)
-        {
-            Flyout flyout = (Flyout)sender;
-            if (flyout.Content == null)
-            {
-                flyout.Content = new ShowQRCodeControl
-                {
-                    QRCodeText = (string)flyout.Target.Tag
-                };
-            }
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

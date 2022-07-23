@@ -53,7 +53,20 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public bool Liked { get; set; }
+        private bool liked;
+        public bool Liked
+        {
+            get => liked;
+            set
+            {
+                if (liked != value)
+                {
+                    liked = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public bool ShowReplyRows { get; set; }
         public ImageModel Pic { get; private set; }
         public string Dateline { get; private set; }

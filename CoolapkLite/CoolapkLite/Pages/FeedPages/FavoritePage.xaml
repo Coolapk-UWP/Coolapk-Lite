@@ -27,8 +27,6 @@
             ItemTemplate="{StaticResource ListDefaultTemplate}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
-            ScrollViewer.IsDeferredScrollingEnabled="True"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectionMode="None" />
         <control:TitleBar
             x:Name="TitleBar"

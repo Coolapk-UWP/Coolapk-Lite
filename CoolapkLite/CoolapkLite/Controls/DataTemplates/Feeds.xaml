@@ -2,6 +2,7 @@
     x:Class="CoolapkLite.Controls.DataTemplates.Feeds"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkUWP.Controls"
     xmlns:ctrl="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:CoolapkLite.Controls.DataTemplates"
@@ -27,6 +28,45 @@
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
             Tapped="OnTapped">
+            <UserControl.Resources>
+                <Flyout x:Key="QRCodeFlyout">
+                    <Flyout.FlyoutPresenterStyle>
+                        <Style TargetType="FlyoutPresenter">
+                            <Setter Property="Padding" Value="0" />
+                            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                        </Style>
+                    </Flyout.FlyoutPresenterStyle>
+                    <controls:ShowQRCodeControl QRCodeText="{Binding ShareUrl}" />
+                </Flyout>
+                <MenuFlyout x:Key="MoreFlyout">
+                    <MenuFlyoutSubItem Text="复制">
+                        <ToggleMenuFlyoutItem
+                            x:Name="CopyButton"
+                            x:Uid="/Feed/Copy"
+                            IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
+                        <MenuFlyoutItem
+                            Click="CopyMenuItem_Click"
+                            Tag="{Binding ShareUrl}"
+                            Text="复制链接" />
+                        <MenuFlyoutItem
+                            Click="CopyMenuItem_Click"
+                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}"
+                            Text="复制全部内容" />
+                        <MenuFlyoutItem
+                            Click="CopyMenuItem_Click"
+                            Tag="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}'}"
+                            Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
+                    </MenuFlyoutSubItem>
+                    <MenuFlyoutItem
+                        x:Name="ReportButton"
+                        x:Uid="/Feed/Report"
+                        Click="FeedButton_Click"
+                        Tag="{Binding ID}" />
+                </MenuFlyout>
+            </UserControl.Resources>
             <Grid Padding="8,4">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -128,6 +168,7 @@
                     <Button
                         x:Name="ShareButton"
                         Click="FeedButton_Click"
+                        Flyout="{StaticResource QRCodeFlyout}"
                         Style="{StaticResource FeedOpButtonStyle}"
                         Tag="{Binding ShareUrl}"
                         ToolTipService.ToolTip="分享"
@@ -139,52 +180,13 @@
                                 VerticalAlignment="Center"
                                 Text="{Binding ShareNum}" />
                         </StackPanel>
-                        <Button.Flyout>
-                            <Flyout Opened="Flyout_Opened">
-                                <Flyout.FlyoutPresenterStyle>
-                                    <Style TargetType="FlyoutPresenter">
-                                        <Setter Property="Padding" Value="0" />
-                                        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
-                                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
-                                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-                                    </Style>
-                                </Flyout.FlyoutPresenterStyle>
-                            </Flyout>
-                        </Button.Flyout>
                     </Button>
                     <Button
                         x:Name="MoreButton"
+                        Flyout="{StaticResource MoreFlyout}"
                         Style="{StaticResource FeedOpButtonStyle}"
                         ToolTipService.ToolTip="更多">
                         <SymbolIcon Symbol="More" />
-                        <Button.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutSubItem Text="复制">
-                                    <ToggleMenuFlyoutItem
-                                        x:Name="CopyButton"
-                                        x:Uid="/Feed/Copy"
-                                        IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
-                                    <MenuFlyoutItem
-                                        Click="CopyMenuItem_Click"
-                                        Tag="{Binding ShareUrl}"
-                                        Text="复制链接" />
-                                    <MenuFlyoutItem
-                                        Click="CopyMenuItem_Click"
-                                        Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}"
-                                        Text="复制全部内容" />
-                                    <MenuFlyoutItem
-                                        Click="CopyMenuItem_Click"
-                                        Tag="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}'}"
-                                        Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
-                                </MenuFlyoutSubItem>
-                                <MenuFlyoutItem
-                                    x:Name="ReportButton"
-                                    x:Uid="/Feed/Report"
-                                    Click="FeedButton_Click"
-                                    Tag="{Binding ID}" />
-                            </MenuFlyout>
-                        </Button.Flyout>
                     </Button>
                 </StackPanel>
                 <ctrl:TextBlockEx

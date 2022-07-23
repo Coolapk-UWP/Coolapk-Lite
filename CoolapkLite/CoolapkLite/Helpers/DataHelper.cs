@@ -1,7 +1,13 @@
 ﻿using CoolapkLite.Core.Helpers;
+using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Helpers
@@ -60,40 +66,31 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        //public static async Task MakeLikeAsync(ICanChangeLikModel model, Windows.UI.Core.CoreDispatcher dispatcher, SymbolIcon like, SymbolIcon coloredLike)
-        //{
-        //    if (model == null) { return; }
+        public static async Task MakeLikeAsync(ICanChangeLikeModel model, CoreDispatcher dispatcher)
+        {
+            if (model == null) { return; }
 
-        //    bool isReply = model is FeedReplyModel;
-        //    Uri u = UriHelper.GetUri(
-        //        model.Liked ? UriType.OperateUnlike : UriType.OperateLike,
-        //        isReply ? "Reply" : string.Empty,
-        //        model.Id);
-        //    (bool isSucceed, JToken result) = await GetDataAsync(u, true);
-        //    if (!isSucceed) { return; }
+            bool isReply = model is FeedReplyModel;
+            Uri u = UriHelper.GetUri(
+                model.Liked ? UriType.OperateUnlike : UriType.OperateLike,
+                isReply ? "Reply" : string.Empty,
+                model.ID);
+            (bool isSucceed, JToken result) = await Utils.GetDataAsync(u, true);
+            if (!isSucceed) { return; }
 
-        //    JObject o = result as JObject;
-        //    await dispatcher?.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-        //    {
-        //        model.Liked = !model.Liked;
-        //        if (isReply)
-        //        {
-        //            model.Likenum = o.ToString().Replace("\"", string.Empty);
-        //        }
-        //        else if (o != null)
-        //        {
-        //            model.Likenum = $"{o.Value<int>("count")}";
-        //        }
-
-        //        if (like != null)
-        //        {
-        //            like.Visibility = model.Liked ? Visibility.Visible : Visibility.Collapsed;
-        //        }
-        //        if (coloredLike != null)
-        //        {
-        //            coloredLike.Visibility = model.Liked ? Visibility.Collapsed : Visibility.Visible;
-        //        }
-        //    });
-        //}
+            JObject o = result as JObject;
+            await dispatcher?.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                model.Liked = !model.Liked;
+                if (isReply)
+                {
+                    model.LikeNum = Convert.ToInt32(o.ToString().Replace("\"", string.Empty));
+                }
+                else if (o != null)
+                {
+                    model.LikeNum = o.Value<int>("count");
+                }
+            });
+        }
     }
 }

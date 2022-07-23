@@ -62,8 +62,21 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        private bool liked;
+        public bool Liked
+        {
+            get => liked;
+            set
+            {
+                if (liked != value)
+                {
+                    liked = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public int ID => EntityId;
-        public bool Liked { get; set; }
         public bool Stared { get; set; }
         public string Info { get; private set; }
         public int ShareNum { get; private set; }

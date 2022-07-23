@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
+using CoolapkUWP.Controls;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -45,6 +47,61 @@ namespace CoolapkLite.Pages.FeedPages
             TwoPaneView.MinWideModeWidth = Provider.FeedDetail?.IsFeedArticle ?? false ? 876 : 804;
             TwoPaneView.Pane1Length = new GridLength(Provider.FeedDetail?.IsFeedArticle ?? false ? 520 : 420);
             //_ = ListControl.Refresh(-2);
+        }
+
+        private async void FeedButton_Click(object sender, RoutedEventArgs _)
+        {
+            void DisabledCopy()
+            {
+                if ((sender as FrameworkElement).DataContext is ICanCopy i)
+                {
+                    i.IsCopyEnabled = false;
+                }
+            }
+
+            FrameworkElement element = sender as FrameworkElement;
+            switch (element.Name)
+            {
+                case "MakeReplyButton":
+                    DisabledCopy();
+                    //ListViewItem item = element.FindAscendant<ListViewItem>();
+                    //MakeFeedControl ctrl = item.FindName("makeFeed") as MakeFeedControl;
+                    //ctrl.Visibility = ctrl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+                    break;
+
+                case "LikeButton":
+                    DisabledCopy();
+                    await DataHelper.MakeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
+                    break;
+
+                case "ReportButton":
+                    DisabledCopy();
+                    UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=feed&m=report&type=feed&id={element.Tag}" });
+                    break;
+
+                case "ShareButton":
+                    DisabledCopy();
+                    break;
+
+                case "DeviceButton":
+                    DisabledCopy();
+                    //FeedListPageViewModelBase f = FeedListPageViewModelBase.GetProvider(FeedListType.DevicePageList, (sender as FrameworkElement).Tag as string);
+                    //if (f != null)
+                    //{
+                    //    UIHelper.NavigateInSplitPane(typeof(FeedListPage), f);
+                    //}
+                    break;
+
+                case "ChangeButton":
+                    DisabledCopy();
+                    //UIHelper.NavigateInSplitPane(typeof(AdaptivePage), new ViewModels.AdaptivePage.ViewModel((sender as FrameworkElement).Tag as string, ViewModels.AdaptivePage.ListType.FeedInfo, "changeHistory"));
+                    break;
+
+                default:
+                    DisabledCopy();
+                    UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    break;
+            }
         }
 
         #region 界面模式切换

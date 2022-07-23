@@ -35,8 +35,6 @@
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            ScrollViewer.IsDeferredScrollingEnabled="True"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
             SelectionMode="None" />
         <control:TitleBar
             x:Name="TitleBar"
