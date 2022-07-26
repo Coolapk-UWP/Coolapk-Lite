@@ -48,6 +48,19 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        public bool Liked
+        {
+            get => UserAction.Like;
+            set
+            {
+                if (UserAction.Like != value)
+                {
+                    UserAction.Like = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         private bool isCopyEnabled;
         public bool IsCopyEnabled
         {
@@ -57,20 +70,6 @@ namespace CoolapkLite.Models.Feeds
                 if (isCopyEnabled != value)
                 {
                     isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        private bool liked;
-        public bool Liked
-        {
-            get => liked;
-            set
-            {
-                if (liked != value)
-                {
-                    liked = value;
                     RaisePropertyChangedEvent();
                 }
             }

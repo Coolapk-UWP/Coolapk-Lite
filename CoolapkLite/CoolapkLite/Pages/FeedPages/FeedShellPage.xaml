@@ -68,7 +68,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <SymbolIcon Symbol="Comment" />
                                     <TextBlock
-                                        Margin="3,0"
+                                        Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{Binding FeedDetail.ReplyNum}" />
                                 </StackPanel>
@@ -86,7 +86,7 @@
                                         Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
                                     <SymbolIcon Symbol="Like" Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                                     <TextBlock
-                                        Margin="3,0"
+                                        Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{Binding FeedDetail.LikeNum}" />
                                 </StackPanel>
@@ -104,7 +104,7 @@
                                         Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}}" />
                                     <SymbolIcon Symbol="OutlineStar" Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                                     <TextBlock
-                                        Margin="3,0"
+                                        Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{Binding FeedDetail.StarNum}" />
                                 </StackPanel>
@@ -119,7 +119,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon Glyph="&#xE72D;" />
                                     <TextBlock
-                                        Margin="3,0"
+                                        Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{Binding FeedDetail.ShareNum}" />
                                 </StackPanel>

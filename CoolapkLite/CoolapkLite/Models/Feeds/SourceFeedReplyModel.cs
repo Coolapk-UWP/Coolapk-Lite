@@ -19,6 +19,7 @@ namespace CoolapkLite.Models.Feeds
         public string Rusername { get; private set; }
         public bool IsFeedAuthor { get; private set; }
         public UserModel UserInfo { get; private set; }
+        public UserAction UserAction { get; private set; }
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
         public SourceFeedReplyModel(JObject token) : base(token)
@@ -32,6 +33,12 @@ namespace CoolapkLite.Models.Feeds
             {
                 JObject userInfo = (JObject)v1;
                 UserInfo = new UserModel(userInfo);
+            }
+
+            if (token.TryGetValue("userAction", out JToken v2))
+            {
+                JObject userAction = (JObject)v1;
+                UserAction = new UserAction(userAction);
             }
 
             if (token.TryGetValue("isFeedAuthor", out JToken isFeedAuthor))

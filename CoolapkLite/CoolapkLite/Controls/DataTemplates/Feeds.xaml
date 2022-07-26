@@ -147,7 +147,7 @@
                                 Symbol="Like"
                                 Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <SymbolIcon Symbol="Like" Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-                            <TextBlock Margin="3,0" Text="{Binding LikeNum}" />
+                            <TextBlock Margin="8,0,0,0" Text="{Binding LikeNum}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -160,7 +160,7 @@
                         <StackPanel Orientation="Horizontal">
                             <SymbolIcon Symbol="Comment" />
                             <TextBlock
-                                Margin="3,0"
+                                Margin="8,0,0,0"
                                 VerticalAlignment="Center"
                                 Text="{Binding ReplyNum}" />
                         </StackPanel>
@@ -176,7 +176,7 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon Glyph="&#xE72D;" />
                             <TextBlock
-                                Margin="3,0"
+                                Margin="8,0,0,0"
                                 VerticalAlignment="Center"
                                 Text="{Binding ShareNum}" />
                         </StackPanel>

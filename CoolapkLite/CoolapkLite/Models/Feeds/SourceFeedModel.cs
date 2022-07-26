@@ -16,6 +16,7 @@ namespace CoolapkLite.Models.Feeds
         public string Dateline { get; private set; }
         public string ShareUrl { get; private set; }
         public UserModel UserInfo { get; private set; }
+        public UserAction UserAction { get; private set; }
         public string FeedType { get; private set; } = "feed";
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
@@ -34,6 +35,12 @@ namespace CoolapkLite.Models.Feeds
             {
                 JObject userInfo = (JObject)v1;
                 UserInfo = new UserModel(userInfo);
+            }
+
+            if (token.TryGetValue("userAction", out JToken v2))
+            {
+                JObject userAction = (JObject)v2;
+                UserAction = new UserAction(userAction);
             }
 
             if (token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString()))

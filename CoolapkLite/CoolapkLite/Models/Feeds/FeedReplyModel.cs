@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -39,6 +40,19 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        public bool Liked
+        {
+            get => UserAction.Like;
+            set
+            {
+                if (UserAction.Like != value)
+                {
+                    UserAction.Like = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         private bool isCopyEnabled;
         public bool IsCopyEnabled
         {
@@ -48,20 +62,6 @@ namespace CoolapkLite.Models.Feeds
                 if (isCopyEnabled != value)
                 {
                     isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        private bool liked;
-        public bool Liked
-        {
-            get => liked;
-            set
-            {
-                if (liked != value)
-                {
-                    liked = value;
                     RaisePropertyChangedEvent();
                 }
             }
@@ -121,8 +121,6 @@ namespace CoolapkLite.Models.Feeds
             {
                 ReplyRows = token["replyRows"].Select(item => new SourceFeedReplyModel((JObject)item)).ToList();
             }
-
-            Liked = token.TryGetValue("userAction", out JToken userAction) ? userAction.Value<int>("like") == 1 : false;
 
             if (!string.IsNullOrEmpty(PicUri))
             {

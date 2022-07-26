@@ -158,6 +158,7 @@
     <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
+    <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
