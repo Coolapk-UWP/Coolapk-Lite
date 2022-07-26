@@ -3,7 +3,6 @@ using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.ToolPages;
 using System;
 using System.Threading.Tasks;
-using Telerik.UI.Xaml.Controls.Chart;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -49,11 +48,10 @@ namespace CoolapkLite.Pages.ToolPages
             Provider.OnLoadMoreProgressChanged -= UIHelper.ShowProgressBar;
         }
 
-        private void ChartTrackBallBehavior_TrackInfoUpdated(object sender, TrackBallInfoEventArgs e)
-        {
-            Provider.FanNumListByDateTrack = e.Context;
-        }
-
+        //private void ChartTrackBallBehavior_TrackInfoUpdated(object sender, TrackBallInfoEventArgs e)
+        //{
+        //    Provider.FanNumListByDateTrack = e.Context;
+        //}
 
         private async Task Refresh(int p = -1) => await Provider.Refresh(p);
 

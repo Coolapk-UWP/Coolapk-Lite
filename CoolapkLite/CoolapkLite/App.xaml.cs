@@ -10,8 +10,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
-using Windows.UI;
-using Windows.UI.ViewManagement;
+using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -42,6 +41,7 @@ namespace CoolapkLite
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             AddBrushResource();
+            RequestWifiAccess();
             RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
 
@@ -131,6 +131,18 @@ namespace CoolapkLite
                 ResourceDictionary SolidBrushs = new ResourceDictionary();
                 SolidBrushs.Source = new Uri("ms-appx:///Styles/Brushes/SolidBrushes.xaml");
                 Resources.MergedDictionaries.Add(SolidBrushs);
+            }
+        }
+
+        private async void RequestWifiAccess()
+        {
+            switch (AppCapability.Create("wifiData").CheckAccess())
+            {
+                case AppCapabilityAccessStatus.DeniedByUser:
+                case AppCapabilityAccessStatus.DeniedBySystem:
+                    // Do something
+                    await AppCapability.Create("wifiData").RequestAccessAsync();
+                    break;
             }
         }
 

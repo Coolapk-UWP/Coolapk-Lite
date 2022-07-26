@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Telerik.UI.Xaml.Controls.Chart;
 using Windows.Storage;
 
 namespace CoolapkLite.ViewModels.ToolPages
@@ -173,21 +172,20 @@ namespace CoolapkLite.ViewModels.ToolPages
             }
         }
 
-
-        private ChartDataContext fanNumListByDateTrack;
-        public ChartDataContext FanNumListByDateTrack
-        {
-            get => fanNumListByDateTrack;
-            set
-            {
-                if (fanNumListByDateTrack != value)
-                {
-                    fanNumListByDateTrack = value;
-                    RaisePropertyChangedEvent();
-                    FanNumListByDateUpdate(fanNumListByDateTrack);
-                }
-            }
-        }
+        //private ChartDataContext fanNumListByDateTrack;
+        //public ChartDataContext FanNumListByDateTrack
+        //{
+        //    get => fanNumListByDateTrack;
+        //    set
+        //    {
+        //        if (fanNumListByDateTrack != value)
+        //        {
+        //            fanNumListByDateTrack = value;
+        //            RaisePropertyChangedEvent();
+        //            FanNumListByDateUpdate(fanNumListByDateTrack);
+        //        }
+        //    }
+        //}
 
         private void OrderFanList()
         {
@@ -210,12 +208,12 @@ namespace CoolapkLite.ViewModels.ToolPages
             OnLoadMoreCompleted?.Invoke();
         }
 
-        private void FanNumListByDateUpdate(ChartDataContext fanNumListByDateTrack)
-        {
-            DateData item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
-            DateLabel = item.Date.ToString("yyyy.MM.dd");
-            FansValue = item.Value;
-        }
+        //private void FanNumListByDateUpdate(ChartDataContext fanNumListByDateTrack)
+        //{
+        //    DateData item = fanNumListByDateTrack.ClosestDataPoint.DataPoint.DataItem as DateData;
+        //    DateLabel = item.Date.ToString("yyyy.MM.dd");
+        //    FansValue = item.Value;
+        //}
     }
 
     internal partial class FansAnalyzeViewModel : IViewModel, INotifyPropertyChanged

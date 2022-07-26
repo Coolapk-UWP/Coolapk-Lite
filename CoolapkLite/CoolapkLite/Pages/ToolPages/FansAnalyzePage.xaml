@@ -5,92 +5,10 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:telerikChart="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d">
     <Grid>
         <ScrollViewer Margin="12,80,12,0">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="2*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid>
-                    <Grid.Resources>
-                        <DataTemplate x:Key="IntersectionPointTemplate">
-                            <Ellipse
-                                Width="8"
-                                Height="8"
-                                Stroke="Black"
-                                StrokeThickness="2" />
-                        </DataTemplate>
-                        <DataTemplate x:Key="EmptyTemplate" />
-                    </Grid.Resources>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <TextBlock FontSize="16" Text="粉丝增长折线图" />
-                    <StackPanel Grid.Row="1" Orientation="Horizontal">
-                        <TextBlock
-                            Width="80"
-                            FontSize="12"
-                            Text="{Binding DateLabel}" />
-                        <TextBlock
-                            Margin="2,0,2,0"
-                            FontSize="12"
-                            Text="粉丝数：" />
-                        <TextBlock
-                            FontSize="12"
-                            Foreground="{ThemeResource ResourceKey=SystemAccentColor}"
-                            Text="{Binding FansValue}" />
-                    </StackPanel>
-                    <telerikChart:RadCartesianChart
-                        x:Name="Chart"
-                        Grid.Row="2"
-                        Margin="0,0,0,50">
-                        <telerikChart:RadCartesianChart.VerticalAxis>
-                            <telerikChart:LinearAxis />
-                        </telerikChart:RadCartesianChart.VerticalAxis>
-                        <telerikChart:RadCartesianChart.HorizontalAxis>
-                            <telerikChart:DateTimeContinuousAxis
-                                LabelFitMode="MultiLine"
-                                LabelFormat="{}{0:MM.dd}"
-                                MaximumTicks="10" />
-                        </telerikChart:RadCartesianChart.HorizontalAxis>
-                        <telerikChart:RadCartesianChart.Grid>
-                            <telerikChart:CartesianChartGrid MajorLinesVisibility="Y" />
-                        </telerikChart:RadCartesianChart.Grid>
-                        <telerikChart:AreaSeries
-                            telerikChart:ChartTrackBallBehavior.IntersectionTemplate="{StaticResource IntersectionPointTemplate}"
-                            telerikChart:ChartTrackBallBehavior.TrackInfoTemplate="{StaticResource EmptyTemplate}"
-                            ItemsSource="{Binding FanNumListByDate}"
-                            Transitions="{x:Null}">
-                            <telerikChart:AreaSeries.ValueBinding>
-                                <telerikChart:PropertyNameDataPointBinding PropertyName="Value" />
-                            </telerikChart:AreaSeries.ValueBinding>
-                            <telerikChart:AreaSeries.CategoryBinding>
-                                <telerikChart:PropertyNameDataPointBinding PropertyName="Date" />
-                            </telerikChart:AreaSeries.CategoryBinding>
-                        </telerikChart:AreaSeries>
-                        <telerikChart:RadCartesianChart.Behaviors>
-                            <telerikChart:ChartPanAndZoomBehavior PanMode="Horizontal" ZoomMode="Horizontal" />
-                            <telerikChart:ChartTrackBallBehavior ShowIntersectionPoints="True" TrackInfoUpdated="ChartTrackBallBehavior_TrackInfoUpdated" />
-                        </telerikChart:RadCartesianChart.Behaviors>
-                    </telerikChart:RadCartesianChart>
-                </Grid>
-                <Grid Grid.Row="1">
-                    <telerikChart:RadPieChart PaletteName="DefaultLight">
-                        <telerikChart:PieSeries ItemsSource="{Binding FanSortListByLevel}" RadiusFactor="0.5">
-                            <telerikChart:PieSeries.ValueBinding>
-                                <telerikChart:PropertyNameDataPointBinding PropertyName="Value" />
-                            </telerikChart:PieSeries.ValueBinding>
-                            <telerikChart:PieSeries.LabelDefinitions>
-                                <telerikChart:ChartSeriesLabelDefinition Margin="-15" />
-                            </telerikChart:PieSeries.LabelDefinitions>
-                        </telerikChart:PieSeries>
-                    </telerikChart:RadPieChart>
-                </Grid>
             </Grid>
         </ScrollViewer>
         <control:TitleBar
