@@ -150,12 +150,6 @@
   <data name="fan" xml:space="preserve">
     <value>粉丝</value>
   </data>
-  <data name="FanandFollow" xml:space="preserve">
-    <value>已互粉</value>
-  </data>
-  <data name="FanbutnotFollow" xml:space="preserve">
-    <value>关注</value>
-  </data>
   <data name="Fans.Text" xml:space="preserve">
     <value>粉丝</value>
   </data>
@@ -167,6 +161,15 @@
   </data>
   <data name="follow" xml:space="preserve">
     <value>关注</value>
+  </data>
+  <data name="followFan" xml:space="preserve">
+    <value>互关</value>
+  </data>
+  <data name="followFanGlyph" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="followGlyph" xml:space="preserve">
+    <value></value>
   </data>
   <data name="FollowNum.Text" xml:space="preserve">
     <value>关注</value>
@@ -189,15 +192,6 @@
   <data name="isBlack" xml:space="preserve">
     <value></value>
   </data>
-  <data name="isFan" xml:space="preserve">
-    <value></value>
-  </data>
-  <data name="isFollow" xml:space="preserve">
-    <value></value>
-  </data>
-  <data name="isFriend" xml:space="preserve">
-    <value></value>
-  </data>
   <data name="lastupdate_desc" xml:space="preserve">
     <value>最近回复</value>
   </data>
@@ -206,9 +200,6 @@
   </data>
   <data name="NewsNum.Text" xml:space="preserve">
     <value>新闻</value>
-  </data>
-  <data name="notFan" xml:space="preserve">
-    <value></value>
   </data>
   <data name="popular" xml:space="preserve">
     <value>按热度排序</value>
@@ -234,7 +225,16 @@
   <data name="Subscribed.Text" xml:space="preserve">
     <value>订阅</value>
   </data>
-  <data name="unFollow" xml:space="preserve">
+  <data name="unfollow" xml:space="preserve">
     <value>已关注</value>
+  </data>
+  <data name="unfollowFan" xml:space="preserve">
+    <value>已互关</value>
+  </data>
+  <data name="unfollowFanGlyph" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="unfollowGlyph" xml:space="preserve">
+    <value></value>
   </data>
 </root>
