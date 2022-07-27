@@ -1,11 +1,10 @@
 ﻿using CoolapkLite.Controls.DataTemplates;
-using CoolapkLite.Core.Helpers;
-using CoolapkLite.Core.Helpers.DataSource;
-using CoolapkLite.Core.Models;
-using CoolapkLite.Core.Providers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.DataSource;
+using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -105,7 +104,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     throw new ArgumentException($"{typeof(FeedListType).FullName}值错误");
             }
 
-            (bool isSucceed, JToken result) = await Utils.GetDataAsync(UriHelper.GetUri(type, Id), true);
+            (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(UriHelper.GetUri(type, Id), true);
             if (!isSucceed) { return null; }
 
             JObject o = (JObject)result;

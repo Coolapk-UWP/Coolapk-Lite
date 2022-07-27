@@ -144,6 +144,83 @@
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MarkdownTextBlock\CodeBlockResolvingEventArgs.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\ImageResolvingEventArgs.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\LinkClickedEventArgs.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownRenderedEventArgs.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Dimensions.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Events.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Methods.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Properties.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Constants.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\IParser.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\ParseHelpers.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\SchemaBase.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\StringValueAttribute.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\CodeBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\HeaderBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\HorizontalRuleBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\LinkReferenceBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\ListBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemBuilder.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemPreamble.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\NestedListInfo.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\ParagraphBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\QuoteBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\TableBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\YamlHeaderBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\ColumnAlignment.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\HyperlinkType.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\InlineParseMethod.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\ListStyle.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\MarkdownBlockType.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\MarkdownInlineType.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\Common.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\DebuggingReporter.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\InlineParseResult.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\InlineTripCharHelper.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\LineInfo.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\BoldItalicTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\BoldTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\CodeInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\CommentInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\EmojiInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\EmojiInline.EmojiCodes.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\HyperlinkInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\IInlineContainer.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\IInlineLeaf.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ILinkElement.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ImageInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ItalicTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\LinkAnchorInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\MarkdownLinkInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\StrikethroughTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\SubscriptTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\SuperscriptTextInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\TextRunInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownBlock.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownDocument.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownElement.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownInline.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\IRenderContext.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.Blocks.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.Inlines.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\ICodeBlockResolver.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\IImageResolver.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\ILinkRegister.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\InlineRenderContext.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Blocks.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Dimensions.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Inlines.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Properties.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownTable.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\RenderContext.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\RenderContextIncorrectException.cs" />
+    <Compile Include="Controls\MarkdownTextBlock\Render\UIElementCollectionRenderContext.cs" />
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
@@ -152,10 +229,22 @@
     <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
-    <Compile Include="Helpers\FocusVisualHelper.cs" />
-    <Compile Include="Helpers\ListViewHelper.cs" />
-    <Compile Include="Helpers\ScrollBarHelper.cs" />
+    <Compile Include="Helpers\DateHelper.cs" />
+    <Compile Include="Helpers\Controls\DispatcherHelper.cs" />
+    <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
+    <Compile Include="Helpers\HtmlToText.cs" />
+    <Compile Include="Helpers\Controls\ListViewHelper.cs" />
+    <Compile Include="Helpers\NetworkHelper.cs" />
+    <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
+    <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
+    <Compile Include="Helpers\UriHelper.cs" />
+    <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
+    <Compile Include="Helpers\WeakEvent.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\Exceptions\CoolapkMessageException.cs" />
+    <Compile Include="Helpers\Exceptions\ExceptionHandlingSynchronizationContext.cs" />
+    <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
@@ -232,11 +321,11 @@
     </Compile>
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\EmojiHelper.cs" />
-    <Compile Include="Helpers\EventHelper.cs" />
+    <Compile Include="Helpers\Controls\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
-    <Compile Include="Helpers\TipsRectangleHelper.cs" />
+    <Compile Include="Helpers\Controls\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
@@ -293,11 +382,10 @@
     <Compile Include="Pages\ShowImagePage.xaml.cs">
       <DependentUpon>ShowImagePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ToolPages\FansAnalyzePage.xaml.cs">
-      <DependentUpon>FansAnalyzePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\DataSource\DataSourceBase.cs" />
     <Compile Include="ViewModels\DataSource\EntityItemSourse.cs" />
+    <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FavoriteViewModel.cs" />
@@ -305,7 +393,8 @@
     <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
-    <Compile Include="ViewModels\ToolPages\FansAnalyzeViewModel.cs" />
+    <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
+    <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -898,6 +987,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MarkdownTextBlock\MarkdownTextBlock.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ShyHeaderListView\ShyHeaderListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1030,10 +1123,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ToolPages\FansAnalyzePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1068,11 +1157,20 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ColorCode.UWP">
+      <Version>2.0.6</Version>
+    </PackageReference>
+    <PackageReference Include="CommonMark.NET">
+      <Version>0.15.1</Version>
+    </PackageReference>
+    <PackageReference Include="Html2Markdown">
+      <Version>4.0.0.427</Version>
+    </PackageReference>
+    <PackageReference Include="HtmlAgilityPack">
+      <Version>1.11.43</Version>
+    </PackageReference>
     <PackageReference Include="ksemenenko.ColorThief">
       <Version>1.1.1.4</Version>
-    </PackageReference>
-    <PackageReference Include="LiteDB">
-      <Version>5.0.12</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
@@ -1083,13 +1181,13 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Connectivity">
+      <Version>4.0.0</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
       <Version>6.1.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>4.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>4.0.0</Version>
     </PackageReference>
     <PackageReference Include="MvvmLight">
@@ -1098,12 +1196,6 @@
     <PackageReference Include="QRCoder">
       <Version>1.4.3</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CoolapkLite.Core\CoolapkLite.Core.csproj">
-      <Project>{2e9152d3-e23a-4ec8-8d20-99f7fcc37bca}</Project>
-      <Name>CoolapkLite.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Resources.resw" />

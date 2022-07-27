@@ -147,7 +147,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                string fileName = Core.Helpers.Utils.GetMD5(url);
+                string fileName = DataHelper.GetMD5(url);
                 StorageFolder folder = await GetFolderAsync(type);
                 IStorageItem item = await folder.TryGetItemAsync(fileName);
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)

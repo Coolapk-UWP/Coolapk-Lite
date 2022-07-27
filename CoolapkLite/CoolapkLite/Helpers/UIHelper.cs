@@ -1,14 +1,13 @@
-﻿using CoolapkLite.Core.Helpers;
-using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
-using LiteDB;
 using MicaForUWP.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -55,11 +54,11 @@ namespace CoolapkLite.Helpers
 
         static UIHelper()
         {
-            BsonMapper.Global.RegisterType
-                (
-                serialize: (pic) => pic.Uri,
-                deserialize: (bson) => new ImageModel(bson.ToString(), ImageType.OriginImage)
-                );
+            //BsonMapper.Global.RegisterType
+            //    (
+            //    serialize: (pic) => pic.Uri,
+            //    deserialize: (bson) => new ImageModel(bson.ToString(), ImageType.OriginImage)
+            //    );
         }
 
         public static bool IsDarkTheme() => IsDarkTheme(SettingsHelper.Theme);
@@ -214,6 +213,27 @@ namespace CoolapkLite.Helpers
                 }
                 IsShowingMessage = false;
             }
+        }
+
+        public static void ShowInAppMessage(MessageType type, string message = null)
+        {
+            switch (type)
+            {
+                case MessageType.Message:
+                    ShowMessage(message);
+                    break;
+                default:
+                    ShowMessage(type.ConvertMessageTypeToMessage());
+                    break;
+            }
+        }
+
+        public static void ShowHttpExceptionMessage(HttpRequestException e)
+        {
+            if (e.Message.IndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
+            { ShowInAppMessage(MessageType.Message, $"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}"); }
+            else if (e.Message == "An error occurred while sending the request.") { ShowInAppMessage(MessageType.Message, "无法连接网络。"); }
+            else { ShowInAppMessage(MessageType.Message, $"请检查网络连接。 {e.Message}"); }
         }
 
         public static bool IsOriginSource(object source, object originalSource)

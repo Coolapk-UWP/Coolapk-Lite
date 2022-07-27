@@ -1,7 +1,7 @@
 ﻿using CoolapkLite.BackgroundTasks;
-using CoolapkLite.Core.Exceptions;
-using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Exceptions;
+using CoolapkLite.Models.Exceptions;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Threading.Tasks;
@@ -169,22 +169,9 @@ namespace CoolapkLite
             ExceptionHandlingSynchronizationContext
                 .Register()
                 .UnhandledException += SynchronizationContext_UnhandledException;
-
-            Utils.NeedShowInAppMessageEvent += (_, arg) =>
-            {
-                switch (arg.Type)
-                {
-                    case MessageType.Message:
-                        UIHelper.ShowMessage(arg.Message);
-                        break;
-                    default:
-                        UIHelper.ShowMessage(arg.Type.ConvertMessageTypeToMessage());
-                        break;
-                }
-            };
         }
 
-        private void SynchronizationContext_UnhandledException(object sender, Core.Exceptions.UnhandledExceptionEventArgs e)
+        private void SynchronizationContext_UnhandledException(object sender, Helpers.Exceptions.UnhandledExceptionEventArgs e)
         {
             e.Handled = true;
             if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))

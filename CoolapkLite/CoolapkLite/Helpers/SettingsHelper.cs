@@ -1,8 +1,6 @@
-﻿using CoolapkLite.Core.Helpers;
-using System;
+﻿using System;
 using Windows.Storage;
 using Windows.System.Profile;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 
@@ -12,10 +10,10 @@ namespace CoolapkLite.Helpers
     {
         public const string Uid = "Uid";
         public const string TileUrl = "TileUrl";
-        public const string Version = "Version";
         public const string DeviceID = "DeviceID";
         public const string IsFirstRun = "IsFirstRun";
         public const string IsDarkMode = "IsDarkMode";
+        public const string APIVersion = "APIVersion";
         public const string IsNoPicsMode = "IsNoPicsMode";
         public const string IsUseOldEmojiMode = "IsUseOldEmojiMode";
         public const string ShowOtherException = "ShowOtherException";
@@ -37,10 +35,6 @@ namespace CoolapkLite.Helpers
             {
                 LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
             }
-            if (!LocalSettings.Values.ContainsKey(Version))
-            {
-                LocalSettings.Values.Add(Version, "V9");
-            }
             if (!LocalSettings.Values.ContainsKey(DeviceID))
             {
                 LocalSettings.Values.Add(DeviceID, string.Empty);
@@ -52,6 +46,10 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(IsDarkMode))
             {
                 LocalSettings.Values.Add(IsDarkMode, false);
+            }
+            if (!LocalSettings.Values.ContainsKey(APIVersion))
+            {
+                LocalSettings.Values.Add(APIVersion, "V12");
             }
             if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
             {
@@ -93,7 +91,7 @@ namespace CoolapkLite.Helpers
         public static ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
         private static readonly ApplicationDataContainer LocalSettings = ApplicationData.Current.LocalSettings;
         public static readonly MetroLog.ILogManager LogManager = MetroLog.LogManagerFactory.CreateLogManager();
-        public static Core.WeakEvent<UISettingChangedType> UISettingChanged { get; } = new Core.WeakEvent<UISettingChangedType>();
+        public static WeakEvent<UISettingChangedType> UISettingChanged { get; } = new WeakEvent<UISettingChangedType>();
         public static double WindowsVersion = double.Parse($"{(ushort)((version & 0x00000000FFFF0000L) >> 16)}.{(ushort)(SettingsHelper.version & 0x000000000000FFFFL)}");
         public static ElementTheme Theme => Get<bool>("IsBackgroundColorFollowSystem") ? ElementTheme.Default : (Get<bool>("IsDarkMode") ? ElementTheme.Dark : ElementTheme.Light);
 

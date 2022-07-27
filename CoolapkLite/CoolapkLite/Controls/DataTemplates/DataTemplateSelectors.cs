@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Core.Models;
-using CoolapkLite.Models;
+﻿using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using Newtonsoft.Json.Linq;
 using Windows.UI.Xaml;

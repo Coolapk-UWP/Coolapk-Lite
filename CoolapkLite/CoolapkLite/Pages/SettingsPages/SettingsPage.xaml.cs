@@ -1,5 +1,5 @@
-﻿using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Controls;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using System;
 using System.ComponentModel;
 using Windows.ApplicationModel;

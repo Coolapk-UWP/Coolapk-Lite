@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Core.Models;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 
 namespace CoolapkLite.Models.Pages

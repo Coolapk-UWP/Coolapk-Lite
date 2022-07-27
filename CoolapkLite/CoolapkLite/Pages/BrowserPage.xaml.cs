@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Controls;
-using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using System;
 using Windows.ApplicationModel.Resources;

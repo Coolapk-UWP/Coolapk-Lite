@@ -105,6 +105,15 @@
                             Click="Button_Click"
                             Content="获取内容"
                             Tag="GetContent" />
+                        <TextBox
+                            x:Name="DeviceID"
+                            Margin="0,2"
+                            Header="设置 Device ID" />
+                        <Button
+                            Margin="0,2"
+                            Click="Button_Click"
+                            Content="保存 ID"
+                            Tag="SetDeviceID" />
                         <ComboBox
                             x:Name="ComboBoxVersion"
                             Grid.Row="13"
@@ -137,11 +146,11 @@
                                 Content="退出"
                                 Tag="OutPIP" />
                         </StackPanel>
-                        <Button
+                        <!--<Button
                             Margin="0,2"
                             Click="Button_Click"
                             Content="前往粉丝分析页面"
-                            Tag="GoToFansAnalyzePage" />
+                            Tag="GoToFansAnalyzePage" />-->
                         <Button
                             Margin="0,2"
                             Click="Button_Click"

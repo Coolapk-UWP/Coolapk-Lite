@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Core.Helpers;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Feeds;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
@@ -27,7 +26,7 @@ namespace CoolapkLite.BackgroundTasks
 
         private static async Task GetData(Uri uri)
         {
-            (bool isSucceed, JToken result) = await Utils.GetDataAsync(uri, true);
+            (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(uri, true);
             if (isSucceed)
             {
                 JArray array = (JArray)result;

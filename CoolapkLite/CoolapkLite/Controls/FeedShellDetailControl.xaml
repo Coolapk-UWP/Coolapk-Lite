@@ -84,6 +84,7 @@
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon
+                                    VerticalAlignment="Center"
                                     FontFamily="{StaticResource SymbolThemeFontFamily}"
                                     FontSize="15"
                                     Glyph="{Binding UserAction.FollowGlyph}" />

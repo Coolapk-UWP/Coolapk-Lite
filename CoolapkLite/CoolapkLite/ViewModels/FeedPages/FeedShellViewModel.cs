@@ -1,10 +1,10 @@
 ﻿using CoolapkLite.Controls;
-using CoolapkLite.Core.Helpers;
-using CoolapkLite.Core.Models;
-using CoolapkLite.Core.Providers;
+using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.DataSource;
+using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected static async Task<FeedDetailModel> GetFeedDetailAsync(string id)
         {
-            (bool isSucceed, JToken result) = id.Contains("changeHistoryDetail") ? await Utils.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : await Utils.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true);
+            (bool isSucceed, JToken result) = id.Contains("changeHistoryDetail") ? await NetworkHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : await NetworkHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;

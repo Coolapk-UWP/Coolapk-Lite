@@ -1,8 +1,5 @@
-﻿using CoolapkLite.Core.Exceptions;
-using CoolapkLite.Core.Helpers;
-using CoolapkLite.Helpers;
-using CoolapkLite.Pages.ToolPages;
-using CoolapkLite.ViewModels.ToolPages;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Exceptions;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -36,12 +33,13 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal string Version
         {
-            get => SettingsHelper.Get<string>(SettingsHelper.Version);
+            get => SettingsHelper.Get<string>(SettingsHelper.APIVersion);
             set
             {
                 if (Version != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.Version, value.ToString());
+                    SettingsHelper.Set(SettingsHelper.APIVersion, value.ToString());
+                    NetworkHelper.SetRequestHeaders();
                     RaisePropertyChangedEvent();
                 }
             }
@@ -63,6 +61,7 @@ namespace CoolapkLite.Pages.SettingsPages
         public TestPage()
         {
             InitializeComponent();
+            DeviceID.Text = SettingsHelper.Get<string>(SettingsHelper.DeviceID);
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
         }
 
@@ -83,7 +82,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     throw new CoolapkMessageException(NotifyMessage.Text);
                 case "GetContent":
                     Uri uri = WebUrl.Text.ValidateAndGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await Utils.GetStringAsync(uri, false);
+                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await NetworkHelper.GetStringAsync(uri, false);
                     if (!isSucceed)
                     {
                         result = "网络错误";
@@ -107,6 +106,10 @@ namespace CoolapkLite.Pages.SettingsPages
                         DefaultButton = ContentDialogButton.Close
                     };
                     _ = await GetJsonDialog.ShowAsync();
+                    break;
+                case "SetDeviceID":
+                    SettingsHelper.Set(SettingsHelper.DeviceID, DeviceID.Text);
+                    NetworkHelper.SetRequestHeaders();
                     break;
                 case "ShowMessage":
                     UIHelper.ShowMessage(NotifyMessage.Text);
@@ -142,9 +145,9 @@ namespace CoolapkLite.Pages.SettingsPages
                         UIHelper.ShowProgressBar();
                     }
                     break;
-                case "GoToFansAnalyzePage":
-                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
-                    break;
+                //case "GoToFansAnalyzePage":
+                //    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
+                //    break;
                 default:
                     break;
             }

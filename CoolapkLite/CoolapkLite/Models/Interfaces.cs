@@ -4,14 +4,14 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models
 {
-    internal interface IPic
+    public interface IPic
     {
         string Uri { get; }
         ImageType Type { get; }
         BitmapImage Pic { get; }
     }
 
-    internal interface IList
+    public interface IList
     {
         string Url { get; }
         string Title { get; }
@@ -19,13 +19,13 @@ namespace CoolapkLite.Models
         string Description { get; }
     }
 
-    internal interface IHasUriAndTitle
+    public interface IHasUriAndTitle
     {
         string Url { get; }
         string Title { get; }
     }
 
-    internal interface IListWithSubtitle
+    public interface IListWithSubtitle
     {
         string Url { get; }
         string Title { get; }
@@ -34,25 +34,25 @@ namespace CoolapkLite.Models
         string Description { get; }
     }
 
-    internal interface ICanCopy
+    public interface ICanCopy
     {
         bool IsCopyEnabled { get; set; }
     }
 
-    internal interface ICanChangeReplyNum
+    public interface ICanChangeReplyNum
     {
         int ID { get; }
         int ReplyNum { get; set; }
     }
 
-    internal interface ICanChangeLikeModel
+    public interface ICanChangeLikeModel
     {
         int ID { get; }
         bool Liked { get; set; }
         int LikeNum { get; set; }
     }
 
-    internal interface ICanChangeStarModel
+    public interface ICanChangeStarModel
     {
         int ID { get; }
         bool Stared { get; set; }

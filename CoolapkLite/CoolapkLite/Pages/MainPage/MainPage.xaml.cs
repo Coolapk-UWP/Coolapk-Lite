@@ -1,12 +1,10 @@
 ﻿using CoolapkLite.BackgroundTasks;
-using CoolapkLite.Core.Helpers;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
-using LiteDB;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
@@ -186,7 +184,7 @@ namespace CoolapkLite
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                (bool isSucceed, JToken result) = await Utils.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, sender.Text), true);
+                (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, sender.Text), true);
                 if (isSucceed && result != null && result is JArray array && array.Count > 0)
                 {
                     ObservableCollection<object> observableCollection = new ObservableCollection<object>();

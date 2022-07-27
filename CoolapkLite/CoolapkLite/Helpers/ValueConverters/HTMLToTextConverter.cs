@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Core.Helpers;
-using System;
+﻿using System;
 using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Helpers.ValueConverters

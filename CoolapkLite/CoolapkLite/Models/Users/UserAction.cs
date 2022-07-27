@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Core.Models;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

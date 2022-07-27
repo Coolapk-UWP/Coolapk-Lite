@@ -1,8 +1,8 @@
 ﻿using CoolapkLite.Controls.DataTemplates;
-using CoolapkLite.Core.Helpers;
-using CoolapkLite.Core.Helpers.DataSource;
-using CoolapkLite.Core.Models;
-using CoolapkLite.Core.Providers;
+using CoolapkLite.Helpers;
+using CoolapkLite.Models;
+using CoolapkLite.ViewModels.DataSource;
+using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
