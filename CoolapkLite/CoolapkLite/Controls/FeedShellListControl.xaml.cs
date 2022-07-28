@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.DataSource;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System.Collections.Generic;
 using Windows.Foundation.Metadata;
@@ -146,6 +147,14 @@ namespace CoolapkLite.Controls
             {
                 ScrollViewer.Margin = new Thickness(0, UIHelper.ScrollViewerMargin.Top, 0, Padding.Bottom);
                 ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
+            }
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ShyHeaderListView.ItemsSource is EntityItemSourse entities)
+            {
+                _ = entities.Refresh(-2);
             }
         }
     }

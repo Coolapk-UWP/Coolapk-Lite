@@ -9,7 +9,11 @@
     <DataTemplate x:Key="Null" />
 
     <DataTemplate x:Key="ListDefaultTemplate">
-        <Grid Padding="0,8" Tag="{Binding Url}">
+        <Grid
+            Padding="0,8"
+            KeyDown="OnKeyDown"
+            Tag="{Binding Url}"
+            Tapped="OnTapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />
@@ -48,7 +52,11 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ListWithSubtitleDefaultTemplate">
-        <Grid Padding="0,8" Tag="{Binding Url}">
+        <Grid
+            Padding="0,8"
+            KeyDown="OnKeyDown"
+            Tag="{Binding Url}"
+            Tapped="OnTapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />

@@ -78,10 +78,10 @@
                     <Button
                         x:Name="FollowButton"
                         Grid.Column="2"
-                        Click="Button_Click"
-                        Tag="{Binding}"
                         HorizontalAlignment="Right"
+                        Click="Button_Click"
                         Style="{StaticResource FeedOpButtonStyle}"
+                        Tag="{Binding}"
                         ToolTipService.ToolTip="{x:Bind FollowStatus.Text, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
                             <StackPanel Orientation="Horizontal">

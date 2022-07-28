@@ -238,6 +238,7 @@
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
+    <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />

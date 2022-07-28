@@ -1,7 +1,9 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkUWP.Controls;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -38,7 +40,7 @@ namespace CoolapkLite.Pages.FeedPages
                     SetLayout();
                 }
             }
-            await System.Threading.Tasks.Task.Delay(30);
+            await Task.Delay(30);
         }
 
         private void SetLayout()
@@ -71,7 +73,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case "LikeButton":
                     DisabledCopy();
-                    await NetworkHelper.ChangeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
+                    await RequestHelper.ChangeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
                     break;
 
                 case "ReportButton":
@@ -83,26 +85,14 @@ namespace CoolapkLite.Pages.FeedPages
                     DisabledCopy();
                     break;
 
-                case "DeviceButton":
-                    DisabledCopy();
-                    //FeedListPageViewModelBase f = FeedListPageViewModelBase.GetProvider(FeedListType.DevicePageList, (sender as FrameworkElement).Tag as string);
-                    //if (f != null)
-                    //{
-                    //    UIHelper.NavigateInSplitPane(typeof(FeedListPage), f);
-                    //}
-                    break;
-
-                case "ChangeButton":
-                    DisabledCopy();
-                    //UIHelper.NavigateInSplitPane(typeof(AdaptivePage), new ViewModels.AdaptivePage.ViewModel((sender as FrameworkElement).Tag as string, ViewModels.AdaptivePage.ListType.FeedInfo, "changeHistory"));
-                    break;
-
                 default:
                     DisabledCopy();
                     UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
             }
         }
+
+        private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Provider.Refresh(-2);
 
         #region 界面模式切换
 

@@ -82,7 +82,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     throw new CoolapkMessageException(NotifyMessage.Text);
                 case "GetContent":
                     Uri uri = WebUrl.Text.ValidateAndGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await NetworkHelper.GetStringAsync(uri, false);
+                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, false);
                     if (!isSucceed)
                     {
                         result = "网络错误";

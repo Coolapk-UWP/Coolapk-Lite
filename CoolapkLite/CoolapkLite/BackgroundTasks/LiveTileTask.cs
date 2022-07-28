@@ -33,7 +33,7 @@ namespace CoolapkLite.BackgroundTasks
 
         private async Task GetData(Uri uri)
         {
-            (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(uri, true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
             if (isSucceed)
             {
                 JArray array = (JArray)result;

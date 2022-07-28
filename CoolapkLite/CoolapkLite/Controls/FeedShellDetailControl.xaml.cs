@@ -19,7 +19,7 @@ namespace CoolapkLite.Controls
             switch (element.Name)
             {
                 case "FollowButton":
-                    NetworkHelper.ChangeFollow(element.Tag as ICanFollowModel, element.Dispatcher);
+                    RequestHelper.ChangeFollow(element.Tag as ICanFollowModel, element.Dispatcher);
                     break;
                 default:
                     UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);

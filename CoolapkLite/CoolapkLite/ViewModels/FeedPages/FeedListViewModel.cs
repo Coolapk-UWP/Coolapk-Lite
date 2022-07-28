@@ -104,7 +104,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     throw new ArgumentException($"{typeof(FeedListType).FullName}值错误");
             }
 
-            (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(UriHelper.GetUri(type, Id), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(type, Id), true);
             if (!isSucceed) { return null; }
 
             JObject o = (JObject)result;

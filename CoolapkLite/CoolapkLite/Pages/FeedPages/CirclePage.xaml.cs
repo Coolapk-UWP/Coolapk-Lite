@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -15,13 +16,21 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class CirclePage : Page
     {
+        private static int PivotIndex = 0;
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public CirclePage() => InitializeComponent();
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            PivotIndex = Pivot.SelectedIndex;
+        }
+
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
         {
             Pivot.ItemsSource = MenuItem.GetMainItems();
+            Pivot.SelectedIndex = PivotIndex;
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)

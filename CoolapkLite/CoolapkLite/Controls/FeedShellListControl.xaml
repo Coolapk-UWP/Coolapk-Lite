@@ -80,6 +80,7 @@
                     <Button
                         x:Name="RefreshButton"
                         VerticalAlignment="Center"
+                        Click="RefreshButton_Click"
                         Style="{StaticResource IconButtonStyle}"
                         Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}">
                         <SymbolIcon Symbol="Refresh" />

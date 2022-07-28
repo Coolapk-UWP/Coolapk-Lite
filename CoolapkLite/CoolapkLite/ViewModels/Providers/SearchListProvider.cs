@@ -41,7 +41,7 @@ namespace CoolapkLite.ViewModels.Providers
 
         public async Task Search(string keyWord)
         {
-            (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(_getUri(keyWord, ++Page, lastItem), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(_getUri(keyWord, ++Page, lastItem), true);
             if (!isSucceed) { return; }
 
             JArray array = (JArray)result;

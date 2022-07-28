@@ -189,7 +189,7 @@ namespace CoolapkLite.BackgroundTasks
         {
             try
             {
-                (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
                 if (!isSucceed) { return; }
                 ChangeNumber((JObject)result);
             }
