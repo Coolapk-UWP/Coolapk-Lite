@@ -139,6 +139,7 @@ namespace CoolapkLite.Helpers
                     base64 = DataHelper.GetBase64(base64);
                 }
                 token = base64.Replace("=", "");
+                SettingsHelper.Set(SettingsHelper.DeviceID, token);
             }
             return token;
         }
@@ -191,38 +192,45 @@ namespace CoolapkLite.Helpers
 
     public static partial class NetworkHelper
     {
-        public static async Task<string> PostAsync(Uri uri, HttpContent content, IEnumerable<(string name, string value)> coolapkCookies)
+        public static async Task<string> PostAsync(Uri uri, HttpContent content, IEnumerable<(string name, string value)> coolapkCookies, bool isBackground)
         {
             try
             {
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
-                if (string.IsNullOrEmpty(ApplicationData.Current.LocalSettings.Values["DeviceID"].ToString()))
-                {
-                    _ = Client.DefaultRequestHeaders.Remove("X-App-Device");
-                    response = await Client.PostAsync(uri, content);
-                    Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
-                }
-                else
-                {
-                    response = await Client.PostAsync(uri, content);
-                }
+                response = await Client.PostAsync(uri, content);
                 return await response.Content.ReadAsStringAsync();
             }
-            catch { throw; }
+            catch (HttpRequestException e)
+            {
+                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies)
+        public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
-                BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
+                BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStreamAsync(uri);
             }
-            catch { throw; }
+            catch (HttpRequestException e)
+            {
+                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
-        public static async Task<string> GetSrtingAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request, bool isBackground)
+        public static async Task<string> GetSrtingAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
@@ -268,7 +276,7 @@ namespace CoolapkLite.Helpers
             }
         }, null, TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(2));
 
-        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground, bool forceRefresh = false)
+        public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground=false, bool forceRefresh = false)
         {
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
@@ -329,7 +337,7 @@ namespace CoolapkLite.Helpers
             return result;
         }
 
-        public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, bool isBackground, bool forceRefresh = false)
+        public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, bool isBackground=false, bool forceRefresh = false)
         {
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
@@ -396,6 +404,38 @@ namespace CoolapkLite.Helpers
             return result;
         }
 
+        public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content=null, bool isBackground=false)
+        {
+            string json = string.Empty;
+            (bool isSucceed, JToken result) result;
+
+            json = await PostAsync(uri, content, GetCoolapkCookies(uri), isBackground);
+            result = GetResult(json);
+
+            return result;
+        }
+
+        public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content=null, bool isBackground=false, bool forceRefresh = false)
+        {
+            string json = string.Empty;
+            (bool isSucceed, string result) result;
+
+            (bool isSucceed, string result) GetResult()
+            {
+                if (string.IsNullOrEmpty(json))
+                {
+                    UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                    return (false, null);
+                }
+                else { return (true, json); }
+            }
+
+            json = await PostAsync(uri, content, GetCoolapkCookies(uri), isBackground);
+            result = GetResult();
+
+            return result;
+        }
+
         private static (int page, Uri uri) GetPage(this Uri uri)
         {
             Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
@@ -441,12 +481,12 @@ namespace CoolapkLite.Helpers
         }
 
 #pragma warning disable 0612
-        public static async Task<BitmapImage> GetImageAsync(string uri)
+        public static async Task<BitmapImage> GetImageAsync(string uri, bool isBackground = false)
         {
-            Windows.Storage.StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha);
-            Windows.Storage.StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
+            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha);
+            StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
 
-            Stream s = await GetStreamAsync(new Uri(uri), GetCoolapkCookies(new Uri(uri)));
+            Stream s = await GetStreamAsync(new Uri(uri), GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground);
 
             using (Stream ss = await file.OpenStreamForWriteAsync())
             {
@@ -457,7 +497,7 @@ namespace CoolapkLite.Helpers
         }
 #pragma warning restore 0612
 
-        public static async Task MakeLikeAsync(ICanChangeLikeModel model, CoreDispatcher dispatcher)
+        public static async Task ChangeLikeAsync(this ICanChangeLikeModel model, CoreDispatcher dispatcher)
         {
             if (model == null) { return; }
 
@@ -466,11 +506,11 @@ namespace CoolapkLite.Helpers
                 model.Liked ? UriType.OperateUnlike : UriType.OperateLike,
                 isReply ? "Reply" : string.Empty,
                 model.ID);
-            (bool isSucceed, JToken result) = await GetDataAsync(u, true);
+            (bool isSucceed, JToken result) = await PostDataAsync(u, null, true);
             if (!isSucceed) { return; }
 
             JObject o = result as JObject;
-            await dispatcher?.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await dispatcher.AwaitableRunAsync(() =>
             {
                 model.Liked = !model.Liked;
                 if (isReply)
@@ -482,6 +522,16 @@ namespace CoolapkLite.Helpers
                     model.LikeNum = o.Value<int>("count");
                 }
             });
+        }
+
+        public static async void ChangeFollow(this ICanFollowModel model, CoreDispatcher dispatcher)
+        {
+            UriType type = model.Followed ? UriType.OperateUnfollow : UriType.OperateFollow;
+
+            (bool isSucceed, _) = await PostDataAsync(UriHelper.GetUri(type, model.UID), null, true);
+            if (!isSucceed) { return; }
+
+            await dispatcher.AwaitableRunAsync(() => model.Followed = !model.Followed);
         }
     }
 

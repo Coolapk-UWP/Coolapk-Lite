@@ -48,8 +48,9 @@ namespace CoolapkLite
             {
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
+            NotificationsTask.Instance?.GetNums();
+            LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
-            LiveTileTask.UpdateTile();
             UIHelper.ChangeTheme();
         }
 

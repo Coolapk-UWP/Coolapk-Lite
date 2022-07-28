@@ -348,8 +348,8 @@ namespace CoolapkLite.Controls
             }
 
             multiClickDetectionTriggered = true;
-            var dispatcherQueue = Dispatcher;
-            await DispatcherHelper.ExecuteOnUIThreadAsync(new Action(() => multiClickDetectionTriggered = false), CoreDispatcherPriority.High);
+            CoreDispatcher dispatcherQueue = Dispatcher;
+            await dispatcherQueue.AwaitableRunAsync(() => multiClickDetectionTriggered = false, CoreDispatcherPriority.High);
 
             // Get the hyperlink URL.
             if (url == null)

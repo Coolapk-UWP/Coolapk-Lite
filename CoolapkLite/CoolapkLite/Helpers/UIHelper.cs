@@ -12,9 +12,11 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -271,6 +273,23 @@ namespace CoolapkLite.Helpers
 
                 default: return string.Empty;
             }
+        }
+
+        public static void SetBadgeNumber(string badgeGlyphValue)
+        {
+            // Get the blank badge XML payload for a badge number
+            XmlDocument badgeXml =
+                BadgeUpdateManager.GetTemplateContent(BadgeTemplateType.BadgeNumber);
+            // Set the value of the badge in the XML to our number
+            XmlElement badgeElement = badgeXml.SelectSingleNode("/badge") as XmlElement;
+            badgeElement.SetAttribute("value", badgeGlyphValue);
+            // Create the badge notification
+            BadgeNotification badge = new BadgeNotification(badgeXml);
+            // Create the badge updater for the application
+            BadgeUpdater badgeUpdater =
+                BadgeUpdateManager.CreateBadgeUpdaterForApplication();
+            // And update the badge
+            badgeUpdater.Update(badge);
         }
     }
 

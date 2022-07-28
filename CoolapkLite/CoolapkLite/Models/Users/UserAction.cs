@@ -77,9 +77,9 @@ namespace CoolapkLite.Models.Users
             {
                 if (followAuthor != value)
                 {
-                    OnFollowChanged();
                     followAuthor = value;
                     RaisePropertyChangedEvent();
+                    OnFollowChanged();
                 }
             }
         }
@@ -92,9 +92,9 @@ namespace CoolapkLite.Models.Users
             {
                 if (authorFollowYou != value)
                 {
-                    OnFollowChanged();
                     authorFollowYou = value;
                     RaisePropertyChangedEvent();
+                    OnFollowChanged();
                 }
             }
         }

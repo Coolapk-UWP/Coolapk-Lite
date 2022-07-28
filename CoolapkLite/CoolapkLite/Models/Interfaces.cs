@@ -39,6 +39,12 @@ namespace CoolapkLite.Models
         bool IsCopyEnabled { get; set; }
     }
 
+    public interface ICanFollowModel
+    {
+        int UID { get; }
+        bool Followed { get; set; }
+    }
+
     public interface ICanChangeReplyNum
     {
         int ID { get; }

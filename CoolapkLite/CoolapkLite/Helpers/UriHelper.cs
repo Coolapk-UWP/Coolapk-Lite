@@ -145,7 +145,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetUserFollows: return "/v6/user/{0}?uid={1}&page={2}";
                 case UriType.OperateFollow: return "/v6/user/follow?uid={0}";
                 case UriType.OperateLike: return "/v6/feed/like{0}?id={1}&detail=0";
-                case UriType.OperateUnfollow: return "/v6/user/follow?uid={0}";
+                case UriType.OperateUnfollow: return "/v6/user/unfollow?uid={0}";
                 case UriType.OperateUnlike: return "/v6/feed/unlike{0}?id={1}&detail=0";
                 case UriType.RequestValidate: return "/v6/account/requestValidate";
                 case UriType.Search: return "/v6/search?type={0}&searchValue={1}&page={2}{3}&showAnonymous=-1";

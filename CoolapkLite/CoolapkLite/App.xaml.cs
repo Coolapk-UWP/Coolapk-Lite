@@ -4,13 +4,16 @@ using CoolapkLite.Helpers.Exceptions;
 using CoolapkLite.Models.Exceptions;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
+using Windows.UI.Notifications;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -199,14 +202,47 @@ namespace CoolapkLite
 
         private static async void RegisterBackgroundTask()
         {
-            #region LiveTileTask
-            if (BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask))) { return; }
-
             // Check for background access (optional)
             await BackgroundExecutionManager.RequestAccessAsync();
 
-            // Register (Multi Process)
-            BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+            #region LiveTileTask
+
+            if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
+            {
+                // Register (Multi Process)
+                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+            }
+
+            #endregion
+
+            #region NotificationsTask
+
+            if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
+            {
+                // Register (Single Process)
+                BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
+            }
+
+            #endregion
+
+            #region ToastBackgroundTask
+            const string ToastBackgroundTask = "ToastBackgroundTask";
+
+            // If background task is already registered, do nothing
+            if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(ToastBackgroundTask)))
+                return;
+
+            // Otherwise request access
+            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
+
+            // Create the background task
+            BackgroundTaskBuilder builder = new BackgroundTaskBuilder { Name = ToastBackgroundTask };
+
+            // Assign the toast action trigger
+            builder.SetTrigger(new ToastNotificationActionTrigger());
+
+            // And register the task
+            BackgroundTaskRegistration registration = builder.Register();
             #endregion
         }
 
@@ -219,7 +255,21 @@ namespace CoolapkLite
             switch (args.TaskInstance.Task.Name)
             {
                 case "LiveTileTask":
-                    new LiveTileTask().Run(args.TaskInstance);
+                    LiveTileTask.Instance?.Run(args.TaskInstance);
+                    break;
+
+                case "NotificationsTask":
+                    NotificationsTask.Instance?.Run(args.TaskInstance);
+                    break;
+
+                case "ToastBackgroundTask":
+                    if (args.TaskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
+                    {
+                        //ToastArguments arguments = ToastArguments.Parse(details.Argument);
+                        ValueSet userInput = details.UserInput;
+
+                        // Perform tasks
+                    }
                     break;
 
                 default:

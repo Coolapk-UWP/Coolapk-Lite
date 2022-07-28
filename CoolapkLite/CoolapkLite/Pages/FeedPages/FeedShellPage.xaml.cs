@@ -71,12 +71,12 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case "LikeButton":
                     DisabledCopy();
-                    await NetworkHelper.MakeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
+                    await NetworkHelper.ChangeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
                     break;
 
                 case "ReportButton":
                     DisabledCopy();
-                    UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=feed&m=report&type=feed&id={element.Tag}" });
+                    UIHelper.Navigate(typeof(BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=feed&m=report&type=feed&id={element.Tag}" });
                     break;
 
                 case "ShareButton":

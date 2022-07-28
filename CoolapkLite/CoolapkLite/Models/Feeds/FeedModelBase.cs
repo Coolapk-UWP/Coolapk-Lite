@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedModelBase : SourceFeedModel, INotifyPropertyChanged, ICanChangeLikeModel, ICanChangeReplyNum, ICanChangeStarModel, ICanCopy
+    public class FeedModelBase : SourceFeedModel, INotifyPropertyChanged, ICanFollowModel, ICanChangeLikeModel, ICanChangeReplyNum, ICanChangeStarModel, ICanCopy
     {
         private int likeNum;
         public int LikeNum
@@ -61,6 +61,19 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        public bool Followed
+        {
+            get => UserAction.FollowAuthor;
+            set
+            {
+                if (UserAction.FollowAuthor != value)
+                {
+                    UserAction.FollowAuthor = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         private bool isCopyEnabled;
         public bool IsCopyEnabled
         {
@@ -76,6 +89,7 @@ namespace CoolapkLite.Models.Feeds
         }
 
         public int ID => EntityId;
+        public int UID => UserInfo.UID;
         public bool Stared { get; set; }
         public string Info { get; private set; }
         public int ShareNum { get; private set; }

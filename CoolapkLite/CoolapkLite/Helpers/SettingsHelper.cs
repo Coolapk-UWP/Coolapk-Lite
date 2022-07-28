@@ -3,6 +3,8 @@ using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 
 namespace CoolapkLite.Helpers
 {
@@ -117,11 +119,11 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
                 {
-                    Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
+                    HttpCookieManager cookieManager = filter.CookieManager;
                     string uid = string.Empty, token = string.Empty, userName = string.Empty;
-                    foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(new Uri("http://coolapk.com")))
+                    foreach (HttpCookie item in cookieManager.GetCookies(new Uri("http://coolapk.com")))
                     {
                         switch (item.Name)
                         {
@@ -150,7 +152,6 @@ namespace CoolapkLite.Helpers
                     else
                     {
                         Set(Uid, uid);
-
                         return true;
                     }
                 }
@@ -160,10 +161,10 @@ namespace CoolapkLite.Helpers
 
         public static void Logout()
         {
-            using (Windows.Web.Http.Filters.HttpBaseProtocolFilter filter = new Windows.Web.Http.Filters.HttpBaseProtocolFilter())
+            using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
-                Windows.Web.Http.HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (Windows.Web.Http.HttpCookie item in cookieManager.GetCookies(UriHelper.BaseUri))
+                HttpCookieManager cookieManager = filter.CookieManager;
+                foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.BaseUri))
                 {
                     cookieManager.DeleteCookie(item);
                 }

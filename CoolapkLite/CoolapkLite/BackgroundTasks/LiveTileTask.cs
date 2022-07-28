@@ -11,6 +11,13 @@ namespace CoolapkLite.BackgroundTasks
 {
     public sealed class LiveTileTask : IBackgroundTask
     {
+        public static LiveTileTask Instance = new LiveTileTask(false);
+
+        public LiveTileTask(bool renew = true)
+        {
+            if (renew) { Instance = this; }
+        }
+
         public void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
@@ -18,13 +25,13 @@ namespace CoolapkLite.BackgroundTasks
             deferral.Complete();
         }
 
-        public static async void UpdateTile()
+        public async void UpdateTile()
         {
             Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
             try { await GetData(uri); } catch { }
         }
 
-        private static async Task GetData(Uri uri)
+        private async Task GetData(Uri uri)
         {
             (bool isSucceed, JToken result) = await NetworkHelper.GetDataAsync(uri, true);
             if (isSucceed)
@@ -47,7 +54,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private static void UpdateTitle(TileContent tileContent)
+        private void UpdateTitle(TileContent tileContent)
         {
             try
             {
@@ -58,7 +65,7 @@ namespace CoolapkLite.BackgroundTasks
             catch { }
         }
 
-        private static TileContent GetFeedTitle(JObject token)
+        private TileContent GetFeedTitle(JObject token)
         {
             FeedModel FeedDetail = new FeedModel(token);
             string Message = FeedDetail.Message.CSStoString();
