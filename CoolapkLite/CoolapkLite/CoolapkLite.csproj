@@ -230,6 +230,7 @@
     <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
+    <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\DispatcherHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />

@@ -5,6 +5,7 @@
     xmlns:controls="using:CoolapkUWP.Controls"
     xmlns:ctrl="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls.DataTemplates"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:valueconverters="using:CoolapkLite.Helpers.ValueConverters"
@@ -57,8 +58,8 @@
                             Text="复制全部内容" />
                         <MenuFlyoutItem
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}'}"
-                            Text="{Binding UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}'}" />
+                            Tag="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}', Mode=OneWay}"
+                            Text="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}', Mode=OneWay}" />
                     </MenuFlyoutSubItem>
                     <MenuFlyoutItem
                         x:Name="ReportButton"
@@ -67,7 +68,7 @@
                         Tag="{Binding ID}" />
                 </MenuFlyout>
             </UserControl.Resources>
-            <Grid Padding="8,4">
+            <Grid Padding="8,4" helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
