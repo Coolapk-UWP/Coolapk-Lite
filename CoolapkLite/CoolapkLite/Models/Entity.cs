@@ -6,7 +6,8 @@ namespace CoolapkLite.Models
     public class Entity
     {
         public bool EntityFixed { get; set; }
-        public int EntityId { get; private set; }
+        public int EntityID { get; private set; }
+        public string EntityIDText { get; private set; }
         public string EntityType { get; private set; }
 
         public Entity(JObject o)
@@ -19,7 +20,14 @@ namespace CoolapkLite.Models
 
             if (o.TryGetValue("entityId", out JToken entityId))
             {
-                EntityId = entityId.ToObject<int>();
+                try
+                {
+                    EntityID = entityId.ToObject<int>();
+                }
+                catch
+                {
+                    EntityIDText = entityId.ToString();
+                }
             }
 
             if (o.TryGetValue("entityType", out JToken entityType))

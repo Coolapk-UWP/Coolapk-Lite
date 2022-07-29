@@ -88,7 +88,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public int ID => EntityId;
+        public int ID => EntityID;
         public int UID => UserInfo.UID;
         public bool Stared { get; set; }
         public string Info { get; private set; }

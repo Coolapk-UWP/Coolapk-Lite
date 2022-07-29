@@ -35,11 +35,19 @@ namespace CoolapkLite.Models.Feeds
                 JObject userInfo = (JObject)v1;
                 UserInfo = new UserModel(userInfo);
             }
+            else
+            {
+                UserInfo = new UserModel(null);
+            }
 
             if (token.TryGetValue("userAction", out JToken v2))
             {
                 JObject userAction = (JObject)v2;
                 UserAction = new UserAction(userAction);
+            }
+            else
+            {
+                UserAction = new UserAction(null);
             }
 
             if (token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString()))

@@ -57,7 +57,14 @@ namespace CoolapkLite
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
 
-                rootFrame.ActualThemeChanged += (sender, e) => UIHelper.CheckTheme();
+                if (ApiInformation.IsEventPresent("Windows.UI.Xaml.FrameworkElement", "ActualThemeChanged"))
+                {
+                    rootFrame.ActualThemeChanged += (sender, e) => UIHelper.CheckTheme();
+                }
+                else
+                {
+                    SettingsHelper.UISettings.ColorValuesChanged += (sender, e) => UIHelper.CheckTheme();
+                }
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
@@ -139,13 +146,17 @@ namespace CoolapkLite
 
         private async void RequestWifiAccess()
         {
-            switch (AppCapability.Create("wifiData").CheckAccess())
+            if (ApiInformation.IsMethodPresent("Windows.Security.Authorization.AppCapabilityAccess.AppCapability", "Create"))
             {
-                case AppCapabilityAccessStatus.DeniedByUser:
-                case AppCapabilityAccessStatus.DeniedBySystem:
-                    // Do something
-                    await AppCapability.Create("wifiData").RequestAccessAsync();
-                    break;
+                var wifiData = AppCapability.Create("wifiData");
+                switch (wifiData.CheckAccess())
+                {
+                    case AppCapabilityAccessStatus.DeniedByUser:
+                    case AppCapabilityAccessStatus.DeniedBySystem:
+                        // Do something
+                        await AppCapability.Create("wifiData").RequestAccessAsync();
+                        break;
+                }
             }
         }
 
@@ -242,7 +253,7 @@ namespace CoolapkLite
             builder.SetTrigger(new ToastNotificationActionTrigger());
 
             // And register the task
-            BackgroundTaskRegistration registration = builder.Register();
+            try { BackgroundTaskRegistration registration = builder.Register(); } catch { }
             #endregion
         }
 

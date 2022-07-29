@@ -47,7 +47,7 @@ namespace CoolapkLite.Helpers
         private static void OnContextFlyoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UIElement element = (UIElement)d;
-            if (!ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
             {
                 element.ContextFlyout = GetContextFlyout((UIElement)d);
             }

@@ -67,7 +67,16 @@ namespace CoolapkLite.Helpers
                 }
             }
 
-            if (await Task.Run(() => { lock (locker) { return !ResponseCache.ContainsKey(info.uri); } }))
+            bool isCached = false;
+
+            lock (locker)
+            {
+                isCached = ResponseCache.ContainsKey(info.uri)
+                && ResponseCache[info.uri].ContainsKey(info.page)
+                && (!IsInternetAvailable || (DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes <= 2);
+            }
+
+            if (!isCached)
             {
                 json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
                 result = GetResult(json);
@@ -76,26 +85,6 @@ namespace CoolapkLite.Helpers
                 {
                     ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
                     ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
-                }
-            }
-            else if (await Task.Run(() => { lock (locker) { return !ResponseCache[info.uri].ContainsKey(info.page); } }))
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult(json);
-                if (!result.isSucceed) { return result; }
-                lock (locker)
-                {
-                    ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
-                }
-            }
-            else if (await Task.Run(() => { lock (locker) { return (DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes > 2; } }) && IsInternetAvailable)
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult(json);
-                if (!result.isSucceed) { ReadCache(); }
-                lock (locker)
-                {
-                    ResponseCache[info.uri][info.page] = (DateTime.Now, json);
                 }
             }
             else
@@ -129,7 +118,16 @@ namespace CoolapkLite.Helpers
                 }
             }
 
-            if (await Task.Run(() => { lock (locker) { return !ResponseCache.ContainsKey(info.uri); } }))
+            bool isCached = false;
+
+            lock (locker)
+            {
+                isCached = ResponseCache.ContainsKey(info.uri)
+                && ResponseCache[info.uri].ContainsKey(info.page)
+                && (!IsInternetAvailable || (DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes <= 2);
+            }
+
+            if (!isCached)
             {
                 json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
                 result = GetResult();
@@ -138,26 +136,6 @@ namespace CoolapkLite.Helpers
                 {
                     ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
                     ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
-                }
-            }
-            else if (await Task.Run(() => { lock (locker) { return !ResponseCache[info.uri].ContainsKey(info.page); } }))
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult();
-                if (!result.isSucceed) { return result; }
-                lock (locker)
-                {
-                    ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
-                }
-            }
-            else if (await Task.Run(() => { lock (locker) { return (DateTime.Now - ResponseCache[info.uri][info.page].date).TotalMinutes > 2; } }) && IsInternetAvailable)
-            {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
-                result = GetResult();
-                if (!result.isSucceed) { return result; }
-                lock (locker)
-                {
-                    ResponseCache[info.uri][info.page] = (DateTime.Now, json);
                 }
             }
             else

@@ -136,6 +136,8 @@ namespace CoolapkLite.Models.Users
 
         public UserAction(JObject token) : base(token)
         {
+            if (token == null) { return; }
+
             if (token.TryGetValue("like", out JToken like))
             {
                 Like = like.ToObject<int>() != 0;

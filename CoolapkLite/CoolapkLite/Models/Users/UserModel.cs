@@ -30,6 +30,8 @@ namespace CoolapkLite.Models.Users
 
         public UserModel(JObject token) : base(token)
         {
+            if (token == null) { return; }
+
             if (token.TryGetValue("uid", out JToken uid))
             {
                 UID = uid.ToObject<int>();
