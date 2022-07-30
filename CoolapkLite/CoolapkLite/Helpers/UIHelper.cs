@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.FeedPages;
 using MicaForUWP.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
@@ -325,6 +326,11 @@ namespace CoolapkLite.Helpers
                     _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
                     break;
             }
+        }
+        
+        public static void ShowImage(ImageModel image)
+        {
+            MainPage?.Frame.Navigate(typeof(ShowImagePage), new ShowImageViewModel(image));
         }
 
         private static readonly ImmutableArray<string> routes = new string[]

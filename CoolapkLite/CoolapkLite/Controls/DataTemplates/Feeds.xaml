@@ -84,6 +84,7 @@
                     Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}}">
                     <FontIcon
                         Margin="4,0,0,0"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         FontSize="16"
                         Foreground="Red"
                         Glyph="&#xE840;" />

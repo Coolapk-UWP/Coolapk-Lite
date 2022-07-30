@@ -30,7 +30,7 @@ namespace CoolapkLite.Helpers
             ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
         }
 
-        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, Pages.ShowImageModel model = null)
+        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, bool isforce = false)
         {
             try { new Uri(url); } catch { return NoPic; }
 
@@ -38,7 +38,7 @@ namespace CoolapkLite.Helpers
             {
                 return new BitmapImage(new Uri(url));
             }
-            else if (model == null && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
                 return NoPic;
             }
@@ -52,10 +52,6 @@ namespace CoolapkLite.Helpers
 
                 try
                 {
-                    if (model != null)
-                    {
-                        model.IsProgressRingActived = true;
-                    }
                     BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                     return image;
                 }
@@ -64,13 +60,6 @@ namespace CoolapkLite.Helpers
                     string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                     UIHelper.ShowMessage(str);
                     return NoPic;
-                }
-                finally
-                {
-                    if (model != null)
-                    {
-                        model.IsProgressRingActived = false;
-                    }
                 }
             }
         }
@@ -133,7 +122,7 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, Pages.ShowImageModel model = null)
+        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, bool isforce = false)
         {
             try { new Uri(url); } catch { return NoPic; }
 
@@ -141,7 +130,7 @@ namespace CoolapkLite.Helpers
             {
                 return new BitmapImage(new Uri(url));
             }
-            else if (model == null && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
                 return NoPic;
             }
@@ -154,15 +143,14 @@ namespace CoolapkLite.Helpers
                 {
                     url += ".s.jpg";
                 }
-                bool forceGetPic = model != null;
                 if (item is null)
                 {
                     StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-                    return await DownloadImageAsync(file, url, model);
+                    return await DownloadImageAsync(file, url);
                 }
                 else
                 {
-                    return item is StorageFile file ? GetLocalImageAsync(file.Path, forceGetPic) : null;
+                    return item is StorageFile file ? GetLocalImageAsync(file.Path, isforce) : null;
                 }
             }
         }
@@ -181,14 +169,10 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, Pages.ShowImageModel model)
+        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url)
         {
             try
             {
-                if (model != null)
-                {
-                    model.IsProgressRingActived = true;
-                }
                 using (HttpClient hc = new HttpClient())
                 using (Stream stream = await hc.GetStreamAsync(new Uri(url)))
                 using (Stream fs = await file.OpenStreamForWriteAsync())
@@ -203,13 +187,6 @@ namespace CoolapkLite.Helpers
                 string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                 UIHelper.ShowMessage(str);
                 return NoPic;
-            }
-            finally
-            {
-                if (model != null)
-                {
-                    model.IsProgressRingActived = false;
-                }
             }
         }
 

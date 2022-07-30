@@ -1,8 +1,10 @@
 ﻿using ColorThiefDotNet;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using Windows.Foundation;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -98,6 +100,7 @@ namespace CoolapkLite.Models.Images
                 if (contextArray.IsDefaultOrEmpty)
                 {
                     contextArray = value;
+                    RaisePropertyChangedEvent();
                 }
             }
         }
@@ -118,9 +121,7 @@ namespace CoolapkLite.Models.Images
                 {
                     case UISettingChangedType.LightMode:
                     case UISettingChangedType.DarkMode:
-                        _ = UIHelper.ShellDispatcher?.RunAsync(
-                            Windows.UI.Core.CoreDispatcherPriority.Normal,
-                            () =>
+                        _ = UIHelper.ShellDispatcher?.AwaitableRunAsync(() =>
                             {
                                 if (pic == null)
                                 {
@@ -131,7 +132,6 @@ namespace CoolapkLite.Models.Images
                                     Pic = ImageCacheHelper.NoPic;
                                 }
                             });
-
                         break;
 
                     case UISettingChangedType.NoPicChanged:
@@ -140,6 +140,9 @@ namespace CoolapkLite.Models.Images
                 }
             });
         }
+
+        public event TypedEventHandler<ImageModel, object> LoadStarted;
+        public event TypedEventHandler<ImageModel, object> LoadCompleted;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -150,6 +153,7 @@ namespace CoolapkLite.Models.Images
 
         private async void GetImage()
         {
+            LoadStarted?.Invoke(this, null);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = ImageCacheHelper.NoPic; }
             BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { return; }
@@ -160,6 +164,7 @@ namespace CoolapkLite.Models.Images
             IsWidePic =
                 ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
                 && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
+            LoadCompleted?.Invoke(this, null);
         }
 
         private async void SetBrush()

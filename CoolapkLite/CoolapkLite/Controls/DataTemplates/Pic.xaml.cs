@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
@@ -9,7 +11,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
         public void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            //UIHelper.ShowImage((sender as FrameworkElement).Tag as ImageModel);
+            UIHelper.ShowImage((sender as FrameworkElement).Tag as ImageModel);
         }
 
         public void Image_KeyDown(object sender, KeyRoutedEventArgs e)
