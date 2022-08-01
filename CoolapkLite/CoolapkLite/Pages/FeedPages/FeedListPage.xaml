@@ -17,11 +17,16 @@
                 <templates:Feeds />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="Null" />
+            <DataTemplate x:Key="UserInfoCard">
+                <Grid Margin="12,0">
+                    <TextBlock Text="{Binding UserName}"/>
+                </Grid>
+            </DataTemplate>
             <local:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 Others="{StaticResource Null}"
-                UserDetail="{StaticResource Null}" />
+                UserDetail="{StaticResource UserInfoCard}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>

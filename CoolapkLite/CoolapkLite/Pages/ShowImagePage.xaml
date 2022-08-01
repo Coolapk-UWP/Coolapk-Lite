@@ -14,7 +14,8 @@
         <FlipView
             x:Name="FlipView"
             Background="Transparent"
-            ItemsSource="{Binding Images}">
+            ItemsSource="{Binding Images}"
+            SelectedIndex="{Binding Index}">
             <FlipView.ItemTemplate>
                 <DataTemplate>
                     <Grid>

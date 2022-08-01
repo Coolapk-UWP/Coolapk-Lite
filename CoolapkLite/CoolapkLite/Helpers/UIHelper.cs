@@ -361,7 +361,7 @@ namespace CoolapkLite.Helpers
             if (str.IsFirst(i++))
             {
                 string u = str.Replace(i - 1);
-                string uid = int.TryParse(u, out _) ? u : await NetworkHelper.GetUserIDByNameAsync(u);
+                string uid = int.TryParse(u, out _) ? u : (await NetworkHelper.GetUserInfoByNameAsync(u)).UID;
                 FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
                 if (f != null)
                 {

@@ -252,9 +252,12 @@ namespace CoolapkLite.Helpers
 
     public static partial class NetworkHelper
     {
-        /// <summary> 通过用户名获取UID。 </summary>
-        /// <param name="name"> 要获取UID的用户名。 </param>
-        public static async Task<string> GetUserIDByNameAsync(string name)
+        /// <summary>
+        /// 通过用户名或 UID 获取用户信息。
+        /// </summary>
+        /// <param name="name">要获取信息的用户名或 UID 。</param>
+        /// <returns>用户信息</returns>
+        public static async Task<(string UID, string UserName, string UserAvatar)> GetUserInfoByNameAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -264,17 +267,39 @@ namespace CoolapkLite.Helpers
             string str = string.Empty;
             try
             {
-                str = await Client.GetStringAsync(new Uri("https://www.coolapk.com/n/" + name));
-                return $"{JObject.Parse(str)["dataRow"].Value<int>("uid")}";
+                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}"));
+
+                JObject token = JObject.Parse(str);
+                if (token.TryGetValue("dataRow", out JToken v1))
+                {
+                    JObject dataRow = (JObject)v1;
+                    (string UID, string UserName, string UserAvatar) result = (string.Empty, string.Empty, string.Empty);
+
+                    if (dataRow.TryGetValue("uid", out JToken uid))
+                    {
+                        result.UID = uid.ToString();
+                    }
+
+                    if (dataRow.TryGetValue("username", out JToken username))
+                    {
+                        result.UserName = username.ToString();
+                    }
+
+                    if (dataRow.TryGetValue("userAvatar", out JToken userAvatar))
+                    {
+                        result.UserAvatar = userAvatar.ToString();
+                    }
+
+                    return result;
+                }
+
+                throw new Exception();
             }
             catch
             {
                 JObject o = JObject.Parse(str);
                 if (o == null) { throw; }
-                else
-                {
-                    throw new CoolapkMessageException(o);
-                }
+                else { throw new CoolapkMessageException(o); }
             }
         }
 

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:converters="using:CoolapkLite.Helpers.ValueConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -15,30 +16,32 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:SearchWord />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate x:Key="DefaultTemplate" x:DataType="local:MenuItem">
+            <converters:EmptyObjectToVisibilityConverter x:Key="EmptyObjectToVisibilityConverter" />
+            <DataTemplate x:Key="DefaultTemplate">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Viewbox Width="16" Height="16">
-                        <SymbolIcon Symbol="{x:Bind Icon}" />
-                    </Viewbox>
-                    <Ellipse
-                        Grid.RowSpan="2"
+                    <Viewbox
                         Width="16"
                         Height="16"
-                        Margin="10,0,0,0"
-                        HorizontalAlignment="Left">
+                        Visibility="{Binding Image, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter='true'}">
+                        <SymbolIcon Symbol="{Binding Icon}" />
+                    </Viewbox>
+                    <Ellipse
+                        Width="18"
+                        Height="18"
+                        Visibility="{Binding Image, Converter={StaticResource EmptyObjectToVisibilityConverter}}">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="{x:Bind Image, Mode=OneWay}" />
+                            <ImageBrush ImageSource="{Binding Image, Mode=OneWay}" />
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBlock
                         Grid.Column="1"
                         VerticalAlignment="Center"
                         FontSize="14"
-                        Text="{x:Bind Name}" />
+                        Text="{Binding Name}" />
                 </Grid>
             </DataTemplate>
         </ResourceDictionary>

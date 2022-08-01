@@ -242,6 +242,7 @@
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Helpers\WeakEvent.cs" />
     <Compile Include="Models\Entity.cs" />

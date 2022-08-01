@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.BackgroundTasks;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -11,6 +12,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
@@ -23,6 +25,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
@@ -181,6 +184,7 @@ namespace CoolapkLite
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
         #region 搜索框
+
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -231,9 +235,11 @@ namespace CoolapkLite
                 sender.Text = searchWord.Title;
             }
         }
+
         #endregion
 
         #region 进度条
+
         public void ShowProgressBar()
         {
             ProgressBar.Visibility = Visibility.Visible;
@@ -287,14 +293,49 @@ namespace CoolapkLite
                 ApplicationView.GetForCurrentView().Title = message ?? string.Empty;
             }
         }
+
         #endregion
     }
 
     public class MenuItem : INotifyPropertyChanged
     {
-        public Symbol Icon { get; set; }
+        public int Index { get; set; }
+        public Type PageType { get; set; }
+        public object ViewModels { get; set; }
+
+        public string name;
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (name != value)
+                {
+                    name = value;
+                    RaisePropertyChangedEvent();
+                    if (value == loader.GetString("User"))
+                    {
+                        SetUserAvatar();
+                    }
+                }
+            }
+        }
+
+        public Symbol icon;
+        public Symbol Icon
+        {
+            get => icon;
+            set
+            {
+                if (icon != value)
+                {
+                    icon = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         private ImageSource image;
-        public event PropertyChangedEventHandler PropertyChanged;
         public ImageSource Image
         {
             get => image;
@@ -303,14 +344,33 @@ namespace CoolapkLite
                 if (image != value)
                 {
                     image = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Image)));
+                    RaisePropertyChangedEvent();
                 }
             }
         }
-        public int Index { get; set; }
-        public string Name { get; set; }
-        public Type PageType { get; set; }
-        public object ViewModels { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        private async void SetUserAvatar()
+        {
+            if (SettingsHelper.CheckLoginInfo())
+            {
+                string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                if(!string.IsNullOrEmpty(UID))
+                {
+                    var results = await NetworkHelper.GetUserInfoByNameAsync(UID);
+                    Name = results.UserName;
+                    Image = new BitmapImage(new Uri(results.UserAvatar));
+                    PageType = typeof(FeedListPage);
+                    ViewModels = FeedListViewModel.GetProvider(FeedListType.UserPageList, results.UID);
+                }
+            }
+        }
 
         private static readonly ResourceLoader loader = ResourceLoader.GetForCurrentView("MainPage");
 
