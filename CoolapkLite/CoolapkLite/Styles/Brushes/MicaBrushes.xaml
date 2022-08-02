@@ -2,6 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:media="using:MicaForUWP.Media">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <media:BackdropMicaBrush
         x:Key="SolidBackgroundFillColorBaseElementBrush"
         BackgroundSource="MicaBackdrop"
@@ -12,4 +15,15 @@
         BackgroundSource="MicaBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
+    
+    <media:BackdropMicaBrush
+        x:Key="SystemChromeMediumLowColorElementBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}" />
+    <media:BackdropMicaBrush
+        x:Key="SystemChromeMediumLowColorWindowBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}" />
 </ResourceDictionary>

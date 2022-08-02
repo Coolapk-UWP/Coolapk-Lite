@@ -33,11 +33,6 @@ namespace CoolapkLite.Controls
         private VisualStateGroup _windowsSizeGroup;
 
         /// <summary>
-        /// Gets a value indicating whether <see cref="NavigationView"/> is supported
-        /// </summary>
-        public static bool IsNavigationViewSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.NavigationView");
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="HamburgerMenu"/> class.
         /// </summary>
         public HamburgerMenu()
@@ -141,17 +136,10 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private bool IsSettingsItem(object menuItem)
-        {
-            return menuItem.GetType()
-                           .GetProperties()
-                           .Any(p => p.GetValue(menuItem).ToString().IndexOf("setting", StringComparison.OrdinalIgnoreCase) >= 0
-                                  || p.GetValue(menuItem).ToString() == ((char)Symbol.Setting).ToString());
-        }
-
         private void UpdatePaneState()
         {
             VisualStateManager.GoToState(this, DisplayMode == SplitViewDisplayMode.CompactOverlay && !IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
+            VisualStateManager.GoToState(this, (DisplayMode == SplitViewDisplayMode.Overlay || DisplayMode == SplitViewDisplayMode.CompactOverlay) && IsPaneOpen ? "PaneOverlaying" : "PaneNotOverlaying", true);
         }
 
         private void UpdateTitleBarPadding()
@@ -164,16 +152,16 @@ namespace CoolapkLite.Controls
             switch (DisplayMode)
             {
                 case SplitViewDisplayMode.Overlay:
-                    VisualStateManager.GoToState(this, "Minimal", true);
+                    VisualStateManager.GoToState(this, "MinimalSize", true);
                     break;
                 case SplitViewDisplayMode.CompactOverlay:
-                    VisualStateManager.GoToState(this, "Compact", true);
+                    VisualStateManager.GoToState(this, "CompactSize", true);
                     break;
                 case SplitViewDisplayMode.CompactInline:
-                    VisualStateManager.GoToState(this, "Expanded", true);
+                    VisualStateManager.GoToState(this, "ExpandedSize", true);
                     break;
                 case SplitViewDisplayMode.Inline:
-                    VisualStateManager.GoToState(this, "Inline", true);
+                    VisualStateManager.GoToState(this, "InlineSize", true);
                     break;
             }
         }

@@ -14,4 +14,17 @@
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintOpacity="0.9" />
+
+    <AcrylicBrush
+        x:Key="SystemChromeMediumLowColorWindowBrush"
+        BackgroundSource="HostBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintOpacity="1" />
+    <AcrylicBrush
+        x:Key="SystemChromeMediumLowColorElementBrush"
+        BackgroundSource="Backdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintOpacity="0.9" />
 </ResourceDictionary>

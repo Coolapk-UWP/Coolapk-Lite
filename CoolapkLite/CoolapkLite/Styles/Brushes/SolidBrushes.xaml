@@ -10,4 +10,13 @@
         x:Key="SolidBackgroundFillColorBaseElementBrush"
         Opacity="0.99"
         Color="{ThemeResource SolidBackgroundFillColorBase}" />
+    
+    <SolidColorBrush
+        x:Key="SystemChromeMediumLowColorWindowBrush"
+        Opacity="1"
+        Color="{ThemeResource SystemChromeMediumLowColor}" />
+    <SolidColorBrush
+        x:Key="SystemChromeMediumLowColorElementBrush"
+        Opacity="0.99"
+        Color="{ThemeResource SystemChromeMediumLowColor}" />
 </ResourceDictionary>

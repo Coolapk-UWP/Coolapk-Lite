@@ -19,4 +19,19 @@
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintOpacity="0.91" />
+    
+    <media:BackdropBlurBrush
+        x:Key="SystemChromeMediumLowColorWindowBrush"
+        Amount="10"
+        BackgroundSource="HostBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintOpacity="0.9" />
+    <media:BackdropBlurBrush
+        x:Key="SystemChromeMediumLowColorElementBrush"
+        Amount="10"
+        BackgroundSource="Backdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintOpacity="0.91" />
 </ResourceDictionary>

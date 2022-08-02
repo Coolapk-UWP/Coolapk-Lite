@@ -371,6 +371,14 @@
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
+                <VisualStateGroup x:Name="PaneOverlayGroup">
+                    <VisualState x:Name="PaneOverlaying">
+                        <VisualState.Setters>
+                            <Setter Target="MainSplitView.PaneBackground" Value="{Binding PaneOverlayBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PaneNotOverlaying" />
+                </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
         </Grid>
     </ControlTemplate>

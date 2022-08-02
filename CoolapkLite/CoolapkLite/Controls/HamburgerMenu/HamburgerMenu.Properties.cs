@@ -48,6 +48,11 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty PaneBackgroundProperty = DependencyProperty.Register(nameof(PaneBackground), typeof(Brush), typeof(HamburgerMenu), new PropertyMetadata(null));
 
         /// <summary>
+        /// Identifies the <see cref="PaneOverlayBackground"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty PaneOverlayBackgroundProperty = DependencyProperty.Register(nameof(PaneOverlayBackground), typeof(Brush), typeof(HamburgerMenu), new PropertyMetadata(null));
+
+        /// <summary>
         /// Identifies the <see cref="IsPaneOpen"/> dependency property.
         /// </summary>
         public static readonly DependencyProperty IsPaneOpenProperty = DependencyProperty.Register(nameof(IsPaneOpen), typeof(bool), typeof(HamburgerMenu), new PropertyMetadata(false, OnIsPaneOpenChanged));
@@ -145,6 +150,15 @@ namespace CoolapkLite.Controls
         {
             get { return (Brush)GetValue(PaneBackgroundProperty); }
             set { SetValue(PaneBackgroundProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets the Brush to apply to the background of the Pane area of the control when overlay.
+        /// </summary>
+        public Brush PaneOverlayBackground
+        {
+            get { return (Brush)GetValue(PaneOverlayBackgroundProperty); }
+            set { SetValue(PaneOverlayBackgroundProperty, value); }
         }
 
         /// <summary>

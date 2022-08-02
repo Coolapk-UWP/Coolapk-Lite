@@ -71,7 +71,8 @@
             Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
             OptionsItemTemplate="{StaticResource DefaultTemplate}"
-            PaneBackground="{StaticResource SolidBackgroundFillColorBaseElementBrush}"
+            PaneBackground="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
+            PaneOverlayBackground="{StaticResource SolidBackgroundFillColorBaseElementBrush}"
             PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}">
             <controls:HamburgerMenu.AutoSuggestBox>
                 <AutoSuggestBox
