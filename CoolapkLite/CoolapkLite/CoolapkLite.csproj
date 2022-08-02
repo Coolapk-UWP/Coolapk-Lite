@@ -1174,9 +1174,6 @@
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.43</Version>
     </PackageReference>
-    <PackageReference Include="ksemenenko.ColorThief">
-      <Version>1.1.1.4</Version>
-    </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
     </PackageReference>

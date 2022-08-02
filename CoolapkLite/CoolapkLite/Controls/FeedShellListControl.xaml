@@ -36,6 +36,7 @@
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             Loaded="ListView_Loaded"
             SelectionMode="None"
+            ShowsScrollingPlaceholders="False"
             ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
             ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged"
             SizeChanged="ShyHeaderListView_SizeChanged">

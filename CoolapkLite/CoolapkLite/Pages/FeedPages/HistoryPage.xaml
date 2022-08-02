@@ -29,7 +29,8 @@
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None" />
+            SelectionMode="None"
+            ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
             Title="{Binding Title}"

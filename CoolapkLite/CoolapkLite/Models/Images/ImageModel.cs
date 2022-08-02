@@ -1,13 +1,8 @@
-﻿using ColorThiefDotNet;
-using CoolapkLite.Controls;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using Windows.Foundation;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,24 +10,7 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged, IPic
     {
-        private bool isLongPic;
-        private bool isWidePic;
         protected WeakReference<BitmapImage> pic;
-        protected ImmutableArray<ImageModel> contextArray;
-        private static readonly ColorThief thief = new ColorThief();
-        private static readonly Windows.UI.Color fallbackColor = Windows.UI.Color.FromArgb(0x99, 0, 0, 0);
-        private Windows.UI.Color backgroundColor = fallbackColor;
-
-        public Windows.UI.Color BackgroundColor
-        {
-            get => backgroundColor;
-            private set
-            {
-                backgroundColor = value;
-                RaisePropertyChangedEvent();
-            }
-        }
-
         public BitmapImage Pic
         {
             get
@@ -56,16 +34,12 @@ namespace CoolapkLite.Models.Images
                 else
                 {
                     pic.SetTarget(value);
-                    if (value.UriSource is null)
-                    {
-                        SetBrush();
-                    }
-                    else { BackgroundColor = fallbackColor; }
                 }
                 RaisePropertyChangedEvent();
             }
         }
 
+        private bool isLongPic;
         public bool IsLongPic
         {
             get => isLongPic;
@@ -79,6 +53,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
+        private bool isWidePic;
         public bool IsWidePic
         {
             get => isWidePic;
@@ -92,6 +67,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
+        protected ImmutableArray<ImageModel> contextArray;
         public ImmutableArray<ImageModel> ContextArray
         {
             get => contextArray;
@@ -105,7 +81,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        public bool IsGif { get => Uri.Substring(Uri.LastIndexOf('.')).ToUpperInvariant().Contains("GIF"); }
+        public bool IsGif => Uri.Substring(Uri.LastIndexOf('.')).ToUpperInvariant().Contains("GIF");
 
         public string Uri { get; }
 
@@ -156,7 +132,6 @@ namespace CoolapkLite.Models.Images
             LoadStarted?.Invoke(this, null);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = ImageCacheHelper.NoPic; }
             BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri);
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { return; }
             Pic = bitmapImage;
             IsLongPic =
                 ((bitmapImage.PixelHeight * Window.Current.Bounds.Width) > bitmapImage.PixelWidth * Window.Current.Bounds.Height * 1.5)
@@ -165,23 +140,6 @@ namespace CoolapkLite.Models.Images
                 ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
                 && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
             LoadCompleted?.Invoke(this, null);
-        }
-
-        private async void SetBrush()
-        {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
-            if (file is null) { return; }
-            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
-            {
-                BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                QuantizedColor color = await thief.GetColor(decoder);
-                BackgroundColor =
-                    Windows.UI.Color.FromArgb(
-                        color.Color.A,
-                        color.Color.R,
-                        color.Color.G,
-                        color.Color.B);
-            }
         }
     }
 }

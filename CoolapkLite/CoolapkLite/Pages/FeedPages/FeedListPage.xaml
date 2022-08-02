@@ -19,7 +19,7 @@
             <DataTemplate x:Key="Null" />
             <DataTemplate x:Key="UserInfoCard">
                 <Grid Margin="12,0">
-                    <TextBlock Text="{Binding UserName}"/>
+                    <TextBlock Text="{Binding UserName}" />
                 </Grid>
             </DataTemplate>
             <local:CardTemplateSelector
@@ -40,7 +40,8 @@
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None" />
+            SelectionMode="None"
+            ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
             Title="{Binding Title}"

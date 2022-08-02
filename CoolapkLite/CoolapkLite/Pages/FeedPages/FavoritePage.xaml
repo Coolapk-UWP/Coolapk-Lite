@@ -27,7 +27,8 @@
             ItemTemplate="{StaticResource ListDefaultTemplate}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
-            SelectionMode="None" />
+            SelectionMode="None"
+            ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
             Title="{Binding Title}"

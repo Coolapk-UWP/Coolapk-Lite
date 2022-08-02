@@ -29,26 +29,26 @@ namespace CoolapkLite.Controls
         public const string AuthorBorder = "<div class=\"author-border\"/>";
         private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            nameof(Text),
-            typeof(string),
-            typeof(TextBlockEx),
-            new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged))
-        );
+        public static readonly DependencyProperty TextProperty =
+            DependencyProperty.Register(
+                nameof(Text),
+                typeof(string),
+                typeof(TextBlockEx),
+                new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged)));
 
-        public static readonly DependencyProperty MaxLinesProperty = DependencyProperty.Register(
-            nameof(MaxLines),
-            typeof(int),
-            typeof(TextBlockEx),
-            null
-        );
+        public static readonly DependencyProperty MaxLinesProperty =
+            DependencyProperty.Register(
+                nameof(MaxLines),
+                typeof(int),
+                typeof(TextBlockEx),
+                null);
 
-        public static readonly DependencyProperty IsTextSelectionEnabledProperty = DependencyProperty.Register(
-            nameof(IsTextSelectionEnabled),
-            typeof(bool),
-            typeof(TextBlockEx),
-            new PropertyMetadata(false)
-        );
+        public static readonly DependencyProperty IsTextSelectionEnabledProperty =
+            DependencyProperty.Register(
+                nameof(IsTextSelectionEnabled),
+                typeof(bool),
+                typeof(TextBlockEx),
+                new PropertyMetadata(false));
 
         public string Text
         {

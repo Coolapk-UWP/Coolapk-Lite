@@ -35,6 +35,7 @@
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None" />
+            SelectionMode="None"
+            ShowsScrollingPlaceholders="False" />
     </Grid>
 </Page>
