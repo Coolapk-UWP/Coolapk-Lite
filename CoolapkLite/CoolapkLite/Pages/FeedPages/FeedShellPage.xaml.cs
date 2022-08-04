@@ -34,7 +34,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Provider = ViewModel;
                 DataContext = Provider;
-                await Provider.Refresh(-2);
+                await Provider.Refresh(true);
                 if (Provider.FeedDetail != null)
                 {
                     SetLayout();
@@ -92,17 +92,42 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Provider.Refresh(-2);
+        private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Provider.Refresh(true);
 
         #region 界面模式切换
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
             // Remove details content from it's parent panel.
-            _ = (DetailControl.Parent as Panel)?.Children.Remove(DetailControl);
-            _ = (BtnsPanel.Parent as Panel)?.Children.Remove(BtnsPanel);
-            _ = (TitleBar.Parent as Panel)?.Children.Remove(TitleBar);
+            if (DetailControl.Parent != null)
+            {
+                (DetailControl.Parent as Panel).Children.Remove(DetailControl);
+            }
+            else
+            {
+                Pane1Grid.Children.Remove(DetailControl);
+                Pane2Grid.Children.Remove(DetailControl);
+            }
 
+            if (BtnsPanel.Parent != null)
+            {
+                (BtnsPanel.Parent as Panel).Children.Remove(BtnsPanel);
+            }
+            else
+            {
+                LeftGrid.Children.Remove(BtnsPanel);
+                RightGrid.Children.Remove(BtnsPanel);
+            }
+
+            if (TitleBar.Parent != null)
+            {
+                (TitleBar.Parent as Panel).Children.Remove(TitleBar);
+            }
+            else
+            {
+                LeftGrid.Children.Remove(TitleBar);
+                RightGrid.Children.Remove(TitleBar);
+            }
 
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)

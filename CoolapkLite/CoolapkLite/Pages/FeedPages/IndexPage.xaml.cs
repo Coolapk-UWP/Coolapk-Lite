@@ -32,7 +32,7 @@ namespace CoolapkLite.Pages.FeedPages
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
-                await Refresh(-2);
+                await Refresh(true);
             }
             else
             {
@@ -47,14 +47,11 @@ namespace CoolapkLite.Pages.FeedPages
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
-        private async Task Refresh(int p = -1)
-        {
-            await Provider.Refresh(p);
-        }
+        private async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
-        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(-2);
+        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(-2);
+        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {

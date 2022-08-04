@@ -212,7 +212,7 @@ namespace CoolapkLite.Helpers
                 UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
                 return (false, null);
             }
-            else { return (!string.IsNullOrEmpty(token.ToString()), token); }
+            else { return (token != null && !string.IsNullOrEmpty(token.ToString()), token); }
         }
 
         public static string GetId(JToken token, string _idName)

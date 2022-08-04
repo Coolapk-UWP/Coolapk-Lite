@@ -15,38 +15,103 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:Feeds />
+                <templates:IndexCardTemplates />
+                <templates:OtherDatatemplates />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate x:Key="Null" />
-            <DataTemplate x:Key="UserInfoCard">
+            <DataTemplate x:Key="UserDetailCard">
                 <Grid Margin="12,0">
-                    <TextBlock Text="{Binding UserName}" />
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Ellipse
+                        Grid.Row="0"
+                        Width="56"
+                        Height="56"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Grid.Row="1" Text="{Binding Bio}" />
                 </Grid>
             </DataTemplate>
-            <local:CardTemplateSelector
+            <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
+                FeedReply="{StaticResource FeedReplyDefaultTemplate}"
+                Images="{StaticResource ImageCardDefaultTemplate}"
+                List="{StaticResource ListDefaultTemplate}"
+                ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
+                Others="{StaticResource Null}" />
+            <local:DetailTemplateSelector
+                x:Name="DetailTemplateSelector"
                 Others="{StaticResource Null}"
-                UserDetail="{StaticResource UserInfoCard}" />
+                UserDetail="{StaticResource UserDetailCard}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <control:PullToRefreshListView
-            x:Name="ListView"
-            x:Uid="/MainPage/ListView"
-            ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
-            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
-            ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-            ItemsSource="{Binding}"
-            Loaded="ListView_Loaded"
-            RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None"
-            ShowsScrollingPlaceholders="False" />
-        <control:TitleBar
-            x:Name="TitleBar"
-            Title="{Binding Title}"
-            IsRefreshButtonVisible="True"
-            IsRefreshEnabled="True"
-            RefreshRequested="TitleBar_RefreshEvent" />
+        <control:TwoPaneView
+            x:Name="TwoPaneView"
+            Loaded="TwoPaneView_Loaded"
+            MinWideModeWidth="804"
+            ModeChanged="TwoPaneView_ModeChanged"
+            Pane1Length="420"
+            PanePriority="Pane2"
+            TallModeConfiguration="SinglePane">
+            <control:TwoPaneView.Pane1>
+                <Grid x:Name="LeftGrid">
+                    <ScrollViewer
+                        x:Name="DetailScrollViewer"
+                        Margin="{x:Bind ScrollViewerMargin}"
+                        Padding="{x:Bind ScrollViewerPadding}"
+                        VerticalAlignment="Top"
+                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
+                        <Grid x:Name="Pane1Grid" Padding="0,0,0,40">
+                            <ContentControl
+                                x:Name="DetailControl"
+                                Padding="{x:Bind StackPanelMargin}"
+                                Content="{Binding Detail}"
+                                ContentTemplate="{Binding DetailDataTemplate}" />
+                        </Grid>
+                    </ScrollViewer>
+                    <control:TitleBar
+                        x:Name="TitleBar"
+                        Title="{Binding Title}"
+                        IsRefreshEnabled="True"
+                        RefreshRequested="TitleBar_RefreshEvent" />
+                </Grid>
+            </control:TwoPaneView.Pane1>
+            <control:TwoPaneView.Pane2>
+                <Grid x:Name="RightGrid">
+                    <control:ShyHeaderListView
+                        x:Name="ListView"
+                        ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
+                        HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
+                        HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
+                        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                        ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                        Loaded="ListView_Loaded"
+                        SelectionMode="None"
+                        ShowsScrollingPlaceholders="False"
+                        ShyHeaderItemSource="{Binding ItemSource}">
+                        <control:ShyHeaderListView.TopHeader>
+                            <Grid x:Name="Pane2Grid" />
+                        </control:ShyHeaderListView.TopHeader>
+                        <control:ShyHeaderListView.RightHeader>
+                            <Button
+                                x:Name="RefreshButton"
+                                VerticalAlignment="Center"
+                                Click="RefreshButton_Click"
+                                Style="{StaticResource IconButtonStyle}">
+                                <SymbolIcon Symbol="Refresh" />
+                            </Button>
+                        </control:ShyHeaderListView.RightHeader>
+                    </control:ShyHeaderListView>
+                </Grid>
+            </control:TwoPaneView.Pane2>
+        </control:TwoPaneView>
     </Grid>
 </Page>

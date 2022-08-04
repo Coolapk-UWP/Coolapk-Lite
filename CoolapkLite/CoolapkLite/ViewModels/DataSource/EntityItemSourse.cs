@@ -35,13 +35,13 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
 
-        public virtual async Task Refresh(int p = -1)
+        public virtual async Task Refresh(bool reset = false)
         {
-            if (p == -2)
+            if (reset)
             {
                 await Reset();
             }
-            else if (p == -1)
+            else
             {
                 _ = await LoadMoreItemsAsync(20);
             }

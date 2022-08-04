@@ -1,6 +1,8 @@
-﻿using CoolapkLite.Controls.DataTemplates;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.DataSource;
@@ -8,17 +10,21 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedListViewModel : DataSourceBase<Entity>, IViewModel
+    public abstract class FeedListViewModel : INotifyPropertyChanged, IViewModel
     {
         protected const string idName = "id";
-        private CoolapkListProvider Provider;
 
-        public string Id { get; }
+        public string ID { get; }
         public FeedListType ListType { get; }
+        public DataTemplateSelector DataTemplateSelector;
         public double[] VerticalOffsets { get; set; } = new double[1];
 
         private string title;
@@ -28,15 +34,54 @@ namespace CoolapkLite.ViewModels.FeedPages
             protected set
             {
                 title = value;
-                TitleUpdate?.Invoke(this, null);
+                RaisePropertyChangedEvent();
             }
         }
 
-        public event EventHandler TitleUpdate;
+        private List<ShyHeaderItem> itemSource;
+        public List<ShyHeaderItem> ItemSource
+        {
+            get => itemSource;
+            protected set
+            {
+                itemSource = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+        private FeedListDetailBase detail;
+        public FeedListDetailBase Detail
+        {
+            get => detail;
+            protected set
+            {
+                detail = value;
+                RaisePropertyChangedEvent();
+                Title = GetTitleBarText(value);
+                DetailDataTemplate = DataTemplateSelector.SelectTemplate(value);
+            }
+        }
+
+        private DataTemplate detailDataTemplate;
+        public DataTemplate DetailDataTemplate
+        {
+            get => detailDataTemplate;
+            protected set
+            {
+                detailDataTemplate = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
 
         protected FeedListViewModel(string id, FeedListType type)
         {
-            Id = string.IsNullOrEmpty(id)
+            ID = string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
                 : id;
             ListType = type;
@@ -47,108 +92,123 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (string.IsNullOrEmpty(id) || id == "0") { return null; }
             switch (type)
             {
-                //case FeedListType.TagPageList: return new TagViewModel(id);
-                //case FeedListType.DyhPageList: return new DyhViewModel(id);
-                //case FeedListType.AppPageList: return new AppViewModel(id);
                 case FeedListType.UserPageList: return new UserViewModel(id);
-                //case FeedListType.DevicePageList: return new DeviceViewModel(id);
-                //case FeedListType.ProductPageList: return new ProductViewModel(id);
-                //case FeedListType.CollectionPageList: return new CollectionViewModel(id);
                 default: return null;
             }
         }
 
         public void ChangeCopyMode(bool mode)
         {
-            //if (Models.Count == 0) { return; }
-            //if (Models[0] is FeedListDetailBase detail)
-            //{
-            //    detail.IsCopyEnabled = mode;
-            //}
+            if (Detail != null)
+            {
+                Detail.IsCopyEnabled = mode;
+            }
         }
 
-        private async Task<FeedListDetailBase> GetDetail()
-        {
-            UriType type;
-            switch (ListType)
-            {
-                case FeedListType.AppPageList:
-                    type = UriType.GetAppDetail;
-                    break;
+        public abstract Task<FeedListDetailBase> GetDetail();
 
-                case FeedListType.TagPageList:
-                    type = UriType.GetTagDetail;
-                    break;
+        public abstract Task Refresh(bool reset = false);
 
-                case FeedListType.DyhPageList:
-                    type = UriType.GetDyhDetail;
-                    break;
-
-                case FeedListType.UserPageList:
-                    type = UriType.GetUserSpace;
-                    break;
-
-                case FeedListType.DevicePageList:
-                    type = UriType.GetTopicDetail;
-                    break;
-
-                case FeedListType.ProductPageList:
-                    type = UriType.GetProductDetail;
-                    break;
-
-                case FeedListType.CollectionPageList:
-                    type = UriType.GetCollectionDetail;
-                    break;
-
-                default:
-                    throw new ArgumentException($"{typeof(FeedListType).FullName}值错误");
-            }
-
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(type, Id), true);
-            if (!isSucceed) { return null; }
-
-            JObject o = (JObject)result;
-            FeedListDetailBase d = null;
-
-            if (o != null)
-            {
-                switch (ListType)
-                {
-                    //case FeedListType.AppPageList:
-                    //    d = new AppDetail(o);
-                    //    break;
-
-                    //case FeedListType.TagPageList:
-                    //    d = new TopicDetail(o);
-                    //    break;
-
-                    //case FeedListType.DyhPageList:
-                    //    d = new DyhDetail(o);
-                    //    break;
-
-                    case FeedListType.UserPageList:
-                        d = new UserDetail(o);
-                        break;
-
-                        //case FeedListType.DevicePageList:
-                        //    d = new TopicDetail(o);
-                        //    break;
-
-                        //case FeedListType.ProductPageList:
-                        //    d = new ProductDetail(o);
-                        //    break;
-
-                        //case FeedListType.CollectionPageList:
-                        //    d = new CollectionDetail(o);
-                        //    break;
-                }
-            }
-            return d;
-        }
+        protected abstract string GetTitleBarText(FeedListDetailBase detail);
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
             yield return EntityTemplateSelector.GetEntity(jo);
+        }
+
+        public class UserViewModel : FeedListViewModel
+        {
+            public FeedListItemSourse FeedItemSourse { get; private set; }
+            public FeedListItemSourse HtmlFeedItemSourse { get; private set; }
+            public FeedListItemSourse QAItemSourse { get; private set; }
+
+            internal UserViewModel(string uid) : base(uid, FeedListType.UserPageList) { }
+
+            public override async Task Refresh(bool reset = false)
+            {
+                if (Detail == null || reset)
+                {
+                    Detail = await GetDetail();
+                }
+                if (ItemSource == null)
+                {
+                    List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                    if (FeedItemSourse == null || FeedItemSourse.ID != ID)
+                    {
+                        var Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "feed"),
+                            GetEntities,
+                            idName);
+                        FeedItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "动态",
+                            ItemSource = FeedItemSourse
+                        });
+                    }
+                    if (HtmlFeedItemSourse == null || HtmlFeedItemSourse.ID != ID)
+                    {
+                        var Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "htmlFeed"),
+                            GetEntities,
+                            idName);
+                        HtmlFeedItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "图文",
+                            ItemSource = HtmlFeedItemSourse
+                        });
+                    }
+                    if (QAItemSourse == null || QAItemSourse.ID != ID)
+                    {
+                        var Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "questionAndAnswer"),
+                            GetEntities,
+                            idName);
+                        QAItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "问答",
+                            ItemSource = QAItemSourse
+                        });
+                    }
+                    base.ItemSource = ItemSource;
+                }
+            }
+
+            public void Report()
+            {
+                UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=user&m=report&id={ID}" });
+            }
+
+            protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as UserDetail).UserName;
+
+            public override async Task<FeedListDetailBase> GetDetail()
+            {
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserSpace, ID), true);
+                if (!isSucceed) { return null; }
+
+                JObject token = (JObject)result;
+                FeedListDetailBase detail = null;
+
+                if (token != null)
+                {
+                    detail = new UserDetail(token);
+                }
+
+                return detail;
+            }
+        }
+    }
+
+    public class FeedListItemSourse : EntityItemSourse
+    {
+        public string ID;
+
+        public FeedListItemSourse(string id, CoolapkListProvider provider)
+        {
+            ID = id;
+            Provider = provider;
         }
 
         protected override void AddItems(IList<Entity> items)
@@ -160,82 +220,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                     if (item is NullModel) { continue; }
                     Add(item);
                 }
-            }
-        }
-
-        protected abstract string GetTitleBarText(FeedListDetailBase detail);
-
-        public async Task Refresh(int p)
-        {
-            if (p == -2)
-            {
-                await Reset();
-            }
-            else if (p == -1)
-            {
-                _ = await LoadMoreItemsAsync(20);
-            }
-            if (this[0] is FeedListDetailBase Model)
-            {
-                Title = GetTitleBarText(Model);
-            }
-        }
-
-        internal class UserViewModel : FeedListViewModel, ICanComboBoxChangeSelectedIndex
-        {
-            public int ComboBoxSelectedIndex { get; private set; }
-
-            public List<string> ItemSource { get; private set; }
-
-            private string sortType = "feed";
-
-            internal UserViewModel(string uid) : base(uid, FeedListType.UserPageList)
-            {
-                Provider = new CoolapkListProvider(
-                    (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, uid, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", sortType),
-                    GetEntities,
-                    idName);
-            }
-
-            protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-            {
-                List<Entity> Models = new List<Entity>();
-                if (_currentPage == 1) { Models.Add(await GetDetail()); }
-                while (Models.Count < count)
-                {
-                    int temp = Models.Count;
-                    if (Models.Count > 0) { _currentPage++; }
-                    await Provider.GetEntity(Models, _currentPage);
-                    if (Models.Count <= 0 || Models.Count <= temp) { break; }
-                }
-                return Models;
-            }
-
-            public void Report()
-            {
-                UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=user&m=report&id={Id}" });
-            }
-
-            protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as UserDetail).UserName;
-
-            public void SetComboBoxSelectedIndex(int value)
-            {
-                switch (value)
-                {
-                    case -1: return;
-                    case 0:
-                        sortType = "feed";
-                        break;
-
-                    case 1:
-                        sortType = "htmlFeed";
-                        break;
-
-                    case 2:
-                        sortType = "questionAndAnswer";
-                        break;
-                }
-                ComboBoxSelectedIndex = value;
             }
         }
     }

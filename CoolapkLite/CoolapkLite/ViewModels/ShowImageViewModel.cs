@@ -55,7 +55,7 @@ namespace CoolapkLite.ViewModels
             Index = image.ContextArray.IndexOf(image);
         }
 
-        public Task Refresh(int p)
+        public Task Refresh(bool reset = false)
         {
             throw new NotImplementedException();
         }

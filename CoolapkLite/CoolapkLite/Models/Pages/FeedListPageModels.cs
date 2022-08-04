@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 
 namespace CoolapkLite.Models.Pages
@@ -26,7 +28,7 @@ namespace CoolapkLite.Models.Pages
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        protected FeedListDetailBase(JObject o) : base(o)
+        protected FeedListDetailBase(JObject token) : base(token)
         {
             EntityFixed = true;
         }
@@ -34,11 +36,24 @@ namespace CoolapkLite.Models.Pages
 
     internal class UserDetail : FeedListDetailBase
     {
+        public ImageModel UserAvatar { get; private set; }
+
+        public string Bio { get; private set; }
         public string UserName { get; private set; }
 
-        internal UserDetail(JObject o) : base(o)
+        internal UserDetail(JObject token) : base(token)
         {
-            if (o.TryGetValue("username", out JToken username))
+            if (token.TryGetValue("userAvatar", out JToken userAvatar))
+            {
+                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
+            }
+
+            if (token.TryGetValue("bio", out JToken bio))
+            {
+                Bio = bio.ToString();
+            }
+
+            if (token.TryGetValue("username", out JToken username))
             {
                 UserName = username.ToString();
             }

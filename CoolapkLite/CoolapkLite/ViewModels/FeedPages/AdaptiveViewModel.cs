@@ -39,13 +39,13 @@ namespace CoolapkLite.ViewModels.FeedPages
             EntityTypes = types;
         }
 
-        public async Task Refresh(int p = -1)
+        public async Task Refresh(bool reset = false)
         {
-            if (p == -2)
+            if (reset)
             {
                 await Reset();
             }
-            else if (p == -1)
+            else
             {
                 _ = await LoadItemsAsync(20);
             }

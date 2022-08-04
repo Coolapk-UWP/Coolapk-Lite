@@ -17,7 +17,7 @@ namespace CoolapkLite.ViewModels
 
     internal interface IViewModel
     {
-        Task Refresh(int p);
+        Task Refresh(bool reset);
         string Title { get; }
         double[] VerticalOffsets { get; set; }
     }

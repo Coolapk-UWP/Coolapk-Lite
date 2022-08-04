@@ -81,7 +81,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail != null ? new FeedDetailModel(detail) : null;
         }
 
-        public abstract Task Refresh(int p = -1);
+        public abstract Task Refresh(bool reset = false);
     }
 
     public class FeedDetailViewModel : FeedShellViewModel
@@ -92,9 +92,9 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         internal FeedDetailViewModel(string id) : base(id) { }
 
-        public override async Task Refresh(int p = -1)
+        public override async Task Refresh(bool reset = false)
         {
-            if (FeedDetail == null || p == 1)
+            if (FeedDetail == null || reset)
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
@@ -128,7 +128,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
                 base.ItemSource = ItemSource;
             }
-            await ReplyItemSourse?.Refresh(p);
+            await ReplyItemSourse?.Refresh(reset);
         }
     }
 
@@ -206,7 +206,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     toggleIsOn ? 1 : 0),
                 GetEntities,
                 "id");
-            await Refresh(-2);
+            await Refresh(true);
         }
 
         private IEnumerable<Entity> GetEntities(JObject jo)

@@ -154,7 +154,7 @@ namespace CoolapkLite.Controls
         {
             if (ShyHeaderListView.ItemsSource is EntityItemSourse entities)
             {
-                _ = entities.Refresh(-2);
+                _ = entities.Refresh(true);
             }
         }
     }
