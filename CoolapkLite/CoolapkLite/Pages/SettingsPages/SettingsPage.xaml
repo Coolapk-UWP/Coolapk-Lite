@@ -158,10 +158,13 @@
                     </StackPanel>
                 </control:HeaderedContentControl>
                 <control:HeaderedContentControl x:Uid="/SettingsPage/AboutSettingsHeader" Style="{StaticResource HeaderStyle}">
-                    <Grid
-                        x:Name="Readme"
+                    <control:MarkdownTextBlock
+                        x:Uid="/MarkDown/about"
                         Margin="0,2"
-                        Loaded="Readme_Loaded" />
+                        HorizontalAlignment="Left"
+                        Background="Transparent"
+                        FontSize="{Binding FontSize, ElementName=GoToTestPage}"
+                        LinkClicked="MarkdownTextBlock_LinkClicked" />
                 </control:HeaderedContentControl>
             </StackPanel>
         </ScrollViewer>

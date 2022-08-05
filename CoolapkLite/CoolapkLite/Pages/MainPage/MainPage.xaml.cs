@@ -54,7 +54,6 @@ namespace CoolapkLite
             NotificationsTask.Instance?.GetNums();
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
-            UIHelper.ChangeTheme();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -14,14 +14,13 @@ namespace CoolapkLite.Helpers
         public const string TileUrl = "TileUrl";
         public const string DeviceID = "DeviceID";
         public const string IsFirstRun = "IsFirstRun";
-        public const string IsDarkMode = "IsDarkMode";
         public const string APIVersion = "APIVersion";
         public const string IsNoPicsMode = "IsNoPicsMode";
+        public const string SelectedAppTheme = "SelectedAppTheme";
         public const string IsUseOldEmojiMode = "IsUseOldEmojiMode";
         public const string ShowOtherException = "ShowOtherException";
         public const string IsDisplayOriginPicture = "IsDisplayOriginPicture";
         public const string CheckUpdateWhenLuanching = "CheckUpdateWhenLuanching";
-        public const string IsBackgroundColorFollowSystem = "IsBackgroundColorFollowSystem";
 
         public static Type Get<Type>(string key) => (Type)LocalSettings.Values[key];
 
@@ -45,10 +44,6 @@ namespace CoolapkLite.Helpers
             {
                 LocalSettings.Values.Add(IsFirstRun, true);
             }
-            if (!LocalSettings.Values.ContainsKey(IsDarkMode))
-            {
-                LocalSettings.Values.Add(IsDarkMode, false);
-            }
             if (!LocalSettings.Values.ContainsKey(APIVersion))
             {
                 LocalSettings.Values.Add(APIVersion, "V12");
@@ -56,6 +51,10 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
             {
                 LocalSettings.Values.Add(IsNoPicsMode, false);
+            }
+            if (!LocalSettings.Values.ContainsKey(SelectedAppTheme))
+            {
+                LocalSettings.Values.Add(SelectedAppTheme, (int)ElementTheme.Default);
             }
             if (!LocalSettings.Values.ContainsKey(IsUseOldEmojiMode))
             {
@@ -73,46 +72,19 @@ namespace CoolapkLite.Helpers
             {
                 LocalSettings.Values.Add(CheckUpdateWhenLuanching, true);
             }
-            if (!LocalSettings.Values.ContainsKey(IsBackgroundColorFollowSystem))
-            {
-                LocalSettings.Values.Add(IsBackgroundColorFollowSystem, true);
-            }
         }
-    }
-
-    public enum UISettingChangedType
-    {
-        LightMode,
-        DarkMode,
-        NoPicChanged,
     }
 
     internal static partial class SettingsHelper
     {
-        public static readonly UISettings UISettings = new UISettings();
         public static ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
         private static readonly ApplicationDataContainer LocalSettings = ApplicationData.Current.LocalSettings;
         public static readonly MetroLog.ILogManager LogManager = MetroLog.LogManagerFactory.CreateLogManager();
-        public static WeakEvent<UISettingChangedType> UISettingChanged { get; } = new WeakEvent<UISettingChangedType>();
         public static double WindowsVersion = double.Parse($"{(ushort)((version & 0x00000000FFFF0000L) >> 16)}.{(ushort)(SettingsHelper.version & 0x000000000000FFFFL)}");
-        public static ElementTheme Theme => Get<bool>("IsBackgroundColorFollowSystem") ? ElementTheme.Default : (Get<bool>("IsDarkMode") ? ElementTheme.Dark : ElementTheme.Light);
 
         static SettingsHelper()
         {
             SetDefaultSettings();
-            UIHelper.ChangeTheme();
-            SetBackgroundTheme(UISettings, null);
-            UISettings.ColorValuesChanged += SetBackgroundTheme;
-        }
-
-        private static void SetBackgroundTheme(UISettings o, object _)
-        {
-            if (Get<bool>(IsBackgroundColorFollowSystem))
-            {
-                bool value = o.GetColorValue(UIColorType.Background) == Windows.UI.Colors.Black;
-                Set(IsDarkMode, value);
-                UISettingChanged.Invoke(value ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
-            }
         }
 
         public static bool CheckLoginInfo()

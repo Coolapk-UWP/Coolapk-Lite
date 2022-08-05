@@ -240,6 +240,7 @@
     <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
+    <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
@@ -333,7 +334,6 @@
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
-    <Compile Include="Helpers\ValueConverters\HTMLToMarkDownConverter.cs" />
     <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
     <Compile Include="Models\Feeds\FeedModelBase.cs" />
@@ -1164,12 +1164,6 @@
   <ItemGroup>
     <PackageReference Include="ColorCode.UWP">
       <Version>2.0.6</Version>
-    </PackageReference>
-    <PackageReference Include="CommonMark.NET">
-      <Version>0.15.1</Version>
-    </PackageReference>
-    <PackageReference Include="Html2Markdown">
-      <Version>4.0.0.427</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.43</Version>

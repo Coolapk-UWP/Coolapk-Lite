@@ -23,7 +23,7 @@ namespace CoolapkLite.Helpers
     {
         private static readonly BitmapImage WhiteNoPicMode = new BitmapImage(new Uri("ms-appx:/Assets/NoPic/img_placeholder.png")) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
         private static readonly BitmapImage DarkNoPicMode = new BitmapImage(new Uri("ms-appx:/Assets/NoPic/img_placeholder_night.png")) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
-        internal static BitmapImage NoPic { get => SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode) ? DarkNoPicMode : WhiteNoPicMode; }
+        internal static BitmapImage NoPic { get => ThemeHelper.IsDarkTheme() ? DarkNoPicMode : WhiteNoPicMode; }
 
         static ImageCacheHelper()
         {

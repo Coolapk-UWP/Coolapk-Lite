@@ -91,7 +91,7 @@ namespace CoolapkLite.Models.Images
         {
             Uri = uri;
             Type = type;
-            SettingsHelper.UISettingChanged.Add(mode =>
+            ThemeHelper.UISettingChanged.Add(mode =>
             {
                 switch (mode)
                 {

@@ -55,44 +55,6 @@ namespace CoolapkLite.Helpers
 
         private static readonly ObservableCollection<string> MessageList = new ObservableCollection<string>();
 
-        static UIHelper()
-        {
-            //BsonMapper.Global.RegisterType
-            //    (
-            //    serialize: (pic) => pic.Uri,
-            //    deserialize: (bson) => new ImageModel(bson.ToString(), ImageType.OriginImage)
-            //    );
-        }
-
-        public static bool IsDarkTheme() => IsDarkTheme(SettingsHelper.Theme);
-
-        public static bool IsDarkTheme(ElementTheme theme) => theme == ElementTheme.Default ? Application.Current.RequestedTheme == ApplicationTheme.Dark : theme == ElementTheme.Dark;
-
-        public static async void ChangeTheme()
-        {
-            while (Window.Current?.Content is null)
-            {
-                await Task.Delay(100);
-            }
-
-            if (Window.Current?.Content is FrameworkElement frameworkElement)
-            {
-                foreach (CoreApplicationView item in CoreApplication.Views)
-                {
-                    await item.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        (Window.Current.Content as FrameworkElement).RequestedTheme = SettingsHelper.Theme;
-                    });
-                }
-            }
-        }
-
-        public static void CheckTheme()
-        {
-            bool IsDark = IsDarkTheme(SettingsHelper.Theme);
-            CheckTheme(IsDark, false);
-        }
-
         public static void CheckTheme(bool IsDark, bool IsInvoke = false)
         {
             Color ForegroundColor = IsDark ? Colors.White : Colors.Black;

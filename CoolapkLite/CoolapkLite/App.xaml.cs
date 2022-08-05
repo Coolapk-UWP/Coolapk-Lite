@@ -3,6 +3,7 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.Exceptions;
 using CoolapkLite.Models.Exceptions;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,15 +58,6 @@ namespace CoolapkLite
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
 
-                if (ApiInformation.IsEventPresent("Windows.UI.Xaml.FrameworkElement", "ActualThemeChanged"))
-                {
-                    rootFrame.ActualThemeChanged += (sender, e) => UIHelper.CheckTheme();
-                }
-                else
-                {
-                    SettingsHelper.UISettings.ColorValuesChanged += (sender, e) => UIHelper.CheckTheme();
-                }
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -86,9 +78,9 @@ namespace CoolapkLite
                     // 参数
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
+                ThemeHelper.Initialize();
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
-                UIHelper.CheckTheme();
             }
         }
 

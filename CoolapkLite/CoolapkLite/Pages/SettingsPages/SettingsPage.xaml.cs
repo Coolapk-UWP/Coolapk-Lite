@@ -9,7 +9,6 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -21,8 +20,6 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
-        private MarkdownTextBlock Markdown;
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
@@ -45,35 +42,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
                     RaisePropertyChangedEvent();
-                    SettingsHelper.UISettingChanged?.Invoke(UISettingChangedType.NoPicChanged);
-                }
-            }
-        }
-
-        internal bool IsDarkMode
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsDarkMode);
-            set
-            {
-                if (IsDarkMode != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsDarkMode, value);
-                    UIHelper.ChangeTheme();
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        internal bool IsBackgroundColorFollowSystem
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsBackgroundColorFollowSystem);
-            set
-            {
-                if (IsBackgroundColorFollowSystem != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsBackgroundColorFollowSystem, value);
-                    RaisePropertyChangedEvent();
-                    IsDarkMode = SettingsHelper.UISettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Background).Equals(Colors.Black);
+                    ThemeHelper.UISettingChanged?.Invoke(UISettingChangedType.NoPicChanged);
                 }
             }
         }
@@ -152,26 +121,17 @@ namespace CoolapkLite.Pages.SettingsPages
 #if DEBUG
             GoToTestPage.Visibility = Visibility.Visible;
 #endif
-            if (IsBackgroundColorFollowSystem)
+            switch (ThemeHelper.ActualTheme)
             {
-                Default.IsChecked = true;
-            }
-            else if (IsDarkMode)
-            {
-                Dark.IsChecked = true;
-            }
-            else
-            {
-                Light.IsChecked = true;
-            }
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-            if (Markdown != null)
-            {
-                Markdown.LinkClicked -= MarkdownTextBlock_LinkClicked;
+                case ElementTheme.Light:
+                    Light.IsChecked = true;
+                    break;
+                case ElementTheme.Dark:
+                    Dark.IsChecked = true;
+                    break;
+                case ElementTheme.Default:
+                    Default.IsChecked = true;
+                    break;
             }
         }
 
@@ -219,43 +179,16 @@ namespace CoolapkLite.Pages.SettingsPages
             switch (element.Name)
             {
                 case "Dark":
-                    IsBackgroundColorFollowSystem = false;
-                    IsDarkMode = true;
+                    ThemeHelper.RootTheme = ElementTheme.Dark;
                     break;
                 case "Light":
-                    IsBackgroundColorFollowSystem = false;
-                    IsDarkMode = false;
+                    ThemeHelper.RootTheme = ElementTheme.Light;
                     break;
                 case "Default":
-                    IsBackgroundColorFollowSystem = true;
-                    SettingsHelper.UISettingChanged?.Invoke(IsDarkMode ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
+                    ThemeHelper.RootTheme = ElementTheme.Default;
                     break;
                 default:
                     break;
-            }
-        }
-
-        private void Readme_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (UIHelper.IsTypePresent("Microsoft.Toolkit.Uwp.UI", "Media.BackdropBlurBrush"))
-            {
-                Markdown = new MarkdownTextBlock()
-                {
-                    FontSize = GoToTestPage.FontSize,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Background = new SolidColorBrush(Colors.Transparent),
-                    Text = ResourceLoader.GetForViewIndependentUse("MarkDown").GetString("about")
-                };
-                Markdown.LinkClicked += MarkdownTextBlock_LinkClicked;
-                (sender as Grid).Children.Add(Markdown);
-            }
-            else
-            {
-                (sender as Grid).Children.Add(new HyperlinkButton()
-                {
-                    Content = "查看更多",
-                    NavigateUri = new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite/blob/master/About.md")
-                });
             }
         }
 

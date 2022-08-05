@@ -40,7 +40,6 @@ namespace CoolapkLite.Pages
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
             UpdateTitleBarLayout(TitleBar);
-            UIHelper.ChangeTheme();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
