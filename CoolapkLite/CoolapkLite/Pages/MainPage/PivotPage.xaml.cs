@@ -23,6 +23,7 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
+        public Frame MainFrame => Frame;
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public PivotPage()
@@ -32,9 +33,6 @@ namespace CoolapkLite.Pages
             UIHelper.ShellDispatcher = Dispatcher;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
-            Window.Current.SetTitleBar(CustomTitleBar);
             if (SettingsHelper.WindowsVersion >= 10586)
             {
                 TitleBar.ExtendViewIntoTitleBar = true;
@@ -42,10 +40,29 @@ namespace CoolapkLite.Pages
             UpdateTitleBarLayout(TitleBar);
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            Window.Current.SetTitleBar(CustomTitleBar);
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed += System_BackPressed;
+            }
+            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+        }
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            Window.Current.SetTitleBar(null);
             SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed -= System_BackPressed;
+            }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
@@ -55,16 +72,6 @@ namespace CoolapkLite.Pages
         {
             // You can also add items in code.
             Pivot.ItemsSource = MenuItem.GetMainItems();
-
-            // Add handler for ContentFrame navigation.
-            Frame.Navigated += On_Navigated;
-
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
-
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += System_BackPressed;
-            }
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)

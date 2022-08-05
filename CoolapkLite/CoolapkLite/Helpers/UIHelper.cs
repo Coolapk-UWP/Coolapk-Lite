@@ -300,6 +300,7 @@ namespace CoolapkLite.Helpers
             "/u/",
             "/feed/",
             "/picture/",
+            "http://image.coolapk.com/",
         }.ToImmutableArray();
 
         private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
@@ -311,8 +312,10 @@ namespace CoolapkLite.Helpers
                 : oldText == -2
                     ? str.Replace("http://www.coolapk.com", string.Empty)
                     : oldText == -3
-                                    ? str.Replace("www.coolapk.com", string.Empty)
-                                    : oldText < 0 ? throw new Exception($"i = {oldText}") : str.Replace(routes[oldText], string.Empty);
+                        ? str.Replace("www.coolapk.com", string.Empty)
+                        : oldText < 0
+                            ? throw new Exception($"i = {oldText}")
+                            : str.Replace(routes[oldText], string.Empty);
         }
 
         public static async void OpenLinkAsync(string str)
@@ -334,6 +337,10 @@ namespace CoolapkLite.Helpers
             {
                 if (str == "/feed/writer") { ShowMessage("暂不支持"); }
                 else { Navigate(typeof(FeedShellPage), new FeedDetailViewModel(str.Replace(i - 1))); }
+            }
+            else if (str.IsFirst(i++))
+            {
+                ShowImage(new ImageModel(str, ImageType.SmallImage));
             }
         }
 

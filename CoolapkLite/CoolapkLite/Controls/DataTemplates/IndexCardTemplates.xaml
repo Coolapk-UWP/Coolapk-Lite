@@ -50,6 +50,7 @@
                         <Image
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
+                            CanDrag="True"
                             Source="{Binding Pic.Pic, Mode=OneWay}" />
                     </DataTemplate>
                 </FlipView.ItemTemplate>

@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
@@ -37,6 +38,8 @@ namespace CoolapkLite
     /// </summary>
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
+        public Frame MainFrame => HamburgerMenuFrame;
+
         public MainPage()
         {
             InitializeComponent();
@@ -44,9 +47,6 @@ namespace CoolapkLite
             UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
-            Window.Current.SetTitleBar(CustomTitleBar);
             if (SettingsHelper.WindowsVersion >= 10586)
             {
                 TitleBar.ExtendViewIntoTitleBar = true;
@@ -55,11 +55,32 @@ namespace CoolapkLite
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
         }
+        
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            Window.Current.SetTitleBar(CustomTitleBar);
+            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed += System_BackPressed;
+            }
+            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+            // Add handler for ContentFrame navigation.
+            HamburgerMenuFrame.Navigated += On_Navigated;
+        }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
+            Window.Current.SetTitleBar(null);
             SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            {
+                HardwareButtons.BackPressed -= System_BackPressed;
+            }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
@@ -96,22 +117,12 @@ namespace CoolapkLite
             HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
             HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
 
-            // Add handler for ContentFrame navigation.
-            HamburgerMenuFrame.Navigated += On_Navigated;
-
             // NavView doesn't load any page by default, so load home page.
             HamburgerMenu.SelectedIndex = 0;
             // If navigation occurs on SelectionChanged, this isn't needed.
             // Because we use ItemInvoked to navigate, we need to call Navigate
             // here to load the home page.
             HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
-
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
-
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += System_BackPressed;
-            }
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)

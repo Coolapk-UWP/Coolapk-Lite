@@ -11,11 +11,32 @@
     Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
     mc:Ignorable="d">
     <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <ReorderThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid
+            x:Name="CustomTitleBar"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            Canvas.ZIndex="1">
+            <TextBlock
+                x:Name="AppTitle"
+                Padding="12,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                MaxLines="1"
+                Style="{StaticResource CaptionTextBlockStyle}"
+                Text="{Binding Title}"
+                TextTrimming="CharacterEllipsis" />
+        </Grid>
         <FlipView
             x:Name="FlipView"
             Background="Transparent"
             ItemsSource="{Binding Images}"
-            SelectedIndex="{Binding Index}">
+            SelectedIndex="{Binding Index, Mode=TwoWay}">
             <FlipView.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -28,15 +49,5 @@
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>
-        <control:TitleBar
-            x:Name="TitleBar"
-            Title="{Binding Title}"
-            BackRequested="TitleBar_BackRequested"
-            Background="Transparent"
-            CompactModeThresholdWidth="0"
-            IsBackButtonVisible="True"
-            IsBackEnabled="True"
-            IsRefreshButtonVisible="True"
-            IsRefreshEnabled="True" />
     </Grid>
 </Page>

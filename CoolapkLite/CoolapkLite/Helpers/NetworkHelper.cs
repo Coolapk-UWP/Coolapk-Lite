@@ -295,10 +295,11 @@ namespace CoolapkLite.Helpers
 
                 throw new Exception();
             }
-            catch
+            catch (Exception ex)
             {
+                if (string.IsNullOrWhiteSpace(str)) { throw ex; }
                 JObject o = JObject.Parse(str);
-                if (o == null) { throw; }
+                if (o == null) { throw ex; }
                 else { throw new CoolapkMessageException(o); }
             }
         }
