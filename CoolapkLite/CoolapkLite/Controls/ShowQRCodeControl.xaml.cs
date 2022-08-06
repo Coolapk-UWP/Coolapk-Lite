@@ -1,4 +1,5 @@
-﻿using QRCoder;
+﻿using CoolapkLite.Helpers;
+using QRCoder;
 using System;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
@@ -28,47 +29,26 @@ namespace CoolapkUWP.Controls
             (d as ShowQRCodeControl).RefreshQRCode();
         }
 
-        private void FeedPage_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        private void ShowUIButton_Click(object sender, RoutedEventArgs e)
         {
-            Uri shareLinkString = ValidateAndGetUri(QRCodeText);
+            DataPackage dataPackage = new DataPackage();
+
+            Uri shareLinkString = NetworkHelper.ValidateAndGetUri(QRCodeText);
             if (shareLinkString != null)
             {
-                DataPackage dataPackage = new DataPackage();
                 dataPackage.SetWebLink(shareLinkString);
                 dataPackage.Properties.Title = "动态分享";
                 dataPackage.Properties.Description = QRCodeText;
-                DataRequest request = args.Request;
-                request.Data = dataPackage;
             }
             else
             {
-                DataPackage dataPackage = new DataPackage();
                 dataPackage.SetText(QRCodeText);
                 dataPackage.Properties.Title = "内容分享";
                 dataPackage.Properties.Description = "内含文本";
-                DataRequest request = args.Request;
-                request.Data = dataPackage;
             }
-        }
 
-        private static Uri ValidateAndGetUri(string uriString)
-        {
-            Uri uri = null;
-            try
-            {
-                uri = new Uri(uriString);
-            }
-            catch (FormatException)
-            {
-            }
-            return uri;
-        }
-
-        private void ShowUIButton_Click(object sender, RoutedEventArgs e)
-        {
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested -= FeedPage_DataRequested;
-            dataTransferManager.DataRequested += FeedPage_DataRequested;
+            dataTransferManager.DataRequested += (sender, args) => { args.Request.Data = dataPackage; };
             DataTransferManager.ShowShareUI();
         }
 
@@ -94,7 +74,7 @@ namespace CoolapkUWP.Controls
                         BitmapImage image = new BitmapImage();
                         await image.SetSourceAsync(stream);
 
-                        qrCodeImage.Source = image;
+                        QRCodeImage.Source = image;
                     }
                 }
             }

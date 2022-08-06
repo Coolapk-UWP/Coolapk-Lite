@@ -4,50 +4,106 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:CoolapkLite.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShowImageViewModel}"
     Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
     mc:Ignorable="d">
+    <Page.Resources>
+        <MenuFlyout x:Key="FlipViewContextFlyout">
+            <MenuFlyoutItem
+                Click="AppBarButton_Click"
+                Tag="Share"
+                Text="分享" />
+            <MenuFlyoutItem
+                Click="AppBarButton_Click"
+                Tag="Save"
+                Text="保存" />
+            <MenuFlyoutItem
+                Click="AppBarButton_Click"
+                Tag="Origin"
+                Text="查看原图"
+                Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}" />
+        </MenuFlyout>
+    </Page.Resources>
     <Grid>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <ReorderThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-        <Grid
-            x:Name="CustomTitleBar"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Background="Transparent"
-            Canvas.ZIndex="1">
-            <TextBlock
-                x:Name="AppTitle"
-                Padding="12,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                MaxLines="1"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                Text="{Binding Title}"
-                TextTrimming="CharacterEllipsis" />
+        <Grid>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <ReorderThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <Grid
+                x:Name="CustomTitleBar"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Canvas.ZIndex="1">
+                <TextBlock
+                    x:Name="AppTitle"
+                    Padding="12,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="{Binding Title}"
+                    TextTrimming="CharacterEllipsis" />
+            </Grid>
+            <Grid x:Name="FlipViewGrid">
+                <FlipView
+                    x:Name="FlipView"
+                    helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"
+                    Background="Transparent"
+                    ItemsSource="{Binding Images}"
+                    SelectedIndex="{Binding Index, Mode=TwoWay}"
+                    Tapped="FlipView_Tapped">
+                    <FlipView.ItemTemplate>
+                        <DataTemplate>
+                            <Image
+                                x:Name="Image"
+                                CanDrag="True"
+                                RenderTransformOrigin="0.5,0.5"
+                                Source="{Binding Pic, Mode=OneWay}" />
+                        </DataTemplate>
+                    </FlipView.ItemTemplate>
+                </FlipView>
+                <ProgressRing
+                    Width="60"
+                    Height="60"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    IsActive="{Binding IsLoading}"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </Grid>
         </Grid>
-        <FlipView
-            x:Name="FlipView"
-            Background="Transparent"
-            ItemsSource="{Binding Images}"
-            SelectedIndex="{Binding Index, Mode=TwoWay}">
-            <FlipView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Image
-                            x:Name="Image"
-                            CanDrag="True"
-                            RenderTransformOrigin="0.5,0.5"
-                            Source="{Binding Pic, Mode=OneWay}" />
-                    </Grid>
-                </DataTemplate>
-            </FlipView.ItemTemplate>
-        </FlipView>
+        <CommandBar
+            x:Name="CommandBar"
+            VerticalAlignment="Bottom"
+            Visibility="Collapsed">
+            <CommandBar.Background>
+                <SolidColorBrush Opacity="0.8" Color="{StaticResource SystemChromeMediumColor}" />
+            </CommandBar.Background>
+            <CommandBar.PrimaryCommands>
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Icon="Share"
+                    Label="分享"
+                    Tag="Share" />
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Icon="Save"
+                    Label="保存"
+                    Tag="Save" />
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Label="查看原图"
+                    Tag="Origin"
+                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
     </Grid>
 </Page>

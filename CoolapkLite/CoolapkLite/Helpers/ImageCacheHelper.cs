@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -32,11 +33,12 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, bool isforce = false)
         {
-            try { new Uri(url); } catch { return NoPic; }
+            var uri = NetworkHelper.ValidateAndGetUri(url);
+            if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
-                return new BitmapImage(new Uri(url));
+                return new BitmapImage(uri);
             }
             else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
@@ -47,8 +49,8 @@ namespace CoolapkLite.Helpers
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
                     url += ".s.jpg";
+                    uri = NetworkHelper.ValidateAndGetUri(url);
                 }
-                Uri uri = new Uri(url);
 
                 try
                 {
@@ -57,22 +59,23 @@ namespace CoolapkLite.Helpers
                 }
                 catch
                 {
-                    string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                    string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                     UIHelper.ShowMessage(str);
                     return NoPic;
                 }
             }
         }
 
-        internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
+        internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url, bool isforce = false)
         {
-            try { new Uri(url); } catch { return null; }
+            var uri = NetworkHelper.ValidateAndGetUri(url);
+            if (uri == null) { return null; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
-                return await StorageFile.GetFileFromApplicationUriAsync(new Uri(url));
+                return await StorageFile.GetFileFromApplicationUriAsync(uri);
             }
-            else if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
                 return null;
             }
@@ -81,9 +84,21 @@ namespace CoolapkLite.Helpers
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
                     url += ".s.jpg";
+                    uri = NetworkHelper.ValidateAndGetUri(url);
                 }
-                Uri uri = new Uri(url);
-                return await ImageCache.Instance.GetFileFromCacheAsync(uri);
+
+                try
+                {
+                    _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                    StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
+                    return image;
+                }
+                catch
+                {
+                    string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                    UIHelper.ShowMessage(str);
+                    return null;
+                }
             }
         }
 
@@ -124,11 +139,12 @@ namespace CoolapkLite.Helpers
         [Obsolete]
         internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, bool isforce = false)
         {
-            try { new Uri(url); } catch { return NoPic; }
+            var uri = NetworkHelper.ValidateAndGetUri(url);
+            if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
-                return new BitmapImage(new Uri(url));
+                return new BitmapImage(uri);
             }
             else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {

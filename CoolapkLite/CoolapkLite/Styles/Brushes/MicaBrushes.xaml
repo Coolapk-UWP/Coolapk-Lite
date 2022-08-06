@@ -15,7 +15,7 @@
         BackgroundSource="MicaBackdrop"
         FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
         TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
-    
+
     <media:BackdropMicaBrush
         x:Key="SystemChromeMediumLowColorElementBrush"
         BackgroundSource="MicaBackdrop"

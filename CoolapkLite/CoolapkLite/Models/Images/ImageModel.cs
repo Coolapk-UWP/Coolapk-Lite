@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
@@ -21,7 +22,7 @@ namespace CoolapkLite.Models.Images
                 }
                 else
                 {
-                    GetImage();
+                    _ = GetImage();
                     return ImageCacheHelper.NoPic;
                 }
             }
@@ -83,15 +84,61 @@ namespace CoolapkLite.Models.Images
 
         public bool IsGif => Uri.Substring(Uri.LastIndexOf('.')).ToUpperInvariant().Contains("GIF");
 
-        public string Uri { get; }
+        private string uri;
+        public string Uri
+        {
+            get => uri;
+            set
+            {
+                if (uri != value)
+                {
+                    uri = value;
+                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    {
+                        _ = GetImage();
+                    }
+                }
+            }
+        }
 
-        public ImageType Type { get; }
+        private ImageType type;
+        public ImageType Type
+        {
+            get => type;
+            set
+            {
+                if (type != value)
+                {
+                    type = value;
+                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    {
+                        _ = GetImage();
+                    }
+                }
+            }
+        }
+
+        public BitmapImage RealPic
+        {
+            get
+            {
+                if (pic != null && pic.TryGetTarget(out BitmapImage image))
+                {
+                    return image;
+                }
+                else
+                {
+                    GetImage().Wait();
+                    return Pic;
+                }
+            }
+        }
 
         public ImageModel(string uri, ImageType type)
         {
             Uri = uri;
             Type = type;
-            ThemeHelper.UISettingChanged.Add(mode =>
+            ThemeHelper.UISettingChanged.Add(async mode =>
             {
                 switch (mode)
                 {
@@ -99,19 +146,21 @@ namespace CoolapkLite.Models.Images
                     case UISettingChangedType.DarkMode:
                         _ = UIHelper.ShellDispatcher?.AwaitableRunAsync(() =>
                             {
-                                if (pic == null)
+                                if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                                 {
-                                    GetImage();
-                                }
-                                else if (pic.TryGetTarget(out BitmapImage image) && image.UriSource != null)
-                                {
-                                    Pic = ImageCacheHelper.NoPic;
+                                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                                    {
+                                        Pic = ImageCacheHelper.NoPic;
+                                    }
                                 }
                             });
                         break;
 
                     case UISettingChangedType.NoPicChanged:
-                        GetImage();
+                        if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                        {
+                            await GetImage();
+                        }
                         break;
                 }
             });
@@ -127,7 +176,7 @@ namespace CoolapkLite.Models.Images
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        private async void GetImage()
+        private async Task GetImage()
         {
             LoadStarted?.Invoke(this, null);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = ImageCacheHelper.NoPic; }

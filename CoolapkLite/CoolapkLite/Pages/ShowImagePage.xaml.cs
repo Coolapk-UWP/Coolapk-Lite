@@ -11,6 +11,7 @@ using Windows.Phone.UI.Input;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -24,7 +25,6 @@ namespace CoolapkLite.Pages
     public sealed partial class ShowImagePage : Page
     {
         private ShowImageViewModel Provider;
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         public ShowImagePage() => InitializeComponent();
 
@@ -96,7 +96,7 @@ namespace CoolapkLite.Pages
             bool IsVisible = TitleBar.IsVisible;
             CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
             Thickness Margin = new Thickness(0, IsVisible ? TitleBar.Height : 0, 0, 0);
-            FlipView.Margin = Margin;
+            FlipViewGrid.Margin = Margin;
         }
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
@@ -106,8 +106,27 @@ namespace CoolapkLite.Pages
             CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
         }
 
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as FrameworkElement).Tag as string)
+            {
+                case "Save":
+                    Provider.SavePic();
+                    break;
+                case "Share":
+                    Provider.SharePic();
+                    break;
+                case "Origin":
+                    Provider.Images[Provider.Index].Type = ImageType.OriginImage;
+                    Provider.ShowOrigin = false;
+                    break;
+            }
+        }
+
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
+
+        private void FlipView_Tapped(object sender, TappedRoutedEventArgs e) => CommandBar.Visibility = CommandBar.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
     }
 }
