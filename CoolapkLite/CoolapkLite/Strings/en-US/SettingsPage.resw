@@ -151,7 +151,7 @@
     <value>Reset application</value>
   </data>
   <data name="ResetSettingsConfirm.Content" xml:space="preserve">
-    <value>OK</value>
+    <value>Yes</value>
   </data>
   <data name="ResetSettingsTitle.Text" xml:space="preserve">
     <value>Are you sure you want to reset the app?</value>
