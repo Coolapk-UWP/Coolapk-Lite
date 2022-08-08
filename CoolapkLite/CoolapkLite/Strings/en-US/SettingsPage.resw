@@ -118,60 +118,60 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AboutSettingsHeader.Header" xml:space="preserve">
-    <value>关于</value>
+    <value>About</value>
   </data>
   <data name="CheckUpdate.Content" xml:space="preserve">
-    <value>检查更新</value>
+    <value>Check for updates</value>
   </data>
   <data name="CheckUpdateWhenLuanchingCheckBox.Content" xml:space="preserve">
-    <value>启动时检查更新</value>
+    <value>Check for updates at startup</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
-    <value>清理缓存</value>
+    <value>Clear the cache</value>
   </data>
   <data name="ContentSettingsHeader.Header" xml:space="preserve">
-    <value>内容</value>
+    <value>Content</value>
   </data>
   <data name="FeedbackLink.Content" xml:space="preserve">
-    <value>在Github上反馈</value>
+    <value>Feedback on GitHub</value>
   </data>
   <data name="GoToTestPage.Content" xml:space="preserve">
-    <value>前往测试页面</value>
+    <value>Go to TestPage</value>
   </data>
   <data name="LogFolderLink.Content" xml:space="preserve">
-    <value>打开日志文件夹</value>
+    <value>Open log folder</value>
   </data>
   <data name="NoPicsModeCheckBox.Header" xml:space="preserve">
-    <value>无图模式</value>
+    <value>No Picture Mode</value>
   </data>
   <data name="OthersSettingsHeader.Header" xml:space="preserve">
-    <value>其他</value>
+    <value>Others</value>
   </data>
   <data name="ResetSettings.Content" xml:space="preserve">
-    <value>重置应用</value>
+    <value>Reset application</value>
   </data>
   <data name="ResetSettingsConfirm.Content" xml:space="preserve">
-    <value>确定</value>
+    <value>OK</value>
   </data>
   <data name="ResetSettingsTitle.Text" xml:space="preserve">
-    <value>您确定要重置应用吗？</value>
+    <value>Are you sure you want to reset the app?</value>
   </data>
   <data name="ShowOtherExceptionCheckBox.Content" xml:space="preserve">
-    <value>显示未知错误</value>
+    <value>Show unknown error</value>
   </data>
   <data name="ThemeModeDark.Content" xml:space="preserve">
-    <value>深色</value>
+    <value>Dark</value>
   </data>
   <data name="ThemeModeDefault.Content" xml:space="preserve">
-    <value>跟随系统</value>
+    <value>Follow System</value>
   </data>
   <data name="ThemeModeLight.Content" xml:space="preserve">
-    <value>浅色</value>
+    <value>Light</value>
   </data>
   <data name="ThemeSettingsHeader.Header" xml:space="preserve">
-    <value>主题</value>
+    <value>Theme</value>
   </data>
   <data name="UpdateSettingsHeader.Header" xml:space="preserve">
-    <value>更新</value>
+    <value>Update</value>
   </data>
 </root>
