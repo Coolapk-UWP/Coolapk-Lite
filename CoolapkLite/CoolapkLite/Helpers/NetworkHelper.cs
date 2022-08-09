@@ -259,6 +259,8 @@ namespace CoolapkLite.Helpers
         /// <returns>用户信息</returns>
         public static async Task<(string UID, string UserName, string UserAvatar)> GetUserInfoByNameAsync(string name)
         {
+            (string UID, string UserName, string UserAvatar) result = (string.Empty, string.Empty, string.Empty);
+
             if (string.IsNullOrEmpty(name))
             {
                 throw new UserNameErrorException();
@@ -273,7 +275,6 @@ namespace CoolapkLite.Helpers
                 if (token.TryGetValue("dataRow", out JToken v1))
                 {
                     JObject dataRow = (JObject)v1;
-                    (string UID, string UserName, string UserAvatar) result = (string.Empty, string.Empty, string.Empty);
 
                     if (dataRow.TryGetValue("uid", out JToken uid))
                     {
@@ -294,6 +295,11 @@ namespace CoolapkLite.Helpers
                 }
 
                 throw new Exception();
+            }
+            catch (HttpRequestException e)
+            {
+                UIHelper.ShowHttpExceptionMessage(e);
+                return result;
             }
             catch (Exception ex)
             {

@@ -2,28 +2,23 @@
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Security.Cryptography;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
-using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Media.Imaging;
@@ -371,9 +366,10 @@ namespace CoolapkLite
             if (SettingsHelper.CheckLoginInfo())
             {
                 string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if(!string.IsNullOrEmpty(UID))
+                if (!string.IsNullOrEmpty(UID))
                 {
                     var results = await NetworkHelper.GetUserInfoByNameAsync(UID);
+                    if (results.UID != UID) { return; }
                     Name = results.UserName;
                     Image = new BitmapImage(new Uri(results.UserAvatar));
                     PageType = typeof(FeedListPage);
