@@ -48,7 +48,7 @@ namespace CoolapkUWP.Controls
             }
 
             DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-            dataTransferManager.DataRequested += (sender, args) => { args.Request.Data = dataPackage; };
+            dataTransferManager.DataRequested += (obj, args) => { args.Request.Data = dataPackage; };
             DataTransferManager.ShowShareUI();
         }
 

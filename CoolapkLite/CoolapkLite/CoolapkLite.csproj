@@ -232,9 +232,6 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
-    <Compile Include="Controls\TwoPaneView\TwoPaneView.cs" />
-    <Compile Include="Controls\TwoPaneView\TwoPaneView.Enum.cs" />
-    <Compile Include="Controls\TwoPaneView\TwoPaneView.Properties.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\DispatcherHelper.cs" />

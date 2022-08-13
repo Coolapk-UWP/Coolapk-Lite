@@ -26,11 +26,11 @@ namespace CoolapkLite.Helpers
 
         public static string ConvertUnixTimeStampToReadable(this double time, DateTime baseTime)
         {
-            (TimeIntervalType type, object time) ConvertUnixTimeStampToReadable(double time, DateTime baseTime)
+            (TimeIntervalType type, object time) ConvertUnixTimeStampToReadable(double times, DateTime baseTimes)
             {
-                TimeSpan ttime = new TimeSpan((long)time * 1000_0000);
+                TimeSpan ttime = new TimeSpan((long)times * 1000_0000);
                 DateTime tdate = unixDateBase.Add(ttime);
-                TimeSpan temp = baseTime.ToUniversalTime()
+                TimeSpan temp = baseTimes.ToUniversalTime()
                                         .Subtract(tdate);
 
                 if (temp.TotalDays > 30)
@@ -39,10 +39,10 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    TimeIntervalType type = temp.Days > 0
+                    TimeIntervalType timetype = temp.Days > 0
                         ? TimeIntervalType.DaysAgo
                         : temp.Hours > 0 ? TimeIntervalType.HoursAgo : temp.Minutes > 0 ? TimeIntervalType.MinutesAgo : TimeIntervalType.JustNow;
-                    return (type, temp);
+                    return (timetype, temp);
                 }
             }
 

@@ -88,9 +88,12 @@
             <CommandBar.PrimaryCommands>
                 <AppBarButton
                     Click="AppBarButton_Click"
-                    Icon="Share"
                     Label="分享"
-                    Tag="Share" />
+                    Tag="Share">
+                    <AppBarButton.Icon>
+                        <FontIcon Glyph="&#xE72D;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton
                     Click="AppBarButton_Click"
                     Icon="Save"
