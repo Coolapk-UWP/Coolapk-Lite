@@ -32,7 +32,6 @@ namespace CoolapkLite.Pages.SettingsPages
                 if (IsUseAPI2 != value)
                 {
                     SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
-                    NetworkHelper.SetRequestHeaders();
                 }
             }
         }
