@@ -20,16 +20,22 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class TestPage : Page, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
-        {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
-        }
-
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
         private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
+
+        internal bool IsUseAPI2
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
+            set
+            {
+                if (IsUseAPI2 != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
+                    NetworkHelper.SetRequestHeaders();
+                }
+            }
+        }
 
         internal string Version
         {
@@ -40,7 +46,6 @@ namespace CoolapkLite.Pages.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.APIVersion, value.ToString());
                     NetworkHelper.SetRequestHeaders();
-                    RaisePropertyChangedEvent();
                 }
             }
         }
@@ -53,9 +58,15 @@ namespace CoolapkLite.Pages.SettingsPages
                 if (IsExtendsTitleBar != value)
                 {
                     CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
-                    RaisePropertyChangedEvent();
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
         public TestPage()

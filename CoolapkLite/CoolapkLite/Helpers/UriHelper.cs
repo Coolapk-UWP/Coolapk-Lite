@@ -67,8 +67,11 @@ namespace CoolapkLite.Helpers
 
     public static class UriHelper
     {
+        private static bool IsUseAPI2 => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
+
         public static readonly Uri CoolapkUri = new Uri("https://coolapk.com");
         public static readonly Uri BaseUri = new Uri("https://api.coolapk.com");
+        public static readonly Uri Base2Uri = new Uri("https://api2.coolapk.com");
         public static readonly Uri ITHomeUri = new Uri("https://qapi.ithome.com");
         public static readonly Uri DevUri = new Uri("https://developer.coolapk.com");
         public static readonly Uri BilibiliUri = new Uri("https://api.vc.bilibili.com");
@@ -76,7 +79,7 @@ namespace CoolapkLite.Helpers
         public static Uri GetUri(UriType type, params object[] args)
         {
             string u = string.Format(GetTemplate(type), args);
-            return new Uri(BaseUri, u);
+            return new Uri(IsUseAPI2 ? Base2Uri : BaseUri, u);
         }
 
         public static Uri GetLinkUri(UriType type, LinkType linkType = LinkType.Coolapk, params object[] args)

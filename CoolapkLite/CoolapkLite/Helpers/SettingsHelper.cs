@@ -13,6 +13,7 @@ namespace CoolapkLite.Helpers
         public const string Uid = "Uid";
         public const string TileUrl = "TileUrl";
         public const string DeviceID = "DeviceID";
+        public const string IsUseAPI2 = "IsUseAPI2";
         public const string IsFirstRun = "IsFirstRun";
         public const string APIVersion = "APIVersion";
         public const string IsNoPicsMode = "IsNoPicsMode";
@@ -39,6 +40,10 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(DeviceID))
             {
                 LocalSettings.Values.Add(DeviceID, string.Empty);
+            }
+            if (!LocalSettings.Values.ContainsKey(IsUseAPI2))
+            {
+                LocalSettings.Values.Add(IsUseAPI2, true);
             }
             if (!LocalSettings.Values.ContainsKey(IsFirstRun))
             {
@@ -95,7 +100,7 @@ namespace CoolapkLite.Helpers
                 {
                     HttpCookieManager cookieManager = filter.CookieManager;
                     string uid = string.Empty, token = string.Empty, userName = string.Empty;
-                    foreach (HttpCookie item in cookieManager.GetCookies(new Uri("http://coolapk.com")))
+                    foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
                     {
                         switch (item.Name)
                         {
@@ -137,6 +142,10 @@ namespace CoolapkLite.Helpers
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
                 foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.BaseUri))
+                {
+                    cookieManager.DeleteCookie(item);
+                }
+                foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.Base2Uri))
                 {
                     cookieManager.DeleteCookie(item);
                 }

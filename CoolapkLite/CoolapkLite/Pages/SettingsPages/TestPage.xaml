@@ -114,6 +114,7 @@
                             Click="Button_Click"
                             Content="保存 ID"
                             Tag="SetDeviceID" />
+                        <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
                         <ComboBox
                             x:Name="ComboBoxVersion"
                             Grid.Row="13"

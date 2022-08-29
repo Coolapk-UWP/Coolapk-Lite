@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Media.Protection.PlayReady;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Storage;
 using Windows.System.Profile;
@@ -43,6 +44,7 @@ namespace CoolapkLite.Helpers
             string Version = SettingsHelper.Get<string>(SettingsHelper.APIVersion);
             try { Culture = GlobalizationPreferences.Languages.Count > 0 ? new CultureInfo(GlobalizationPreferences.Languages.First()) : null; } catch { }
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
+            Client.DefaultRequestHeaders.Clear();
             Client.DefaultRequestHeaders.Add("X-Sdk-Int", "30");
             Client.DefaultRequestHeaders.Add("X-App-Mode", "universal");
             Client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
