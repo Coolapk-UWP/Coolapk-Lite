@@ -66,42 +66,42 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "7");
                     break;
                 case "V8":
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/8.7-1809041-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "8.7");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1809041");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "8");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/8.7-1809041-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "8.7");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "1809041");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "8");
                     break;
                 case "V9":
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/9.6.3-1910291-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "9.6.3");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1910291");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "9");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/9.6.3-1910291-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "9.6.3");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "1910291");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "9");
                     break;
                 case "小程序":
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/1.0-1902250-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "1.0");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1902250");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "9");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/1.0-1902250-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "1.0");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "1902250");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "9");
                     break;
                 case "V10":
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/10.5.3-2009271-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "10.5.3");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2009271");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "10");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/10.5.3-2009271-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "10.5.3");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2009271");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "10");
                     break;
                 case "V11":
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/11.4.7-2112231-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "11.4.7");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2112231");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "11");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/11.4.7-2112231-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "11.4.7");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2112231");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "11");
                     break;
                 case "V12":
                 default:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.4.2-2208241-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "12.4.2");
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2208241");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2208241");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "12");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.4.2-2208241-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "12.4.2");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2208241");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2208241");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
             }
             Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
