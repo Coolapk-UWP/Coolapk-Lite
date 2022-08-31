@@ -105,15 +105,6 @@
                             Click="Button_Click"
                             Content="获取内容"
                             Tag="GetContent" />
-                        <TextBox
-                            x:Name="DeviceID"
-                            Margin="0,2"
-                            Header="设置 Device ID" />
-                        <Button
-                            Margin="0,2"
-                            Click="Button_Click"
-                            Content="保存 ID"
-                            Tag="SetDeviceID" />
                         <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
                         <ComboBox
                             x:Name="ComboBoxVersion"

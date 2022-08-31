@@ -13,7 +13,6 @@ using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
 using Windows.System.UserProfile;
-using Windows.UI.Xaml;
 using Windows.Web.Http.Filters;
 
 namespace CoolapkLite.Helpers
@@ -22,29 +21,34 @@ namespace CoolapkLite.Helpers
     {
         public static readonly HttpClientHandler ClientHandler = new HttpClientHandler();
         public static readonly HttpClient Client = new HttpClient(ClientHandler);
-        private static TokenCreater token = new TokenCreater();
+        private static TokenCreater token;
 
         static NetworkHelper()
         {
             SetRequestHeaders();
+            ThemeHelper.UISettingChanged.Add((arg) => Client.DefaultRequestHeaders.ReplaceDarkMode());
         }
 
         public static void SetRequestHeaders()
         {
-            CultureInfo Culture = null;
-            ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
-            string Version = SettingsHelper.Get<string>(SettingsHelper.APIVersion);
-            try { Culture = GlobalizationPreferences.Languages.Count > 0 ? new CultureInfo(GlobalizationPreferences.Languages.First()) : null; } catch { }
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
+            string APIVersion = SettingsHelper.Get<string>(SettingsHelper.APIVersion);
+            ulong OSVersion = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
+            TokenVersion TokenVersion = SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion);
+            string Culture = GlobalizationPreferences.Languages.Count > 0 ? new CultureInfo(GlobalizationPreferences.Languages.FirstOrDefault()).ToString() : "zh-CN";
+
+            token = new TokenCreater(TokenVersion);
             Client.DefaultRequestHeaders.Clear();
             Client.DefaultRequestHeaders.Add("X-Sdk-Int", "30");
+            Client.DefaultRequestHeaders.Add("X-Sdk-Locale", Culture);
             Client.DefaultRequestHeaders.Add("X-App-Mode", "universal");
             Client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
             Client.DefaultRequestHeaders.Add("X-App-Id", "com.coolapk.market");
-            Client.DefaultRequestHeaders.Add("X-Sdk-Locale", Culture == null ? "zh-CN" : Culture.ToString());
-            Client.DefaultRequestHeaders.Add("X-Dark-Mode", Application.Current.RequestedTheme.ToString() == "Dark" ? "1" : "0");
-            Client.DefaultRequestHeaders.UserAgent.ParseAdd("Dalvik/2.1.0 (Windows NT " + (ushort)((version & 0xFFFF000000000000L) >> 48) + "." + (ushort)((version & 0x0000FFFF00000000L) >> 32) + (Package.Current.Id.Architecture.ToString().Contains("64") ? "; Win64; " : "; Win32; ") + Package.Current.Id.Architecture.ToString().Replace("X", "x") + "; WebView/3.0) (#Build; " + deviceInfo.SystemManufacturer + "; " + deviceInfo.SystemProductName + "; CoolapkUWP; " + (ushort)((version & 0xFFFF000000000000L) >> 48) + "." + (ushort)((version & 0x0000FFFF00000000L) >> 32) + "." + (ushort)((version & 0x00000000FFFF0000L) >> 16) + "." + (ushort)(version & 0x000000000000FFFFL) + ")");
-            switch (Version)
+            Client.DefaultRequestHeaders.Add("X-App-Device", TokenCreater.DeviceCode);
+            Client.DefaultRequestHeaders.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
+            Client.DefaultRequestHeaders.UserAgent.ParseAdd($"Dalvik/2.1.0 (Windows NT {(ushort)((OSVersion & 0xFFFF000000000000L) >> 48)}.{(ushort)((OSVersion & 0x0000FFFF00000000L) >> 32)}; Win32; {Package.Current.Id.Architecture.ToString().Replace("X", "x")}; WebView/3.0) (#Build; {deviceInfo.SystemManufacturer}; {deviceInfo.SystemProductName}; CoolapkUWP; {(ushort)((OSVersion & 0xFFFF000000000000L) >> 48)}.{(ushort)((OSVersion & 0x0000FFFF00000000L) >> 32)}.{(ushort)((OSVersion & 0x00000000FFFF0000L) >> 16)}.{(ushort)(OSVersion & 0x000000000000FFFFL)})");
+            
+            switch (APIVersion)
             {
                 case "V6":
                     Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/6.10.6-1608291-universal");
@@ -96,7 +100,6 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
             }
-            Client.DefaultRequestHeaders.Add("X-App-Device", TokenCreater.DeviceCode);
         }
 
         public static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
@@ -114,6 +117,13 @@ namespace CoolapkLite.Helpers
                     }
                 }
             }
+        }
+
+        private static void ReplaceDarkMode(this System.Net.Http.Headers.HttpRequestHeaders headers)
+        {
+            const string name = "X-Dark-Mode";
+            _ = headers.Remove(name);
+            headers.Add(name, ThemeHelper.IsDarkTheme() ? "1" : "0");
         }
 
         private static void ReplaceAppToken(this System.Net.Http.Headers.HttpRequestHeaders headers)

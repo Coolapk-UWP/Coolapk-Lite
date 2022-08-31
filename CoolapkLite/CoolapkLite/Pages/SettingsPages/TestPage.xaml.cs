@@ -71,7 +71,6 @@ namespace CoolapkLite.Pages.SettingsPages
         public TestPage()
         {
             InitializeComponent();
-            DeviceID.Text = SettingsHelper.Get<string>(SettingsHelper.DeviceID);
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
         }
 
@@ -116,10 +115,6 @@ namespace CoolapkLite.Pages.SettingsPages
                         DefaultButton = ContentDialogButton.Close
                     };
                     _ = await GetJsonDialog.ShowAsync();
-                    break;
-                case "SetDeviceID":
-                    SettingsHelper.Set(SettingsHelper.DeviceID, DeviceID.Text);
-                    NetworkHelper.SetRequestHeaders();
                     break;
                 case "ShowMessage":
                     UIHelper.ShowMessage(NotifyMessage.Text);

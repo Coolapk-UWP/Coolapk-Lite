@@ -10,11 +10,11 @@ namespace CoolapkLite.Helpers
     {
         public const string Uid = "Uid";
         public const string TileUrl = "TileUrl";
-        public const string DeviceID = "DeviceID";
         public const string IsUseAPI2 = "IsUseAPI2";
         public const string IsFirstRun = "IsFirstRun";
         public const string APIVersion = "APIVersion";
         public const string IsNoPicsMode = "IsNoPicsMode";
+        public const string TokenVersion = "TokenVersion";
         public const string SelectedAppTheme = "SelectedAppTheme";
         public const string IsUseOldEmojiMode = "IsUseOldEmojiMode";
         public const string ShowOtherException = "ShowOtherException";
@@ -35,10 +35,6 @@ namespace CoolapkLite.Helpers
             {
                 LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
             }
-            if (!LocalSettings.Values.ContainsKey(DeviceID))
-            {
-                LocalSettings.Values.Add(DeviceID, string.Empty);
-            }
             if (!LocalSettings.Values.ContainsKey(IsUseAPI2))
             {
                 LocalSettings.Values.Add(IsUseAPI2, true);
@@ -54,6 +50,10 @@ namespace CoolapkLite.Helpers
             if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
             {
                 LocalSettings.Values.Add(IsNoPicsMode, false);
+            }
+            if (!LocalSettings.Values.ContainsKey(TokenVersion))
+            {
+                LocalSettings.Values.Add(TokenVersion, (int)Helpers.TokenVersion.TokenV2);
             }
             if (!LocalSettings.Values.ContainsKey(SelectedAppTheme))
             {
