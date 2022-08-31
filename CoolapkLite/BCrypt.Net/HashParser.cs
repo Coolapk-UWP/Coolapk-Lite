@@ -9,7 +9,7 @@ namespace BCrypt.Net
 
         public static HashInformation GetHashInformation(string hash)
         {
-            if (!IsValidHash(hash, out var format))
+            if (!IsValidHash(hash, out HashFormatDescriptor format))
             {
                 ThrowInvalidHashFormat();
             }
@@ -23,14 +23,14 @@ namespace BCrypt.Net
 
         public static int GetWorkFactor(string hash)
         {
-            if (!IsValidHash(hash, out var format))
+            if (!IsValidHash(hash, out HashFormatDescriptor format))
             {
                 ThrowInvalidHashFormat();
             }
 
             int offset = format.WorkfactorOffset;
 
-            return 10 * (hash[offset] - '0') + (hash[offset + 1] - '0');
+            return (10 * (hash[offset] - '0')) + (hash[offset + 1] - '0');
         }
 
         private static bool IsValidHash(string hash, out HashFormatDescriptor format)

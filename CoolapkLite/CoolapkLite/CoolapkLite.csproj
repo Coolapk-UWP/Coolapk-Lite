@@ -234,7 +234,7 @@
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
-    <Compile Include="Helpers\Controls\DispatcherHelper.cs" />
+    <Compile Include="Helpers\DispatcherHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
     <Compile Include="Helpers\HtmlToText.cs" />
     <Compile Include="Helpers\Controls\ListViewHelper.cs" />
@@ -243,12 +243,12 @@
     <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
-    <Compile Include="Helpers\TokenHelper.cs" />
+    <Compile Include="Common\TokenCreater.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
-    <Compile Include="Helpers\Utils.cs" />
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
-    <Compile Include="Helpers\WeakEvent.cs" />
+    <Compile Include="Common\WeakEvent.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Exceptions\CoolapkMessageException.cs" />
     <Compile Include="Helpers\Exceptions\ExceptionHandlingSynchronizationContext.cs" />
@@ -329,11 +329,11 @@
     </Compile>
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\EmojiHelper.cs" />
-    <Compile Include="Helpers\Controls\EventHelper.cs" />
+    <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
-    <Compile Include="Helpers\Controls\TipsRectangleHelper.cs" />
+    <Compile Include="Helpers\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\ValueConverters\FontSizeToLineHeight.cs" />
     <Compile Include="Helpers\ValueConverters\HTMLToTextConverter.cs" />
@@ -1169,13 +1169,13 @@
       <Version>2.0.6</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.43</Version>
+      <Version>1.11.45</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MicaForUWP">
-      <Version>0.0.6</Version>
+      <Version>0.0.7</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>

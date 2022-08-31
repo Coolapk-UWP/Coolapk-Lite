@@ -1,10 +1,5 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
-using CoolapkLite.ViewModels.FeedPages;
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
@@ -12,7 +7,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -52,7 +46,7 @@ namespace CoolapkLite.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if(!UIHelper.MainPage.MainFrame.CanGoBack)
+            if (!UIHelper.MainPage.MainFrame.CanGoBack)
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
             }

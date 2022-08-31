@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using CoolapkLite.Parsers.Markdown;
 using CoolapkLite.Parsers.Markdown.Blocks;
 using CoolapkLite.Parsers.Markdown.Render;
+using System;
+using System.Collections.Generic;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,13 +26,13 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderBlocks(IEnumerable<MarkdownBlock> blockElements, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
             base.RenderBlocks(blockElements, context);
 
@@ -41,7 +41,7 @@ namespace CoolapkLite.Controls.Render
             FrameworkElement previousFrameworkElement = null;
             for (int i = 0; i < blockUIElementCollection.Count; i++)
             {
-                var frameworkElement = blockUIElementCollection[i] as FrameworkElement;
+                FrameworkElement frameworkElement = blockUIElementCollection[i] as FrameworkElement;
                 if (frameworkElement != null)
                 {
                     if (i == 0)
@@ -78,20 +78,20 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderParagraph(ParagraphBlock element, IRenderContext context)
         {
-            var paragraph = new Paragraph
+            Paragraph paragraph = new Paragraph
             {
                 Margin = ParagraphMargin,
                 LineHeight = ParagraphLineHeight
             };
 
-            var childContext = new InlineRenderContext(paragraph.Inlines, context)
+            InlineRenderContext childContext = new InlineRenderContext(paragraph.Inlines, context)
             {
                 Parent = paragraph
             };
 
             RenderInlineChildren(element.Inlines, childContext);
 
-            var textBlock = CreateOrReuseRichTextBlock(context);
+            RichTextBlock textBlock = CreateOrReuseRichTextBlock(context);
             textBlock.Blocks.Add(paragraph);
         }
 
@@ -100,15 +100,15 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderYamlHeader(YamlHeaderBlock element, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
-            var table = new MarkdownTable(element.Children.Count, 2, YamlBorderThickness, YamlBorderBrush)
+            MarkdownTable table = new MarkdownTable(element.Children.Count, 2, YamlBorderThickness, YamlBorderBrush)
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = TableMargin
@@ -124,7 +124,7 @@ namespace CoolapkLite.Controls.Render
             for (int i = 0; i < element.Children.Count; i++)
             {
                 // Add each cell
-                var keyCell = new TextBlock
+                TextBlock keyCell = new TextBlock
                 {
                     Text = childrenKeys[i],
                     Foreground = Foreground,
@@ -132,7 +132,7 @@ namespace CoolapkLite.Controls.Render
                     FontWeight = FontWeights.Bold,
                     Margin = TableCellPadding
                 };
-                var valueCell = new TextBlock
+                TextBlock valueCell = new TextBlock
                 {
                     Text = childrenValues[i],
                     Foreground = Foreground,
@@ -156,10 +156,10 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderHeader(HeaderBlock element, IRenderContext context)
         {
-            var textBlock = CreateOrReuseRichTextBlock(context);
+            RichTextBlock textBlock = CreateOrReuseRichTextBlock(context);
 
-            var paragraph = new Paragraph();
-            var childInlines = paragraph.Inlines;
+            Paragraph paragraph = new Paragraph();
+            InlineCollection childInlines = paragraph.Inlines;
             switch (element.HeaderLevel)
             {
                 case 1:
@@ -203,14 +203,14 @@ namespace CoolapkLite.Controls.Render
                     paragraph.FontWeight = Header6FontWeight;
                     paragraph.Foreground = Header6Foreground;
 
-                    var underline = new Underline();
+                    Underline underline = new Underline();
                     childInlines = underline.Inlines;
                     paragraph.Inlines.Add(underline);
                     break;
             }
 
             // Render the children into the para inline.
-            var childContext = new InlineRenderContext(childInlines, context)
+            InlineRenderContext childContext = new InlineRenderContext(childInlines, context)
             {
                 Parent = paragraph,
                 TrimLeadingWhitespace = true
@@ -227,13 +227,13 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderListElement(ListBlock element, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
             // Create a grid with two columns.
             Grid grid = new Grid
@@ -247,13 +247,13 @@ namespace CoolapkLite.Controls.Render
 
             for (int rowIndex = 0; rowIndex < element.Items.Count; rowIndex++)
             {
-                var listItem = element.Items[rowIndex];
+                ListItemBlock listItem = element.Items[rowIndex];
 
                 // Add a row definition.
                 grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
                 // Add the bullet or number.
-                var bullet = CreateTextBlock(localContext);
+                TextBlock bullet = CreateTextBlock(localContext);
                 bullet.Margin = ParagraphMargin;
                 switch (element.Style)
                 {
@@ -272,8 +272,8 @@ namespace CoolapkLite.Controls.Render
                 grid.Children.Add(bullet);
 
                 // Add the list item content.
-                var content = new StackPanel();
-                var childContext = new UIElementCollectionRenderContext(content.Children, localContext);
+                StackPanel content = new StackPanel();
+                UIElementCollectionRenderContext childContext = new UIElementCollectionRenderContext(content.Children, localContext);
                 RenderBlocks(listItem.Blocks, childContext);
                 Grid.SetColumn(content, 1);
                 Grid.SetRow(content, rowIndex);
@@ -288,21 +288,21 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderHorizontalRule(IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
-            var brush = localContext.Foreground;
+            Windows.UI.Xaml.Media.Brush brush = localContext.Foreground;
             if (HorizontalRuleBrush != null && !localContext.OverrideForeground)
             {
                 brush = HorizontalRuleBrush;
             }
 
-            var rectangle = new Rectangle
+            Rectangle rectangle = new Rectangle
             {
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 Height = HorizontalRuleThickness,
@@ -318,16 +318,16 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderQuote(QuoteBlock element, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
-            var stackPanel = new StackPanel();
-            var childContext = new UIElementCollectionRenderContext(stackPanel.Children, context)
+            StackPanel stackPanel = new StackPanel();
+            UIElementCollectionRenderContext childContext = new UIElementCollectionRenderContext(stackPanel.Children, context)
             {
                 Parent = stackPanel
             };
@@ -339,7 +339,7 @@ namespace CoolapkLite.Controls.Render
 
             RenderBlocks(element.Blocks, childContext);
 
-            var border = new Border
+            Border border = new Border
             {
                 Margin = QuoteMargin,
                 Background = QuoteBackground,
@@ -357,21 +357,21 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderCode(CodeBlock element, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
-            var brush = localContext.Foreground;
+            Windows.UI.Xaml.Media.Brush brush = localContext.Foreground;
             if (CodeForeground != null && !localContext.OverrideForeground)
             {
                 brush = CodeForeground;
             }
 
-            var textBlock = new RichTextBlock
+            RichTextBlock textBlock = new RichTextBlock
             {
                 FontFamily = CodeFontFamily ?? FontFamily,
                 Foreground = brush,
@@ -381,18 +381,18 @@ namespace CoolapkLite.Controls.Render
 
             textBlock.PointerWheelChanged += Preventative_PointerWheelChanged;
 
-            var paragraph = new Paragraph();
+            Paragraph paragraph = new Paragraph();
             textBlock.Blocks.Add(paragraph);
 
             // Allows external Syntax Highlighting
-            var hasCustomSyntax = CodeBlockResolver.ParseSyntax(paragraph.Inlines, element.Text, element.CodeLanguage);
+            bool hasCustomSyntax = CodeBlockResolver.ParseSyntax(paragraph.Inlines, element.Text, element.CodeLanguage);
             if (!hasCustomSyntax)
             {
                 paragraph.Inlines.Add(new Run { Text = element.Text });
             }
 
             // Ensures that Code has Horizontal Scroll and doesn't wrap.
-            var viewer = new ScrollViewer
+            ScrollViewer viewer = new ScrollViewer
             {
                 Background = CodeBackground,
                 BorderBrush = CodeBorderBrush,
@@ -419,15 +419,15 @@ namespace CoolapkLite.Controls.Render
         /// </summary>
         protected override void RenderTable(TableBlock element, IRenderContext context)
         {
-            var localContext = context as UIElementCollectionRenderContext;
+            UIElementCollectionRenderContext localContext = context as UIElementCollectionRenderContext;
             if (localContext == null)
             {
                 throw new RenderContextIncorrectException();
             }
 
-            var blockUIElementCollection = localContext.BlockUIElementCollection;
+            UIElementCollection blockUIElementCollection = localContext.BlockUIElementCollection;
 
-            var table = new MarkdownTable(element.ColumnDefinitions.Count, element.Rows.Count, TableBorderThickness, TableBorderBrush)
+            MarkdownTable table = new MarkdownTable(element.ColumnDefinitions.Count, element.Rows.Count, TableBorderThickness, TableBorderBrush)
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 Margin = TableMargin
@@ -436,15 +436,15 @@ namespace CoolapkLite.Controls.Render
             // Add each row.
             for (int rowIndex = 0; rowIndex < element.Rows.Count; rowIndex++)
             {
-                var row = element.Rows[rowIndex];
+                TableBlock.TableRow row = element.Rows[rowIndex];
 
                 // Add each cell.
                 for (int cellIndex = 0; cellIndex < Math.Min(element.ColumnDefinitions.Count, row.Cells.Count); cellIndex++)
                 {
-                    var cell = row.Cells[cellIndex];
+                    TableBlock.TableCell cell = row.Cells[cellIndex];
 
                     // Cell content.
-                    var cellContent = CreateOrReuseRichTextBlock(new UIElementCollectionRenderContext(null, context));
+                    RichTextBlock cellContent = CreateOrReuseRichTextBlock(new UIElementCollectionRenderContext(null, context));
                     cellContent.Margin = TableCellPadding;
                     Grid.SetRow(cellContent, rowIndex);
                     Grid.SetColumn(cellContent, cellIndex);
@@ -464,9 +464,9 @@ namespace CoolapkLite.Controls.Render
                         cellContent.FontWeight = FontWeights.Bold;
                     }
 
-                    var paragraph = new Paragraph();
+                    Paragraph paragraph = new Paragraph();
 
-                    var childContext = new InlineRenderContext(paragraph.Inlines, context)
+                    InlineRenderContext childContext = new InlineRenderContext(paragraph.Inlines, context)
                     {
                         Parent = paragraph,
                         TrimLeadingWhitespace = true

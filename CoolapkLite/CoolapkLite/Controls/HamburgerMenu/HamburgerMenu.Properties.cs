@@ -3,9 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -241,12 +238,9 @@ namespace CoolapkLite.Controls
         {
             get
             {
-                if (_buttonsListView == null)
-                {
-                    throw new Exception("ButtonsListView is not defined yet. Please use ItemsSource instead.");
-                }
-
-                return _buttonsListView.Items;
+                return _buttonsListView == null
+                    ? throw new Exception("ButtonsListView is not defined yet. Please use ItemsSource instead.")
+                    : _buttonsListView.Items;
             }
         }
 

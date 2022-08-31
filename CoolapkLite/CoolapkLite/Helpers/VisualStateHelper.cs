@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers
@@ -16,8 +12,8 @@ namespace CoolapkLite.Helpers
                 return null;
             }
 
-            var groups = VisualStateManager.GetVisualStateGroups(element);
-            foreach (var result in groups)
+            System.Collections.Generic.IList<VisualStateGroup> groups = VisualStateManager.GetVisualStateGroups(element);
+            foreach (VisualStateGroup result in groups)
             {
                 if (result != null && name.Equals(result?.Name, StringComparison.OrdinalIgnoreCase))
                 {

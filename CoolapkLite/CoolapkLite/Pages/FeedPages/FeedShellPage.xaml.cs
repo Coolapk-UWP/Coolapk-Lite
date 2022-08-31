@@ -2,11 +2,9 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
-using CoolapkUWP.Controls;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
 using TwoPaneViewMode = CoolapkLite.Controls.TwoPaneViewMode;

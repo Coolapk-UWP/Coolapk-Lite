@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace CoolapkLite.Helpers
+namespace CoolapkLite.Common
 {
     public class WeakEvent<TEventArgs>
     {

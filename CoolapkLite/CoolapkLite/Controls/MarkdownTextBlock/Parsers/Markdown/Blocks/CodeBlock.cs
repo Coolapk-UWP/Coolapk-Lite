@@ -4,7 +4,6 @@
 
 using System;
 using System.Text;
-using CoolapkLite.Parsers.Markdown.Helpers;
 
 namespace CoolapkLite.Parsers.Markdown.Blocks
 {
@@ -57,12 +56,12 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
                 Or the code block starts and ends with ```
             */
 
-            foreach (var lineInfo in Common.ParseLines(markdown, start, maxEnd, quoteDepth))
+            foreach (Helpers.LineInfo lineInfo in Helpers.Common.ParseLines(markdown, start, maxEnd, quoteDepth))
             {
                 int pos = lineInfo.StartOfLine;
                 if (pos < maxEnd && markdown[pos] == '`')
                 {
-                    var backTickCount = 0;
+                    int backTickCount = 0;
                     while (pos < maxEnd && backTickCount < 3)
                     {
                         if (markdown[pos] == '`')

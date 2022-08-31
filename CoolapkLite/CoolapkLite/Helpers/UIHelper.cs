@@ -1,9 +1,9 @@
-﻿using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.FeedPages;
-using MicaForUWP.Media;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
 using System.Collections.Immutable;
@@ -21,7 +21,6 @@ using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
@@ -289,7 +288,7 @@ namespace CoolapkLite.Helpers
                     break;
             }
         }
-        
+
         public static void ShowImage(ImageModel image)
         {
             MainPage?.Frame.Navigate(typeof(ShowImagePage), new ShowImageViewModel(image));

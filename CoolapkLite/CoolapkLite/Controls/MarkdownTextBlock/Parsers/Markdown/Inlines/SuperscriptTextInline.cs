@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using CoolapkLite.Parsers.Core;
 using CoolapkLite.Parsers.Markdown.Helpers;
+using System;
+using System.Collections.Generic;
 
 namespace CoolapkLite.Parsers.Markdown.Inlines
 {
@@ -73,7 +73,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
             {
                 int innerStart = start + 5;
                 int innerEnd, end;
-                innerEnd = Common.IndexOf(markdown, "</sup>", innerStart, maxEnd);
+                innerEnd = Helpers.Common.IndexOf(markdown, "</sup>", innerStart, maxEnd);
                 if (innerEnd == -1)
                 {
                     return null;
@@ -91,8 +91,8 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
 
                 // We found something!
                 end = innerEnd + 6;
-                var result = new SuperscriptTextInline();
-                result.Inlines = Common.ParseInlineChildren(markdown, innerStart, innerEnd);
+                SuperscriptTextInline result = new SuperscriptTextInline();
+                result.Inlines = Helpers.Common.ParseInlineChildren(markdown, innerStart, innerEnd);
                 return new InlineParseResult(result, start, end);
             }
             else
@@ -104,7 +104,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 {
                     // Find the end parenthesis.
                     innerStart++;
-                    innerEnd = Common.IndexOf(markdown, ')', innerStart, maxEnd);
+                    innerEnd = Helpers.Common.IndexOf(markdown, ')', innerStart, maxEnd);
                     if (innerEnd == -1)
                     {
                         return null;
@@ -115,7 +115,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 else
                 {
                     // Search for the next whitespace character.
-                    innerEnd = Common.FindNextWhiteSpace(markdown, innerStart, maxEnd, ifNotFoundReturnLength: true);
+                    innerEnd = Helpers.Common.FindNextWhiteSpace(markdown, innerStart, maxEnd, ifNotFoundReturnLength: true);
                     if (innerEnd == innerStart)
                     {
                         // No match if the character after the caret is a space.
@@ -126,8 +126,8 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 }
 
                 // We found something!
-                var result = new SuperscriptTextInline();
-                result.Inlines = Common.ParseInlineChildren(markdown, innerStart, innerEnd);
+                SuperscriptTextInline result = new SuperscriptTextInline();
+                result.Inlines = Helpers.Common.ParseInlineChildren(markdown, innerStart, innerEnd);
                 return new InlineParseResult(result, start, end);
             }
         }
@@ -138,12 +138,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Inlines == null)
-            {
-                return base.ToString();
-            }
-
-            return "^(" + string.Join(string.Empty, Inlines) + ")";
+            return Inlines == null ? base.ToString() : "^(" + string.Join(string.Empty, Inlines) + ")";
         }
     }
 }

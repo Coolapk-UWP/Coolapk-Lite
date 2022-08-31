@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkUWP.Controls;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;

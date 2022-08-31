@@ -50,7 +50,7 @@ namespace CoolapkLite
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
         }
-        
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
@@ -368,7 +368,7 @@ namespace CoolapkLite
                 string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 if (!string.IsNullOrEmpty(UID))
                 {
-                    var results = await NetworkHelper.GetUserInfoByNameAsync(UID);
+                    (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(UID);
                     if (results.UID != UID) { return; }
                     Name = results.UserName;
                     Image = new BitmapImage(new Uri(results.UserAvatar));

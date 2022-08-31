@@ -122,7 +122,7 @@ namespace CoolapkLite.Controls
         private ScrollBar _scrollerVerticalScrollBar;
         private double _lastOffset = 0.0;
         private double _pullDistance = 0.0;
-        private DateTime _lastRefreshActivation = default(DateTime);
+        private DateTime _lastRefreshActivation = default;
         private bool _refreshActivated = false;
         private bool _refreshIntentCanceled = false;
         private double _overscrollMultiplier;
@@ -444,7 +444,7 @@ namespace CoolapkLite.Controls
             _pullDistance = 0;
             _refreshActivated = false;
             _refreshIntentCanceled = false;
-            _lastRefreshActivation = default(DateTime);
+            _lastRefreshActivation = default;
             _isManipulatingWithMouse = false;
 
             PullProgressChanged?.Invoke(this, new RefreshProgressEventArgs { PullProgress = 0 });
@@ -474,7 +474,7 @@ namespace CoolapkLite.Controls
                 }
 
                 _refreshActivated = false;
-                _lastRefreshActivation = default(DateTime);
+                _lastRefreshActivation = default;
 
                 PullProgressChanged?.Invoke(this, new RefreshProgressEventArgs { PullProgress = 0 });
                 _isManipulatingWithMouse = false;
@@ -515,7 +515,7 @@ namespace CoolapkLite.Controls
                 itemsPanel.RenderTransform = _contentTransform;
             }
 
-            Rect elementBounds = _scrollerContent.TransformToVisual(_root).TransformBounds(default(Rect));
+            Rect elementBounds = _scrollerContent.TransformToVisual(_root).TransformBounds(default);
 
             // content is not "moved" automagically by the scrollviewer in this case
             // so we apply our own transformation too and need to take it in account.
@@ -552,16 +552,11 @@ namespace CoolapkLite.Controls
                     }
                 }
 
-                if (_isManipulatingWithMouse)
-                {
-                    _refreshIndicatorTransform.TranslateY = _pullDistance - offset
+                _refreshIndicatorTransform.TranslateY = _isManipulatingWithMouse
+                    ? _pullDistance - offset
+                                                        - _refreshIndicatorBorder.ActualHeight
+                    : _pullDistance
                                                         - _refreshIndicatorBorder.ActualHeight;
-                }
-                else
-                {
-                    _refreshIndicatorTransform.TranslateY = _pullDistance
-                                                        - _refreshIndicatorBorder.ActualHeight;
-                }
             }
             else
             {
@@ -612,7 +607,7 @@ namespace CoolapkLite.Controls
                 {
                     _refreshIntentCanceled |= _refreshActivated;
                     _refreshActivated = false;
-                    _lastRefreshActivation = default(DateTime);
+                    _lastRefreshActivation = default;
                     pullProgress = _pullDistance / PullThreshold;
                     if (RefreshIndicatorContent == null)
                     {
@@ -706,14 +701,9 @@ namespace CoolapkLite.Controls
             double value = (double)e.NewValue;
             PullToRefreshListView view = d as PullToRefreshListView;
 
-            if (value >= 0 && value <= 1)
-            {
-                view._overscrollMultiplier = value * 8;
-            }
-            else
-            {
-                throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
-            }
+            view._overscrollMultiplier = value >= 0 && value <= 1
+                ? value * 8
+                : throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
         }
 
         private static void OnPullToRefreshLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

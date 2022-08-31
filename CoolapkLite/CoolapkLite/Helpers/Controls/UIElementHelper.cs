@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.Foundation.Metadata;
+﻿using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,7 +78,7 @@ namespace CoolapkLite.Helpers
         private static void OnHolding(object sender, HoldingRoutedEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
-            var flyout = FlyoutBase.GetAttachedFlyout(element);
+            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(element);
             if (flyout is MenuFlyout menu)
             {
                 menu.ShowAt(element, e.GetPosition(element));
@@ -93,7 +92,7 @@ namespace CoolapkLite.Helpers
         private static void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
-            var flyout = FlyoutBase.GetAttachedFlyout(element);
+            FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(element);
             if (flyout is MenuFlyout menu)
             {
                 menu.ShowAt(element, e.GetPosition(element));

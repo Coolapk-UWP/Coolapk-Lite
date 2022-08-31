@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CoolapkLite.Helpers
+namespace CoolapkLite.Common
 {
     public enum MessageType
     {

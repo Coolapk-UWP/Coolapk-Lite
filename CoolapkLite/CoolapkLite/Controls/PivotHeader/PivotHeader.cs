@@ -125,12 +125,7 @@ namespace CoolapkLite.Controls
             }
 
             Grid grid = VisualTreeHelper.GetChild(container, 0) as Grid;
-            if (grid == null)
-            {
-                return null;
-            }
-
-            return grid.FindName("Indicator") as Rectangle;
+            return grid == null ? null : grid.FindName("Indicator") as Rectangle;
         }
 
         private async Task<T> WaitForLoaded<T>(FrameworkElement element, Func<T> func, Predicate<T> pre, CancellationToken cancellationToken)

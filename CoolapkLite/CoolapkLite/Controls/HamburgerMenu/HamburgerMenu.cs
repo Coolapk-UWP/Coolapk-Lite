@@ -3,11 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -116,9 +112,9 @@ namespace CoolapkLite.Controls
 
         private void WindowsSizeGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
         {
-            if(e.NewState != e.OldState)
+            if (e.NewState != e.OldState)
             {
-                switch(e.NewState.Name)
+                switch (e.NewState.Name)
                 {
                     case "OverlaySize":
                         IsPaneOpen = false;
@@ -179,11 +175,9 @@ namespace CoolapkLite.Controls
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            if (!HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode)
-            {
-                return !(split.ToString() == mode) && HasConnectedAnimation;
-            }
-            return HasConnectedAnimation;
+            return !HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode
+                ? !(split.ToString() == mode) && HasConnectedAnimation
+                : (object)HasConnectedAnimation;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language) => null;

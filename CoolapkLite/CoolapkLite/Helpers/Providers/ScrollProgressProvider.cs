@@ -71,7 +71,7 @@ namespace CoolapkLite.Helpers.Providers
             {
                 readyToScroll = true;
 
-                if (newSv.VerticalOffset == 0 && (oldSv == null || oldSv != null && oldSv.VerticalOffset == 0))
+                if (newSv.VerticalOffset == 0 && (oldSv == null || (oldSv != null && oldSv.VerticalOffset == 0)))
                 {
                     StartScrollProgressAnimation(newSv, false);
                 }
@@ -292,12 +292,7 @@ namespace CoolapkLite.Helpers.Providers
 
         private static double GetProgress(double offset, double threshold)
         {
-            if (threshold == 0)
-            {
-                return 0;
-            }
-
-            return Math.Min(1, Math.Max(0, offset / threshold));
+            return threshold == 0 ? 0 : Math.Min(1, Math.Max(0, offset / threshold));
         }
 
         #endregion Utilities

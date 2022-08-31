@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using CoolapkLite.Parsers.Core;
 using CoolapkLite.Parsers.Markdown.Inlines;
+using System;
 
 namespace CoolapkLite.Parsers.Markdown.Blocks
 {
@@ -158,7 +158,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
             }
 
             // We found something!
-            var result = new LinkReferenceBlock();
+            LinkReferenceBlock result = new LinkReferenceBlock();
             result.Id = id;
             result.Url = url;
             result.Tooltip = tooltip;

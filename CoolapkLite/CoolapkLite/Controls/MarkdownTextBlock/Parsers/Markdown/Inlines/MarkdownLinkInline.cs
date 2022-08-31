@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using CoolapkLite.Parsers.Core;
 using CoolapkLite.Parsers.Markdown.Helpers;
 using Microsoft.Toolkit.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace CoolapkLite.Parsers.Markdown.Inlines
 {
@@ -122,7 +122,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 // Find the ')' character.
                 pos = linkOpen;
                 int linkClose = -1;
-                var openParenthesis = 0;
+                int openParenthesis = 0;
                 while (pos < maxEnd)
                 {
                     if (markdown[pos] == ')')
@@ -169,7 +169,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 string url;
                 string tooltip = null;
                 bool lastUrlCharIsDoubleQuote = markdown[linkClose - 1] == '"';
-                int tooltipStart = Common.IndexOf(markdown, " \"", linkOpen, linkClose - 1);
+                int tooltipStart = Helpers.Common.IndexOf(markdown, " \"", linkOpen, linkClose - 1);
                 if (tooltipStart == linkOpen)
                 {
                     return null;
@@ -179,7 +179,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 {
                     // Extract the URL (resolving any escape sequences).
                     url = TextRunInline.ResolveEscapeSequences(markdown, linkOpen, tooltipStart).TrimEnd(' ', '\t', '\r', '\n');
-                    tooltip = markdown.Substring(tooltipStart + 2, (linkClose - 1) - (tooltipStart + 2));
+                    tooltip = markdown.Substring(tooltipStart + 2, linkClose - 1 - (tooltipStart + 2));
                 }
                 else
                 {
@@ -190,7 +190,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 // Check the URL is okay.
                 if (!url.IsEmail())
                 {
-                    if (!Common.IsUrlValid(url))
+                    if (!Helpers.Common.IsUrlValid(url))
                     {
                         return null;
                     }
@@ -201,8 +201,8 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 }
 
                 // We found a regular stand-alone link.
-                var result = new MarkdownLinkInline();
-                result.Inlines = Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, ignoreLinks: true);
+                MarkdownLinkInline result = new MarkdownLinkInline();
+                result.Inlines = Helpers.Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, ignoreLinks: true);
                 result.Url = url.Replace(" ", "%20");
                 result.Tooltip = tooltip;
                 return new InlineParseResult(result, start, end);
@@ -210,15 +210,15 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
             else if (markdown[pos] == '[')
             {
                 // Find the ']' character.
-                int linkClose = Common.IndexOf(markdown, ']', pos + 1, maxEnd);
+                int linkClose = Helpers.Common.IndexOf(markdown, ']', pos + 1, maxEnd);
                 if (linkClose == -1)
                 {
                     return null;
                 }
 
                 // We found a reference-style link.
-                var result = new MarkdownLinkInline();
-                result.Inlines = Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, ignoreLinks: true);
+                MarkdownLinkInline result = new MarkdownLinkInline();
+                result.Inlines = Helpers.Common.ParseInlineChildren(markdown, linkTextOpen, linkTextClose, ignoreLinks: true);
                 result.ReferenceId = markdown.Substring(linkOpen + 1, linkClose - (linkOpen + 1));
                 if (result.ReferenceId == string.Empty)
                 {
@@ -248,14 +248,14 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
             }
 
             // Look up the reference ID.
-            var reference = document.LookUpReference(ReferenceId);
+            Blocks.LinkReferenceBlock reference = document.LookUpReference(ReferenceId);
             if (reference == null)
             {
                 return;
             }
 
             // The reference was found. Check the URL is valid.
-            if (!Common.IsUrlValid(reference.Url))
+            if (!Helpers.Common.IsUrlValid(reference.Url))
             {
                 return;
             }
@@ -272,17 +272,11 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Inlines == null || Url == null)
-            {
-                return base.ToString();
-            }
-
-            if (ReferenceId != null)
-            {
-                return string.Format("[{0}][{1}]", string.Join(string.Empty, Inlines), ReferenceId);
-            }
-
-            return string.Format("[{0}]({1})", string.Join(string.Empty, Inlines), Url);
+            return Inlines == null || Url == null
+                ? base.ToString()
+                : ReferenceId != null
+                ? string.Format("[{0}][{1}]", string.Join(string.Empty, Inlines), ReferenceId)
+                : string.Format("[{0}]({1})", string.Join(string.Empty, Inlines), Url);
         }
     }
 }

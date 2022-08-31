@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using CoolapkLite.Parsers.Core;
 using CoolapkLite.Parsers.Markdown.Helpers;
+using System;
+using System.Collections.Generic;
 
 namespace CoolapkLite.Parsers.Markdown.Inlines
 {
@@ -60,8 +60,8 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
 
             // Find the end of the span.  The end sequence (either '**' or '__') must be the same
             // as the start sequence.
-            var innerStart = start + 2;
-            int innerEnd = Common.IndexOf(markdown, startSequence, innerStart, maxEnd);
+            int innerStart = start + 2;
+            int innerEnd = Helpers.Common.IndexOf(markdown, startSequence, innerStart, maxEnd);
             if (innerEnd == -1)
             {
                 return null;
@@ -86,8 +86,8 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
             }
 
             // We found something!
-            var result = new BoldTextInline();
-            result.Inlines = Common.ParseInlineChildren(markdown, innerStart, innerEnd);
+            BoldTextInline result = new BoldTextInline();
+            result.Inlines = Helpers.Common.ParseInlineChildren(markdown, innerStart, innerEnd);
             return new InlineParseResult(result, start, innerEnd + 2);
         }
 
@@ -97,12 +97,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Inlines == null)
-            {
-                return base.ToString();
-            }
-
-            return "**" + string.Join(string.Empty, Inlines) + "**";
+            return Inlines == null ? base.ToString() : "**" + string.Join(string.Empty, Inlines) + "**";
         }
     }
 }

@@ -80,12 +80,9 @@ namespace CoolapkLite.Controls
         {
             get
             {
-                if (_optionsListView == null)
-                {
-                    throw new Exception("OptionsListView is not defined yet. Please use OptionsItemsSource instead.");
-                }
-
-                return _optionsListView?.Items;
+                return _optionsListView == null
+                    ? throw new Exception("OptionsListView is not defined yet. Please use OptionsItemsSource instead.")
+                    : (_optionsListView?.Items);
             }
         }
 

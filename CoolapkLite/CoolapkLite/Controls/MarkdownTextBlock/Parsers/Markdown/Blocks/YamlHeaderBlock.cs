@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using CoolapkLite.Parsers.Markdown.Helpers;
 
 namespace CoolapkLite.Parsers.Markdown.Blocks
 {
@@ -56,7 +55,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
                 return null;
             }
 
-            int startUnderlineIndex = Common.FindNextSingleNewLine(markdown, lineStart, end, out int startOfNextLine);
+            int startUnderlineIndex = Helpers.Common.FindNextSingleNewLine(markdown, lineStart, end, out int startOfNextLine);
             if (startUnderlineIndex - lineStart != 3)
             {
                 return null;
@@ -70,7 +69,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
             List<string> elements = new List<string>();
             while (pos < end)
             {
-                int nextUnderLineIndex = Common.FindNextSingleNewLine(markdown, pos, end, out startOfNextLine);
+                int nextUnderLineIndex = Helpers.Common.FindNextSingleNewLine(markdown, pos, end, out startOfNextLine);
                 bool haveSeparator = markdown.Substring(pos, nextUnderLineIndex - pos).Contains(": ");
                 if (haveSeparator)
                 {
@@ -106,9 +105,9 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
                 return null;
             }
 
-            var result = new YamlHeaderBlock();
+            YamlHeaderBlock result = new YamlHeaderBlock();
             result.Children = new Dictionary<string, string>();
-            foreach (var item in elements)
+            foreach (string item in elements)
             {
                 string[] splits = item.Split(new string[] { ": " }, StringSplitOptions.None);
                 if (splits.Length < 2)

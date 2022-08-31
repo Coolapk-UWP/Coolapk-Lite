@@ -28,18 +28,7 @@ namespace CoolapkLite.Controls.DataTemplates
                         default: return Others;
                     }
                 default:
-                    if (item is IList)
-                    {
-                        return List;
-                    }
-                    else if (item is IListWithSubtitle)
-                    {
-                        return ListWithSubtitle;
-                    }
-                    else
-                    {
-                        return Others;
-                    }
+                    return item is IList ? List : item is IListWithSubtitle ? ListWithSubtitle : Others;
             }
         }
     }

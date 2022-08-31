@@ -5,7 +5,6 @@ using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Helpers;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -213,7 +212,7 @@ namespace CoolapkLite
         {
             if (ApiInformation.IsMethodPresent("Windows.Security.Authorization.AppCapabilityAccess.AppCapability", "Create"))
             {
-                var wifiData = AppCapability.Create("wifiData");
+                AppCapability wifiData = AppCapability.Create("wifiData");
                 switch (wifiData.CheckAccess())
                 {
                     case AppCapabilityAccessStatus.DeniedByUser:
@@ -306,7 +305,9 @@ namespace CoolapkLite
 
             // If background task is already registered, do nothing
             if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(ToastBackgroundTask)))
+            {
                 return;
+            }
 
             // Otherwise request access
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();

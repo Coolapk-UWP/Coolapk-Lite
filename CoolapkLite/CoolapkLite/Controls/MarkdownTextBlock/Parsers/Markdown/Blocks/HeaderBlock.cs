@@ -2,10 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Parsers.Markdown.Inlines;
 using System;
 using System.Collections.Generic;
-using CoolapkLite.Parsers.Markdown.Helpers;
-using CoolapkLite.Parsers.Markdown.Inlines;
 
 namespace CoolapkLite.Parsers.Markdown.Blocks
 {
@@ -64,7 +63,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
         {
             // This type of header starts with one or more '#' characters, followed by the header
             // text, optionally followed by any number of hash characters.
-            var result = new HeaderBlock();
+            HeaderBlock result = new HeaderBlock();
 
             // Figure out how many consecutive hash characters there are.
             int pos = start;
@@ -86,7 +85,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
             }
 
             // Parse the inline content.
-            result.Inlines = Common.ParseInlineChildren(markdown, pos, end);
+            result.Inlines = Helpers.Common.ParseInlineChildren(markdown, pos, end);
             return result;
         }
 
@@ -144,11 +143,11 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
                 pos++;
             }
 
-            var result = new HeaderBlock();
+            HeaderBlock result = new HeaderBlock();
             result.HeaderLevel = underlineChar == '=' ? 1 : 2;
 
             // Parse the inline content.
-            result.Inlines = Common.ParseInlineChildren(markdown, firstLineStart, firstLineEnd);
+            result.Inlines = Helpers.Common.ParseInlineChildren(markdown, firstLineStart, firstLineEnd);
             return result;
         }
 
@@ -158,12 +157,7 @@ namespace CoolapkLite.Parsers.Markdown.Blocks
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Inlines == null)
-            {
-                return base.ToString();
-            }
-
-            return string.Join(string.Empty, Inlines);
+            return Inlines == null ? base.ToString() : string.Join(string.Empty, Inlines);
         }
     }
 }

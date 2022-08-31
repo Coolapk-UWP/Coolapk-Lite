@@ -2,7 +2,6 @@
 using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.DataSource;
@@ -11,7 +10,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -135,7 +133,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
                     if (FeedItemSourse == null || FeedItemSourse.ID != ID)
                     {
-                        var Provider = new CoolapkListProvider(
+                        CoolapkListProvider Provider = new CoolapkListProvider(
                             (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "feed"),
                             GetEntities,
                             idName);
@@ -148,7 +146,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     }
                     if (HtmlFeedItemSourse == null || HtmlFeedItemSourse.ID != ID)
                     {
-                        var Provider = new CoolapkListProvider(
+                        CoolapkListProvider Provider = new CoolapkListProvider(
                             (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "htmlFeed"),
                             GetEntities,
                             idName);
@@ -161,7 +159,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     }
                     if (QAItemSourse == null || QAItemSourse.ID != ID)
                     {
-                        var Provider = new CoolapkListProvider(
+                        CoolapkListProvider Provider = new CoolapkListProvider(
                             (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "questionAndAnswer"),
                             GetEntities,
                             idName);

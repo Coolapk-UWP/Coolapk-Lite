@@ -213,14 +213,14 @@ namespace CoolapkLite.Controls
                     m_columnMiddle.Width = new GridLength(rc2.X - rc1.Width, GridUnitType.Pixel);
 
                     m_columnLeft.Width = new GridLength(rc1.Width - rcControl.X, GridUnitType.Pixel);
-                    m_columnRight.Width = new GridLength(rc2.Width - ((rcWindow.Width - rcControl.Width) - rcControl.X), GridUnitType.Pixel);
+                    m_columnRight.Width = new GridLength(rc2.Width - (rcWindow.Width - rcControl.Width - rcControl.X), GridUnitType.Pixel);
                 }
                 else
                 {
                     m_rowMiddle.Height = new GridLength(rc2.Y - rc1.Height, GridUnitType.Pixel);
 
                     m_rowTop.Height = new GridLength(rc1.Height - rcControl.Y, GridUnitType.Pixel);
-                    m_rowBottom.Height = new GridLength(rc2.Height - ((rcWindow.Height - rcControl.Height) - rcControl.Y), GridUnitType.Pixel);
+                    m_rowBottom.Height = new GridLength(rc2.Height - (rcWindow.Height - rcControl.Height - rcControl.Y), GridUnitType.Pixel);
                 }
             }
         }

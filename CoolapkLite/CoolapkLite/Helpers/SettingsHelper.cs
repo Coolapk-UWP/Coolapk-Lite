@@ -1,7 +1,5 @@
-﻿using System;
-using Windows.Storage;
+﻿using Windows.Storage;
 using Windows.System.Profile;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;

@@ -1,12 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 
 namespace CoolapkLite.BackgroundTasks

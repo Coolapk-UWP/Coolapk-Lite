@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Parsers.Markdown.Helpers;
 using System;
 using System.Collections.Generic;
-using CoolapkLite.Parsers.Markdown.Helpers;
 
 namespace CoolapkLite.Parsers.Markdown.Inlines
 {
@@ -61,7 +61,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 innerStart++;
 
                 // Find the end of the span.
-                innerEnd = Common.IndexOf(markdown, "``", innerStart, maxEnd);
+                innerEnd = Helpers.Common.IndexOf(markdown, "``", innerStart, maxEnd);
                 if (innerEnd == -1)
                 {
                     return null;
@@ -74,7 +74,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
                 // Standard single backtick syntax.
 
                 // Find the end of the span.
-                innerEnd = Common.IndexOf(markdown, '`', innerStart, maxEnd);
+                innerEnd = Helpers.Common.IndexOf(markdown, '`', innerStart, maxEnd);
                 if (innerEnd == -1)
                 {
                     return null;
@@ -90,7 +90,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
             }
 
             // We found something!
-            var result = new CodeInline();
+            CodeInline result = new CodeInline();
             result.Text = markdown.Substring(innerStart, innerEnd - innerStart).Trim(' ', '\t', '\r', '\n');
             return new InlineParseResult(result, start, end);
         }
@@ -101,12 +101,7 @@ namespace CoolapkLite.Parsers.Markdown.Inlines
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Text == null)
-            {
-                return base.ToString();
-            }
-
-            return "`" + Text + "`";
+            return Text == null ? base.ToString() : "`" + Text + "`";
         }
     }
 }

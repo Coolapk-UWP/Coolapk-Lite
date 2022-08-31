@@ -477,7 +477,7 @@ namespace BCrypt.Net
                 else
                 {
                     char minor = currentHash[2];
-                    if (minor != 'a' && minor != 'b' && minor != 'x' && minor != 'y' || currentHash[3] != '$')
+                    if ((minor != 'a' && minor != 'b' && minor != 'x' && minor != 'y') || currentHash[3] != '$')
                     {
                         throw new SaltParseException("Invalid bcrypt revision");
                     }
@@ -627,7 +627,7 @@ namespace BCrypt.Net
             else
             {
                 bcryptMinorRevision = salt[2];
-                if (bcryptMinorRevision != 'a' && bcryptMinorRevision != 'b' && bcryptMinorRevision != 'x' && bcryptMinorRevision != 'y' || salt[3] != '$')
+                if ((bcryptMinorRevision != 'a' && bcryptMinorRevision != 'b' && bcryptMinorRevision != 'x' && bcryptMinorRevision != 'y') || salt[3] != '$')
                 {
                     throw new SaltParseException("Invalid salt revision");
                 }
@@ -651,17 +651,9 @@ namespace BCrypt.Net
 
             string extractedSalt = salt.Substring(startingOffset + 3, 22);
 
-            byte[] inputBytes;
-
-            if (enhancedEntropy)
-            {
-                inputBytes = EnhancedHash(SafeUTF8.GetBytes(inputKey), bcryptMinorRevision, hashType);
-            }
-            else
-            {
-                inputBytes = SafeUTF8.GetBytes(inputKey + (bcryptMinorRevision >= 'a' ? Nul : EmptyString));
-            }
-
+            byte[] inputBytes = enhancedEntropy
+                ? EnhancedHash(SafeUTF8.GetBytes(inputKey), bcryptMinorRevision, hashType)
+                : SafeUTF8.GetBytes(inputKey + (bcryptMinorRevision >= 'a' ? Nul : EmptyString));
             byte[] saltBytes = DecodeBase64(extractedSalt, BCryptSaltLen);
 
             BCrypt bCrypt = new BCrypt();
@@ -669,7 +661,7 @@ namespace BCrypt.Net
             byte[] hashed = bCrypt.CryptRaw(inputBytes, saltBytes, workFactor);
 
             // Generate result string
-            var result = new StringBuilder(60);
+            StringBuilder result = new StringBuilder(60);
             result.Append("$2").Append(bcryptMinorRevision).Append('$').Append(workFactor.ToString("D2")).Append('$');
             result.Append(EncodeBase64(saltBytes, saltBytes.Length));
             result.Append(EncodeBase64(hashed, (BfCryptCiphertext.Length * 4) - 1));
@@ -689,16 +681,25 @@ namespace BCrypt.Net
             switch (hashType)
             {
                 case HashType.SHA256:
-                    using (var sha = SHA256.Create())
+                    using (SHA256 sha = SHA256.Create())
+                    {
                         inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(sha.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? Nul : EmptyString));
+                    }
+
                     break;
                 case HashType.SHA384:
-                    using (var sha = SHA384.Create())
+                    using (SHA384 sha = SHA384.Create())
+                    {
                         inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(sha.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? Nul : EmptyString));
+                    }
+
                     break;
                 case HashType.SHA512:
-                    using (var sha = SHA512.Create())
+                    using (SHA512 sha = SHA512.Create())
+                    {
                         inputBytes = SafeUTF8.GetBytes(Convert.ToBase64String(sha.ComputeHash(inputBytes)) + (bcryptMinorRevision >= 'a' ? Nul : EmptyString));
+                    }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(hashType), hashType, null);
@@ -733,7 +734,7 @@ namespace BCrypt.Net
 
             RngCsp.GetBytes(saltBytes);
 
-            var result = new StringBuilder(29);
+            StringBuilder result = new StringBuilder(29);
             result.Append("$2").Append(bcryptMinorRevision).Append('$').Append(workFactor.ToString("D2")).Append('$');
             result.Append(EncodeBase64(saltBytes, saltBytes.Length));
 
@@ -824,9 +825,9 @@ namespace BCrypt.Net
                 return false;
             }
             int diff = 0;
-            for (var i = 0; i < a.Length; i++)
+            for (int i = 0; i < a.Length; i++)
             {
-                diff |= (a[i] ^ b[i]);
+                diff |= a[i] ^ b[i];
             }
             return diff == 0;
         }
@@ -848,7 +849,7 @@ namespace BCrypt.Net
                 throw new ArgumentException("Invalid length", nameof(length));
             }
 
-            int encodedSize = (int)Math.Ceiling((length * 4D) / 3);
+            int encodedSize = (int)Math.Ceiling(length * 4D / 3);
             char[] encoded = new char[encodedSize];
 
             int pos = 0;
@@ -1114,7 +1115,7 @@ namespace BCrypt.Net
 #if HAS_SPAN
         internal byte[] CryptRaw(ReadOnlySpan<byte> inputBytes, ReadOnlySpan<byte> saltBytes, int workFactor)
 #else
-       internal byte[] CryptRaw(byte[] inputBytes, byte[] saltBytes, int workFactor)
+        internal byte[] CryptRaw(byte[] inputBytes, byte[] saltBytes, int workFactor)
 #endif
         {
             int i;

@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Parsers.Markdown.Blocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CoolapkLite.Parsers.Markdown.Blocks;
-using CoolapkLite.Parsers.Markdown.Helpers;
 
 namespace CoolapkLite.Parsers.Markdown
 {
@@ -63,7 +62,7 @@ namespace CoolapkLite.Parsers.Markdown
             {
                 if (Blocks[i].Type == MarkdownBlockType.LinkReference)
                 {
-                    var reference = (LinkReferenceBlock)Blocks[i];
+                    LinkReferenceBlock reference = (LinkReferenceBlock)Blocks[i];
                     if (_references == null)
                     {
                         _references = new Dictionary<string, LinkReferenceBlock>(StringComparer.OrdinalIgnoreCase);
@@ -96,10 +95,10 @@ namespace CoolapkLite.Parsers.Markdown
             // Some blocks need to start on a new paragraph (code, lists and tables) while other
             // blocks can start on any line (headers, horizontal rules and quotes).
             // Text that is outside of any other block becomes a paragraph.
-            var blocks = new List<MarkdownBlock>();
+            List<MarkdownBlock> blocks = new List<MarkdownBlock>();
             int startOfLine = start;
             bool lineStartsNewParagraph = true;
-            var paragraphText = new StringBuilder();
+            StringBuilder paragraphText = new StringBuilder();
 
             // These are needed to parse underline-style header blocks.
             int previousRealStartOfLine = start;
@@ -170,10 +169,10 @@ namespace CoolapkLite.Parsers.Markdown
                             lastIndentation = lastLine.Count(c => c == '>');
                         }
 
-                        var currentEndOfLine = Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out _);
-                        var currentLine = markdown.Substring(realStartOfLine, currentEndOfLine - realStartOfLine);
-                        var currentIndentation = currentLine.Count(c => c == '>');
-                        var firstChar = markdown[realStartOfLine];
+                        int currentEndOfLine = Helpers.Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out _);
+                        string currentLine = markdown.Substring(realStartOfLine, currentEndOfLine - realStartOfLine);
+                        int currentIndentation = currentLine.Count(c => c == '>');
+                        char firstChar = markdown[realStartOfLine];
 
                         // This is a quote that doesn't start with a Quote marker, but carries on from the last line.
                         if (lastIndentation == 1)
@@ -204,7 +203,7 @@ namespace CoolapkLite.Parsers.Markdown
                 }
 
                 // Find the end of the current line.
-                int endOfLine = Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out int startOfNextLine);
+                int endOfLine = Helpers.Common.FindNextSingleNewLine(markdown, nonSpacePos, end, out int startOfNextLine);
 
                 if (nonSpaceChar == '\0')
                 {
@@ -233,7 +232,7 @@ namespace CoolapkLite.Parsers.Markdown
                         {
                             realStartOfLine = startOfLine;
                             endOfLine = startOfLine + 3;
-                            startOfNextLine = Common.FindNextSingleNewLine(markdown, startOfLine, end, out startOfNextLine);
+                            startOfNextLine = Helpers.Common.FindNextSingleNewLine(markdown, startOfLine, end, out startOfNextLine);
 
                             paragraphText.Clear();
                         }
@@ -384,22 +383,9 @@ namespace CoolapkLite.Parsers.Markdown
         /// <returns> The reference details, or <c>null</c> if the reference wasn't found. </returns>
         public LinkReferenceBlock LookUpReference(string id)
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException("id");
-            }
-
-            if (_references == null)
-            {
-                return null;
-            }
-
-            if (_references.TryGetValue(id, out LinkReferenceBlock result))
-            {
-                return result;
-            }
-
-            return null;
+            return id == null
+                ? throw new ArgumentNullException("id")
+                : _references == null ? null : _references.TryGetValue(id, out LinkReferenceBlock result) ? result : null;
         }
 
         /// <summary>
@@ -408,12 +394,7 @@ namespace CoolapkLite.Parsers.Markdown
         /// <returns> The textual representation of this object. </returns>
         public override string ToString()
         {
-            if (Blocks == null)
-            {
-                return base.ToString();
-            }
-
-            return string.Join("\r\n", Blocks);
+            return Blocks == null ? base.ToString() : string.Join("\r\n", Blocks);
         }
     }
 }

@@ -113,18 +113,13 @@ namespace CoolapkLite.Controls
         {
             if (GetTemplateChild(PartHeaderPresenter) is FrameworkElement headerPresenter)
             {
-                if (Header is string headerText)
-                {
-                    headerPresenter.Visibility = string.IsNullOrEmpty(headerText)
+                headerPresenter.Visibility = Header is string headerText
+                    ? string.IsNullOrEmpty(headerText)
                         ? Visibility.Collapsed
-                        : Visibility.Visible;
-                }
-                else
-                {
-                    headerPresenter.Visibility = Header != null
+                        : Visibility.Visible
+                    : Header != null
                         ? Visibility.Visible
                         : Visibility.Collapsed;
-                }
             }
         }
 

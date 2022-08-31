@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.UI.ViewManagement;
-using Windows.UI.Xaml;
+﻿using CoolapkLite.Common;
 using Windows.UI;
 using Windows.UI.Core;
-using Newtonsoft.Json.Linq;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers
 {
@@ -51,12 +45,7 @@ namespace CoolapkLite.Helpers
         {
             get
             {
-                if (Window.Current.Content is FrameworkElement rootElement)
-                {
-                    return rootElement.RequestedTheme;
-                }
-
-                return ElementTheme.Default;
+                return Window.Current.Content is FrameworkElement rootElement ? rootElement.RequestedTheme : ElementTheme.Default;
             }
             set
             {
@@ -98,11 +87,9 @@ namespace CoolapkLite.Helpers
 
         public static bool IsDarkTheme()
         {
-            if (RootTheme == ElementTheme.Default)
-            {
-                return Application.Current.RequestedTheme == ApplicationTheme.Dark;
-            }
-            return RootTheme == ElementTheme.Dark;
+            return RootTheme == ElementTheme.Default
+                ? Application.Current.RequestedTheme == ApplicationTheme.Dark
+                : RootTheme == ElementTheme.Dark;
         }
 
         public static void UpdateSystemCaptionButtonColors()
