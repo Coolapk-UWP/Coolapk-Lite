@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using System;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 
-namespace CoolapkLite.Helpers
+namespace CoolapkLite.Common
 {
     public class TokenCreater
     {

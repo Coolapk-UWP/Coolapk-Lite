@@ -61,6 +61,9 @@
 ![安装](Images/Guides/Snipaste_2019-10-13_16-01-09.png)
 
 ## 使用到的模块
+- [MetroLog](https://github.com/mbrit/MetroLog)
+- [QRCoder](https://github.com/codebude/QRCoder)
+- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net)
 - [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit/)
 
 ## 衍生项目

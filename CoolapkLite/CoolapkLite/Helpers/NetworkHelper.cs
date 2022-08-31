@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Core.Exceptions;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Models.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
@@ -35,7 +36,7 @@ namespace CoolapkLite.Helpers
             string APIVersion = SettingsHelper.Get<string>(SettingsHelper.APIVersion);
             ulong OSVersion = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
             TokenVersion TokenVersion = SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion);
-            string Culture = GlobalizationPreferences.Languages.Count > 0 ? new CultureInfo(GlobalizationPreferences.Languages.FirstOrDefault()).ToString() : "zh-CN";
+            string Culture = GlobalizationPreferences.Languages.Any() ? new CultureInfo(GlobalizationPreferences.Languages.FirstOrDefault()).ToString() : "zh-CN";
 
             token = new TokenCreater(TokenVersion);
             Client.DefaultRequestHeaders.Clear();

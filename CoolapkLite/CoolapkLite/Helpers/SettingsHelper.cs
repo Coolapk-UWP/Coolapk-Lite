@@ -53,7 +53,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalSettings.Values.ContainsKey(TokenVersion))
             {
-                LocalSettings.Values.Add(TokenVersion, (int)Helpers.TokenVersion.TokenV2);
+                LocalSettings.Values.Add(TokenVersion, (int)Common.TokenVersion.TokenV2);
             }
             if (!LocalSettings.Values.ContainsKey(SelectedAppTheme))
             {
