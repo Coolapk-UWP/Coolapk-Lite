@@ -118,24 +118,24 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="about.Text" xml:space="preserve">
-    <value>#### 欢迎使用酷安 Lite！
+    <value>#### Welcome to the Coolapk Lite！
 
-##### 声明
+##### Declaration
 
-1. 本程序是[酷安](https://coolapk.com)的第三方客户端，仅用作学习交流使用，禁止用于商业用途。
-2. 本程序是开源软件，因此，在使用时请确保程序是来自[本Github仓库](https://github.com/Coolapk-UWP/Coolapk-Lite)，以确保您的数据安全。
-3. 若程序来源无异常，程序运行过程中您的所有数据都仅用于与酷安的服务器交流或储存于本地，开发者不会窃取您的任何数据。但即便如此，也请注意使用环境的安全性。
-4. 若您对[酷安](https://coolapk.com)如何处理您的数据存在疑虑，请访问[酷安用户服务协议](https://m.coolapk.com/mp/user/agreement)、[酷安隐私保护政策](https://m.coolapk.com/mp/user/privacy)、[酷安二手安全条约](https://m.coolapk.com/mp/user/ershouAgreement)。
+1. This program is a third-party client of [Coolapk](https://coolapk.com), which is only used for learning and communication purposes.Using it for commercial use is prohibited.
+2. This program is an open source software. Therefore, please make sure that the program is downloaded from this [Github repository](https://github.com/Coolapk-UWP/Coolapk-Lite) to ensure safety of your data.
+3. If the source of the program is correct, all your data saved while running the program will only be used to communicate with CoolAPK's server or stored locally, and the developer will not steal any of your data. Even so, please be aware of security of the current environment you are using.
+4. If you have concerns about how [Coolapk](https://coolapk.com) handles your data, please visit [Coolapk User Service Agreement](https://m.coolapk.com/mp/user/agreement), [Coolapk Privacy Policy](https://m.coolapk.com/mp/user/privacy), and [Coolapk Second-hand Security Agreement](https://m.coolapk.com/mp/user/ershouAgreement).
 
-##### 鸣谢
+##### Acknowledgements
 
-|                                          贡献                                        |                      作者                      |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| [原作(CoolApk-UWP)](https://github.com/oboard/CoolApk-UWP)                           | [oboard](https://github.com/oboard)            |
-| [Token获取方法(CoolapkTokenCrack)](https://github.com/ZCKun/CoolapkTokenCrack)        | [ZCKun](https://github.com/ZCKun)              |
-| [TokenV2获取方法(CoolapkTokenV2)](https://github.com/XiaoMengXinX/FuckCoolapkTokenV2) | [XiaoMengXinX](https://github.com/XiaoMengXinX)|
+|                                                                         Contribution                                                                       |                           Author                          |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| [Original (CoolApk-UWP)](https://github.com/oboard/CoolApk-UWP)                                                 | [oboard](https://github.com/oboard)|
+| [Token Acquisition Method (CoolapkTokenCrack)](https://github.com/ZCKun/CoolapkTokenCrack) | [ZCKun](https://github.com/ZCKun/)|
+| [TokenV2Acquisition Method (CoolapkTokenV2)](https://github.com/XiaoMengXinX/FuckCoolapkTokenV2) | [XiaoMengXinX](https://github.com/XiaoMengXinX)|
 
-##### 引用及参考
+##### Citations and References
 
 - [MetroLog](https://github.com/mbrit/MetroLog)
 - [QRCoder](https://github.com/codebude/QRCoder)
