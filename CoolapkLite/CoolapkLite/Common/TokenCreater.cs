@@ -6,8 +6,8 @@ namespace CoolapkLite.Helpers
     public class TokenCreater
     {
         private static readonly string Guid = System.Guid.NewGuid().ToString();
-        private static readonly string aid = randHexString(16);
-        private static readonly string mac = randMacAdress();
+        private static readonly string aid = RandHexString(16);
+        private static readonly string mac = RandMacAdress();
         private static string SystemManufacturer;
         private static string SystemProductName;
 
@@ -51,13 +51,13 @@ namespace CoolapkLite.Helpers
             string timeStamp = DateTime.Now.ConvertDateTimeToUnixTimeStamp().ToString();
 
             string base64TimeStamp = timeStamp.GetBase64(true);
-            string md5TimeStamp = timeStamp.GetMD5().ToLowerInvariant();
-            string md5DeviceCode = deviceCode.GetMD5().ToLowerInvariant();
+            string md5TimeStamp = timeStamp.GetMD5();
+            string md5DeviceCode = deviceCode.GetMD5();
 
             string token = $"token://com.coolapk.market/dcf01e569c1e3db93a3d0fcf191a622c?{md5TimeStamp}${md5DeviceCode}&com.coolapk.market";
             string base64Token = token.GetBase64(true);
-            string md5Base64Token = base64Token.GetMD5().ToLowerInvariant();
-            string md5Token = token.GetMD5().ToLowerInvariant();
+            string md5Base64Token = base64Token.GetMD5();
+            string md5Token = token.GetMD5();
 
             string bcryptSalt = $"{$"$2y$10${base64TimeStamp}/{md5Token}".Substring(0, 31)}u";
             string bcryptresult = BCrypt.Net.BCrypt.HashPassword(md5Base64Token, bcryptSalt);
@@ -69,14 +69,14 @@ namespace CoolapkLite.Helpers
 
         private static string GetCoolapkAppToken()
         {
-            double t = DateTime.Now.ConvertDateTimeToUnixTimeStamp();
-            string hex_t = "0x" + Convert.ToString((int)t, 16);
+            double timeStamp = DateTime.Now.ConvertDateTimeToUnixTimeStamp();
+            string hex_timeStamp = $"0x{Convert.ToString((int)timeStamp, 16)}";
             // 时间戳加密
-            string md5_t = DataHelper.GetMD5($"{t}");
-            string a = $"token://com.coolapk.market/c67ef5943784d09750dcfbb31020f0ab?{md5_t}${Guid}&com.coolapk.market";
-            string md5_a = DataHelper.GetMD5(DataHelper.GetBase64(a));
-            string token = md5_a + Guid + hex_t;
-            return token;
+            string md5_timeStamp = $"{timeStamp}".GetMD5();
+            string token = $"token://com.coolapk.market/c67ef5943784d09750dcfbb31020f0ab?{md5_timeStamp}${Guid}&com.coolapk.market";
+            string md5_token = token.GetBase64().GetMD5();
+            string appToken = $"{md5_token}{Guid}{hex_timeStamp}";
+            return appToken;
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace CoolapkLite.Helpers
             return $"{aid}; ; ; {mac}; {manufactor}; {brand}; {model}; {buildNumber}".GetBase64(true).Reverse();
         }
 
-        private static string randMacAdress()
+        private static string RandMacAdress()
         {
             Random rand = new Random();
             string macAdress = string.Empty;
@@ -102,7 +102,7 @@ namespace CoolapkLite.Helpers
             return macAdress;
         }
 
-        private static string randHexString(int n)
+        private static string RandHexString(int n)
         {
             Random rand = new Random();
             byte[] bytes = new byte[n];

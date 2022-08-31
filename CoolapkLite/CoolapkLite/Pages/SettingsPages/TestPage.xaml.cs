@@ -36,6 +36,19 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
+        internal bool IsUseTokenV2
+        {
+            get => SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion) == TokenVersion.TokenV2;
+            set
+            {
+                if (IsUseTokenV2 != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersion.TokenV2 : TokenVersion.TokenV1));
+                    NetworkHelper.SetRequestHeaders();
+                }
+            }
+        }
+
         internal string Version
         {
             get => SettingsHelper.Get<string>(SettingsHelper.APIVersion);

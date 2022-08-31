@@ -17,7 +17,7 @@ namespace CoolapkLite.Helpers
                 // Convert the input string to a byte array and compute the hash.
                 byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(input));
 
-                string results = BitConverter.ToString(data);
+                string results = BitConverter.ToString(data).ToLowerInvariant();
 
                 return results.Replace("-", "");
             }

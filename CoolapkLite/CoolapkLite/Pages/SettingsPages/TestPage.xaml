@@ -106,6 +106,7 @@
                             Content="获取内容"
                             Tag="GetContent" />
                         <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
+                        <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind IsUseTokenV2, Mode=TwoWay}" />
                         <ComboBox
                             x:Name="ComboBoxVersion"
                             Grid.Row="13"
