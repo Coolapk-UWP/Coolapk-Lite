@@ -243,6 +243,7 @@
     <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
+    <Compile Include="Helpers\TokenHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
@@ -1253,6 +1254,12 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\TitleBar.resw" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BCrypt.Net\BCrypt.Net.csproj">
+      <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
+      <Name>BCrypt.Net</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

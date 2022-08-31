@@ -9,21 +9,33 @@ namespace CoolapkLite.Helpers
 {
     public static partial class DataHelper
     {
-        public static string GetMD5(string input)
+        public static string GetMD5(this string input)
         {
-            using (MD5 md5 = MD5.Create())
+            // Create a new instance of the MD5CryptoServiceProvider object.
+            using (MD5 md5Hasher = MD5.Create())
             {
-                byte[] r1 = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
-                string r2 = BitConverter.ToString(r1).ToLowerInvariant();
-                return r2.Replace("-", "");
+                // Convert the input string to a byte array and compute the hash.
+                byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+                string results = BitConverter.ToString(data);
+
+                return results.Replace("-", "");
             }
         }
 
-        public static string GetBase64(string input)
+        public static string GetBase64(this string input, bool israw = false)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input);
-            string base64 = Convert.ToBase64String(bytes);
-            return base64;
+            string result = Convert.ToBase64String(bytes);
+            if (israw) { result = result.Replace("=", ""); }
+            return result;
+        }
+
+        public static string Reverse(this string text)
+        {
+            char[] charArray = text.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
         }
 
         public static string GetSizeString(this double size)

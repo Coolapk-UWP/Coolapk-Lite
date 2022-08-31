@@ -104,7 +104,7 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
             }
-            Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
+            //Client.DefaultRequestHeaders.Add("X-App-Device", GetCoolapkDeviceID());
         }
 
         public static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
@@ -124,41 +124,60 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        private static string GetCoolapkDeviceID()
-        {
-            string token = SettingsHelper.Get<string>(SettingsHelper.DeviceID);
-            if (string.IsNullOrEmpty(token))
-            {
-                Guid easId = new EasClientDeviceInformation().Id;
-                string md5_easID = DataHelper.GetMD5(easId.ToString());
-                string base64 = md5_easID;
-                for (int i = 0; i < 5; i++)
-                {
-                    base64 = DataHelper.GetBase64(base64);
-                }
-                token = base64.Replace("=", "");
-                SettingsHelper.Set(SettingsHelper.DeviceID, token);
-            }
-            return token;
-        }
+        //private static string GetCoolapkDeviceID()
+        //{
+        //    string token = SettingsHelper.Get<string>(SettingsHelper.DeviceID);
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        Guid easId = new EasClientDeviceInformation().Id;
+        //        string md5_easID = DataHelper.GetMD5(easId.ToString());
+        //        string base64 = md5_easID;
+        //        for (int i = 0; i < 5; i++)
+        //        {
+        //            base64 = DataHelper.GetBase64(base64);
+        //        }
+        //        token = base64.Replace("=", "");
+        //        SettingsHelper.Set(SettingsHelper.DeviceID, token);
+        //    }
+        //    return token;
+        //}
 
-        private static string GetCoolapkAppToken()
-        {
-            double t = DateTime.Now.ConvertDateTimeToUnixTimeStamp();
-            string hex_t = "0x" + Convert.ToString((int)t, 16);
-            // 时间戳加密
-            string md5_t = DataHelper.GetMD5($"{t}");
-            string a = $"token://com.coolapk.market/c67ef5943784d09750dcfbb31020f0ab?{md5_t}${Guid}&com.coolapk.market";
-            string md5_a = DataHelper.GetMD5(DataHelper.GetBase64(a));
-            string token = md5_a + Guid + hex_t;
-            return token;
-        }
+        //private static string GetCoolapkAppToken()
+        //{
+        //    double t = DateTime.Now.ConvertDateTimeToUnixTimeStamp();
+        //    string hex_t = "0x" + Convert.ToString((int)t, 16);
+        //    // 时间戳加密
+        //    string md5_t = DataHelper.GetMD5($"{t}");
+        //    string a = $"token://com.coolapk.market/c67ef5943784d09750dcfbb31020f0ab?{md5_t}${Guid}&com.coolapk.market";
+        //    string md5_a = DataHelper.GetMD5(DataHelper.GetBase64(a));
+        //    string token = md5_a + Guid + hex_t;
+        //    return token;
+        //}
+
+        //private static string GetCoolapkDeviceID()
+        //{
+        //    return new TokenHelper().GetToken().randDeviceCode;
+        //}
+
+        //private static string GetCoolapkAppToken()
+        //{
+        //    return new TokenHelper().GetToken().token;
+        //}
 
         private static void ReplaceAppToken(this System.Net.Http.Headers.HttpRequestHeaders headers)
         {
             const string name = "X-App-Token";
             _ = headers.Remove(name);
-            headers.Add(name, GetCoolapkAppToken());
+            var results = new TokenHelper().GetToken();
+            headers.Add(name, results.token);
+            headers.ReplaceDeviceID(results.randDeviceCode);
+        }
+
+        private static void ReplaceDeviceID(this System.Net.Http.Headers.HttpRequestHeaders headers, string randDeviceCode)
+        {
+            const string name = "X-App-Device";
+            _ = headers.Remove(name);
+            headers.Add(name, randDeviceCode);
         }
 
         private static void ReplaceRequested(this System.Net.Http.Headers.HttpRequestHeaders headers, string request)
