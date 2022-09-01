@@ -1,12 +1,16 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Upload;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +53,24 @@ namespace CoolapkLite.Helpers
             string json = string.Empty;
             (int page, Uri uri) info = uri.GetPage();
             (bool isSucceed, JToken result) result;
+
+            (bool isSucceed, JToken result) GetResult(string json)
+            {
+                if (string.IsNullOrEmpty(json)) { return (false, null); }
+                JObject o;
+                try { o = JObject.Parse(json); }
+                catch
+                {
+                    UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                    return (false, null);
+                }
+                if (!o.TryGetValue("data", out JToken token) && o.TryGetValue("message", out JToken message))
+                {
+                    UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
+                    return (false, null);
+                }
+                else { return (token != null && !string.IsNullOrEmpty(token.ToString()), token); }
+            }
 
             void ReadCache()
             {
@@ -155,6 +177,24 @@ namespace CoolapkLite.Helpers
             string json = string.Empty;
             (bool isSucceed, JToken result) result;
 
+            (bool isSucceed, JToken result) GetResult(string json)
+            {
+                if (string.IsNullOrEmpty(json)) { return (false, null); }
+                JObject o;
+                try { o = JObject.Parse(json); }
+                catch
+                {
+                    UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                    return (false, null);
+                }
+                if (!o.TryGetValue("data", out JToken token) && o.TryGetValue("message", out JToken message))
+                {
+                    UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
+                    return (false, null);
+                }
+                else { return (token != null && !string.IsNullOrEmpty(token.ToString()), token); }
+            }
+
             json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
             result = GetResult(json);
 
@@ -195,24 +235,6 @@ namespace CoolapkLite.Helpers
             {
                 return (0, uri);
             }
-        }
-
-        private static (bool isSucceed, JToken result) GetResult(string json)
-        {
-            if (string.IsNullOrEmpty(json)) { return (false, null); }
-            JObject o;
-            try { o = JObject.Parse(json); }
-            catch
-            {
-                UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
-                return (false, null);
-            }
-            if (!o.TryGetValue("data", out JToken token) && o.TryGetValue("message", out JToken message))
-            {
-                UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
-                return (false, null);
-            }
-            else { return (token != null && !string.IsNullOrEmpty(token.ToString()), token); }
         }
 
         public static string GetId(JToken token, string _idName)
@@ -278,6 +300,49 @@ namespace CoolapkLite.Helpers
             if (!isSucceed) { return; }
 
             await dispatcher.AwaitableRunAsync(() => model.Followed = !model.Followed);
+        }
+
+        public static async void UploadImagePrepare(IList<UploadFileFragment> images)
+        {
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                string json = JsonConvert.SerializeObject(images, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                using (StringContent uploadBucket = new StringContent("image"))
+                using (StringContent uploadDir = new StringContent("feed"))
+                using (StringContent is_anonymous = new StringContent("0"))
+                using (StringContent uploadFileList = new StringContent(json))
+                {
+                    content.Add(uploadBucket, "uploadBucket");
+                    content.Add(uploadDir, "uploadDir");
+                    content.Add(is_anonymous, "is_anonymous");
+                    content.Add(uploadFileList, "uploadFileList");
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content);
+                    if (isSucceed)
+                    {
+                    }
+                }
+            }
+        }
+
+        public static async Task<(bool isSucceed, string result)> UploadImage(byte[] image, string name)
+        {
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                using (var picFile = new ByteArrayContent(image))
+                {
+                    picFile.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
+                    picFile.Headers.ContentDisposition.Name = "picFile";
+                    picFile.Headers.ContentDisposition.FileName = name;
+                    picFile.Headers.ContentType = new MediaTypeHeaderValue("image/png");
+                    picFile.Headers.ContentLength = image.Length;
+
+                    content.Add(picFile);
+
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.UploadImage, "feed"), content);
+                   
+                    return (isSucceed, result.ToString());
+                }
+            }
         }
     }
 }

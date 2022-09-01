@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using Windows.Storage.Streams;
 
 namespace CoolapkLite.Helpers
 {
@@ -141,6 +143,76 @@ namespace CoolapkLite.Helpers
             else
             {
                 return str;
+            }
+        }
+
+        public static IBuffer GetBuffer(this IRandomAccessStream randomStream)
+        {
+            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
+            {
+                return stream.GetBuffer();
+            }
+        }
+
+        public static byte[] GetBytes(this IRandomAccessStream randomStream)
+        {
+            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
+            {
+                return stream.GetBytes();
+            }
+        }
+
+        public static IBuffer GetBuffer(this Stream stream)
+        {
+            byte[] bytes = new byte[0];
+            if (stream != null)
+            {
+                bytes = stream.GetBytes();
+            }
+            return bytes.AsBuffer();
+        }
+
+        public static byte[] GetBytes(this Stream stream)
+        {
+            if (stream.CanSeek) // stream.Length 已确定
+            {
+                byte[] bytes = new byte[stream.Length];
+                stream.Read(bytes, 0, bytes.Length);
+                stream.Seek(0, SeekOrigin.Begin);
+                return bytes;
+            }
+            else // stream.Length 不确定
+            {
+                int initialLength = 32768; // 32k
+
+                byte[] buffer = new byte[initialLength];
+                int read = 0;
+
+                int chunk;
+                while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
+                {
+                    read += chunk;
+
+                    if (read == buffer.Length)
+                    {
+                        int nextByte = stream.ReadByte();
+
+                        if (nextByte == -1)
+                        {
+                            return buffer;
+                        }
+
+                        byte[] newBuffer = new byte[buffer.Length * 2];
+                        Array.Copy(buffer, newBuffer, buffer.Length);
+                        newBuffer[read] = (byte)nextByte;
+                        buffer = newBuffer;
+                        read++;
+                    }
+                }
+
+                byte[] ret = new byte[read];
+                Array.Copy(buffer, ret, read);
+                return ret;
             }
         }
     }

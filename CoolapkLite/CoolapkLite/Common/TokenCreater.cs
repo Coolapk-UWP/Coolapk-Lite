@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 
 namespace CoolapkLite.Common
@@ -21,7 +23,7 @@ namespace CoolapkLite.Common
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
             SystemManufacturer = deviceInfo.SystemManufacturer;
             SystemProductName = deviceInfo.SystemProductName;
-            DeviceCode = CreateDeviceCode(aid, mac, SystemManufacturer, SystemManufacturer, SystemProductName, "CoolapkUWP");
+            DeviceCode = CreateDeviceCode(aid, mac, SystemManufacturer, SystemManufacturer, SystemProductName, $"CoolapkLite {Package.Current.Id.Version.ToFormattedString()}");
         }
 
         public TokenCreater(TokenVersion version = TokenVersion.TokenV2)

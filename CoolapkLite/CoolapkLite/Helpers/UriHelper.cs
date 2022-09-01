@@ -54,7 +54,9 @@ namespace CoolapkLite.Helpers
         OperateLike,
         OperateUnfollow,
         OperateUnlike,
+        OOSUploadPrepare,
         RequestValidate,
+        UploadImage,
         Search,
         SearchFeeds,
         SearchTags,
@@ -150,7 +152,9 @@ namespace CoolapkLite.Helpers
                 case UriType.OperateLike: return "/v6/feed/like{0}?id={1}&detail=0";
                 case UriType.OperateUnfollow: return "/v6/user/unfollow?uid={0}";
                 case UriType.OperateUnlike: return "/v6/feed/unlike{0}?id={1}&detail=0";
+                case UriType.OOSUploadPrepare: return "/v6/upload/ossUploadPrepare";
                 case UriType.RequestValidate: return "/v6/account/requestValidate";
+                case UriType.UploadImage: return "/v6/feed/uploadImage?fieldName=picFile&uploadDir={0}";
                 case UriType.Search: return "/v6/search?type={0}&searchValue={1}&page={2}{3}&showAnonymous=-1";
                 case UriType.SearchFeeds: return "/v6/search?type=feed&feedType={0}&sort={1}&searchValue={2}&page={3}{4}&showAnonymous=-1";
                 case UriType.SearchTags: return "/v6/search?type=feedTopic&searchValue={0}&page={1}{2}&showAnonymous=-1";
