@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Controls;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using System;
 using Windows.ApplicationModel.Resources;
@@ -132,6 +133,13 @@ namespace CoolapkLite.Pages
         private void TryLoginButton_Click(object sender, RoutedEventArgs e)
         {
             CheckLogin();
+        }
+
+        private async void ManualLoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var Dialog = new LoginDialog();
+            _ = await Dialog.ShowAsync();
+            if (Frame.CanGoBack) { Frame.GoBack(); }
         }
     }
 }

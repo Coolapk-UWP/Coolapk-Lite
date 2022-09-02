@@ -331,8 +331,8 @@ namespace CoolapkLite.Helpers
                 using (var picFile = new ByteArrayContent(image))
                 {
                     picFile.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
-                    picFile.Headers.ContentDisposition.Name = "picFile";
-                    picFile.Headers.ContentDisposition.FileName = name;
+                    picFile.Headers.ContentDisposition.Name = "\"picFile\"";
+                    picFile.Headers.ContentDisposition.FileName = $"\"{name}\"";
                     picFile.Headers.ContentType = new MediaTypeHeaderValue("image/png");
                     picFile.Headers.ContentLength = image.Length;
 

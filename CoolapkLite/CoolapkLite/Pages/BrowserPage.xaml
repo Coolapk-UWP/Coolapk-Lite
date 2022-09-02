@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -27,7 +28,16 @@
                     Background="Transparent"
                     BorderThickness="0"
                     Click="TryLoginButton_Click"
-                    Visibility="Collapsed" />
+                    Visibility="Collapsed">
+                    <helpers:UIElementHelper.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                x:Name="ManualLoginButton"
+                                x:Uid="/BrowserPage/ManualLoginButton"
+                                Click="ManualLoginButton_Click" />
+                        </MenuFlyout>
+                    </helpers:UIElementHelper.ContextFlyout>
+                </Button>
                 <Button
                     x:Name="OpenInSystemBrowserButton"
                     x:Uid="/BrowserPage/OpenInBrowserButton"

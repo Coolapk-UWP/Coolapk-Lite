@@ -1,4 +1,5 @@
-﻿using Windows.Storage;
+﻿using System;
+using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
@@ -9,7 +10,9 @@ namespace CoolapkLite.Helpers
     internal static partial class SettingsHelper
     {
         public const string Uid = "Uid";
+        public const string Token = "Token";
         public const string TileUrl = "TileUrl";
+        public const string UserName = "UserName";
         public const string IsUseAPI2 = "IsUseAPI2";
         public const string IsFirstRun = "IsFirstRun";
         public const string APIVersion = "APIVersion";
@@ -31,9 +34,17 @@ namespace CoolapkLite.Helpers
             {
                 LocalSettings.Values.Add(Uid, string.Empty);
             }
+            if (!LocalSettings.Values.ContainsKey(Token))
+            {
+                LocalSettings.Values.Add(Token, string.Empty);
+            }
             if (!LocalSettings.Values.ContainsKey(TileUrl))
             {
                 LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
+            }
+            if (!LocalSettings.Values.ContainsKey(UserName))
+            {
+                LocalSettings.Values.Add(UserName, string.Empty);
             }
             if (!LocalSettings.Values.ContainsKey(IsUseAPI2))
             {
@@ -90,6 +101,28 @@ namespace CoolapkLite.Helpers
             SetDefaultSettings();
         }
 
+        public static bool LoginIn() => LoginIn(Get<string>(Uid), Get<string>(UserName), Get<string>(Token));
+
+        public static bool LoginIn(string Uid, string UserName, string Token)
+        {
+            using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+            {
+                HttpCookieManager cookieManager = filter.CookieManager;
+                HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                uid.Value = Uid;
+                username.Value = UserName;
+                token.Value = Token;
+                var Expires = DateTime.UtcNow.AddDays(365);
+                uid.Expires = username.Expires = token.Expires = Expires;
+                cookieManager.SetCookie(uid);
+                cookieManager.SetCookie(username);
+                cookieManager.SetCookie(token);
+                return CheckLoginInfo();
+            }
+        }
+
         public static bool CheckLoginInfo()
         {
             try
@@ -127,6 +160,8 @@ namespace CoolapkLite.Helpers
                     else
                     {
                         Set(Uid, uid);
+                        Set(Token, token);
+                        Set(UserName, userName);
                         return true;
                     }
                 }
@@ -139,16 +174,13 @@ namespace CoolapkLite.Helpers
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.BaseUri))
-                {
-                    cookieManager.DeleteCookie(item);
-                }
                 foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.Base2Uri))
                 {
                     cookieManager.DeleteCookie(item);
                 }
             }
             Set(Uid, string.Empty);
+            Set(UserName, string.Empty);
         }
     }
 }
