@@ -1,4 +1,6 @@
-﻿using CoolapkLite.ViewModels.FeedPages;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels.DataSource;
+using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,6 +23,8 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class CollectionDetailControl : UserControl, INotifyPropertyChanged
     {
+        private double PageTitleHeight => UIHelper.PageTitleHeight;
+
         private CollectionViewModel provider;
         public CollectionViewModel Provider
         {
@@ -74,5 +78,15 @@ namespace CoolapkLite.Controls
                 await Provider.Refresh();
             }
         }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (ShyHeaderListView.ItemsSource is EntityItemSourse entities)
+            {
+                _ = entities.Refresh(true);
+            }
+        }
+
+        private void ListView_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
     }
 }

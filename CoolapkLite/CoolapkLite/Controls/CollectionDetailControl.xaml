@@ -26,14 +26,27 @@
                 Others="{StaticResource Null}" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <local:ShyHeaderListView
-            x:Name="ShyHeaderListView"
-            Padding="{x:Bind Padding, Mode=TwoWay}"
-            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
-            ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-            SelectionMode="None"
-            ShowsScrollingPlaceholders="False"
-            ShyHeaderItemSource="{x:Bind Provider.ItemSource, Mode=OneWay}" />
-    </Grid>
+    <local:ShyHeaderListView
+        x:Name="ShyHeaderListView"
+        Padding="{x:Bind Padding, Mode=TwoWay}"
+        HeaderHeight="{x:Bind PageTitleHeight}"
+        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+        ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+        SelectionMode="None"
+        ShowsScrollingPlaceholders="False"
+        ShyHeaderItemSource="{x:Bind Provider.ItemSource, Mode=OneWay}"
+        SizeChanged="ListView_SizeChanged">
+        <local:ShyHeaderListView.LeftHeader>
+            <Border x:Name="Block" Height="48" />
+        </local:ShyHeaderListView.LeftHeader>
+        <local:ShyHeaderListView.RightHeader>
+            <Button
+                x:Name="RefreshButton"
+                VerticalAlignment="Center"
+                Click="RefreshButton_Click"
+                Style="{StaticResource IconButtonStyle}">
+                <SymbolIcon Symbol="Refresh" />
+            </Button>
+        </local:ShyHeaderListView.RightHeader>
+    </local:ShyHeaderListView>
 </UserControl>

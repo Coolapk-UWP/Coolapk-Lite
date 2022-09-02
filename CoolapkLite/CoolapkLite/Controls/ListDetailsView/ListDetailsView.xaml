@@ -31,7 +31,6 @@
                                     </Grid.RowDefinitions>
                                     <ContentPresenter
                                         x:Name="HeaderContentPresenter"
-                                        Margin="12,0"
                                         x:DeferLoadStrategy="Lazy"
                                         Content="{TemplateBinding ListHeader}"
                                         ContentTemplate="{TemplateBinding ListHeaderTemplate}"

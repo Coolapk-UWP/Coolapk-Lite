@@ -57,25 +57,25 @@
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid>
-        <control:ListDetailsView
-            x:Name="ListDetailsView"
-            Margin="{x:Bind StackPanelMargin}"
-            BackButtonBehavior="Automatic"
-            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
-            ItemTemplate="{StaticResource CollectionListTemplate}"
-            ItemsSource="{Binding}">
-            <control:ListDetailsView.DetailsTemplate>
-                <DataTemplate>
-                    <control:CollectionDetailControl ID="{Binding ID}" />
-                </DataTemplate>
-            </control:ListDetailsView.DetailsTemplate>
-        </control:ListDetailsView>
-        <control:TitleBar
-            x:Name="TitleBar"
-            Title="{Binding Title}"
-            IsRefreshButtonVisible="True"
-            IsRefreshEnabled="True"
-            RefreshRequested="TitleBar_RefreshEvent" />
-    </Grid>
+    <control:ListDetailsView
+        x:Name="ListDetailsView"
+        BackButtonBehavior="Automatic"
+        CompactModeThresholdWidth="800"
+        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+        ItemTemplate="{StaticResource CollectionListTemplate}"
+        ItemsSource="{Binding}">
+        <control:ListDetailsView.ListHeader>
+            <control:TitleBar
+                x:Name="TitleBar"
+                Title="{Binding Title}"
+                IsRefreshButtonVisible="True"
+                IsRefreshEnabled="True"
+                RefreshRequested="TitleBar_RefreshEvent" />
+        </control:ListDetailsView.ListHeader>
+        <control:ListDetailsView.DetailsTemplate>
+            <DataTemplate>
+                <control:CollectionDetailControl ID="{Binding ID}" />
+            </DataTemplate>
+        </control:ListDetailsView.DetailsTemplate>
+    </control:ListDetailsView>
 </Page>
