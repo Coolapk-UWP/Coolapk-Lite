@@ -124,6 +124,6 @@
     <value>Cancel</value>
   </data>
   <data name="LoginDialog.Title" xml:space="preserve">
-    <value>手动登录</value>
+    <value>Manual Login</value>
   </data>
 </root>
