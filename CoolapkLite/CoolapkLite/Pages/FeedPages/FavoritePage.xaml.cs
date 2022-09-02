@@ -18,6 +18,7 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class FavoritePage : Page
     {
         private FavoriteViewModel Provider;
+        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         public FavoritePage()
         {
@@ -51,20 +52,5 @@ namespace CoolapkLite.Pages.FeedPages
         private async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
-
-        private void ListView_Loaded(object sender, RoutedEventArgs e)
-        {
-            ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
-            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
-            if (StackPanel != null)
-            {
-                StackPanel.Margin = UIHelper.StackPanelMargin;
-            }
-            if (ScrollViewer != null)
-            {
-                ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
-                ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
-            }
-        }
     }
 }

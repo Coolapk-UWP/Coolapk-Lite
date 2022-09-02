@@ -142,12 +142,21 @@
     </Compile>
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
     <Compile Include="BackgroundTasks\NotificationsTask.cs" />
+    <Compile Include="Controls\CollectionDetailControl.xaml.cs">
+      <DependentUpon>CollectionDetailControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.Events.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.Properties.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsViewState.cs" />
     <Compile Include="Controls\MarkdownTextBlock\CodeBlockResolvingEventArgs.cs" />
     <Compile Include="Controls\MarkdownTextBlock\ImageResolvingEventArgs.cs" />
     <Compile Include="Controls\MarkdownTextBlock\LinkClickedEventArgs.cs" />
@@ -252,6 +261,7 @@
     <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Common\WeakEvent.cs" />
+    <Compile Include="Models\CollectionModel.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Exceptions\CoolapkMessageException.cs" />
     <Compile Include="Helpers\Exceptions\ExceptionHandlingSynchronizationContext.cs" />
@@ -398,6 +408,7 @@
     <Compile Include="ViewModels\DataSource\EntityItemSourse.cs" />
     <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\CollectionViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FavoriteViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
@@ -995,6 +1006,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\CollectionDetailControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\SearchWord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1002,6 +1017,10 @@
     <Page Include="Controls\Dialogs\LoginDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MarkdownTextBlock\MarkdownTextBlock.xaml">
       <Generator>MSBuild:Compile</Generator>

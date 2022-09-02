@@ -7,7 +7,6 @@
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
     d:DataContext="{d:DesignInstance Type=feedpages:FavoriteViewModel}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -16,19 +15,62 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:OtherDatatemplates />
             </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="CollectionListTemplate">
+                <Grid Padding="0,8" Tag="{Binding Url}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="55"
+                        Height="40"
+                        Margin="8,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        CornerRadius="8">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding Cover.Pic}" Stretch="UniformToFill" />
+                        </Border.Background>
+                    </Border>
+                    <Grid
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            VerticalAlignment="Center"
+                            Text="{Binding Title}"
+                            Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                        <TextBlock
+                            Grid.Row="1"
+                            VerticalAlignment="Center"
+                            Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}">
+                            <Run Text="{Binding ItemNum}" />
+                            <Run Text="个内容" />
+                        </TextBlock>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
-        <control:PullToRefreshListView
-            x:Name="ListView"
-            ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
+        <control:ListDetailsView
+            x:Name="ListDetailsView"
+            Margin="{x:Bind StackPanelMargin}"
+            BackButtonBehavior="Automatic"
             ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
-            ItemTemplate="{StaticResource ListDefaultTemplate}"
-            ItemsSource="{Binding}"
-            Loaded="ListView_Loaded"
-            SelectionMode="None"
-            ShowsScrollingPlaceholders="False" />
+            ItemTemplate="{StaticResource CollectionListTemplate}"
+            ItemsSource="{Binding}">
+            <control:ListDetailsView.DetailsTemplate>
+                <DataTemplate>
+                    <control:CollectionDetailControl ID="{Binding ID}" />
+                </DataTemplate>
+            </control:ListDetailsView.DetailsTemplate>
+        </control:ListDetailsView>
         <control:TitleBar
             x:Name="TitleBar"
             Title="{Binding Title}"

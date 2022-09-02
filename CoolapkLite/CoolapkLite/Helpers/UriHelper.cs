@@ -12,6 +12,7 @@ namespace CoolapkLite.Helpers
 
     public enum UriType
     {
+        DataList,
         CheckLoginInfo,
         CreateFeed,
         CreateFeedReply,
@@ -21,6 +22,7 @@ namespace CoolapkLite.Helpers
         GetAppFeeds,
         GetCollectionContents,
         GetCollectionDetail,
+        GetCollectionList,
         GetDyhDetail,
         GetDyhFeeds,
         GetProductDetail,
@@ -110,6 +112,7 @@ namespace CoolapkLite.Helpers
         {
             switch (type)
             {
+                case UriType.DataList: return "/v6/page/dataList?url={0}{1}";
                 case UriType.CheckLoginInfo: return "/v6/account/checkLoginInfo";
                 case UriType.CreateFeed: return "/v6/feed/createFeed";
                 case UriType.CreateFeedReply: return "/v6/feed/reply?id={0}&type=feed";
@@ -119,6 +122,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetAppFeeds: return "/v6/page/dataList?url=%23/feed/apkCommentList?isIncludeTop=1&id={0}&subTitle=&page={1}{2}{3}";
                 case UriType.GetCollectionContents: return "/v6/collection/itemList?id={0}&page={1}{2}";
                 case UriType.GetCollectionDetail: return "/v6/collection/detail?id={0}";
+                case UriType.GetCollectionList: return "/v6/collection/list?uid={0}&page={1}";
                 case UriType.GetDyhDetail: return "/v6/dyh/detail?dyhId={0}";
                 case UriType.GetDyhFeeds: return "/v6/dyhArticle/list?dyhId={0}&type={1}&page={2}{3}{4}";
                 case UriType.GetProductDetail: return "/v6/product/detail?id={0}";

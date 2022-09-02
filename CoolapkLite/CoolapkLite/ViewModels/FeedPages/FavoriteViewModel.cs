@@ -19,16 +19,16 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Favorite");
             Provider = new CoolapkListProvider(
-                (p, _, __) => UriHelper.GetUri(UriType.GetUserFollows, "apkFollowList", string.Empty, p),
+                (p, _, __) => UriHelper.GetUri(UriType.GetCollectionList, "", p),
                 GetEntities,
-                "entityId");
+                "id");
         }
 
         private readonly CoolapkListProvider Provider;
 
         private IEnumerable<Entity> GetEntities(JObject jo)
         {
-            yield return new IndexPageModel(jo);
+            yield return new CollectionModel(jo);
         }
 
         public async Task Refresh(bool reset = false)
