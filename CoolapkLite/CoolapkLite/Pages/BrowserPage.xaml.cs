@@ -137,9 +137,9 @@ namespace CoolapkLite.Pages
 
         private async void ManualLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            var Dialog = new LoginDialog();
-            _ = await Dialog.ShowAsync();
-            if (Frame.CanGoBack) { Frame.GoBack(); }
+            LoginDialog Dialog = new LoginDialog();
+            ContentDialogResult result = await Dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary && Frame.CanGoBack) { Frame.GoBack(); }
         }
     }
 }

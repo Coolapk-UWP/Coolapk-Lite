@@ -54,11 +54,11 @@ namespace CoolapkLite.Helpers
             (int page, Uri uri) info = uri.GetPage();
             (bool isSucceed, JToken result) result;
 
-            (bool isSucceed, JToken result) GetResult(string json)
+            (bool isSucceed, JToken result) GetResult(string jsons)
             {
-                if (string.IsNullOrEmpty(json)) { return (false, null); }
+                if (string.IsNullOrEmpty(jsons)) { return (false, null); }
                 JObject o;
-                try { o = JObject.Parse(json); }
+                try { o = JObject.Parse(jsons); }
                 catch
                 {
                     UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
@@ -177,11 +177,11 @@ namespace CoolapkLite.Helpers
             string json = string.Empty;
             (bool isSucceed, JToken result) result;
 
-            (bool isSucceed, JToken result) GetResult(string json)
+            (bool isSucceed, JToken result) GetResult(string jsons)
             {
-                if (string.IsNullOrEmpty(json)) { return (false, null); }
+                if (string.IsNullOrEmpty(jsons)) { return (false, null); }
                 JObject o;
-                try { o = JObject.Parse(json); }
+                try { o = JObject.Parse(jsons); }
                 catch
                 {
                     UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");

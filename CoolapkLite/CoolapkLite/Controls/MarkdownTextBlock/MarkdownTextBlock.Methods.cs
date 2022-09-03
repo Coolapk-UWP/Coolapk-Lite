@@ -280,8 +280,8 @@ namespace CoolapkLite.Controls
             ImageSource GetImageSource(Uri imageUrl)
             {
                 return Path.GetExtension(imageUrl.AbsolutePath)?.ToLowerInvariant() == ".svg"
-                    ? new SvgImageSource(imageUrl)
-                    : new BitmapImage(imageUrl);
+                    ? new SvgImageSource(imageUrl) as ImageSource
+                    : new BitmapImage(imageUrl) as ImageSource;
             }
         }
 

@@ -60,6 +60,7 @@
     <control:ListDetailsView
         x:Name="ListDetailsView"
         BackButtonBehavior="Automatic"
+        Background="Transparent"
         CompactModeThresholdWidth="800"
         ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
         ItemTemplate="{StaticResource CollectionListTemplate}"
