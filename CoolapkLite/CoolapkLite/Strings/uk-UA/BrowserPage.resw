@@ -132,7 +132,7 @@
   <data name="LoginSuccessfully" xml:space="preserve">
     <value>登录成功</value>
   </data>
-  <data name="ManualLoginButton.Content" xml:space="preserve">
+  <data name="ManualLoginButton.Text" xml:space="preserve">
     <value>手动登录</value>
   </data>
   <data name="OpenInBrowserButton.Content" xml:space="preserve">
