@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="LoginDialog.CloseButtonText" xml:space="preserve">
-    <value>Login</value>
+    <value>Cancel</value>
   </data>
   <data name="LoginDialog.PrimaryButtonText" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Login</value>
   </data>
   <data name="LoginDialog.Title" xml:space="preserve">
     <value>Manual Login</value>
