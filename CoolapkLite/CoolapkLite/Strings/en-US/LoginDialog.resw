@@ -117,25 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BackButton.Content" xml:space="preserve">
-    <value>尝试获取token</value>
+  <data name="LoginDialog.CloseButtonText" xml:space="preserve">
+    <value>Login</value>
   </data>
-  <data name="BackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>如果登录成功后没有自动返回上一页，请点这里。如果获取token失败，请右击尝试手动登录。</value>
+  <data name="LoginDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Cancel</value>
   </data>
-  <data name="CannotGetToken" xml:space="preserve">
-    <value>没有获取到token，请尝试重新登录</value>
-  </data>
-  <data name="LoginFailed" xml:space="preserve">
-    <value>登录失败</value>
-  </data>
-  <data name="LoginSuccessfully" xml:space="preserve">
-    <value>登录成功</value>
-  </data>
-  <data name="ManualLoginButton.Content" xml:space="preserve">
-    <value>手动登录</value>
-  </data>
-  <data name="OpenInBrowserButton.Content" xml:space="preserve">
-    <value>在浏览器中打开</value>
+  <data name="LoginDialog.Title" xml:space="preserve">
+    <value>Manual Login</value>
   </data>
 </root>
