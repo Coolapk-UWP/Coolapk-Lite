@@ -1224,6 +1224,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="WindowsMobile, Version=10.0.22621.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -1245,9 +1250,7 @@
     <PRIResource Include="Strings\zh-CN\Feed.resw" />
   </ItemGroup>
   <ItemGroup>
-    <SDKReference Include="WindowsMobile, Version=10.0.22621.0">
-      <Name>Windows Mobile Extensions for the UWP</Name>
-    </SDKReference>
+    <PRIResource Include="Strings\zh-CN\LoginDialog.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\BrowserPage.resw" />
@@ -1283,13 +1286,13 @@
     <PRIResource Include="Strings\en-US\TitleBar.resw" />
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en-US\LoginDialog.resw" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BCrypt.Net\BCrypt.Net.csproj">
       <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
       <Name>BCrypt.Net</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\LoginDialog.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
