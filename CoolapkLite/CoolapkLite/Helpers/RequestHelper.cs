@@ -328,7 +328,7 @@ namespace CoolapkLite.Helpers
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
-                using (var picFile = new ByteArrayContent(image))
+                using (ByteArrayContent picFile = new ByteArrayContent(image))
                 {
                     picFile.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data");
                     picFile.Headers.ContentDisposition.Name = "\"picFile\"";
@@ -339,7 +339,7 @@ namespace CoolapkLite.Helpers
                     content.Add(picFile);
 
                     (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.UploadImage, "feed"), content);
-                   
+
                     return (isSucceed, result.ToString());
                 }
             }

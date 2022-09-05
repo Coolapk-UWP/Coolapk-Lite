@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;

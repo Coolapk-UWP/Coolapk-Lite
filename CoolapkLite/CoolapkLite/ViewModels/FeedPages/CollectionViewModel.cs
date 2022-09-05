@@ -103,7 +103,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                     if (entity.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
                                     {
                                         CoolapkListProvider Provider = new CoolapkListProvider(
-                                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.DataList, url.ToString().Replace("#","%23").Replace("/","%2F").Replace("?","%3F").Replace("=","%3D").Replace("&","%26"), $"&page={p}" + (string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}") + (string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}")),
+                                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.DataList, url.ToString().Replace("#", "%23").Replace("/", "%2F").Replace("?", "%3F").Replace("=", "%3D").Replace("&", "%26"), $"&page={p}" + (string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}") + (string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}")),
                                             GetEntities,
                                             "id");
                                         CollectionItemSourse CollectionItemSourse = new CollectionItemSourse(ID, Provider);

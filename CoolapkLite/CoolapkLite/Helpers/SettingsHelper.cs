@@ -114,7 +114,7 @@ namespace CoolapkLite.Helpers
                 uid.Value = Uid;
                 username.Value = UserName;
                 token.Value = Token;
-                var Expires = DateTime.UtcNow.AddDays(365);
+                DateTime Expires = DateTime.UtcNow.AddDays(365);
                 uid.Expires = username.Expires = token.Expires = Expires;
                 cookieManager.SetCookie(uid);
                 cookieManager.SetCookie(username);

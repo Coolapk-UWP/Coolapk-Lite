@@ -1,8 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Security.Cryptography;
@@ -27,7 +25,7 @@ namespace CoolapkLite.Models.Upload
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
-                var img = await BitmapDecoder.CreateAsync(stream);
+                BitmapDecoder img = await BitmapDecoder.CreateAsync(stream);
 
                 return new UploadFileFragment
                 {
@@ -42,8 +40,8 @@ namespace CoolapkLite.Models.Upload
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
-                var Provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
-                var computedHash = Provider.HashData(stream.GetBuffer());
+                HashAlgorithmProvider Provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
+                IBuffer computedHash = Provider.HashData(stream.GetBuffer());
                 string result = CryptographicBuffer.EncodeToHexString(computedHash);
                 return result;
             }

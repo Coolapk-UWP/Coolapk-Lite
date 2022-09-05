@@ -318,7 +318,7 @@ namespace CoolapkLite.Controls
 
         private void OnCommandBarChanged(string panelName, CommandBar commandbar)
         {
-            var panel = GetTemplateChild(panelName) as Panel;
+            Panel panel = GetTemplateChild(panelName) as Panel;
             if (panel == null)
             {
                 return;
@@ -396,7 +396,7 @@ namespace CoolapkLite.Controls
         {
             if (GetTemplateChild(PartDetailsPanel) is DependencyObject details)
             {
-                var focusableElement = FocusManager.FindFirstFocusableElement(details);
+                DependencyObject focusableElement = FocusManager.FindFirstFocusableElement(details);
                 (focusableElement as Control)?.Focus(FocusState.Programmatic);
             }
         }
