@@ -248,7 +248,7 @@
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\DispatcherHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
-    <Compile Include="Helpers\HtmlToText.cs" />
+    <Compile Include="Common\HtmlToText.cs" />
     <Compile Include="Helpers\Controls\ListViewHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\Providers\ScrollProgressProvider.cs" />
@@ -256,6 +256,7 @@
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Common\TokenCreater.cs" />
+    <Compile Include="Helpers\UpdateHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Helpers\ValueConverters\EmptyObjectToVisibilityConverter.cs" />
@@ -268,6 +269,8 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
+    <Compile Include="Models\Update\SystemVersionInfo.cs" />
+    <Compile Include="Models\Update\UpdateInfo.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
@@ -1232,7 +1235,9 @@
     <PRIResource Include="Strings\zh-CN\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
+    <PRIResource Include="Strings\zh-CN\SettingsPage.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\MarkDown.resw" />

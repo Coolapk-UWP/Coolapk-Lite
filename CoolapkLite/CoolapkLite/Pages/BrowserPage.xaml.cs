@@ -3,9 +3,11 @@ using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using System;
 using Windows.ApplicationModel.Resources;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
+using Windows.Web.Http;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -70,7 +72,7 @@ namespace CoolapkLite.Pages
 
         private void LoadUri(Uri uri)
         {
-            using (Windows.Web.Http.HttpRequestMessage httpRequestMessage = new Windows.Web.Http.HttpRequestMessage(Windows.Web.Http.HttpMethod.Get, uri))
+            using (HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Get, uri))
             {
                 httpRequestMessage.Headers.UserAgent.ParseAdd(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
                 WebView.NavigateWithHttpRequestMessage(httpRequestMessage);
@@ -106,12 +108,10 @@ namespace CoolapkLite.Pages
             UIHelper.HideProgressBar();
         }
 
-        private void BackButton_Click(object sender, RoutedEventArgs e) => Frame.GoBack();
-
-        private void CheckLogin()
+        private async void CheckLogin()
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
-            if (SettingsHelper.CheckLoginInfo())
+            if (await SettingsHelper.CheckLoginInfo())
             {
                 if (Frame.CanGoBack) { Frame.GoBack(); }
                 UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
@@ -123,17 +123,11 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e)
-        {
-            _ = await Windows.System.Launcher.LaunchUriAsync(new Uri(uri));
-        }
+        private void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(new Uri(uri));
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => WebView.Refresh();
 
-        private void TryLoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            CheckLogin();
-        }
+        private void TryLoginButton_Click(object sender, RoutedEventArgs e) => CheckLogin();
 
         private async void ManualLoginButton_Click(object sender, RoutedEventArgs e)
         {

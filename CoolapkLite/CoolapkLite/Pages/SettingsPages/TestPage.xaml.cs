@@ -6,7 +6,9 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Security.Credentials;
 using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -102,7 +104,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
                     break;
                 case "ShowError":
-                    throw new CoolapkMessageException(NotifyMessage.Text);
+                    throw new Exception(NotifyMessage.Text);
                 case "GetContent":
                     Uri uri = WebUrl.Text.ValidateAndGetUri();
                     (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, false);
@@ -137,7 +139,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, WebUrl.Text });
                     break;
                 case "ShowAsyncError":
-                    await Task.Run(() => throw new CoolapkMessageException(NotifyMessage.Text));
+                    await Task.Run(() => throw new Exception(NotifyMessage.Text));
                     break;
                 case "ShowProgressBar":
                     UIHelper.ShowProgressBar();

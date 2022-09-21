@@ -8,8 +8,20 @@
     Background="{StaticResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <StackPanel>
-        <TextBox Header="UID" Text="{x:Bind UID, Mode=TwoWay}" />
-        <TextBox Header="Username" Text="{x:Bind UserName, Mode=TwoWay}" />
-        <TextBox Header="Token" Text="{x:Bind Token, Mode=TwoWay}" />
+        <TextBox
+            Header="UID"
+            PlaceholderText="UID"
+            Text="{x:Bind UID, Mode=TwoWay}"
+            TextChanged="TextBox_TextChanged" />
+        <TextBox
+            Header="Username"
+            PlaceholderText="Username"
+            Text="{x:Bind UserName, Mode=TwoWay}"
+            TextChanged="TextBox_TextChanged" />
+        <PasswordBox
+            Header="Token"
+            Password="{x:Bind Token, Mode=TwoWay}"
+            PasswordChanged="PasswordBox_PasswordChanged"
+            PlaceholderText="Token" />
     </StackPanel>
 </ContentDialog>

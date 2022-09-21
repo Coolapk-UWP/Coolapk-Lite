@@ -344,5 +344,11 @@ namespace CoolapkLite.Helpers
                 }
             }
         }
+
+        public static async Task<bool> CheckLogin()
+        {
+            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true, true);
+            return isSucceed;
+        }
     }
 }

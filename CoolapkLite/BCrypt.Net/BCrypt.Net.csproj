@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <TargetFrameworks>netcore50</TargetFrameworks>
+    <TargetFramework>netcore50</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>

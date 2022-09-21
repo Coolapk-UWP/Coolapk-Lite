@@ -363,7 +363,7 @@ namespace CoolapkLite
 
         private async void SetUserAvatar()
         {
-            if (SettingsHelper.CheckLoginInfo())
+            if (await SettingsHelper.CheckLoginInfo())
             {
                 string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 if (!string.IsNullOrEmpty(UID))

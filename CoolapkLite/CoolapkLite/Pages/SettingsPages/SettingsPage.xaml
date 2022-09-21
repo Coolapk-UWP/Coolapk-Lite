@@ -74,6 +74,44 @@
                             IsActive="{x:Bind IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}" />
                     </Grid>
                 </control:HeaderedContentControl>
+                <control:HeaderedContentControl
+                    x:Uid="/SettingsPage/AccountSettingsHeader"
+                    Style="{StaticResource HeaderStyle}"
+                    Visibility="{x:Bind IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+                    <StackPanel>
+                        <HyperlinkButton
+                            x:Uid="/SettingsPage/AccountSetting"
+                            Margin="0,2"
+                            Click="Button_Click"
+                            Tag="AccountSetting" />
+
+                        <HyperlinkButton
+                            x:Uid="/SettingsPage/MyDevice"
+                            Margin="0,2"
+                            Click="Button_Click"
+                            Tag="MyDevice" />
+
+                        <Button
+                            Name="AccountLogout"
+                            x:Uid="/SettingsPage/AccountLogout"
+                            Margin="0,2">
+                            <Button.Flyout>
+                                <Flyout>
+                                    <StackPanel>
+                                        <TextBlock
+                                            x:Uid="/SettingsPage/AccountLogoutTitle"
+                                            Margin="0,0,0,12"
+                                            Style="{ThemeResource BaseTextBlockStyle}" />
+                                        <Button
+                                            x:Uid="/SettingsPage/AccountLogoutConfirm"
+                                            Click="Button_Click"
+                                            Tag="AccountLogout" />
+                                    </StackPanel>
+                                </Flyout>
+                            </Button.Flyout>
+                        </Button>
+                    </StackPanel>
+                </control:HeaderedContentControl>
                 <control:HeaderedContentControl x:Uid="/SettingsPage/UpdateSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>

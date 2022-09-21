@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace CoolapkLite.Helpers
+namespace CoolapkLite.Common
 {
     /// <summary>
     /// Converts HTML to plain text.

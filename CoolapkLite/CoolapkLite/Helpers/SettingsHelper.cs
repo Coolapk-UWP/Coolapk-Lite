@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
@@ -101,9 +102,9 @@ namespace CoolapkLite.Helpers
             SetDefaultSettings();
         }
 
-        public static bool LoginIn() => LoginIn(Get<string>(Uid), Get<string>(UserName), Get<string>(Token));
+        public static Task<bool> LoginIn() => LoginIn(Get<string>(Uid), Get<string>(UserName), Get<string>(Token));
 
-        public static bool LoginIn(string Uid, string UserName, string Token)
+        public static async Task<bool> LoginIn(string Uid, string UserName, string Token)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
@@ -119,11 +120,57 @@ namespace CoolapkLite.Helpers
                 cookieManager.SetCookie(uid);
                 cookieManager.SetCookie(username);
                 cookieManager.SetCookie(token);
-                return CheckLoginInfo();
+                return await CheckLoginInfo();
             }
         }
 
-        public static bool CheckLoginInfo()
+        public static async Task<bool> CheckLoginInfo()
+        {
+            try
+            {
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                {
+                    HttpCookieManager cookieManager = filter.CookieManager;
+                    string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                    foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
+                    {
+                        switch (item.Name)
+                        {
+                            case "uid":
+                                uid = item.Value;
+                                break;
+
+                            case "username":
+                                userName = item.Value;
+                                break;
+
+                            case "token":
+                                token = item.Value;
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
+                    {
+                        Logout();
+                        return false;
+                    }
+                    else
+                    {
+                        Set(Uid, uid);
+                        Set(Token, token);
+                        Set(UserName, userName);
+                        return true;
+                    }
+                }
+            }
+            catch { throw; }
+        }
+
+        public static bool CheckLoginInfoFast()
         {
             try
             {

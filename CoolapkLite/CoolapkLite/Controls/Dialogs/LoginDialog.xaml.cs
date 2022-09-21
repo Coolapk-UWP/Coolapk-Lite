@@ -1,6 +1,9 @@
 ﻿using CoolapkLite.Helpers;
+using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -16,26 +19,59 @@ namespace CoolapkLite.Controls.Dialogs
         public LoginDialog()
         {
             InitializeComponent();
-            PrimaryButtonClick += OnPrimaryButtonClick;
+            Closing += OnClosing;
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
             {
                 DefaultButton = ContentDialogButton.Primary;
             }
+            CheckText();
         }
 
-        private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private async void OnClosing(ContentDialog sender, ContentDialogClosingEventArgs args)
         {
-            UIHelper.ShowProgressBar();
-            ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
-            if (SettingsHelper.LoginIn(UID, UserName, Token))
+            if (args.Result == ContentDialogResult.Primary)
             {
-                UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
+                args.Cancel = true;
+                UIHelper.ShowProgressBar();
+                ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
+                if (string.IsNullOrWhiteSpace(UID) && !string.IsNullOrWhiteSpace(UserName))
+                {
+                    await GetText(UserName);
+                }
+                else if (string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(UID))
+                {
+                    await GetText(UID);
+                }
+                if (await SettingsHelper.LoginIn(UID, UserName, Token))
+                {
+                    UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
+                    args.Cancel = false;
+                }
+                else
+                {
+                    UIHelper.ShowMessage(loader.GetString("LoginFailed"));
+                }
+                UIHelper.HideProgressBar();
             }
-            else
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) => CheckText();
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e) => CheckText();
+
+        private void CheckText() => IsPrimaryButtonEnabled = !string.IsNullOrEmpty(Token) && (!string.IsNullOrEmpty(UID) || !string.IsNullOrEmpty(UserName));
+
+        private async Task GetText(string name)
+        {
+            (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(name);
+            if (!string.IsNullOrWhiteSpace(results.UID))
             {
-                UIHelper.ShowMessage("LoginFailed");
+                UID = results.UID;
             }
-            UIHelper.HideProgressBar();
+            if (!string.IsNullOrWhiteSpace(results.UserName))
+            {
+                UserName = results.UserName;
+            }
         }
     }
 }

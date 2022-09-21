@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using System;
 using System.ComponentModel;
+using System.Net.Http;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -31,6 +32,12 @@ namespace CoolapkLite.Pages.SettingsPages
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
+
+        internal bool IsLogin
+        {
+            get => SettingsHelper.CheckLoginInfoFast();
+            set => RaisePropertyChangedEvent();
+        }
 
         internal bool IsNoPicsMode
         {
@@ -148,11 +155,14 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Frame.Navigate(typeof(SettingsPage));
                     Frame.GoBack();
                     break;
+                case "MyDevice":
+                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, "https://m.coolapk.com/mp/do?c=userDevice&m=myDevice" });
+                    break;
                 case "TestPage":
                     _ = Frame.Navigate(typeof(TestPage));
                     break;
                 case "FeedBack":
-                    UIHelper.OpenLinkAsync(IssuePath);
+                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, IssuePath });
                     break;
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
@@ -164,8 +174,30 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "CheckUpdate":
                     IsCheckUpdateButtonEnabled = false;
-                    //await CheckUpdate.CheckUpdateAsync(true, false);
+                    try
+                    {
+                        _ = await UpdateHelper.CheckUpdateAsync("CoolapkUWP", "CoolapkUWP");
+                    }
+                    catch (HttpRequestException ex)
+                    {
+                        UIHelper.ShowHttpExceptionMessage(ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        UIHelper.ShowMessage(ex.Message);
+                    }
                     IsCheckUpdateButtonEnabled = true;
+                    break;
+                case "AccountSetting":
+                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, "https://account.coolapk.com/account/settings" });
+                    break;
+                case "AccountLogout":
+                    SettingsHelper.Logout();
+                    IsLogin = false;
+                    if (AccountLogout.Flyout is Flyout flyout_logout)
+                    {
+                        flyout_logout.Hide();
+                    }
                     break;
                 default:
                     break;
