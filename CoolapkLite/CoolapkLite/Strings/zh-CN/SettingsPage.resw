@@ -192,4 +192,10 @@
   <data name="MyDevice.Content" xml:space="preserve">
     <value>我的机型</value>
   </data>
+  <data name="FindUpdate" xml:space="preserve">
+    <value>找到新的更新</value>
+  </data>
+  <data name="UpToDate" xml:space="preserve">
+    <value>已是最新</value>
+  </data>
 </root>

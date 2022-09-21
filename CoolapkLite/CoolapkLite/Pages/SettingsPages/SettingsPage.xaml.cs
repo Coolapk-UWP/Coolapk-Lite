@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models.Update;
 using System;
 using System.ComponentModel;
 using System.Net.Http;
@@ -176,7 +177,16 @@ namespace CoolapkLite.Pages.SettingsPages
                     IsCheckUpdateButtonEnabled = false;
                     try
                     {
-                        _ = await UpdateHelper.CheckUpdateAsync("CoolapkUWP", "CoolapkUWP");
+                        ResourceLoader _loader = ResourceLoader.GetForCurrentView("SettingsPage");
+                        UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
+                        if (results != null && results.IsExistNewVersion)
+                        {
+                            UIHelper.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
+                        }
+                        else
+                        {
+                            UIHelper.ShowMessage(_loader.GetString("UpToDate"));
+                        }
                     }
                     catch (HttpRequestException ex)
                     {
