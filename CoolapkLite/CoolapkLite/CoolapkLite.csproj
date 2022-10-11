@@ -1200,7 +1200,7 @@
       <Version>2.0.6</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.45</Version>
+      <Version>1.11.46</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
