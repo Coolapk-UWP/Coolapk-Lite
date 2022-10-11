@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
@@ -49,7 +50,7 @@ namespace CoolapkLite
         {
             AddBrushResource();
             RequestWifiAccess();
-            RegisterBackgroundTask();
+            //RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
             EnsureWindow(e);
         }
@@ -88,10 +89,14 @@ namespace CoolapkLite
                 {
                     if (rootFrame.Content == null)
                     {
+                        if (SettingsHelper.WindowsVersion >= 10586)
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
                         // 当导航堆栈尚未还原时，导航到第一页，
                         // 并通过将所需信息作为导航参数传入来配置
                         // 参数
-                        rootFrame.Navigate(typeof(MainPage), args.Arguments);
+                        _ = rootFrame.Navigate(typeof(MainPage), args.Arguments);
                     }
                     ThemeHelper.Initialize();
                     // 确保当前窗口处于活动状态

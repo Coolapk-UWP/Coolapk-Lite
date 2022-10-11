@@ -44,6 +44,9 @@
                 </Flyout>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem Text="复制">
+                        <helpers:MenuFlyoutHelper.Icon>
+                            <FontIcon Glyph="&#xE8C8;" />
+                        </helpers:MenuFlyoutHelper.Icon>
                         <ToggleMenuFlyoutItem
                             x:Name="CopyButton"
                             x:Uid="/Feed/Copy"
@@ -65,7 +68,11 @@
                         x:Name="ReportButton"
                         x:Uid="/Feed/Report"
                         Click="FeedButton_Click"
-                        Tag="{Binding ID}" />
+                        Tag="{Binding ID}" >
+                        <helpers:MenuFlyoutHelper.Icon>
+                            <FontIcon Glyph="&#xE8F8;" />
+                        </helpers:MenuFlyoutHelper.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </UserControl.Resources>
             <Grid Padding="8,4" helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}">

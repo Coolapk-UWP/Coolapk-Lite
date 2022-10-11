@@ -46,6 +46,7 @@
             <uap:DisplayName>酷安网页跳转</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
+		<!--
         <Extension Category="windows.backgroundTasks" EntryPoint="CoolapkLite.BackgroundTasks.LiveTileTask">
           <BackgroundTasks>
             <Task Type="timer"/>
@@ -55,7 +56,8 @@
           <BackgroundTasks>
             <Task Type="timer"/>
           </BackgroundTasks>
-        </Extension>
+        </Extension> 
+		-->
       </Extensions>
     </Application>
   </Applications>

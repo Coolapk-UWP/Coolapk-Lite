@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -11,6 +12,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels
 {
@@ -98,14 +100,11 @@ namespace CoolapkLite.ViewModels
 
         public ShowImageViewModel(ImageModel image)
         {
-            Images = image.ContextArray;
+            Images = image.ContextArray.Select(x => new ImageModel(x.Uri, ImageType.SmallImage)).ToList();
             Index = image.ContextArray.IndexOf(image);
         }
 
-        public Task Refresh(bool reset = false)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
 
         private string GetTitle(string url)
         {

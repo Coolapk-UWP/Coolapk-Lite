@@ -3,7 +3,7 @@
     internal static class EmojiHelper
     {
         #region 旧表情
-        public static string[] oldEmojis = new string[]
+        public static string[] OldEmojis = new string[]
         {
             "[doge]",
             "[doge原谅ta]",
@@ -75,7 +75,7 @@
         #endregion
 
         #region 全部
-        public static string[] emojis = new string[]
+        public static string[] Emojis = new string[]
         {
             "[哈哈哈]",
             "[惊讶]",
@@ -531,7 +531,7 @@
         #endregion
 
         #region 常规
-        public static string[] normal = new string[]
+        public static string[] Normal = new string[]
         {
             "[哈哈哈]",
             "[惊讶]",
@@ -643,7 +643,7 @@
         #endregion
 
         #region 酷币
-        public static string[] coolcoins = new string[]
+        public static string[] CoolCoins = new string[]
         {
             "[酷币]",
             "[酷币空]",
@@ -694,7 +694,7 @@
         #endregion
 
         #region 贴吧
-        public static string[] funny = new string[]
+        public static string[] Funny = new string[]
         {
             "(稽滑",
             "(流汗滑稽",
@@ -793,7 +793,7 @@
         #endregion
 
         #region 微博
-        public static string[] doge = new string[]
+        public static string[] Doge = new string[]
         {
             "[doge]",
             "[喵喵]",
@@ -842,7 +842,7 @@
         #endregion
 
         #region 微信
-        public static string[] tradition = new string[]
+        public static string[] Tradition = new string[]
         {
             "[笑哭再见]",
             "[捂脸]",
@@ -945,7 +945,7 @@
         #endregion
 
         #region QQ
-        public static string[] classic = new string[]
+        public static string[] Classic = new string[]
         {
             "[呵呵]",
             "[撇嘴]",

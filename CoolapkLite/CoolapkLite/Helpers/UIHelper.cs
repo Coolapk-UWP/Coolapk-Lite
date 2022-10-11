@@ -6,10 +6,12 @@ using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Reflection;
+using System.Resources;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -52,7 +54,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        private static readonly ObservableCollection<string> MessageList = new ObservableCollection<string>();
+        private static readonly List<string> MessageList = new List<string>();
 
         public static void CheckTheme(bool IsDark, bool IsInvoke = false)
         {
@@ -90,7 +92,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                AppTitle?.ShowProgressBar();
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.ShowProgressBar());
             }
         }
 
@@ -104,7 +106,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                AppTitle?.ShowProgressBar(value);
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.ShowProgressBar(value));
             }
         }
 
@@ -115,7 +117,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.PausedProgressBar();
+            await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.PausedProgressBar());
         }
 
         public static async void ErrorProgressBar()
@@ -125,7 +127,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.ErrorProgressBar();
+            await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.ErrorProgressBar());
         }
 
         public static async void HideProgressBar()
@@ -135,7 +137,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.HideProgressBar();
+            await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.HideProgressBar());
         }
 
         public static async void ShowMessage(string message)
@@ -160,19 +162,25 @@ namespace CoolapkLite.Helpers
                         if (MessageList.Count == 0 && !IsShowingProgressBar) { await statusBar.ProgressIndicator.HideAsync(); }
                         statusBar.ProgressIndicator.Text = string.Empty;
                     }
-                    else if (AppTitle != null)
+                    else
                     {
-                        if (!string.IsNullOrEmpty(MessageList[0]))
+                        await AppTitle?.Dispatcher.AwaitableRunAsync(async () =>
                         {
-                            string messages = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
-                            AppTitle.ShowMessage(messages);
-                            await Task.Delay(3000);
-                        }
-                        MessageList.RemoveAt(0);
-                        if (MessageList.Count == 0)
-                        {
-                            AppTitle.ShowMessage();
-                        }
+                            if (AppTitle != null)
+                            {
+                                if (!string.IsNullOrEmpty(MessageList[0]))
+                                {
+                                    string messages = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
+                                    AppTitle.ShowMessage(messages);
+                                    await Task.Delay(3000);
+                                }
+                                MessageList.RemoveAt(0);
+                                if (MessageList.Count == 0)
+                                {
+                                    AppTitle.ShowMessage();
+                                }
+                            }
+                        });
                     }
                 }
                 IsShowingMessage = false;
@@ -272,26 +280,41 @@ namespace CoolapkLite.Helpers
             switch (Type)
             {
                 case NavigationThemeTransition.DrillIn:
-                    _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo()));
+                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Entrance:
-                    _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo()));
+                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Suppress:
-                    _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo()));
+                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Default:
-                    _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
+                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
                     break;
                 default:
-                    _ = (MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
+                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
                     break;
             }
         }
 
-        public static void ShowImage(ImageModel image)
+        public static async void ShowImage(ImageModel image)
         {
-            MainPage?.Frame.Navigate(typeof(ShowImagePage), new ShowImageViewModel(image));
+            CoreApplicationView View = CoreApplication.CreateNewView();
+            int ViewId = 0;
+            await View.ExecuteOnUIThreadAsync(() =>
+            {
+                Frame frame = new Frame();
+                frame.Navigate(typeof(ShowImagePage), image);
+                Window.Current.Content = frame;
+                Window.Current.Activate();
+                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                if (SettingsHelper.WindowsVersion >= 10586)
+                {
+                    TitleBar.ExtendViewIntoTitleBar = true;
+                }
+                ViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            _ = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(ViewId);
         }
 
         private static readonly ImmutableArray<string> routes = new string[]

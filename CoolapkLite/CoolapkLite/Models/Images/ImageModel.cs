@@ -1,9 +1,17 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls.DataTemplates;
+using CoolapkLite.Helpers;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -138,13 +146,13 @@ namespace CoolapkLite.Models.Images
         {
             Uri = uri;
             Type = type;
-            ThemeHelper.UISettingChanged.Add(async mode =>
+            ThemeHelper.UISettingChanged.Add(mode =>
             {
                 switch (mode)
                 {
                     case UISettingChangedType.LightMode:
                     case UISettingChangedType.DarkMode:
-                        _ = UIHelper.ShellDispatcher?.AwaitableRunAsync(() =>
+                        _ = DispatcherHelper.ExecuteOnUIThreadAsync(() =>
                             {
                                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                                 {
@@ -157,10 +165,13 @@ namespace CoolapkLite.Models.Images
                         break;
 
                     case UISettingChangedType.NoPicChanged:
-                        if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                        _ = DispatcherHelper.ExecuteOnUIThreadAsync(async () =>
                         {
-                            await GetImage();
-                        }
+                            if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                            {
+                                await GetImage();
+                            }
+                        });
                         break;
                 }
             });
@@ -181,14 +192,35 @@ namespace CoolapkLite.Models.Images
             LoadStarted?.Invoke(this, null);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = ImageCacheHelper.NoPic; }
             BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri);
-            Pic = bitmapImage;
-            IsLongPic =
-                ((bitmapImage.PixelHeight * Window.Current.Bounds.Width) > bitmapImage.PixelWidth * Window.Current.Bounds.Height * 1.5)
-                && bitmapImage.PixelHeight > bitmapImage.PixelWidth * 1.5;
-            IsWidePic =
-                ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
-                && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
+            if (bitmapImage.Dispatcher.HasThreadAccess)
+            {
+                Pic = bitmapImage;
+                IsLongPic =
+                    ((bitmapImage.PixelHeight * Window.Current.Bounds.Width) > bitmapImage.PixelWidth * Window.Current.Bounds.Height * 1.5)
+                    && bitmapImage.PixelHeight > bitmapImage.PixelWidth * 1.5;
+                IsWidePic =
+                    ((bitmapImage.PixelWidth * Window.Current.Bounds.Height) > bitmapImage.PixelHeight * Window.Current.Bounds.Width * 1.5)
+                    && bitmapImage.PixelWidth > bitmapImage.PixelHeight * 1.5;
+            }
+            else
+            {
+                StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+                using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                {
+                    BitmapImage image = new BitmapImage();
+                    await image.SetSourceAsync(stream);
+                    Pic = image;
+                    IsLongPic =
+                        ((image.PixelHeight * Window.Current.Bounds.Width) > image.PixelWidth * Window.Current.Bounds.Height * 1.5)
+                        && image.PixelHeight > image.PixelWidth * 1.5;
+                    IsWidePic =
+                        ((image.PixelWidth * Window.Current.Bounds.Height) > image.PixelHeight * Window.Current.Bounds.Width * 1.5)
+                        && image.PixelWidth > image.PixelHeight * 1.5;
+                }
+            }
             LoadCompleted?.Invoke(this, null);
         }
+
+        public async Task Refresh() => await DispatcherHelper.ExecuteOnUIThreadAsync(GetImage);
     }
 }

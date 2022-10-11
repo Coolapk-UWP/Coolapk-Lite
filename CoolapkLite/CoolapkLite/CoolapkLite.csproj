@@ -112,7 +112,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -244,6 +244,7 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
+    <Compile Include="Helpers\Controls\MenuFlyoutHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\DispatcherHelper.cs" />

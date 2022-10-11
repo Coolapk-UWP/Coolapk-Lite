@@ -103,7 +103,7 @@ namespace CoolapkLite.Controls
                                 case '#':
                                     {
                                         string s = item.Substring(1, item.Length - 2);
-                                        if (EmojiHelper.emojis.Contains(s))
+                                        if (EmojiHelper.Emojis.Contains(s))
                                         {
                                             InlineUIContainer container = new InlineUIContainer();
                                             Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
@@ -129,7 +129,7 @@ namespace CoolapkLite.Controls
                                     break;
                                 case '[':
                                     {
-                                        if (SettingsHelper.Get<bool>("IsUseOldEmojiMode") && EmojiHelper.oldEmojis.Contains(item))
+                                        if (SettingsHelper.Get<bool>("IsUseOldEmojiMode") && EmojiHelper.OldEmojis.Contains(item))
                                         {
                                             InlineUIContainer container = new InlineUIContainer();
                                             Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
@@ -150,7 +150,7 @@ namespace CoolapkLite.Controls
                                             container.Child = viewbox;
                                             paragraph.Inlines.Add(container);
                                         }
-                                        else if (EmojiHelper.emojis.Contains(item))
+                                        else if (EmojiHelper.Emojis.Contains(item))
                                         {
                                             InlineUIContainer container = new InlineUIContainer();
                                             Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
@@ -195,13 +195,13 @@ namespace CoolapkLite.Controls
                                 }
                                 if (content.IndexOf('@') != 0 && content.IndexOf('#') != 0 && !(type == "user-detail"))
                                 {
-                                    Run run2 = new Run { Text = "\uE167", FontFamily = new FontFamily("Segoe MDL2 Assets") };
+                                    Run run2 = new Run { Text = "\uE167", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] };
                                     hyperlink.Inlines.Add(run2);
                                 }
                                 else if (content == "查看图片" && (href.IndexOf("http://image.coolapk.com", StringComparison.Ordinal) == 0 || href.IndexOf("https://image.coolapk.com", StringComparison.Ordinal) == 0))
                                 {
                                     content = "查看图片";
-                                    Run run2 = new Run { Text = "\uE158", FontFamily = new FontFamily("Segoe MDL2 Assets") };
+                                    Run run2 = new Run { Text = "\uE158", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] };
                                     hyperlink.Inlines.Add(run2);
                                 }
                                 else
@@ -371,7 +371,6 @@ namespace CoolapkLite.Controls
                                 {
                                     Margin = new Thickness(4, 0, 4, -4),
                                     VerticalAlignment = VerticalAlignment.Center,
-                                    //BorderBrush = (SolidColorBrush)Application.Current.Resources["GrayText"],
                                     BorderThickness = new Thickness(1),
                                     CornerRadius = new CornerRadius(4),
                                 };
@@ -393,7 +392,6 @@ namespace CoolapkLite.Controls
                 }
             }
             RichTextBlock.Blocks.Add(paragraph);
-            Content = RichTextBlock;
         }
     }
 }

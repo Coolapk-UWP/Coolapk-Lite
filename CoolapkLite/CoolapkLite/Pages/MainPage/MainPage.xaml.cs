@@ -42,10 +42,6 @@ namespace CoolapkLite
             UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            if (SettingsHelper.WindowsVersion >= 10586)
-            {
-                TitleBar.ExtendViewIntoTitleBar = true;
-            }
             NotificationsTask.Instance?.GetNums();
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);

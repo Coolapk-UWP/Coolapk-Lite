@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Pages
 {
@@ -10,6 +11,7 @@ namespace CoolapkLite.Pages
         void PausedProgressBar();
         void ShowProgressBar(double value);
         void ShowMessage(string message = null);
+        CoreDispatcher Dispatcher { get; }
         Frame MainFrame { get; }
     }
 }
