@@ -117,6 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountLogout.Content" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="AccountLogoutConfirm.Content" xml:space="preserve">
+    <value>确定退出</value>
+  </data>
+  <data name="AccountLogoutTitle.Text" xml:space="preserve">
+    <value>你确定要退出登录吗？</value>
+  </data>
+  <data name="AccountSetting.Content" xml:space="preserve">
+    <value>账户设置</value>
+  </data>
+  <data name="AccountSettingsHeader.Header" xml:space="preserve">
+    <value>账户</value>
+  </data>
   <data name="AboutSettingsHeader.Header" xml:space="preserve">
     <value>关于</value>
   </data>
@@ -173,5 +188,14 @@
   </data>
   <data name="UpdateSettingsHeader.Header" xml:space="preserve">
     <value>更新</value>
+  </data>
+  <data name="MyDevice.Content" xml:space="preserve">
+    <value>我的机型</value>
+  </data>
+  <data name="FindUpdate" xml:space="preserve">
+    <value>找到新的更新</value>
+  </data>
+  <data name="UpToDate" xml:space="preserve">
+    <value>已是最新</value>
   </data>
 </root>
