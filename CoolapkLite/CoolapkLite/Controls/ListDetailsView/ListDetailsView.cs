@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI.Extensions;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -267,7 +269,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void SetVisualState(bool animate)
+        private async void SetVisualState(bool animate)
         {
             string noSelectionState;
             string hasSelectionState;
@@ -283,6 +285,7 @@ namespace CoolapkLite.Controls
             }
 
             VisualStateManager.GoToState(this, SelectedItem == null ? noSelectionState : hasSelectionState, animate);
+            if (SettingsHelper.WindowsVersion >= 21996) { await Task.Delay(1000); }
             VisualStateManager.GoToState(this, Items.Count > 0 ? HasItemsState : HasNoItemsState, animate);
         }
 

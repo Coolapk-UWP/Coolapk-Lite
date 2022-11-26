@@ -68,7 +68,7 @@
                         x:Name="ReportButton"
                         x:Uid="/Feed/Report"
                         Click="FeedButton_Click"
-                        Tag="{Binding ID}" >
+                        Tag="{Binding ID}">
                         <helpers:MenuFlyoutHelper.Icon>
                             <FontIcon Glyph="&#xE8F8;" />
                         </helpers:MenuFlyoutHelper.Icon>

@@ -17,7 +17,6 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class FavoritePage : Page
     {
         private FavoriteViewModel Provider;
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
 
         public FavoritePage()
         {
@@ -30,7 +29,6 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is FavoriteViewModel ViewModel)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);
@@ -39,6 +37,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Favorite");
             }
+            DataContext = Provider;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

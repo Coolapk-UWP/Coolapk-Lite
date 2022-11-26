@@ -184,6 +184,36 @@
                             Glyph="" />
                     </Grid>
                 </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColor}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorDark1}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorDark2}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorDark3}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorLight1}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorLight2}" />
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        Fill="{StaticResource SystemAccentColorLight3}" />
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
         <control:TitleBar x:Name="TitleBar" />

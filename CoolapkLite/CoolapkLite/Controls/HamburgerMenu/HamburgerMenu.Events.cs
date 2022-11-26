@@ -31,18 +31,7 @@ namespace CoolapkLite.Controls
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (Window.Current.Bounds.Width >= ExpandedModeThresholdWidth)
-            {
-                VisualStateManager.GoToState(this, "ExpandedSize", true);
-            }
-            else if (Window.Current.Bounds.Width >= CompactModeThresholdWidth)
-            {
-                VisualStateManager.GoToState(this, "CompactSize", true);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "OverlaySize", true);
-            }
+            UpdateSize();
         }
 
         private void HamburgerButton_Click(object sender, RoutedEventArgs e)

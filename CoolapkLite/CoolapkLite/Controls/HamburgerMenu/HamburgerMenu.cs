@@ -100,35 +100,27 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped += PaneAutoSuggestButton_Tapped;
             }
 
-            if (_windowsSizeGroup != null)
-            {
-                _windowsSizeGroup.CurrentStateChanged += WindowsSizeGroup_CurrentStateChanged;
-            }
-
             UpdateTitleBarPadding();
 
             base.OnApplyTemplate();
         }
 
-        private void WindowsSizeGroup_CurrentStateChanged(object sender, VisualStateChangedEventArgs e)
+        private void UpdateSize()
         {
-            if (e.NewState != e.OldState)
+            if (Window.Current.Bounds.Width >= ExpandedModeThresholdWidth)
             {
-                switch (e.NewState.Name)
-                {
-                    case "OverlaySize":
-                        IsPaneOpen = false;
-                        DisplayMode = SplitViewDisplayMode.Overlay;
-                        break;
-                    case "CompactSize":
-                        IsPaneOpen = false;
-                        DisplayMode = SplitViewDisplayMode.CompactOverlay;
-                        break;
-                    case "ExpandedSize":
-                        IsPaneOpen = true;
-                        DisplayMode = SplitViewDisplayMode.CompactInline;
-                        break;
-                }
+                IsPaneOpen = true;
+                DisplayMode = SplitViewDisplayMode.CompactInline;
+            }
+            else if (Window.Current.Bounds.Width >= CompactModeThresholdWidth)
+            {
+                IsPaneOpen = false;
+                DisplayMode = SplitViewDisplayMode.CompactOverlay;
+            }
+            else
+            {
+                IsPaneOpen = false;
+                DisplayMode = SplitViewDisplayMode.Overlay;
             }
         }
 
