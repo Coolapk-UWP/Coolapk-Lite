@@ -338,11 +338,12 @@ namespace CoolapkLite.Helpers
 
                     content.Add(picFile);
 
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.UploadImage, "feed"), content);
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content);
 
-                    return (isSucceed, result.ToString());
+                    if (isSucceed) { return (isSucceed, result.ToString()); }
                 }
             }
+            return (false, null);
         }
 
         public static async Task<bool> CheckLogin()

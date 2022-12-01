@@ -86,6 +86,12 @@ namespace CoolapkLite.Helpers
             return new Uri(IsUseAPI2 ? Base2Uri : BaseUri, u);
         }
 
+        public static Uri GetOldUri(UriType type, params object[] args)
+        {
+            string u = string.Format(GetTemplate(type), args);
+            return new Uri(BaseUri, u);
+        }
+
         public static Uri GetLinkUri(UriType type, LinkType linkType = LinkType.Coolapk, params object[] args)
         {
             string u = string.Format(GetTemplate(type), args);
