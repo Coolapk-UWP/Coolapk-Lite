@@ -127,7 +127,7 @@
     <value>GIF</value>
   </data>
   <data name="LongPic.Text" xml:space="preserve">
-    <value>Long picture</value>
+    <value>Long Pic</value>
   </data>
   <data name="QR.Text" xml:space="preserve">
     <value>QR Code</value>
@@ -154,6 +154,6 @@
     <value>Pin</value>
   </data>
   <data name="WidePic.Text" xml:space="preserve">
-    <value>Wide picture</value>
+    <value>Wide Pic</value>
   </data>
 </root>
