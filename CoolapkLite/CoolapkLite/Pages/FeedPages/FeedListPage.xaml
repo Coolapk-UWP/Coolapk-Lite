@@ -40,6 +40,28 @@
                         TextWrapping="WrapWholeWords" />
                 </Grid>
             </DataTemplate>
+            <DataTemplate x:Key="TopicDetailCard">
+                <Grid Margin="12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Ellipse
+                        Grid.Row="0"
+                        Width="56"
+                        Height="56"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock
+                        Grid.Row="1"
+                        Text="{Binding Description}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+            </DataTemplate>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
@@ -51,7 +73,8 @@
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
                 Others="{StaticResource Null}"
-                UserDetail="{StaticResource UserDetailCard}" />
+                UserDetail="{StaticResource UserDetailCard}" 
+                TopicDetail="{StaticResource TopicDetailCard}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>

@@ -91,6 +91,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             switch (type)
             {
                 case FeedListType.UserPageList: return new UserViewModel(id);
+                case FeedListType.TagPageList: return new TagViewModel(id);
                 default: return null;
             }
         }
@@ -192,6 +193,85 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (token != null)
                 {
                     detail = new UserDetail(token);
+                }
+
+                return detail;
+            }
+        }
+
+        internal class TagViewModel : FeedListViewModel
+        {
+            public FeedListItemSourse LastupdateItemSourse { get; private set; }
+            public FeedListItemSourse DatelineItemSourse { get; private set; }
+            public FeedListItemSourse PopularItemSourse { get; private set; }
+
+            internal TagViewModel(string uid) : base(uid, FeedListType.TagPageList) { }
+
+            public override async Task Refresh(bool reset = false)
+            {
+                if (Detail == null || reset)
+                {
+                    Detail = await GetDetail();
+                }
+                if (ItemSource == null)
+                {
+                    List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                    if (LastupdateItemSourse == null || LastupdateItemSourse.ID != ID)
+                    {
+                        CoolapkListProvider Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "lastupdate_desc"),
+                            GetEntities,
+                            idName);
+                        LastupdateItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "最近回复",
+                            ItemSource = LastupdateItemSourse
+                        });
+                    }
+                    if (DatelineItemSourse == null || DatelineItemSourse.ID != ID)
+                    {
+                        CoolapkListProvider Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "dateline_desc"),
+                            GetEntities,
+                            idName);
+                        DatelineItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "最近发布",
+                            ItemSource = DatelineItemSourse
+                        });
+                    }
+                    if (PopularItemSourse == null || PopularItemSourse.ID != ID)
+                    {
+                        CoolapkListProvider Provider = new CoolapkListProvider(
+                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "popular"),
+                            GetEntities,
+                            idName);
+                        PopularItemSourse = new FeedListItemSourse(ID, Provider);
+                        ItemSource.Add(new ShyHeaderItem()
+                        {
+                            Header = "热门动态",
+                            ItemSource = PopularItemSourse
+                        });
+                    }
+                    base.ItemSource = ItemSource;
+                }
+            }
+
+            protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as TopicDetail).Title;
+
+            public override async Task<FeedListDetailBase> GetDetail()
+            {
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetTagDetail, ID), true);
+                if (!isSucceed) { return null; }
+
+                JObject token = (JObject)result;
+                FeedListDetailBase detail = null;
+
+                if (token != null)
+                {
+                    detail = new TopicDetail(token);
                 }
 
                 return detail;
