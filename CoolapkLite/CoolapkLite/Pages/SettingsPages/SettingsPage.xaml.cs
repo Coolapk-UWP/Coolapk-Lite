@@ -36,7 +36,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal bool IsLogin
         {
-            get => SettingsHelper.CheckLoginInfoFast();
+            get => !string.IsNullOrEmpty(SettingsHelper.Get<string>(SettingsHelper.Uid));
             set => RaisePropertyChangedEvent();
         }
 

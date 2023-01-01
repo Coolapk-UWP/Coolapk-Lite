@@ -15,7 +15,11 @@ using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.System.Profile;
 using Windows.System.UserProfile;
+using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using HttpClient = System.Net.Http.HttpClient;
+using HttpResponseMessage = System.Net.Http.HttpResponseMessage;
+using HttpStatusCode = System.Net.HttpStatusCode;
 
 namespace CoolapkLite.Helpers
 {
@@ -27,8 +31,33 @@ namespace CoolapkLite.Helpers
 
         static NetworkHelper()
         {
+            SetLoginCookie();
             SetRequestHeaders();
             ThemeHelper.UISettingChanged.Add((arg) => Client.DefaultRequestHeaders.ReplaceDarkMode());
+        }
+
+        public static void SetLoginCookie()
+        {
+            string Uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
+            string UserName = SettingsHelper.Get<string>(SettingsHelper.UserName);
+            string Token = SettingsHelper.Get<string>(SettingsHelper.Token);
+
+            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
+            {
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                {
+                    HttpCookieManager cookieManager = filter.CookieManager;
+                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                    uid.Value = Uid;
+                    username.Value = UserName;
+                    token.Value = Token;
+                    cookieManager.SetCookie(uid);
+                    cookieManager.SetCookie(username);
+                    cookieManager.SetCookie(token);
+                }
+            }
         }
 
         public static void SetRequestHeaders()
@@ -94,12 +123,19 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "11");
                     break;
                 case "V12":
-                default:
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.4.2-2208241-universal");
-                    Client.DefaultRequestHeaders.Add("X-App-Version", "12.4.2");
-                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2208241");
-                    Client.DefaultRequestHeaders.Add("X-App-Code", "2208241");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.5.4-2212261-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "12.5.4");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2212261");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2212261");
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
+                    break;
+                case "V13":
+                default:
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.0-beta3-2212301-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.0-beta3");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2212301");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2212301");
+                    Client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
             }
         }
@@ -201,7 +237,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<string> GetSrtingAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
+        public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {

@@ -34,7 +34,10 @@
                             <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                         </Ellipse.Fill>
                     </Ellipse>
-                    <TextBlock Grid.Row="1" Text="{Binding Bio}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Text="{Binding Bio}"
+                        TextWrapping="WrapWholeWords" />
                 </Grid>
             </DataTemplate>
             <templates:CardTemplateSelector

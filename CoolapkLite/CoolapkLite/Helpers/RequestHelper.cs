@@ -81,6 +81,25 @@ namespace CoolapkLite.Helpers
                 result = GetResult(json);
             }
 
+            void WriteCache()
+            {
+                lock (locker)
+                {
+                    if (!ResponseCache.ContainsKey(info.uri))
+                    {
+                        ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
+                    }
+                    if (!ResponseCache[info.uri].ContainsKey(info.page))
+                    {
+                        ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+                    }
+                    else
+                    {
+                        ResponseCache[info.uri][info.page] = (DateTime.Now, json);
+                    }
+                }
+            }
+
             if (forceRefresh && IsInternetAvailable)
             {
                 lock (locker)
@@ -100,14 +119,10 @@ namespace CoolapkLite.Helpers
 
             if (!isCached)
             {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                json = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
                 result = GetResult(json);
                 if (!result.isSucceed) { return result; }
-                lock (locker)
-                {
-                    ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
-                    ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
-                }
+                WriteCache();
             }
             else
             {
@@ -151,13 +166,23 @@ namespace CoolapkLite.Helpers
 
             if (!isCached)
             {
-                json = await NetworkHelper.GetSrtingAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+                json = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
                 result = GetResult();
                 if (!result.isSucceed) { return result; }
                 lock (locker)
                 {
-                    ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
-                    ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+                    if (!ResponseCache.ContainsKey(info.uri))
+                    {
+                        ResponseCache.Add(info.uri, new Dictionary<int, (DateTime date, string data)>());
+                    }
+                    if (!ResponseCache[info.uri].ContainsKey(info.page))
+                    {
+                        ResponseCache[info.uri].Add(info.page, (DateTime.Now, json));
+                    }
+                    else
+                    {
+                        ResponseCache[info.uri][info.page] = (DateTime.Now, json);
+                    }
                 }
             }
             else
@@ -174,7 +199,6 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = string.Empty;
             (bool isSucceed, JToken result) result;
 
             (bool isSucceed, JToken result) GetResult(string jsons)
@@ -195,7 +219,7 @@ namespace CoolapkLite.Helpers
                 else { return (token != null && !string.IsNullOrEmpty(token.ToString()), token); }
             }
 
-            json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
+            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
             result = GetResult(json);
 
             return result;
@@ -203,9 +227,9 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = string.Empty;
             (bool isSucceed, string result) result;
 
+            string json;
             (bool isSucceed, string result) GetResult()
             {
                 if (string.IsNullOrEmpty(json))
@@ -244,8 +268,10 @@ namespace CoolapkLite.Helpers
                 : (token as JObject).TryGetValue(_idName, out JToken jToken)
                     ? jToken.ToString()
                     : (token as JObject).TryGetValue("entityId", out JToken v1)
-                                    ? v1.ToString()
-                                    : (token as JObject).TryGetValue("id", out JToken v2) ? v2.ToString() : throw new ArgumentException(nameof(_idName));
+                        ? v1.ToString()
+                        : (token as JObject).TryGetValue("id", out JToken v2)
+                            ? v2.ToString()
+                            : throw new ArgumentException(nameof(_idName));
         }
 
 #pragma warning disable 0612

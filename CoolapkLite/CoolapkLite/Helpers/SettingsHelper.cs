@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
@@ -92,6 +95,7 @@ namespace CoolapkLite.Helpers
 
     internal static partial class SettingsHelper
     {
+        public static event TypedEventHandler<string, bool> LoginChanged;
         public static ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
         private static readonly ApplicationDataContainer LocalSettings = ApplicationData.Current.LocalSettings;
         public static readonly MetroLog.ILogManager LogManager = MetroLog.LogManagerFactory.CreateLogManager();
@@ -102,118 +106,112 @@ namespace CoolapkLite.Helpers
             SetDefaultSettings();
         }
 
-        public static Task<bool> LoginIn() => LoginIn(Get<string>(Uid), Get<string>(UserName), Get<string>(Token));
-
-        public static async Task<bool> LoginIn(string Uid, string UserName, string Token)
+        public static async Task<bool> Login()
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
-                HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
-                HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
-                uid.Value = Uid;
-                username.Value = UserName;
-                token.Value = Token;
-                DateTime Expires = DateTime.UtcNow.AddDays(365);
-                uid.Expires = username.Expires = token.Expires = Expires;
-                cookieManager.SetCookie(uid);
-                cookieManager.SetCookie(username);
-                cookieManager.SetCookie(token);
-                return await CheckLoginInfo();
+                string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
+                {
+                    switch (item.Name)
+                    {
+                        case "uid":
+                            uid = item.Value;
+                            break;
+                        case "username":
+                            userName = item.Value;
+                            break;
+                        case "token":
+                            token = item.Value;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
+                {
+                    Logout();
+                    return false;
+                }
+                else
+                {
+                    Set(Uid, uid);
+                    Set(Token, token);
+                    Set(UserName, userName);
+                    LoginChanged?.Invoke(uid, true);
+                    return true;
+                }
             }
         }
 
-        public static async Task<bool> CheckLoginInfo()
+        public static async Task<bool> Login(string Uid, string UserName, string Token)
         {
-            try
+            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
             {
                 using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
                 {
                     HttpCookieManager cookieManager = filter.CookieManager;
-                    string uid = string.Empty, token = string.Empty, userName = string.Empty;
-                    foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
-                    {
-                        switch (item.Name)
-                        {
-                            case "uid":
-                                uid = item.Value;
-                                break;
-
-                            case "username":
-                                userName = item.Value;
-                                break;
-
-                            case "token":
-                                token = item.Value;
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
-                    {
-                        Logout();
-                        return false;
-                    }
-                    else
-                    {
-                        Set(Uid, uid);
-                        Set(Token, token);
-                        Set(UserName, userName);
-                        return true;
-                    }
+                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                    uid.Value = Uid;
+                    username.Value = UserName;
+                    token.Value = Token;
+                    cookieManager.SetCookie(uid);
+                    cookieManager.SetCookie(username);
+                    cookieManager.SetCookie(token);
+                }
+                if (await RequestHelper.CheckLogin())
+                {
+                    Set(SettingsHelper.Uid, Uid);
+                    Set(SettingsHelper.Token, Token);
+                    Set(SettingsHelper.UserName, UserName);
+                    LoginChanged?.Invoke(Uid, true);
+                    return true;
+                }
+                else
+                {
+                    Logout();
+                    return false;
                 }
             }
-            catch { throw; }
+            return false;
         }
 
-        public static bool CheckLoginInfoFast()
+        public static async Task<bool> CheckLoginAsync()
         {
-            try
+            using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
-                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                HttpCookieManager cookieManager = filter.CookieManager;
+                string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
                 {
-                    HttpCookieManager cookieManager = filter.CookieManager;
-                    string uid = string.Empty, token = string.Empty, userName = string.Empty;
-                    foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
+                    switch (item.Name)
                     {
-                        switch (item.Name)
-                        {
-                            case "uid":
-                                uid = item.Value;
-                                break;
-
-                            case "username":
-                                userName = item.Value;
-                                break;
-
-                            case "token":
-                                token = item.Value;
-                                break;
-
-                            default:
-                                break;
-                        }
-                    }
-
-                    if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName))
-                    {
-                        Logout();
-                        return false;
-                    }
-                    else
-                    {
-                        Set(Uid, uid);
-                        Set(Token, token);
-                        Set(UserName, userName);
-                        return true;
+                        case "uid":
+                            uid = item.Value;
+                            break;
+                        case "username":
+                            userName = item.Value;
+                            break;
+                        case "token":
+                            token = item.Value;
+                            break;
+                        default:
+                            break;
                     }
                 }
+                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
+                {
+                    Logout();
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
-            catch { throw; }
         }
 
         public static void Logout()
@@ -227,7 +225,9 @@ namespace CoolapkLite.Helpers
                 }
             }
             Set(Uid, string.Empty);
+            Set(Token, string.Empty);
             Set(UserName, string.Empty);
+            LoginChanged?.Invoke(string.Empty, false);
         }
     }
 }

@@ -27,11 +27,16 @@ namespace CoolapkLite.Controls.Dialogs
             CheckText();
         }
 
-        private async void OnClosing(ContentDialog sender, ContentDialogClosingEventArgs args)
+        private void OnClosing(ContentDialog sender, ContentDialogClosingEventArgs args)
         {
             if (args.Result == ContentDialogResult.Primary)
             {
                 args.Cancel = true;
+                CheckLogin().Wait();
+            }
+
+            async Task CheckLogin()
+            {
                 UIHelper.ShowProgressBar();
                 ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
                 if (string.IsNullOrWhiteSpace(UID) && !string.IsNullOrWhiteSpace(UserName))
@@ -42,7 +47,7 @@ namespace CoolapkLite.Controls.Dialogs
                 {
                     await GetText(UID);
                 }
-                if (await SettingsHelper.LoginIn(UID, UserName, Token))
+                if (await SettingsHelper.Login(UID, UserName, Token))
                 {
                     UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
                     args.Cancel = false;
