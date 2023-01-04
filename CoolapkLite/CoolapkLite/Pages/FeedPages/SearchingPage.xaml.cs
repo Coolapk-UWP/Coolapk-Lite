@@ -119,7 +119,7 @@ namespace CoolapkLite.Pages.FeedPages
             //else
             if (args.ChosenSuggestion is SearchWord word)
             {
-                Provider.Title = word.Title;
+                Provider.Title = word.ToString();
                 await Provider.Refresh(true);
             }
             else if (args.ChosenSuggestion is null)
@@ -133,7 +133,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.SelectedItem is SearchWord searchWord)
             {
-                sender.Text = searchWord.Title;
+                sender.Text = searchWord.ToString();
             }
         }
 

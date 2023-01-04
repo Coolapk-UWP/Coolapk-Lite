@@ -227,8 +227,9 @@ namespace CoolapkLite.Controls
         private async Task<List<string>> UploadPic()
         {
             int i = 0;
-            UIHelper.ShowMessage("上传图片");
             List<string> results = new List<string>();
+            if (!Pictures.Any()) { return results; }
+            UIHelper.ShowMessage("上传图片");
             foreach (WriteableBitmap pic in Pictures)
             {
                 i++;

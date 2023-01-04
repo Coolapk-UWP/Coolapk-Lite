@@ -296,25 +296,30 @@ namespace CoolapkLite.Helpers
             if (model == null) { return; }
 
             bool isReply = model is FeedReplyModel;
-            Uri u = UriHelper.GetUri(
+            Uri u = UriHelper.GetOldUri(
                 model.Liked ? UriType.OperateUnlike : UriType.OperateLike,
                 isReply ? "Reply" : string.Empty,
                 model.ID);
             (bool isSucceed, JToken result) = await PostDataAsync(u, null, true);
             if (!isSucceed) { return; }
 
-            JObject o = result as JObject;
+            int LikeNum = 0;
+            if (isReply)
+            {
+                LikeNum = Convert.ToInt32(result.ToString().Replace("\"", string.Empty));
+            }
+            else
+            {
+                JObject json = result as JObject;
+                if (json.TryGetValue("count", out JToken count))
+                {
+                    LikeNum = count.ToObject<int>();
+                }
+            }
             await dispatcher.AwaitableRunAsync(() =>
             {
                 model.Liked = !model.Liked;
-                if (isReply)
-                {
-                    model.LikeNum = Convert.ToInt32(o.ToString().Replace("\"", string.Empty));
-                }
-                else if (o != null)
-                {
-                    model.LikeNum = o.Value<int>("count");
-                }
+                model.LikeNum = LikeNum;
             });
         }
 

@@ -81,5 +81,7 @@ namespace CoolapkLite.Models
                 LastUpdate = DateHelper.ConvertUnixTimeStampToReadable(token.Value<int>("lastupdate"));
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 }

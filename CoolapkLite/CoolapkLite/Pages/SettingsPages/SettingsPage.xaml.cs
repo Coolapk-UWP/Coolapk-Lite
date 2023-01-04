@@ -125,9 +125,6 @@ namespace CoolapkLite.Pages.SettingsPages
         {
             base.OnNavigatedTo(e);
             TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
-#if DEBUG
-            GoToTestPage.Visibility = Visibility.Visible;
-#endif
             switch (ThemeHelper.ActualTheme)
             {
                 case ElementTheme.Light:

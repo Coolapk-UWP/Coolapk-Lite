@@ -58,6 +58,8 @@ namespace CoolapkLite.Models.Pages
                 UserName = username.ToString();
             }
         }
+
+        public override string ToString() => $"{UserName} - {Bio}";
     }
 
     internal class TopicDetail : FeedListDetailBase
@@ -88,5 +90,7 @@ namespace CoolapkLite.Models.Pages
                 Description = intro.ToString();
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 }

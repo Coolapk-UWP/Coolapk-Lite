@@ -19,5 +19,18 @@ namespace CoolapkLite.Models
                         : Symbol.Find;
             Title = keys.Value<string>("title");
         }
+
+        public override string ToString()
+        {
+            switch (Symbol)
+            {
+                case Symbol.Shop:
+                case Symbol.Contact:
+                    return Title.Substring(5);
+
+                default:
+                    return Title;
+            }
+        }
     }
 }

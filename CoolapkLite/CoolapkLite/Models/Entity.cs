@@ -40,6 +40,11 @@ namespace CoolapkLite.Models
                 EntityFixed = Convert.ToBoolean(entityFixed.ToObject<int>());
             }
         }
+
+        public override string ToString()
+        {
+            return $"{EntityType} - {EntityID}";
+        }
     }
 
     public class NullModel : Entity

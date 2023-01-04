@@ -221,7 +221,7 @@ namespace CoolapkLite
             //else
             if (args.ChosenSuggestion is SearchWord word)
             {
-                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.Title));
+                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
             }
             else if (args.ChosenSuggestion is null)
             {
@@ -233,7 +233,7 @@ namespace CoolapkLite
         {
             if (args.SelectedItem is SearchWord searchWord)
             {
-                sender.Text = searchWord.Title;
+                sender.Text = searchWord.ToString();
             }
         }
 

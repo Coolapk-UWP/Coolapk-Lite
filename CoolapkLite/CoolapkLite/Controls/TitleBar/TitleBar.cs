@@ -17,20 +17,9 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = "Icon", Type = typeof(Viewbox))]
     public partial class TitleBar : Control
     {
-        private Grid m_layoutRoot;
-        private TextBlock m_titleTextBlock;
-        private FrameworkElement m_customArea;
-        private Viewbox m_icon;
-
-        private bool m_isTitleSquished = false;
-        private bool m_isIconSquished = false;
-
-        private double m_titleWidth;
-        private double m_iconWidth;
-
         public TitleBar()
         {
-            this.DefaultStyleKey = typeof(TitleBar);
+            DefaultStyleKey = typeof(TitleBar);
 
             SizeChanged += OnSizeChanged;
 
@@ -43,12 +32,6 @@ namespace CoolapkLite.Controls
 
         protected override void OnApplyTemplate()
         {
-            m_layoutRoot = (Grid)GetTemplateChild("LayoutRoot");
-
-            m_icon = (Viewbox)GetTemplateChild("Icon");
-            m_titleTextBlock = (TextBlock)GetTemplateChild("TitleText");
-            m_customArea = (FrameworkElement)GetTemplateChild("CustomContentPresenter");
-
             Window window = Window.Current;
             if (window != null)
             {

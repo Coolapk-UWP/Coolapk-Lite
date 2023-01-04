@@ -97,5 +97,7 @@ namespace CoolapkLite.Models.Users
                 BlockStatus = block_status.ToObject<int>();
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 }

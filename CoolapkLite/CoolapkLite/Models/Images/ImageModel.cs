@@ -222,5 +222,7 @@ namespace CoolapkLite.Models.Images
         }
 
         public async Task Refresh() => await DispatcherHelper.ExecuteOnUIThreadAsync(GetImage);
+
+        public override string ToString() => Uri;
     }
 }
