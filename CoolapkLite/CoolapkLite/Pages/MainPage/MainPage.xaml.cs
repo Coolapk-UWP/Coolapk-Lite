@@ -221,11 +221,11 @@ namespace CoolapkLite
             //else
             if (args.ChosenSuggestion is SearchWord word)
             {
-                //HamburgerMenuFrame.Navigate(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(word.Symbol == Symbol.Contact ? 1 : 0, word.GetTitle()));
+                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
             }
             else if (args.ChosenSuggestion is null)
             {
-                //UIHelper.NavigateInSplitPane(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(0, sender.Text));
+                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
             }
         }
 
@@ -233,7 +233,7 @@ namespace CoolapkLite
         {
             if (args.SelectedItem is SearchWord searchWord)
             {
-                sender.Text = searchWord.Title;
+                sender.Text = searchWord.ToString();
             }
         }
 
@@ -316,7 +316,8 @@ namespace CoolapkLite
                     RaisePropertyChangedEvent();
                     if (value == loader.GetString("User"))
                     {
-                        SetUserAvatar();
+                        SetUserAvatar(true);
+                        SettingsHelper.LoginChanged += (_, e) => SetUserAvatar(e);
                     }
                 }
             }
@@ -357,9 +358,9 @@ namespace CoolapkLite
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        private async void SetUserAvatar()
+        private async void SetUserAvatar(bool isLogin)
         {
-            if (await SettingsHelper.CheckLoginInfo())
+            if (isLogin && await SettingsHelper.CheckLoginAsync())
             {
                 string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 if (!string.IsNullOrEmpty(UID))
@@ -371,6 +372,13 @@ namespace CoolapkLite
                     PageType = typeof(FeedListPage);
                     ViewModels = FeedListViewModel.GetProvider(FeedListType.UserPageList, results.UID);
                 }
+            }
+            else
+            {
+                Name = loader.GetString("User");
+                Image = null;
+                PageType = typeof(BrowserPage);
+                ViewModels = new object[] { true };
             }
         }
 

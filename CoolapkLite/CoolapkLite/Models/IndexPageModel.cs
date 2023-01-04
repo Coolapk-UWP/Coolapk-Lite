@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 
@@ -147,6 +148,8 @@ namespace CoolapkLite.Models
                 Pic = new ImageModel(pic_url.ToString(), ImageType.Icon);
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 
     internal class IndexPageMessageCardModel : Entity
@@ -228,6 +231,8 @@ namespace CoolapkLite.Models
             }
             else { ShowEntities = false; }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 
     internal enum EntityType
@@ -324,9 +329,9 @@ namespace CoolapkLite.Models
                                 buider.Add(new FeedModel(item));
                                 break;
 
-                            //case "user":
-                            //    buider.Add(new UserModel(item));
-                            //    break;
+                            case "user":
+                                buider.Add(new UserModel(item));
+                                break;
 
                             default:
                                 buider.Add(new IndexPageModel(item));
@@ -348,6 +353,8 @@ namespace CoolapkLite.Models
 
             ShowTitle = !(string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Url));
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 
     internal enum OperationType
@@ -388,5 +395,7 @@ namespace CoolapkLite.Models
                     break;
             }
         }
+
+        public override string ToString() => Title;
     }
 }

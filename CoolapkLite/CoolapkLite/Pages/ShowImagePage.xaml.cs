@@ -8,7 +8,9 @@ using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
+using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -37,6 +39,7 @@ namespace CoolapkLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            UpdateSystemCaptionButtonColors();
             if (e.Parameter is ImageModel Model)
             {
                 Provider = new ShowImageViewModel(Model);
@@ -48,6 +51,7 @@ namespace CoolapkLite.Pages
                 DataContext = Provider;
             }
             Window.Current.SetTitleBar(CustomTitleBar);
+            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
@@ -65,6 +69,7 @@ namespace CoolapkLite.Pages
         {
             base.OnNavigatedFrom(e);
             Window.Current.SetTitleBar(null);
+            ActualThemeChanged -= OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             {
@@ -79,6 +84,11 @@ namespace CoolapkLite.Pages
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
+        }
+
+        private void OnActualThemeChanged(FrameworkElement sender, object args)
+        {
+            UpdateSystemCaptionButtonColors();
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
@@ -119,6 +129,31 @@ namespace CoolapkLite.Pages
             Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
             CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+        }
+
+        private void UpdateSystemCaptionButtonColors()
+        {
+            bool IsDark = ActualTheme == ElementTheme.Default
+                ? Application.Current.RequestedTheme == ApplicationTheme.Dark
+                : ActualTheme == ElementTheme.Dark;
+
+            Color ForegroundColor = IsDark ? Colors.White : Colors.Black;
+            Color BackgroundColor = new AccessibilitySettings().HighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
+
+            if (UIHelper.HasStatusBar)
+            {
+                StatusBar StatusBar = StatusBar.GetForCurrentView();
+                StatusBar.ForegroundColor = ForegroundColor;
+                StatusBar.BackgroundColor = BackgroundColor;
+                StatusBar.BackgroundOpacity = 0; // 透明度
+            }
+            else
+            {
+                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
+                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
+                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = UIHelper.HasTitleBar ? BackgroundColor : Colors.Transparent;
+            }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)

@@ -29,7 +29,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
         {
-            Pivot.ItemsSource = MenuItem.GetMainItems();
+            Pivot.ItemsSource = GetMainItems();
             Pivot.SelectedIndex = PivotIndex;
         }
 
@@ -50,10 +50,7 @@ namespace CoolapkLite.Pages.FeedPages
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
-    }
 
-    public class MenuItem
-    {
         public static ObservableCollection<PivotItem> GetMainItems()
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");

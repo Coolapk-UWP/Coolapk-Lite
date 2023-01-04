@@ -34,7 +34,32 @@
                             <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                         </Ellipse.Fill>
                     </Ellipse>
-                    <TextBlock Grid.Row="1" Text="{Binding Bio}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Text="{Binding Bio}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="TopicDetailCard">
+                <Grid Margin="12,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Ellipse
+                        Grid.Row="0"
+                        Width="56"
+                        Height="56"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock
+                        Grid.Row="1"
+                        Text="{Binding Description}"
+                        TextWrapping="WrapWholeWords" />
                 </Grid>
             </DataTemplate>
             <templates:CardTemplateSelector
@@ -48,6 +73,7 @@
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
                 Others="{StaticResource Null}"
+                TopicDetail="{StaticResource TopicDetailCard}"
                 UserDetail="{StaticResource UserDetailCard}" />
         </ResourceDictionary>
     </Page.Resources>
@@ -66,8 +92,7 @@
                         x:Name="DetailScrollViewer"
                         Margin="{x:Bind ScrollViewerMargin}"
                         Padding="{x:Bind ScrollViewerPadding}"
-                        VerticalAlignment="Top"
-                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
+                        VerticalAlignment="Top">
                         <Grid x:Name="Pane1Grid" Padding="0,0,0,40">
                             <ContentControl
                                 x:Name="DetailControl"
@@ -88,13 +113,11 @@
                     <control:ShyHeaderListView
                         x:Name="ListView"
                         ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
                         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
-                        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                        ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                         ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                         Loaded="ListView_Loaded"
-                        SelectionMode="None"
                         ShowsScrollingPlaceholders="False"
                         ShyHeaderItemSource="{Binding ItemSource}">
                         <control:ShyHeaderListView.TopHeader>

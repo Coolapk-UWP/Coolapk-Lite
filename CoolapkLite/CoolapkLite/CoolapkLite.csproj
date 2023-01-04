@@ -112,7 +112,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -144,6 +144,9 @@
     <Compile Include="BackgroundTasks\NotificationsTask.cs" />
     <Compile Include="Controls\CollectionDetailControl.xaml.cs">
       <DependentUpon>CollectionDetailControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CreateFeedControl.xaml.cs">
+      <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
@@ -270,10 +273,14 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
+    <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\Update\SystemVersionInfo.cs" />
     <Compile Include="Models\Update\UpdateInfo.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
+    <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
+      <DependentUpon>SearchingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
@@ -418,6 +425,7 @@
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
@@ -1014,6 +1022,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CreateFeedControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\SearchWord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1045,6 +1057,10 @@
     <Page Include="Controls\TwoPaneView\TwoPaneView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FeedPages\SearchingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SettingsPages\BlankPage.xaml">
       <SubType>Designer</SubType>
@@ -1299,6 +1315,9 @@
       <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
       <Name>BCrypt.Net</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

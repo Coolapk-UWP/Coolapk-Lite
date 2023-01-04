@@ -45,5 +45,7 @@ namespace CoolapkLite.Models
                 Cover = new ImageModel(cover_pic.ToString(), ImageType.OriginImage);
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 }

@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
-namespace CoolapkUWP.Controls
+namespace CoolapkLite.Controls
 {
     public sealed partial class ShowQRCodeControl : UserControl
     {

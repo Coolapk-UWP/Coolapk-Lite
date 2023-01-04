@@ -95,14 +95,10 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        private static string GetAuthorString(bool isFeedAuthor)
-        {
-            return isFeedAuthor ? TextBlockEx.AuthorBorder : string.Empty;
-        }
+        private static string GetAuthorString(bool isFeedAuthor) => isFeedAuthor ? TextBlockEx.AuthorBorder : string.Empty;
 
-        private static string GetUserLink(string url, string name)
-        {
-            return $"<a href=\"{url}\" type=\"user-detail\">{name}</a>";
-        }
+        private static string GetUserLink(string url, string name) => $"<a href=\"{url}\" type=\"user-detail\">{name}</a>";
+
+        public override string ToString() => Message;
     }
 }

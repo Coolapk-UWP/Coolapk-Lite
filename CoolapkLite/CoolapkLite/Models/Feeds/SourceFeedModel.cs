@@ -89,5 +89,7 @@ namespace CoolapkLite.Models.Feeds
                 Pic = new ImageModel(pic.ToString(), ImageType.SmallImage);
             }
         }
+
+        public override string ToString() => Message;
     }
 }

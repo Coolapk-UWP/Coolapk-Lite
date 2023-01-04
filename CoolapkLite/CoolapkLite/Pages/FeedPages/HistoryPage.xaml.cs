@@ -30,7 +30,6 @@ namespace CoolapkLite.Pages.FeedPages
                 DataContext = Provider;
                 Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
-                Provider.OnLoadMoreProgressChanged += UIHelper.ShowProgressBar;
                 await Refresh(true);
             }
             else
@@ -44,7 +43,6 @@ namespace CoolapkLite.Pages.FeedPages
             base.OnNavigatedFrom(e);
             Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
             Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
-            Provider.OnLoadMoreProgressChanged -= UIHelper.ShowProgressBar;
         }
 
         private async Task Refresh(bool reset = false) => await Provider.Refresh(reset);

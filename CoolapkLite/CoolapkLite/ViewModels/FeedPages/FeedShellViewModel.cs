@@ -102,30 +102,36 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ReplyItemSourse == null || ReplyItemSourse.ID != ID)
                 {
                     ReplyItemSourse = new ReplyItemSourse(ID);
-                    ItemSource.Add(new ShyHeaderItem()
-                    {
-                        Header = "回复",
-                        ItemSource = ReplyItemSourse
-                    });
+                    ReplyItemSourse.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                    ReplyItemSourse.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 }
+                ItemSource.Add(new ShyHeaderItem()
+                {
+                    Header = "回复",
+                    ItemSource = ReplyItemSourse
+                });
                 if (LikeItemSourse == null || LikeItemSourse.ID != ID)
                 {
                     LikeItemSourse = new LikeItemSourse(ID);
-                    ItemSource.Add(new ShyHeaderItem()
-                    {
-                        Header = "点赞",
-                        ItemSource = LikeItemSourse
-                    });
+                    LikeItemSourse.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                    LikeItemSourse.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 }
+                ItemSource.Add(new ShyHeaderItem()
+                {
+                    Header = "点赞",
+                    ItemSource = LikeItemSourse
+                });
                 if (ShareItemSourse == null || ShareItemSourse.ID != ID)
                 {
                     ShareItemSourse = new ShareItemSourse(ID, FeedDetail.FeedType);
-                    ItemSource.Add(new ShyHeaderItem()
-                    {
-                        Header = "转发",
-                        ItemSource = ShareItemSourse
-                    });
+                    ShareItemSourse.OnLoadMoreStarted += UIHelper.ShowProgressBar;
+                    ShareItemSourse.OnLoadMoreCompleted += UIHelper.HideProgressBar;
                 }
+                ItemSource.Add(new ShyHeaderItem()
+                {
+                    Header = "转发",
+                    ItemSource = ShareItemSourse
+                });
                 base.ItemSource = ItemSource;
             }
             await ReplyItemSourse?.Refresh(reset);

@@ -51,9 +51,6 @@ namespace CoolapkLite.Controls.DataTemplates
             {
                 case "MakeReplyButton":
                     DisabledCopy();
-                    //ListViewItem item = element.FindAscendant<ListViewItem>();
-                    //MakeFeedControl ctrl = item.FindName("makeFeed") as MakeFeedControl;
-                    //ctrl.Visibility = ctrl.Visibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
                     break;
 
                 case "LikeButton":
@@ -63,7 +60,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "ReportButton":
                     DisabledCopy();
-                    UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=feed&m=report&type=feed&id={element.Tag}" });
+                    UIHelper.Navigate(typeof(Pages.BrowserPage), new object[] { false, element.Tag.ToString() });
                     break;
 
                 case "ShareButton":
@@ -109,7 +106,7 @@ namespace CoolapkLite.Controls.DataTemplates
             UserControl UserControl = sender as UserControl;
             StackPanel StackPanel = UserControl.FindChildByName("BtnsPanel") as StackPanel;
             double width = e is null ? UserControl.Width : e.NewSize.Width;
-            StackPanel.SetValue(Grid.RowProperty, width > 600 ? 1 : 5);
+            StackPanel.SetValue(Grid.RowProperty, width > 600 ? 1 : 10);
         }
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;

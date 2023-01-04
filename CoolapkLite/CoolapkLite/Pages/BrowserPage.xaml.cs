@@ -80,12 +80,6 @@ namespace CoolapkLite.Pages
             }
         }
 
-        protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
-        {
-            _ = SettingsHelper.CheckLoginInfo();
-            base.OnNavigatingFrom(e);
-        }
-
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             UIHelper.ShowProgressBar();
@@ -111,7 +105,7 @@ namespace CoolapkLite.Pages
         private async void CheckLogin()
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
-            if (await SettingsHelper.CheckLoginInfo())
+            if (await SettingsHelper.Login())
             {
                 if (Frame.CanGoBack) { Frame.GoBack(); }
                 UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));

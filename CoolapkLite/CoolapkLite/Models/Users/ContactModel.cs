@@ -27,5 +27,7 @@ namespace CoolapkLite.Models.Users
                 UserInfo = new UserModel(userInfo);
             }
         }
+
+        public override string ToString() => UserInfo.ToString();
     }
 }

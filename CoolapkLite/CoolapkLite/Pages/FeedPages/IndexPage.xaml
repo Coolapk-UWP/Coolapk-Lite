@@ -32,13 +32,11 @@
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
-            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+            ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"

@@ -41,5 +41,7 @@ namespace CoolapkLite.Models
                 Pic = new ImageModel(logo.ToString(), ImageType.Icon);
             }
         }
+
+        public override string ToString() => $"{Title} - {Description}";
     }
 }

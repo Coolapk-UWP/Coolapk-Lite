@@ -71,7 +71,7 @@ namespace CoolapkLite.Pages
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
         {
             // You can also add items in code.
-            Pivot.ItemsSource = MenuItem.GetMainItems();
+            Pivot.ItemsSource = GetMainItems();
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -200,10 +200,7 @@ namespace CoolapkLite.Pages
             }
         }
         #endregion
-    }
 
-    public class MenuItem
-    {
         public static ObservableCollection<PivotItem> GetMainItems()
         {
             ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");

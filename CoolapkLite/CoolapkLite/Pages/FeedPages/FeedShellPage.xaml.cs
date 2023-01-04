@@ -43,10 +43,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void SetLayout()
         {
-            //ListControl.ReplyDS = new Controls.ReplyDS(FeedDetailModel);
             TwoPaneView.MinWideModeWidth = Provider.FeedDetail?.IsFeedArticle ?? false ? 876 : 804;
             TwoPaneView.Pane1Length = new GridLength(Provider.FeedDetail?.IsFeedArticle ?? false ? 520 : 420);
-            //_ = ListControl.Refresh(-2);
         }
 
         private async void FeedButton_Click(object sender, RoutedEventArgs _)

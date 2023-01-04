@@ -50,7 +50,7 @@ namespace CoolapkLite
         {
             AddBrushResource();
             RequestWifiAccess();
-            //RegisterBackgroundTask();
+            RegisterBackgroundTask();
             RegisterExceptionHandlingSynchronizationContext();
             EnsureWindow(e);
         }

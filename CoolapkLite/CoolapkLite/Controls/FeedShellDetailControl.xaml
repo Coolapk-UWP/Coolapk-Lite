@@ -59,7 +59,7 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                            IsTextSelectionEnabled="True"
                             Text="{Binding UserInfo.UserName}" />
                         <StackPanel Margin="-1,0" Orientation="Horizontal">
                             <TextBlock
@@ -103,14 +103,14 @@
                     x:Name="Message"
                     Grid.Row="3"
                     Margin="4"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                    IsTextSelectionEnabled="True"
                     Text="{Binding Message}"
                     Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}" />
                 <local:TextBlockEx
                     x:Name="ArticleMessage"
                     Grid.Row="3"
                     Margin="4"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                    IsTextSelectionEnabled="True"
                     Text="{Binding MessageRawOutput}"
                     Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}}" />
                 <Grid

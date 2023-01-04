@@ -52,5 +52,10 @@ namespace CoolapkLite.Models.Upload
         {
             return obj is UploadFileFragment && Md5.Equals((obj as UploadFileFragment).Md5);
         }
+
+        public override int GetHashCode()
+        {
+            return Md5.GetHashCode();
+        }
     }
 }

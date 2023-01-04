@@ -26,13 +26,10 @@
         <ResourceDictionary x:Key="HighContrast">
             <Thickness x:Key="CardBorderThickness">2</Thickness>
 
-            <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
-            <Color x:Key="SolidBackgroundFillColorBase">#FF000000</Color>
-
-            <SolidColorBrush x:Key="SubtleFillColorTransparentBrush" Color="Transparent" />
-            <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
-            <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
-            <SolidColorBrush x:Key="SubtleFillColorDisabledBrush" Color="{ThemeResource SystemColorButtonFaceColor}" />
+            <Color x:Key="SubtleFillColorTransparent">#00FFFFFF</Color>
+            <StaticResource x:Key="SubtleFillColorSecondary" ResourceKey="SystemColorButtonFaceColor" />
+            <StaticResource x:Key="SubtleFillColorTertiary" ResourceKey="SystemColorButtonFaceColor" />
+            <StaticResource x:Key="SubtleFillColorDisabled" ResourceKey="SystemColorButtonFaceColor" />
 
             <StaticResource x:Key="TextFillColorPrimary" ResourceKey="SystemColorWindowTextColor" />
             <StaticResource x:Key="TextFillColorSecondary" ResourceKey="SystemColorWindowTextColor" />
@@ -42,6 +39,8 @@
 
             <StaticResource x:Key="LayerFillColorDefault" ResourceKey="SystemColorWindowColor" />
             <StaticResource x:Key="CardStrokeColorDefault" ResourceKey="SystemColorWindowTextColor" />
+            <Color x:Key="SystemChromeMediumHighColor">#FF323232</Color>
+            <Color x:Key="SolidBackgroundFillColorBase">#FF000000</Color>
             <StaticResource x:Key="CardBackgroundFillColorDefault" ResourceKey="SystemColorButtonFaceColor" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
@@ -65,6 +64,18 @@
             <Color x:Key="CardBackgroundFillColorDefault">#B3FFFFFF</Color>
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
+
+    <SolidColorBrush x:Key="TextFillColorPrimaryBrush" Color="{ThemeResource TextFillColorPrimary}" />
+    <SolidColorBrush x:Key="TextFillColorSecondaryBrush" Color="{ThemeResource TextFillColorSecondary}" />
+    <SolidColorBrush x:Key="TextFillColorTertiaryBrush" Color="{ThemeResource TextFillColorTertiary}" />
+    <SolidColorBrush x:Key="TextFillColorDisabledBrush" Color="{ThemeResource TextFillColorDisabled}" />
+    <SolidColorBrush x:Key="TextFillColorInverseBrush" Color="{ThemeResource TextFillColorInverse}" />
+
+    <SolidColorBrush x:Key="SubtleFillColorTransparentBrush" Color="{ThemeResource SubtleFillColorTransparent}" />
+    <SolidColorBrush x:Key="SubtleFillColorSecondaryBrush" Color="{ThemeResource SubtleFillColorSecondary}" />
+    <SolidColorBrush x:Key="SubtleFillColorTertiaryBrush" Color="{ThemeResource SubtleFillColorTertiary}" />
+    <SolidColorBrush x:Key="SubtleFillColorDisabledBrush" Color="{ThemeResource SubtleFillColorDisabled}" />
+
     <SolidColorBrush x:Key="CardBorderBrush" Color="{ThemeResource CardStrokeColorDefault}" />
     <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{ThemeResource LayerFillColorDefault}" />
     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />

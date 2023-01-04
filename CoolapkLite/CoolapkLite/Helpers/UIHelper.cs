@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Resources;
@@ -322,7 +323,12 @@ namespace CoolapkLite.Helpers
             "/u/",
             "/feed/",
             "/picture/",
+            "/t/",
+            "t/",
             "http://image.coolapk.com/",
+            "https",
+            "http",
+            "www.coolapk.com",
         }.ToImmutableArray();
 
         private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
@@ -360,9 +366,45 @@ namespace CoolapkLite.Helpers
                 if (str == "/feed/writer") { ShowMessage("暂不支持"); }
                 else { Navigate(typeof(FeedShellPage), new FeedDetailViewModel(str.Replace(i - 1))); }
             }
+            else if (str.IsFirst(i++) || str.IsFirst(i++))
+            {
+                string u = str.Replace(i - 1);
+                if (u.Contains("?type=")){ u = u.Substring(0, u.IndexOf('?')); }
+                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.TagPageList, u);
+                if (f != null)
+                {
+                    Navigate(typeof(FeedListPage), f);
+                }
+            }
             else if (str.IsFirst(i++))
             {
                 ShowImage(new ImageModel(str, ImageType.SmallImage));
+            }
+            else if (str.IsFirst(i++))
+            {
+                if (str.Contains("coolapk.com"))
+                {
+                    OpenLinkAsync(str.Replace(-1));
+                }
+                else
+                {
+                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                }
+            }
+            else if (str.IsFirst(i++))
+            {
+                if (str.Contains("coolapk.com"))
+                {
+                    OpenLinkAsync(str.Replace(-2));
+                }
+                else
+                {
+                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                }
+            }
+            else if (str.IsFirst(i++))
+            {
+                OpenLinkAsync(str.Replace(-3));
             }
         }
 

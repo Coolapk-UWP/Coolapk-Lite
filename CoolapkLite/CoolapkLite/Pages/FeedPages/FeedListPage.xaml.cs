@@ -171,11 +171,13 @@ namespace CoolapkLite.Pages.FeedPages
     {
         public DataTemplate Others { get; set; }
         public DataTemplate UserDetail { get; set; }
+        public DataTemplate TopicDetail { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item.GetType().Name)
             {
                 case "UserDetail": return UserDetail;
+                case "TopicDetail": return TopicDetail;
                 default: return Others;
             }
         }

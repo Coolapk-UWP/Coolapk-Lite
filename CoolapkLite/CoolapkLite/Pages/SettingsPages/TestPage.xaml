@@ -120,6 +120,7 @@
                             <x:String>V10</x:String>
                             <x:String>V11</x:String>
                             <x:String>V12</x:String>
+                            <x:String>V13</x:String>
                             <x:String>小程序</x:String>
                         </ComboBox>
                     </StackPanel>
@@ -161,8 +162,11 @@
                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             TextWrapping="Wrap" />
-                        <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" />
+                        <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
                     </StackPanel>
+                </control:HeaderedContentControl>
+                <control:HeaderedContentControl Header="发帖测试" Style="{StaticResource HeaderStyle}">
+                    <control:CreateFeedControl FeedType="Feed" />
                 </control:HeaderedContentControl>
                 <Grid Background="#181819" Visibility="Collapsed">
                     <FontIcon FontSize="900" Glyph="" />
