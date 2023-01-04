@@ -62,7 +62,7 @@
         BackButtonBehavior="Automatic"
         Background="Transparent"
         CompactModeThresholdWidth="804"
-        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+        ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
         ItemTemplate="{StaticResource CollectionListTemplate}"
         ItemsSource="{Binding}">
         <control:ListDetailsView.ListHeader>

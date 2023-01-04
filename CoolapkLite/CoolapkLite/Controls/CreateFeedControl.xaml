@@ -22,7 +22,8 @@
             Grid.Row="1"
             Padding="0"
             HorizontalContentAlignment="Left"
-            ItemsSource="{x:Bind Pictures, Mode=OneWay}">
+            ItemsSource="{x:Bind Pictures, Mode=OneWay}"
+            SelectionChanged="GridView_SelectionChanged">
             <GridView.ItemTemplate>
                 <DataTemplate>
                     <Border

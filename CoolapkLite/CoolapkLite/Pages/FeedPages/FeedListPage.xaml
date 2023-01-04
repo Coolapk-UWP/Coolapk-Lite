@@ -115,10 +115,9 @@
                         ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
                         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
-                        ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                        ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                         ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                         Loaded="ListView_Loaded"
-                        SelectionMode="None"
                         ShowsScrollingPlaceholders="False"
                         ShyHeaderItemSource="{Binding ItemSource}">
                         <control:ShyHeaderListView.TopHeader>

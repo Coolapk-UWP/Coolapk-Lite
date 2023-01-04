@@ -202,15 +202,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
-                {
-                    Logout();
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLogin();
             }
         }
 

@@ -90,7 +90,12 @@
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </UserControl.Resources>
-            <Grid Padding="8,4" helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}">
+            <Grid
+                Padding="8,4"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
+                Background="Transparent">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -292,7 +297,12 @@
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </UserControl.Resources>
-            <Grid Padding="8,4" helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}">
+            <Grid
+                Padding="8,4"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
+                Background="Transparent">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
@@ -432,9 +442,8 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="2"
                     Margin="2,0,4,8"
-                    ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemsSource="{Binding ReplyRows}"
-                    SelectionMode="None"
                     Style="{StaticResource VerticalListViewStyle}"
                     Visibility="{Binding ShowReplyRows, Converter={StaticResource BoolToVisibilityConverter}}">
                     <ListView.ItemTemplate>
@@ -446,7 +455,7 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.Footer>
-                        <ListViewItem Style="{StaticResource FixedListViewItemStyle}">
+                        <ListViewItem Style="{StaticResource DefaultCardItemStyle}">
                             <TextBlock
                                 Margin="4"
                                 VerticalAlignment="Center"

@@ -1,33 +1,23 @@
-﻿using CoolapkLite.Controls.DataTemplates;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Exceptions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage.Pickers;
+using Windows.ApplicationModel.Resources;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.Storage.Streams;
-using Windows.Graphics.Imaging;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.ApplicationModel.Resources;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -257,6 +247,8 @@ namespace CoolapkLite.Controls
             }
             return results;
         }
+
+        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
     }
 
     public enum CreateFeedType

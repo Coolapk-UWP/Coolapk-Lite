@@ -29,12 +29,11 @@
         <control:PullToRefreshListView
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+            ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{Binding}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
-            SelectionMode="None"
             ShowsScrollingPlaceholders="False" />
     </Grid>
 </Page>

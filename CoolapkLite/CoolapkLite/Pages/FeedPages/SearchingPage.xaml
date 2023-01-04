@@ -260,34 +260,31 @@
             <PivotItem Header="动态">
                 <control:PullToRefreshListView
                     ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                    ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachFeedItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
-                    SelectionMode="None"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>
             <PivotItem Header="用户">
                 <control:PullToRefreshListView
                     ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                    ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachUserItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
-                    SelectionMode="None"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>
             <PivotItem Header="话题">
                 <control:PullToRefreshListView
                     ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                    ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachTopicItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
-                    SelectionMode="None"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>
         </Pivot>
