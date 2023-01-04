@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="EditBox.PlaceholderText" xml:space="preserve">
-    <value>分享你的想法……</value>
+    <value>Your thoughts…</value>
   </data>
   <data name="EmojiButton.Label" xml:space="preserve">
-    <value>插入表情</value>
+    <value>Add Emoji</value>
   </data>
   <data name="SendButton.Label" xml:space="preserve">
-    <value>发送</value>
+    <value>Send</value>
   </data>
   <data name="SendSuccessed" xml:space="preserve">
-    <value>发送成功</value>
+    <value>Send successes</value>
   </data>
 </root>
