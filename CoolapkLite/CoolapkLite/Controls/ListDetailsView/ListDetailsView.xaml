@@ -44,7 +44,6 @@
                                         x:Name="MainList"
                                         Grid.Row="1"
                                         ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
                                         IsSynchronizedWithCurrentItem="False"
                                         IsTabStop="False"
                                         ItemContainerStyle="{TemplateBinding ItemContainerStyle}"

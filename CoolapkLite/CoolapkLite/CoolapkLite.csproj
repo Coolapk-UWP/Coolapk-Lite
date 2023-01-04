@@ -270,10 +270,14 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
+    <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\Update\SystemVersionInfo.cs" />
     <Compile Include="Models\Update\UpdateInfo.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
+    <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
+      <DependentUpon>SearchingPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
@@ -418,6 +422,7 @@
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
@@ -1045,6 +1050,10 @@
     <Page Include="Controls\TwoPaneView\TwoPaneView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\FeedPages\SearchingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SettingsPages\BlankPage.xaml">
       <SubType>Designer</SubType>

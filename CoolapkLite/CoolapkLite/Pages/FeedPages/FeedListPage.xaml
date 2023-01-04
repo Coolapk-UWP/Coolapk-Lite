@@ -73,8 +73,8 @@
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
                 Others="{StaticResource Null}"
-                UserDetail="{StaticResource UserDetailCard}" 
-                TopicDetail="{StaticResource TopicDetailCard}" />
+                TopicDetail="{StaticResource TopicDetailCard}"
+                UserDetail="{StaticResource UserDetailCard}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>
@@ -92,8 +92,7 @@
                         x:Name="DetailScrollViewer"
                         Margin="{x:Bind ScrollViewerMargin}"
                         Padding="{x:Bind ScrollViewerPadding}"
-                        VerticalAlignment="Top"
-                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True">
+                        VerticalAlignment="Top">
                         <Grid x:Name="Pane1Grid" Padding="0,0,0,40">
                             <ContentControl
                                 x:Name="DetailControl"
@@ -114,7 +113,6 @@
                     <control:ShyHeaderListView
                         x:Name="ListView"
                         ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-                        ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
                         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
                         ItemContainerStyle="{StaticResource FixedListViewItemStyle}"

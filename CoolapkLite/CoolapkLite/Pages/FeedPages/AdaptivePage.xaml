@@ -29,7 +29,6 @@
         <control:PullToRefreshListView
             x:Name="ListView"
             ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
-            ui:ScrollViewerExtensions.EnableMiddleClickScrolling="True"
             ItemContainerStyle="{StaticResource FixedListViewItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{Binding}"

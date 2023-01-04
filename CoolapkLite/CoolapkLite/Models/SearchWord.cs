@@ -14,7 +14,9 @@ namespace CoolapkLite.Models
                 ? Symbol.Shop
                 : keys.Value<string>("logo").Contains("cube")
                     ? Symbol.Shop
-                    : keys.Value<string>("logo").Contains("xitongguanli") ? Symbol.Contact : Symbol.Find;
+                    : keys.Value<string>("logo").Contains("xitongguanli")
+                        ? Symbol.Contact
+                        : Symbol.Find;
             Title = keys.Value<string>("title");
         }
     }

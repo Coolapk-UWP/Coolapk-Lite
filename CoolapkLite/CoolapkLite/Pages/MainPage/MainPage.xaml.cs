@@ -221,11 +221,11 @@ namespace CoolapkLite
             //else
             if (args.ChosenSuggestion is SearchWord word)
             {
-                //HamburgerMenuFrame.Navigate(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(word.Symbol == Symbol.Contact ? 1 : 0, word.GetTitle()));
+                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.Title));
             }
             else if (args.ChosenSuggestion is null)
             {
-                //UIHelper.NavigateInSplitPane(typeof(SearchingPage), new ViewModels.SearchPage.ViewModel(0, sender.Text));
+                HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
             }
         }
 
