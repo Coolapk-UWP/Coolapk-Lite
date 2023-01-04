@@ -145,6 +145,9 @@
     <Compile Include="Controls\CollectionDetailControl.xaml.cs">
       <DependentUpon>CollectionDetailControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CreateFeedControl.xaml.cs">
+      <DependentUpon>CreateFeedControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
     </Compile>
@@ -1019,6 +1022,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CreateFeedControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\SearchWord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1308,6 +1315,9 @@
       <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
       <Name>BCrypt.Net</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
