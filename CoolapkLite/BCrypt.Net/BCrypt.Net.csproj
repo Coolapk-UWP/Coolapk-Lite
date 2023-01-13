@@ -1,13 +1,16 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
-    <LangVersion>latest</LangVersion>
-    <TargetFramework>netcore50</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <TargetFramework>uap10.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <ExtrasUwpMetaPackageVersion>6.2.14</ExtrasUwpMetaPackageVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformWinMDLocation>C:\Program Files (x86)\Windows Kits\10\UnionMetadata</TargetPlatformWinMDLocation>
+  </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcore50'">
     <NugetTargetMoniker>.NETCore,Version=v5.0</NugetTargetMoniker>

@@ -60,7 +60,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalSettings.Values.ContainsKey(APIVersion))
             {
-                LocalSettings.Values.Add(APIVersion, "V12");
+                LocalSettings.Values.Add(APIVersion, "V13");
             }
             if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
             {

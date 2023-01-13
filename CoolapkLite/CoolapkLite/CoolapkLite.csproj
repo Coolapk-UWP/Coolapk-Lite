@@ -10,7 +10,7 @@
     <RootNamespace>CoolapkLite</RootNamespace>
     <AssemblyName>CoolapkLite</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>7.3</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
@@ -303,7 +303,6 @@
     <Compile Include="Controls\FeedShellListControl.xaml.cs">
       <DependentUpon>FeedShellListControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\GridPanel.cs" />
     <Compile Include="Controls\HamburgerMenu\HamburgerMenu.cs">
       <DependentUpon>HamburgerMenu.xaml</DependentUpon>
     </Compile>

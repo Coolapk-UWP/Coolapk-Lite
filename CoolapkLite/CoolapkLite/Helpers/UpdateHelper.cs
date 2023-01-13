@@ -26,7 +26,7 @@ namespace CoolapkLite.Helpers
                 throw new ArgumentNullException(nameof(repository));
             }
 
-            HttpClient client = new();
+            HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Add("User-Agent", username);
             string url = string.Format(GITHUB_API, username, repository);
             HttpResponseMessage response = await client.GetAsync(url);
@@ -47,7 +47,7 @@ namespace CoolapkLite.Helpers
                 int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
                 int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
 
-                SystemVersionInfo currentVersionInfo = new(major, minor, build, revision);
+                SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
 
                 return new UpdateInfo
                 {
