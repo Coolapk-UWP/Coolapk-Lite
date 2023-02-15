@@ -118,79 +118,79 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccountLogout.Content" xml:space="preserve">
-    <value>退出登录</value>
+    <value>退出登錄</value>
   </data>
   <data name="AccountLogoutConfirm.Content" xml:space="preserve">
-    <value>确定退出</value>
+    <value>確定登出</value>
   </data>
   <data name="AccountLogoutTitle.Text" xml:space="preserve">
-    <value>你确定要退出登录吗？</value>
+    <value>你確定要退出登錄嗎？</value>
   </data>
   <data name="AccountSetting.Content" xml:space="preserve">
-    <value>账户设置</value>
+    <value>帳號設定</value>
   </data>
   <data name="AccountSettingsHeader.Header" xml:space="preserve">
-    <value>账户</value>
+    <value>帳戶</value>
   </data>
   <data name="AboutSettingsHeader.Header" xml:space="preserve">
-    <value>关于</value>
+    <value>關於</value>
   </data>
   <data name="CheckUpdate.Content" xml:space="preserve">
-    <value>检查更新</value>
+    <value>檢查更新</value>
   </data>
   <data name="CheckUpdateWhenLuanchingCheckBox.Content" xml:space="preserve">
-    <value>启动时检查更新</value>
+    <value>啟動時檢查更新</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
-    <value>清理缓存</value>
+    <value>清理快取</value>
   </data>
   <data name="ContentSettingsHeader.Header" xml:space="preserve">
-    <value>内容</value>
+    <value>內容</value>
   </data>
   <data name="FeedbackLink.Content" xml:space="preserve">
-    <value>在Github上反馈</value>
+    <value>在Github上反饋</value>
   </data>
   <data name="GoToTestPage.Content" xml:space="preserve">
-    <value>前往测试页面</value>
+    <value>前往測試頁面</value>
   </data>
   <data name="LogFolderLink.Content" xml:space="preserve">
-    <value>打开日志文件夹</value>
+    <value>打開紀錄資料夾</value>
   </data>
   <data name="NoPicsModeCheckBox.Header" xml:space="preserve">
-    <value>无图模式</value>
+    <value>無圖模式</value>
   </data>
   <data name="OthersSettingsHeader.Header" xml:space="preserve">
     <value>其他</value>
   </data>
   <data name="ResetSettings.Content" xml:space="preserve">
-    <value>重置应用</value>
+    <value>重置應用</value>
   </data>
   <data name="ResetSettingsConfirm.Content" xml:space="preserve">
-    <value>确定</value>
+    <value>確定</value>
   </data>
   <data name="ResetSettingsTitle.Text" xml:space="preserve">
-    <value>您确定要重置应用吗？</value>
+    <value>你確定要重置應用嗎？</value>
   </data>
   <data name="ShowOtherExceptionCheckBox.Content" xml:space="preserve">
-    <value>显示未知错误</value>
+    <value>顯示未知錯誤</value>
   </data>
   <data name="ThemeModeDark.Content" xml:space="preserve">
     <value>深色</value>
   </data>
   <data name="ThemeModeDefault.Content" xml:space="preserve">
-    <value>跟随系统</value>
+    <value>跟隨系統</value>
   </data>
   <data name="ThemeModeLight.Content" xml:space="preserve">
-    <value>浅色</value>
+    <value>淺色</value>
   </data>
   <data name="ThemeSettingsHeader.Header" xml:space="preserve">
-    <value>主题</value>
+    <value>主題</value>
   </data>
   <data name="UpdateSettingsHeader.Header" xml:space="preserve">
     <value>更新</value>
   </data>
   <data name="MyDevice.Content" xml:space="preserve">
-    <value>我的机型</value>
+    <value>我的機型</value>
   </data>
   <data name="FindUpdate" xml:space="preserve">
     <value>找到新的更新</value>
