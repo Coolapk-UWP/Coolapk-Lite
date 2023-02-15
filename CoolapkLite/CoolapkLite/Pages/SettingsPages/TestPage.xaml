@@ -189,34 +189,41 @@
                     </Grid>
                 </Grid>
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColor}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorDark1}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorDark2}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorDark3}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorLight1}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorLight2}" />
-                    <Rectangle
-                        Width="20"
-                        Height="20"
-                        Fill="{StaticResource SystemAccentColorLight3}" />
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColor}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark1}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark2}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark3}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight1}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight2}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight3}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

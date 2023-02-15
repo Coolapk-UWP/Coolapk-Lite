@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
@@ -49,7 +48,7 @@ namespace CoolapkLite.Helpers
             {
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
-                    url += ".s.jpg";
+                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                     uri = NetworkHelper.ValidateAndGetUri(url);
                 }
 
@@ -58,7 +57,22 @@ namespace CoolapkLite.Helpers
                     BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                     return image;
                 }
-                catch
+                catch (FileNotFoundException)
+                {
+                    try
+                    {
+                        await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
+                        BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                        return image;
+                    }
+                    catch (Exception)
+                    {
+                        string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                        UIHelper.ShowMessage(str);
+                        return NoPic;
+                    }
+                }
+                catch (Exception)
                 {
                     string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                     UIHelper.ShowMessage(str);
@@ -84,7 +98,7 @@ namespace CoolapkLite.Helpers
             {
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
-                    url += ".s.jpg";
+                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                     uri = NetworkHelper.ValidateAndGetUri(url);
                 }
 
@@ -158,7 +172,8 @@ namespace CoolapkLite.Helpers
                 IStorageItem item = await folder.TryGetItemAsync(fileName);
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
-                    url += ".s.jpg";
+                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
+                    uri = NetworkHelper.ValidateAndGetUri(url);
                 }
                 if (item is null)
                 {
@@ -201,7 +216,7 @@ namespace CoolapkLite.Helpers
             catch (FileLoadException) { return NoPic; }
             catch (HttpRequestException)
             {
-                string str = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                 UIHelper.ShowMessage(str);
                 return NoPic;
             }
