@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Browser" xml:space="preserve">
-    <value>浏览器</value>
+    <value>瀏覽器</value>
   </data>
   <data name="Circle" xml:space="preserve">
     <value>圈子</value>
@@ -127,16 +127,16 @@
     <value>收藏</value>
   </data>
   <data name="History" xml:space="preserve">
-    <value>历史</value>
+    <value>歷史</value>
   </data>
   <data name="Home" xml:space="preserve">
-    <value>主页</value>
+    <value>主頁</value>
   </data>
   <data name="ListView.PullToRefreshContent" xml:space="preserve">
     <value>下拉刷新</value>
   </data>
   <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
-    <value>松手刷新</value>
+    <value>鬆手刷新</value>
   </data>
   <data name="Search.Text" xml:space="preserve">
     <value>搜索</value>
@@ -145,12 +145,12 @@
     <value>搜索</value>
   </data>
   <data name="Setting" xml:space="preserve">
-    <value>设置</value>
+    <value>設定</value>
   </data>
   <data name="Test" xml:space="preserve">
-    <value>测试</value>
+    <value>測試</value>
   </data>
   <data name="User" xml:space="preserve">
-    <value>用户</value>
+    <value>用戶</value>
   </data>
 </root>
