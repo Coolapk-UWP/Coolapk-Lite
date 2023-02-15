@@ -118,52 +118,52 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="active" xml:space="preserve">
-    <value>活跃</value>
+    <value>活躍</value>
   </data>
   <data name="all" xml:space="preserve">
-    <value>精选</value>
+    <value>精選</value>
   </data>
   <data name="answer" xml:space="preserve">
-    <value>问答</value>
+    <value>問答</value>
   </data>
   <data name="article" xml:space="preserve">
-    <value>图文</value>
+    <value>圖文</value>
   </data>
   <data name="block_status-1" xml:space="preserve">
-    <value>[黑号]</value>
+    <value>[黑號]</value>
   </data>
   <data name="block_status2" xml:space="preserve">
     <value>[已限流]</value>
   </data>
   <data name="Comment.Text" xml:space="preserve">
-    <value>讨论</value>
+    <value>討論</value>
   </data>
   <data name="Commentnum.Text" xml:space="preserve">
-    <value>讨论</value>
+    <value>討論</value>
   </data>
   <data name="dateline_desc" xml:space="preserve">
-    <value>按时间排序</value>
+    <value>按時間排序</value>
   </data>
   <data name="DownloadNum.Text" xml:space="preserve">
-    <value>下载</value>
+    <value>下載</value>
   </data>
   <data name="fan" xml:space="preserve">
-    <value>粉丝</value>
+    <value>粉絲</value>
   </data>
   <data name="Fans.Text" xml:space="preserve">
-    <value>粉丝</value>
+    <value>粉絲</value>
   </data>
   <data name="feed" xml:space="preserve">
-    <value>动态</value>
+    <value>動態</value>
   </data>
   <data name="Feeds.Text" xml:space="preserve">
-    <value>动态</value>
+    <value>動態</value>
   </data>
   <data name="follow" xml:space="preserve">
-    <value>关注</value>
+    <value>關注</value>
   </data>
   <data name="followFan" xml:space="preserve">
-    <value>互关</value>
+    <value>互關</value>
   </data>
   <data name="followFanGlyph" xml:space="preserve">
     <value></value>
@@ -172,19 +172,19 @@
     <value></value>
   </data>
   <data name="FollowNum.Text" xml:space="preserve">
-    <value>关注</value>
+    <value>關注</value>
   </data>
   <data name="hot" xml:space="preserve">
-    <value>热门</value>
+    <value>熱門</value>
   </data>
   <data name="HotNum" xml:space="preserve">
-    <value>热度</value>
+    <value>熱度</value>
   </data>
   <data name="HotNumTXT.Text" xml:space="preserve">
-    <value>热度</value>
+    <value>熱度</value>
   </data>
   <data name="htmlFeed" xml:space="preserve">
-    <value>图文</value>
+    <value>圖文</value>
   </data>
   <data name="inBlackList" xml:space="preserve">
     <value>已拉黑</value>
@@ -193,43 +193,43 @@
     <value></value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
-    <value>最近回复</value>
+    <value>最近回復</value>
   </data>
   <data name="newest" xml:space="preserve">
     <value>最新</value>
   </data>
   <data name="NewsNum.Text" xml:space="preserve">
-    <value>新闻</value>
+    <value>新聞</value>
   </data>
   <data name="popular" xml:space="preserve">
-    <value>按热度排序</value>
+    <value>按熱度排序</value>
   </data>
   <data name="product_num" xml:space="preserve">
-    <value>个机型</value>
+    <value>個機型</value>
   </data>
   <data name="questionAndAnswer" xml:space="preserve">
-    <value>问答</value>
+    <value>問答</value>
   </data>
   <data name="release_time" xml:space="preserve">
-    <value>发布日期：</value>
+    <value>發布日期：</value>
   </data>
   <data name="square" xml:space="preserve">
-    <value>广场</value>
+    <value>廣場</value>
   </data>
   <data name="status-1" xml:space="preserve">
     <value>[已锁定]</value>
   </data>
   <data name="status1" xml:space="preserve">
-    <value>[半黑号]</value>
+    <value>[半黑號]</value>
   </data>
   <data name="Subscribed.Text" xml:space="preserve">
-    <value>订阅</value>
+    <value>訂閱</value>
   </data>
   <data name="unfollow" xml:space="preserve">
-    <value>已关注</value>
+    <value>已關注</value>
   </data>
   <data name="unfollowFan" xml:space="preserve">
-    <value>已互关</value>
+    <value>已互關</value>
   </data>
   <data name="unfollowFanGlyph" xml:space="preserve">
     <value></value>
