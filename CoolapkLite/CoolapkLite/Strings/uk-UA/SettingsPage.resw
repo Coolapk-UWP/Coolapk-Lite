@@ -118,84 +118,84 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccountLogout.Content" xml:space="preserve">
-    <value>退出登录</value>
+    <value>Вийти</value>
   </data>
   <data name="AccountLogoutConfirm.Content" xml:space="preserve">
-    <value>确定退出</value>
+    <value>Підтвердити вихід</value>
   </data>
   <data name="AccountLogoutTitle.Text" xml:space="preserve">
-    <value>你确定要退出登录吗？</value>
+    <value>Ви впевнені, що бажаєте вийти?</value>
   </data>
   <data name="AccountSetting.Content" xml:space="preserve">
-    <value>账户设置</value>
+    <value>Налаштування облікового запису</value>
   </data>
   <data name="AccountSettingsHeader.Header" xml:space="preserve">
-    <value>账户</value>
+    <value>Обліковий запис</value>
   </data>
   <data name="AboutSettingsHeader.Header" xml:space="preserve">
-    <value>关于</value>
+    <value>Про програму</value>
   </data>
   <data name="CheckUpdate.Content" xml:space="preserve">
-    <value>检查更新</value>
+    <value>Перевірити наявність оновлень</value>
   </data>
   <data name="CheckUpdateWhenLuanchingCheckBox.Content" xml:space="preserve">
-    <value>启动时检查更新</value>
+    <value>Перевірити наявність оновлень під час запуску</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
-    <value>清理缓存</value>
+    <value>Очистити кеш</value>
   </data>
   <data name="ContentSettingsHeader.Header" xml:space="preserve">
-    <value>内容</value>
+    <value>Вміст</value>
   </data>
   <data name="FeedbackLink.Content" xml:space="preserve">
-    <value>在Github上反馈</value>
+    <value>Відгук на GitHub</value>
   </data>
   <data name="GoToTestPage.Content" xml:space="preserve">
-    <value>前往测试页面</value>
+    <value>Перейти на TestPage</value>
   </data>
   <data name="LogFolderLink.Content" xml:space="preserve">
-    <value>打开日志文件夹</value>
+    <value>Відкрити папку журналу</value>
   </data>
   <data name="NoPicsModeCheckBox.Header" xml:space="preserve">
-    <value>无图模式</value>
+    <value>Без режиму зображення</value>
   </data>
   <data name="OthersSettingsHeader.Header" xml:space="preserve">
-    <value>其他</value>
+    <value>Інше</value>
   </data>
   <data name="ResetSettings.Content" xml:space="preserve">
-    <value>重置应用</value>
+    <value>Скинути застосунок</value>
   </data>
   <data name="ResetSettingsConfirm.Content" xml:space="preserve">
-    <value>确定</value>
+    <value>Так</value>
   </data>
   <data name="ResetSettingsTitle.Text" xml:space="preserve">
-    <value>您确定要重置应用吗？</value>
+    <value>Ви впевнені, що бажаєте скинути застосунок?</value>
   </data>
   <data name="ShowOtherExceptionCheckBox.Content" xml:space="preserve">
-    <value>显示未知错误</value>
+    <value>Показати невідому помилку</value>
   </data>
   <data name="ThemeModeDark.Content" xml:space="preserve">
-    <value>深色</value>
+    <value>Темна</value>
   </data>
   <data name="ThemeModeDefault.Content" xml:space="preserve">
-    <value>跟随系统</value>
+    <value>Системна</value>
   </data>
   <data name="ThemeModeLight.Content" xml:space="preserve">
-    <value>浅色</value>
+    <value>Світла</value>
   </data>
   <data name="ThemeSettingsHeader.Header" xml:space="preserve">
-    <value>主题</value>
+    <value>Тема</value>
   </data>
   <data name="UpdateSettingsHeader.Header" xml:space="preserve">
-    <value>更新</value>
+    <value>Оновити</value>
   </data>
   <data name="MyDevice.Content" xml:space="preserve">
-    <value>我的机型</value>
+    <value>Моя модель пристрою</value>
   </data>
   <data name="FindUpdate" xml:space="preserve">
-    <value>找到新的更新</value>
+    <value>Знайти оновлення</value>
   </data>
   <data name="UpToDate" xml:space="preserve">
-    <value>已是最新</value>
+    <value>Оновлено</value>
   </data>
 </root>

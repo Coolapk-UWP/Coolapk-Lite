@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="NoMore" xml:space="preserve">
-    <value>没有更多了</value>
+    <value>沒有更多了</value>
   </data>
   <data name="NoMoreHotReply" xml:space="preserve">
     <value>没有更多热门回复了</value>
   </data>
   <data name="NoMoreLikeUser" xml:space="preserve">
-    <value>没有更多点赞用户了</value>
+    <value>沒有更多點讚使用者了</value>
   </data>
   <data name="NoMoreReply" xml:space="preserve">
-    <value>没有更多回复了</value>
+    <value>沒有更多回復了</value>
   </data>
   <data name="NoMoreShare" xml:space="preserve">
-    <value>没有更多转发了</value>
+    <value>沒有更多轉發了</value>
   </data>
 </root>
