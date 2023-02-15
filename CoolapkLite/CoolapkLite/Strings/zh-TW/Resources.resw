@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDescription" xml:space="preserve">
-    <value>一个基于 UWP 平台的第三方酷安客户端精简版</value>
+    <value>一個基於 UWP 平臺的第三方酷安用戶端精簡版</value>
   </data>
   <data name="AppName" xml:space="preserve">
     <value>酷安 Lite</value>
   </data>
   <data name="ExceptionThrown" xml:space="preserve">
-    <value>程序出现了错误……</value>
+    <value>程式出現了錯誤......</value>
   </data>
   <data name="ImageLoadError" xml:space="preserve">
-    <value>图片加载失败</value>
+    <value>圖片載入失敗</value>
   </data>
   <data name="NetworkError" xml:space="preserve">
-    <value>无法连接到网络</value>
+    <value>無法連接到網路</value>
   </data>
 </root>
