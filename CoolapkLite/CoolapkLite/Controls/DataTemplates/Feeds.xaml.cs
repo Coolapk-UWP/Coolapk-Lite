@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -104,7 +104,7 @@ namespace CoolapkLite.Controls.DataTemplates
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UserControl UserControl = sender as UserControl;
-            StackPanel StackPanel = UserControl.FindChildByName("BtnsPanel") as StackPanel;
+            FrameworkElement StackPanel = UserControl.FindChild("BtnsPanel");
             double width = e is null ? UserControl.Width : e.NewSize.Width;
             StackPanel.SetValue(Grid.RowProperty, width > 600 ? 1 : 10);
         }

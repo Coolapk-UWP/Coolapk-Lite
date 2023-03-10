@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.BackgroundTasks;
 using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Exceptions;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -252,7 +251,7 @@ namespace CoolapkLite
                 .UnhandledException += SynchronizationContext_UnhandledException;
         }
 
-        private void SynchronizationContext_UnhandledException(object sender, Helpers.Exceptions.UnhandledExceptionEventArgs e)
+        private void SynchronizationContext_UnhandledException(object sender, Helpers.UnhandledExceptionEventArgs e)
         {
             if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))
             {

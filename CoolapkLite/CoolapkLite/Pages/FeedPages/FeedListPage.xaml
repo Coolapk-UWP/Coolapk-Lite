@@ -8,7 +8,7 @@
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feeds:FeedListViewModel}"
     mc:Ignorable="d">
     <Page.Resources>
@@ -112,7 +112,7 @@
                 <Grid x:Name="RightGrid">
                     <control:ShyHeaderListView
                         x:Name="ListView"
-                        ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+                        ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
                         ItemContainerStyle="{StaticResource DefaultCardItemStyle}"

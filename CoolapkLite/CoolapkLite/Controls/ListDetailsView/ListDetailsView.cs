@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;

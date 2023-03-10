@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
+    xmlns:cwuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{StaticResource LayerFillColorDefaultBrush}"
@@ -196,7 +197,7 @@
                     </StackPanel>
                 </control:HeaderedContentControl>
                 <control:HeaderedContentControl x:Uid="/SettingsPage/AboutSettingsHeader" Style="{StaticResource HeaderStyle}">
-                    <control:MarkdownTextBlock
+                    <cwuc:MarkdownTextBlock
                         x:Uid="/MarkDown/about"
                         Margin="0,2"
                         HorizontalAlignment="Left"

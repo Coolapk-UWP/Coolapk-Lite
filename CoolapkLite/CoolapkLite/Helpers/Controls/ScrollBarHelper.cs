@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
+﻿using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,7 +35,7 @@ namespace CoolapkLite.Helpers
                 {
                     Thickness Margin = GetVerticalScrollBarMargin((FrameworkElement)d);
                     ScrollViewer ScrollViewer = Element is ScrollViewer ? (ScrollViewer)Element : Element?.FindDescendant<ScrollViewer>();
-                    ScrollBar VerticalScrollBar = Element is ScrollBar ? (ScrollBar)Element : (ScrollBar)ScrollViewer?.FindDescendantByName("VerticalScrollBar");
+                    ScrollBar VerticalScrollBar = Element is ScrollBar ? (ScrollBar)Element : (ScrollBar)ScrollViewer?.FindDescendant("VerticalScrollBar");
                     if (VerticalScrollBar != null) { VerticalScrollBar.Margin = Margin; }
                 };
             }
@@ -43,7 +43,7 @@ namespace CoolapkLite.Helpers
             {
                 Thickness Margin = GetVerticalScrollBarMargin((FrameworkElement)d);
                 ScrollViewer ScrollViewer = Element is ScrollViewer ? (ScrollViewer)Element : Element?.FindDescendant<ScrollViewer>();
-                ScrollBar VerticalScrollBar = Element is ScrollBar ? (ScrollBar)Element : (ScrollBar)ScrollViewer?.FindDescendantByName("VerticalScrollBar");
+                ScrollBar VerticalScrollBar = Element is ScrollBar ? (ScrollBar)Element : (ScrollBar)ScrollViewer?.FindDescendant("VerticalScrollBar");
                 if (VerticalScrollBar != null) { VerticalScrollBar.Margin = Margin; }
             }
         }

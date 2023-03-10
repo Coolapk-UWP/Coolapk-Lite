@@ -7,7 +7,7 @@
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:HistoryViewModel}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -22,7 +22,7 @@
         <control:PullToRefreshListView
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
-            ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplate="{StaticResource ListDefaultTemplate}"
             ItemsSource="{Binding}"

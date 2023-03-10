@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
+﻿using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -251,11 +251,11 @@ namespace CoolapkLite.Helpers
             {
                 object targetItem = e.AddedItems.FirstOrDefault();
                 TargetItemContainer = selector.ContainerFromItem(targetItem);
-                TargetItemTips = TargetItemContainer?.FindDescendantByName(name);
+                TargetItemTips = TargetItemContainer?.FindDescendant(name);
 
                 object sourceItem = e.RemovedItems.FirstOrDefault();
                 SourceItemContainer = selector.ContainerFromItem(sourceItem);
-                SourceItemTips = SourceItemContainer?.FindDescendantByName(name);
+                SourceItemTips = SourceItemContainer?.FindDescendant(name);
             }
             if (SourceItemTips != null && TargetItemTips != null)
             {
@@ -292,7 +292,7 @@ namespace CoolapkLite.Helpers
                 {
                     if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (TargetItemContainer as PivotItem).Header.ToString())
                     {
-                        TargetItemTips = item?.FindDescendantByName(name);
+                        TargetItemTips = item?.FindDescendant(name);
                         break;
                     }
                 }
@@ -305,7 +305,7 @@ namespace CoolapkLite.Helpers
                 {
                     if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (SourceItemContainer as PivotItem).Header.ToString())
                     {
-                        SourceItemTips = item?.FindDescendantByName(name);
+                        SourceItemTips = item?.FindDescendant(name);
                         break;
                     }
                 }

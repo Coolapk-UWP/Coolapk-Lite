@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
 using System;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Storage;
 using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using IObjectSerializer = Microsoft.Toolkit.Helpers.IObjectSerializer;
 
 namespace CoolapkLite.Helpers
 {
@@ -28,67 +28,68 @@ namespace CoolapkLite.Helpers
         public const string IsDisplayOriginPicture = "IsDisplayOriginPicture";
         public const string CheckUpdateWhenLuanching = "CheckUpdateWhenLuanching";
 
-        public static Type Get<Type>(string key) => (Type)LocalSettings.Values[key];
-
-        public static void Set(string key, object value) => LocalSettings.Values[key] = value;
+        public static Type Get<Type>(string key) => LocalObject.Read<Type>(key);
+        public static void Set<Type>(string key, Type value) => LocalObject.Save(key, value);
+        public static void SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync(key, value);
+        public static async Task<Type> GetFile<Type>(string key) => await LocalObject.ReadFileAsync<Type>(key);
 
         public static void SetDefaultSettings()
         {
-            if (!LocalSettings.Values.ContainsKey(Uid))
+            if (!LocalObject.KeyExists(Uid))
             {
-                LocalSettings.Values.Add(Uid, string.Empty);
+                LocalObject.Save(Uid, string.Empty);
             }
-            if (!LocalSettings.Values.ContainsKey(Token))
+            if (!LocalObject.KeyExists(Token))
             {
-                LocalSettings.Values.Add(Token, string.Empty);
+                LocalObject.Save(Token, string.Empty);
             }
-            if (!LocalSettings.Values.ContainsKey(TileUrl))
+            if (!LocalObject.KeyExists(TileUrl))
             {
-                LocalSettings.Values.Add(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
+                LocalObject.Save(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
             }
-            if (!LocalSettings.Values.ContainsKey(UserName))
+            if (!LocalObject.KeyExists(UserName))
             {
-                LocalSettings.Values.Add(UserName, string.Empty);
+                LocalObject.Save(UserName, string.Empty);
             }
-            if (!LocalSettings.Values.ContainsKey(IsUseAPI2))
+            if (!LocalObject.KeyExists(IsUseAPI2))
             {
-                LocalSettings.Values.Add(IsUseAPI2, true);
+                LocalObject.Save(IsUseAPI2, true);
             }
-            if (!LocalSettings.Values.ContainsKey(IsFirstRun))
+            if (!LocalObject.KeyExists(IsFirstRun))
             {
-                LocalSettings.Values.Add(IsFirstRun, true);
+                LocalObject.Save(IsFirstRun, true);
             }
-            if (!LocalSettings.Values.ContainsKey(APIVersion))
+            if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalSettings.Values.Add(APIVersion, "V13");
+                LocalObject.Save(APIVersion, "V13");
             }
-            if (!LocalSettings.Values.ContainsKey(IsNoPicsMode))
+            if (!LocalObject.KeyExists(IsNoPicsMode))
             {
-                LocalSettings.Values.Add(IsNoPicsMode, false);
+                LocalObject.Save(IsNoPicsMode, false);
             }
-            if (!LocalSettings.Values.ContainsKey(TokenVersion))
+            if (!LocalObject.KeyExists(TokenVersion))
             {
-                LocalSettings.Values.Add(TokenVersion, (int)Common.TokenVersion.TokenV2);
+                LocalObject.Save(TokenVersion, Common.TokenVersion.TokenV2);
             }
-            if (!LocalSettings.Values.ContainsKey(SelectedAppTheme))
+            if (!LocalObject.KeyExists(SelectedAppTheme))
             {
-                LocalSettings.Values.Add(SelectedAppTheme, (int)ElementTheme.Default);
+                LocalObject.Save(SelectedAppTheme, ElementTheme.Default);
             }
-            if (!LocalSettings.Values.ContainsKey(IsUseOldEmojiMode))
+            if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {
-                LocalSettings.Values.Add(IsUseOldEmojiMode, false);
+                LocalObject.Save(IsUseOldEmojiMode, false);
             }
-            if (!LocalSettings.Values.ContainsKey(ShowOtherException))
+            if (!LocalObject.KeyExists(ShowOtherException))
             {
-                LocalSettings.Values.Add(ShowOtherException, true);
+                LocalObject.Save(ShowOtherException, true);
             }
-            if (!LocalSettings.Values.ContainsKey(IsDisplayOriginPicture))
+            if (!LocalObject.KeyExists(IsDisplayOriginPicture))
             {
-                LocalSettings.Values.Add(IsDisplayOriginPicture, false);
+                LocalObject.Save(IsDisplayOriginPicture, false);
             }
-            if (!LocalSettings.Values.ContainsKey(CheckUpdateWhenLuanching))
+            if (!LocalObject.KeyExists(CheckUpdateWhenLuanching))
             {
-                LocalSettings.Values.Add(CheckUpdateWhenLuanching, true);
+                LocalObject.Save(CheckUpdateWhenLuanching, true);
             }
         }
     }
@@ -97,8 +98,8 @@ namespace CoolapkLite.Helpers
     {
         public static event TypedEventHandler<string, bool> LoginChanged;
         public static ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
-        private static readonly ApplicationDataContainer LocalSettings = ApplicationData.Current.LocalSettings;
         public static readonly MetroLog.ILogManager LogManager = MetroLog.LogManagerFactory.CreateLogManager();
+        public static readonly ApplicationDataStorageHelper LocalObject = ApplicationDataStorageHelper.GetCurrent(new SystemTextJsonObjectSerializer());
         public static double WindowsVersion = double.Parse($"{(ushort)((version & 0x00000000FFFF0000L) >> 16)}.{(ushort)(SettingsHelper.version & 0x000000000000FFFFL)}");
 
         static SettingsHelper()
@@ -221,5 +222,15 @@ namespace CoolapkLite.Helpers
             Set(UserName, string.Empty);
             LoginChanged?.Invoke(string.Empty, false);
         }
+    }
+
+    public class SystemTextJsonObjectSerializer : IObjectSerializer
+    {
+        // Specify your serialization settings
+        private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };
+
+        string IObjectSerializer.Serialize<T>(T value) => JsonConvert.SerializeObject(value, typeof(T), Formatting.Indented, settings);
+
+        public T Deserialize<T>(string value) => JsonConvert.DeserializeObject<T>(value, settings);
     }
 }

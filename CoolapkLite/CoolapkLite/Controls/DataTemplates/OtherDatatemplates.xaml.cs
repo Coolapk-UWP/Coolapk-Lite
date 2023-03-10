@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.UI.Xaml;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -15,7 +15,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private void OnTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            if (((FrameworkElement)sender).FindAscendantByName("searchPivot") == null)
+            if (((FrameworkElement)sender).FindAscendant("searchPivot") == null)
             {
                 UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
             }

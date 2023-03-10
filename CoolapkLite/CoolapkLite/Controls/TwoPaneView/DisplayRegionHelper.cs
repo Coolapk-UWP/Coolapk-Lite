@@ -1,4 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Extensions;
+﻿using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -105,7 +105,7 @@ namespace CoolapkLite.Controls
 
                 if (Window.Current.Content is FrameworkElement fe)
                 {
-                    window = fe.FindDescendantByName("SimulatedWindow");
+                    window = fe.FindDescendant("SimulatedWindow");
                 }
 
                 return window;

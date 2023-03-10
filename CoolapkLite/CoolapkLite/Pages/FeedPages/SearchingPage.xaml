@@ -9,7 +9,7 @@
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI.Extensions"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:SearchingViewModel}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
@@ -259,7 +259,7 @@
             </Pivot.RightHeader>
             <PivotItem Header="动态">
                 <control:PullToRefreshListView
-                    ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachFeedItemSourse}"
@@ -269,7 +269,7 @@
             </PivotItem>
             <PivotItem Header="用户">
                 <control:PullToRefreshListView
-                    ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachUserItemSourse}"
@@ -279,7 +279,7 @@
             </PivotItem>
             <PivotItem Header="话题">
                 <control:PullToRefreshListView
-                    ui:ListViewExtensions.StretchItemContainerDirection="Horizontal"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SeachTopicItemSourse}"

@@ -29,7 +29,6 @@
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
-    <Win32Resource>Assets\MiddleClickScrolling-CursorType.res</Win32Resource>
     <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -154,89 +153,13 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.Events.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.Properties.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsViewState.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\CodeBlockResolvingEventArgs.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\ImageResolvingEventArgs.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\LinkClickedEventArgs.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownRenderedEventArgs.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Dimensions.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Events.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Methods.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\MarkdownTextBlock.Properties.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Constants.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\IParser.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\ParseHelpers.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\SchemaBase.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Core\StringValueAttribute.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\CodeBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\HeaderBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\HorizontalRuleBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\LinkReferenceBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\ListBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemBuilder.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\ListItemPreamble.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\List\NestedListInfo.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\ParagraphBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\QuoteBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\TableBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Blocks\YamlHeaderBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\ColumnAlignment.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\HyperlinkType.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\InlineParseMethod.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\ListStyle.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\MarkdownBlockType.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Enums\MarkdownInlineType.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\Common.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\DebuggingReporter.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\InlineParseResult.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\InlineTripCharHelper.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Helpers\LineInfo.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\BoldItalicTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\BoldTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\CodeInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\CommentInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\EmojiInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\EmojiInline.EmojiCodes.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\HyperlinkInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\IInlineContainer.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\IInlineLeaf.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ILinkElement.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ImageInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\ItalicTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\LinkAnchorInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\MarkdownLinkInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\StrikethroughTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\SubscriptTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\SuperscriptTextInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Inlines\TextRunInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownBlock.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownDocument.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownElement.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\MarkdownInline.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\IRenderContext.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.Blocks.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Parsers\Markdown\Render\MarkdownRendererBase.Inlines.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\ICodeBlockResolver.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\IImageResolver.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\ILinkRegister.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\InlineRenderContext.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Blocks.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Dimensions.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Inlines.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownRenderer.Properties.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\MarkdownTable.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\RenderContext.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\RenderContextIncorrectException.cs" />
-    <Compile Include="Controls\MarkdownTextBlock\Render\UIElementCollectionRenderContext.cs" />
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
@@ -269,7 +192,7 @@
     <Compile Include="Models\CollectionModel.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\Exceptions\CoolapkMessageException.cs" />
-    <Compile Include="Helpers\Exceptions\ExceptionHandlingSynchronizationContext.cs" />
+    <Compile Include="Helpers\ExceptionHandling.cs" />
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
@@ -323,9 +246,6 @@
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuImageItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItem.cs" />
     <Compile Include="Controls\HamburgerMenu\MenuItems\HamburgerMenuItemCollection.cs" />
-    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs">
-      <DependentUpon>HeaderedContentControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\PivotHeader\PivotHeader.cs">
       <DependentUpon>PivotHeader.xaml</DependentUpon>
     </Compile>
@@ -956,7 +876,6 @@
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
-    <Content Include="Assets\MiddleClickScrolling-CursorType.res" />
     <Content Include="Assets\NoPic\image_empty.png" />
     <Content Include="Assets\NoPic\img_placeholder.png" />
     <Content Include="Assets\NoPic\img_placeholder_night.png" />
@@ -1033,11 +952,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
+    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\MarkdownTextBlock\MarkdownTextBlock.xaml">
+    <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1177,10 +1096,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Styles\Brushes\AcrylicBrushes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1211,9 +1126,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="ColorCode.UWP">
-      <Version>2.0.6</Version>
-    </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
       <Version>1.11.46</Version>
     </PackageReference>
@@ -1226,20 +1138,20 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.Connectivity">
-      <Version>4.0.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>6.1.1</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI">
-      <Version>4.0.0</Version>
+      <Version>7.1.3</Version>
     </PackageReference>
     <PackageReference Include="MvvmLight">
       <Version>5.4.1.1</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
     <PackageReference Include="QRCoder">
       <Version>1.4.3</Version>
+    </PackageReference>
+    <PackageReference Include="System.ValueTuple">
+      <Version>4.5.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -1313,6 +1225,38 @@
     <ProjectReference Include="..\BCrypt.Net\BCrypt.Net.csproj">
       <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
       <Name>BCrypt.Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ColorCode-Universal\ColorCode.Core\ColorCode.Core.csproj">
+      <Project>{66c525f8-8bb9-4026-8ced-5f2868175b8e}</Project>
+      <Name>ColorCode.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ColorCode-Universal\ColorCode.UWP\ColorCode.UWP.csproj">
+      <Project>{c28c936a-316c-46da-888d-3ab53f15557e}</Project>
+      <Name>ColorCode.UWP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.Connectivity\Microsoft.Toolkit.Uwp.Connectivity.csproj">
+      <Project>{fedc09c9-6e92-4676-87e1-bf492644dc40}</Project>
+      <Name>Microsoft.Toolkit.Uwp.Connectivity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Core\Microsoft.Toolkit.Uwp.UI.Controls.Core.csproj">
+      <Project>{7e63fd82-2598-46e3-b38f-57613ef74b51}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI.Controls.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Markdown\Microsoft.Toolkit.Uwp.UI.Controls.Markdown.csproj">
+      <Project>{3a5c5c2d-2493-415c-bdeb-2b6d97ffcbee}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI.Controls.Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Primitives\Microsoft.Toolkit.Uwp.UI.Controls.Primitives.csproj">
+      <Project>{6f7f3cdd-d85d-41b6-a9fd-5e72c3cf5292}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI.Controls.Primitives</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI\Microsoft.Toolkit.Uwp.UI.csproj">
+      <Project>{ad731f87-a0e3-4b6c-add9-edc02b3b4abe}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp\Microsoft.Toolkit.Uwp.csproj">
+      <Project>{a50d881f-7442-4ed6-b137-fcbb82ddfb95}</Project>
+      <Name>Microsoft.Toolkit.Uwp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

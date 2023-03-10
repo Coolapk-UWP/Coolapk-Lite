@@ -1,7 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.DataSource;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;

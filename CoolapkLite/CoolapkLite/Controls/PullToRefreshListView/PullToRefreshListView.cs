@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Windows.Input;
 using Windows.Foundation;
@@ -639,7 +639,7 @@ namespace CoolapkLite.Controls
 
         private void Scroller_Loaded(object sender, RoutedEventArgs e)
         {
-            _scrollerVerticalScrollBar = _scroller.FindDescendantByName("VerticalScrollBar") as ScrollBar;
+            _scrollerVerticalScrollBar = _scroller.FindDescendant("VerticalScrollBar") as ScrollBar;
             _scrollerVerticalScrollBar.PointerEntered += ScrollerVerticalScrollBar_PointerEntered;
             _scrollerVerticalScrollBar.PointerExited += ScrollerVerticalScrollBar_PointerExited;
         }

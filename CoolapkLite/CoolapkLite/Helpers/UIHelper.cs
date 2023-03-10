@@ -4,7 +4,7 @@ using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -217,7 +217,7 @@ namespace CoolapkLite.Helpers
             {
                 if (source is FrameworkElement FrameworkElement)
                 {
-                    r = source == DependencyObject.FindAscendantByName(FrameworkElement.Name);
+                    r = source == DependencyObject.FindAscendant(FrameworkElement.Name);
                 }
             }
             return source == originalSource || r;

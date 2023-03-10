@@ -3,7 +3,7 @@ using CoolapkLite.Models;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using GalaSoft.MvvmLight.Command;
-using Microsoft.Toolkit.Uwp.UI.Extensions;
+using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
