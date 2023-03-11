@@ -115,7 +115,7 @@ namespace CoolapkLite.ViewModels
 
         public async void SharePic()
         {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri, true);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
@@ -136,7 +136,7 @@ namespace CoolapkLite.ViewModels
         public async void SavePic()
         {
             string url = Images[Index].Uri;
-            StorageFile image = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, url, true);
+            StorageFile image = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, url);
             if (image != null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");

@@ -7,7 +7,7 @@
     xmlns:feeds="using:CoolapkLite.Models.Feeds"
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:valueconverters="using:CoolapkLite.Helpers.ValueConverters"
+    xmlns:valueconverters="using:CoolapkLite.Helpers.Converters"
     d:DataContext="{d:DesignInstance Type=feeds:FeedDetailModel}"
     d:DesignHeight="300"
     d:DesignWidth="400"

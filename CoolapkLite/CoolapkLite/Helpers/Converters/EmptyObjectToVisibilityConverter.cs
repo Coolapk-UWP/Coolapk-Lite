@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.UI.Converters;
 using Windows.UI.Xaml;
 
-namespace CoolapkLite.Helpers.ValueConverters
+namespace CoolapkLite.Helpers.Converters
 {
     /// <summary>
     /// This class converts a object value into a Visibility value (if the value is null or empty returns a collapsed value).

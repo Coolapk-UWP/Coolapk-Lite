@@ -13,7 +13,7 @@ namespace CoolapkLite.Helpers.StateTrigger
 
         public bool IsPresent
         {
-            get { return _isPresent; }
+            get => _isPresent;
             set
             {
                 _isPresent = value;

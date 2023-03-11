@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.ObjectModel;
@@ -30,7 +31,7 @@ namespace CoolapkLite.Pages
         public ShowImagePage()
         {
             InitializeComponent();
-            if (SettingsHelper.WindowsVersion >= 22000)
+            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             {
                 CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
             }

@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class HistoryModel : Entity, IList
+    public class HistoryModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -33,7 +33,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Description = double.Parse(dateline.ToString()).ConvertUnixTimeStampToReadable();
+                Description = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
             }
 
             if (token.TryGetValue("logo", out JToken logo))

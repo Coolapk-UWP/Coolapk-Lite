@@ -3,21 +3,66 @@ using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class SourceFeedModel : Entity
+    public class SourceFeedModel : Entity, INotifyPropertyChanged
     {
+        private bool showUser = true;
+        public bool ShowUser
+        {
+            get => showUser;
+            set
+            {
+                if (showUser != value)
+                {
+                    showUser = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        private bool isCopyEnabled;
+        public bool IsCopyEnabled
+        {
+            get => isCopyEnabled;
+            set
+            {
+                if (isCopyEnabled != value)
+                {
+                    isCopyEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        public int RatingStar { get; private set; }
+
+        public bool IsRatingFeed { get; private set; }
+        public bool IsCoolPicture { get; private set; }
+        public bool IsQuestionFeed { get; private set; }
+
         public string Url { get; private set; }
         public string Message { get; private set; }
-        public ImageModel Pic { get; private set; }
         public string Dateline { get; private set; }
         public string ShareUrl { get; private set; }
+        public string MessageTitle { get; private set; }
+        public string FeedType { get; private set; } = "feed";
+
+        public ImageModel Pic { get; private set; }
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
-        public string FeedType { get; private set; } = "feed";
+
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
 
         public SourceFeedModel(JObject token) : base(token)
         {
@@ -50,33 +95,51 @@ namespace CoolapkLite.Models.Feeds
                 UserAction = new UserAction(null);
             }
 
-            if (token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString()))
-            {
-                ShareUrl = shareUrl.ToString();
-            }
-            else
-            {
-                ShareUrl = "https://www.coolapk.com" + Url != null ? Url.Replace("/question/", "/feed/") : string.Empty; ;
-            }
+            ShareUrl = token.TryGetValue("shareUrl", out JToken shareUrl) && !string.IsNullOrEmpty(shareUrl.ToString())
+                ? shareUrl.ToString()
+                : $"https://www.coolapk.com{(Url != null ? Url.Replace("/question/", "/feed/") : string.Empty)}";
 
             if (token.TryGetValue("message", out JToken message))
             {
-                Message = message.ToString();
+                Message = message.ToString().Replace("<a href=\"\">查看更多</a>", $"<a href=\"{Url}\">查看更多</a>");
+            }
+
+            if (token.TryGetValue("message_title", out JToken message_title))
+            {
+                MessageTitle = message_title.ToString();
             }
 
             if (token.TryGetValue("feedType", out JToken feedType))
             {
                 FeedType = feedType.ToString();
+                switch (FeedType)
+                {
+                    case "question":
+                        IsQuestionFeed = true;
+                        Url = Url.Replace("/feed/", "/question/");
+                        break;
+                    case "rating":
+                        IsRatingFeed = true;
+                        if (token.TryGetValue("star", out JToken star))
+                        {
+                            RatingStar = star.ToObject<int>();
+                        }
+                        break;
+                }
             }
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<double>().ConvertUnixTimeStampToReadable();
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
             }
 
-            if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0 && !string.IsNullOrEmpty((picArr as JArray)[0].ToString()))
+            if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)
             {
-                PicArr = (from item in picArr select new ImageModel(item.ToString(), ImageType.SmallImage)).ToImmutableArray();
+                PicArr = picArr.Select(
+                    x => !string.IsNullOrEmpty(x.ToString())
+                        ? new ImageModel(x.ToString(), ImageType.SmallImage) : null)
+                    .Where(x => x != null)
+                    .ToImmutableArray();
 
                 foreach (ImageModel item in PicArr)
                 {

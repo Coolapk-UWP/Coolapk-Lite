@@ -1,18 +1,15 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Resources;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -56,27 +53,6 @@ namespace CoolapkLite.Helpers
         }
 
         private static readonly List<string> MessageList = new List<string>();
-
-        public static void CheckTheme(bool IsDark, bool IsInvoke = false)
-        {
-            Color ForegroundColor = IsDark ? Colors.White : Colors.Black;
-            Color BackgroundColor = new AccessibilitySettings().HighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
-
-            if (HasStatusBar)
-            {
-                StatusBar StatusBar = StatusBar.GetForCurrentView();
-                StatusBar.ForegroundColor = ForegroundColor;
-                StatusBar.BackgroundColor = BackgroundColor;
-                StatusBar.BackgroundOpacity = 0; // 透明度
-            }
-            else
-            {
-                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
-                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
-                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = HasTitleBar ? BackgroundColor : Colors.Transparent;
-            }
-        }
     }
 
     internal static partial class UIHelper
@@ -88,6 +64,7 @@ namespace CoolapkLite.Helpers
             IsShowingProgressBar = true;
             if (HasStatusBar)
             {
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.HideProgressBar());
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
@@ -97,11 +74,12 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async void ShowProgressBar(double value = 0)
+        public static async void ShowProgressBar(double value)
         {
             IsShowingProgressBar = true;
             if (HasStatusBar)
             {
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.HideProgressBar());
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
@@ -262,6 +240,56 @@ namespace CoolapkLite.Helpers
             // And update the badge
             badgeUpdater.Update(badge);
         }
+
+        public static string ExceptionToMessage(this Exception ex)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append('\n');
+            if (!string.IsNullOrWhiteSpace(ex.Message)) { builder.AppendLine($"Message: {ex.Message}"); }
+            builder.AppendLine($"HResult: {ex.HResult} (0x{Convert.ToString(ex.HResult, 16)})");
+            if (!string.IsNullOrWhiteSpace(ex.StackTrace)) { builder.AppendLine(ex.StackTrace); }
+            if (!string.IsNullOrWhiteSpace(ex.HelpLink)) { builder.Append($"HelperLink: {ex.HelpLink}"); }
+            return builder.ToString();
+        }
+
+        public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function)
+        {
+            TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
+            Task<TResult> task = taskCompletionSource.Task;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    TResult result = await function.Invoke().ConfigureAwait(false);
+                    taskCompletionSource.SetResult(result);
+                }
+                catch (Exception e)
+                {
+                    taskCompletionSource.SetException(e);
+                }
+            });
+            TResult taskResult = task.Result;
+            return taskResult;
+        }
+
+        public static bool IsTypePresent(string AssemblyName, string TypeName)
+        {
+            try
+            {
+                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
+                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
+                if (supType != null)
+                {
+                    try { Activator.CreateInstance(supType); }
+                    catch (MissingMethodException) { }
+                }
+                return supType != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     public enum NavigationThemeTransition
@@ -297,27 +325,32 @@ namespace CoolapkLite.Helpers
                     break;
             }
         }
-
-        public static async void ShowImage(ImageModel image)
+        
+        public static async Task ShowImageAsync(ImageModel image)
         {
             CoreApplicationView View = CoreApplication.CreateNewView();
             int ViewId = 0;
             await View.ExecuteOnUIThreadAsync(() =>
             {
+                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
+                {
+                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                }
+                Window window = Window.Current;
+                WindowHelper.TrackWindow(window);
                 Frame frame = new Frame();
                 frame.Navigate(typeof(ShowImagePage), image);
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-                if (SettingsHelper.WindowsVersion >= 10586)
-                {
-                    TitleBar.ExtendViewIntoTitleBar = true;
-                }
+                window.Content = frame;
+                ThemeHelper.Initialize(window);
+                window.Activate();
                 ViewId = ApplicationView.GetForCurrentView().Id;
             });
             _ = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(ViewId);
         }
+    }
 
+    internal static partial class UIHelper
+    {
         private static readonly ImmutableArray<string> routes = new string[]
         {
             "/u/",
@@ -378,7 +411,7 @@ namespace CoolapkLite.Helpers
             }
             else if (str.IsFirst(i++))
             {
-                ShowImage(new ImageModel(str, ImageType.SmallImage));
+                _ = ShowImageAsync(new ImageModel(str, ImageType.SmallImage));
             }
             else if (str.IsFirst(i++))
             {
@@ -407,24 +440,15 @@ namespace CoolapkLite.Helpers
                 OpenLinkAsync(str.Replace(-3));
             }
         }
+    }
 
-        public static bool IsTypePresent(string AssemblyName, string TypeName)
-        {
-            try
-            {
-                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
-                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
-                if (supType != null)
-                {
-                    try { Activator.CreateInstance(supType); }
-                    catch (MissingMethodException) { }
-                }
-                return supType != null;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+    public enum MessageType
+    {
+        Message,
+        NoMore,
+        NoMoreReply,
+        NoMoreLikeUser,
+        NoMoreShare,
+        NoMoreHotReply,
     }
 }

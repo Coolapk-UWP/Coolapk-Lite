@@ -5,8 +5,8 @@ namespace CoolapkLite.Helpers
     /// <summary> 程序支持的能从服务器中获取的数据的类型。 </summary>
     public enum LinkType
     {
-        Coolapk,
         ITHome,
+        Coolapk,
         Bilibili
     }
 
@@ -26,10 +26,12 @@ namespace CoolapkLite.Helpers
         GetDyhDetail,
         GetDyhFeeds,
         GetProductDetail,
+        GetProductDetailByName,
         GetProductFeeds,
         GetFeedDetail,
         GetFeedReplies,
         GetFeedInfos,
+        GetChangeHistoryList,
         GetHotReplies,
         GetIndexPage,
         GetIndexPageNames,
@@ -52,10 +54,15 @@ namespace CoolapkLite.Helpers
         GetUserSpace,
         GetUserProfile,
         GetUserFollows,
-        OperateFollow,
-        OperateLike,
-        OperateUnfollow,
-        OperateUnlike,
+        PostUserFollow,
+        PostTopicFollow,
+        PostDyhFollow,
+        PostFeedLike,
+        PostUserUnfollow,
+        PostTopicUnfollow,
+        PostDyhUnfollow,
+        PostFeedUnlike,
+        OperateProductFollow,
         OOSUploadPrepare,
         RequestValidate,
         UploadImage,
@@ -64,6 +71,8 @@ namespace CoolapkLite.Helpers
         SearchTags,
         SearchUsers,
         SearchWords,
+        SearchCreateTags,
+        SearchCreateUsers,
         GetDevMyList,
         GetITHomeFeed,
         GetBilibiliFeed
@@ -73,12 +82,15 @@ namespace CoolapkLite.Helpers
     {
         private static bool IsUseAPI2 => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
 
-        public static readonly Uri CoolapkUri = new Uri("https://coolapk.com");
         public static readonly Uri BaseUri = new Uri("https://api.coolapk.com");
         public static readonly Uri Base2Uri = new Uri("https://api2.coolapk.com");
+        public static readonly Uri CoolapkUri = new Uri("https://www.coolapk.com");
+
         public static readonly Uri ITHomeUri = new Uri("https://qapi.ithome.com");
         public static readonly Uri DevUri = new Uri("https://developer.coolapk.com");
         public static readonly Uri BilibiliUri = new Uri("https://api.vc.bilibili.com");
+
+        public const string LoginUri = "https://account.coolapk.com/auth/loginByCoolapk";
 
         public static Uri GetUri(UriType type, params object[] args)
         {
@@ -132,10 +144,12 @@ namespace CoolapkLite.Helpers
                 case UriType.GetDyhDetail: return "/v6/dyh/detail?dyhId={0}";
                 case UriType.GetDyhFeeds: return "/v6/dyhArticle/list?dyhId={0}&type={1}&page={2}{3}{4}";
                 case UriType.GetProductDetail: return "/v6/product/detail?id={0}";
+                case UriType.GetProductDetailByName: return "/v6/product/detail?name={0}";
                 case UriType.GetProductFeeds: return "/v6/page/dataList?url=/page?url=/product/feedList?type={4}&id={0}&page={1}{2}{3}";
                 case UriType.GetFeedDetail: return "/v6/feed/detail?id={0}";
                 case UriType.GetFeedReplies: return "/v6/feed/replyList?id={0}&listType={1}&page={2}{3}&discussMode=1&feedType=feed&blockStatus=0&fromFeedAuthor={4}";
                 case UriType.GetFeedInfos: return "/v6/feed/{4}List?id={0}&page={1}{2}{3}";
+                case UriType.GetChangeHistoryList: return "/v6/feed/changeHistoryList?id={0}";
                 case UriType.GetHotReplies: return "/v6/feed/hotReplyList?id={0}&page={1}{2}&discussMode=1";
                 case UriType.GetIndexPage: return "/v6{0}{1}page={2}";
                 case UriType.GetIndexPageNames: return "/v6/main/init";
@@ -158,10 +172,15 @@ namespace CoolapkLite.Helpers
                 case UriType.GetUserSpace: return "/v6/user/space?uid={0}";
                 case UriType.GetUserProfile: return "/v6/user/profile?uid={0}";
                 case UriType.GetUserFollows: return "/v6/user/{0}?uid={1}&page={2}";
-                case UriType.OperateFollow: return "/v6/user/follow?uid={0}";
-                case UriType.OperateLike: return "/v6/feed/like{0}?id={1}";
-                case UriType.OperateUnfollow: return "/v6/user/unfollow?uid={0}";
-                case UriType.OperateUnlike: return "/v6/feed/unlike{0}?id={1}";
+                case UriType.PostUserFollow: return "/v6/user/follow?uid={0}";
+                case UriType.PostTopicFollow: return "/v6/feed/followTag?tag={0}";
+                case UriType.PostDyhFollow: return "/v6/dyh/follow?dyhId={0}";
+                case UriType.PostFeedLike: return "/v6/feed/like{0}?id={1}";
+                case UriType.PostUserUnfollow: return "/v6/user/unfollow?uid={0}";
+                case UriType.PostDyhUnfollow: return "/v6/dyh/unFollow?dyhId={0}";
+                case UriType.PostTopicUnfollow: return "/v6/feed/unFollowTag?tag={0}";
+                case UriType.PostFeedUnlike: return "/v6/feed/unlike{0}?id={1}";
+                case UriType.OperateProductFollow: return "/v6/product/changeFollowStatus";
                 case UriType.OOSUploadPrepare: return "/v6/upload/ossUploadPrepare";
                 case UriType.RequestValidate: return "/v6/account/requestValidate";
                 case UriType.UploadImage: return "/v6/feed/uploadImage?fieldName=picFile&uploadDir={0}";
@@ -170,6 +189,8 @@ namespace CoolapkLite.Helpers
                 case UriType.SearchTags: return "/v6/search?type=feedTopic&searchValue={0}&page={1}{2}&showAnonymous=-1";
                 case UriType.SearchUsers: return "/v6/search?type=user&searchValue={0}&page={1}{2}&showAnonymous=-1";
                 case UriType.SearchWords: return "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
+                case UriType.SearchCreateTags: return "/v6/feed/searchTag?q={0}&page={1}{2}";
+                case UriType.SearchCreateUsers: return "/v6/user/search?q={0}&page={1}{2}";
                 //开发者中心
                 case UriType.GetDevMyList: return "/do?c=apk&m=myList&listType={0}&p={1}";
                 //IT之家

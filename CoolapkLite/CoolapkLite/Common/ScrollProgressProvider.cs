@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Hosting;
 
-namespace CoolapkLite.Helpers.Providers
+namespace CoolapkLite.Common
 {
     public class ScrollProgressProvider : DependencyObject
     {
@@ -71,7 +71,7 @@ namespace CoolapkLite.Helpers.Providers
             {
                 readyToScroll = true;
 
-                if (newSv.VerticalOffset == 0 && (oldSv == null || (oldSv != null && oldSv.VerticalOffset == 0)))
+                if (newSv.VerticalOffset == 0 && (oldSv == null || oldSv != null && oldSv.VerticalOffset == 0))
                 {
                     StartScrollProgressAnimation(newSv, false);
                 }

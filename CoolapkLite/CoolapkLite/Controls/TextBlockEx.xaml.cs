@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.ValueConverters;
+using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
 using Microsoft.Toolkit.Uwp.UI.Converters;
@@ -43,6 +43,20 @@ namespace CoolapkLite.Controls
                 typeof(TextBlockEx),
                 null);
 
+        public static readonly DependencyProperty TextTrimmingProperty =
+            DependencyProperty.Register(
+                nameof(TextTrimming),
+                typeof(TextTrimming),
+                typeof(TextBlockEx),
+                new PropertyMetadata(TextTrimming.CharacterEllipsis));
+
+        public static readonly DependencyProperty TextWrappingProperty =
+            DependencyProperty.Register(
+                nameof(TextWrapping),
+                typeof(TextWrapping),
+                typeof(TextBlockEx),
+                new PropertyMetadata(TextWrapping.Wrap));
+
         public static readonly DependencyProperty IsTextSelectionEnabledProperty =
             DependencyProperty.Register(
                 nameof(IsTextSelectionEnabled),
@@ -60,6 +74,18 @@ namespace CoolapkLite.Controls
         {
             get => (int)GetValue(MaxLinesProperty);
             set => SetValue(MaxLinesProperty, value);
+        }
+
+        public TextTrimming TextTrimming
+        {
+            get => (TextTrimming)GetValue(TextTrimmingProperty);
+            set => SetValue(TextTrimmingProperty, value);
+        }
+
+        public TextWrapping TextWrapping
+        {
+            get => (TextWrapping)GetValue(TextWrappingProperty);
+            set => SetValue(TextWrappingProperty, value);
         }
 
         public bool IsTextSelectionEnabled
@@ -81,13 +107,14 @@ namespace CoolapkLite.Controls
             HtmlDocument doc = new HtmlDocument();
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
             doc.LoadHtml(Text.Replace("<!--break-->", string.Empty));
-            Paragraph paragraph = new Paragraph() { LineHeight = FontSize + 10 };
+            Paragraph paragraph = new Paragraph { LineHeight = FontSize + 10 };
+            ImmutableArray<ImageModel>.Builder imageArrayBuider = ImmutableArray.CreateBuilder<ImageModel>();
             void NewLine()
             {
                 RichTextBlock.Blocks.Add(paragraph);
-                paragraph = new Paragraph() { LineHeight = FontSize + 10 };
+                paragraph = new Paragraph { LineHeight = FontSize + 10 };
             }
-            void AddText(string item) => paragraph.Inlines.Add(new Run() { Text = WebUtility.HtmlDecode(item) });
+            void AddText(string item) => paragraph.Inlines.Add(new Run { Text = WebUtility.HtmlDecode(item) });
             HtmlNodeCollection nodes = doc.DocumentNode.ChildNodes;
             foreach (HtmlNode node in nodes)
             {
@@ -102,11 +129,11 @@ namespace CoolapkLite.Controls
                             {
                                 case '#':
                                     {
-                                        string s = item.Substring(1, item.Length - 2);
-                                        if (EmojiHelper.Emojis.Contains(s))
+                                        string str = item.Substring(1);
+                                        if (EmojiHelper.Emojis.Contains(str))
                                         {
                                             InlineUIContainer container = new InlineUIContainer();
-                                            Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
+                                            Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{str}.png")) };
                                             ToolTipService.SetToolTip(image, new ToolTip { Content = item });
                                             Viewbox viewbox = new Viewbox
                                             {
@@ -118,7 +145,7 @@ namespace CoolapkLite.Controls
                                             {
                                                 Source = this,
                                                 Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToLineHeight(),
+                                                Converter = new FontSizeToHeightConverter(),
                                                 Path = new PropertyPath(nameof(FontSize))
                                             });
                                             container.Child = viewbox;
@@ -144,7 +171,7 @@ namespace CoolapkLite.Controls
                                             {
                                                 Source = this,
                                                 Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToLineHeight(),
+                                                Converter = new FontSizeToHeightConverter(),
                                                 Path = new PropertyPath(nameof(FontSize))
                                             });
                                             container.Child = viewbox;
@@ -165,7 +192,7 @@ namespace CoolapkLite.Controls
                                             {
                                                 Source = this,
                                                 Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToLineHeight(),
+                                                Converter = new FontSizeToHeightConverter(),
                                                 Path = new PropertyPath(nameof(FontSize))
                                             });
                                             container.Child = viewbox;
@@ -244,7 +271,7 @@ namespace CoolapkLite.Controls
                                     {
                                         Source = this,
                                         Mode = BindingMode.OneWay,
-                                        Converter = new FontSizeToLineHeight(),
+                                        Converter = new FontSizeToHeightConverter(),
                                         Path = new PropertyPath(nameof(FontSize))
                                     });
                                     container.Child = viewbox;
@@ -253,6 +280,8 @@ namespace CoolapkLite.Controls
                                 else
                                 {
                                     NewLine();
+                                    imageArrayBuider.Add(imageModel);
+
                                     Grid Grid = new Grid
                                     {
                                         CornerRadius = new CornerRadius(4)
@@ -342,8 +371,10 @@ namespace CoolapkLite.Controls
 
                                     Grid.Children.Add(viewbox);
                                     Grid.Children.Add(PicSizePanel);
+                                    Grid.Tapped += (sender, args) => _ = UIHelper.ShowImageAsync(imageModel);
 
                                     container.Child = Grid;
+
                                     Paragraph paragraph1 = new Paragraph { TextAlignment = TextAlignment.Center };
                                     paragraph1.Inlines.Add(container);
                                     RichTextBlock.Blocks.Add(paragraph1);
@@ -388,6 +419,13 @@ namespace CoolapkLite.Controls
                         break;
                 }
             }
+
+            ImmutableArray<ImageModel> array = imageArrayBuider.ToImmutable();
+            foreach (ImageModel item in array)
+            {
+                item.ContextArray = array;
+            }
+
             RichTextBlock.Blocks.Add(paragraph);
         }
     }

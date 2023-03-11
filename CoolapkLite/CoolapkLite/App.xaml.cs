@@ -1,13 +1,11 @@
 ﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Exceptions;
-using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.Pages.SettingsPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -17,7 +15,9 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
+using Windows.System.Profile;
 using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -36,8 +36,14 @@ namespace CoolapkLite
         public App()
         {
             InitializeComponent();
+
             Suspending += OnSuspending;
             UnhandledException += Application_UnhandledException;
+
+            if (ApiInformation.IsEnumNamedValuePresent("Windows.UI.Xaml.FocusVisualKind", "Reveal"))
+            {
+                FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
+            }
         }
 
         /// <summary>
@@ -47,10 +53,6 @@ namespace CoolapkLite
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            AddBrushResource();
-            RequestWifiAccess();
-            RegisterBackgroundTask();
-            RegisterExceptionHandlingSynchronizationContext();
             EnsureWindow(e);
         }
 
@@ -60,14 +62,31 @@ namespace CoolapkLite
             base.OnActivated(e);
         }
 
-        private void EnsureWindow(IActivatedEventArgs e)
+        private async void EnsureWindow(IActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            if (MainWindow == null)
+            {
+                AddBrushResource();
+                RequestWifiAccess();
+                RegisterBackgroundTask();
+                RegisterExceptionHandlingSynchronizationContext();
+
+                MainWindow = Window.Current;
+                WindowHelper.TrackWindow(MainWindow);
+
+                if (ApiInformation.IsTypePresent("Windows.UI.StartScreen.JumpList") && JumpList.IsSupported())
+                {
+                    JumpList JumpList = await JumpList.LoadCurrentAsync();
+                    JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+                }
+            }
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
-            if (rootFrame == null)
+            if (!(MainWindow.Content is Frame rootFrame))
             {
+                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
 
@@ -80,86 +99,32 @@ namespace CoolapkLite
 
                 // 将框架放在当前窗口中
                 Window.Current.Content = rootFrame;
+
+                ThemeHelper.Initialize();
             }
 
             if (e is LaunchActivatedEventArgs args)
             {
-                if (args.PrelaunchActivated == false)
+                if (!args.PrelaunchActivated)
                 {
-                    if (rootFrame.Content == null)
+                    if (ApiInformation.IsMethodPresent("Windows.ApplicationModel.Core.CoreApplication", "EnablePrelaunch"))
                     {
-                        if (SettingsHelper.WindowsVersion >= 10586)
-                        {
-                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-                        }
-                        // 当导航堆栈尚未还原时，导航到第一页，
-                        // 并通过将所需信息作为导航参数传入来配置
-                        // 参数
-                        _ = rootFrame.Navigate(typeof(MainPage), args.Arguments);
+                        CoreApplication.EnablePrelaunch(true);
                     }
-                    ThemeHelper.Initialize();
-                    // 确保当前窗口处于活动状态
-                    Window.Current.Activate();
                 }
-                else
-                {
-                    return;
-                }
+                else { return; }
             }
-            else if (rootFrame.Content == null)
-            {
-                AddBrushResource();
-                RequestWifiAccess();
-                RegisterBackgroundTask();
-                RegisterExceptionHandlingSynchronizationContext();
 
+            if (rootFrame.Content == null)
+            {
                 // 当导航堆栈尚未还原时，导航到第一页，
                 // 并通过将所需信息作为导航参数传入来配置
                 // 参数
-                rootFrame.Navigate(typeof(MainPage));
-
-                ThemeHelper.Initialize();
-                // 确保当前窗口处于活动状态
-                Window.Current.Activate();
+                rootFrame.Navigate(typeof(MainPage), e);
             }
 
-            if (e.Kind == ActivationKind.Protocol && UIHelper.MainPage != null)
-            {
-                ProtocolActivatedEventArgs protocolArgs = (ProtocolActivatedEventArgs)e;
-                switch (protocolArgs.Uri.Host)
-                {
-                    case "www.coolapk.com":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "coolapk.com":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "www.coolmarket.com":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "coolmarket.com":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "http":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.Host + ":" + protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "https":
-                        UIHelper.OpenLinkAsync(protocolArgs.Uri.Host + ":" + protocolArgs.Uri.AbsolutePath);
-                        break;
-                    case "settings":
-                        UIHelper.Navigate(typeof(SettingsPage));
-                        break;
-                    case "flags":
-                        UIHelper.Navigate(typeof(TestPage));
-                        break;
-                    case "history":
-                        UIHelper.Navigate(typeof(HistoryPage));
-                        break;
-                    default:
-                        UIHelper.OpenLinkAsync("/" + protocolArgs.Uri.Host + protocolArgs.Uri.AbsolutePath);
-                        break;
-                }
-            }
+            // 确保当前窗口处于活动状态
+            MainWindow.Activate();
         }
 
         /// <summary>
@@ -237,7 +202,7 @@ namespace CoolapkLite
                 ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
                 UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
             }
-            SettingsHelper.LogManager.GetLogger("Unhandled Exception - Application").Error(ExceptionToMessage(e.Exception), e.Exception);
+            SettingsHelper.LogManager.GetLogger("Unhandled Exception - Application").Error(e.Exception.ExceptionToMessage(), e.Exception);
             e.Handled = true;
         }
 
@@ -251,7 +216,7 @@ namespace CoolapkLite
                 .UnhandledException += SynchronizationContext_UnhandledException;
         }
 
-        private void SynchronizationContext_UnhandledException(object sender, Helpers.UnhandledExceptionEventArgs e)
+        private void SynchronizationContext_UnhandledException(object sender, Common.UnhandledExceptionEventArgs e)
         {
             if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))
             {
@@ -269,19 +234,8 @@ namespace CoolapkLite
                     UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
                 }
             }
-            SettingsHelper.LogManager.GetLogger("Unhandled Exception - SynchronizationContext").Error(ExceptionToMessage(e.Exception), e.Exception);
+            SettingsHelper.LogManager.GetLogger("Unhandled Exception - SynchronizationContext").Error(e.Exception.ExceptionToMessage(), e.Exception);
             e.Handled = true;
-        }
-
-        private string ExceptionToMessage(Exception ex)
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.Append('\n');
-            if (!string.IsNullOrWhiteSpace(ex.Message)) { builder.AppendLine($"Message: {ex.Message}"); }
-            builder.AppendLine($"HResult: {ex.HResult} (0x{Convert.ToString(ex.HResult, 16)})");
-            if (!string.IsNullOrWhiteSpace(ex.StackTrace)) { builder.AppendLine(ex.StackTrace); }
-            if (!string.IsNullOrWhiteSpace(ex.HelpLink)) { builder.Append($"HelperLink: {ex.HelpLink}"); }
-            return builder.ToString();
         }
 
         private static async void RegisterBackgroundTask()
@@ -289,46 +243,57 @@ namespace CoolapkLite
             // Check for background access (optional)
             await BackgroundExecutionManager.RequestAccessAsync();
 
+            RegisterLiveTileTask();
+            RegisterNotificationsTask();
+            RegisterToastBackgroundTask();
+
             #region LiveTileTask
 
-            if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
+            void RegisterLiveTileTask()
             {
-                // Register (Multi Process)
-                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
+                {
+                    // Register (Multi Process)
+                    BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+                }
             }
 
             #endregion
 
             #region NotificationsTask
 
-            if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
+            void RegisterNotificationsTask()
             {
-                // Register (Single Process)
-                BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
+                {
+                    // Register (Single Process)
+                    BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
+                }
             }
 
             #endregion
 
             #region ToastBackgroundTask
-            const string ToastBackgroundTask = "ToastBackgroundTask";
 
-            // If background task is already registered, do nothing
-            if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(ToastBackgroundTask)))
+            void RegisterToastBackgroundTask()
             {
-                return;
+                const string ToastBackgroundTask = "ToastBackgroundTask";
+
+                // If background task is already registered, do nothing
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(ToastBackgroundTask)))
+                { return; }
+
+                // Create the background task
+                BackgroundTaskBuilder builder = new BackgroundTaskBuilder
+                { Name = ToastBackgroundTask };
+
+                // Assign the toast action trigger
+                builder.SetTrigger(new ToastNotificationActionTrigger());
+
+                // And register the task
+                BackgroundTaskRegistration registration = builder.Register();
             }
 
-            // Otherwise request access
-            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
-
-            // Create the background task
-            BackgroundTaskBuilder builder = new BackgroundTaskBuilder { Name = ToastBackgroundTask };
-
-            // Assign the toast action trigger
-            builder.SetTrigger(new ToastNotificationActionTrigger());
-
-            // And register the task
-            try { BackgroundTaskRegistration registration = builder.Register(); } catch { }
             #endregion
         }
 
@@ -365,5 +330,7 @@ namespace CoolapkLite
 
             deferral.Complete();
         }
+
+        public static Window MainWindow { get; private set; }
     }
 }

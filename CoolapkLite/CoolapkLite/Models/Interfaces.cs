@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models
@@ -11,27 +12,21 @@ namespace CoolapkLite.Models
         BitmapImage Pic { get; }
     }
 
-    public interface IList
+    public interface IHasTitle
     {
         string Url { get; }
         string Title { get; }
+    }
+
+    public interface IHasDescription : IHasTitle
+    {
         ImageModel Pic { get; }
         string Description { get; }
     }
 
-    public interface IHasUriAndTitle
+    public interface IHasSubtitle : IHasDescription
     {
-        string Url { get; }
-        string Title { get; }
-    }
-
-    public interface IListWithSubtitle
-    {
-        string Url { get; }
-        string Title { get; }
-        ImageModel Pic { get; }
         string SubTitle { get; }
-        string Description { get; }
     }
 
     public interface ICanCopy
@@ -39,29 +34,44 @@ namespace CoolapkLite.Models
         bool IsCopyEnabled { get; set; }
     }
 
-    public interface ICanFollowModel
-    {
-        int UID { get; }
-        bool Followed { get; set; }
-    }
-
-    public interface ICanChangeReplyNum
-    {
-        int ID { get; }
-        int ReplyNum { get; set; }
-    }
-
-    public interface ICanChangeLikeModel
+    public interface ICanLike
     {
         int ID { get; }
         bool Liked { get; set; }
         int LikeNum { get; set; }
     }
 
-    public interface ICanChangeStarModel
+    public interface ICanStar
     {
         int ID { get; }
         bool Stared { get; set; }
         int StarNum { get; set; }
+    }
+
+    public interface ICanReply
+    {
+        int ID { get; }
+        int ReplyNum { get; set; }
+    }
+
+    public interface ICanFollow
+    {
+        int ID { get; }
+        bool Followed { get; set; }
+        Task ChangeFollow();
+    }
+
+    public interface IUserModel
+    {
+        int FansNum { get; }
+        int FollowNum { get; }
+
+        string Bio { get; }
+        string Url { get; }
+        string UserName { get; }
+        string LoginTime { get; }
+
+        ImageModel Cover { get; }
+        ImageModel UserAvatar { get; }
     }
 }

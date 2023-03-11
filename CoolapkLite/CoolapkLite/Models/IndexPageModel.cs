@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace CoolapkLite.Models
 {
-    internal class IndexPageModel : Entity, IList
+    internal class IndexPageModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -246,7 +246,7 @@ namespace CoolapkLite.Models
         SelectorLink,
     }
 
-    internal class IndexPageHasEntitiesModel : Entity, IList
+    internal class IndexPageHasEntitiesModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -364,7 +364,7 @@ namespace CoolapkLite.Models
         ShowTitle,
     }
 
-    internal class IndexPageOperationCardModel : Entity, IHasUriAndTitle
+    internal class IndexPageOperationCardModel : Entity, IHasTitle
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

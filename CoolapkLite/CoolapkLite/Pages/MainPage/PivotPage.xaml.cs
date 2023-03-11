@@ -3,6 +3,7 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.FeedPages;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -33,7 +34,7 @@ namespace CoolapkLite.Pages
             UIHelper.ShellDispatcher = Dispatcher;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            if (SettingsHelper.WindowsVersion >= 10586)
+            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
             {
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
