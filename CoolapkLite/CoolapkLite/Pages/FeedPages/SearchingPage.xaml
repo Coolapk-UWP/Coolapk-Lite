@@ -16,7 +16,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:Feeds />
+                <templates:FeedsTemplates />
                 <templates:SearchWord />
                 <templates:IndexCardTemplates />
                 <templates:OtherDatatemplates />

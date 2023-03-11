@@ -2,6 +2,7 @@
     x:Class="CoolapkLite.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:CoolapkLite.Helpers.Converters"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
     xmlns:helper="using:CoolapkLite.Helpers">
     <Application.Resources>
@@ -10,7 +11,12 @@
                 <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
                 <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
+            <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
+
             <FontFamily x:Key="SymbolThemeFontFamily">Segoe Fluent Icons,Segoe MDL2 Assets,Segoe UI Symbol</FontFamily>
+
             <Style x:Key="IconButtonStyle" TargetType="Button">
                 <Setter Property="Width" Value="48" />
                 <Setter Property="Height" Value="48" />
@@ -18,11 +24,13 @@
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Background" Value="Transparent" />
             </Style>
+
             <Style x:Key="FeedOpButtonStyle" TargetType="Button">
                 <Setter Property="Height" Value="34" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="HorizontalAlignment" Value="Stretch" />
             </Style>
+
             <Style x:Key="DefaultCardItemStyle" TargetType="SelectorItem">
                 <Setter Property="Margin" Value="1,0.5" />
                 <Setter Property="Padding" Value="0" />
@@ -61,7 +69,7 @@
                                         <VisualState x:Name="PointerOver">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubtleFillColorSecondaryBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
@@ -74,7 +82,7 @@
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TextFillColorPrimaryBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -82,7 +90,7 @@
                                         <VisualState x:Name="PointerOverSelected">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubtleFillColorSecondaryBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
                                                     <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
@@ -92,10 +100,10 @@
                                         <VisualState x:Name="PressedSelected">
                                             <Storyboard>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SubtleFillColorTertiaryBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                                 <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TextFillColorPrimaryBrush}" />
+                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
                                                 </ObjectAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
@@ -118,6 +126,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
             <Style x:Key="VerticalListViewStyle" TargetType="ListView">
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
@@ -126,11 +135,14 @@
                 <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
                 <Setter Property="ScrollViewer.IsVerticalRailEnabled" Value="False" />
             </Style>
+
             <converters:StringFormatConverter x:Key="StringFormatConverter" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
             <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
             <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+
+            <converter:NumMultConverter x:Key="NumMultConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

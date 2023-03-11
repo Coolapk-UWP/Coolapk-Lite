@@ -78,6 +78,7 @@
 
     <SolidColorBrush x:Key="CardBorderBrush" Color="{ThemeResource CardStrokeColorDefault}" />
     <SolidColorBrush x:Key="LayerFillColorDefaultBrush" Color="{ThemeResource LayerFillColorDefault}" />
+    <SolidColorBrush x:Key="CardStrokeColorDefaultBrush" Color="{ThemeResource CardStrokeColorDefault}" />
     <SolidColorBrush x:Key="ApplicationPageBackgroundThemeBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
     <SolidColorBrush x:Key="CardBackgroundFillColorDefaultBrush" Color="{ThemeResource CardBackgroundFillColorDefault}" />
 </ResourceDictionary>

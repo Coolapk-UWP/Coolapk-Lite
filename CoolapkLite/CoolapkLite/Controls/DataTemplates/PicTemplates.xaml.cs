@@ -5,9 +5,9 @@ using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class Pic : ResourceDictionary
+    public partial class PicTemplates : ResourceDictionary
     {
-        public Pic() => InitializeComponent();
+        public PicTemplates() => InitializeComponent();
 
         public void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {

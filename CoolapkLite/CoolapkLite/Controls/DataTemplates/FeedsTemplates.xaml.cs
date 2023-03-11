@@ -1,18 +1,24 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
+using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class Feeds : ResourceDictionary
+    public partial class FeedsTemplates : ResourceDictionary
     {
-        public Feeds() => InitializeComponent();
+        public FeedsTemplates() => InitializeComponent();
 
         private void OnTapped(object sender, TappedRoutedEventArgs e)
         {
@@ -25,6 +31,16 @@ namespace CoolapkLite.Controls.DataTemplates
             UIHelper.OpenLinkAsync(s.Tag as string);
         }
 
+        private void OnTopTapped(object sender, TappedRoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+
+            if (e != null) { e.Handled = true; }
+
+            UIHelper.OpenLinkAsync(element.Tag.ToString());
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
@@ -33,6 +49,15 @@ namespace CoolapkLite.Controls.DataTemplates
                 default:
                     UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
+            }
+        }
+
+        private void ReplyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is FrameworkElement frameworkElement)
+            {
+                if ((frameworkElement.Tag as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+                //UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)frameworkElement.Tag).ID.ToString(), (FeedReplyModel)frameworkElement.Tag));
             }
         }
 
@@ -88,6 +113,27 @@ namespace CoolapkLite.Controls.DataTemplates
             }
         }
 
+        private async void DeviceHyperlink_Click(Hyperlink sender, HyperlinkClickEventArgs args)
+        {
+            UIHelper.ShowProgressBar();
+            string device = (sender.Inlines.FirstOrDefault().ElementStart.VisualParent.DataContext as FeedModelBase).DeviceTitle;
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true);
+            UIHelper.HideProgressBar();
+            if (!isSucceed) { return; }
+
+            JObject token = (JObject)result;
+
+            if (token.TryGetValue("id", out JToken id))
+            {
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString());
+
+                if (provider != null)
+                {
+                    UIHelper.Navigate(typeof(FeedListPage), provider);
+                }
+            }
+        }
+
         private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
@@ -106,7 +152,7 @@ namespace CoolapkLite.Controls.DataTemplates
             UserControl UserControl = sender as UserControl;
             FrameworkElement StackPanel = UserControl.FindChild("BtnsPanel");
             double width = e is null ? UserControl.Width : e.NewSize.Width;
-            StackPanel.SetValue(Grid.RowProperty, width > 600 ? 1 : 10);
+            StackPanel?.SetValue(Grid.RowProperty, width > 600 ? 1 : 20);
         }
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;

@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <datatemplates:Pic />
+                <datatemplates:PicTemplates />
             </ResourceDictionary.MergedDictionaries>
             <valueconverters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
         </ResourceDictionary>

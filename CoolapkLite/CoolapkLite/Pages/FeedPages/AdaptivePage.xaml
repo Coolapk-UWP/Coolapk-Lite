@@ -13,7 +13,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:Feeds />
+                <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
                 <templates:OtherDatatemplates />
             </ResourceDictionary.MergedDictionaries>

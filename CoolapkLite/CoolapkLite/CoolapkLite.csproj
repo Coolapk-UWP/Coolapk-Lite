@@ -147,6 +147,9 @@
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplates\RelationRowsTemplates.xaml.cs">
+      <DependentUpon>RelationRowsTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
     </Compile>
@@ -164,6 +167,7 @@
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\StackPanel.cs" />
     <Compile Include="Controls\TitleBar\TitleBar.cs" />
     <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
@@ -172,6 +176,7 @@
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
     <Compile Include="Helpers\Controls\MenuFlyoutHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
+    <Compile Include="Helpers\Converters\NumMultConverter.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
     <Compile Include="Common\HtmlToText.cs" />
@@ -211,8 +216,8 @@
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\DataTemplateSelectors.cs" />
-    <Compile Include="Controls\DataTemplates\Feeds.xaml.cs">
-      <DependentUpon>Feeds.xaml</DependentUpon>
+    <Compile Include="Controls\DataTemplates\FeedsTemplates.xaml.cs">
+      <DependentUpon>FeedsTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\IndexCardTemplates.xaml.cs">
       <DependentUpon>IndexCardTemplates.xaml</DependentUpon>
@@ -220,8 +225,8 @@
     <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
       <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplates\Pic.xaml.cs">
-      <DependentUpon>Pic.xaml</DependentUpon>
+    <Compile Include="Controls\DataTemplates\PicTemplates.xaml.cs">
+      <DependentUpon>PicTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\FeedShellDetailControl.xaml.cs">
       <DependentUpon>FeedShellDetailControl.xaml</DependentUpon>
@@ -945,6 +950,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DataTemplates\RelationRowsTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\SearchWord.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -985,7 +994,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\DataTemplates\Feeds.xaml">
+    <Page Include="Controls\DataTemplates\FeedsTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -997,7 +1006,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\DataTemplates\Pic.xaml">
+    <Page Include="Controls\DataTemplates\PicTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
