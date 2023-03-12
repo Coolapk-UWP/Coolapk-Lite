@@ -118,7 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Copy.Text" xml:space="preserve">
-    <value>Вільна копія</value>
+    <value>复制</value>
+  </data>
+  <data name="CopyAll.Text" xml:space="preserve">
+    <value>复制全部内容</value>
+  </data>
+  <data name="CopyFree.Text" xml:space="preserve">
+    <value>自由复制</value>
+  </data>
+  <data name="CopyLink.Text" xml:space="preserve">
+    <value>复制链接</value>
   </data>
   <data name="FeedAuthor.Text" xml:space="preserve">
     <value>Автор</value>
@@ -129,11 +138,14 @@
   <data name="LongPic.Text" xml:space="preserve">
     <value>Довге фото</value>
   </data>
+  <data name="PinTile.Text" xml:space="preserve">
+    <value>固定到开始</value>
+  </data>
   <data name="QR.Text" xml:space="preserve">
     <value>QR-код</value>
   </data>
-  <data name="Readmore" xml:space="preserve">
-    <value>Докладніше</value>
+  <data name="ReadMore" xml:space="preserve">
+    <value>查看更多</value>
   </data>
   <data name="Report.Text" xml:space="preserve">
     <value>Поскаржитись</value>
