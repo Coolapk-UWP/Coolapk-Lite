@@ -17,7 +17,7 @@ namespace CoolapkLite.ViewModels.DataSource
             {
                 int temp = Models.Count;
                 if (Models.Count > 0) { _currentPage++; }
-                await Provider.GetEntity(Models, _currentPage);
+                await Provider?.GetEntity(Models, _currentPage);
                 if (Models.Count <= 0 || Models.Count <= temp) { break; }
             }
             return Models;
@@ -29,8 +29,7 @@ namespace CoolapkLite.ViewModels.DataSource
             {
                 foreach (Entity item in items)
                 {
-                    if (item is NullModel) { continue; }
-                    Add(item);
+                    if (!(item is NullEntity)) { Add(item); }
                 }
             }
         }
@@ -47,5 +46,4 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
     }
-
 }

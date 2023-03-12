@@ -16,7 +16,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:Feeds />
+                <templates:FeedsTemplates />
                 <templates:SearchWord />
                 <templates:IndexCardTemplates />
                 <templates:OtherDatatemplates />
@@ -29,162 +29,6 @@
                 List="{StaticResource ListDefaultTemplate}"
                 ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
                 Others="{StaticResource Null}" />
-            <Style TargetType="PivotItem">
-                <Setter Property="Margin" Value="0" />
-            </Style>
-            <Style TargetType="PivotHeaderItem">
-                <Setter Property="FontSize" Value="{ThemeResource ContentControlFontSize}" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="PivotHeaderItem">
-                            <Grid
-                                x:Name="Grid"
-                                Padding="{TemplateBinding Padding}"
-                                Background="{TemplateBinding Background}">
-                                <Grid.RenderTransform>
-                                    <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
-                                </Grid.RenderTransform>
-                                <ContentPresenter
-                                    x:Name="ContentPresenter"
-                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                    Content="{TemplateBinding Content}"
-                                    ContentTemplate="{TemplateBinding ContentTemplate}"
-                                    FontFamily="{TemplateBinding FontFamily}"
-                                    FontSize="{TemplateBinding FontSize}"
-                                    FontWeight="{TemplateBinding FontWeight}"
-                                    OpticalMarginAlignment="TrimSideBearings" />
-                                <Rectangle
-                                    x:Name="SelectedPipe"
-                                    Height="2"
-                                    Margin="0,0,0,2"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Bottom"
-                                    Fill="{ThemeResource SystemControlForegroundAccentBrush}"
-                                    RadiusX="1"
-                                    RadiusY="1" />
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup x:Name="SelectionStates">
-                                        <VisualStateGroup.Transitions>
-                                            <VisualTransition
-                                                GeneratedDuration="0:0:0.33"
-                                                From="Unselected"
-                                                To="UnselectedLocked" />
-                                            <VisualTransition
-                                                GeneratedDuration="0:0:0.33"
-                                                From="UnselectedLocked"
-                                                To="Unselected" />
-                                            <VisualTransition
-                                                GeneratedDuration="0:0:0.001"
-                                                From="Selected"
-                                                To="Unselected">
-                                                <VisualTransition.Storyboard>
-                                                    <Storyboard>
-                                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPipe" Storyboard.TargetProperty="(UIElement.Opacity)">
-                                                            <DiscreteObjectKeyFrame KeyTime="0:0:0.001" Value="0.0" />
-                                                        </ObjectAnimationUsingKeyFrames>
-                                                    </Storyboard>
-                                                </VisualTransition.Storyboard>
-                                            </VisualTransition>
-                                        </VisualStateGroup.Transitions>
-                                        <VisualState x:Name="Disabled">
-                                            <VisualState.Setters>
-                                                <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                            </VisualState.Setters>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Unselected">
-                                            <VisualState.Setters>
-                                                <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState x:Name="UnselectedLocked">
-                                            <VisualState.Setters>
-                                                <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                            </VisualState.Setters>
-                                            <Storyboard>
-                                                <DoubleAnimation
-                                                    Storyboard.TargetName="ContentPresenterTranslateTransform"
-                                                    Storyboard.TargetProperty="X"
-                                                    To="{ThemeResource PivotHeaderItemLockedTranslation}"
-                                                    Duration="0" />
-                                                <DoubleAnimation
-                                                    Storyboard.TargetName="ContentPresenter"
-                                                    Storyboard.TargetProperty="(UIElement.Opacity)"
-                                                    To="0"
-                                                    Duration="0" />
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="Selected">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="UnselectedPointerOver">
-                                            <VisualState.Setters>
-                                                <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                            </VisualState.Setters>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="SelectedPointerOver">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="UnselectedPressed">
-                                            <VisualState.Setters>
-                                                <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                            </VisualState.Setters>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                        <VisualState x:Name="SelectedPressed">
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </Page.Resources>
     <Grid Margin="{x:Bind PivotTitleMargin}">
@@ -218,9 +62,10 @@
                 x:Name="RefreshButton"
                 Grid.Column="2"
                 VerticalAlignment="Center"
-                Style="{StaticResource IconButtonStyle}">
-                <SymbolIcon Symbol="Refresh" />
-            </Button>
+                Click="RefreshButton_Click"
+                Content="&#xE72C;"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconButtonStyle}" />
         </Grid>
         <Pivot
             x:Name="Pivot"
@@ -235,7 +80,7 @@
                     <ComboBox
                         Margin="8,6,4,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SeachFeedItemSourse.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{Binding SearchFeedItemSourse.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>全部</x:String>
                         <x:String>动态</x:String>
                         <x:String>图文</x:String>
@@ -250,7 +95,7 @@
                     <ComboBox
                         Margin="4,6,8,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SeachFeedItemSourse.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{Binding SearchFeedItemSourse.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>实时</x:String>
                         <x:String>热度</x:String>
                         <x:String>评论数</x:String>
@@ -262,7 +107,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SeachFeedItemSourse}"
+                    ItemsSource="{Binding SearchFeedItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -272,7 +117,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SeachUserItemSourse}"
+                    ItemsSource="{Binding SearchUserItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -282,7 +127,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SeachTopicItemSourse}"
+                    ItemsSource="{Binding SearchTopicItemSourse}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />

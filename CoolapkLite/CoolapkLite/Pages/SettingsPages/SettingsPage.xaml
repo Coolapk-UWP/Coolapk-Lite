@@ -5,6 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:cwuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{StaticResource LayerFillColorDefaultBrush}"
     NavigationCacheMode="Required"
@@ -97,7 +98,7 @@
                             x:Uid="/SettingsPage/AccountLogout"
                             Margin="0,2">
                             <Button.Flyout>
-                                <Flyout>
+                                <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                                     <StackPanel>
                                         <TextBlock
                                             x:Uid="/SettingsPage/AccountLogoutTitle"
@@ -164,7 +165,7 @@
                             x:Uid="/SettingsPage/ResetSettings"
                             Margin="0,2">
                             <Button.Flyout>
-                                <Flyout>
+                                <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                                     <StackPanel>
                                         <TextBlock
                                             x:Uid="/SettingsPage/ResetSettingsTitle"
@@ -201,7 +202,7 @@
                         x:Uid="/MarkDown/about"
                         Margin="0,2"
                         HorizontalAlignment="Left"
-                        Background="Transparent"
+                        Background="{ThemeResource SystemControlTransparentBrush}"
                         FontSize="{Binding FontSize, ElementName=GoToTestPage}"
                         LinkClicked="MarkdownTextBlock_LinkClicked" />
                 </control:HeaderedContentControl>

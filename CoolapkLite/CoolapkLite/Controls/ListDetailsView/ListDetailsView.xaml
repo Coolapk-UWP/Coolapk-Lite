@@ -80,7 +80,7 @@
                                                 x:Name="ListDetailsBackButton"
                                                 Width="48"
                                                 Height="44"
-                                                Background="Transparent"
+                                                Background="{ThemeResource SystemControlTransparentBrush}"
                                                 Visibility="Collapsed">
                                                 <SymbolIcon Symbol="Back" />
                                             </Button>

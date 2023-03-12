@@ -1,5 +1,8 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
+using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
@@ -8,6 +11,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
 using TwoPaneViewMode = CoolapkLite.Controls.TwoPaneViewMode;
@@ -93,6 +97,72 @@ namespace CoolapkLite.Pages.FeedPages
                 _ = entities.Refresh(true);
             }
         }
+
+        private void FlipView_SizeChanged(object sender, SizeChangedEventArgs e) => (sender as FrameworkElement).MaxHeight = e.NewSize.Width / 2;
+
+        private void FlipView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            {
+                if ((sender as FrameworkElement).Parent is FrameworkElement parent)
+                { parent.Visibility = Visibility.Collapsed; }
+            }
+            else
+            {
+                FlipView view = sender as FlipView;
+                view.MaxHeight = view.ActualWidth / 3;
+                DispatcherTimer timer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(20)
+                };
+                timer.Tick += (o, a) =>
+                {
+                    if (view.SelectedIndex != -1)
+                    {
+                        if (view.SelectedIndex + 1 >= view.Items.Count)
+                        {
+                            while (view.SelectedIndex > 0)
+                            {
+                                view.SelectedIndex -= 1;
+                            }
+                        }
+                        else
+                        {
+                            view.SelectedIndex += 1;
+                        }
+                    }
+                };
+                view.Unloaded += (_, __) => timer.Stop();
+                timer.Start();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            switch (element.Name)
+            {
+                case "FansButton":
+                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
+                    break;
+                case "ReportButton":
+                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    break;
+                case "FollowButton":
+                    _ = (element.Tag as ICanFollow).ChangeFollow();
+                    break;
+                case "PinTileButton":
+                    _ = Provider.PinSecondaryTile(element.Tag as Entity);
+                    break;
+                case "FollowsButton":
+                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void On_Tapped(object sender, TappedRoutedEventArgs e) => _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 

@@ -40,7 +40,7 @@
             <FlipView
                 x:Name="FlipView"
                 Grid.Row="1"
-                Background="Transparent"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 ItemsSource="{Binding Entities}"
                 Loaded="FlipView_Loaded"
                 SizeChanged="FlipView_SizeChanged"

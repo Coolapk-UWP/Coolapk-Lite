@@ -23,12 +23,13 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is AdaptiveViewModel ViewModel)
+            if (e.Parameter is AdaptiveViewModel ViewModel
+                && (Provider == null || Provider.Uri != ViewModel.Uri))
             {
                 Provider = ViewModel;
                 DataContext = Provider;
-                Provider.OnLoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.OnLoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
+                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);
             }
         }
@@ -36,16 +37,11 @@ namespace CoolapkLite.Pages.FeedPages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Provider.OnLoadMoreStarted -= UIHelper.ShowProgressBar;
-            Provider.OnLoadMoreCompleted -= UIHelper.HideProgressBar;
+            Provider.LoadMoreStarted -= UIHelper.ShowProgressBar;
+            Provider.LoadMoreCompleted -= UIHelper.HideProgressBar;
         }
 
-        public void Refresh() => _ = Refresh(true);
-
-        private async Task Refresh(bool reset = false)
-        {
-            await Provider.Refresh(reset);
-        }
+        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
         private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
 

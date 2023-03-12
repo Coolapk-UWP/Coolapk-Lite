@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class TopicModel : Entity, IList
+    public class TopicModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -78,7 +78,7 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("lastupdate", out JToken lastupdate) && !string.IsNullOrEmpty(lastupdate.ToString()))
             {
-                LastUpdate = DateHelper.ConvertUnixTimeStampToReadable(token.Value<int>("lastupdate"));
+                LastUpdate = lastupdate.ToObject<long>().ConvertUnixTimeStampToReadable();
             }
         }
 

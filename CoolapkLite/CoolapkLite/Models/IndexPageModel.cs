@@ -3,32 +3,28 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Immutable;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models
 {
-    internal class IndexPageModel : Entity, IList
+    internal class IndexPageModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
         public string SubTitle { get; private set; }
         public string Description { get; private set; }
-        public string EntityForward { get; private set; }
         public string EntityTemplate { get; private set; }
         public ImageModel Pic { get; private set; }
 
         public IndexPageModel(JObject token) : base(token)
         {
-            Windows.ApplicationModel.Resources.ResourceLoader loader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("FeedListPage");
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
             if (token.TryGetValue("entityTemplate", out JToken entityTemplate))
             {
                 EntityTemplate = entityTemplate.ToString();
-            }
-
-            if (token.TryGetValue("entityForward", out JToken entityForward))
-            {
-                EntityForward = entityForward.ToString();
             }
 
             if (token.TryGetValue("title", out JToken title))
@@ -46,7 +42,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("hot_num_txt", out JToken hot_num_txt) && !string.IsNullOrEmpty(hot_num_txt.ToString()))
             {
-                SubTitle = hot_num_txt.ToString() + loader.GetString("HotNum");
+                SubTitle = $"{hot_num_txt}{loader.GetString("HotNum")}";
             }
             else if (token.TryGetValue("link_tag", out JToken link_tag) && !string.IsNullOrEmpty(link_tag.ToString()))
             {
@@ -74,7 +70,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("product_num", out JToken product_num) && !string.IsNullOrEmpty(product_num.ToString()))
             {
-                SubTitle = product_num.ToString() + loader.GetString("product_num");
+                SubTitle = $"{product_num}{loader.GetString("ProductNum")}";
             }
             else if (token.TryGetValue("description", out JToken description))
             {
@@ -96,7 +92,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("release_time", out JToken release_time) && !string.IsNullOrEmpty(release_time.ToString()))
             {
-                Description = loader.GetString("release_time") + release_time.ToString();
+                Description = $"{loader.GetString("ReleaseTime")}{release_time}";
             }
             else if (token.TryGetValue("link_tag", out JToken link_tag) && !string.IsNullOrEmpty(link_tag.ToString()))
             {
@@ -104,7 +100,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("hot_num_txt", out JToken hot_num_txt) && !string.IsNullOrEmpty(hot_num_txt.ToString()))
             {
-                Description = hot_num_txt.ToString() + loader.GetString("HotNum");
+                Description = $"{hot_num_txt}{loader.GetString("HotNum")}";
             }
             else if (token.TryGetValue("keywords", out JToken keywords) && !string.IsNullOrEmpty(keywords.ToString()))
             {
@@ -157,7 +153,7 @@ namespace CoolapkLite.Models
         public string Title { get; private set; }
         public bool ShowEntities { get; private set; }
         public string Description { get; private set; }
-        public ImmutableArray<Entity> Entities { get; private set; }
+        public ImmutableArray<Entity> Entities { get; private set; } = ImmutableArray<Entity>.Empty;
 
         public IndexPageMessageCardModel(JObject token) : base(token)
         {
@@ -172,7 +168,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("release_time", out JToken release_time) && !string.IsNullOrEmpty(release_time.ToString()))
             {
-                Description = "发布日期：" + release_time.ToString();
+                Description = $"发布日期：{release_time}";
             }
             else if (token.TryGetValue("link_tag", out JToken link_tag) && !string.IsNullOrEmpty(link_tag.ToString()))
             {
@@ -180,7 +176,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("hot_num_txt", out JToken hot_num_txt) && !string.IsNullOrEmpty(hot_num_txt.ToString()))
             {
-                Description = hot_num_txt.ToString() + "热度";
+                Description = $"{hot_num_txt}热度";
             }
             else if (token.TryGetValue("keywords", out JToken keywords) && !string.IsNullOrEmpty(keywords.ToString()))
             {
@@ -216,9 +212,13 @@ namespace CoolapkLite.Models
                                 buider.Add(new FeedModel(item));
                                 break;
 
-                            //case "user":
-                            //    buider.Add(new UserModel(item));
-                            //    break;
+                            case "user":
+                                buider.Add(new UserModel(item));
+                                break;
+
+                            case "collection":
+                                buider.Add(new CollectionModel(item));
+                                break;
 
                             default:
                                 buider.Add(new IndexPageModel(item));
@@ -242,11 +242,11 @@ namespace CoolapkLite.Models
         TabLink,
         IconLink,
         TextLinks,
-        ScrollLink,
+        GridLink,
         SelectorLink,
     }
 
-    internal class IndexPageHasEntitiesModel : Entity, IList
+    internal class IndexPageHasEntitiesModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -257,7 +257,7 @@ namespace CoolapkLite.Models
         public string Description { get; private set; }
         public string EntityTemplate { get; private set; }
         public EntityType EntitiesType { get; private set; }
-        public ImmutableArray<Entity> Entities { get; private set; }
+        public ImmutableArray<Entity> Entities { get; private set; } = ImmutableArray<Entity>.Empty;
 
         public IndexPageHasEntitiesModel(JObject token, EntityType type) : base(token)
         {
@@ -322,7 +322,8 @@ namespace CoolapkLite.Models
                 {
                     if (item.TryGetValue("entityType", out JToken entityType))
                     {
-                        try { item.Property("entityType").AddAfterSelf(new JProperty("entityForward", EntityTemplate)); } catch { }
+                        try { item.Property("entityType").AddAfterSelf(new JProperty("entityForward", EntityTemplate)); }
+                        catch (Exception ex) { SettingsHelper.LogManager.GetLogger(nameof(IndexPageModel)).Warn(ex.ExceptionToMessage(), ex); }
                         switch (entityType.ToString())
                         {
                             case "feed":
@@ -331,6 +332,10 @@ namespace CoolapkLite.Models
 
                             case "user":
                                 buider.Add(new UserModel(item));
+                                break;
+
+                            case "collection":
+                                buider.Add(new CollectionModel(item));
                                 break;
 
                             default:
@@ -348,6 +353,7 @@ namespace CoolapkLite.Models
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
             {
                 Pic = new ImageModel(pic.ToString(), ImageType.OriginImage);
+                ShowPic = true;
             }
             else { ShowPic = false; }
 
@@ -364,7 +370,7 @@ namespace CoolapkLite.Models
         ShowTitle,
     }
 
-    internal class IndexPageOperationCardModel : Entity, IHasUriAndTitle
+    internal class IndexPageOperationCardModel : Entity, IHasTitle
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

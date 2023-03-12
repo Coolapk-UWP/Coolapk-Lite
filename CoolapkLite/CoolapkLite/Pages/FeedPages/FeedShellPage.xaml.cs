@@ -1,8 +1,13 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using System;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.UserActivities;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -19,6 +24,7 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class FeedShellPage : Page
     {
         private FeedShellViewModel Provider;
+        private static UserActivitySession _currentActivity;
         private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
         private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
         private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
@@ -28,7 +34,8 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is FeedShellViewModel ViewModel)
+            if (e.Parameter is FeedShellViewModel ViewModel
+                && (Provider == null || Provider.ID != ViewModel.ID))
             {
                 Provider = ViewModel;
                 DataContext = Provider;
@@ -36,6 +43,7 @@ namespace CoolapkLite.Pages.FeedPages
                 if (Provider.FeedDetail != null)
                 {
                     SetLayout();
+                    GenerateActivityAsync();
                 }
             }
             await Task.Delay(30);
@@ -47,7 +55,30 @@ namespace CoolapkLite.Pages.FeedPages
             TwoPaneView.Pane1Length = new GridLength(Provider.FeedDetail?.IsFeedArticle ?? false ? 520 : 420);
         }
 
-        private async void FeedButton_Click(object sender, RoutedEventArgs _)
+        private async void GenerateActivityAsync()
+        {
+            if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.UserActivities.UserActivityChannel"))
+            { return; }
+
+            // Get the default UserActivityChannel and query it for our UserActivity. If the activity doesn't exist, one is created.
+            UserActivityChannel channel = UserActivityChannel.GetDefault();
+            UserActivity userActivity = await channel.GetOrCreateUserActivityAsync(Provider.FeedDetail.Url.GetMD5());
+
+            // Populate required properties
+            userActivity.VisualElements.DisplayText = Provider.Title;
+            userActivity.VisualElements.AttributionDisplayText = Provider.Title;
+            userActivity.VisualElements.Description = Provider.FeedDetail.Message.CSStoString();
+            userActivity.ActivationUri = new Uri($"coolapk://{(Provider.FeedDetail.Url[0] == '/' ? Provider.FeedDetail.Url.Substring(1) : Provider.FeedDetail.Url)}");
+
+            //Save
+            await userActivity.SaveAsync(); //save the new metadata
+
+            // Dispose of any current UserActivitySession, and create a new one.
+            _currentActivity?.Dispose();
+            _currentActivity = userActivity.CreateSession();
+        }
+
+        private async void FeedButton_Click(object sender, RoutedEventArgs e)
         {
             void DisabledCopy()
             {
@@ -69,12 +100,12 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case "LikeButton":
                     DisabledCopy();
-                    await RequestHelper.ChangeLikeAsync(element.Tag as ICanChangeLikeModel, element.Dispatcher);
+                    await RequestHelper.ChangeLikeAsync(element.Tag as ICanLike, element.Dispatcher);
                     break;
 
                 case "ReportButton":
                     DisabledCopy();
-                    UIHelper.Navigate(typeof(BrowserPage), new object[] { false, $"https://m.coolapk.com/mp/do?c=feed&m=report&type=feed&id={element.Tag}" });
+                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
                     break;
 
                 case "ShareButton":
@@ -83,7 +114,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 default:
                     DisabledCopy();
-                    UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
             }
         }

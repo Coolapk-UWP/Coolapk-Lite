@@ -11,19 +11,19 @@ namespace CoolapkLite.Common
         private static readonly string Guid = System.Guid.NewGuid().ToString();
         private static readonly string aid = RandHexString(16);
         private static readonly string mac = RandMacAdress();
-        private static string SystemManufacturer;
-        private static string SystemProductName;
+        private static readonly string SystemManufacturer;
+        private static readonly string SystemProductName;
 
         public static string DeviceCode;
 
-        private TokenVersion TokenVersion;
+        private readonly TokenVersion TokenVersion;
 
         static TokenCreater()
         {
             EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
             SystemManufacturer = deviceInfo.SystemManufacturer;
             SystemProductName = deviceInfo.SystemProductName;
-            DeviceCode = CreateDeviceCode(aid, mac, SystemManufacturer, SystemManufacturer, SystemProductName, $"CoolapkLite {Package.Current.Id.Version.ToFormattedString()}");
+            DeviceCode = CreateDeviceCode(aid, mac, SystemManufacturer, SystemManufacturer, SystemProductName, $"CoolapkUWP {Package.Current.Id.Version.ToFormattedString()}");
         }
 
         public TokenCreater(TokenVersion version = TokenVersion.TokenV2)
@@ -118,5 +118,18 @@ namespace CoolapkLite.Common
     {
         TokenV1,
         TokenV2
+    }
+
+    public enum APIVersion
+    {
+        小程序 = 5,
+        V6,
+        V7,
+        V8,
+        V9,
+        V10,
+        V11,
+        V12,
+        V13,
     }
 }

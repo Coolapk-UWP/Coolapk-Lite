@@ -99,7 +99,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             switch (jo.Value<string>("entityType"))
             {
                 case "feed":
-                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.isFirstPageFeed : FeedDisplayMode.normal);
+                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.IsFirstPageFeed : FeedDisplayMode.Normal);
                 default:
                     if (jo.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))
                     {
@@ -134,7 +134,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 foreach (Entity item in items)
                 {
-                    if (item is NullModel) { continue; }
+                    if (item is NullEntity) { continue; }
                     Add(item);
                     InvokeProgressChanged(item, items);
                 }

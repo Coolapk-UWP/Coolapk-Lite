@@ -6,6 +6,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Helpers
@@ -25,6 +27,7 @@ namespace CoolapkLite.Helpers
         private static readonly BitmapImage WhiteNoPicMode = new BitmapImage(new Uri("ms-appx:/Assets/NoPic/img_placeholder.png")) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
         private static readonly BitmapImage DarkNoPicMode = new BitmapImage(new Uri("ms-appx:/Assets/NoPic/img_placeholder_night.png")) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
         internal static BitmapImage NoPic { get => ThemeHelper.IsDarkTheme() ? DarkNoPicMode : WhiteNoPicMode; }
+        internal static readonly CoreDispatcher Dispatcher = Window.Current.Dispatcher;
 
         static ImageCacheHelper()
         {
@@ -33,7 +36,7 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, bool isforce = false)
         {
-            Uri uri = NetworkHelper.ValidateAndGetUri(url);
+            Uri uri = url.ValidateAndGetUri();
             if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
@@ -49,7 +52,7 @@ namespace CoolapkLite.Helpers
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
-                    uri = NetworkHelper.ValidateAndGetUri(url);
+                    uri = url.ValidateAndGetUri();
                 }
 
                 try
@@ -81,34 +84,53 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url, bool isforce = false)
+        internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
-            Uri uri = NetworkHelper.ValidateAndGetUri(url);
+            Uri uri = url.ValidateAndGetUri();
             if (uri == null) { return null; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
                 return await StorageFile.GetFileFromApplicationUriAsync(uri);
             }
-            else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
-            {
-                return null;
-            }
             else
             {
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
-                    uri = NetworkHelper.ValidateAndGetUri(url);
+                    uri = url.ValidateAndGetUri();
                 }
 
                 try
                 {
-                    _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                     StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
+                    if (image != null)
+                    {
+                        _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                        image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
+                    }
                     return image;
                 }
-                catch
+                catch (FileNotFoundException)
+                {
+                    try
+                    {
+                        StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
+                        if (image != null)
+                        {
+                            _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                            image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
+                        }
+                        return image;
+                    }
+                    catch (Exception)
+                    {
+                        string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                        UIHelper.ShowMessage(str);
+                        return null;
+                    }
+                }
+                catch (Exception)
                 {
                     string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                     UIHelper.ShowMessage(str);
@@ -117,10 +139,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        internal static Task CleanCacheAsync()
-        {
-            return ImageCache.Instance.ClearAsync();
-        }
+        internal static Task CleanCacheAsync() => ImageCache.Instance.ClearAsync();
     }
 
     internal static partial class ImageCacheHelper
@@ -154,7 +173,7 @@ namespace CoolapkLite.Helpers
         [Obsolete]
         internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, bool isforce = false)
         {
-            Uri uri = NetworkHelper.ValidateAndGetUri(url);
+            Uri uri = url.ValidateAndGetUri();
             if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
@@ -173,7 +192,6 @@ namespace CoolapkLite.Helpers
                 if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
-                    uri = NetworkHelper.ValidateAndGetUri(url);
                 }
                 if (item is null)
                 {
@@ -194,7 +212,7 @@ namespace CoolapkLite.Helpers
             {
                 return (filename is null || (!forceGetPic && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))) ? NoPic : new BitmapImage(new Uri(filename));
             }
-            catch
+            catch (Exception)
             {
                 return NoPic;
             }
@@ -213,7 +231,10 @@ namespace CoolapkLite.Helpers
                 }
                 return new BitmapImage(new Uri(file.Path));
             }
-            catch (FileLoadException) { return NoPic; }
+            catch (FileLoadException)
+            {
+                return NoPic;
+            }
             catch (HttpRequestException)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");

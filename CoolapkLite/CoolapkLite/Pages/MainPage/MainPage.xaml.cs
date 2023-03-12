@@ -3,8 +3,11 @@ using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Pages;
+using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
+using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Newtonsoft.Json.Linq;
 using System;
@@ -132,7 +135,7 @@ namespace CoolapkLite
             }
         }
 
-        private void HamburgerMenu_Navigate(MenuItem MenuItem, NavigationTransitionInfo TransitionInfo, object[] vs = null)
+        private void HamburgerMenu_Navigate(MenuItem MenuItem, NavigationTransitionInfo TransitionInfo, object vs = null)
         {
             Type _page;
             if (MenuItem.PageType != null)
@@ -302,7 +305,7 @@ namespace CoolapkLite
     {
         public int Index { get; set; }
         public Type PageType { get; set; }
-        public object ViewModels { get; set; }
+        public IViewModel ViewModels { get; set; }
 
         public string name;
         public string Name
@@ -378,7 +381,7 @@ namespace CoolapkLite
                 Name = loader.GetString("User");
                 Image = null;
                 PageType = typeof(BrowserPage);
-                ViewModels = new object[] { true };
+                ViewModels = new BrowserViewModel(UriHelper.LoginUri);
             }
         }
 
@@ -400,7 +403,7 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem() { Icon = Symbol.Contact, Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new object[]{ true }, Index = 0 },
+                 new MenuItem() { Icon = Symbol.Contact, Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
                  new MenuItem() { Icon = Symbol.Setting, Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
             };
             return items;

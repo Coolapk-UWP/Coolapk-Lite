@@ -28,7 +28,7 @@ namespace CoolapkLite.Controls.DataTemplates
                         default: return Others;
                     }
                 default:
-                    return item is IList ? List : item is IListWithSubtitle ? ListWithSubtitle : Others;
+                    return item is IHasDescription ? List : item is IHasSubtitle ? ListWithSubtitle : Others;
             }
         }
     }
@@ -52,7 +52,7 @@ namespace CoolapkLite.Controls.DataTemplates
             switch (jo.Value<string>("entityType"))
             {
                 case "feed":
-                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.isFirstPageFeed : FeedDisplayMode.normal);
+                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.IsFirstPageFeed : FeedDisplayMode.Normal);
                 case "history": return new HistoryModel(jo);
                 default:
                     if (jo.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))

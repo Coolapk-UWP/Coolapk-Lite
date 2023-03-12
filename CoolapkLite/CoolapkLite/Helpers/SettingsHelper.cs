@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Helpers;
+﻿using MetroLog;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
@@ -61,7 +62,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalObject.Save(APIVersion, "V13");
+                LocalObject.Save(APIVersion, Common.APIVersion.V13);
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {
@@ -97,15 +98,12 @@ namespace CoolapkLite.Helpers
     internal static partial class SettingsHelper
     {
         public static event TypedEventHandler<string, bool> LoginChanged;
-        public static ulong version = ulong.Parse(AnalyticsInfo.VersionInfo.DeviceFamilyVersion);
-        public static readonly MetroLog.ILogManager LogManager = MetroLog.LogManagerFactory.CreateLogManager();
         public static readonly ApplicationDataStorageHelper LocalObject = ApplicationDataStorageHelper.GetCurrent(new SystemTextJsonObjectSerializer());
-        public static double WindowsVersion = double.Parse($"{(ushort)((version & 0x00000000FFFF0000L) >> 16)}.{(ushort)(SettingsHelper.version & 0x000000000000FFFFL)}");
+        public static readonly ILogManager LogManager = LogManagerFactory.CreateLogManager();
 
-        static SettingsHelper()
-        {
-            SetDefaultSettings();
-        }
+        static SettingsHelper() => SetDefaultSettings();
+
+        public static void InvokeLoginChanged(string sender, bool args) => LoginChanged?.Invoke(sender, args);
 
         public static async Task<bool> Login()
         {
@@ -140,7 +138,7 @@ namespace CoolapkLite.Helpers
                     Set(Uid, uid);
                     Set(Token, token);
                     Set(UserName, userName);
-                    LoginChanged?.Invoke(uid, true);
+                    InvokeLoginChanged(uid, true);
                     return true;
                 }
             }
@@ -168,7 +166,7 @@ namespace CoolapkLite.Helpers
                     Set(SettingsHelper.Uid, Uid);
                     Set(SettingsHelper.Token, Token);
                     Set(SettingsHelper.UserName, UserName);
-                    LoginChanged?.Invoke(Uid, true);
+                    InvokeLoginChanged(Uid, true);
                     return true;
                 }
                 else
@@ -220,7 +218,7 @@ namespace CoolapkLite.Helpers
             Set(Uid, string.Empty);
             Set(Token, string.Empty);
             Set(UserName, string.Empty);
-            LoginChanged?.Invoke(string.Empty, false);
+            InvokeLoginChanged(string.Empty, false);
         }
     }
 

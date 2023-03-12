@@ -1,14 +1,13 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Exceptions;
+using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.ViewModels.BrowserPages;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
-using Windows.Security.Credentials;
 using Windows.System;
-using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -107,7 +106,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     throw new Exception(NotifyMessage.Text);
                 case "GetContent":
                     Uri uri = WebUrl.Text.ValidateAndGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, false);
+                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, "XMLHttpRequest", false);
                     if (!isSucceed)
                     {
                         result = "网络错误";
@@ -136,7 +135,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, WebUrl.Text });
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text));
                     break;
                 case "ShowAsyncError":
                     await Task.Run(() => throw new Exception(NotifyMessage.Text));

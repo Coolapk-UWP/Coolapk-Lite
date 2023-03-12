@@ -2,7 +2,7 @@
 using System.Threading;
 using Windows.UI.Xaml.Controls;
 
-namespace CoolapkLite.Helpers
+namespace CoolapkLite.Common
 {
     /// <summary>
     /// Wrapper around a standard synchronization context, that catches any unhandled exceptions.
@@ -44,7 +44,7 @@ namespace CoolapkLite.Helpers
         public static ExceptionHandlingSynchronizationContext Register()
         {
             SynchronizationContext syncContext = Current ?? throw new InvalidOperationException("Ensure a synchronization context exists before calling this method.");
-            
+
             if (!(syncContext is ExceptionHandlingSynchronizationContext customSynchronizationContext))
             {
                 customSynchronizationContext = new ExceptionHandlingSynchronizationContext(syncContext);

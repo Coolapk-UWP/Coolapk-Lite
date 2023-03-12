@@ -11,14 +11,18 @@ namespace CoolapkLite.Models.Feeds
     public class SourceFeedReplyModel : Entity
     {
         public int ID { get; private set; }
+        public int BlockStatus { get; private set; }
+
+        public bool IsFeedAuthor { get; private set; }
+
         public string Rurl { get; private set; }
         public string PicUri { get; private set; }
-        public string Message { get; private set; }
-        public int BlockStatus { get; private set; }
+        public string Message { get; protected set; }
         public string Rusername { get; private set; }
-        public bool IsFeedAuthor { get; private set; }
+
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
+
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
         public SourceFeedReplyModel(JObject token) : base(token)
@@ -81,7 +85,11 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0 && !string.IsNullOrEmpty((picArr as JArray)[0].ToString()))
             {
-                PicArr = (from item in picArr select new ImageModel(item.ToString(), ImageType.SmallImage)).ToImmutableArray();
+                PicArr = picArr.Select(
+                    x => !string.IsNullOrEmpty(x.ToString())
+                        ? new ImageModel(x.ToString(), ImageType.SmallImage) : null)
+                    .Where(x => x != null)
+                    .ToImmutableArray();
 
                 foreach (ImageModel item in PicArr)
                 {

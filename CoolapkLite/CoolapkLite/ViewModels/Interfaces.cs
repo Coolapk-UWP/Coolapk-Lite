@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels
@@ -15,10 +16,9 @@ namespace CoolapkLite.ViewModels
         bool ToggleIsOn { get; }
     }
 
-    internal interface IViewModel
+    public interface IViewModel : INotifyPropertyChanged
     {
         Task Refresh(bool reset);
         string Title { get; }
-        double[] VerticalOffsets { get; set; }
     }
 }

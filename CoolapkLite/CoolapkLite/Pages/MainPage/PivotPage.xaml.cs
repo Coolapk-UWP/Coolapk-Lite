@@ -1,8 +1,12 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
+using CoolapkLite.ViewModels.BrowserPages;
+using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
-using GalaSoft.MvvmLight.Command;
+using Microsoft.Toolkit.Uwp.Helpers;
+using System;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -23,6 +27,7 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
+        private Action Refresh;
         public Frame MainFrame => Frame;
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
@@ -33,7 +38,7 @@ namespace CoolapkLite.Pages
             UIHelper.ShellDispatcher = Dispatcher;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            if (SettingsHelper.WindowsVersion >= 10586)
+            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
             {
                 TitleBar.ExtendViewIntoTitleBar = true;
             }
@@ -108,14 +113,24 @@ namespace CoolapkLite.Pages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
-                Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
-                RelayCommand RefreshButtonCommand = new RelayCommand((Frame.Content as AdaptivePage).Refresh);
-                RefreshButton.Command = RefreshButtonCommand;
+                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
             {
-                RelayCommand RefreshButtonCommand = new RelayCommand(AdaptivePage.Refresh);
-                RefreshButton.Command = RefreshButtonCommand;
+                Refresh = () => _ = AdaptivePage.Refresh(true);
+            }
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (Refresh != null)
+            {
+                Refresh();
+            }
+            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
+            {
+                _ = ItemsSource.Refresh(true);
             }
         }
 
@@ -133,7 +148,7 @@ namespace CoolapkLite.Pages
             switch ((sender as FrameworkElement).Tag as string)
             {
                 case "User":
-                    Frame.Navigate(typeof(BrowserPage), new object[] { true });
+                    Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
                     break;
                 case "Setting":
                     Frame.Navigate(typeof(SettingsPage));

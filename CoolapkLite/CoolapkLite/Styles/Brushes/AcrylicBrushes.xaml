@@ -1,7 +1,4 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
-    </ResourceDictionary.MergedDictionaries>
     <AcrylicBrush
         x:Key="SolidBackgroundFillColorBaseWindowBrush"
         BackgroundSource="HostBackdrop"

@@ -12,7 +12,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:Feeds />
+                <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
                 <templates:OtherDatatemplates />
             </ResourceDictionary.MergedDictionaries>
@@ -43,9 +43,9 @@
                 x:Name="RefreshButton"
                 VerticalAlignment="Center"
                 Click="RefreshButton_Click"
-                Style="{StaticResource IconButtonStyle}">
-                <SymbolIcon Symbol="Refresh" />
-            </Button>
+                Content="&#xE72C;"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconButtonStyle}" />
         </local:ShyHeaderListView.RightHeader>
     </local:ShyHeaderListView>
 </UserControl>

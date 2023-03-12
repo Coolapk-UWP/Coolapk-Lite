@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -285,7 +286,7 @@ namespace CoolapkLite.Controls
             }
 
             VisualStateManager.GoToState(this, SelectedItem == null ? noSelectionState : hasSelectionState, animate);
-            if (SettingsHelper.WindowsVersion >= 21996) { await Task.Delay(1000); }
+            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 21996) { await Task.Delay(1000); }
             VisualStateManager.GoToState(this, Items.Count > 0 ? HasItemsState : HasNoItemsState, animate);
         }
 

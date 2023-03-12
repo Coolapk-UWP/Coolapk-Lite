@@ -2,12 +2,10 @@
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
-using GalaSoft.MvvmLight.Command;
 using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -21,8 +19,10 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class SearchingPage : Page
     {
+        private Action Refresh;
         private static int PivotIndex = 0;
         private SearchingViewModel Provider;
+
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public SearchingPage() => InitializeComponent();
@@ -30,10 +30,13 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is SearchingViewModel ViewModel)
+            if (e.Parameter is SearchingViewModel ViewModel
+                && (Provider == null || Provider.Title != ViewModel.Title))
             {
                 Provider = ViewModel;
                 DataContext = Provider;
+                if (Provider.PivotIndex != -1)
+                { PivotIndex = Provider.PivotIndex; }
                 await Provider.Refresh(true);
             }
         }
@@ -54,17 +57,23 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
             {
-                RelayCommand RefreshButtonCommand = new RelayCommand(async () => await ItemsSource.Refresh(true));
-                RefreshButton.Command = RefreshButtonCommand;
+                Refresh = () => _ = ItemsSource.Refresh(true);
             }
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
 
-        private async Task Refresh(bool reset = false)
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            await Provider.Refresh(reset);
+            if (Refresh != null)
+            {
+                Refresh();
+            }
+            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
+            {
+                _ = ItemsSource.Refresh(true);
+            }
         }
 
         private async void ListView_RefreshRequested(object sender, EventArgs e)

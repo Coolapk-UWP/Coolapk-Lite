@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CoolapkLite.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace CoolapkLite.Models
@@ -9,49 +10,46 @@ namespace CoolapkLite.Models
         public int EntityID { get; private set; }
         public string EntityIDText { get; private set; }
         public string EntityType { get; private set; }
+        public string EntityForward { get; private set; }
 
-        public Entity(JObject o)
+        public Entity(JObject token)
         {
-            if (o == null)
-            {
-                //throw new ArgumentNullException(nameof(o));
-                return;
-            }
+            if (token == null) { return; }
 
-            if (o.TryGetValue("entityId", out JToken entityId))
+            if (token.TryGetValue("entityId", out JToken entityId))
             {
                 try
                 {
                     EntityID = entityId.ToObject<int>();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    SettingsHelper.LogManager.GetLogger(nameof(Entity)).Warn(ex.ExceptionToMessage(), ex);
                     EntityIDText = entityId.ToString();
                 }
             }
 
-            if (o.TryGetValue("entityType", out JToken entityType))
+            if (token.TryGetValue("entityType", out JToken entityType))
             {
                 EntityType = entityType.ToString();
             }
 
-            if (o.TryGetValue("entityFixed", out JToken entityFixed))
+            if (token.TryGetValue("entityFixed", out JToken entityFixed))
             {
                 EntityFixed = Convert.ToBoolean(entityFixed.ToObject<int>());
             }
+
+            if (token.TryGetValue("entityForward", out JToken entityForward))
+            {
+                EntityForward = entityForward.ToString();
+            }
         }
 
-        public override string ToString()
-        {
-            return $"{EntityType} - {EntityID}";
-        }
+        public override string ToString() => $"{EntityType} - {EntityID}";
     }
 
-    public class NullModel : Entity
+    public class NullEntity : Entity
     {
-        public NullModel(JObject o = null) : base(o)
-        {
-
-        }
+        public NullEntity(JObject token = null) : base(token) { }
     }
 }

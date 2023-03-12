@@ -1,18 +1,19 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
+using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels;
+using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Resources;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -56,27 +57,6 @@ namespace CoolapkLite.Helpers
         }
 
         private static readonly List<string> MessageList = new List<string>();
-
-        public static void CheckTheme(bool IsDark, bool IsInvoke = false)
-        {
-            Color ForegroundColor = IsDark ? Colors.White : Colors.Black;
-            Color BackgroundColor = new AccessibilitySettings().HighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
-
-            if (HasStatusBar)
-            {
-                StatusBar StatusBar = StatusBar.GetForCurrentView();
-                StatusBar.ForegroundColor = ForegroundColor;
-                StatusBar.BackgroundColor = BackgroundColor;
-                StatusBar.BackgroundOpacity = 0; // 透明度
-            }
-            else
-            {
-                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
-                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
-                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = HasTitleBar ? BackgroundColor : Colors.Transparent;
-            }
-        }
     }
 
     internal static partial class UIHelper
@@ -88,6 +68,7 @@ namespace CoolapkLite.Helpers
             IsShowingProgressBar = true;
             if (HasStatusBar)
             {
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.HideProgressBar());
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
@@ -97,11 +78,12 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async void ShowProgressBar(double value = 0)
+        public static async void ShowProgressBar(double value)
         {
             IsShowingProgressBar = true;
             if (HasStatusBar)
             {
+                await AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.HideProgressBar());
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
@@ -262,6 +244,56 @@ namespace CoolapkLite.Helpers
             // And update the badge
             badgeUpdater.Update(badge);
         }
+
+        public static string ExceptionToMessage(this Exception ex)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append('\n');
+            if (!string.IsNullOrWhiteSpace(ex.Message)) { builder.AppendLine($"Message: {ex.Message}"); }
+            builder.AppendLine($"HResult: {ex.HResult} (0x{Convert.ToString(ex.HResult, 16)})");
+            if (!string.IsNullOrWhiteSpace(ex.StackTrace)) { builder.AppendLine(ex.StackTrace); }
+            if (!string.IsNullOrWhiteSpace(ex.HelpLink)) { builder.Append($"HelperLink: {ex.HelpLink}"); }
+            return builder.ToString();
+        }
+
+        public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function)
+        {
+            TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
+            Task<TResult> task = taskCompletionSource.Task;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    TResult result = await function.Invoke().ConfigureAwait(false);
+                    taskCompletionSource.SetResult(result);
+                }
+                catch (Exception e)
+                {
+                    taskCompletionSource.SetException(e);
+                }
+            });
+            TResult taskResult = task.Result;
+            return taskResult;
+        }
+
+        public static bool IsTypePresent(string AssemblyName, string TypeName)
+        {
+            try
+            {
+                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
+                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
+                if (supType != null)
+                {
+                    try { Activator.CreateInstance(supType); }
+                    catch (MissingMethodException) { }
+                }
+                return supType != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     public enum NavigationThemeTransition
@@ -297,134 +329,170 @@ namespace CoolapkLite.Helpers
                     break;
             }
         }
-
-        public static async void ShowImage(ImageModel image)
+        
+        public static async Task ShowImageAsync(ImageModel image)
         {
             CoreApplicationView View = CoreApplication.CreateNewView();
             int ViewId = 0;
             await View.ExecuteOnUIThreadAsync(() =>
             {
+                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
+                {
+                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                }
+                Window window = Window.Current;
+                WindowHelper.TrackWindow(window);
                 Frame frame = new Frame();
                 frame.Navigate(typeof(ShowImagePage), image);
-                Window.Current.Content = frame;
-                Window.Current.Activate();
-                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-                if (SettingsHelper.WindowsVersion >= 10586)
-                {
-                    TitleBar.ExtendViewIntoTitleBar = true;
-                }
+                window.Content = frame;
+                ThemeHelper.Initialize(window);
+                window.Activate();
                 ViewId = ApplicationView.GetForCurrentView().Id;
             });
             _ = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(ViewId);
         }
+    }
 
-        private static readonly ImmutableArray<string> routes = new string[]
+    internal static partial class UIHelper
+    {
+        public static async Task OpenLinkAsync(string link)
         {
-            "/u/",
-            "/feed/",
-            "/picture/",
-            "/t/",
-            "t/",
-            "http://image.coolapk.com/",
-            "https",
-            "http",
-            "www.coolapk.com",
-        }.ToImmutableArray();
+            if (string.IsNullOrWhiteSpace(link)) { return; }
 
-        private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
+            string origin = link;
 
-        private static string Replace(this string str, int oldText)
-        {
-            return oldText == -1
-                ? str.Replace("https://www.coolapk.com", string.Empty)
-                : oldText == -2
-                    ? str.Replace("http://www.coolapk.com", string.Empty)
-                    : oldText == -3
-                        ? str.Replace("www.coolapk.com", string.Empty)
-                        : oldText < 0
-                            ? throw new Exception($"i = {oldText}")
-                            : str.Replace(routes[oldText], string.Empty);
-        }
-
-        public static async void OpenLinkAsync(string str)
-        {
-            string rawstr = str;
-            if (string.IsNullOrWhiteSpace(str)) { return; }
-            int i = 0;
-            if (str.IsFirst(i++))
+            if (link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
-                string u = str.Replace(i - 1);
-                string uid = int.TryParse(u, out _) ? u : (await NetworkHelper.GetUserInfoByNameAsync(u)).UID;
-                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
-                if (f != null)
+                link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
+                if (link.StartsWith("image.coolapk.com"))
                 {
-                    Navigate(typeof(FeedListPage), f);
-                }
-            }
-            else if (str.IsFirst(i++) || str.IsFirst(i++))
-            {
-                if (str == "/feed/writer") { ShowMessage("暂不支持"); }
-                else { Navigate(typeof(FeedShellPage), new FeedDetailViewModel(str.Replace(i - 1))); }
-            }
-            else if (str.IsFirst(i++) || str.IsFirst(i++))
-            {
-                string u = str.Replace(i - 1);
-                if (u.Contains("?type=")){ u = u.Substring(0, u.IndexOf('?')); }
-                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.TagPageList, u);
-                if (f != null)
-                {
-                    Navigate(typeof(FeedListPage), f);
-                }
-            }
-            else if (str.IsFirst(i++))
-            {
-                ShowImage(new ImageModel(str, ImageType.SmallImage));
-            }
-            else if (str.IsFirst(i++))
-            {
-                if (str.Contains("coolapk.com"))
-                {
-                    OpenLinkAsync(str.Replace(-1));
+                    _ = ShowImageAsync(new ImageModel(origin, ImageType.SmallImage));
+                    return;
                 }
                 else
                 {
-                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                    Regex coolapk = new Regex(@"\w*?.?coolapk.\w*/");
+                    if (coolapk.IsMatch(link))
+                    {
+                        link = coolapk.Replace(link, string.Empty);
+                    }
+                    else
+                    {
+                        Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
+                        return;
+                    }
                 }
             }
-            else if (str.IsFirst(i++))
+
+            if (link.FirstOrDefault() != '/')
             {
-                if (str.Contains("coolapk.com"))
+                link = $"/{link}";
+            }
+
+            if (link == "/contacts/fans")
+            {
+                Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+            }
+            else if (link == "/user/myFollowList")
+            {
+                Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+            }
+            else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
+            {
+                string url = link.Replace("/page?", string.Empty);
+                Navigate(typeof(AdaptivePage), new AdaptiveViewModel(url));
+            }
+            else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
+            {
+                string url = link.Replace("/u/", string.Empty);
+                string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
+                if (provider != null)
                 {
-                    OpenLinkAsync(str.Replace(-2));
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
+            {
+                string id = link.Substring(6);
+                if (int.TryParse(id, out _))
+                {
+                    Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
                 }
                 else
                 {
-                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                    ShowMessage("暂不支持");
                 }
             }
-            else if (str.IsFirst(i++))
+            else if (link.StartsWith("/picture/", StringComparison.OrdinalIgnoreCase))
             {
-                OpenLinkAsync(str.Replace(-3));
-            }
-        }
-
-        public static bool IsTypePresent(string AssemblyName, string TypeName)
-        {
-            try
-            {
-                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
-                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
-                if (supType != null)
+                string id = link.Substring(10);
+                if (int.TryParse(id, out _))
                 {
-                    try { Activator.CreateInstance(supType); }
-                    catch (MissingMethodException) { }
+                    Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
                 }
-                return supType != null;
             }
-            catch
+            else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
             {
-                return false;
+                string id = link.Substring(10);
+                if (int.TryParse(id, out _))
+                {
+                    Navigate(typeof(FeedShellPage), new QuestionViewModel(id));
+                }
+            }
+            else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
+            {
+                int end = link.IndexOf('?');
+                string tag = end > 3 ? link.Substring(3, end - 3) : link.Substring(3);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag);
+                if (provider != null)
+                {
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
+            {
+                string tag = link.Substring(5);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag);
+                if (provider != null)
+                {
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/product/", StringComparison.OrdinalIgnoreCase))
+            {
+                if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigate(typeof(AdaptivePage), new AdaptiveViewModel(link));
+                }
+                else
+                {
+                    string tag = link.Substring(9);
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag);
+                    if (provider != null)
+                    {
+                        Navigate(typeof(FeedListPage), provider);
+                    }
+                }
+            }
+            else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
+            {
+                //Navigate(typeof(HTMLPage), new HTMLViewModel(link));
+            }
+            else
+            {
+                Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
             }
         }
+    }
+
+    public enum MessageType
+    {
+        Message,
+        NoMore,
+        NoMoreReply,
+        NoMoreLikeUser,
+        NoMoreShare,
+        NoMoreHotReply,
     }
 }

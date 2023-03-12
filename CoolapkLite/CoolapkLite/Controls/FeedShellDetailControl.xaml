@@ -7,7 +7,7 @@
     xmlns:feeds="using:CoolapkLite.Models.Feeds"
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:valueconverters="using:CoolapkLite.Helpers.ValueConverters"
+    xmlns:valueconverters="using:CoolapkLite.Helpers.Converters"
     d:DataContext="{d:DesignInstance Type=feeds:FeedDetailModel}"
     d:DesignHeight="300"
     d:DesignWidth="400"
@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <datatemplates:Pic />
+                <datatemplates:PicTemplates />
             </ResourceDictionary.MergedDictionaries>
             <valueconverters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
         </ResourceDictionary>
@@ -42,7 +42,7 @@
                         Margin="0,4"
                         Padding="0"
                         HorizontalAlignment="Left"
-                        Background="Transparent"
+                        Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
                         Tag="{Binding UserInfo.Url}">
                         <Ellipse Width="36" Height="36">
@@ -80,7 +80,7 @@
                         Grid.Column="2"
                         HorizontalAlignment="Right"
                         Click="Button_Click"
-                        Style="{StaticResource FeedOpButtonStyle}"
+                        Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
                         ToolTipService.ToolTip="{x:Bind FollowStatus.Text, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">
