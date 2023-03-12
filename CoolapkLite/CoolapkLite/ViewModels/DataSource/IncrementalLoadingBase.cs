@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +47,41 @@ namespace CoolapkLite.ViewModels.DataSource
 
         #endregion
 
+        private bool any = false;
+        public bool Any
+        {
+            get => any;
+            set
+            {
+                if (any != value)
+                {
+                    any = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        private bool isLoading = false;
+        public bool IsLoading
+        {
+            get => isLoading;
+            set
+            {
+                if (isLoading != value)
+                {
+                    isLoading = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        protected override event PropertyChangedEventHandler PropertyChanged;
+
+        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
         /// <summary>
         /// We use this method to load data and add to self.
         /// </summary>
@@ -55,7 +93,8 @@ namespace CoolapkLite.ViewModels.DataSource
             try
             {
                 // We are going to load more.
-                OnLoadMoreStarted?.Invoke();
+                IsLoading = true;
+                LoadMoreStarted?.Invoke();
 
                 // Data loading will different for sub-class.
                 IList<T> items = await LoadMoreItemsOverrideAsync(c, count);
@@ -63,7 +102,8 @@ namespace CoolapkLite.ViewModels.DataSource
                 AddItems(items);
 
                 // We finished loading operation.
-                OnLoadMoreCompleted?.Invoke();
+                IsLoading = false;
+                LoadMoreCompleted?.Invoke();
 
                 return new LoadMoreItemsResult { Count = items == null ? 0 : (uint)items.Count };
             }
@@ -73,18 +113,21 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
 
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            base.OnCollectionChanged(e);
+            Any = this.Any();
+        }
 
+        public delegate void EventHandler();
+        public delegate void EventHandler<TEventArgs>(TEventArgs e);
 
-        public delegate void LoadMoreStarted();
-        public delegate void LoadMoreCompleted();
-        public delegate void LoadMoreProgressChanged(double value);
-
-        public event LoadMoreStarted OnLoadMoreStarted;
-        public event LoadMoreCompleted OnLoadMoreCompleted;
-        public event LoadMoreProgressChanged OnLoadMoreProgressChanged;
-
+        public event EventHandler LoadMoreStarted;
+        public event EventHandler LoadMoreCompleted;
+        public event EventHandler<double> LoadMoreProgressChanged;
 
         #region Overridable methods
+
         /// <summary>
         /// Append items to list.
         /// </summary>
@@ -100,7 +143,7 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
 
-        protected virtual void InvokeProgressChanged(T item, IList<T> items) => OnLoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
+        protected virtual void InvokeProgressChanged(T item, IList<T> items) => LoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
 
         protected abstract Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count);
 

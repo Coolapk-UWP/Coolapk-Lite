@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,19 +117,62 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AlreadyPinnedTile" xml:space="preserve">
+    <value>磁贴已固定到开始</value>
+  </data>
   <data name="AppDescription" xml:space="preserve">
     <value>一个基于 UWP 平台的第三方酷安客户端精简版</value>
   </data>
   <data name="AppName" xml:space="preserve">
     <value>酷安 Lite</value>
   </data>
+  <data name="CoolapkProtocol" xml:space="preserve">
+    <value>酷安网页跳转</value>
+  </data>
+  <data name="CoolMarketProtocol" xml:space="preserve">
+    <value>酷市场网页跳转</value>
+  </data>
   <data name="ExceptionThrown" xml:space="preserve">
     <value>程序出现了错误……</value>
+  </data>
+  <data name="GotoGithub" xml:space="preserve">
+    <value>前往Github</value>
+  </data>
+  <data name="HasUpdate" xml:space="preserve">
+    <value>程序更新了v({0}.{1}.{2} -&gt; {3})。</value>
+    <comment>{0}.{1}.{2}和{3} 表示版本号</comment>
+  </data>
+  <data name="HasUpdateTitle" xml:space="preserve">
+    <value>检查到了更新</value>
   </data>
   <data name="ImageLoadError" xml:space="preserve">
     <value>图片加载失败</value>
   </data>
+  <data name="IndexPageError" xml:space="preserve">
+    <value>主页加载失败</value>
+  </data>
+  <data name="MyPageError" xml:space="preserve">
+    <value>个人页面加载失败</value>
+  </data>
   <data name="NetworkError" xml:space="preserve">
     <value>无法连接到网络</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="NoUpdate" xml:space="preserve">
+    <value>当前无可用更新。</value>
+  </data>
+  <data name="PinnedTileFailed" xml:space="preserve">
+    <value>固定磁贴失败</value>
+  </data>
+  <data name="PinnedTileSucceeded" xml:space="preserve">
+    <value>固定磁贴成功</value>
+  </data>
+  <data name="UserNameError" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>是</value>
   </data>
 </root>

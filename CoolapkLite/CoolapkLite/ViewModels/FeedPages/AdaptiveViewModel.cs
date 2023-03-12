@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
@@ -12,7 +14,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public class AdaptiveViewModel : DataSourceBase<Entity>, IViewModel
     {
-        private readonly string Uri;
+        public readonly string Uri;
         private readonly List<Type> EntityTypes;
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains("?");
@@ -20,8 +22,33 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private readonly CoolapkListProvider Provider;
 
-        public string Title { get; protected set; }
-        public double[] VerticalOffsets { get; set; } = new double[1];
+        private string title = string.Empty;
+        public string Title
+        {
+            get => title;
+            protected set
+            {
+                if (title != value)
+                {
+                    title = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        private bool isShowTitle;
+        public bool IsShowTitle
+        {
+            get => isShowTitle;
+            set
+            {
+                if (isShowTitle != value)
+                {
+                    isShowTitle = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
 
         internal AdaptiveViewModel(string uri, List<Type> types = null)
         {
@@ -37,6 +64,102 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             Provider = provider;
             EntityTypes = types;
+        }
+
+        public static AdaptiveViewModel GetUserListProvider(string uid, bool isFollowList, string name)
+        {
+            return string.IsNullOrEmpty(uid)
+                ? throw new ArgumentException(nameof(uid))
+                : new AdaptiveViewModel(
+                new CoolapkListProvider(
+                    (p, firstItem, lastItem) =>
+                        UriHelper.GetUri(
+                            UriType.GetUserList,
+                            isFollowList ? "followList" : "fansList",
+                            uid,
+                            p,
+                            string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                            string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                    (o) => new Entity[] { new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])) },
+                    "fuid"))
+                { Title = $"{name}的{(isFollowList ? "关注" : "粉丝")}" };
+        }
+
+        public static AdaptiveViewModel GetReplyListProvider(string id, FeedReplyModel reply = null)
+        {
+            return string.IsNullOrEmpty(id)
+                ? throw new ArgumentException(nameof(id))
+                : reply == null
+                ? new AdaptiveViewModel(
+                    new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetHotReplies,
+                                id,
+                                p,
+                                p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                        (o) => new Entity[] { new FeedReplyModel(o) },
+                        "uid"))
+                { Title = $"热门回复" }
+                : new AdaptiveViewModel(
+                    new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetReplyReplies,
+                                id,
+                                p,
+                                p > 1 ? $"&lastItem={lastItem}" : string.Empty),
+                        (o) => new Entity[] { new FeedReplyModel(o, false) },
+                        "uid"))
+                { Title = $"回复({reply.ReplyNum})" };
+        }
+
+        public static AdaptiveViewModel GetHistoryProvider(string title)
+        {
+            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
+
+            UriType type = UriType.CheckLoginInfo;
+
+            switch (title)
+            {
+                case "我的常去":
+                    type = UriType.GetUserRecentHistory;
+                    break;
+                case "浏览历史":
+                    type = UriType.GetUserHistory;
+                    break;
+                default: throw new ArgumentException(nameof(title));
+            }
+
+            return new AdaptiveViewModel(
+                new CoolapkListProvider(
+                    (p, firstItem, lastItem) =>
+                        UriHelper.GetUri(
+                            type,
+                            p,
+                            string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                            string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                    (o) => new Entity[] { new HistoryModel(o) },
+                    "uid"))
+            { Title = title };
+        }
+
+        public static AdaptiveViewModel GetUserFeedsProvider(string uid, string branch)
+        {
+            return string.IsNullOrEmpty(uid)
+                ? throw new ArgumentException(nameof(uid))
+                : new AdaptiveViewModel(
+                    new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetUserFeeds,
+                                uid,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                branch),
+                        (o) => new Entity[] { new FeedModel(o) },
+                        "uid"));
         }
 
         public async Task Refresh(bool reset = false)
@@ -59,6 +182,11 @@ namespace CoolapkLite.ViewModels.FeedPages
                 Title = uri.Substring(uri.LastIndexOf(Value, StringComparison.Ordinal) + Value.Length);
             }
 
+            if (uri.StartsWith("url="))
+            {
+                uri = uri.Replace("url=", string.Empty);
+            }
+
             if (uri.IndexOf("/page", StringComparison.Ordinal) == -1 && (uri.StartsWith("#", StringComparison.Ordinal) || (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))))
             {
                 uri = "/page/dataList?url=" + uri;
@@ -70,20 +198,20 @@ namespace CoolapkLite.ViewModels.FeedPages
             return uri.Replace("#", "%23");
         }
 
-        private IEnumerable<Entity> GetEntities(JObject jo)
+        private IEnumerable<Entity> GetEntities(JObject json)
         {
-            if (jo.TryGetValue("entityTemplate", out JToken t) && t?.ToString() == "configCard")
+            if (json.TryGetValue("entityTemplate", out JToken t) && t?.ToString() == "configCard")
             {
-                JObject j = JObject.Parse(jo.Value<string>("extraData"));
+                JObject j = JObject.Parse(json.Value<string>("extraData"));
                 Title = j.Value<string>("pageTitle");
                 yield return null;
             }
-            else if (jo.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
+            else if (json.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
             else if (tt?.ToString() == "feedCoolPictureGridCard")
             {
-                foreach (JObject item in jo.Value<JArray>("entities"))
+                foreach (JToken item in json.Value<JArray>("entities"))
                 {
-                    Entity entity = EntityTemplateSelector.GetEntity(item, IsHotFeedPage);
+                    Entity entity = EntityTemplateSelector.GetEntity((JObject)item, IsHotFeedPage);
                     if (entity != null)
                     {
                         yield return entity;
@@ -92,7 +220,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             else
             {
-                yield return EntityTemplateSelector.GetEntity(jo, IsHotFeedPage);
+                yield return EntityTemplateSelector.GetEntity(json, IsHotFeedPage);
             }
             yield break;
         }
@@ -116,7 +244,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 foreach (Entity item in items)
                 {
-                    if (item is NullModel) { continue; }
+                    if (item is NullEntity) { continue; }
                     if (EntityTypes == null || EntityTypes.Contains(item.GetType())) { Add(item); }
                 }
             }

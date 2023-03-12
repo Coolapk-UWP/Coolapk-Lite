@@ -12,12 +12,17 @@
         SearchWord="{StaticResource SearchWord}" />
 
     <DataTemplate x:Key="SearchWord">
-        <StackPanel Orientation="Horizontal">
-            <SymbolIcon Symbol="{Binding Symbol}" />
-            <TextBlock Margin="10,0" Text="{Binding Title}" />
-        </StackPanel>
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{Binding Glyph}" />
+            <TextBlock Grid.Column="2" Text="{Binding Title}" />
+        </Grid>
     </DataTemplate>
-
+    
     <DataTemplate x:Key="Apps">
         <ListViewItem Tag="{Binding Url}">
             <Grid Padding="-10,8">

@@ -11,7 +11,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+            _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
-using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -17,6 +17,10 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class CirclePage : Page
     {
         private static int PivotIndex = 0;
+
+        private bool isLoaded;
+        private Action Refresh;
+
         private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public CirclePage() => InitializeComponent();
@@ -29,8 +33,12 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
         {
-            Pivot.ItemsSource = GetMainItems();
-            Pivot.SelectedIndex = PivotIndex;
+            if (!isLoaded)
+            {
+                Pivot.ItemsSource = GetMainItems();
+                Pivot.SelectedIndex = PivotIndex;
+                isLoaded = true;
+            }
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -38,14 +46,12 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
-                Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
-                RelayCommand RefreshButtonCommand = new RelayCommand((Frame.Content as AdaptivePage).Refresh);
-                RefreshButton.Command = RefreshButtonCommand;
+                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
             {
-                RelayCommand RefreshButtonCommand = new RelayCommand(AdaptivePage.Refresh);
-                RefreshButton.Command = RefreshButtonCommand;
+                Refresh = () => _ = AdaptivePage.Refresh(true);
             }
         }
 
@@ -65,5 +71,7 @@ namespace CoolapkLite.Pages.FeedPages
             };
             return items;
         }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e) => Refresh();
     }
 }

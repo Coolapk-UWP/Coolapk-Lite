@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Update;
+using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.ViewModels.BrowserPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.ComponentModel;
@@ -155,13 +157,13 @@ namespace CoolapkLite.Pages.SettingsPages
                     Frame.GoBack();
                     break;
                 case "MyDevice":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, "https://m.coolapk.com/mp/do?c=userDevice&m=myDevice" });
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
                     break;
                 case "TestPage":
                     _ = Frame.Navigate(typeof(TestPage));
                     break;
                 case "FeedBack":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, IssuePath });
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(IssuePath));
                     break;
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
@@ -197,7 +199,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     IsCheckUpdateButtonEnabled = true;
                     break;
                 case "AccountSetting":
-                    _ = Frame.Navigate(typeof(BrowserPage), new object[] { false, "https://account.coolapk.com/account/settings" });
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();

@@ -1,15 +1,19 @@
 ﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
+using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -351,93 +355,133 @@ namespace CoolapkLite.Helpers
 
     internal static partial class UIHelper
     {
-        private static readonly ImmutableArray<string> routes = new string[]
+        public static async Task OpenLinkAsync(string link)
         {
-            "/u/",
-            "/feed/",
-            "/picture/",
-            "/t/",
-            "t/",
-            "http://image.coolapk.com/",
-            "https",
-            "http",
-            "www.coolapk.com",
-        }.ToImmutableArray();
+            if (string.IsNullOrWhiteSpace(link)) { return; }
 
-        private static bool IsFirst(this string str, int i) => str.IndexOf(routes[i], StringComparison.Ordinal) == 0;
+            string origin = link;
 
-        private static string Replace(this string str, int oldText)
-        {
-            return oldText == -1
-                ? str.Replace("https://www.coolapk.com", string.Empty)
-                : oldText == -2
-                    ? str.Replace("http://www.coolapk.com", string.Empty)
-                    : oldText == -3
-                        ? str.Replace("www.coolapk.com", string.Empty)
-                        : oldText < 0
-                            ? throw new Exception($"i = {oldText}")
-                            : str.Replace(routes[oldText], string.Empty);
-        }
-
-        public static async void OpenLinkAsync(string str)
-        {
-            string rawstr = str;
-            if (string.IsNullOrWhiteSpace(str)) { return; }
-            int i = 0;
-            if (str.IsFirst(i++))
+            if (link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
-                string u = str.Replace(i - 1);
-                string uid = int.TryParse(u, out _) ? u : (await NetworkHelper.GetUserInfoByNameAsync(u)).UID;
-                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
-                if (f != null)
+                link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
+                if (link.StartsWith("image.coolapk.com"))
                 {
-                    Navigate(typeof(FeedListPage), f);
-                }
-            }
-            else if (str.IsFirst(i++) || str.IsFirst(i++))
-            {
-                if (str == "/feed/writer") { ShowMessage("暂不支持"); }
-                else { Navigate(typeof(FeedShellPage), new FeedDetailViewModel(str.Replace(i - 1))); }
-            }
-            else if (str.IsFirst(i++) || str.IsFirst(i++))
-            {
-                string u = str.Replace(i - 1);
-                if (u.Contains("?type=")){ u = u.Substring(0, u.IndexOf('?')); }
-                FeedListViewModel f = FeedListViewModel.GetProvider(FeedListType.TagPageList, u);
-                if (f != null)
-                {
-                    Navigate(typeof(FeedListPage), f);
-                }
-            }
-            else if (str.IsFirst(i++))
-            {
-                _ = ShowImageAsync(new ImageModel(str, ImageType.SmallImage));
-            }
-            else if (str.IsFirst(i++))
-            {
-                if (str.Contains("coolapk.com"))
-                {
-                    OpenLinkAsync(str.Replace(-1));
+                    _ = ShowImageAsync(new ImageModel(origin, ImageType.SmallImage));
+                    return;
                 }
                 else
                 {
-                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                    Regex coolapk = new Regex(@"\w*?.?coolapk.\w*/");
+                    if (coolapk.IsMatch(link))
+                    {
+                        link = coolapk.Replace(link, string.Empty);
+                    }
+                    else
+                    {
+                        Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
+                        return;
+                    }
                 }
             }
-            else if (str.IsFirst(i++))
+
+            if (link.FirstOrDefault() != '/')
             {
-                if (str.Contains("coolapk.com"))
+                link = $"/{link}";
+            }
+
+            if (link == "/contacts/fans")
+            {
+                Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+            }
+            else if (link == "/user/myFollowList")
+            {
+                Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+            }
+            else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
+            {
+                string url = link.Replace("/page?", string.Empty);
+                Navigate(typeof(AdaptivePage), new AdaptiveViewModel(url));
+            }
+            else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
+            {
+                string url = link.Replace("/u/", string.Empty);
+                string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
+                if (provider != null)
                 {
-                    OpenLinkAsync(str.Replace(-2));
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
+            {
+                string id = link.Substring(6);
+                if (int.TryParse(id, out _))
+                {
+                    Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
                 }
                 else
                 {
-                    Navigate(typeof(BrowserPage), new object[] { false, str });
+                    ShowMessage("暂不支持");
                 }
             }
-            else if (str.IsFirst(i++))
+            else if (link.StartsWith("/picture/", StringComparison.OrdinalIgnoreCase))
             {
-                OpenLinkAsync(str.Replace(-3));
+                string id = link.Substring(10);
+                if (int.TryParse(id, out _))
+                {
+                    Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
+                }
+            }
+            else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
+            {
+                string id = link.Substring(10);
+                if (int.TryParse(id, out _))
+                {
+                    Navigate(typeof(FeedShellPage), new QuestionViewModel(id));
+                }
+            }
+            else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
+            {
+                int end = link.IndexOf('?');
+                string tag = end > 3 ? link.Substring(3, end - 3) : link.Substring(3);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag);
+                if (provider != null)
+                {
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
+            {
+                string tag = link.Substring(5);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag);
+                if (provider != null)
+                {
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
+            else if (link.StartsWith("/product/", StringComparison.OrdinalIgnoreCase))
+            {
+                if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
+                {
+                    Navigate(typeof(AdaptivePage), new AdaptiveViewModel(link));
+                }
+                else
+                {
+                    string tag = link.Substring(9);
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag);
+                    if (provider != null)
+                    {
+                        Navigate(typeof(FeedListPage), provider);
+                    }
+                }
+            }
+            else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
+            {
+                //Navigate(typeof(HTMLPage), new HTMLViewModel(link));
+            }
+            else
+            {
+                Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
             }
         }
     }

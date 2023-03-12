@@ -1,10 +1,13 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Notifications;
 
 namespace CoolapkLite.BackgroundTasks
@@ -28,7 +31,14 @@ namespace CoolapkLite.BackgroundTasks
         public async void UpdateTile()
         {
             Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
-            try { await GetData(uri); } catch { }
+            try
+            {
+                await GetData(uri);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+            }
         }
 
         private async Task GetData(Uri uri)
@@ -39,15 +49,15 @@ namespace CoolapkLite.BackgroundTasks
                 JArray array = (JArray)result;
                 if (array.Count < 1) { return; }
                 int i = 0;
-                foreach (JObject item in array)
+                foreach (JToken item in array)
                 {
                     if (i >= 5) { break; }
-                    if (item.TryGetValue("entityType", out JToken entityType))
+                    if (((JObject)item).TryGetValue("entityType", out JToken entityType))
                     {
                         if (entityType.ToString() == "feed" || entityType.ToString() == "discovery")
                         {
                             i++;
-                            UpdateTitle(GetFeedTitle(item));
+                            UpdateTitle(GetFeedTitle((JObject)item));
                         }
                     }
                 }
@@ -58,30 +68,38 @@ namespace CoolapkLite.BackgroundTasks
         {
             try
             {
-                TileUpdateManager.CreateTileUpdaterForApplication().EnableNotificationQueue(true);
+                TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
+                tileUpdater.EnableNotificationQueue(true);
                 TileNotification tileNotification = new TileNotification(tileContent.GetXml());
-                TileUpdateManager.CreateTileUpdaterForApplication().Update(tileNotification);
+                tileUpdater.Update(tileNotification);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+            }
         }
 
-        private TileContent GetFeedTitle(JObject token)
+        public static TileContent GetFeedTitle(JObject token)
         {
             FeedModel FeedDetail = new FeedModel(token);
+            return GetFeedTitle(FeedDetail);
+        }
+
+        public static TileContent GetFeedTitle(FeedModelBase FeedDetail)
+        {
             string Message = FeedDetail.Message.CSStoString();
-            return new TileContent()
+            return new TileContent
             {
-                Visual = new TileVisual()
+                Visual = new TileVisual
                 {
                     Branding = TileBranding.NameAndLogo,
                     DisplayName = FeedDetail.Info,
-                    Arguments = FeedDetail.Url,
 
-                    TileMedium = new TileBinding()
+                    TileMedium = new TileBinding
                     {
-                        Content = new TileBindingContentAdaptive()
+                        Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
                             {
                                 Source = FeedDetail.Pic.Uri,
                                 HintOverlay = 70
@@ -89,13 +107,13 @@ namespace CoolapkLite.BackgroundTasks
 
                             Children =
                             {
-                                new AdaptiveText()
+                                new AdaptiveText
                                 {
                                     Text = FeedDetail.UserInfo.UserName,
                                     HintStyle = AdaptiveTextStyle.Caption,
                                 },
 
-                                new AdaptiveText()
+                                new AdaptiveText
                                 {
                                     Text = Message,
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
@@ -105,11 +123,12 @@ namespace CoolapkLite.BackgroundTasks
                             }
                         }
                     },
-                    TileWide = new TileBinding()
+
+                    TileWide = new TileBinding
                     {
-                        Content = new TileBindingContentAdaptive()
+                        Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
                             {
                                 Source = FeedDetail.Pic.Uri,
                                 HintOverlay = 70
@@ -117,33 +136,33 @@ namespace CoolapkLite.BackgroundTasks
 
                             Children =
                             {
-                                new AdaptiveGroup()
+                                new AdaptiveGroup
                                 {
                                     Children =
                                     {
-                                        new AdaptiveSubgroup()
+                                        new AdaptiveSubgroup
                                         {
                                             HintWeight = 33,
                                             Children =
                                             {
-                                                new AdaptiveImage()
+                                                new AdaptiveImage
                                                 {
                                                     Source = FeedDetail.UserInfo.UserAvatar.Uri,
                                                     HintCrop = AdaptiveImageCrop.Circle
                                                 }
                                             },
                                         },
-                                        new AdaptiveSubgroup()
+                                        new AdaptiveSubgroup
                                         {
                                             Children =
                                             {
-                                                new AdaptiveText()
+                                                new AdaptiveText
                                                 {
                                                     Text = FeedDetail.UserInfo.UserName,
                                                     HintStyle = AdaptiveTextStyle.Caption,
                                                 },
 
-                                                new AdaptiveText()
+                                                new AdaptiveText
                                                 {
                                                     Text = Message,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
@@ -157,11 +176,12 @@ namespace CoolapkLite.BackgroundTasks
                             }
                         }
                     },
-                    TileLarge = new TileBinding()
+
+                    TileLarge = new TileBinding
                     {
-                        Content = new TileBindingContentAdaptive()
+                        Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage()
+                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
                             {
                                 Source = FeedDetail.Pic.Uri,
                                 HintOverlay = 70
@@ -169,17 +189,252 @@ namespace CoolapkLite.BackgroundTasks
 
                             Children =
                             {
-                                new AdaptiveText()
+                                new AdaptiveGroup
                                 {
-                                    Text = FeedDetail.UserInfo.UserName,
-                                    HintStyle = AdaptiveTextStyle.Base,
+                                    Children =
+                                    {
+                                        new AdaptiveSubgroup
+                                        {
+                                            HintWeight = 33,
+                                            Children =
+                                            {
+                                                new AdaptiveImage
+                                                {
+                                                    Source = FeedDetail.UserInfo.UserAvatar.Uri,
+                                                    HintCrop = AdaptiveImageCrop.Circle
+                                                },
+                                            }
+                                        },
+
+                                        new AdaptiveSubgroup()
+                                    }
                                 },
 
-                                new AdaptiveText()
+                                new AdaptiveText
+                                {
+                                    Text = FeedDetail.UserInfo.UserName,
+                                    HintStyle = AdaptiveTextStyle.Caption,
+                                },
+
+                                new AdaptiveText
                                 {
                                     Text = Message,
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
-                                    HintWrap = true
+                                    HintWrap = true,
+                                    HintMaxLines = 3
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        public static TileContent GetUserTitle(JObject token)
+        {
+            UserModel UserDetail = new UserModel(token);
+            return GetUserTitle(UserDetail);
+        }
+
+        public static TileContent GetUserTitle(IUserModel UserDetail)
+        {
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
+            return new TileContent
+            {
+                Visual = new TileVisual
+                {
+                    Branding = TileBranding.NameAndLogo,
+                    DisplayName = UserDetail.UserName,
+
+                    TileSmall = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            BackgroundImage = new TileBackgroundImage
+                            {
+                                Source = UserDetail.Cover.Uri,
+                                HintOverlay = 70
+                            },
+
+                            Children =
+                            {
+                                new AdaptiveImage
+                                {
+                                    Source = UserDetail.UserAvatar.Uri,
+                                    HintCrop = AdaptiveImageCrop.Circle
+                                }
+                            }
+                        }
+                    },
+
+                    TileMedium = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            BackgroundImage = new TileBackgroundImage
+                            {
+                                Source = UserDetail.Cover.Uri,
+                                HintOverlay = 70
+                            },
+
+                            PeekImage = new TilePeekImage
+                            {
+                                Source = UserDetail.UserAvatar.Uri,
+                                HintCrop = TilePeekImageCrop.Circle,
+                            },
+
+                            Children =
+                            {
+                                new AdaptiveText
+                                {
+                                    Text = UserDetail.UserName,
+                                    HintStyle = AdaptiveTextStyle.Caption,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = $"{UserDetail.FollowNum}{loader.GetString("Follow")} {UserDetail.FansNum}{loader.GetString("Fan")}",
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = UserDetail.Bio,
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                    HintWrap = true,
+                                    HintMaxLines = 2
+                                }
+                            }
+                        }
+                    },
+
+                    TileWide = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            BackgroundImage = new TileBackgroundImage
+                            {
+                                Source = UserDetail.Cover.Uri,
+                                HintOverlay = 70
+                            },
+
+                            Children =
+                            {
+                                new AdaptiveGroup
+                                {
+                                    Children =
+                                    {
+                                        new AdaptiveSubgroup
+                                        {
+                                            HintWeight = 33,
+                                            Children =
+                                            {
+                                                new AdaptiveImage
+                                                {
+                                                    Source = UserDetail.UserAvatar.Uri,
+                                                    HintCrop = AdaptiveImageCrop.Circle
+                                                }
+                                            },
+                                        },
+                                        new AdaptiveSubgroup
+                                        {
+                                            Children =
+                                            {
+                                                new AdaptiveText
+                                                {
+                                                    Text = UserDetail.UserName,
+                                                    HintStyle = AdaptiveTextStyle.Caption,
+                                                },
+
+                                                new AdaptiveText
+                                                {
+                                                    Text = $"{UserDetail.FollowNum}{loader.GetString("Follow")} {UserDetail.FansNum}{loader.GetString("Fan")}",
+                                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                                },
+
+                                                new AdaptiveText
+                                                {
+                                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                                },
+
+                                                new AdaptiveText
+                                                {
+                                                    Text = UserDetail.Bio,
+                                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                                    HintWrap = true,
+                                                    HintMaxLines = 2
+                                                }
+                                            },
+                                        }
+                                    }
+                                },
+                            }
+                        }
+                    },
+
+                    TileLarge = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            BackgroundImage = new TileBackgroundImage
+                            {
+                                Source = UserDetail.Cover.Uri,
+                                HintOverlay = 70
+                            },
+
+                            Children =
+                            {
+                                new AdaptiveGroup
+                                {
+                                    Children =
+                                    {
+                                        new AdaptiveSubgroup
+                                        {
+                                            HintWeight = 33,
+                                            Children =
+                                            {
+                                                new AdaptiveImage
+                                                {
+                                                    Source = UserDetail.UserAvatar.Uri,
+                                                    HintCrop = AdaptiveImageCrop.Circle
+                                                }
+                                            }
+                                        },
+
+                                        new AdaptiveSubgroup()
+                                    }
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = UserDetail.UserName,
+                                    HintStyle = AdaptiveTextStyle.Caption,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = $"{UserDetail.FollowNum}{loader.GetString("Follow")} {UserDetail.FansNum}{loader.GetString("Fan")}",
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                },
+
+                                new AdaptiveText
+                                {
+                                    Text = UserDetail.Bio,
+                                    HintStyle = AdaptiveTextStyle.CaptionSubtle,
+                                    HintWrap = true,
                                 }
                             }
                         }

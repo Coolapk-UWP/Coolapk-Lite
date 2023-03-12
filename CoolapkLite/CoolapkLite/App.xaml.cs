@@ -155,27 +155,28 @@ namespace CoolapkLite
         {
             if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
             {
-                ResourceDictionary MicaBrushs = new ResourceDictionary();
-                MicaBrushs.Source = new Uri("ms-appx:///Styles/Brushes/MicaBrushes.xaml");
-                Resources.MergedDictionaries.Add(MicaBrushs);
+                AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
+                AddResourceDictionary("ms-appx:///Styles/Brushes/MicaBrushes.xaml");
             }
             else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
             {
-                ResourceDictionary AcrylicBrushs = new ResourceDictionary();
-                AcrylicBrushs.Source = new Uri("ms-appx:///Styles/Brushes/AcrylicBrushes.xaml");
-                Resources.MergedDictionaries.Add(AcrylicBrushs);
+                AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
+                AddResourceDictionary("ms-appx:///Styles/Brushes/AcrylicBrushes.xaml");
             }
             else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
             {
-                ResourceDictionary BlurBrushs = new ResourceDictionary();
-                BlurBrushs.Source = new Uri("ms-appx:///Styles/Brushes/BlurBrushes.xaml");
-                Resources.MergedDictionaries.Add(BlurBrushs);
+                AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS2.xaml");
+                AddResourceDictionary("ms-appx:///Styles/Brushes/BlurBrushes.xaml");
             }
             else
             {
-                ResourceDictionary SolidBrushs = new ResourceDictionary();
-                SolidBrushs.Source = new Uri("ms-appx:///Styles/Brushes/SolidBrushes.xaml");
-                Resources.MergedDictionaries.Add(SolidBrushs);
+                AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS1.xaml");
+                AddResourceDictionary("ms-appx:///Styles/Brushes/SolidBrushes.xaml");
+            }
+
+            void AddResourceDictionary(string Source)
+            {
+                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(Source) });
             }
         }
 

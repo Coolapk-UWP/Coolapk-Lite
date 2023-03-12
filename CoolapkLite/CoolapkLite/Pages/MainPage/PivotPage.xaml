@@ -226,9 +226,10 @@
                 <Button
                     x:Name="RefreshButton"
                     VerticalAlignment="Center"
-                    Style="{StaticResource IconButtonStyle}">
-                    <SymbolIcon Symbol="Refresh" />
-                </Button>
+                    Click="RefreshButton_Click"
+                    Content="&#xE72C;"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
+                    Style="{StaticResource IconButtonStyle}" />
             </Pivot.RightHeader>
         </Pivot>
         <ProgressBar

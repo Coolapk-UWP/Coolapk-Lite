@@ -21,7 +21,7 @@ namespace CoolapkLite.Controls
                     (element.Tag as ICanFollow).ChangeFollow();
                     break;
                 default:
-                    UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
             }
         }

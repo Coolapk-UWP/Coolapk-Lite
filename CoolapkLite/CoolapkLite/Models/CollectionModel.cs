@@ -4,14 +4,17 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class CollectionModel : Entity
+    public class CollectionModel : Entity, IHasSubtitle
     {
         public int ID { get; private set; }
         public string Url { get; private set; }
         public int ItemNum { get; private set; }
         public string Title { get; private set; }
+        public string SubTitle { get; private set; }
         public ImageModel Cover { get; private set; }
         public string Description { get; private set; }
+
+        public ImageModel Pic => Cover;
 
         public CollectionModel(JObject token) : base(token)
         {
@@ -28,6 +31,11 @@ namespace CoolapkLite.Models
             if (token.TryGetValue("title", out JToken title))
             {
                 Title = title.ToString();
+            }
+
+            if (token.TryGetValue("subTitle", out JToken subTitle))
+            {
+                SubTitle = subTitle.ToString();
             }
 
             if (token.TryGetValue("url", out JToken url))

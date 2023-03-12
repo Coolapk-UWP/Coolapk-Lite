@@ -8,8 +8,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///Themes/Color.xaml" />
-                <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
+                <ResourceDictionary Source="ms-appx:///Themes/CustomStyles.xaml" />
+                <!--<ResourceDictionary Source="ms-appx:///Styles/Brushes/MicaBrushes.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
 
             <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
