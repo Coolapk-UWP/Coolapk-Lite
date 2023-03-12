@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Copy.Text" xml:space="preserve">
-    <value>复制</value>
+    <value>Копіювати</value>
   </data>
   <data name="CopyAll.Text" xml:space="preserve">
     <value>复制全部内容</value>
   </data>
   <data name="CopyFree.Text" xml:space="preserve">
-    <value>自由复制</value>
+    <value>Вільна копія</value>
   </data>
   <data name="CopyLink.Text" xml:space="preserve">
     <value>复制链接</value>
@@ -145,7 +145,7 @@
     <value>QR-код</value>
   </data>
   <data name="ReadMore" xml:space="preserve">
-    <value>查看更多</value>
+    <value>Докладніше</value>
   </data>
   <data name="Report.Text" xml:space="preserve">
     <value>Поскаржитись</value>
