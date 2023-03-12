@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -118,117 +118,111 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Active" xml:space="preserve">
-    <value>Active</value>
+    <value>活跃</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>Featured</value>
+    <value>精选</value>
   </data>
   <data name="Answer" xml:space="preserve">
-    <value>Q&amp;A</value>
+    <value>问答</value>
   </data>
   <data name="Article" xml:space="preserve">
-    <value>Article</value>
+    <value>图文</value>
   </data>
   <data name="BlockStatus-1" xml:space="preserve">
-    <value>[Blocked]</value>
+    <value>[黑号]</value>
   </data>
   <data name="BlockStatus2" xml:space="preserve">
-    <value>[Current limited]</value>
+    <value>[已限流]</value>
   </data>
   <data name="CommentNum" xml:space="preserve">
-    <value>Comment</value>
+    <value>讨论</value>
   </data>
   <data name="DatelineDesc" xml:space="preserve">
-    <value>Sort by time</value>
+    <value>按时间排序</value>
   </data>
   <data name="DownloadNum" xml:space="preserve">
-    <value>Download</value>
+    <value>下载</value>
   </data>
   <data name="Fan" xml:space="preserve">
-    <value>Fans</value>
+    <value>粉丝</value>
   </data>
   <data name="FansNum.Text" xml:space="preserve">
-    <value>Fans</value>
+    <value>粉丝</value>
   </data>
   <data name="Feed" xml:space="preserve">
-    <value>Feeds</value>
+    <value>动态</value>
   </data>
   <data name="FeedsNum.Text" xml:space="preserve">
-    <value>Feeds</value>
+    <value>动态</value>
   </data>
   <data name="Follow" xml:space="preserve">
-    <value>Follows</value>
+    <value>关注</value>
   </data>
   <data name="FollowFan" xml:space="preserve">
-    <value>Friend</value>
-  </data>
-  <data name="followFanGlyph" xml:space="preserve">
-    <value></value>
-  </data>
-  <data name="followGlyph" xml:space="preserve">
-    <value></value>
+    <value>互关</value>
   </data>
   <data name="FollowNum.Text" xml:space="preserve">
     <value>Follows</value>
   </data>
   <data name="Hot" xml:space="preserve">
-    <value>Popular</value>
+    <value>热门</value>
   </data>
   <data name="HotNum" xml:space="preserve">
     <value>Hot</value>
   </data>
   <data name="HtmlFeed" xml:space="preserve">
-    <value>Article</value>
+    <value>图文</value>
   </data>
   <data name="InBlackList" xml:space="preserve">
-    <value>In Blacklist</value>
-  </data>
-  <data name="isBlack" xml:space="preserve">
-    <value></value>
+    <value>已拉黑</value>
   </data>
   <data name="LastupdateDesc" xml:space="preserve">
-    <value>Recent Comments</value>
+    <value>最近回复</value>
+  </data>
+  <data name="LikeNum.Text" xml:space="preserve">
+    <value>获赞</value>
   </data>
   <data name="Newest" xml:space="preserve">
-    <value>Most Recent</value>
+    <value>最新</value>
   </data>
   <data name="NewsNum" xml:space="preserve">
-    <value>News</value>
+    <value>新闻</value>
   </data>
   <data name="Popular" xml:space="preserve">
-    <value>Sort by population</value>
+    <value>按热度排序</value>
   </data>
   <data name="ProductNum" xml:space="preserve">
-    <value> Device Models</value>
+    <value>个机型</value>
   </data>
   <data name="QuestionAndAnswer" xml:space="preserve">
-    <value>Q&amp;A</value>
+    <value>问答</value>
   </data>
   <data name="ReleaseTime" xml:space="preserve">
-    <value>Release Date: </value>
+    <value>发布日期：</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>Square</value>
+    <value>广场</value>
   </data>
   <data name="Status-1" xml:space="preserve">
-    <value>[Locked]</value>
+    <value>[已锁定]</value>
   </data>
   <data name="Status1" xml:space="preserve">
-    <value>[Half blocked]</value>
+    <value>[半黑号]</value>
   </data>
-  <data name="Subscribed.Text" xml:space="preserve">
-    <value>Subscribe</value>
+  <data name="Subscribe" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="SubscribeNum" xml:space="preserve">
+    <value>人订阅</value>
   </data>
   <data name="Unfollow" xml:space="preserve">
-    <value>Followed</value>
+    <value>已关注</value>
   </data>
   <data name="UnfollowFan" xml:space="preserve">
-    <value>Is Friends</value>
+    <value>已互关</value>
   </data>
-  <data name="unfollowFanGlyph" xml:space="preserve">
-    <value></value>
-  </data>
-  <data name="unfollowGlyph" xml:space="preserve">
-    <value></value>
+  <data name="Unsubscribe" xml:space="preserve">
+    <value>已订阅</value>
   </data>
 </root>
