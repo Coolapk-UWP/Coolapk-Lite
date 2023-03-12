@@ -118,97 +118,97 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Active" xml:space="preserve">
-    <value>活跃</value>
+    <value>Активний</value>
   </data>
   <data name="All" xml:space="preserve">
-    <value>精选</value>
+    <value>Рекомендовані</value>
   </data>
   <data name="Answer" xml:space="preserve">
-    <value>问答</value>
+    <value>Питання та відповіді</value>
   </data>
   <data name="Article" xml:space="preserve">
-    <value>图文</value>
+    <value>Артикль</value>
   </data>
   <data name="BlockStatus-1" xml:space="preserve">
-    <value>[黑号]</value>
+    <value>[Заблоковано]</value>
   </data>
   <data name="BlockStatus2" xml:space="preserve">
-    <value>[已限流]</value>
+    <value>[Поточне обмеження]</value>
   </data>
   <data name="CommentNum" xml:space="preserve">
-    <value>讨论</value>
+    <value>Коментар</value>
   </data>
   <data name="DatelineDesc" xml:space="preserve">
-    <value>按时间排序</value>
+    <value>Сортувати за часом</value>
   </data>
   <data name="DownloadNum" xml:space="preserve">
-    <value>下载</value>
+    <value>Завантажити</value>
   </data>
   <data name="Fan" xml:space="preserve">
-    <value>粉丝</value>
+    <value>Фани</value>
   </data>
   <data name="FansNum.Text" xml:space="preserve">
-    <value>粉丝</value>
+    <value>Фани</value>
   </data>
   <data name="Feed" xml:space="preserve">
-    <value>动态</value>
+    <value>Канали</value>
   </data>
   <data name="FeedsNum.Text" xml:space="preserve">
-    <value>动态</value>
+    <value>Канали</value>
   </data>
   <data name="Follow" xml:space="preserve">
-    <value>关注</value>
+    <value>Підписки</value>
   </data>
   <data name="FollowFan" xml:space="preserve">
-    <value>互关</value>
+    <value>Друг</value>
   </data>
   <data name="FollowNum.Text" xml:space="preserve">
-    <value>关注</value>
+    <value>Підписки</value>
   </data>
   <data name="Hot" xml:space="preserve">
-    <value>热门</value>
+    <value>Популярний</value>
   </data>
   <data name="HotNum" xml:space="preserve">
     <value>Популярність</value>
   </data>
   <data name="HtmlFeed" xml:space="preserve">
-    <value>图文</value>
+    <value>Артикль</value>
   </data>
   <data name="InBlackList" xml:space="preserve">
-    <value>已拉黑</value>
+    <value>В чорному списку</value>
   </data>
   <data name="LastupdateDesc" xml:space="preserve">
-    <value>最近回复</value>
+    <value>Недавні коментарі</value>
   </data>
   <data name="LikeNum.Text" xml:space="preserve">
     <value>获赞</value>
   </data>
   <data name="Newest" xml:space="preserve">
-    <value>最新</value>
+    <value>Нещодавні</value>
   </data>
   <data name="NewsNum" xml:space="preserve">
-    <value>新闻</value>
+    <value>Новини</value>
   </data>
   <data name="Popular" xml:space="preserve">
-    <value>按热度排序</value>
+    <value>Сортувати за популярністю</value>
   </data>
   <data name="ProductNum" xml:space="preserve">
-    <value>个机型</value>
+    <value>Моделі пристроїв</value>
   </data>
   <data name="QuestionAndAnswer" xml:space="preserve">
-    <value>问答</value>
+    <value>Питання та відповіді</value>
   </data>
   <data name="ReleaseTime" xml:space="preserve">
-    <value>发布日期：</value>
+    <value>Дата виходу：</value>
   </data>
   <data name="Square" xml:space="preserve">
-    <value>广场</value>
+    <value>Майдан</value>
   </data>
   <data name="Status-1" xml:space="preserve">
-    <value>[已锁定]</value>
+    <value>[Заблоковано]</value>
   </data>
   <data name="Status1" xml:space="preserve">
-    <value>[半黑号]</value>
+    <value>[Наполовину заблоковано]</value>
   </data>
   <data name="Subscribe" xml:space="preserve">
     <value>订阅</value>
@@ -217,10 +217,10 @@
     <value>人订阅</value>
   </data>
   <data name="Unfollow" xml:space="preserve">
-    <value>已关注</value>
+    <value>Підписаний</value>
   </data>
   <data name="UnfollowFan" xml:space="preserve">
-    <value>已互关</value>
+    <value>Друзі</value>
   </data>
   <data name="Unsubscribe" xml:space="preserve">
     <value>已订阅</value>
