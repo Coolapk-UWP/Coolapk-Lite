@@ -136,7 +136,7 @@
     <value>У програмі сталася помилка…</value>
   </data>
   <data name="GotoGithub" xml:space="preserve">
-    <value>前往Github</value>
+    <value>Перейти на GitHub</value>
   </data>
   <data name="HasUpdate" xml:space="preserve">
     <value>程序更新了v({0}.{1}.{2} -&gt; {3})。</value>
@@ -158,7 +158,7 @@
     <value>Виняток мережі</value>
   </data>
   <data name="No" xml:space="preserve">
-    <value>否</value>
+    <value>Ні</value>
   </data>
   <data name="NoUpdate" xml:space="preserve">
     <value>当前无可用更新。</value>
@@ -173,6 +173,6 @@
     <value>请输入用户名</value>
   </data>
   <data name="Yes" xml:space="preserve">
-    <value>是</value>
+    <value>Так</value>
   </data>
 </root>
