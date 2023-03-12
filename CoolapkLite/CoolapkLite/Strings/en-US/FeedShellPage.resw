@@ -119,7 +119,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="dateline_desc" xml:space="preserve">
-    <value>Sort by time</value>
+    <value>按时间排序</value>
   </data>
   <data name="IsFromAuthorBox.Content" xml:space="preserve">
     <value>Only author</value>
@@ -128,7 +128,7 @@
     <value>Only author: </value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
-    <value>Recent Comments</value>
+    <value>最近回复</value>
   </data>
   <data name="like" xml:space="preserve">
     <value>Sort by like</value>
@@ -137,6 +137,6 @@
     <value>No more replies</value>
   </data>
   <data name="popular" xml:space="preserve">
-    <value>Sort by population</value>
+    <value>按热度排序</value>
   </data>
 </root>
