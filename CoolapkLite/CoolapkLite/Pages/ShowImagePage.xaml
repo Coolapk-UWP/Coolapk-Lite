@@ -15,34 +15,34 @@
                 Click="AppBarButton_Click"
                 Tag="Refresh"
                 Text="刷新">
-                <helpers:MenuFlyoutHelper.Icon>
+                <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon Glyph="&#xE72C;" />
-                </helpers:MenuFlyoutHelper.Icon>
+                </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
                 Click="AppBarButton_Click"
                 Tag="Share"
                 Text="分享">
-                <helpers:MenuFlyoutHelper.Icon>
+                <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon Glyph="&#xE72D;" />
-                </helpers:MenuFlyoutHelper.Icon>
+                </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
                 Click="AppBarButton_Click"
                 Tag="Save"
                 Text="保存">
-                <helpers:MenuFlyoutHelper.Icon>
+                <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon Glyph="&#xE74E;" />
-                </helpers:MenuFlyoutHelper.Icon>
+                </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
                 Click="AppBarButton_Click"
                 Tag="Origin"
                 Text="查看原图"
                 Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
-                <helpers:MenuFlyoutHelper.Icon>
+                <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon Glyph="&#xEB9F;" />
-                </helpers:MenuFlyoutHelper.Icon>
+                </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
         </MenuFlyout>
     </Page.Resources>
@@ -57,7 +57,7 @@
                 x:Name="CustomTitleBar"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Background="Transparent"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 Canvas.ZIndex="1">
                 <TextBlock
                     x:Name="AppTitle"
@@ -73,7 +73,7 @@
                 <FlipView
                     x:Name="FlipView"
                     helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"
-                    Background="Transparent"
+                    Background="{ThemeResource SystemControlTransparentBrush}"
                     ItemsSource="{Binding Images}"
                     SelectedIndex="{Binding Index, Mode=TwoWay}"
                     Tapped="FlipView_Tapped">

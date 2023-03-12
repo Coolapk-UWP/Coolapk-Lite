@@ -12,7 +12,7 @@
     <Style x:Key="HamburgerMenuItemStyle" TargetType="ListViewItem">
         <Setter Property="Padding" Value="0" />
         <Setter Property="MinHeight" Value="0" />
-        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Background" Value="{ThemeResource SystemControlTransparentBrush}" />
         <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -338,7 +338,7 @@
                 VerticalAlignment="Top"
                 helpers:FocusVisualHelper.FocusVisualMargin="0"
                 AutomationProperties.Name="Main button"
-                Background="Transparent"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 BorderThickness="0"
                 TabIndex="0"
                 Visibility="{TemplateBinding HamburgerVisibility}">

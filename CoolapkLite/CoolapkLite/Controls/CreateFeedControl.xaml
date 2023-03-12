@@ -37,9 +37,9 @@
                                     Click="MenuFlyoutItem_Click"
                                     Tag="{Binding}"
                                     Text="删除">
-                                    <helpers:MenuFlyoutHelper.Icon>
+                                    <helpers:FlyoutBaseHelper.Icon>
                                         <SymbolIcon Symbol="Delete" />
-                                    </helpers:MenuFlyoutHelper.Icon>
+                                    </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
                         </helpers:UIElementHelper.ContextFlyout>

@@ -5,12 +5,13 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
     Background="{StaticResource LayerFillColorDefaultBrush}"
     mc:Ignorable="d">
     <Page.Resources>
-        <Flyout x:Key="QRCodeFlyout">
+        <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
                     <Setter Property="Padding" Value="0" />
@@ -22,7 +23,7 @@
             </Flyout.FlyoutPresenterStyle>
             <controls:ShowQRCodeControl QRCodeText="{Binding FeedDetail.ShareUrl}" />
         </Flyout>
-        <Flyout x:Key="ReplyFlyout">
+        <Flyout x:Key="ReplyFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
             <Flyout.FlyoutPresenterStyle>
                 <Style TargetType="FlyoutPresenter">
                     <Setter Property="Padding" Value="0" />
@@ -75,7 +76,7 @@
                                 x:Name="ReplyButton"
                                 Click="FeedButton_Click"
                                 Flyout="{StaticResource ReplyFlyout}"
-                                Style="{StaticResource FeedOpButtonStyle}"
+                                Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="回复">
                                 <StackPanel Orientation="Horizontal">
@@ -89,7 +90,7 @@
                             <Button
                                 x:Name="LikeButton"
                                 Click="FeedButton_Click"
-                                Style="{StaticResource FeedOpButtonStyle}"
+                                Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="点赞">
                                 <StackPanel Orientation="Horizontal">
@@ -107,7 +108,7 @@
                             <Button
                                 x:Name="StarButton"
                                 Click="FeedButton_Click"
-                                Style="{StaticResource FeedOpButtonStyle}"
+                                Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="收藏">
                                 <StackPanel Orientation="Horizontal">
@@ -126,7 +127,7 @@
                                 x:Name="ShareButton"
                                 Click="FeedButton_Click"
                                 Flyout="{StaticResource QRCodeFlyout}"
-                                Style="{StaticResource FeedOpButtonStyle}"
+                                Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail.ShareUrl}"
                                 ToolTipService.ToolTip="分享">
                                 <StackPanel Orientation="Horizontal">

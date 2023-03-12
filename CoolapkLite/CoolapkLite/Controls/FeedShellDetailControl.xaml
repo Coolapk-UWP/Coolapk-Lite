@@ -42,7 +42,7 @@
                         Margin="0,4"
                         Padding="0"
                         HorizontalAlignment="Left"
-                        Background="Transparent"
+                        Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
                         Tag="{Binding UserInfo.Url}">
                         <Ellipse Width="36" Height="36">
@@ -80,7 +80,7 @@
                         Grid.Column="2"
                         HorizontalAlignment="Right"
                         Click="Button_Click"
-                        Style="{StaticResource FeedOpButtonStyle}"
+                        Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
                         ToolTipService.ToolTip="{x:Bind FollowStatus.Text, Mode=OneWay}">
                         <StackPanel Orientation="Horizontal">

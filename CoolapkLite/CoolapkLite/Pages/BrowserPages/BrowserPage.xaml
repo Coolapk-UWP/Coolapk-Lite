@@ -24,7 +24,7 @@
                     x:Name="GotoSystemBrowserButton"
                     x:Uid="/BrowserPage/OpenInBrowserButton"
                     Height="48"
-                    Background="Transparent"
+                    Background="{ThemeResource SystemControlTransparentBrush}"
                     BorderThickness="0"
                     Click="GotoSystemBrowserButton_Click"
                     Visibility="{Binding IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
@@ -32,7 +32,7 @@
                     x:Name="TryLoginButton"
                     x:Uid="/BrowserPage/BackButton"
                     Height="48"
-                    Background="Transparent"
+                    Background="{ThemeResource SystemControlTransparentBrush}"
                     BorderThickness="0"
                     Click="TryLoginButton_Click"
                     Visibility="{Binding IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -42,9 +42,9 @@
                                 x:Name="ManualLoginButton"
                                 x:Uid="/BrowserPage/ManualLoginButton"
                                 Click="ManualLoginButton_Click">
-                                <helpers:MenuFlyoutHelper.Icon>
+                                <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEC87;" />
-                                </helpers:MenuFlyoutHelper.Icon>
+                                </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </helpers:UIElementHelper.ContextFlyout>

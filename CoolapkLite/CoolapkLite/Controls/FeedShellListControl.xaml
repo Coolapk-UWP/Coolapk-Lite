@@ -80,10 +80,10 @@
                     x:Name="RefreshButton"
                     VerticalAlignment="Center"
                     Click="RefreshButton_Click"
-                    Style="{StaticResource IconButtonStyle}"
-                    Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}">
-                    <SymbolIcon Symbol="Refresh" />
-                </Button>
+                    Content="&#xE72C;"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
+                    Style="{StaticResource TitleBarIconButtonStyle}"
+                    Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}" />
             </StackPanel>
         </local:ShyHeaderListView.RightHeader>
     </local:ShyHeaderListView>

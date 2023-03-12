@@ -51,7 +51,7 @@
             x:Name="CustomTitleBar"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
-            Background="Transparent"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             Canvas.ZIndex="1">
             <TextBlock
                 x:Name="AppTitle"
@@ -92,7 +92,7 @@
         <ProgressBar
             x:Name="ProgressBar"
             VerticalAlignment="Top"
-            Background="Transparent"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             IsIndeterminate="False" />
     </Grid>
 </Page>

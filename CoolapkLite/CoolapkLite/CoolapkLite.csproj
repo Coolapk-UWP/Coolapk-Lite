@@ -174,18 +174,16 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
-    <Compile Include="Helpers\Controls\MenuFlyoutHelper.cs" />
+    <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\Converters\NumMultConverter.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
     <Compile Include="Common\HtmlToText.cs" />
-    <Compile Include="Helpers\Controls\ListViewHelper.cs" />
     <Compile Include="Helpers\EmojiHelper.cs" />
     <Compile Include="Helpers\LanguageHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Common\ScrollProgressProvider.cs" />
-    <Compile Include="Helpers\Controls\ScrollBarHelper.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
     <Compile Include="Common\TokenCreater.cs" />
@@ -979,7 +977,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TitleBar\TitleBar_themeresources.xaml">
+    <Page Include="Controls\TitleBar\TitleBar.Themeresources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1132,6 +1130,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Brushes\SolidBrushes.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Button.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\ListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\Pivot.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -4,7 +4,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="TitleBar_themeresources.xaml" />
+        <ResourceDictionary Source="TitleBar.Themeresources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:TitleBar">

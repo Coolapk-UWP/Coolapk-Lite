@@ -35,7 +35,7 @@
                 Width="200"
                 Height="200"
                 Margin="4"
-                Background="Transparent"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 Click="ShowUIButton_Click"
                 Tag="ShareFeed"
                 ToolTipService.ToolTip="{x:Bind QRCodeText, Mode=OneWay}" />
