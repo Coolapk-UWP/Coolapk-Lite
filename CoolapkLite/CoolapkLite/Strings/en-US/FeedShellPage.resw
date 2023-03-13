@@ -128,7 +128,7 @@
     <value>Only author: </value>
   </data>
   <data name="lastupdate_desc" xml:space="preserve">
-    <value>Recent Comments</value>
+    <value>Last Reply</value>
   </data>
   <data name="like" xml:space="preserve">
     <value>Sort by like</value>
@@ -137,6 +137,6 @@
     <value>No more replies</value>
   </data>
   <data name="popular" xml:space="preserve">
-    <value>Sort by population</value>
+    <value>Sort by Hot</value>
   </data>
 </root>
