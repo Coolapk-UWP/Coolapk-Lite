@@ -15,7 +15,8 @@
         <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-        <Setter Property="HeaderBackground" Value="{StaticResource SolidBackgroundFillColorBaseElementBrush}" />
+        <Setter Property="HeaderBackground" Value="{ThemeResource TitleBarBackgroundBrush}" />
+        <Setter Property="TopHeaderBackground" Value="{ThemeResource SystemControlTransparentBrush}" />
         <Setter Property="ItemContainerTransitions">
             <Setter.Value>
                 <TransitionCollection>
@@ -97,7 +98,16 @@
                         </ScrollViewer>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
-                                <VisualState x:Name="OnThreshold" />
+                                <VisualState x:Name="OnThreshold">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopHeader" Storyboard.TargetProperty="Opacity">
+                                            <SplineDoubleKeyFrame
+                                                KeySpline="{StaticResource ControlFastOutSlowInKeySpline}"
+                                                KeyTime="{StaticResource ControlFasterAnimationDuration}"
+                                                Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="BeforeThreshold">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ListViewHeader" Storyboard.TargetProperty="Background">

@@ -1,0 +1,399 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:local="using:CoolapkLite.Controls">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <StaticResource x:Key="HamburgerMenuDefaultPaneBackground" ResourceKey="SystemControlAcrylicElementBrush" />
+            <StaticResource x:Key="HamburgerMenuExpandedPaneBackground" ResourceKey="SolidBackgroundFillColorTransparent" />
+            <StaticResource x:Key="HamburgerMenuContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushDisabled" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
+
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="HamburgerMenuDefaultPaneBackground" ResourceKey="SystemControlAcrylicElementBrush" />
+            <StaticResource x:Key="HamburgerMenuExpandedPaneBackground" ResourceKey="SolidBackgroundFillColorTransparent" />
+            <StaticResource x:Key="HamburgerMenuContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundDisabled" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushDisabled" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
+
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="HamburgerMenuDefaultPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="HamburgerMenuContentBackground" Color="{ThemeResource SystemColorWindowColor}" />
+
+            <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlBackgroundBaseLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundDisabled" ResourceKey="SystemControlBackgroundBaseLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBackgroundSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemForeground" ResourceKey="SystemControlForegroundBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="HamburgerMenuItemForegroundSelectedDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+
+            <StaticResource x:Key="HamburgerMenuItemBorderBrush" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushDisabled" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPointerOver" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedPressed" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="HamburgerMenuItemBorderBrushSelectedDisabled" ResourceKey="SystemControlTransparentBrush" />
+
+            <SolidColorBrush x:Key="HamburgerMenuSelectionIndicatorForeground" Color="{ThemeResource SystemColorHighlightTextColor}" />
+
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <local:DisplayModeToBool x:Key="DisplayModeToBool" />
+
+    <x:Double x:Key="PaneToggleButtonHeight">48</x:Double>
+    <x:Double x:Key="PaneToggleButtonWidth">48</x:Double>
+    <x:Double x:Key="HamburgerMenuItemOnLeftMinHeight">40</x:Double>
+
+    <Thickness x:Key="HamburgerMenuItemBorderThickness">1</Thickness>
+
+    <DataTemplate x:Key="PaneToggleButtonTemplate">
+        <FontIcon
+            FontFamily="{StaticResource SymbolThemeFontFamily}"
+            FontSize="16"
+            Foreground="{ThemeResource HamburgerMenuItemForeground}"
+            Glyph="&#xE700;" />
+    </DataTemplate>
+
+    <Style x:Key="HamburgerMenuItemStyle" TargetType="ListViewItem">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="MinHeight" Value="0" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Background" Value="{ThemeResource HamburgerMenuItemBackground}" />
+        <Setter Property="Foreground" Value="{ThemeResource HamburgerMenuItemForeground}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{StaticResource HamburgerMenuItemBorderThickness}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Grid
+                        x:Name="LayoutRoot"
+                        MinHeight="{StaticResource HamburgerMenuItemOnLeftMinHeight}"
+                        Background="{TemplateBinding Background}"
+                        Control.IsTemplateFocusTarget="True">
+                        <Border
+                            x:Name="RevealBorder"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
+                        <!--  Wrap SelectionIndicator in a grid so that its offset is 0,0 - this enables the offset animation.  -->
+                        <Rectangle
+                            x:Name="SelectionIndicator"
+                            Width="2"
+                            Height="24"
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Fill="{ThemeResource HamburgerMenuSelectionIndicatorForeground}"
+                            Opacity="0.0"
+                            RadiusX="1"
+                            RadiusY="1" />
+                        <ContentPresenter
+                            x:Name="ContentPresenter"
+                            Grid.Column="1"
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="PointerStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition
+                                        GeneratedDuration="0:0:0.001"
+                                        From="Selected"
+                                        To="Normal">
+                                        <VisualTransition.Storyboard>
+                                            <Storyboard>
+                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectionIndicator" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.001" Value="0.0" />
+                                                </ObjectAnimationUsingKeyFrames>
+                                            </Storyboard>
+                                        </VisualTransition.Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundPointerOver}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundPointerOver}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundPressed}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundPressed}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundSelected}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushSelected}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundSelected}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PointerOverSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPointerOver}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushSelectedPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundSelectedPointerOver}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="PressedSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPressed}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushSelectedPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundSelectedPressed}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DisabledStates">
+                                <VisualState x:Name="Enabled" />
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource HamburgerMenuItemBackgroundDisabled}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushDisabled}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource HamburgerMenuItemForegroundDisabled}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate x:Key="HamburgerMenuTemplate" TargetType="local:HamburgerMenu">
+        <Grid x:Name="LayoutRoot">
+            <SplitView
+                x:Name="MainSplitView"
+                CompactPaneLength="{TemplateBinding CompactPaneLength}"
+                DisplayMode="{TemplateBinding DisplayMode}"
+                IsPaneOpen="{Binding IsPaneOpen, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                IsTabStop="False"
+                OpenPaneLength="{TemplateBinding OpenPaneLength}"
+                PaneBackground="{TemplateBinding PaneBackground}"
+                PanePlacement="{TemplateBinding PanePlacement}">
+                <SplitView.Pane>
+                    <Grid
+                        x:Name="PaneGrid"
+                        Margin="0,0,0,0"
+                        FlowDirection="LeftToRight">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid
+                            x:Name="ListViewTopPadding"
+                            Grid.Row="0"
+                            Height="{TemplateBinding HamburgerHeight}" />
+                        <ListView
+                            x:Name="ButtonsListView"
+                            Grid.Row="1"
+                            Width="{TemplateBinding OpenPaneLength}"
+                            helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
+                            AutomationProperties.Name="Menu items"
+                            IsItemClickEnabled="True"
+                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
+                            ItemTemplate="{TemplateBinding ItemTemplate}"
+                            ItemTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                            ItemsSource="{TemplateBinding ItemsSource}"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectedIndex="{Binding SelectedIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            TabIndex="1">
+                            <ListView.Header>
+                                <Grid x:Name="AutoSuggestArea">
+                                    <ContentControl
+                                        x:Name="PaneAutoSuggestBoxPresenter"
+                                        Margin="10,8"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Center"
+                                        Content="{TemplateBinding AutoSuggestBox}"
+                                        IsTabStop="True"
+                                        Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                    <ListViewItem
+                                        x:Name="PaneAutoSuggestItem"
+                                        Style="{StaticResource HamburgerMenuItemStyle}"
+                                        Visibility="{Binding IsPaneOpen, ElementName=MainSplitView, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="48" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Viewbox Width="16" Height="16">
+                                                <SymbolIcon Symbol="Find" />
+                                            </Viewbox>
+                                            <TextBlock
+                                                x:Uid="/MainPage/Search"
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                FontSize="14" />
+                                        </Grid>
+                                    </ListViewItem>
+                                </Grid>
+                            </ListView.Header>
+                        </ListView>
+                        <ListView
+                            x:Name="OptionsListView"
+                            Grid.Row="2"
+                            Width="{TemplateBinding OpenPaneLength}"
+                            Margin="0,20,0,8"
+                            VerticalAlignment="Bottom"
+                            helpers:TipsRectangleHelper.IsEnable="{Binding DisplayMode, Converter={StaticResource DisplayModeToBool}, ConverterParameter='Overlay', RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            helpers:TipsRectangleHelper.TipTargetName="SelectionIndicator"
+                            AutomationProperties.Name="Option items"
+                            IsItemClickEnabled="True"
+                            ItemContainerStyle="{StaticResource HamburgerMenuItemStyle}"
+                            ItemTemplate="{TemplateBinding OptionsItemTemplate}"
+                            ItemTemplateSelector="{TemplateBinding OptionsItemTemplateSelector}"
+                            ItemsSource="{TemplateBinding OptionsItemsSource}"
+                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                            SelectedIndex="{Binding SelectedOptionsIndex, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            SelectedItem="{Binding SelectedOptionsItem, Mode=TwoWay, RelativeSource={RelativeSource Mode=TemplatedParent}}"
+                            TabIndex="2" />
+                    </Grid>
+                </SplitView.Pane>
+                <ContentPresenter
+                    x:Name="ContentPart"
+                    AutomationProperties.Name="Content"
+                    Content="{TemplateBinding Content}" />
+            </SplitView>
+            <Button
+                x:Name="HamburgerButton"
+                Width="{TemplateBinding HamburgerWidth}"
+                Height="{TemplateBinding HamburgerHeight}"
+                Padding="0"
+                VerticalAlignment="Top"
+                helpers:FocusVisualHelper.FocusVisualMargin="0"
+                AutomationProperties.Name="Main button"
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                BorderThickness="0"
+                Foreground="{TemplateBinding PaneForeground}"
+                TabIndex="0"
+                Visibility="{TemplateBinding HamburgerVisibility}">
+                <ContentControl
+                    Margin="{TemplateBinding HamburgerMargin}"
+                    ContentTemplate="{TemplateBinding HamburgerMenuTemplate}"
+                    IsTabStop="False" />
+            </Button>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="WindowsSizeGroup">
+                    <VisualState x:Name="OverlaySize" />
+                    <VisualState x:Name="CompactSize" />
+                    <VisualState x:Name="ExpandedSize" />
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="TitleBarVisibilityGroup">
+                    <VisualState x:Name="TitleBarVisible" />
+                    <VisualState x:Name="TitleBarCollapsed">
+                        <VisualState.Setters>
+                            <Setter Target="HamburgerButton.Margin" Value="0,32,0,0" />
+                            <Setter Target="ListViewTopPadding.Margin" Value="0,32,0,0" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="AutoSuggestGroup">
+                    <VisualState x:Name="AutoSuggestBoxVisible" />
+                    <VisualState x:Name="AutoSuggestBoxCollapsed">
+                        <VisualState.Setters>
+                            <Setter Target="AutoSuggestArea.Visibility" Value="Collapsed" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+                <VisualStateGroup x:Name="PaneOverlayGroup">
+                    <VisualState x:Name="PaneOverlaying">
+                        <VisualState.Setters>
+                            <Setter Target="MainSplitView.PaneBackground" Value="{Binding PaneOverlayBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PaneNotOverlaying" />
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+        </Grid>
+    </ControlTemplate>
+
+</ResourceDictionary>

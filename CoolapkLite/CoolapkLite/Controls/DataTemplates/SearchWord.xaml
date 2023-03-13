@@ -22,7 +22,7 @@
             <TextBlock Grid.Column="2" Text="{Binding Title}" />
         </Grid>
     </DataTemplate>
-    
+
     <DataTemplate x:Key="Apps">
         <ListViewItem Tag="{Binding Url}">
             <Grid Padding="-10,8">

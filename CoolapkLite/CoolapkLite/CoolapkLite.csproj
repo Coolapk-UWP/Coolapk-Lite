@@ -262,9 +262,6 @@
     <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
       <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ShyHeaderPivot\ShyHeaderPivot.cs">
-      <DependentUpon>ShyHeaderPivot.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TextBlockEx.xaml.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
@@ -1021,7 +1018,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\HamburgerMenu\HamburgerMenuTemplate.xaml">
+    <Page Include="Controls\HamburgerMenu\HamburgerMenu.ThemeResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1044,10 +1041,6 @@
     <Page Include="Controls\ShowQRCodeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ShyHeaderPivot\ShyHeaderPivot.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1105,7 +1098,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Brushes\AcrylicBrushes.xaml">
+    <Page Include="Styles\Brushes\ThemeResources.RS3.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1121,15 +1114,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Brushes\BlurBrushes.xaml">
+    <Page Include="Styles\Brushes\ThemeResources.RS2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Brushes\MicaBrushes.xaml">
+    <Page Include="Styles\Brushes\ThemeResources.21H2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\Brushes\SolidBrushes.xaml">
+    <Page Include="Styles\Brushes\ThemeResources.RS1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

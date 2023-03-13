@@ -6,7 +6,6 @@
         <Border
             Width="102"
             Height="102"
-            CornerRadius="8"
             KeyDown="Image_KeyDown"
             Tag="{Binding}"
             Tapped="Image_Tapped">
@@ -21,7 +20,6 @@
                     <Border
                         x:Name="GIF"
                         Background="#0F9D58"
-                        CornerRadius="0,8,0,8"
                         Visibility="{Binding IsGif, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             Margin="2,0"
@@ -36,7 +34,6 @@
                     <Border
                         x:Name="LongPic"
                         Background="#0F9D58"
-                        CornerRadius="8,0,8,0"
                         Visibility="{Binding IsLongPic, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             x:Uid="/Feed/LongPic"
@@ -46,7 +43,6 @@
                     <Border
                         x:Name="WidePic"
                         Background="#0F9D58"
-                        CornerRadius="8,0,8,0"
                         Visibility="{Binding IsWidePic, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             x:Uid="/Feed/WidePic"

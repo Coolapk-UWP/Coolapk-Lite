@@ -1,0 +1,61 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:MicaForUWP.Media">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <AcrylicBrush
+                x:Key="TitleBarBackgroundBrush"
+                BackgroundSource="Backdrop"
+                FallbackColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintOpacity="0.8" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPageBackgroundBrush"
+                BackgroundSource="MicaBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <AcrylicBrush
+                x:Key="TitleBarBackgroundBrush"
+                BackgroundSource="Backdrop"
+                FallbackColor="{ThemeResource CardStrokeColorDefaultSolid}"
+                TintColor="{ThemeResource CardStrokeColorDefaultSolid}"
+                TintOpacity="0.8" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPageBackgroundBrush"
+                BackgroundSource="MicaBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.5" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <media:BackdropMicaBrush
+        x:Key="SolidBackgroundFillColorBaseElementBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+        TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
+    <media:BackdropMicaBrush
+        x:Key="SolidBackgroundFillColorBaseWindowBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+        TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
+
+    <media:BackdropMicaBrush
+        x:Key="SystemChromeMediumLowColorElementBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}" />
+    <media:BackdropMicaBrush
+        x:Key="SystemChromeMediumLowColorWindowBrush"
+        BackgroundSource="MicaBackdrop"
+        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
+        TintColor="{ThemeResource SystemChromeMediumLowColor}" />
+</ResourceDictionary>

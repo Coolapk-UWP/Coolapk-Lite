@@ -140,7 +140,7 @@
                                     Text="{Binding Bio}"
                                     TextWrapping="WrapWholeWords"
                                     Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
-                                <control:StackPanel Orientation="Horizontal" Spacing="12">
+                                <control:StackPanel Orientation="Horizontal" Spacing="6">
                                     <TextBlock VerticalAlignment="Center" FontSize="16">
                                         <Run FontWeight="Bold" Text="{Binding LikeNum}" />
                                         <Run x:Uid="/FeedListPage/LikeNum" FontWeight="Thin" />
@@ -148,7 +148,7 @@
                                     <Button
                                         x:Name="FollowsButton"
                                         Padding="0"
-                                        Background="{StaticResource SystemControlTransparentBrush}"
+                                        Background="{ThemeResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
                                         FontSize="16">
                                         <TextBlock>

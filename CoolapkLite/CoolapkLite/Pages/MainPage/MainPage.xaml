@@ -5,10 +5,9 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:converters="using:CoolapkLite.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="using:CoolapkLite"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    Background="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
+    Background="{ThemeResource ApplicationPageBackgroundBrush}"
     NavigationCacheMode="Required"
     mc:Ignorable="d">
     <Page.Resources>
@@ -27,7 +26,7 @@
                         Width="16"
                         Height="16"
                         Visibility="{Binding Image, Converter={StaticResource EmptyObjectToVisibilityConverter}, ConverterParameter='true'}">
-                        <SymbolIcon Symbol="{Binding Icon}" />
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{Binding Icon}" />
                     </Viewbox>
                     <Ellipse
                         Width="18"
@@ -70,16 +69,12 @@
             ItemTemplate="{StaticResource DefaultTemplate}"
             Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
-            OptionsItemTemplate="{StaticResource DefaultTemplate}"
-            PaneBackground="{StaticResource SolidBackgroundFillColorBaseWindowBrush}"
-            PaneForeground="{ThemeResource ApplicationForegroundThemeBrush}"
-            PaneOverlayBackground="{StaticResource SolidBackgroundFillColorBaseElementBrush}">
+            OptionsItemTemplate="{StaticResource DefaultTemplate}">
             <controls:HamburgerMenu.AutoSuggestBox>
                 <AutoSuggestBox
                     x:Name="AutoSuggestBox"
                     x:Uid="/MainPage/SearchBox"
                     VerticalAlignment="Center"
-                    Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                     IsTabStop="True"
                     ItemTemplateSelector="{StaticResource SearchWordSelector}"
                     QueryIcon="Find"
@@ -87,7 +82,10 @@
                     SuggestionChosen="AutoSuggestBox_SuggestionChosen"
                     TextChanged="AutoSuggestBox_TextChanged" />
             </controls:HamburgerMenu.AutoSuggestBox>
-            <Frame x:Name="HamburgerMenuFrame" x:FieldModifier="Public" />
+            <Frame
+                x:Name="HamburgerMenuFrame"
+                x:FieldModifier="Public"
+                Background="{ThemeResource HamburgerMenuContentBackground}" />
         </controls:HamburgerMenu>
         <ProgressBar
             x:Name="ProgressBar"

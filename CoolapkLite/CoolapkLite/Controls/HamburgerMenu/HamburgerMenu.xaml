@@ -1,23 +1,16 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CoolapkLite.Controls">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:local="using:CoolapkLite.Controls">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenuTemplate.xaml" />
+        <ResourceDictionary Source="HamburgerMenu.ThemeResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <Style TargetType="local:HamburgerMenu">
-        <Setter Property="HamburgerMenuTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <FontIcon
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        FontSize="16"
-                        Glyph="&#xE700;" />
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Foreground" Value="{ThemeResource HamburgerMenuItemForeground}" />
+        <Setter Property="HamburgerWidth" Value="{StaticResource PaneToggleButtonWidth}" />
+        <Setter Property="HamburgerHeight" Value="{StaticResource PaneToggleButtonHeight}" />
+        <Setter Property="HamburgerMenuTemplate" Value="{StaticResource PaneToggleButtonTemplate}" />
+        <Setter Property="PaneBackground" Value="{ThemeResource HamburgerMenuExpandedPaneBackground}" />
+        <Setter Property="PaneOverlayBackground" Value="{ThemeResource HamburgerMenuDefaultPaneBackground}" />
         <Setter Property="Template" Value="{StaticResource HamburgerMenuTemplate}" />
     </Style>
 </ResourceDictionary>

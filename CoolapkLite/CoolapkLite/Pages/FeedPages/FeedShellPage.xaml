@@ -8,7 +8,6 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
-    Background="{StaticResource LayerFillColorDefaultBrush}"
     mc:Ignorable="d">
     <Page.Resources>
         <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
@@ -69,7 +68,7 @@
                         Padding="8,0"
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
-                        Background="{StaticResource SolidBackgroundFillColorBaseElementBrush}">
+                        Background="{ThemeResource HamburgerMenuDefaultPaneBackground}">
                         <StackPanel HorizontalAlignment="Left" />
                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button
@@ -80,11 +79,11 @@
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="回复">
                                 <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon Symbol="Comment" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.ReplyNum}" />
+                                        Text="{Binding FeedDetail.ReplyNum, FallbackValue='0'}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -94,15 +93,19 @@
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="点赞">
                                 <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon
+                                    <FontIcon
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                        Symbol="Like"
-                                        Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    <SymbolIcon Symbol="Like" Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                        Glyph="&#xE8E1;"
+                                        Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}" />
+                                    <FontIcon
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE8E1;"
+                                        Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.LikeNum}" />
+                                        Text="{Binding FeedDetail.LikeNum, FallbackValue='0'}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -112,15 +115,19 @@
                                 Tag="{Binding FeedDetail}"
                                 ToolTipService.ToolTip="收藏">
                                 <StackPanel Orientation="Horizontal">
-                                    <SymbolIcon
+                                    <FontIcon
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                        Symbol="OutlineStar"
-                                        Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                    <SymbolIcon Symbol="OutlineStar" Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                        Glyph="&#xE734;"
+                                        Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}" />
+                                    <FontIcon
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        Glyph="&#xE734;"
+                                        Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.StarNum}" />
+                                        Text="{Binding FeedDetail.StarNum, FallbackValue='0'}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -131,11 +138,11 @@
                                 Tag="{Binding FeedDetail.ShareUrl}"
                                 ToolTipService.ToolTip="分享">
                                 <StackPanel Orientation="Horizontal">
-                                    <FontIcon Glyph="&#xE72D;" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.ShareNum}" />
+                                        Text="{Binding FeedDetail.ShareNum, FallbackValue='0'}" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>

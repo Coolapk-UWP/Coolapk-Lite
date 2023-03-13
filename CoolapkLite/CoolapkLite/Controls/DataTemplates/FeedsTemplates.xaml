@@ -276,10 +276,10 @@
                     Grid.Row="4"
                     Margin="4"
                     Spacing="4">
-                    <Grid Margin="0,-4" Visibility="{Binding IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid Visibility="{Binding IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="8" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border
@@ -294,12 +294,6 @@
                                 Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
                                 Text="评分" />
                         </Border>
-                        <!--<RatingControl
-                            x:Name="RatingStarControl"
-                            Grid.Column="1"
-                            Margin="8,7,8,0"
-                            IsReadOnly="True"
-                            Value="{Binding RatingStar, Mode=OneWay}" />-->
                         <TextBlock
                             Grid.Column="2"
                             VerticalAlignment="Center"
@@ -361,7 +355,6 @@
                         <Border
                             Width="56"
                             Height="56"
-                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                             Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                             <Border.Background>
                                 <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
@@ -373,7 +366,6 @@
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                             Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
                             <FontIcon
                                 HorizontalAlignment="Center"
@@ -418,7 +410,6 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="{ThemeResource OverlayCornerRadius}"
                     Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid
                         Padding="8"
@@ -431,7 +422,6 @@
                         <Border
                             Width="56"
                             Height="56"
-                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                             Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                             <Border.Background>
                                 <ImageBrush ImageSource="{Binding MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
@@ -443,7 +433,6 @@
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            CornerRadius="{ThemeResource OverlayCornerRadius}"
                             Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
                             <FontIcon
                                 HorizontalAlignment="Center"

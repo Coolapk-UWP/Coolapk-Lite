@@ -191,37 +191,37 @@
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColor}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark1}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark2}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorDark3}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight1}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight2}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
                         </Rectangle.Fill>
                     </Rectangle>
                     <Rectangle Width="20" Height="20">
                         <Rectangle.Fill>
-                            <SolidColorBrush Color="{StaticResource SystemAccentColorLight3}" />
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
                         </Rectangle.Fill>
                     </Rectangle>
                 </StackPanel>

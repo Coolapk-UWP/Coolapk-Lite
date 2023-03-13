@@ -326,8 +326,8 @@ namespace CoolapkLite
             }
         }
 
-        public Symbol icon;
-        public Symbol Icon
+        public string icon;
+        public string Icon
         {
             get => icon;
             set
@@ -391,10 +391,10 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = Symbol.Home, Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel("/main/indexV8"), Index = 0},
-                new MenuItem() { Icon = Symbol.People, Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
-                new MenuItem() { Icon = Symbol.Favorite, Name = loader.GetString("Favorite"), PageType = typeof(FavoritePage),ViewModels = new FavoriteViewModel(), Index = 2 },
-                new MenuItem() { Icon = Symbol.Calendar, Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
+                new MenuItem() { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel("/main/indexV8"), Index = 0},
+                new MenuItem() { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
+                new MenuItem() { Icon = "\uE113", Name = loader.GetString("Favorite"), PageType = typeof(FavoritePage),ViewModels = new FavoriteViewModel(), Index = 2 },
+                new MenuItem() { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
             };
             return items;
         }
@@ -403,8 +403,8 @@ namespace CoolapkLite
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem() { Icon = Symbol.Contact, Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
-                 new MenuItem() { Icon = Symbol.Setting, Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
+                 new MenuItem() { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
+                 new MenuItem() { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
             };
             return items;
         }

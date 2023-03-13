@@ -32,65 +32,75 @@ namespace CoolapkLite.Controls
         private readonly ScrollProgressProvider _progressProvider;
         private bool HasGetElementVisual => ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
-        public static readonly DependencyProperty TopHeaderProperty = DependencyProperty.Register(
-           nameof(TopHeader),
-           typeof(object),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty TopHeaderProperty =
+            DependencyProperty.Register(
+                nameof(TopHeader),
+                typeof(object),
+                typeof(ShyHeaderListView),
+                null);
 
-        public static readonly DependencyProperty LeftHeaderProperty = DependencyProperty.Register(
-           nameof(LeftHeader),
-           typeof(object),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty LeftHeaderProperty =
+            DependencyProperty.Register(
+                nameof(LeftHeader),
+                typeof(object),
+                typeof(ShyHeaderListView),
+                null);
 
-        public static readonly DependencyProperty RightHeaderProperty = DependencyProperty.Register(
-           nameof(RightHeader),
-           typeof(object),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty RightHeaderProperty =
+            DependencyProperty.Register(
+                nameof(RightHeader),
+                typeof(object),
+                typeof(ShyHeaderListView),
+                null);
 
-        public static readonly DependencyProperty HeaderMarginProperty = DependencyProperty.Register(
-           nameof(HeaderMargin),
-           typeof(double),
-           typeof(ShyHeaderListView),
-           new PropertyMetadata(0d));
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(0d));
 
-        public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-           nameof(HeaderHeight),
-           typeof(double),
-           typeof(ShyHeaderListView),
-           new PropertyMetadata(double.NaN));
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(double.NaN));
 
-        public static readonly DependencyProperty HeaderBackgroundProperty = DependencyProperty.Register(
-           nameof(HeaderBackground),
-           typeof(Brush),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty HeaderBackgroundProperty =
+            DependencyProperty.Register(
+                nameof(HeaderBackground),
+                typeof(Brush),
+                typeof(ShyHeaderListView),
+                null);
 
-        public static readonly DependencyProperty TopHeaderBackgroundProperty = DependencyProperty.Register(
-           nameof(TopHeaderBackground),
-           typeof(Brush),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty TopHeaderBackgroundProperty =
+            DependencyProperty.Register(
+                nameof(TopHeaderBackground),
+                typeof(Brush),
+                typeof(ShyHeaderListView),
+                null);
 
-        public static readonly DependencyProperty ShyHeaderItemSourceProperty = DependencyProperty.Register(
-           nameof(ShyHeaderItemSource),
-           typeof(IList<ShyHeaderItem>),
-           typeof(ShyHeaderListView),
-           new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
+        public static readonly DependencyProperty ShyHeaderItemSourceProperty =
+            DependencyProperty.Register(
+                nameof(ShyHeaderItemSource),
+                typeof(IList<ShyHeaderItem>),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
 
-        public static readonly DependencyProperty ShyHeaderSelectedIndexProperty = DependencyProperty.Register(
-           nameof(ShyHeaderSelectedIndex),
-           typeof(int),
-           typeof(ShyHeaderListView),
-           new PropertyMetadata(-1, OnShyHeaderSelectedIndexPropertyChanged));
+        public static readonly DependencyProperty ShyHeaderSelectedIndexProperty =
+            DependencyProperty.Register(
+                nameof(ShyHeaderSelectedIndex),
+                typeof(int),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(-1, OnShyHeaderSelectedIndexPropertyChanged));
 
-        public static readonly DependencyProperty ShyHeaderSelectedItemProperty = DependencyProperty.Register(
-           nameof(ShyHeaderSelectedItem),
-           typeof(object),
-           typeof(ShyHeaderListView),
-           null);
+        public static readonly DependencyProperty ShyHeaderSelectedItemProperty =
+            DependencyProperty.Register(
+                nameof(ShyHeaderSelectedItem),
+                typeof(object),
+                typeof(ShyHeaderListView),
+                null);
 
         public event SelectionChangedEventHandler ShyHeaderSelectionChanged;
 
