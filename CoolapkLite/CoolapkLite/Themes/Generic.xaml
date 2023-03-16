@@ -1,5 +1,6 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ms-appx:///Controls/QRCode/QRCode.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TwoPaneView/TwoPaneView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PivotHeader/PivotHeader.xaml" />

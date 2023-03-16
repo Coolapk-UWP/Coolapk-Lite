@@ -158,20 +158,39 @@
     </Compile>
     <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs" />
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.cs" />
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.Events.cs" />
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.Properties.cs" />
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs">
+      <DependentUpon>ListDetailsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.cs">
+      <DependentUpon>ListDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.Events.cs">
+      <DependentUpon>ListDetailsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ListDetailsView\ListDetailsView.Properties.cs">
+      <DependentUpon>ListDetailsView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ListDetailsView\ListDetailsViewState.cs" />
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
+    <Compile Include="Controls\QRCode\QRCode.cs">
+      <DependentUpon>QRCode.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\QRCode\QRCode.Properties.cs">
+      <DependentUpon>QRCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\QRCode\QRCodeTemplateSettings.cs" />
+    <Compile Include="Controls\QRCode\XamlQRCode.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StackPanel.cs" />
-    <Compile Include="Controls\TitleBar\TitleBar.cs" />
-    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs" />
+    <Compile Include="Controls\TitleBar\TitleBar.cs">
+      <DependentUpon>TitleBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TitleBar\TitleBar.Properties.cs">
+      <DependentUpon>TitleBar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
-    <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.Properties.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
@@ -963,6 +982,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\QRCode\QRCode.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
