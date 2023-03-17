@@ -7,8 +7,12 @@ using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
+using Windows.Storage.Streams;
+using Windows.Storage;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -179,6 +183,13 @@ namespace CoolapkLite.Pages
                     Provider.ShowOrigin = false;
                     break;
             }
+        }
+
+        private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            args.DragUI.SetContentFromDataPackage();
+            args.Data.RequestedOperation = DataPackageOperation.Copy;
+            await Provider.GetImageDataPackage(args.Data, "拖拽图片");
         }
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender);

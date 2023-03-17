@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -137,6 +138,20 @@ namespace CoolapkLite.Models.Images
             }
         }
 
+        private bool isLoading = true;
+        public bool IsLoading
+        {
+            get => isLoading;
+            private set
+            {
+                if (isLoading != value)
+                {
+                    isLoading = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public ImageModel(string uri, ImageType type)
         {
             Uri = uri;
@@ -184,6 +199,7 @@ namespace CoolapkLite.Models.Images
 
         private async Task GetImage()
         {
+            IsLoading = true;
             LoadStarted?.Invoke(this, null);
             if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = ImageCacheHelper.NoPic; }
             if (ImageCacheHelper.Dispatcher.HasThreadAccess)
@@ -216,7 +232,12 @@ namespace CoolapkLite.Models.Images
             else
             {
                 StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
-                if (file == null) { LoadCompleted?.Invoke(this, null); return; }
+                if (file == null)
+                {
+                    LoadCompleted?.Invoke(this, null);
+                    IsLoading = false;
+                    return;
+                }
                 using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
                 {
                     BitmapImage image = new BitmapImage();
@@ -247,6 +268,7 @@ namespace CoolapkLite.Models.Images
                 }
             }
             LoadCompleted?.Invoke(this, null);
+            IsLoading = false;
         }
 
         public async Task Refresh() => await DispatcherHelper.ExecuteOnUIThreadAsync(GetImage);
