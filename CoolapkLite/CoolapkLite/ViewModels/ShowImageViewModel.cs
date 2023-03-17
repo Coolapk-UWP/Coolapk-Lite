@@ -18,6 +18,7 @@ namespace CoolapkLite.ViewModels
 {
     public class ShowImageViewModel : INotifyPropertyChanged, IViewModel
     {
+        private readonly ImageModel BaseImage;
         private string ImageName = string.Empty;
         public double[] VerticalOffsets { get; set; } = new double[1];
 
@@ -49,7 +50,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        private bool isLoading;
+        private bool isLoading = true;
         public bool IsLoading
         {
             get => isLoading;
@@ -98,10 +99,14 @@ namespace CoolapkLite.ViewModels
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        public ShowImageViewModel(ImageModel image)
+        public ShowImageViewModel(ImageModel image) => BaseImage = image;
+
+        public void Initialize()
         {
-            Images = image.ContextArray.Select(x => new ImageModel(x.Uri, ImageType.SmallImage)).ToList();
-            Index = image.ContextArray.IndexOf(image);
+            Images = BaseImage.ContextArray.Any()
+                ? BaseImage.ContextArray.Select(x => new ImageModel(x.Uri, ImageType.SmallImage)).ToList()
+                : (IList<ImageModel>)new List<ImageModel> { new ImageModel(BaseImage.Uri, ImageType.SmallImage) };
+            Index = BaseImage.ContextArray.Any() ? BaseImage.ContextArray.IndexOf(BaseImage) : 0;
         }
 
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
@@ -111,6 +116,24 @@ namespace CoolapkLite.ViewModels
             Regex regex = new Regex(@"[^/]+(?!.*/)");
             ImageName = regex.IsMatch(url) ? regex.Match(url).Value : "查看图片";
             return $"{ImageName} ({Index + 1}/{Images.Count})";
+        }
+
+        public async void CopyPic()
+        {
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
+            if (file == null)
+            {
+                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                UIHelper.ShowMessage(str);
+            }
+            RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
+
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetBitmap(bitmap);
+            dataPackage.Properties.Title = "分享图片";
+            dataPackage.Properties.Description = ImageName;
+
+            Clipboard.SetContentWithOptions(dataPackage, null);
         }
 
         public async void SharePic()

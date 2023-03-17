@@ -104,7 +104,7 @@ namespace CoolapkLite.Helpers
                 try
                 {
                     StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
-                    if (image != null)
+                    if (image == null)
                     {
                         _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                         image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
@@ -116,7 +116,7 @@ namespace CoolapkLite.Helpers
                     try
                     {
                         StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
-                        if (image != null)
+                        if (image == null)
                         {
                             _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                             image = await ImageCache.Instance.GetFileFromCacheAsync(uri);

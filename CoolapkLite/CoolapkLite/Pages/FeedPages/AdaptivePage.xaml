@@ -35,5 +35,12 @@
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
+        <control:TitleBar
+            x:Name="TitleBar"
+            Title="{Binding Title}"
+            IsRefreshButtonVisible="True"
+            IsRefreshEnabled="True"
+            RefreshRequested="TitleBar_RefreshEvent"
+            Visibility="{Binding IsShowTitle, Converter={StaticResource BoolToVisibilityConverter}}" />
     </Grid>
 </Page>

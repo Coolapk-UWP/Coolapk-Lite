@@ -398,15 +398,18 @@ namespace CoolapkLite.Controls
                                 Border border = new Border
                                 {
                                     Margin = new Thickness(4, 0, 4, -4),
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                    BorderThickness = new Thickness(1),
                                     CornerRadius = new CornerRadius(4),
+                                    BorderThickness = new Thickness(1),
+                                    VerticalAlignment = VerticalAlignment.Center,
+                                    BorderBrush = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
                                 };
                                 TextBlock textBlock = new TextBlock
                                 {
-                                    Margin = new Thickness(1),
                                     FontSize = 12,
-                                    Text = _loader.GetString("FeedAuthor.Text"),
+                                    Margin = new Thickness(1),
+                                    IsTextSelectionEnabled = true,
+                                    Text = _loader.GetString("FeedAuthorText"),
+                                    Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
                                 };
 
                                 border.Child = textBlock;

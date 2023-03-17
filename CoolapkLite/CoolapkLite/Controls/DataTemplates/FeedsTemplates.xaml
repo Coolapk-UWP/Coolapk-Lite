@@ -755,6 +755,7 @@
                                 Click="Button_Click"
                                 Content="{Binding Rusername}"
                                 FontWeight="Normal"
+                                Style="{StaticResource TextBlockButtonStyle}"
                                 Tag="{Binding Rurl}"
                                 Visibility="{Binding Rusername, Converter={StaticResource StringVisibilityConverter}}" />
                         </StackPanel>

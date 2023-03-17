@@ -64,6 +64,7 @@ namespace CoolapkLite.Pages
             Frame.Navigated += On_Navigated;
             UpdateTitleBarLayout(TitleBar);
             UpdateContentLayout(TitleBar);
+            Provider.Initialize();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -127,9 +128,9 @@ namespace CoolapkLite.Pages
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
         {
-            Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
-            CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+            LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
         }
 
         private void UpdateSystemCaptionButtonColors()
@@ -161,6 +162,9 @@ namespace CoolapkLite.Pages
         {
             switch ((sender as FrameworkElement).Tag as string)
             {
+                case "Copy":
+                    Provider.CopyPic();
+                    break;
                 case "Save":
                     Provider.SavePic();
                     break;

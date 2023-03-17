@@ -26,8 +26,7 @@
                         Height="40"
                         Margin="8,0"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        CornerRadius="8">
+                        VerticalAlignment="Top">
                         <Border.Background>
                             <ImageBrush ImageSource="{Binding Cover.Pic}" Stretch="UniformToFill" />
                         </Border.Background>

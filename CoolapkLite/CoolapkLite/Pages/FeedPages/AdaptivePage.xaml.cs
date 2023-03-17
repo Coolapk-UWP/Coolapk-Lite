@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
@@ -43,12 +44,28 @@ namespace CoolapkLite.Pages.FeedPages
 
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
+        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+        
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
+            Page page = this.FindAscendant<Page>();
+            Provider.IsShowTitle = page is MainPage;
+
+            Thickness thickness = new Thickness(0);
             ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
-            if (StackPanel != null) { StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch; }
+            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+            if (StackPanel != null)
+            {
+                StackPanel.Margin = Provider.IsShowTitle? UIHelper.StackPanelMargin: thickness;
+                StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+            }
+            if (ScrollViewer != null)
+            {
+                ScrollViewer.Margin = Provider.IsShowTitle ? UIHelper.ScrollViewerMargin : thickness;
+                ScrollViewer.Padding = Provider.IsShowTitle ? UIHelper.ScrollViewerPadding : thickness;
+            }
         }
     }
 }

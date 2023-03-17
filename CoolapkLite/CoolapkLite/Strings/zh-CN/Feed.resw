@@ -132,6 +132,9 @@
   <data name="FeedAuthor.Text" xml:space="preserve">
     <value>楼主</value>
   </data>
+  <data name="FeedAuthorText" xml:space="preserve">
+    <value>楼主</value>
+  </data>
   <data name="GIF" xml:space="preserve">
     <value>GIF</value>
   </data>

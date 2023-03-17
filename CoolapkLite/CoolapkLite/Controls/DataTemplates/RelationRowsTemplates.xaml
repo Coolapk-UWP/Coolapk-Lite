@@ -48,6 +48,7 @@
             <controls:TextBlockEx
                 Margin="4"
                 VerticalAlignment="Center"
+                IsTextSelectionEnabled="True"
                 Text="{Binding Message}" />
         </Grid>
     </DataTemplate>
