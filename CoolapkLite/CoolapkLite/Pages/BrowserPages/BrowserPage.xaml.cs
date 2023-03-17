@@ -22,8 +22,6 @@ namespace CoolapkLite.Pages.BrowserPages
     {
         private BrowserViewModel Provider;
 
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-
         public BrowserPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

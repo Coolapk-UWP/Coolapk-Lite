@@ -1,4 +1,5 @@
-﻿using Windows.UI.Core;
+﻿using System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
@@ -20,6 +21,8 @@ namespace CoolapkLite.Controls
         public TitleBar()
         {
             DefaultStyleKey = typeof(TitleBar);
+
+            SetValue(TemplateSettingsProperty, new TitleBarTemplateSettings());
 
             SizeChanged += OnSizeChanged;
 
@@ -62,6 +65,7 @@ namespace CoolapkLite.Controls
             UpdateBackButton();
             UpdateIcon();
             UpdateTitle();
+            UpdateTopPadding();
             UpdateRefreshButton();
 
             base.OnApplyTemplate();
@@ -130,6 +134,11 @@ namespace CoolapkLite.Controls
             UpdateTitle();
         }
 
+        public void OnTopPaddingPropertyChanged(DependencyPropertyChangedEventArgs args)
+        {
+            UpdateTopPadding();
+        }
+
         public void OnWindowActivated(object sender, WindowActivatedEventArgs args)
         {
             VisualStateManager.GoToState(this, (args.WindowActivationState == CoreWindowActivationState.Deactivated) ? "Deactivated" : "Activated", false);
@@ -147,7 +156,7 @@ namespace CoolapkLite.Controls
 
         public void UpdateHeight()
         {
-            VisualStateManager.GoToState(this, (CustomContent == null && AutoSuggestBox == null && PaneFooter == null) ? "CompactHeight" : "ExpandedHeight", false);
+            VisualStateManager.GoToState(this, (CustomContent == null) ? "CompactHeight" : "ExpandedHeight", false);
         }
 
         public void UpdateIcon()
@@ -174,6 +183,11 @@ namespace CoolapkLite.Controls
             {
                 VisualStateManager.GoToState(this, "TitleTextVisible", false);
             }
+        }
+
+        private void UpdateTopPadding()
+        {
+            TemplateSettings.TopPaddingColumnGridLength = new GridLength(TopPadding);
         }
     }
 }

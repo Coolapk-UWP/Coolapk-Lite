@@ -195,8 +195,10 @@ namespace CoolapkLite.Helpers
 
         public static bool IsOriginSource(object source, object originalSource)
         {
+            if (source == originalSource) { return true; }
+
             bool result = false;
-            DependencyObject DependencyObject = originalSource as DependencyObject;
+            FrameworkElement DependencyObject = originalSource as FrameworkElement;
             if (DependencyObject.FindAscendant<ButtonBase>() == null && !(originalSource is ButtonBase) && !(originalSource is RichEditBox))
             {
                 if (source is FrameworkElement FrameworkElement)
@@ -204,7 +206,8 @@ namespace CoolapkLite.Helpers
                     result = source == DependencyObject.FindAscendant(FrameworkElement.Name);
                 }
             }
-            return source == originalSource || result;
+
+            return DependencyObject.Tag == null && result;
         }
 
         public static string ConvertMessageTypeToMessage(this MessageType type)

@@ -48,7 +48,7 @@ namespace CoolapkLite.Helpers
             UIElement element = (UIElement)d;
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
             {
-                element.ContextFlyout = GetContextFlyout((UIElement)d);
+                element.ContextFlyout = GetContextFlyout(element);
             }
             else if (element is FrameworkElement frameworkElement)
             {
@@ -100,6 +100,51 @@ namespace CoolapkLite.Helpers
             else
             {
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+            }
+        }
+
+        #endregion
+
+        #region AllowFocusOnInteraction
+
+        /// <summary>
+        /// Gets a value that indicates whether the element automatically gets focus when the user interacts with it.
+        /// </summary>
+        /// <param name="element">The flyout associated with this element.</param>
+        /// <returns>
+        /// A value that indicates whether the element automatically gets focus when the user interacts with it.
+        /// </returns>
+        public static bool GetAllowFocusOnInteraction(FrameworkElement element)
+        {
+            return (bool)element.GetValue(AllowFocusOnInteractionProperty);
+        }
+
+        /// <summary>
+        /// Sets a value that indicates whether the element automatically gets focus when the user interacts with it.
+        /// </summary>
+        /// <param name="element">The element on which to set the attached property.</param>
+        /// <param name="value">A value that indicates whether the element automatically gets focus when the user interacts with it.</param>
+        public static void SetAllowFocusOnInteraction(FrameworkElement element, bool value)
+        {
+            element.SetValue(AllowFocusOnInteractionProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the AllowFocusOnInteraction dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AllowFocusOnInteractionProperty =
+            DependencyProperty.RegisterAttached(
+                "AllowFocusOnInteraction",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnAllowFocusOnInteractionChanged));
+
+        private static void OnAllowFocusOnInteractionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            FrameworkElement element = (FrameworkElement)d;
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "AllowFocusOnInteraction"))
+            {
+                element.AllowFocusOnInteraction = GetAllowFocusOnInteraction(element);
             }
         }
 

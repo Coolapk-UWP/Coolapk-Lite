@@ -171,6 +171,7 @@
       <DependentUpon>ListDetailsView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\ListDetailsView\ListDetailsViewState.cs" />
+    <Compile Include="Controls\Picker\Picker.cs" />
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\QRCode\QRCode.cs">
       <DependentUpon>QRCode.xaml</DependentUpon>
@@ -365,6 +366,7 @@
     <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\CollectionViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\CreateFeedViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FavoriteViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
@@ -994,6 +996,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Picker\Picker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\QRCode\QRCode.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1220,6 +1226,9 @@
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
     </PackageReference>
+    <PackageReference Include="UnicodeStyle">
+      <Version>0.1.12</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="WindowsMobile, Version=10.0.22621.0">
@@ -1329,7 +1338,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw" />
+    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\uk-UA\BrowserPage.resw" />

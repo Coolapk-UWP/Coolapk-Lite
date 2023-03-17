@@ -4,41 +4,76 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="300"
     d:DesignWidth="400"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <local:EmojiNameConverter x:Key="EmojiNameConverter" />
+            <local:StringToEmojiConverter x:Key="StringToEmojiConverter" />
+            <DataTemplate x:Key="EmojiImageTemplate">
+                <Image
+                    Width="36"
+                    Height="36"
+                    Source="{Binding Converter={StaticResource StringToEmojiConverter}}"
+                    ToolTipService.ToolTip="{Binding Converter={StaticResource EmojiNameConverter}}" />
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <local:TitleBar
+            x:Name="TitleBar"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
+            CompactModeThresholdWidth="-1"
+            TopPadding="0">
+            <Button
+                VerticalAlignment="Center"
+                Click="Button_Click"
+                Content="&#xE10A;"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconButtonStyle}"
+                Tag="CloseButton" />
+        </local:TitleBar>
         <RichEditBox
             x:Name="InputBox"
+            x:Uid="/CreateFeedControl/EditBox"
+            Grid.Row="1"
             AcceptsReturn="True"
+            Background="{ThemeResource SystemControlTransparentBrush}"
+            BorderBrush="{ThemeResource SystemControlTransparentBrush}"
+            Loaded="InputBox_Loaded"
             TextWrapping="Wrap" />
         <GridView
-            Grid.Row="1"
-            Padding="0"
+            Grid.Row="2"
+            Padding="4,0"
             HorizontalContentAlignment="Left"
-            ItemsSource="{x:Bind Pictures, Mode=OneWay}"
+            ItemsSource="{x:Bind Provider.Pictures, Mode=OneWay}"
             SelectionChanged="GridView_SelectionChanged">
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid MaximumRowsOrColumns="3" Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
             <GridView.ItemTemplate>
                 <DataTemplate>
-                    <Border
-                        Width="102"
-                        Height="102"
-                        CornerRadius="8">
+                    <Border Width="102" Height="102">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem
-                                    x:Name="Delete"
+                                    x:Name="DeletePic"
+                                    x:Uid="/CreateFeedControl/DeletePicItem"
                                     Click="MenuFlyoutItem_Click"
-                                    Tag="{Binding}"
-                                    Text="删除">
+                                    Tag="{Binding}">
                                     <helpers:FlyoutBaseHelper.Icon>
-                                        <SymbolIcon Symbol="Delete" />
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
@@ -50,17 +85,277 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <CommandBar Grid.Row="2">
+        <CommandBar x:Name="CommandBar" Grid.Row="3">
             <AppBarButton
-                Click="AppBarButton_Click"
-                Icon="Add"
-                Label="添加图片"
-                Tag="AddPic" />
+                x:Uid="/CreateFeedControl/LinkButton"
+                helpers:UIElementHelper.AllowFocusOnInteraction="True"
+                Tag="Link"
+                ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE71B;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="LinkFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="MaxHeight" Value="320" />
+                                <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <Pivot>
+                            <PivotItem x:Uid="/CreateFeedControl/UserPivotItem">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <AutoSuggestBox
+                                        x:Uid="/CreateFeedControl/UserSearchBox"
+                                        Margin="8,4"
+                                        IsTabStop="True"
+                                        QuerySubmitted="UserAutoSuggestBox_QuerySubmitted">
+                                        <AutoSuggestBox.QueryIcon>
+                                            <FontIcon
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                FontSize="12"
+                                                Glyph="&#xE721;" />
+                                        </AutoSuggestBox.QueryIcon>
+                                    </AutoSuggestBox>
+                                    <ListView
+                                        Grid.Row="1"
+                                        Padding="4,0"
+                                        ItemsSource="{x:Bind Provider.CreateUserItemSourse, Mode=OneWay}"
+                                        SelectionChanged="ListView_SelectionChanged"
+                                        Tag="UserList">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Padding="0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Ellipse Width="24" Height="24">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="10,0,0,2"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding UserName}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                    <ProgressBar
+                                        VerticalAlignment="Top"
+                                        Background="{ThemeResource SystemControlTransparentBrush}"
+                                        IsIndeterminate="{x:Bind Provider.CreateUserItemSourse.IsLoading, Mode=OneWay}" />
+                                </Grid>
+                            </PivotItem>
+                            <PivotItem x:Uid="/CreateFeedControl/TopicPivotItem">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <AutoSuggestBox
+                                        x:Uid="/CreateFeedControl/TopicSearchBox"
+                                        Margin="8,4"
+                                        IsTabStop="True"
+                                        QuerySubmitted="TopicAutoSuggestBox_QuerySubmitted">
+                                        <AutoSuggestBox.QueryIcon>
+                                            <FontIcon
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                FontSize="12"
+                                                Glyph="&#xE721;" />
+                                        </AutoSuggestBox.QueryIcon>
+                                    </AutoSuggestBox>
+                                    <ListView
+                                        Grid.Row="1"
+                                        Padding="4,0"
+                                        ItemsSource="{x:Bind Provider.CreateTopicItemSourse, Mode=OneWay}"
+                                        SelectionChanged="ListView_SelectionChanged"
+                                        Tag="TopicList">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Padding="0,4">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Width="24" Height="24">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <TextBlock
+                                                        Grid.Column="1"
+                                                        Margin="10,0,0,2"
+                                                        VerticalAlignment="Center"
+                                                        Text="{Binding Title}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                    <ProgressBar
+                                        VerticalAlignment="Top"
+                                        Background="{ThemeResource SystemControlTransparentBrush}"
+                                        IsIndeterminate="{x:Bind Provider.CreateTopicItemSourse.IsLoading, Mode=OneWay}" />
+                                </Grid>
+                            </PivotItem>
+                        </Pivot>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
             <AppBarButton
+                x:Uid="/CreateFeedControl/EmojiButton"
+                helpers:UIElementHelper.AllowFocusOnInteraction="True"
+                Tag="Emoji"
+                ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE76E;" />
+                </AppBarButton.Icon>
+                <AppBarButton.Flyout>
+                    <Flyout x:Name="EmojiFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                        <Flyout.FlyoutPresenterStyle>
+                            <Style TargetType="FlyoutPresenter">
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="MaxHeight" Value="320" />
+                                <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                            </Style>
+                        </Flyout.FlyoutPresenterStyle>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <AutoSuggestBox
+                                x:Uid="/CreateFeedControl/EmojiSearchBox"
+                                Margin="8,8,8,-8"
+                                IsTabStop="True"
+                                SuggestionChosen="EmojiAutoSuggestBox_SuggestionChosen"
+                                TextChanged="EmojiAutoSuggestBox_TextChanged">
+                                <AutoSuggestBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="0,4">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Image
+                                                Width="24"
+                                                Height="24"
+                                                Source="{Binding Converter={StaticResource StringToEmojiConverter}}"
+                                                ToolTipService.ToolTip="{Binding Converter={StaticResource EmojiNameConverter}}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Margin="10,0,0,2"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Converter={StaticResource EmojiNameConverter}}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </AutoSuggestBox.ItemTemplate>
+                            </AutoSuggestBox>
+                            <Pivot Grid.Row="1">
+                                <PivotItem Header="常规">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind NormalEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                                <PivotItem Header="酷币">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind CoolCoinsEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                                <PivotItem Header="滑稽">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind FunnyEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                                <PivotItem Header="Doge">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind DogeEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                                <PivotItem Header="传统">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind TraditionEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                                <PivotItem Header="经典">
+                                    <GridView
+                                        Padding="8,0"
+                                        IsItemClickEnabled="True"
+                                        ItemClick="EmojiGridView_ItemClick"
+                                        ItemTemplate="{StaticResource EmojiImageTemplate}"
+                                        ItemsSource="{x:Bind ClassicEmojis}"
+                                        SelectionChanged="GridView_SelectionChanged" />
+                                </PivotItem>
+                            </Pivot>
+                        </Grid>
+                    </Flyout>
+                </AppBarButton.Flyout>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="/CreateFeedControl/AddPicButton"
                 Click="AppBarButton_Click"
-                Icon="Send"
-                Label="发送"
-                Tag="Send" />
+                Tag="AddPic"
+                ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE710;" />
+                </AppBarButton.Icon>
+                <helpers:UIElementHelper.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            x:Name="PastePic"
+                            x:Uid="/CreateFeedControl/PastePicItem"
+                            Click="MenuFlyoutItem_Click"
+                            Tag="PastePic">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE77F;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </helpers:UIElementHelper.ContextFlyout>
+            </AppBarButton>
+            <AppBarButton
+                x:Uid="/CreateFeedControl/SendButton"
+                Click="AppBarButton_Click"
+                Tag="Send"
+                ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                <AppBarButton.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE724;" />
+                </AppBarButton.Icon>
+            </AppBarButton>
         </CommandBar>
     </Grid>
 </UserControl>

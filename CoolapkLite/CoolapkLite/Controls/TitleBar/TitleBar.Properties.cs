@@ -1,4 +1,6 @@
-﻿using Windows.Foundation;
+﻿using CoolapkLite.Helpers;
+using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -6,88 +8,80 @@ namespace CoolapkLite.Controls
 {
     public partial class TitleBar
     {
-        public static readonly DependencyProperty CustomContentProperty = DependencyProperty.Register(
-           "CustomContent",
-           typeof(object),
-           typeof(TitleBar),
-           new PropertyMetadata(default, OnCustomContentPropertyChanged));
+        public static readonly DependencyProperty CustomContentProperty =
+            DependencyProperty.Register(
+                "CustomContent",
+                typeof(object),
+                typeof(TitleBar),
+                new PropertyMetadata(default, OnCustomContentPropertyChanged));
 
-        public static readonly DependencyProperty AutoSuggestBoxProperty = DependencyProperty.Register(
-           "AutoSuggestBox",
-           typeof(AutoSuggestBox),
-           typeof(TitleBar),
-           new PropertyMetadata(default, OnCustomContentPropertyChanged));
+        public static readonly DependencyProperty IconSourceProperty =
+            DependencyProperty.Register(
+                "IconSource",
+                typeof(UIElement),
+                typeof(TitleBar),
+                new PropertyMetadata(default(UIElement), OnIconSourcePropertyChanged));
 
-        public static readonly DependencyProperty PaneFooterProperty = DependencyProperty.Register(
-           "PaneFooter",
-           typeof(object),
-           typeof(TitleBar),
-           new PropertyMetadata(default, OnCustomContentPropertyChanged));
+        public static readonly DependencyProperty IsBackButtonVisibleProperty =
+            DependencyProperty.Register(
+                "IsBackButtonVisible",
+                typeof(bool),
+                typeof(TitleBar),
+                new PropertyMetadata(default(bool), OnIsBackButtonVisiblePropertyChanged));
 
-        public static readonly DependencyProperty IconSourceProperty = DependencyProperty.Register(
-           "IconSource",
-           typeof(UIElement),
-           typeof(TitleBar),
-           new PropertyMetadata(default(UIElement), OnIconSourcePropertyChanged));
+        public static readonly DependencyProperty IsBackEnabledProperty =
+            DependencyProperty.Register(
+                "IsBackEnabled",
+                typeof(bool),
+                typeof(TitleBar),
+                new PropertyMetadata(default(bool)));
 
-        public static readonly DependencyProperty IsBackButtonVisibleProperty = DependencyProperty.Register(
-           "IsBackButtonVisible",
-           typeof(bool),
-           typeof(TitleBar),
-           new PropertyMetadata(default(bool), OnIsBackButtonVisiblePropertyChanged));
+        public static readonly DependencyProperty IsRefreshButtonVisibleProperty =
+            DependencyProperty.Register(
+                "IsRefreshButtonVisible",
+                typeof(bool),
+                typeof(TitleBar),
+                new PropertyMetadata(default(bool), OnIsRefreshButtonVisiblePropertyChanged));
 
-        public static readonly DependencyProperty IsBackEnabledProperty = DependencyProperty.Register(
-           "IsBackEnabled",
-           typeof(bool),
-           typeof(TitleBar),
-           new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty IsRefreshEnabledProperty =
+            DependencyProperty.Register(
+                "IsRefreshEnabled",
+                typeof(bool),
+                typeof(TitleBar),
+                new PropertyMetadata(default(bool)));
 
-        public static readonly DependencyProperty IsRefreshButtonVisibleProperty = DependencyProperty.Register(
-           "IsRefreshButtonVisible",
-           typeof(bool),
-           typeof(TitleBar),
-           new PropertyMetadata(default(bool), OnIsRefreshButtonVisiblePropertyChanged));
+        public static readonly DependencyProperty TemplateSettingsProperty =
+            DependencyProperty.Register(
+                "TemplateSettings",
+                typeof(TitleBarTemplateSettings),
+                typeof(TitleBar),
+                new PropertyMetadata(null));
 
-        public static readonly DependencyProperty IsRefreshEnabledProperty = DependencyProperty.Register(
-           "IsRefreshEnabled",
-           typeof(bool),
-           typeof(TitleBar),
-           new PropertyMetadata(default(bool)));
+        public static readonly DependencyProperty TitleProperty = 
+            DependencyProperty.Register(
+                "Title",
+                typeof(string),
+                typeof(TitleBar),
+                new PropertyMetadata(default(string), OnTitlePropertyChanged));
 
-        public static readonly DependencyProperty TemplateSettingsProperty = DependencyProperty.Register(
-           "TemplateSettings",
-           typeof(TitleBarTemplateSettings),
-           typeof(TitleBar),
-           new PropertyMetadata(new TitleBarTemplateSettings()));
+        public static readonly DependencyProperty CompactModeThresholdWidthProperty =
+            DependencyProperty.Register(
+                "CompactModeThresholdWidth",
+                typeof(double),
+                typeof(TitleBar),
+                new PropertyMetadata(641.0));
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-           "Title",
-           typeof(string),
-           typeof(TitleBar),
-           new PropertyMetadata(default(string), OnTitlePropertyChanged));
-
-        public static readonly DependencyProperty CompactModeThresholdWidthProperty = DependencyProperty.Register(
-            "CompactModeThresholdWidth",
-            typeof(double),
-            typeof(TitleBar),
-            new PropertyMetadata(641.0));
+        public static readonly DependencyProperty TopPaddingProperty =
+            DependencyProperty.Register(
+                "TopPadding",
+                typeof(double),
+                typeof(TitleBar),
+                new PropertyMetadata(UIHelper.PageTitleHeight - 48, OnTopPaddingPropertyChanged));
 
         public object CustomContent
         {
             get => GetValue(CustomContentProperty);
             set => SetValue(CustomContentProperty, value);
-        }
-
-        public object AutoSuggestBox
-        {
-            get => (AutoSuggestBox)GetValue(AutoSuggestBoxProperty);
-            set => SetValue(AutoSuggestBoxProperty, value);
-        }
-
-        public object PaneFooter
-        {
-            get => GetValue(PaneFooterProperty);
-            set => SetValue(PaneFooterProperty, value);
         }
 
         public UIElement IconSource
@@ -134,8 +128,14 @@ namespace CoolapkLite.Controls
 
         public double CompactModeThresholdWidth
         {
-            get { return (double)GetValue(CompactModeThresholdWidthProperty); }
-            set { SetValue(CompactModeThresholdWidthProperty, value); }
+            get => (double)GetValue(CompactModeThresholdWidthProperty);
+            set => SetValue(CompactModeThresholdWidthProperty, value);
+        }
+
+        public double TopPadding
+        {
+            get => (double)GetValue(TopPaddingProperty);
+            set => SetValue(TopPaddingProperty, value);
         }
 
         public event TypedEventHandler<TitleBar, object> BackRequested;
@@ -164,6 +164,11 @@ namespace CoolapkLite.Controls
         private static void OnTitlePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((TitleBar)d).OnTitlePropertyChanged(e);
+        }
+
+        private static void OnTopPaddingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((TitleBar)d).OnTopPaddingPropertyChanged(e);
         }
     }
 }
