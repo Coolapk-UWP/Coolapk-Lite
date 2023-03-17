@@ -479,7 +479,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                //Navigate(typeof(HTMLPage), new HTMLViewModel(link));
+                Navigate(typeof(HTMLPage), new HTMLViewModel(origin));
             }
             else
             {

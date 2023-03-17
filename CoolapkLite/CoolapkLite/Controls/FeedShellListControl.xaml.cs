@@ -15,35 +15,40 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class FeedShellListControl : UserControl
     {
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-           nameof(Header),
-           typeof(object),
-           typeof(FeedShellListControl),
-           null);
+        public static readonly DependencyProperty HeaderProperty =
+            DependencyProperty.Register(
+                nameof(Header),
+                typeof(object),
+                typeof(FeedShellListControl),
+                null);
 
-        public static readonly DependencyProperty ItemSourceProperty = DependencyProperty.Register(
-           nameof(ItemSource),
-           typeof(IList<ShyHeaderItem>),
-           typeof(FeedShellListControl),
-           null);
+        public static readonly DependencyProperty ItemSourceProperty =
+            DependencyProperty.Register(
+                nameof(ItemSource),
+                typeof(IList<ShyHeaderItem>),
+                typeof(FeedShellListControl),
+                null);
 
-        public static readonly DependencyProperty HeaderMarginProperty = DependencyProperty.Register(
-           nameof(HeaderMargin),
-           typeof(double),
-           typeof(FeedShellListControl),
-           null);
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(FeedShellListControl),
+                null);
 
-        public static readonly DependencyProperty HeaderHeightProperty = DependencyProperty.Register(
-           nameof(HeaderHeight),
-           typeof(double),
-           typeof(FeedShellListControl),
-           null);
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(FeedShellListControl),
+                null);
 
-        public static readonly DependencyProperty RefreshButtonVisibilityProperty = DependencyProperty.Register(
-           nameof(RefreshButtonVisibility),
-           typeof(Visibility),
-           typeof(FeedShellListControl),
-           new PropertyMetadata(Visibility.Visible));
+        public static readonly DependencyProperty RefreshButtonVisibilityProperty =
+            DependencyProperty.Register(
+                nameof(RefreshButtonVisibility),
+                typeof(Visibility),
+                typeof(FeedShellListControl),
+                new PropertyMetadata(Visibility.Visible));
 
         public object Header
         {

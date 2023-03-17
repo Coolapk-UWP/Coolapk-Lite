@@ -169,7 +169,7 @@ namespace CoolapkLite
 
         private AppViewBackButtonVisibility TryGoBack()
         {
-            if (!HamburgerMenuFrame.CanGoBack)
+            if (!Dispatcher.HasThreadAccess || !HamburgerMenuFrame.CanGoBack)
             { return AppViewBackButtonVisibility.Disabled; }
 
             HamburgerMenuFrame.GoBack();
@@ -178,9 +178,9 @@ namespace CoolapkLite
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
         {
-            Thickness TitleMargin = CustomTitleBar.Margin;
             CustomTitleBar.Height = TitleBar.Height;
-            CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+            LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
         }
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;

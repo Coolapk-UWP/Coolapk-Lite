@@ -29,13 +29,7 @@ namespace CoolapkLite.Pages.SettingsPages
         internal bool IsUseAPI2
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
-            set
-            {
-                if (IsUseAPI2 != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
-                }
-            }
+            set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
         }
 
         internal bool IsUseTokenV2
@@ -72,6 +66,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 if (IsExtendsTitleBar != value)
                 {
                     CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
+                    ThemeHelper.UpdateSystemCaptionButtonColors();
                 }
             }
         }

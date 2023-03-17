@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
         <Style x:Key="HeaderStyle" TargetType="control:HeaderedContentControl">
@@ -18,7 +18,10 @@
     </Page.Resources>
 
     <Grid>
-        <ScrollViewer Margin="{x:Bind ScrollViewerMargin}" Padding="{x:Bind ScrollViewerPadding}">
+        <ScrollViewer
+            Margin="{x:Bind ScrollViewerMargin}"
+            Padding="{x:Bind ScrollViewerPadding}"
+            VerticalScrollBarVisibility="Auto">
             <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="12,0">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
@@ -203,7 +206,8 @@
                         HorizontalAlignment="Left"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         FontSize="{Binding FontSize, ElementName=GoToTestPage}"
-                        LinkClicked="MarkdownTextBlock_LinkClicked" />
+                        LinkClicked="MarkdownTextBlock_LinkClicked"
+                        TextWrapping="Wrap" />
                 </control:HeaderedContentControl>
             </StackPanel>
         </ScrollViewer>

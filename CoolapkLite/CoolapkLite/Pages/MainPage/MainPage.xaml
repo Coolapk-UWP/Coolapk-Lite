@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     Background="{ThemeResource ApplicationPageBackgroundBrush}"
-    NavigationCacheMode="Required"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -51,9 +51,21 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Top"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            Canvas.ZIndex="1">
+            Canvas.ZIndex="1"
+            IsHitTestVisible="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+            </Grid.ColumnDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <ReorderThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <TextBlock
                 x:Name="AppTitle"
+                Grid.Column="1"
                 Padding="12,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"

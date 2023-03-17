@@ -20,7 +20,6 @@
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 FeedReply="{StaticResource FeedReplyDefaultTemplate}"
-                Images="{StaticResource ImageCardDefaultTemplate}"
                 List="{StaticResource ListDefaultTemplate}"
                 ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
                 Others="{StaticResource Null}" />
