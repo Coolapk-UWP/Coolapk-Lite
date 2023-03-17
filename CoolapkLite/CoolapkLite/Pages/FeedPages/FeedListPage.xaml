@@ -220,26 +220,628 @@
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="TopicDetailCard">
-                <Grid Margin="12,0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <Ellipse
-                        Grid.Row="0"
-                        Width="56"
-                        Height="56"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-                        <Ellipse.Fill>
-                            <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
-                        </Ellipse.Fill>
-                    </Ellipse>
-                    <TextBlock
-                        Grid.Row="1"
-                        Text="{Binding Description}"
-                        TextWrapping="WrapWholeWords" />
+                <Grid
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                    <control:StackPanel Spacing="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="56"
+                                Height="56"
+                                HorizontalAlignment="Left">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
+                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding Title}" />
+                                <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                    <Run Text="{Binding HotNum}" />
+                                    <Run Text="{Binding CommentNum}" />
+                                </TextBlock>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Ellipse
+                                                    Width="16"
+                                                    Height="16"
+                                                    Tag="{Binding Url}"
+                                                    Tapped="On_Tapped"
+                                                    ToolTipService.ToolTip="{Binding UserName}">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        FontSize="12"
+                                        Text="{Binding FollowNum}" />
+                                </Grid>
+                            </control:StackPanel>
+                            <Button
+                                x:Name="FollowButton"
+                                Grid.Column="2"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource SystemControlTransparentBrush}"
+                                Click="Button_Click"
+                                Tag="{Binding}"
+                                ToolTipService.ToolTip="{Binding FollowStatus}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon
+                                        VerticalAlignment="Center"
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        FontSize="15"
+                                        Glyph="{Binding FollowGlyph}" />
+                                    <TextBlock
+                                        x:Name="FollowStatus"
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding FollowStatus}" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                        <TextBlock
+                            Text="{Binding Description}"
+                            TextWrapping="WrapWholeWords"
+                            Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                    </control:StackPanel>
                 </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="DyhDetailCard">
+                <Grid
+                    Padding="10"
+                    HorizontalAlignment="Stretch"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1">
+                    <control:StackPanel Spacing="8">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Width="56"
+                                Height="56"
+                                HorizontalAlignment="Left">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                </Border.Background>
+                            </Border>
+                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                                <TextBlock
+                                    FontSize="16"
+                                    FontWeight="SemiBold"
+                                    Text="{Binding Title}" />
+                                <TextBlock
+                                    FontSize="12"
+                                    FontWeight="Thin"
+                                    Text="{Binding FollowNum}" />
+                                <Grid
+                                    Background="{ThemeResource SystemControlTransparentBrush}"
+                                    Tag="{Binding Uurl}"
+                                    Tapped="On_Tapped">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse Width="16" Height="16">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        FontSize="12"
+                                        Text="{Binding UserName}" />
+                                </Grid>
+                            </control:StackPanel>
+                            <Button
+                                x:Name="FollowButton"
+                                Grid.Column="2"
+                                Height="32"
+                                HorizontalAlignment="Right"
+                                Background="{ThemeResource SystemControlTransparentBrush}"
+                                Click="Button_Click"
+                                Tag="{Binding}"
+                                ToolTipService.ToolTip="{Binding FollowStatus}">
+                                <StackPanel Orientation="Horizontal">
+                                    <FontIcon
+                                        VerticalAlignment="Center"
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        FontSize="15"
+                                        Glyph="{Binding FollowGlyph}" />
+                                    <TextBlock
+                                        x:Name="FollowStatus"
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding FollowStatus}" />
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                        <TextBlock
+                            Text="{Binding Description}"
+                            TextWrapping="WrapWholeWords"
+                            Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                    </control:StackPanel>
+                </Grid>
+            </DataTemplate>
+            <DataTemplate x:Key="ProductDetailCard">
+                <control:StackPanel Spacing="6">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Visibility="{Binding CoverArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        <FlipView
+                            x:Name="FlipView"
+                            Background="{ThemeResource SystemControlTransparentBrush}"
+                            ItemsSource="{Binding CoverArr}"
+                            Loaded="FlipView_Loaded"
+                            SizeChanged="FlipView_SizeChanged">
+                            <FlipView.ItemTemplate>
+                                <DataTemplate>
+                                    <Image
+                                        x:Name="Picture"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        CanDrag="True"
+                                        Source="{Binding Pic, Mode=OneWay}"
+                                        Stretch="UniformToFill" />
+                                </DataTemplate>
+                            </FlipView.ItemTemplate>
+                        </FlipView>
+                    </Grid>
+                    <Grid
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                        <control:StackPanel Spacing="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border
+                                    Width="56"
+                                    Height="56"
+                                    HorizontalAlignment="Left">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+                                <control:StackPanel Grid.Column="1" Margin="8,0">
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Title}" />
+                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                        <Run Text="{Binding HotNum}" />
+                                        <Run Text="{Binding CommentNum}" />
+                                    </TextBlock>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Ellipse
+                                                        Width="16"
+                                                        Height="16"
+                                                        Tag="{Binding Url}"
+                                                        Tapped="On_Tapped"
+                                                        ToolTipService.ToolTip="{Binding UserName}">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Margin="4,0"
+                                            FontSize="12"
+                                            Text="{Binding FollowNum}" />
+                                    </Grid>
+                                </control:StackPanel>
+                                <Button
+                                    x:Name="FollowButton"
+                                    Grid.Column="2"
+                                    Height="32"
+                                    HorizontalAlignment="Right"
+                                    Background="{ThemeResource SystemControlTransparentBrush}"
+                                    Click="Button_Click"
+                                    Tag="{Binding}"
+                                    ToolTipService.ToolTip="{Binding FollowStatus}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon
+                                            VerticalAlignment="Center"
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="15"
+                                            Glyph="{Binding FollowGlyph}" />
+                                        <TextBlock
+                                            x:Name="FollowStatus"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding FollowStatus}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <TextBlock
+                                Text="{Binding Description}"
+                                TextWrapping="WrapWholeWords"
+                                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                        </control:StackPanel>
+                    </Grid>
+                    <ScrollViewer
+                        Margin="0,0,0,-10"
+                        Padding="0,0,0,10"
+                        HorizontalScrollBarVisibility="Hidden"
+                        HorizontalScrollMode="Auto"
+                        VerticalScrollMode="Disabled">
+                        <ItemsControl
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{Binding TagArr}"
+                            Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <control:StackPanel Orientation="Horizontal" Spacing="6" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid
+                                        VerticalAlignment="Center"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1">
+                                        <TextBlock
+                                            Margin="4,2"
+                                            FontSize="12"
+                                            Text="{Binding}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <Grid
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                        <control:StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="机主评分"
+                                    Visibility="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    FontSize="16"
+                                    FontWeight="Bold"
+                                    Text="酷安评分"
+                                    Visibility="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Grid Grid.Column="1" HorizontalAlignment="Right">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ToggleButton
+                                        x:Name="SeeAllButton"
+                                        Grid.Column="1"
+                                        Padding="4,2"
+                                        Content="查看全部"
+                                        FontSize="12"
+                                        IsChecked="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolNegationConverter}, Mode=TwoWay}" />
+                                    <ToggleButton
+                                        x:Name="OnlyOwnerButton"
+                                        Grid.Column="0"
+                                        Padding="4,2"
+                                        Content="只看机主"
+                                        FontSize="12"
+                                        IsChecked="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolNegationConverter}, Mode=TwoWay}" />
+                                </Grid>
+                            </Grid>
+                            <Grid Height="100">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.5*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="35"
+                                        FontWeight="Bold"
+                                        Text="{Binding OwnerScore}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Thin"
+                                        Text="{Binding RatingCount}" />
+                                </StackPanel>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="35"
+                                        FontWeight="Bold"
+                                        Text="{Binding RatingScore}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Thin"
+                                        Text="{Binding StarCount}" />
+                                </StackPanel>
+                                <Grid
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="5星" />
+                                    <ProgressBar
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding OwnerStar5Percent}" />
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding OwnerStar5Count}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="4星" />
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding OwnerStar4Percent}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding OwnerStar4Count}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="3星" />
+                                    <ProgressBar
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding OwnerStar3Percent}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding OwnerStar3Count}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="2星" />
+                                    <ProgressBar
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding OwnerStar2Percent}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding OwnerStar2Count}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="1星" />
+                                    <ProgressBar
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding OwnerStar1Percent}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding OwnerStar1Count}" />
+                                </Grid>
+                                <Grid
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Visibility="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="5星" />
+                                    <ProgressBar
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding Star5Percent}" />
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star5Count}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="4星" />
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding Star4Percent}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star4Count}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="3星" />
+                                    <ProgressBar
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding Star3Percent}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star3Count}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="2星" />
+                                    <ProgressBar
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding Star2Percent}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star2Count}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="1星" />
+                                    <ProgressBar
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Value="{Binding Star1Percent}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star1Count}" />
+                                </Grid>
+                            </Grid>
+                        </control:StackPanel>
+                    </Grid>
+                </control:StackPanel>
             </DataTemplate>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
@@ -251,7 +853,9 @@
                 Others="{StaticResource Null}" />
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
+                DyhDetail="{StaticResource DyhDetailCard}"
                 Others="{StaticResource Null}"
+                ProductDetail="{StaticResource ProductDetailCard}"
                 TopicDetail="{StaticResource TopicDetailCard}"
                 UserDetail="{StaticResource UserDetailCard}" />
         </ResourceDictionary>

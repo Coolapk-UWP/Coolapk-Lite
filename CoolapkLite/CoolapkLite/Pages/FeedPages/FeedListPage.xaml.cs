@@ -168,8 +168,6 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
-
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
@@ -240,14 +238,19 @@ namespace CoolapkLite.Pages.FeedPages
     internal class DetailTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
+        public DataTemplate DyhDetail { get; set; }
         public DataTemplate UserDetail { get; set; }
         public DataTemplate TopicDetail { get; set; }
+        public DataTemplate ProductDetail { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item.GetType().Name)
             {
+                case "DyhDetail": return DyhDetail;
                 case "UserDetail": return UserDetail;
                 case "TopicDetail": return TopicDetail;
+                case "ProductDetail": return ProductDetail;
                 default: return Others;
             }
         }
