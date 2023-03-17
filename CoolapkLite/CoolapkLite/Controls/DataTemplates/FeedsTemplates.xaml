@@ -18,11 +18,11 @@
 
     <DataTemplate x:Key="FeedDefaultTemplate">
         <UserControl
-            x:Name="Root"
+            x:Name="RootGrid"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="OnRootTapped">
             <UserControl.Resources>
                 <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                     <Flyout.FlyoutPresenterStyle>
@@ -414,7 +414,7 @@
                     <Grid
                         Padding="8"
                         Tag="{Binding MediaUrl}"
-                        Tapped="OnTapped">
+                        Tapped="OnTopTapped">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -538,11 +538,11 @@
 
     <DataTemplate x:Key="SourceFeedDefaultTemplate">
         <UserControl
-            x:Name="Root"
+            x:Name="RootGrid"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="OnRootTapped">
             <UserControl.Resources>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -635,7 +635,7 @@
 
     <DataTemplate x:Key="FeedReplyDefaultTemplate">
         <UserControl
-            x:Name="Root"
+            x:Name="RootGrid"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged">
             <UserControl.Resources>
@@ -844,11 +844,12 @@
                         ItemTemplate="{StaticResource ReplyRowsItemTemplate}"
                         ItemsSource="{Binding ReplyRows}" />
                     <Button
+                        x:Name="ReplyButton"
                         Padding="4"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"
                         Background="{ThemeResource SystemControlTransparentBrush}"
-                        Click="ReplyButton_Click"
+                        Click="Button_Click"
                         Tag="{Binding}">
                         <TextBlock
                             VerticalAlignment="Center"

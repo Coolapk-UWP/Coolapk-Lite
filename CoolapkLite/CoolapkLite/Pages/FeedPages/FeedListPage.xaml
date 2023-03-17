@@ -518,11 +518,9 @@
                         Padding="0,0,0,10"
                         HorizontalScrollBarVisibility="Hidden"
                         HorizontalScrollMode="Auto"
-                        VerticalScrollMode="Disabled">
-                        <ItemsControl
-                            HorizontalAlignment="Stretch"
-                            ItemsSource="{Binding TagArr}"
-                            Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        VerticalScrollMode="Disabled"
+                        Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding TagArr}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <control:StackPanel Orientation="Horizontal" Spacing="6" />

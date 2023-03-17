@@ -385,6 +385,22 @@
                     </VisualState>
                 </VisualStateGroup>
                 <VisualStateGroup x:Name="PaneOverlayGroup">
+                    <VisualStateGroup.Transitions>
+                        <VisualTransition From="PaneNotOverlaying" To="PaneOverlaying">
+                            <Storyboard>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainSplitView" Storyboard.TargetProperty="PaneBackground">
+                                    <DiscreteObjectKeyFrame KeyTime="0" Value="{Binding PaneOverlayBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualTransition>
+                        <VisualTransition From="PaneOverlaying" To="PaneNotOverlaying">
+                            <Storyboard x:Name="ShadowCasterEaseOutStoryboard">
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainSplitView" Storyboard.TargetProperty="PaneBackground">
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.12" Value="{Binding PaneBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                                </ObjectAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualTransition>
+                    </VisualStateGroup.Transitions>
                     <VisualState x:Name="PaneOverlaying">
                         <VisualState.Setters>
                             <Setter Target="MainSplitView.PaneBackground" Value="{Binding PaneOverlayBackground, RelativeSource={RelativeSource Mode=TemplatedParent}}" />

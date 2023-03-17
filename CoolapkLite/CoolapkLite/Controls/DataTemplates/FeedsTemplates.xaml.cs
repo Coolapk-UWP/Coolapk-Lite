@@ -30,21 +30,22 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public FeedsTemplates() => InitializeComponent();
 
-        private void OnTapped(object sender, TappedRoutedEventArgs e)
+        private void OnRootTapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement s = sender as FrameworkElement;
+            FrameworkElement element = sender as FrameworkElement;
+
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+
             if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
-            if ((s.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
 
             if (e != null) { e.Handled = true; }
 
-            _ = UIHelper.OpenLinkAsync(s.Tag as string);
+            _ = UIHelper.OpenLinkAsync(element.Tag as string);
         }
 
         private void OnTopTapped(object sender, TappedRoutedEventArgs e)
         {
             FrameworkElement element = sender as FrameworkElement;
-            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
 
             if (e != null) { e.Handled = true; }
 
@@ -56,18 +57,12 @@ namespace CoolapkLite.Controls.DataTemplates
             FrameworkElement element = sender as FrameworkElement;
             switch (element.Name)
             {
+                case "ReplyButton":
+                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
+                    break;
                 default:
                     _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
                     break;
-            }
-        }
-
-        private void ReplyButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is FrameworkElement frameworkElement)
-            {
-                if ((frameworkElement.Tag as ICanCopy)?.IsCopyEnabled ?? false) { return; }
-                UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)frameworkElement.Tag).ID.ToString(), (FeedReplyModel)frameworkElement.Tag));
             }
         }
 
