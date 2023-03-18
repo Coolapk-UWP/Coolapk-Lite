@@ -29,7 +29,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Controls
 {
-    public sealed partial class CreateFeedControl : UserControl
+    public sealed partial class CreateFeedControl : Picker
     {
         private AppBarToggleButton BoldButton;
         private AppBarToggleButton ItalicButton;
@@ -114,7 +114,7 @@ namespace CoolapkLite.Controls
             switch ((sender as FrameworkElement).Tag as string)
             {
                 case "CloseButton":
-                    //Hide();
+                    Hide();
                     break;
                 default:
                     break;
@@ -239,7 +239,7 @@ namespace CoolapkLite.Controls
             UIHelper.ShowMessage(ResourceLoader.GetForViewIndependentUse("CreateFeedControl").GetString("SendSuccessed"));
             InputBox.Document.SetText(TextSetOptions.None, string.Empty);
             Provider.Pictures.Clear();
-            //Hide();
+            Hide();
         }
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
@@ -399,6 +399,18 @@ namespace CoolapkLite.Controls
                 InputBox.Document.Selection.TypeText($" #{TopicModel.Title}# ");
             }
             (sender as ListView).SelectedIndex = -1;
+        }
+
+        private void Grid_DragOver(object sender, DragEventArgs e)
+        {
+            e.AcceptedOperation = DataPackageOperation.Copy;
+            e.Handled = true;
+        }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            _ = Provider.DropFile(e.DataView);
+            e.Handled = true;
         }
 
         private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckData(Clipboard.GetContent()));

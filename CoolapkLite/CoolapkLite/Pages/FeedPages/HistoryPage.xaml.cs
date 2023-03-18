@@ -24,7 +24,8 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is HistoryViewModel ViewModel)
+            if (e.Parameter is HistoryViewModel ViewModel
+                && (Provider == null || Provider.Title != ViewModel.Title))
             {
                 Provider = ViewModel;
                 DataContext = Provider;

@@ -845,14 +845,15 @@
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 FeedReply="{StaticResource FeedReplyDefaultTemplate}"
-                Images="{StaticResource ImageCardDefaultTemplate}"
+                Images="{StaticResource ImageCardTemplate}"
                 List="{StaticResource ListDefaultTemplate}"
-                ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
-                Others="{StaticResource Null}" />
+                Others="{StaticResource Empty}"
+                SubtitleList="{StaticResource SubtitleListDefaultTemplate}"
+                User="{StaticResource UserTemplate}" />
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
                 DyhDetail="{StaticResource DyhDetailCard}"
-                Others="{StaticResource Null}"
+                Others="{StaticResource Empty}"
                 ProductDetail="{StaticResource ProductDetailCard}"
                 TopicDetail="{StaticResource TopicDetailCard}"
                 UserDetail="{StaticResource UserDetailCard}" />

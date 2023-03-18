@@ -13,7 +13,6 @@ namespace CoolapkLite.ViewModels.FeedPages
     internal class HistoryViewModel : DataSourceBase<Entity>, IViewModel
     {
         public string Title { get; }
-        public double[] VerticalOffsets { get; set; } = new double[1];
 
         private readonly CoolapkListProvider Provider;
         private readonly UriType _type = UriType.CheckLoginInfo;

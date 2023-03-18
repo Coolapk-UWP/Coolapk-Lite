@@ -21,8 +21,11 @@
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 FeedReply="{StaticResource FeedReplyDefaultTemplate}"
-                Images="{StaticResource ImageCardDefaultTemplate}"
-                Others="{StaticResource Null}" />
+                Images="{StaticResource ImageCardTemplate}"
+                List="{StaticResource ListDefaultTemplate}"
+                Others="{StaticResource Empty}"
+                SubtitleList="{StaticResource SubtitleListDefaultTemplate}"
+                User="{StaticResource UserTemplate}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid>

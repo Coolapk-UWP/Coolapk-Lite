@@ -244,8 +244,8 @@
     <Compile Include="Controls\DataTemplates\IndexCardTemplates.xaml.cs">
       <DependentUpon>IndexCardTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplates\OtherDatatemplates.xaml.cs">
-      <DependentUpon>OtherDatatemplates.xaml</DependentUpon>
+    <Compile Include="Controls\DataTemplates\OtherDataTemplates.xaml.cs">
+      <DependentUpon>OtherDataTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\PicTemplates.xaml.cs">
       <DependentUpon>PicTemplates.xaml</DependentUpon>
@@ -996,6 +996,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\Picker\Picker.ThemeResources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Picker\Picker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1040,7 +1044,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\DataTemplates\OtherDatatemplates.xaml">
+    <Page Include="Controls\DataTemplates\OtherDataTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

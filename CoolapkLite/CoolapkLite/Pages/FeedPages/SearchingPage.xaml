@@ -24,10 +24,11 @@
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 FeedReply="{StaticResource FeedReplyDefaultTemplate}"
-                Images="{StaticResource ImageCardDefaultTemplate}"
+                Images="{StaticResource ImageCardTemplate}"
                 List="{StaticResource ListDefaultTemplate}"
-                ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
-                Others="{StaticResource Null}" />
+                Others="{StaticResource Empty}"
+                SubtitleList="{StaticResource SubtitleListDefaultTemplate}"
+                User="{StaticResource UserTemplate}" />
         </ResourceDictionary>
     </Page.Resources>
     <Grid Margin="{x:Bind PivotTitleMargin}">

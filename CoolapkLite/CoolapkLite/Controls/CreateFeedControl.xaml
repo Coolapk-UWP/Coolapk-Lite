@@ -1,4 +1,4 @@
-﻿<UserControl
+﻿<local:Picker
     x:Class="CoolapkLite.Controls.CreateFeedControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,10 +6,9 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    d:DesignHeight="300"
-    d:DesignWidth="400"
+    Padding="10"
     mc:Ignorable="d">
-    <UserControl.Resources>
+    <local:Picker.Resources>
         <ResourceDictionary>
             <local:EmojiNameConverter x:Key="EmojiNameConverter" />
             <local:StringToEmojiConverter x:Key="StringToEmojiConverter" />
@@ -21,8 +20,12 @@
                     ToolTipService.ToolTip="{Binding Converter={StaticResource EmojiNameConverter}}" />
             </DataTemplate>
         </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid>
+    </local:Picker.Resources>
+    <Grid
+        AllowDrop="True"
+        Background="{ThemeResource SystemControlTransparentBrush}"
+        DragOver="Grid_DragOver"
+        Drop="Grid_Drop">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -85,7 +88,10 @@
                 </DataTemplate>
             </GridView.ItemTemplate>
         </GridView>
-        <CommandBar x:Name="CommandBar" Grid.Row="3">
+        <CommandBar
+            x:Name="CommandBar"
+            Grid.Row="3"
+            Background="{ThemeResource TitleBarBackgroundBrush}">
             <AppBarButton
                 x:Uid="/CreateFeedControl/LinkButton"
                 helpers:UIElementHelper.AllowFocusOnInteraction="True"
@@ -358,4 +364,4 @@
             </AppBarButton>
         </CommandBar>
     </Grid>
-</UserControl>
+</local:Picker>

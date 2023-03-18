@@ -18,8 +18,10 @@ using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Animation;
 using TileSize = Windows.UI.StartScreen.TileSize;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -57,7 +59,7 @@ namespace CoolapkLite.Controls.DataTemplates
             FrameworkElement element = sender as FrameworkElement;
             switch (element.Name)
             {
-                case "ReplyButton":
+                case "SeeAllButton":
                     UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
                     break;
                 default:
@@ -79,8 +81,38 @@ namespace CoolapkLite.Controls.DataTemplates
             FrameworkElement element = sender as FrameworkElement;
             switch (element.Name)
             {
-                case "MakeReplyButton":
+                case "ReplyButton":
                     DisabledCopy();
+                    if (element.Tag is FeedModelBase feed)
+                    {
+                        new CreateFeedControl
+                        {
+                            ReplyID = feed.ID,
+                            FeedType = CreateFeedType.Reply,
+                            PopupTransitions = new TransitionCollection
+                            {
+                                new EdgeUIThemeTransition
+                                {
+                                    Edge = EdgeTransitionLocation.Bottom
+                                }
+                            }
+                        }.Show();
+                    }
+                    else if (element.Tag is FeedReplyModel reply)
+                    {
+                        new CreateFeedControl
+                        {
+                            ReplyID = reply.ID,
+                            FeedType = CreateFeedType.ReplyReply,
+                            PopupTransitions = new TransitionCollection
+                            {
+                                new EdgeUIThemeTransition
+                                {
+                                    Edge = EdgeTransitionLocation.Bottom
+                                }
+                            }
+                        }.Show();
+                    }
                     break;
 
                 case "PinTileButton":

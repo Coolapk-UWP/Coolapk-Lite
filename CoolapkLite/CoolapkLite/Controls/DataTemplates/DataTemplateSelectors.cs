@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static CoolapkLite.Models.Feeds.FeedModel;
@@ -10,25 +12,38 @@ namespace CoolapkLite.Controls.DataTemplates
     public sealed class CardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Feed { get; set; }
+        public DataTemplate User { get; set; }
         public DataTemplate List { get; set; }
         public DataTemplate Images { get; set; }
         public DataTemplate Others { get; set; }
         public DataTemplate FeedReply { get; set; }
-        public DataTemplate ListWithSubtitle { get; set; }
+        public DataTemplate SubtitleList { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            switch (item.GetType().Name)
+            if (item is FeedModel) { return Feed; }
+            else if (item is UserModel) { return User; }
+            else if (item is FeedReplyModel) { return FeedReply; }
+            else if (item is IndexPageHasEntitiesModel IndexPageHasEntitiesModel)
             {
-                case "FeedModel": return Feed;
-                case "FeedReplyModel": return FeedReply;
-                case "IndexPageHasEntitiesModel":
-                    switch ((item as IndexPageHasEntitiesModel).EntitiesType)
-                    {
-                        case EntityType.Image: return Images;
-                        default: return Others;
-                    }
-                default:
-                    return item is IHasDescription ? List : item is IHasSubtitle ? ListWithSubtitle : Others;
+                switch (IndexPageHasEntitiesModel.EntitiesType)
+                {
+                    case EntityType.Image: return Images;
+                    default: return Others;
+                }
+            }
+            //else if (item is LikeNotificationModel) { return LikeNotify; }
+            //else if (item is SimpleNotificationModel) { return CommentMe; }
+            //else if (item is MessageNotificationModel)
+            //{
+            //    return MessageNotify;
+            //}
+            //else if (item is AtCommentMeNotificationModel)
+            //{
+            //    return AtCommentMe;
+            //}
+            else
+            {
+                return item is IHasDescription ? List : item is IHasSubtitle ? SubtitleList : Others;
             }
         }
     }

@@ -14,7 +14,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     internal class IndexViewModel : DataSourceBase<Entity>, IViewModel
     {
-        private readonly string Uri;
+        public readonly string Uri;
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains("?");
         protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
@@ -23,7 +23,6 @@ namespace CoolapkLite.ViewModels.FeedPages
         private readonly CoolapkListProvider Provider;
 
         public string Title { get; protected set; }
-        public double[] VerticalOffsets { get; set; } = new double[1];
 
         internal IndexViewModel(string uri, bool showTitleBar = true)
         {

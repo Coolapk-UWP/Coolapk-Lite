@@ -75,7 +75,10 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is FeedListViewModel ViewModel)
+            if (e.Parameter is FeedListViewModel ViewModel
+                && (Provider == null
+                    || Provider.ListType != ViewModel.ListType
+                    || Provider.ID != ViewModel.ID))
             {
                 Provider = ViewModel;
                 DataContext = Provider;

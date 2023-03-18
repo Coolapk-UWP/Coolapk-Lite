@@ -36,22 +36,6 @@
                     </Flyout.FlyoutPresenterStyle>
                     <controls:ShowQRCodeControl QRCodeText="{Binding ShareUrl}" />
                 </Flyout>
-                <Flyout x:Key="ReplyFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
-                    <Flyout.FlyoutPresenterStyle>
-                        <Style TargetType="FlyoutPresenter">
-                            <Setter Property="Padding" Value="0" />
-                            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
-                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
-                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-                        </Style>
-                    </Flyout.FlyoutPresenterStyle>
-                    <controls:CreateFeedControl
-                        MinWidth="300"
-                        MinHeight="200"
-                        FeedType="Reply"
-                        ReplyID="{Binding ID}" />
-                </Flyout>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
                         <helpers:FlyoutBaseHelper.Icon>
@@ -223,9 +207,8 @@
                         </StackPanel>
                     </Button>
                     <Button
-                        x:Name="MakeReplyButton"
+                        x:Name="ReplyButton"
                         Click="FeedButton_Click"
-                        Flyout="{StaticResource ReplyFlyout}"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
                         ToolTipService.ToolTip="回复"
@@ -639,22 +622,6 @@
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged">
             <UserControl.Resources>
-                <Flyout x:Key="ReplyFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
-                    <Flyout.FlyoutPresenterStyle>
-                        <Style TargetType="FlyoutPresenter">
-                            <Setter Property="Padding" Value="0" />
-                            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
-                            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
-                            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
-                            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
-                        </Style>
-                    </Flyout.FlyoutPresenterStyle>
-                    <controls:CreateFeedControl
-                        MinWidth="300"
-                        MinHeight="200"
-                        FeedType="ReplyReply"
-                        ReplyID="{Binding ID}" />
-                </Flyout>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
                         <helpers:FlyoutBaseHelper.Icon>
@@ -786,9 +753,8 @@
                         </StackPanel>
                     </Button>
                     <Button
-                        x:Name="MakeReplyButton"
+                        x:Name="ReplyButton"
                         Click="FeedButton_Click"
-                        Flyout="{StaticResource ReplyFlyout}"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
                         ToolTipService.ToolTip="回复">
@@ -845,7 +811,7 @@
                         ItemTemplate="{StaticResource ReplyRowsItemTemplate}"
                         ItemsSource="{Binding ReplyRows}" />
                     <Button
-                        x:Name="ReplyButton"
+                        x:Name="SeeAllButton"
                         Padding="4"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Left"

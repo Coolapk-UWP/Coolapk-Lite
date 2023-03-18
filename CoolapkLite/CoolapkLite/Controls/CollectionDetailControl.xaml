@@ -20,10 +20,10 @@
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
                 FeedReply="{StaticResource FeedReplyDefaultTemplate}"
-                Images="{StaticResource ImageCardDefaultTemplate}"
+                Images="{StaticResource ImageCardTemplate}"
                 List="{StaticResource ListDefaultTemplate}"
-                ListWithSubtitle="{StaticResource ListWithSubtitleDefaultTemplate}"
-                Others="{StaticResource Null}" />
+                SubtitleList="{StaticResource SubtitleListDefaultTemplate}"
+                Others="{StaticResource Empty}" />
         </ResourceDictionary>
     </UserControl.Resources>
     <local:ShyHeaderListView

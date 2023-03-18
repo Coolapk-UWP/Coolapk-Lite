@@ -6,6 +6,7 @@
         <ResourceDictionary Source="ms-appx:///Styles/Button.xaml" />
         <ResourceDictionary Source="ms-appx:///Styles/ListView.xaml" />
         <ResourceDictionary Source="ms-appx:///Styles/ToggleSwitch.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/Picker/Picker.ThemeResources.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.ThemeResources.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenu.ThemeResources.xaml" />
     </ResourceDictionary.MergedDictionaries>

@@ -6,7 +6,62 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <DataTemplate x:Key="Null" />
+    <DataTemplate x:Key="Empty" />
+
+    <DataTemplate x:Key="UserTemplate">
+        <Grid
+            Padding="8"
+            KeyDown="OnKeyDown"
+            Tag="{Binding Url}"
+            Tapped="OnTapped">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Ellipse
+                Grid.RowSpan="2"
+                Width="36"
+                Height="36"
+                Margin="0,0,8,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                </Ellipse.Fill>
+            </Ellipse>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Text="{Binding UserName}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                MaxLines="1"
+                TextTrimming="CharacterEllipsis">
+                <Run Text="{Binding FollowNum}" />
+                <Run Text="{Binding FansNum}" />
+                <Run Text="{Binding LoginTime}" />
+            </TextBlock>
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="1"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                MaxLines="2"
+                Text="{Binding Bio}"
+                TextWrapping="Wrap"
+                Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
+        </Grid>
+    </DataTemplate>
 
     <DataTemplate x:Key="ListDefaultTemplate">
         <Grid
@@ -19,21 +74,22 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Border
+                Width="40"
+                Height="40"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top"
-                CornerRadius="8">
-                <Image
-                    Width="40"
-                    Height="40"
-                    Source="{Binding Pic.Pic, Mode=OneWay}" />
+                VerticalAlignment="Top">
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                </Border.Background>
             </Border>
             <Grid
                 Grid.Column="1"
+                Margin="0,0,8,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -43,15 +99,16 @@
                 <ctrl:TextBlockEx
                     Grid.Row="1"
                     VerticalAlignment="Center"
-                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                    MaxLines="1"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    MaxLines="10"
                     Text="{Binding Description}"
+                    TextTrimming="CharacterEllipsis"
                     Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="ListWithSubtitleDefaultTemplate">
+    <DataTemplate x:Key="SubtitleListDefaultTemplate">
         <Grid
             Padding="0,8"
             KeyDown="OnKeyDown"
@@ -67,17 +124,18 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                 </Ellipse.Fill>
             </Ellipse>
             <Grid
                 Grid.Column="1"
+                Margin="0,0,8,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <TextBlock
                     Grid.Row="0"
@@ -92,9 +150,10 @@
                 <ctrl:TextBlockEx
                     Grid.Row="2"
                     VerticalAlignment="Center"
-                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
-                    MaxLines="1"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    MaxLines="10"
                     Text="{Binding Description}"
+                    TextTrimming="CharacterEllipsis"
                     Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Grid>
