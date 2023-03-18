@@ -117,16 +117,43 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AddPicButton.Label" xml:space="preserve">
+    <value>Add Image</value>
+  </data>
+  <data name="DeletePicItem.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
   <data name="EditBox.PlaceholderText" xml:space="preserve">
     <value>Your thoughts…</value>
   </data>
   <data name="EmojiButton.Label" xml:space="preserve">
     <value>Add Emoji</value>
   </data>
+  <data name="EmojiSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search Emoji...</value>
+  </data>
+  <data name="LinkButton.Label" xml:space="preserve">
+    <value>User &amp; Topic</value>
+  </data>
+  <data name="PastePicItem.Text" xml:space="preserve">
+    <value>Paste</value>
+  </data>
   <data name="SendButton.Label" xml:space="preserve">
     <value>Send</value>
   </data>
   <data name="SendSuccessed" xml:space="preserve">
     <value>Send successes</value>
+  </data>
+  <data name="TopicPivotItem.Header" xml:space="preserve">
+    <value>Threads</value>
+  </data>
+  <data name="TopicSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search Topic...</value>
+  </data>
+  <data name="UserPivotItem.Header" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="UserSearchBox.PlaceholderText" xml:space="preserve">
+    <value>Search Users...</value>
   </data>
 </root>

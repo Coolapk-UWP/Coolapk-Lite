@@ -142,7 +142,7 @@
     <value>Пошук</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Пошук</value>
+    <value>搜索动态、话题、用户等</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Налаштування</value>

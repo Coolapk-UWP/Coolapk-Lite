@@ -142,7 +142,7 @@
     <value>Search</value>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Search</value>
+    <value>Search for Feeds, Topics, Users, etc</value>
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Settings</value>
