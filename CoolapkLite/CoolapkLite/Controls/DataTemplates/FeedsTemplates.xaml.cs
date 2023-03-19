@@ -122,7 +122,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "LikeButton":
                     DisabledCopy();
-                    await RequestHelper.ChangeLikeAsync(element.Tag as ICanLike, element.Dispatcher);
+                    await (element.Tag as ICanLike).ChangeLike();
                     break;
 
                 case "ReportButton":

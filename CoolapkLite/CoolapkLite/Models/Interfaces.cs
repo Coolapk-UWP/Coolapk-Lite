@@ -38,7 +38,7 @@ namespace CoolapkLite.Models
     {
         int ID { get; }
         bool Liked { get; set; }
-        int LikeNum { get; set; }
+        Task ChangeLike();
     }
 
     public interface ICanStar

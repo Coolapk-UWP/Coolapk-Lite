@@ -12,14 +12,22 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Helpers
 {
+    [Flags]
     public enum ImageType
     {
-        Icon,
-        Captcha,
-        BigAvatar,
-        SmallImage,
-        OriginImage,
-        SmallAvatar,
+        Origin = 0x00,
+        Small = 0x01,
+
+        Image = 0x02,
+        Avatar = 0x04,
+        Icon = 0x08,
+        Captcha = 0x16,
+
+        OriginImage = Image | Origin,
+        BigAvatar = Avatar | Origin,
+
+        SmallImage = Image | Small,
+        SmallAvatar = Avatar | Small,
     }
 
     internal static partial class ImageCacheHelper
@@ -49,7 +57,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
+                if (type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                     uri = url.ValidateAndGetUri();
@@ -95,7 +103,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
+                if (type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                     uri = url.ValidateAndGetUri();
@@ -189,7 +197,7 @@ namespace CoolapkLite.Helpers
                 string fileName = DataHelper.GetMD5(url);
                 StorageFolder folder = await GetFolderAsync(type);
                 IStorageItem item = await folder.TryGetItemAsync(fileName);
-                if (type == ImageType.SmallImage || type == ImageType.SmallAvatar)
+                if (type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                 }

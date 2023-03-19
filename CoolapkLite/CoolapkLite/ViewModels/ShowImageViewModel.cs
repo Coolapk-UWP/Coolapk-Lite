@@ -47,7 +47,7 @@ namespace CoolapkLite.ViewModels
                 index = value;
                 RaisePropertyChangedEvent();
                 Title = GetTitle(Images[value].Uri);
-                ShowOrigin = Images[value].Type == ImageType.SmallImage || Images[value].Type == ImageType.SmallAvatar;
+                ShowOrigin = Images[value].Type.HasFlag(ImageType.Small);
             }
         }
 
@@ -105,8 +105,8 @@ namespace CoolapkLite.ViewModels
         public void Initialize()
         {
             Images = BaseImage.ContextArray.Any()
-                ? BaseImage.ContextArray.Select(x => new ImageModel(x.Uri, ImageType.SmallImage)).ToList()
-                : (IList<ImageModel>)new List<ImageModel> { new ImageModel(BaseImage.Uri, ImageType.SmallImage) };
+                ? BaseImage.ContextArray.Select(x => new ImageModel(x.Uri, x.Type)).ToList()
+                : (IList<ImageModel>)new List<ImageModel> { new ImageModel(BaseImage.Uri, BaseImage.Type) };
             Index = BaseImage.ContextArray.Any() ? BaseImage.ContextArray.IndexOf(BaseImage) : 0;
         }
 

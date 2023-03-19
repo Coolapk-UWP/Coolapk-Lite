@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,6 +15,8 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged, IPic
     {
+        public CoreDispatcher Dispatcher { get; private set; }
+
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
         {
@@ -267,11 +269,22 @@ namespace CoolapkLite.Models.Images
                     }
                 }
             }
+            if (Pic != null) { Dispatcher = Pic.Dispatcher; }
             LoadCompleted?.Invoke(this, null);
             IsLoading = false;
         }
 
-        public async Task Refresh() => await DispatcherHelper.ExecuteOnUIThreadAsync(GetImage);
+        public async Task Refresh()
+        {
+            if (Dispatcher != null)
+            {
+                await Dispatcher.AwaitableRunAsync(GetImage);
+            }
+            else
+            {
+                await GetImage();
+            }
+        }
 
         public override string ToString() => Uri;
     }

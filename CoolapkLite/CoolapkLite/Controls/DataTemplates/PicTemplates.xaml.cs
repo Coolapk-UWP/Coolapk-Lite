@@ -48,6 +48,9 @@ namespace CoolapkLite.Controls.DataTemplates
                 case "RefreshButton":
                     _ = image.Refresh();
                     break;
+                case "ShowImageButton":
+                    _ = UIHelper.ShowImageAsync(image);
+                    break;
                 case "OriginButton":
                     image.Type = ImageType.OriginImage;
                     break;

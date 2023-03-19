@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
@@ -9,6 +11,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -140,6 +143,9 @@ namespace CoolapkLite.Pages.FeedPages
             FrameworkElement element = sender as FrameworkElement;
             switch (element.Name)
             {
+                case "LikeButton":
+                    _ = (element.Tag as ICanLike).ChangeLike();
+                    break;
                 case "FansButton":
                     UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
                     break;
@@ -160,11 +166,31 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void On_Tapped(object sender, TappedRoutedEventArgs e) => _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
-
-        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
-
-        private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            ImageModel image = (sender as FrameworkElement).Tag as ImageModel;
+            switch ((sender as FrameworkElement).Name)
+            {
+                case "CopyButton":
+                    Provider.CopyPic(image);
+                    break;
+                case "SaveButton":
+                    Provider.SavePic(image);
+                    break;
+                case "ShareButton":
+                    Provider.SharePic(image);
+                    break;
+                case "RefreshButton":
+                    _ = image.Refresh();
+                    break;
+                case "ShowImageButton":
+                    _ = UIHelper.ShowImageAsync(image);
+                    break;
+                case "OriginButton":
+                    image.Type = ImageType.OriginImage;
+                    break;
+            }
+        }
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
@@ -175,6 +201,30 @@ namespace CoolapkLite.Pages.FeedPages
                 ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
             }
         }
+
+        private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            args.DragUI.SetContentFromDataPackage();
+            args.Data.RequestedOperation = DataPackageOperation.Copy;
+            await Provider.GetImageDataPackage(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
+        }
+
+        private void On_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            object Tag = (sender as FrameworkElement).Tag;
+            if (Tag is ImageModel image)
+            {
+                _ = UIHelper.ShowImageAsync(image);
+            }
+            else if (Tag is string url)
+            {
+                _ = UIHelper.OpenLinkAsync(url);
+            }
+        }
+
+        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
 
         #region 界面模式切换
 
@@ -240,6 +290,7 @@ namespace CoolapkLite.Pages.FeedPages
         public DataTemplate UserDetail { get; set; }
         public DataTemplate TopicDetail { get; set; }
         public DataTemplate ProductDetail { get; set; }
+        public DataTemplate CollectionDetail { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
@@ -249,6 +300,7 @@ namespace CoolapkLite.Pages.FeedPages
                 case "UserDetail": return UserDetail;
                 case "TopicDetail": return TopicDetail;
                 case "ProductDetail": return ProductDetail;
+                case "CollectionDetail": return CollectionDetail;
                 default: return Others;
             }
         }

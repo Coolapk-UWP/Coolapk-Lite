@@ -480,6 +480,15 @@ namespace CoolapkLite.Helpers
                     }
                 }
             }
+            else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
+            {
+                string id = link.Substring(12);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id);
+                if (provider != null)
+                {
+                    Navigate(typeof(FeedListPage), provider);
+                }
+            }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
                 Navigate(typeof(HTMLPage), new HTMLViewModel(origin));
