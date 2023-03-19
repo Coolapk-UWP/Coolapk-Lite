@@ -22,7 +22,6 @@
             Grid.Row="1"
             Width="200"
             Height="200"
-            Margin="4"
             Padding="0"
             HorizontalAlignment="Center"
             HorizontalContentAlignment="Stretch"

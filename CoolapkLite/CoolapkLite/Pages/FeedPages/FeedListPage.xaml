@@ -255,13 +255,17 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <ItemsControl ItemsSource="{Binding FollowUsers}">
-                                        <ItemsControl.ItemsPanel>
+                                    <ListView
+                                        ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                                        ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                                        ItemsSource="{Binding FollowUsers}"
+                                        ShowsScrollingPlaceholders="False">
+                                        <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <control:StackPanel Orientation="Horizontal" Spacing="-6" />
                                             </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
+                                        </ListView.ItemsPanel>
+                                        <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <Ellipse
                                                     Width="16"
@@ -274,8 +278,8 @@
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                             </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
                                     <TextBlock
                                         Grid.Column="1"
                                         Margin="4,0"
@@ -395,7 +399,7 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="ProductDetailCard">
-                <control:StackPanel Spacing="6">
+                <control:StackPanel Spacing="2">
                     <Grid
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -456,13 +460,17 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
-                                            <ItemsControl.ItemsPanel>
+                                        <ListView
+                                            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                                            ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                                            ItemsSource="{Binding FollowUsers}"
+                                            ShowsScrollingPlaceholders="False">
+                                            <ListView.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <control:StackPanel Orientation="Horizontal" Spacing="-6" />
                                                 </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
+                                            </ListView.ItemsPanel>
+                                            <ListView.ItemTemplate>
                                                 <DataTemplate>
                                                     <Ellipse
                                                         Width="16"
@@ -475,8 +483,8 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                 </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
                                         <TextBlock
                                             Grid.Column="1"
                                             Margin="4,0"
@@ -513,35 +521,34 @@
                                 Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
                         </control:StackPanel>
                     </Grid>
-                    <ScrollViewer
-                        Margin="0,0,0,-10"
-                        Padding="0,0,0,10"
-                        HorizontalScrollBarVisibility="Hidden"
-                        HorizontalScrollMode="Auto"
-                        VerticalScrollMode="Disabled"
+                    <ListView
+                        HorizontalAlignment="Stretch"
+                        ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
+                        ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                        ItemsSource="{Binding TagArr}"
+                        ShowsScrollingPlaceholders="False"
+                        Style="{StaticResource VerticalListViewStyle}"
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
-                        <ItemsControl HorizontalAlignment="Stretch" ItemsSource="{Binding TagArr}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <control:StackPanel Orientation="Horizontal" Spacing="6" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Grid
-                                        VerticalAlignment="Center"
-                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                        BorderThickness="1">
-                                        <TextBlock
-                                            Margin="4,2"
-                                            FontSize="12"
-                                            Text="{Binding}" />
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </ScrollViewer>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <control:StackPanel Orientation="Horizontal" Spacing="2" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1">
+                                    <TextBlock
+                                        Margin="4,2"
+                                        FontSize="12"
+                                        Text="{Binding}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     <Grid
                         Padding="10"
                         HorizontalAlignment="Stretch"
@@ -859,70 +866,68 @@
                 UserDetail="{StaticResource UserDetailCard}" />
         </ResourceDictionary>
     </Page.Resources>
-    <Grid>
-        <control:TwoPaneView
-            x:Name="TwoPaneView"
-            Loaded="TwoPaneView_Loaded"
-            MinWideModeWidth="804"
-            ModeChanged="TwoPaneView_ModeChanged"
-            Pane1Length="420"
-            PanePriority="Pane2"
-            TallModeConfiguration="SinglePane">
-            <control:TwoPaneView.Pane1>
-                <Grid x:Name="LeftGrid">
-                    <ScrollViewer
-                        x:Name="DetailScrollViewer"
-                        Margin="{x:Bind ScrollViewerMargin}"
-                        Padding="{x:Bind ScrollViewerPadding}"
-                        VerticalAlignment="Top"
-                        HorizontalContentAlignment="Stretch"
-                        HorizontalScrollBarVisibility="Disabled"
-                        VerticalScrollBarVisibility="Auto">
-                        <Grid x:Name="Pane1Grid">
-                            <ContentControl
-                                x:Name="DetailControl"
-                                Margin="1,0.5"
-                                Padding="{x:Bind StackPanelMargin}"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Stretch"
-                                Content="{Binding Detail}"
-                                ContentTemplate="{Binding DetailDataTemplate}" />
-                        </Grid>
-                    </ScrollViewer>
-                    <control:TitleBar
-                        x:Name="TitleBar"
-                        Title="{Binding Title}"
-                        IsRefreshEnabled="True"
-                        RefreshRequested="TitleBar_RefreshEvent" />
-                </Grid>
-            </control:TwoPaneView.Pane1>
-            <control:TwoPaneView.Pane2>
-                <Grid x:Name="RightGrid">
-                    <control:ShyHeaderListView
-                        x:Name="ListView"
-                        ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-                        HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
-                        HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
-                        ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-                        ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                        Loaded="ListView_Loaded"
-                        ShowsScrollingPlaceholders="False"
-                        ShyHeaderItemSource="{Binding ItemSource}">
-                        <control:ShyHeaderListView.TopHeader>
-                            <Grid x:Name="Pane2Grid" />
-                        </control:ShyHeaderListView.TopHeader>
-                        <control:ShyHeaderListView.RightHeader>
-                            <Button
-                                x:Name="RefreshButton"
-                                VerticalAlignment="Center"
-                                Click="RefreshButton_Click"
-                                Content="&#xE72C;"
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Style="{StaticResource TitleBarIconButtonStyle}" />
-                        </control:ShyHeaderListView.RightHeader>
-                    </control:ShyHeaderListView>
-                </Grid>
-            </control:TwoPaneView.Pane2>
-        </control:TwoPaneView>
-    </Grid>
+    <control:TwoPaneView
+        x:Name="TwoPaneView"
+        Loaded="TwoPaneView_Loaded"
+        MinWideModeWidth="804"
+        ModeChanged="TwoPaneView_ModeChanged"
+        Pane1Length="420"
+        PanePriority="Pane2"
+        TallModeConfiguration="SinglePane">
+        <control:TwoPaneView.Pane1>
+            <Grid x:Name="LeftGrid">
+                <ScrollViewer
+                    x:Name="DetailScrollViewer"
+                    Margin="{x:Bind ScrollViewerMargin}"
+                    Padding="{x:Bind ScrollViewerPadding}"
+                    VerticalAlignment="Top"
+                    HorizontalContentAlignment="Stretch"
+                    HorizontalScrollBarVisibility="Disabled"
+                    VerticalScrollBarVisibility="Auto">
+                    <Grid x:Name="Pane1Grid">
+                        <ContentControl
+                            x:Name="DetailControl"
+                            Margin="1,0.5"
+                            Padding="{x:Bind StackPanelMargin}"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            Content="{Binding Detail}"
+                            ContentTemplate="{Binding DetailDataTemplate}" />
+                    </Grid>
+                </ScrollViewer>
+                <control:TitleBar
+                    x:Name="TitleBar"
+                    Title="{Binding Title}"
+                    IsRefreshEnabled="True"
+                    RefreshRequested="TitleBar_RefreshEvent" />
+            </Grid>
+        </control:TwoPaneView.Pane1>
+        <control:TwoPaneView.Pane2>
+            <Grid x:Name="RightGrid">
+                <control:ShyHeaderListView
+                    x:Name="ListView"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                    HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
+                    HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
+                    ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    Loaded="ListView_Loaded"
+                    ShowsScrollingPlaceholders="False"
+                    ShyHeaderItemSource="{Binding ItemSource}">
+                    <control:ShyHeaderListView.TopHeader>
+                        <Grid x:Name="Pane2Grid" />
+                    </control:ShyHeaderListView.TopHeader>
+                    <control:ShyHeaderListView.RightHeader>
+                        <Button
+                            x:Name="RefreshButton"
+                            VerticalAlignment="Center"
+                            Click="RefreshButton_Click"
+                            Content="&#xE72C;"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Style="{StaticResource TitleBarIconButtonStyle}" />
+                    </control:ShyHeaderListView.RightHeader>
+                </control:ShyHeaderListView>
+            </Grid>
+        </control:TwoPaneView.Pane2>
+    </control:TwoPaneView>
 </Page>

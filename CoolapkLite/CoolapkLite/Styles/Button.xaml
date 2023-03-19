@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style x:Key="TransparentButtonStyle" TargetType="Button">
-        <Setter Property="Height" Value="34" />
+        <Setter Property="MinHeight" Value="34" />
         <Setter Property="Background" Value="{ThemeResource SystemControlTransparentBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>

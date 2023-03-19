@@ -147,6 +147,9 @@
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplates\ProfileCardTemplates.xaml.cs">
+      <DependentUpon>ProfileCardTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\RelationRowsTemplates.xaml.cs">
       <DependentUpon>RelationRowsTemplates.xaml</DependentUpon>
     </Compile>
@@ -221,6 +224,7 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
+    <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\Update\SystemVersionInfo.cs" />
@@ -230,6 +234,9 @@
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
       <DependentUpon>HTMLPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FeedPages\ProfilePage.xaml.cs">
+      <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
       <DependentUpon>SearchingPage.xaml</DependentUpon>
@@ -372,6 +379,7 @@
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\ProfileViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
@@ -976,6 +984,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DataTemplates\ProfileCardTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\RelationRowsTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1025,6 +1037,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\BrowserPages\HTMLPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FeedPages\ProfilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

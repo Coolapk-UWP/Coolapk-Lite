@@ -1,0 +1,287 @@
+﻿<Page
+    x:Class="CoolapkLite.Pages.FeedPages.ProfilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
+    xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
+    d:DataContext="{d:DesignInstance Type=feedpages:ProfileViewModel}"
+    NavigationCacheMode="Enabled"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <templates:ProfileCardTemplates />
+            </ResourceDictionary.MergedDictionaries>
+            <templates:ProfileCardTemplateSelector
+                x:Key="ProfileCardTemplateSelector"
+                ImageTextScrollCard="{StaticResource ImageTextScrollCardTemplate}"
+                Others="{StaticResource Empty}"
+                TextLinkList="{StaticResource TextLinkListCardTemplate}"
+                TitleCard="{StaticResource TitleCardTemplate}" />
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <controls:TwoPaneView
+            x:Name="TwoPaneView"
+            Loaded="TwoPaneView_Loaded"
+            MinWideModeWidth="804"
+            ModeChanged="TwoPaneView_ModeChanged"
+            Pane1Length="420"
+            PanePriority="Pane2"
+            TallModeConfiguration="SinglePane">
+            <controls:TwoPaneView.Pane1>
+                <Grid x:Name="LeftGrid">
+                    <ScrollViewer
+                        x:Name="DetailScrollViewer"
+                        Margin="{x:Bind ScrollViewerMargin}"
+                        Padding="{x:Bind ScrollViewerPadding}"
+                        VerticalAlignment="Top"
+                        HorizontalContentAlignment="Stretch"
+                        HorizontalScrollBarVisibility="Disabled"
+                        VerticalScrollBarVisibility="Auto">
+                        <Grid
+                            x:Name="Pane1Grid"
+                            Margin="12"
+                            Padding="{x:Bind StackPanelMargin}">
+                            <controls:StackPanel
+                                x:Name="DetailControl"
+                                HorizontalAlignment="Stretch"
+                                Spacing="12">
+                                <controls:StackPanel.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </controls:StackPanel.ChildrenTransitions>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="12" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse
+                                        Width="49"
+                                        Height="49"
+                                        DoubleTapped="Grid_DoubleTapped"
+                                        IsDoubleTapEnabled="True">
+                                        <Ellipse.Fill>
+                                            <ImageBrush ImageSource="{Binding ProfileDetail.UserAvatar.Pic, Mode=OneWay}" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <Grid Grid.Column="2">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock FontWeight="SemiBold" Text="{Binding ProfileDetail.UserName, FallbackValue='登录'}" />
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                HorizontalAlignment="Left"
+                                                FontSize="12"
+                                                FontStyle="Italic"
+                                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                                Text="{Binding ProfileDetail.LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}', FallbackValue='Lv.0'}" />
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                HorizontalAlignment="Right"
+                                                FontSize="12"
+                                                Text="{Binding ProfileDetail.NextLevelNowExperience}" />
+                                        </Grid>
+                                        <ProgressBar
+                                            x:Name="NextLevelPercentage"
+                                            Grid.Row="2"
+                                            MinWidth="160"
+                                            Margin="0,4"
+                                            Value="{Binding ProfileDetail.NextLevelPercentage}" />
+                                    </Grid>
+                                    <Button
+                                        x:Name="QRCodeButton"
+                                        Grid.Column="4"
+                                        Margin="-8,4"
+                                        Content="&#xE72D;"
+                                        Style="{StaticResource TitleBarIconButtonStyle}"
+                                        Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <Button.Flyout>
+                                            <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                                                <Flyout.FlyoutPresenterStyle>
+                                                    <Style TargetType="FlyoutPresenter">
+                                                        <Setter Property="Padding" Value="0" />
+                                                        <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled" />
+                                                        <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled" />
+                                                        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Disabled" />
+                                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+                                                    </Style>
+                                                </Flyout.FlyoutPresenterStyle>
+                                                <controls:ShowQRCodeControl QRCodeText="{Binding ProfileDetail.Url}" />
+                                            </Flyout>
+                                        </Button.Flyout>
+                                    </Button>
+                                    <Button
+                                        x:Name="LoginButton"
+                                        Grid.Column="4"
+                                        Margin="-8,4"
+                                        Click="Button_Click"
+                                        Content="&#xE78B;"
+                                        Style="{StaticResource TitleBarIconButtonStyle}"
+                                        Tag="LoginButton"
+                                        Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                </Grid>
+                                <Grid x:Name="ButtonGrid" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Button
+                                        Grid.Column="0"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        Click="Button_Click"
+                                        Tag="FeedsButton">
+                                        <StackPanel>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="20"
+                                                FontWeight="Bold"
+                                                Text="{Binding ProfileDetail.FeedNum, FallbackValue='0'}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="动态" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        Click="Button_Click"
+                                        Tag="FollowsButton">
+                                        <StackPanel>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="20"
+                                                FontWeight="Bold"
+                                                Text="{Binding ProfileDetail.FollowNum, FallbackValue='0'}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="关注" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Button
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                        Click="Button_Click"
+                                        Tag="FansButton">
+                                        <StackPanel>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="20"
+                                                FontWeight="Bold"
+                                                Text="{Binding ProfileDetail.FansNum, FallbackValue='0'}" />
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontSize="12"
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                Text="粉丝" />
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                                <Button
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    Click="Button_Click"
+                                    Tag="CreateFeedButton"
+                                    Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <controls:StackPanel
+                                        Margin="8,0"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <FontIcon
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="16"
+                                            Glyph="&#xE932;" />
+                                        <TextBlock
+                                            Margin="0,0,0,2"
+                                            FontSize="16"
+                                            Text="写动态" />
+                                    </controls:StackPanel>
+                                </Button>
+                            </controls:StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </controls:TwoPaneView.Pane1>
+            <controls:TwoPaneView.Pane2>
+                <Grid x:Name="RightGrid">
+                    <ScrollViewer
+                        Margin="{x:Bind ScrollViewerMargin}"
+                        Padding="{x:Bind ScrollViewerPadding}"
+                        VerticalScrollBarVisibility="Auto">
+                        <controls:StackPanel
+                            Margin="12"
+                            Padding="{x:Bind StackPanelMargin}"
+                            Spacing="12">
+                            <controls:StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </controls:StackPanel.ChildrenTransitions>
+                            <Grid x:Name="Pane2Grid" />
+                            <ItemsControl
+                                x:Name="ListView"
+                                Padding="12"
+                                ItemTemplateSelector="{StaticResource ProfileCardTemplateSelector}"
+                                ItemsSource="{Binding}"
+                                Loaded="ListView_Loaded"
+                                ScrollViewer.HorizontalScrollMode="Disabled"
+                                ScrollViewer.VerticalScrollMode="Auto">
+                                <ItemsControl.ItemContainerTransitions>
+                                    <TransitionCollection>
+                                        <AddDeleteThemeTransition />
+                                        <ContentThemeTransition />
+                                        <ReorderThemeTransition />
+                                        <EntranceThemeTransition IsStaggeringEnabled="False" />
+                                    </TransitionCollection>
+                                </ItemsControl.ItemContainerTransitions>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <controls:StackPanel
+                                            Orientation="Vertical"
+                                            ScrollViewer.HorizontalScrollMode="Disabled"
+                                            ScrollViewer.VerticalScrollMode="Auto"
+                                            Spacing="12" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </controls:StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </controls:TwoPaneView.Pane2>
+        </controls:TwoPaneView>
+        <controls:TitleBar
+            x:Name="TitleBar"
+            Title="{Binding Title}"
+            IsRefreshButtonVisible="True"
+            IsRefreshEnabled="True"
+            RefreshRequested="TitleBar_RefreshEvent" />
+    </Grid>
+</Page>

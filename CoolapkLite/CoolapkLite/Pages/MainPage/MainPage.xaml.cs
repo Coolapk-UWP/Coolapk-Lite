@@ -372,8 +372,8 @@ namespace CoolapkLite
                     if (results.UID != UID) { return; }
                     Name = results.UserName;
                     Image = new BitmapImage(new Uri(results.UserAvatar));
-                    PageType = typeof(FeedListPage);
-                    ViewModels = FeedListViewModel.GetProvider(FeedListType.UserPageList, results.UID);
+                    PageType = typeof(ProfilePage);
+                    ViewModels = new ProfileViewModel();
                 }
             }
             else

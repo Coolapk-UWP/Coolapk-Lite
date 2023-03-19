@@ -8,6 +8,7 @@
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     xmlns:valueconverters="using:CoolapkLite.Helpers.Converters"
     d:DataContext="{d:DesignInstance Type=feeds:FeedDetailModel}"
     mc:Ignorable="d">
@@ -520,25 +521,24 @@
                     </StackPanel>
                 </Grid>
             </Grid>
-            <ScrollViewer
+            <ListView
                 Grid.Row="10"
                 Margin="2,0"
                 Padding="0,4"
-                HorizontalScrollBarVisibility="Hidden"
-                HorizontalScrollMode="Auto"
-                VerticalScrollMode="Disabled"
+                HorizontalAlignment="Stretch"
+                ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
+                ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                ItemTemplate="{StaticResource RelationRowsItemTemplate}"
+                ItemsSource="{Binding RelationRows}"
+                ShowsScrollingPlaceholders="False"
+                Style="{StaticResource VerticalListViewStyle}"
                 Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed'}">
-                <ItemsControl
-                    HorizontalAlignment="Stretch"
-                    ItemTemplate="{StaticResource RelationRowsItemTemplate}"
-                    ItemsSource="{Binding RelationRows}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <local:StackPanel Orientation="Horizontal" Spacing="6" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </ScrollViewer>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <local:StackPanel Orientation="Horizontal" Spacing="6" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>
             <StackPanel
                 Grid.Row="11"
                 Margin="4"

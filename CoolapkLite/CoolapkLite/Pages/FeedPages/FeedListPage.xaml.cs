@@ -87,11 +87,6 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            base.OnNavigatedFrom(e);
-        }
-
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
