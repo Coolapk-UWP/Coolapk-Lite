@@ -282,6 +282,15 @@
             Title="{Binding Title}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
-            RefreshRequested="TitleBar_RefreshEvent" />
+            RefreshRequested="TitleBar_RefreshEvent">
+            <Button
+                VerticalAlignment="Center"
+                Click="Button_Click"
+                Content="&#xE8BD;"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconButtonStyle}"
+                Tag="NotificationButton"
+                ToolTipService.ToolTip="通知" />
+        </controls:TitleBar>
     </Grid>
 </Page>

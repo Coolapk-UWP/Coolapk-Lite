@@ -120,6 +120,9 @@ namespace CoolapkLite.Pages.FeedPages
                         }
                     }.Show();
                     break;
+                case "NotificationButton":
+                    UIHelper.Navigate(typeof(NotificationsPage));
+                    break;
                 default:
                     break;
             }

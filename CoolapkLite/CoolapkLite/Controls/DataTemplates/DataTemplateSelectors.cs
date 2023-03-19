@@ -1,8 +1,8 @@
 ﻿using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static CoolapkLite.Models.Feeds.FeedModel;
@@ -17,7 +17,11 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate Images { get; set; }
         public DataTemplate Others { get; set; }
         public DataTemplate FeedReply { get; set; }
+        public DataTemplate CommentMe { get; set; }
+        public DataTemplate LikeNotify { get; set; }
+        public DataTemplate AtCommentMe { get; set; }
         public DataTemplate SubtitleList { get; set; }
+        public DataTemplate MessageNotify { get; set; }
         protected override DataTemplate SelectTemplateCore(object item)
         {
             if (item is FeedModel) { return Feed; }
@@ -31,20 +35,13 @@ namespace CoolapkLite.Controls.DataTemplates
                     default: return Others;
                 }
             }
-            //else if (item is LikeNotificationModel) { return LikeNotify; }
-            //else if (item is SimpleNotificationModel) { return CommentMe; }
-            //else if (item is MessageNotificationModel)
-            //{
-            //    return MessageNotify;
-            //}
-            //else if (item is AtCommentMeNotificationModel)
-            //{
-            //    return AtCommentMe;
-            //}
-            else
-            {
-                return item is IHasDescription ? List : item is IHasSubtitle ? SubtitleList : Others;
-            }
+            else if (item is LikeNotificationModel) { return LikeNotify; }
+            else if (item is SimpleNotificationModel) { return CommentMe; }
+            else if (item is MessageNotificationModel) { return MessageNotify; }
+            else if (item is AtCommentMeNotificationModel) { return AtCommentMe; }
+            else if (item is IHasDescription) { return List; }
+            else if (item is IHasSubtitle) { return SubtitleList; }
+            else { return Others; }
         }
     }
 
@@ -88,10 +85,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is CollectionModel)
-            {
-                return History;
-            }
+            if (item is CollectionModel) { return History; }
             else if (item is IndexPageModel IndexPageModel)
             {
                 switch (IndexPageModel?.EntityType)

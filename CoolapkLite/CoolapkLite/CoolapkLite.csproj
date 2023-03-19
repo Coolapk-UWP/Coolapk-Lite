@@ -147,6 +147,9 @@
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplates\NotificationTemplates.xaml.cs">
+      <DependentUpon>NotificationTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\ProfileCardTemplates.xaml.cs">
       <DependentUpon>ProfileCardTemplates.xaml</DependentUpon>
     </Compile>
@@ -224,6 +227,7 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
+    <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
@@ -234,6 +238,9 @@
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
       <DependentUpon>HTMLPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FeedPages\NotificationsPage.xaml.cs">
+      <DependentUpon>NotificationsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedPages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
@@ -968,7 +975,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
-    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw" />
+    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -981,6 +990,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\CreateFeedControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\DataTemplates\NotificationTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1037,6 +1050,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\BrowserPages\HTMLPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FeedPages\NotificationsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
