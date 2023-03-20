@@ -20,6 +20,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
+using Windows.System.Profile;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -35,16 +36,17 @@ namespace CoolapkLite.Pages
         public ShowImagePage()
         {
             InitializeComponent();
+            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
-            {
-                CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right;
-            }
+            { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
+            if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
+            { UpdateContentLayout(false); }
+            UpdateTitleBarLayout(TitleBar);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            UpdateSystemCaptionButtonColors();
             if (e.Parameter is ImageModel Model)
             {
                 Provider = new ShowImageViewModel(Model);
@@ -56,18 +58,13 @@ namespace CoolapkLite.Pages
                 DataContext = Provider;
             }
             Window.Current.SetTitleBar(CustomTitleBar);
-            ActualThemeChanged += OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += System_BackPressed;
-            }
+            { HardwareButtons.BackPressed += System_BackPressed; }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             Frame.Navigated += On_Navigated;
-            UpdateTitleBarLayout(TitleBar);
-            UpdateContentLayout(TitleBar);
             Provider.Initialize();
         }
 
@@ -75,12 +72,9 @@ namespace CoolapkLite.Pages
         {
             base.OnNavigatedFrom(e);
             Window.Current.SetTitleBar(null);
-            ActualThemeChanged -= OnActualThemeChanged;
             SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed -= System_BackPressed;
-            }
+            { HardwareButtons.BackPressed -= System_BackPressed; }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
@@ -90,11 +84,6 @@ namespace CoolapkLite.Pages
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
-        }
-
-        private void OnActualThemeChanged(FrameworkElement sender, object args)
-        {
-            UpdateSystemCaptionButtonColors();
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
@@ -122,12 +111,9 @@ namespace CoolapkLite.Pages
             return AppViewBackButtonVisibility.Visible;
         }
 
-        private void UpdateContentLayout(CoreApplicationViewTitleBar TitleBar)
+        private void UpdateContentLayout(bool IsVisible)
         {
-            bool IsVisible = TitleBar.IsVisible;
             CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
-            Thickness Margin = new Thickness(0, IsVisible ? TitleBar.Height : 0, 0, 0);
-            FlipViewGrid.Margin = Margin;
         }
 
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
@@ -135,31 +121,6 @@ namespace CoolapkLite.Pages
             CustomTitleBar.Height = TitleBar.Height;
             LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
-        }
-
-        private void UpdateSystemCaptionButtonColors()
-        {
-            bool IsDark = ActualTheme == ElementTheme.Default
-                ? Application.Current.RequestedTheme == ApplicationTheme.Dark
-                : ActualTheme == ElementTheme.Dark;
-
-            Color ForegroundColor = IsDark ? Colors.White : Colors.Black;
-            Color BackgroundColor = new AccessibilitySettings().HighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
-
-            if (UIHelper.HasStatusBar)
-            {
-                StatusBar StatusBar = StatusBar.GetForCurrentView();
-                StatusBar.ForegroundColor = ForegroundColor;
-                StatusBar.BackgroundColor = BackgroundColor;
-                StatusBar.BackgroundOpacity = 0; // 透明度
-            }
-            else
-            {
-                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
-                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
-                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = UIHelper.HasTitleBar ? BackgroundColor : Colors.Transparent;
-            }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
@@ -192,7 +153,7 @@ namespace CoolapkLite.Pages
             await Provider.GetImageDataPackage(args.Data, "拖拽图片");
         }
 
-        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender);
+        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 

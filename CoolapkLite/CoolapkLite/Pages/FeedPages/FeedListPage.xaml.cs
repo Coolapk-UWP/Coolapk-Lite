@@ -40,9 +40,6 @@ namespace CoolapkLite.Pages.FeedPages
     public sealed partial class FeedListPage : Page, INotifyPropertyChanged
     {
         private FeedListViewModel Provider;
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private double headerMargin;
         internal double HeaderMargin
@@ -194,11 +191,15 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
+            Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
+            Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
+
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = new Thickness(0, UIHelper.ScrollViewerMargin.Top, 0, Padding.Bottom);
-                ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
+                ScrollViewer.Margin = new Thickness(0, ScrollViewerMargin.Top, 0, Padding.Bottom);
+                ScrollViewer.Padding = new Thickness(0, ScrollViewerPadding.Top, 0, -Padding.Bottom);
             }
         }
 
@@ -230,6 +231,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+
             // Remove details content from it's parent panel.
             if (DetailControl.Parent != null)
             {
@@ -255,7 +258,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 HeaderHeight = double.NaN;
-                HeaderMargin = UIHelper.PageTitleHeight;
+                HeaderMargin = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = true;
                 RefreshButton.Visibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
@@ -266,7 +269,7 @@ namespace CoolapkLite.Pages.FeedPages
             else
             {
                 HeaderMargin = 0d;
-                HeaderHeight = UIHelper.PageTitleHeight;
+                HeaderHeight = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = false;
                 RefreshButton.Visibility = Visibility.Visible;
                 // Put details content in Pane2.

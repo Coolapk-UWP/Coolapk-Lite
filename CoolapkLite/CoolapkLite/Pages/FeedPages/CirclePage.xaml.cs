@@ -21,8 +21,6 @@ namespace CoolapkLite.Pages.FeedPages
         private bool isLoaded;
         private Action Refresh;
 
-        private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
-
         public CirclePage() => InitializeComponent();
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

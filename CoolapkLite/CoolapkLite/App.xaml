@@ -12,6 +12,13 @@
                 <ResourceDictionary Source="ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
 
+            <x:Double x:Key="PageTitleHeight">80</x:Double>
+
+            <Thickness x:Key="StackPanelMargin">0,80,0,0</Thickness>
+            <Thickness x:Key="ScrollViewerMargin">0,80,0,0</Thickness>
+            <Thickness x:Key="ScrollViewerPadding">0,-80,0,0</Thickness>
+            <Thickness x:Key="PivotTitleMargin">0,32,0,0</Thickness>
+
             <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
             <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
 

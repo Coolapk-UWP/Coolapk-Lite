@@ -22,10 +22,6 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class TestPage : Page, INotifyPropertyChanged
     {
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
-
         internal bool IsUseAPI2
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);

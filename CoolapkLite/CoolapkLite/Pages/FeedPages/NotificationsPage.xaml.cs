@@ -25,8 +25,6 @@ namespace CoolapkLite.Pages.FeedPages
         private bool isLoaded;
         private Action Refresh;
 
-        private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
-
         private NotificationsTask _notificationsTask;
         public NotificationsTask NotificationsTask
         {

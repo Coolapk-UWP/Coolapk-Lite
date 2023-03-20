@@ -15,8 +15,8 @@
         </Style>
     </Page.Resources>
     <Grid>
-        <ScrollViewer Margin="{x:Bind ScrollViewerMargin}" Padding="{x:Bind ScrollViewerPadding}">
-            <StackPanel Margin="{x:Bind StackPanelMargin}" Padding="12,0">
+        <ScrollViewer Margin="{StaticResource ScrollViewerMargin}" Padding="{StaticResource ScrollViewerPadding}">
+            <StackPanel Margin="{StaticResource StackPanelMargin}" Padding="12,0">
                 <StackPanel.ChildrenTransitions>
                     <TransitionCollection>
                         <ReorderThemeTransition />

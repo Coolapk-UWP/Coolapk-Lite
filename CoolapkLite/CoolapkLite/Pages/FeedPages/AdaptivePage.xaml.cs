@@ -47,24 +47,39 @@ namespace CoolapkLite.Pages.FeedPages
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
         private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
-        
+
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
             Page page = this.FindAscendant<Page>();
             Provider.IsShowTitle = page is MainPage;
 
-            Thickness thickness = new Thickness(0);
+            Thickness StackPanelMargin;
+            Thickness ScrollViewerMargin;
+            Thickness ScrollViewerPadding;
+
+            if (Provider.IsShowTitle)
+            {
+                StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
+                ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
+                ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
+            }
+            else
+            {
+                StackPanelMargin = ScrollViewerMargin = ScrollViewerPadding = new Thickness(0);
+            }
+
             ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+
             if (StackPanel != null)
             {
-                StackPanel.Margin = Provider.IsShowTitle? UIHelper.StackPanelMargin: thickness;
+                StackPanel.Margin = StackPanelMargin;
                 StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
             }
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = Provider.IsShowTitle ? UIHelper.ScrollViewerMargin : thickness;
-                ScrollViewer.Padding = Provider.IsShowTitle ? UIHelper.ScrollViewerPadding : thickness;
+                ScrollViewer.Margin = ScrollViewerMargin;
+                ScrollViewer.Padding = ScrollViewerPadding;
             }
         }
     }

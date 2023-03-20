@@ -28,9 +28,6 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private ProfileViewModel Provider;
         private DateTime dateTime = default;
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private double headerMargin;
         internal double HeaderMargin
@@ -133,10 +130,12 @@ namespace CoolapkLite.Pages.FeedPages
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+            Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
+            Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = new Thickness(0, UIHelper.ScrollViewerMargin.Top, 0, Padding.Bottom);
-                ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
+                ScrollViewer.Margin = new Thickness(0, ScrollViewerMargin.Top, 0, Padding.Bottom);
+                ScrollViewer.Padding = new Thickness(0, ScrollViewerPadding.Top, 0, -Padding.Bottom);
             }
         }
 
@@ -146,6 +145,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+
             // Remove details content from it's parent panel.
             if (DetailControl.Parent != null)
             {
@@ -161,7 +162,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 HeaderHeight = double.NaN;
-                HeaderMargin = UIHelper.PageTitleHeight;
+                HeaderMargin = PageTitleHeight;
                 // Add the details content to Pane1.
                 Pane2Grid.Children.Add(DetailControl);
             }
@@ -169,7 +170,7 @@ namespace CoolapkLite.Pages.FeedPages
             else
             {
                 HeaderMargin = 0d;
-                HeaderHeight = UIHelper.PageTitleHeight;
+                HeaderHeight = PageTitleHeight;
                 // Put details content in Pane2.
                 Pane1Grid.Children.Add(DetailControl);
             }

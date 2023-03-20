@@ -31,9 +31,6 @@ namespace CoolapkLite.Pages.SettingsPages
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
 

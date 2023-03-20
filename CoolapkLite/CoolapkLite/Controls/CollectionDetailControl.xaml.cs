@@ -11,8 +11,6 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class CollectionDetailControl : UserControl, INotifyPropertyChanged
     {
-        private double PageTitleHeight => UIHelper.PageTitleHeight;
-
         private CollectionViewModel provider;
         public CollectionViewModel Provider
         {

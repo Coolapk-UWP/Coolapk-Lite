@@ -28,9 +28,6 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private FeedShellViewModel Provider;
         private static UserActivitySession _currentActivity;
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
 
         public FeedShellPage() => InitializeComponent();
 
@@ -140,6 +137,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+
             // Remove details content from it's parent panel.
             if (DetailControl.Parent != null)
             {
@@ -175,7 +174,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 ListControl.HeaderHeight = double.NaN;
-                ListControl.HeaderMargin = UIHelper.PageTitleHeight;
+                ListControl.HeaderMargin = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = true;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
@@ -187,7 +186,7 @@ namespace CoolapkLite.Pages.FeedPages
             else
             {
                 ListControl.HeaderMargin = 0d;
-                ListControl.HeaderHeight = UIHelper.PageTitleHeight;
+                ListControl.HeaderHeight = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = false;
                 ListControl.RefreshButtonVisibility = Visibility.Visible;
                 // Put details content in Pane2.

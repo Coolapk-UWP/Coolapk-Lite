@@ -31,7 +31,7 @@
                 User="{StaticResource UserTemplate}" />
         </ResourceDictionary>
     </Page.Resources>
-    <Grid Margin="{x:Bind PivotTitleMargin}">
+    <Grid Margin="{StaticResource PivotTitleMargin}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />

@@ -23,8 +23,6 @@ namespace CoolapkLite.Pages.FeedPages
         private static int PivotIndex = 0;
         private SearchingViewModel Provider;
 
-        private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
-
         public SearchingPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

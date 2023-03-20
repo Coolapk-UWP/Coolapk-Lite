@@ -147,11 +147,15 @@ namespace CoolapkLite.Controls
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
+            Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
+            Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
+
             ScrollViewer ScrollViewer = ShyHeaderListView.FindDescendant<ScrollViewer>();
+
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = new Thickness(0, UIHelper.ScrollViewerMargin.Top, 0, Padding.Bottom);
-                ScrollViewer.Padding = new Thickness(0, UIHelper.ScrollViewerPadding.Top, 0, -Padding.Bottom);
+                ScrollViewer.Margin = new Thickness(0, ScrollViewerMargin.Top, 0, Padding.Bottom);
+                ScrollViewer.Padding = new Thickness(0, ScrollViewerPadding.Top, 0, -Padding.Bottom);
             }
         }
 

@@ -55,17 +55,21 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
+            Thickness StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
+            Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
+            Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
+
             ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+
             if (StackPanel != null)
             {
-                StackPanel.Margin = UIHelper.StackPanelMargin;
-                StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                StackPanel.Margin = StackPanelMargin;
             }
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = UIHelper.ScrollViewerMargin;
-                ScrollViewer.Padding = UIHelper.ScrollViewerPadding;
+                ScrollViewer.Margin = ScrollViewerMargin;
+                ScrollViewer.Padding = ScrollViewerPadding;
             }
         }
     }

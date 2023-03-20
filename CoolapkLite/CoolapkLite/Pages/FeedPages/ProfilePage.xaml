@@ -37,8 +37,8 @@
                 <Grid x:Name="LeftGrid">
                     <ScrollViewer
                         x:Name="DetailScrollViewer"
-                        Margin="{x:Bind ScrollViewerMargin}"
-                        Padding="{x:Bind ScrollViewerPadding}"
+                        Margin="{StaticResource ScrollViewerMargin}"
+                        Padding="{StaticResource ScrollViewerPadding}"
                         VerticalAlignment="Top"
                         HorizontalContentAlignment="Stretch"
                         HorizontalScrollBarVisibility="Disabled"
@@ -46,7 +46,7 @@
                         <Grid
                             x:Name="Pane1Grid"
                             Margin="12"
-                            Padding="{x:Bind StackPanelMargin}">
+                            Padding="{StaticResource StackPanelMargin}">
                             <controls:StackPanel
                                 x:Name="DetailControl"
                                 HorizontalAlignment="Stretch"
@@ -233,12 +233,12 @@
             <controls:TwoPaneView.Pane2>
                 <Grid x:Name="RightGrid">
                     <ScrollViewer
-                        Margin="{x:Bind ScrollViewerMargin}"
-                        Padding="{x:Bind ScrollViewerPadding}"
+                        Margin="{StaticResource ScrollViewerMargin}"
+                        Padding="{StaticResource ScrollViewerPadding}"
                         VerticalScrollBarVisibility="Auto">
                         <controls:StackPanel
                             Margin="12"
-                            Padding="{x:Bind StackPanelMargin}"
+                            Padding="{StaticResource StackPanelMargin}"
                             Spacing="12">
                             <controls:StackPanel.ChildrenTransitions>
                                 <TransitionCollection>

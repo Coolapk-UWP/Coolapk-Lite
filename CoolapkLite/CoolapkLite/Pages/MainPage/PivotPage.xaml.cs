@@ -29,7 +29,6 @@ namespace CoolapkLite.Pages
     {
         private Action Refresh;
         public Frame MainFrame => Frame;
-        private Thickness PivotTitleMargin => UIHelper.PivotTitleMargin;
 
         public PivotPage()
         {

@@ -56,6 +56,10 @@
     </Page.Resources>
     <Grid>
         <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <ReorderThemeTransition />
@@ -73,6 +77,11 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
                 </Grid.ColumnDefinitions>
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
                 <TextBlock
                     x:Name="AppTitle"
                     Grid.Column="1"
@@ -84,7 +93,7 @@
                     Text="{Binding Title}"
                     TextTrimming="CharacterEllipsis" />
             </Grid>
-            <Grid x:Name="FlipViewGrid">
+            <Grid x:Name="FlipViewGrid" Grid.Row="1">
                 <FlipView
                     x:Name="FlipView"
                     helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"

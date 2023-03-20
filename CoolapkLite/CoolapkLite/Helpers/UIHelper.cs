@@ -38,13 +38,6 @@ namespace CoolapkLite.Helpers
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
 
-        public static double TitleBarHeight = 32;
-        public static double PageTitleHeight => HasStatusBar || HasTitleBar ? 48 : 48 + TitleBarHeight;
-        public static Thickness StackPanelMargin => new Thickness(0, PageTitleHeight, 0, 0);
-        public static Thickness ScrollViewerMargin => new Thickness(0, PageTitleHeight, 0, 0);
-        public static Thickness ScrollViewerPadding => new Thickness(0, -PageTitleHeight, 0, 0);
-        public static Thickness PivotTitleMargin => new Thickness(0, HasStatusBar || HasTitleBar ? 0 : TitleBarHeight, 0, 0);
-
         private static CoreDispatcher shellDispatcher;
         public static CoreDispatcher ShellDispatcher
         {

@@ -472,11 +472,11 @@
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         CanDrag="True"
-                                        Tapped="On_Tapped"
                                         DragStarting="Image_DragStarting"
                                         Source="{Binding Pic, Mode=OneWay}"
                                         Stretch="UniformToFill"
-                                        Tag="{Binding}">
+                                        Tag="{Binding}"
+                                        Tapped="On_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
@@ -1152,8 +1152,8 @@
             <Grid x:Name="LeftGrid">
                 <ScrollViewer
                     x:Name="DetailScrollViewer"
-                    Margin="{x:Bind ScrollViewerMargin}"
-                    Padding="{x:Bind ScrollViewerPadding}"
+                    Margin="{StaticResource ScrollViewerMargin}"
+                    Padding="{StaticResource ScrollViewerPadding}"
                     VerticalAlignment="Top"
                     HorizontalContentAlignment="Stretch"
                     HorizontalScrollBarVisibility="Disabled"
@@ -1162,7 +1162,7 @@
                         <ContentControl
                             x:Name="DetailControl"
                             Margin="1,0.5"
-                            Padding="{x:Bind StackPanelMargin}"
+                            Padding="{StaticResource StackPanelMargin}"
                             HorizontalAlignment="Stretch"
                             HorizontalContentAlignment="Stretch"
                             Content="{Binding Detail}"

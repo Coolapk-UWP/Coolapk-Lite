@@ -17,10 +17,6 @@ namespace CoolapkLite.Pages.BrowserPages
     {
         private HTMLViewModel Provider;
 
-        private Thickness StackPanelMargin => UIHelper.StackPanelMargin;
-        private Thickness ScrollViewerMargin => UIHelper.ScrollViewerMargin;
-        private Thickness ScrollViewerPadding => UIHelper.ScrollViewerPadding;
-
         public HTMLPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

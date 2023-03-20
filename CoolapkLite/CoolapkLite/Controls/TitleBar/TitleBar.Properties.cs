@@ -76,7 +76,7 @@ namespace CoolapkLite.Controls
                 "TopPadding",
                 typeof(double),
                 typeof(TitleBar),
-                new PropertyMetadata(UIHelper.PageTitleHeight - 48, OnTopPaddingPropertyChanged));
+                new PropertyMetadata(32d, OnTopPaddingPropertyChanged));
 
         public object CustomContent
         {

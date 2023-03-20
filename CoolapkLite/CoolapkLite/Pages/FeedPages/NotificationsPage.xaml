@@ -10,7 +10,7 @@
     mc:Ignorable="d">
     <Pivot
         x:Name="Pivot"
-        Margin="{x:Bind PivotTitleMargin}"
+        Margin="{StaticResource PivotTitleMargin}"
         helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
         Loaded="Pivot_Loaded"
         SelectionChanged="Pivot_SelectionChanged"
