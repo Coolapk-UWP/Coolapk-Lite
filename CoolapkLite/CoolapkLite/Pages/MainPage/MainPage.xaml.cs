@@ -14,6 +14,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
@@ -65,6 +66,10 @@ namespace CoolapkLite
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             // Add handler for ContentFrame navigation.
             HamburgerMenuFrame.Navigated += On_Navigated;
+            HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
+            HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
+            if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
+            { OpenActivatedEventArgs(ActivatedEventArgs); }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -78,6 +83,14 @@ namespace CoolapkLite
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             HamburgerMenuFrame.Navigated -= On_Navigated;
+        }
+
+        private async void OpenActivatedEventArgs(IActivatedEventArgs args)
+        {
+            if (!(await UIHelper.OpenActivatedEventArgs(args)))
+            {
+                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
+            }
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -100,22 +113,13 @@ namespace CoolapkLite
                         HamburgerMenu.SelectedIndex = -1;
                         HamburgerMenu.SelectedOptionsIndex = item.Index;
                     }
+                    else
+                    {
+                        HamburgerMenu.SelectedIndex = -1;
+                        HamburgerMenu.SelectedOptionsIndex = -1;
+                    }
                 }
             }
-        }
-
-        private void HamburgerMenu_Loaded(object sender, RoutedEventArgs e)
-        {
-            // You can also add items in code.
-            HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
-            HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
-
-            // NavView doesn't load any page by default, so load home page.
-            HamburgerMenu.SelectedIndex = 0;
-            // If navigation occurs on SelectionChanged, this isn't needed.
-            // Because we use ItemInvoked to navigate, we need to call Navigate
-            // here to load the home page.
-            HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)

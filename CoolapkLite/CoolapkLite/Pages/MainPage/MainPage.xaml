@@ -90,7 +90,6 @@
             HamburgerVisibility="Visible"
             ItemClick="HamburgerMenu_ItemInvoked"
             ItemTemplate="{StaticResource DefaultTemplate}"
-            Loaded="HamburgerMenu_Loaded"
             OptionsItemClick="HamburgerMenu_ItemInvoked"
             OptionsItemTemplate="{StaticResource DefaultTemplate}">
             <controls:HamburgerMenu.AutoSuggestBox>

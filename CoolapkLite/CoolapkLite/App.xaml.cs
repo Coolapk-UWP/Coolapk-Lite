@@ -122,6 +122,10 @@ namespace CoolapkLite
                 // 参数
                 rootFrame.Navigate(typeof(MainPage), e);
             }
+            else
+            {
+                _ = UIHelper.OpenActivatedEventArgs(e);
+            }
 
             // 确保当前窗口处于活动状态
             MainWindow.Activate();

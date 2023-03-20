@@ -1,7 +1,9 @@
-﻿using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -9,16 +11,19 @@ using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -353,9 +358,9 @@ namespace CoolapkLite.Helpers
 
     internal static partial class UIHelper
     {
-        public static async Task OpenLinkAsync(string link)
+        public static async Task<bool> OpenLinkAsync(string link)
         {
-            if (string.IsNullOrWhiteSpace(link)) { return; }
+            if (string.IsNullOrWhiteSpace(link)) { return false; }
 
             string origin = link;
 
@@ -365,7 +370,7 @@ namespace CoolapkLite.Helpers
                 if (link.StartsWith("image.coolapk.com"))
                 {
                     _ = ShowImageAsync(new ImageModel(origin, ImageType.SmallImage));
-                    return;
+                    return true;
                 }
                 else
                 {
@@ -377,9 +382,17 @@ namespace CoolapkLite.Helpers
                     else
                     {
                         Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
-                        return;
+                        return true;
                     }
                 }
+            }
+            else if (link.StartsWith("coolapk://", StringComparison.OrdinalIgnoreCase))
+            {
+                link = link.Substring(10);
+            }
+            else if (link.StartsWith("coolmarket://", StringComparison.OrdinalIgnoreCase))
+            {
+                link = link.Substring(13);
             }
 
             if (link.FirstOrDefault() != '/')
@@ -397,12 +410,12 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
-                string url = link.Replace("/page?", string.Empty);
+                string url = link.Substring(6);
                 Navigate(typeof(AdaptivePage), new AdaptiveViewModel(url));
             }
             else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
             {
-                string url = link.Replace("/u/", string.Empty);
+                string url = link.Substring(3, "?");
                 string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
                 FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
                 if (provider != null)
@@ -412,7 +425,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(6);
+                string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
                     Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
@@ -424,7 +437,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/picture/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(10);
+                string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
                     Navigate(typeof(FeedShellPage), new FeedDetailViewModel(id));
@@ -432,7 +445,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(10);
+                string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
                     Navigate(typeof(FeedShellPage), new QuestionViewModel(id));
@@ -440,8 +453,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
             {
-                int end = link.IndexOf('?');
-                string tag = end > 3 ? link.Substring(3, end - 3) : link.Substring(3);
+                string tag = link.Substring(3, "?");
                 FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag);
                 if (provider != null)
                 {
@@ -450,7 +462,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
             {
-                string tag = link.Substring(5);
+                string tag = link.Substring(5, "?");
                 FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag);
                 if (provider != null)
                 {
@@ -465,7 +477,7 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    string tag = link.Substring(9);
+                    string tag = link.Substring(9, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag);
                     if (provider != null)
                     {
@@ -475,7 +487,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(12);
+                string id = link.Substring(12, "?");
                 FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id);
                 if (provider != null)
                 {
@@ -486,10 +498,98 @@ namespace CoolapkLite.Helpers
             {
                 Navigate(typeof(HTMLPage), new HTMLViewModel(origin));
             }
-            else
+            else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {
                 Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
             }
+            else if (origin.Contains("://"))
+            {
+                return await Launcher.LaunchUriAsync(origin.ValidateAndGetUri());
+            }
+            else
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public static async Task<bool> OpenActivatedEventArgs(IActivatedEventArgs args)
+        {
+            switch (args.Kind)
+            {
+                case ActivationKind.Launch:
+                    LaunchActivatedEventArgs LaunchActivatedEventArgs = (LaunchActivatedEventArgs)args;
+                    if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
+                    {
+                        switch (LaunchActivatedEventArgs.Arguments)
+                        {
+                            case "settings":
+                                Navigate(typeof(SettingsPage));
+                                break;
+                            case "flags":
+                                Navigate(typeof(TestPage));
+                                break;
+                            default:
+                                return await OpenLinkAsync(LaunchActivatedEventArgs.Arguments);
+                        }
+                    }
+                    else if (LaunchActivatedEventArgs.TileActivatedInfo != null)
+                    {
+                        if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
+                        {
+                            string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
+                            if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
+                            {
+                                return await OpenLinkAsync(TileArguments);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    break;
+                case ActivationKind.Protocol:
+                    IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
+                    switch (ProtocolActivatedEventArgs.Uri.Host)
+                    {
+                        case "www.coolapk.com":
+                        case "coolapk.com":
+                        case "www.coolmarket.com":
+                        case "coolmarket.com":
+                            return await OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath);
+                        case "http":
+                        case "https":
+                            return await OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
+                        case "settings":
+                            Navigate(typeof(SettingsPage));
+                            break;
+                        case "flags":
+                            Navigate(typeof(TestPage));
+                            break;
+                        default:
+                            return await OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
+                    }
+                    break;
+                default:
+                    return false;
+            }
+            return true;
+        }
+
+        private static string Substring(this string str, int startIndex, string endString)
+        {
+            int end = str.IndexOf(endString);
+            return end > startIndex ? str.Substring(startIndex, end - startIndex) : str.Substring(startIndex);
         }
     }
 
