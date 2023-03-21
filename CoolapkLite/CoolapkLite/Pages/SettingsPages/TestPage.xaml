@@ -223,6 +223,7 @@
                         </Rectangle.Fill>
                     </Rectangle>
                 </StackPanel>
+                <Border Height="8" />
             </StackPanel>
         </ScrollViewer>
         <control:TitleBar x:Name="TitleBar" />

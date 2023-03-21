@@ -45,73 +45,74 @@
             </DataTemplate>
         </ResourceDictionary>
     </Page.Resources>
-    <Grid Margin="0,-32,0,0">
-        <Grid.RowDefinitions>
-            <RowDefinition x:Name="TopPaddingRow" Height="32" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <ReorderThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-        <Grid
-            x:Name="CustomTitleBar"
-            Grid.Row="1"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            Canvas.ZIndex="1"
-            IsHitTestVisible="True">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid Margin="0,-32,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="TopPaddingRow" Height="32" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <ReorderThemeTransition />
                 </TransitionCollection>
             </Grid.ChildrenTransitions>
-            <TextBlock
-                x:Name="AppTitle"
-                Grid.Column="1"
-                Padding="12,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                MaxLines="1"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                Text="酷安 Lite"
-                TextTrimming="CharacterEllipsis" />
-        </Grid>
-        <controls:HamburgerMenu
-            x:Name="HamburgerMenu"
-            Grid.Row="1"
-            HamburgerVisibility="Visible"
-            ItemClick="HamburgerMenu_ItemInvoked"
-            ItemTemplate="{StaticResource DefaultTemplate}"
-            OptionsItemClick="HamburgerMenu_ItemInvoked"
-            OptionsItemTemplate="{StaticResource DefaultTemplate}">
-            <controls:HamburgerMenu.AutoSuggestBox>
-                <AutoSuggestBox
-                    x:Name="AutoSuggestBox"
-                    x:Uid="/MainPage/SearchBox"
+            <Grid
+                x:Name="CustomTitleBar"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                Canvas.ZIndex="1"
+                IsHitTestVisible="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+                </Grid.ColumnDefinitions>
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
+                <TextBlock
+                    x:Name="AppTitle"
+                    Grid.Column="1"
+                    Padding="12,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    IsTabStop="True"
-                    ItemTemplateSelector="{StaticResource SearchWordSelector}"
-                    QueryIcon="Find"
-                    QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                    SuggestionChosen="AutoSuggestBox_SuggestionChosen"
-                    TextChanged="AutoSuggestBox_TextChanged" />
-            </controls:HamburgerMenu.AutoSuggestBox>
-            <Frame
-                x:Name="HamburgerMenuFrame"
-                x:FieldModifier="Public"
-                Background="{ThemeResource HamburgerMenuContentBackground}" />
-        </controls:HamburgerMenu>
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="酷安 Lite"
+                    TextTrimming="CharacterEllipsis" />
+            </Grid>
+            <controls:HamburgerMenu
+                x:Name="HamburgerMenu"
+                Grid.Row="1"
+                HamburgerVisibility="Visible"
+                ItemClick="HamburgerMenu_ItemInvoked"
+                ItemTemplate="{StaticResource DefaultTemplate}"
+                OptionsItemClick="HamburgerMenu_ItemInvoked"
+                OptionsItemTemplate="{StaticResource DefaultTemplate}">
+                <controls:HamburgerMenu.AutoSuggestBox>
+                    <AutoSuggestBox
+                        x:Name="AutoSuggestBox"
+                        x:Uid="/MainPage/SearchBox"
+                        VerticalAlignment="Center"
+                        IsTabStop="True"
+                        ItemTemplateSelector="{StaticResource SearchWordSelector}"
+                        QueryIcon="Find"
+                        QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                        SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                        TextChanged="AutoSuggestBox_TextChanged" />
+                </controls:HamburgerMenu.AutoSuggestBox>
+                <Frame
+                    x:Name="HamburgerMenuFrame"
+                    x:FieldModifier="Public"
+                    Background="{ThemeResource HamburgerMenuContentBackground}" />
+            </controls:HamburgerMenu>
+        </Grid>
         <ProgressBar
             x:Name="ProgressBar"
-            Grid.Row="1"
             VerticalAlignment="Top"
             Background="{ThemeResource SystemControlTransparentBrush}"
             IsIndeterminate="False" />

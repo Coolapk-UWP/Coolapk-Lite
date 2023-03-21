@@ -1,26 +1,18 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI;
-using System;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
-using Windows.Storage.Streams;
-using Windows.Storage;
-using Windows.UI;
+using Windows.System.Profile;
 using Windows.UI.Core;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
-using Windows.System.Profile;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -65,7 +57,6 @@ namespace CoolapkLite.Pages
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             Frame.Navigated += On_Navigated;
-            Provider.Initialize();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -144,6 +135,13 @@ namespace CoolapkLite.Pages
                     Provider.ShowOrigin = false;
                     break;
             }
+        }
+
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (SystemInformation.Instance.OperatingSystemVersion.Build <= 16299)
+            { await Task.Delay(2000); }
+            Provider?.Initialize();
         }
 
         private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)

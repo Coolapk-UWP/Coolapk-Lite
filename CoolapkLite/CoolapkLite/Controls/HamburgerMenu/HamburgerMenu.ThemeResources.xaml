@@ -267,7 +267,8 @@
                         <Grid
                             x:Name="ListViewTopPadding"
                             Grid.Row="0"
-                            Height="{TemplateBinding HamburgerHeight}" />
+                            Height="{TemplateBinding HamburgerHeight}"
+                            Margin="0,32,0,0" />
                         <ListView
                             x:Name="ButtonsListView"
                             Grid.Row="1"
@@ -347,6 +348,7 @@
                 x:Name="HamburgerButton"
                 Width="{TemplateBinding HamburgerWidth}"
                 Height="{TemplateBinding HamburgerHeight}"
+                Margin="0,32,0,0"
                 Padding="0"
                 VerticalAlignment="Top"
                 helpers:FocusVisualHelper.FocusVisualMargin="0"
@@ -354,6 +356,7 @@
                 Background="{ThemeResource SystemControlTransparentBrush}"
                 BorderThickness="0"
                 Foreground="{TemplateBinding PaneForeground}"
+                IsTabStop="True"
                 TabIndex="0"
                 Visibility="{TemplateBinding HamburgerVisibility}">
                 <ContentControl
@@ -369,12 +372,7 @@
                 </VisualStateGroup>
                 <VisualStateGroup x:Name="TitleBarVisibilityGroup">
                     <VisualState x:Name="TitleBarVisible" />
-                    <VisualState x:Name="TitleBarCollapsed">
-                        <VisualState.Setters>
-                            <Setter Target="HamburgerButton.Margin" Value="0,32,0,0" />
-                            <Setter Target="ListViewTopPadding.Margin" Value="0,32,0,0" />
-                        </VisualState.Setters>
-                    </VisualState>
+                    <VisualState x:Name="TitleBarCollapsed" />
                 </VisualStateGroup>
                 <VisualStateGroup x:Name="AutoSuggestGroup">
                     <VisualState x:Name="AutoSuggestBoxVisible" />
