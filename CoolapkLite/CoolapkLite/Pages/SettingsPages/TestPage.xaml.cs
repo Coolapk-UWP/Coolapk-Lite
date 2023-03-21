@@ -41,6 +41,12 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
+        internal bool IsUseLiteHome
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.UseLiteHome);
+            set => SettingsHelper.Set(SettingsHelper.UseLiteHome, value);
+        }
+
         internal string Version
         {
             get => SettingsHelper.Get<string>(SettingsHelper.APIVersion);

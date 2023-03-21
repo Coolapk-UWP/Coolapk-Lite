@@ -96,7 +96,7 @@ namespace CoolapkLite.Pages
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!Dispatcher.HasThreadAccess || !Frame.CanGoBack)
-            { return AppViewBackButtonVisibility.Disabled; }
+            { return AppViewBackButtonVisibility.Collapsed; }
 
             Frame.GoBack();
             return AppViewBackButtonVisibility.Visible;

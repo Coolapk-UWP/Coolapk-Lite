@@ -309,26 +309,24 @@ namespace CoolapkLite.Helpers
 
     internal static partial class UIHelper
     {
-        public static MainPage MainPage;
-
         public static void Navigate(Type pageType, object e = null, NavigationThemeTransition Type = NavigationThemeTransition.Default)
         {
             switch (Type)
             {
                 case NavigationThemeTransition.DrillIn:
-                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo()));
+                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Entrance:
-                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo()));
+                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Suppress:
-                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo()));
+                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo()));
                     break;
                 case NavigationThemeTransition.Default:
-                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
+                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e));
                     break;
                 default:
-                    _ = MainPage?.Dispatcher.AwaitableRunAsync(() => MainPage?.HamburgerMenuFrame.Navigate(pageType, e));
+                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e));
                     break;
             }
         }

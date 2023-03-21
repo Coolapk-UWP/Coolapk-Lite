@@ -138,6 +138,7 @@
                                 Content="退出"
                                 Tag="OutPIP" />
                         </StackPanel>
+                        <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind IsUseLiteHome, Mode=TwoWay}" />
                         <!--<Button
                             Margin="0,2"
                             Click="Button_Click"

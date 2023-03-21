@@ -43,8 +43,8 @@ namespace CoolapkLite
         public MainPage()
         {
             InitializeComponent();
+            UIHelper.AppTitle = this;
             UIHelper.ShellDispatcher = Dispatcher;
-            UIHelper.AppTitle = UIHelper.MainPage = this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
@@ -173,7 +173,7 @@ namespace CoolapkLite
         private AppViewBackButtonVisibility TryGoBack()
         {
             if (!Dispatcher.HasThreadAccess || !HamburgerMenuFrame.CanGoBack)
-            { return AppViewBackButtonVisibility.Disabled; }
+            { return AppViewBackButtonVisibility.Collapsed; }
 
             HamburgerMenuFrame.GoBack();
             return AppViewBackButtonVisibility.Visible;
@@ -235,7 +235,7 @@ namespace CoolapkLite
             {
                 HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
             }
-            else if (args.ChosenSuggestion is null)
+            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
                 HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
             }

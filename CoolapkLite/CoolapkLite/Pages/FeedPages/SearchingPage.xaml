@@ -50,6 +50,7 @@
                 x:Name="AutoSuggestBox"
                 x:Uid="/MainPage/SearchBox"
                 Grid.Column="1"
+                Margin="4,0"
                 VerticalAlignment="Center"
                 IsTabStop="True"
                 ItemTemplateSelector="{StaticResource SearchWordSelector}"

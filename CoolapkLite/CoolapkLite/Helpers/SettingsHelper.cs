@@ -21,6 +21,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string APIVersion = nameof(APIVersion);
+        public const string UseLiteHome = nameof(UseLiteHome);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
@@ -63,6 +64,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(APIVersion))
             {
                 LocalObject.Save(APIVersion, Common.APIVersion.V13);
+            }
+            if (!LocalObject.KeyExists(UseLiteHome))
+            {
+                LocalObject.Save(UseLiteHome, false);
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {

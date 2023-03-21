@@ -2,74 +2,103 @@
     x:Class="CoolapkLite.Pages.PivotPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:control="using:CoolapkLite.Controls"
+    xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Background="{ThemeResource SolidBackgroundFillColorBaseWindowBrush}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
+    <Page.Resources>
+        <Style TargetType="controls:TitleBar">
+            <Setter Property="CompactModeThresholdWidth" Value="-1" />
+        </Style>
+    </Page.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="auto" />
-        </Grid.RowDefinitions>
-        <Border
-            x:Name="CustomTitleBar"
-            Grid.Row="0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Canvas.ZIndex="1"
-            Visibility="Visible">
-            <TextBlock
-                x:Name="AppTitle"
-                Padding="12,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                x:FieldModifier="public"
-                MaxLines="1"
-                Style="{StaticResource CaptionTextBlockStyle}"
-                TextTrimming="CharacterEllipsis" />
-        </Border>
-        <control:HamburgerMenu />
-        <Pivot
-            x:Name="Pivot"
-            Grid.Row="0"
-            Margin="{StaticResource PivotTitleMargin}"
-            helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
-            Loaded="Pivot_Loaded"
-            SelectionChanged="Pivot_SelectionChanged">
-            <Pivot.LeftHeader>
-                <Border x:Name="Block" Height="48" />
-            </Pivot.LeftHeader>
-            <Pivot.RightHeader>
-                <Button
-                    x:Name="RefreshButton"
+        <Grid Margin="0,-32,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="TopPaddingRow" Height="32" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid
+                x:Name="CustomTitleBar"
+                Grid.Row="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                Canvas.ZIndex="1"
+                IsHitTestVisible="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
+                </Grid.ColumnDefinitions>
+                <Grid.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </Grid.ChildrenTransitions>
+                <TextBlock
+                    x:Name="AppTitle"
+                    Grid.Column="1"
+                    Padding="12,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Click="RefreshButton_Click"
-                    Content="&#xE72C;"
-                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                    Style="{StaticResource TitleBarIconButtonStyle}" />
-            </Pivot.RightHeader>
-        </Pivot>
+                    MaxLines="1"
+                    Style="{StaticResource CaptionTextBlockStyle}"
+                    Text="酷安 Lite"
+                    TextTrimming="CharacterEllipsis" />
+            </Grid>
+            <Pivot
+                x:Name="Pivot"
+                Grid.Row="1"
+                Margin="{StaticResource PivotTitleMargin}"
+                helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+                SelectionChanged="Pivot_SelectionChanged">
+                <Pivot.RightHeader>
+                    <Button
+                        x:Name="RefreshButton"
+                        VerticalAlignment="Center"
+                        Click="RefreshButton_Click"
+                        Content="&#xE72C;"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                </Pivot.RightHeader>
+            </Pivot>
+            <Frame
+                x:Name="PivotContentFrame"
+                Grid.Row="1"
+                Visibility="Collapsed" />
+            <CommandBar
+                x:Name="CommandBar"
+                Grid.Row="2"
+                VerticalAlignment="Bottom">
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Label="用户"
+                    Tag="User"
+                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE77B;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarSeparator />
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Label="设置"
+                    Tag="Setting"
+                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE713;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+            </CommandBar>
+        </Grid>
         <ProgressBar
             x:Name="ProgressBar"
-            Grid.Row="0"
             VerticalAlignment="Top"
             Background="{ThemeResource SystemControlTransparentBrush}"
             IsIndeterminate="False" />
-        <CommandBar Grid.Row="1" VerticalAlignment="Bottom">
-            <AppBarButton
-                Click="AppBarButton_Click"
-                Icon="Contact"
-                Label="用户"
-                Tag="User" />
-            <AppBarSeparator />
-            <AppBarButton
-                Click="AppBarButton_Click"
-                Icon="Setting"
-                Label="设置"
-                Tag="Setting" />
-        </CommandBar>
     </Grid>
 </Page>

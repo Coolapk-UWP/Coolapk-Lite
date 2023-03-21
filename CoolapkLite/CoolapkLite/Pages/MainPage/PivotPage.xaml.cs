@@ -1,4 +1,6 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -8,14 +10,17 @@ using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
+using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -28,19 +33,22 @@ namespace CoolapkLite.Pages
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
         private Action Refresh;
-        public Frame MainFrame => Frame;
+        public Frame MainFrame => PivotContentFrame;
 
         public PivotPage()
         {
             InitializeComponent();
             UIHelper.AppTitle = this;
             UIHelper.ShellDispatcher = Dispatcher;
+            PivotContentFrame.Navigate(typeof(Page));
+            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
+            { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
-            {
-                TitleBar.ExtendViewIntoTitleBar = true;
-            }
+            if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
+            { UpdateTitleBarLayout(false); }
+            NotificationsTask.Instance?.GetNums();
+            LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
         }
 
@@ -50,12 +58,15 @@ namespace CoolapkLite.Pages
             Window.Current.SetTitleBar(CustomTitleBar);
             SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed += System_BackPressed;
-            }
+            { HardwareButtons.BackPressed += System_BackPressed; }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+            // Add handler for ContentFrame navigation.
+            PivotContentFrame.Navigated += On_Navigated;
+            Pivot.ItemsSource = GetMainItems();
+            if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
+            { OpenActivatedEventArgs(ActivatedEventArgs); }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -64,38 +75,34 @@ namespace CoolapkLite.Pages
             Window.Current.SetTitleBar(null);
             SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
-            {
-                HardwareButtons.BackPressed -= System_BackPressed;
-            }
+            { HardwareButtons.BackPressed -= System_BackPressed; }
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
             TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
+            PivotContentFrame.Navigated -= On_Navigated;
         }
 
-        private void Pivot_Loaded(object sender, RoutedEventArgs e)
+        private void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            // You can also add items in code.
-            Pivot.ItemsSource = GetMainItems();
+            _ = UIHelper.OpenActivatedEventArgs(args);
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             HideProgressBar();
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
-        }
-
-        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
-        {
-            Thickness TitleMargin = CustomTitleBar.Margin;
-            CustomTitleBar.Height = TitleBar.Height;
-            CustomTitleBar.Margin = new Thickness(SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility == AppViewBackButtonVisibility.Visible ? 48 : 0, TitleMargin.Top, TitleBar.SystemOverlayRightInset, TitleMargin.Bottom);
+            if (PivotContentFrame.Visibility == Visibility.Collapsed)
+            {
+                Pivot.Visibility = Visibility.Collapsed;
+                PivotContentFrame.Visibility = Visibility.Visible;
+            }
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
         {
             if (!e.Handled)
             {
-                e.Handled = TryGoBack() == AppViewBackButtonVisibility.Visible;
+                e.Handled = TryGoBack();
             }
         }
 
@@ -103,7 +110,7 @@ namespace CoolapkLite.Pages
         {
             if (!e.Handled)
             {
-                e.Handled = TryGoBack() == AppViewBackButtonVisibility.Visible;
+                e.Handled = TryGoBack();
             }
         }
 
@@ -112,13 +119,50 @@ namespace CoolapkLite.Pages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
-                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
+                    MenuItem.Tag.ToString() == "indexV8"
+                        ? "/main/indexV8"
+                        : MenuItem.Tag.ToString().Contains("V")
+                            ? $"/page?url={MenuItem.Tag}"
+                            : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
                 Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
             {
                 Refresh = () => _ = AdaptivePage.Refresh(true);
             }
+        }
+
+        private bool TryGoBack()
+        {
+            if (!Dispatcher.HasThreadAccess || !PivotContentFrame.CanGoBack)
+            { return false; }
+
+            if (PivotContentFrame.BackStackDepth > 1)
+            {
+                PivotContentFrame.GoBack();
+            }
+            else
+            {
+                PivotContentFrame.GoBack();
+                Pivot.Visibility = Visibility.Visible;
+                PivotContentFrame.Visibility = Visibility.Collapsed;
+            }
+
+            return true;
+        }
+
+        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
+        {
+            CustomTitleBar.Height = TitleBar.Height;
+            LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
+        }
+
+        private void UpdateTitleBarLayout(bool IsVisible)
+        {
+            TopPaddingRow.Height = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? new GridLength(32) : new GridLength(0);
+            CustomTitleBar.Visibility = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -133,29 +177,22 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private AppViewBackButtonVisibility TryGoBack()
-        {
-            if (!Frame.CanGoBack)
-            { return AppViewBackButtonVisibility.Disabled; }
-
-            Frame.GoBack();
-            return AppViewBackButtonVisibility.Visible;
-        }
-
-        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
             switch ((sender as FrameworkElement).Tag as string)
             {
                 case "User":
-                    Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                    _ = await SettingsHelper.CheckLoginAsync()
+                        ? PivotContentFrame.Navigate(typeof(ProfilePage), new ProfileViewModel())
+                        : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
                     break;
                 case "Setting":
-                    Frame.Navigate(typeof(SettingsPage));
+                    PivotContentFrame.Navigate(typeof(SettingsPage));
                     break;
             }
         }
 
-        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => CustomTitleBar.Visibility = sender.IsVisible ? Visibility.Visible : Visibility.Collapsed;
+        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
@@ -220,7 +257,8 @@ namespace CoolapkLite.Pages
             ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");
             ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
             {
-                new PivotItem() { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },
+                new PivotItem() { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
+                new PivotItem() { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
                 new PivotItem() { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
                 new PivotItem() { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
                 new PivotItem() { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
