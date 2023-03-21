@@ -123,6 +123,12 @@
   <data name="circle" xml:space="preserve">
     <value>Friends</value>
   </data>
+  <data name="follow" xml:space="preserve">
+    <value>Follow</value>
+  </data>
+  <data name="indexV8" xml:space="preserve">
+    <value>Home</value>
+  </data>
   <data name="product" xml:space="preserve">
     <value>Digital</value>
   </data>
