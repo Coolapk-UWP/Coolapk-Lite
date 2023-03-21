@@ -123,6 +123,12 @@
   <data name="circle" xml:space="preserve">
     <value>好友</value>
   </data>
+  <data name="follow" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="indexV8" xml:space="preserve">
+    <value>首頁</value>
+  </data>
   <data name="product" xml:space="preserve">
     <value>數碼</value>
   </data>
