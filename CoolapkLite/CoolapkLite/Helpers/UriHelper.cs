@@ -2,14 +2,6 @@
 
 namespace CoolapkLite.Helpers
 {
-    /// <summary> 程序支持的能从服务器中获取的数据的类型。 </summary>
-    public enum LinkType
-    {
-        ITHome,
-        Coolapk,
-        Bilibili
-    }
-
     public enum UriType
     {
         DataList,
@@ -77,9 +69,6 @@ namespace CoolapkLite.Helpers
         SearchWords,
         SearchCreateTags,
         SearchCreateUsers,
-        GetDevMyList,
-        GetITHomeFeed,
-        GetBilibiliFeed
     }
 
     public static class UriHelper
@@ -89,10 +78,6 @@ namespace CoolapkLite.Helpers
         public static readonly Uri BaseUri = new Uri("https://api.coolapk.com");
         public static readonly Uri Base2Uri = new Uri("https://api2.coolapk.com");
         public static readonly Uri CoolapkUri = new Uri("https://www.coolapk.com");
-
-        public static readonly Uri ITHomeUri = new Uri("https://qapi.ithome.com");
-        public static readonly Uri DevUri = new Uri("https://developer.coolapk.com");
-        public static readonly Uri BilibiliUri = new Uri("https://api.vc.bilibili.com");
 
         public const string LoginUri = "https://account.coolapk.com/auth/loginByCoolapk";
 
@@ -105,28 +90,6 @@ namespace CoolapkLite.Helpers
         public static Uri GetOldUri(UriType type, params object[] args)
         {
             string u = string.Format(GetTemplate(type), args);
-            return new Uri(BaseUri, u);
-        }
-
-        public static Uri GetLinkUri(UriType type, LinkType linkType = LinkType.Coolapk, params object[] args)
-        {
-            string u = string.Format(GetTemplate(type), args);
-            Uri BaseUri;
-            switch (linkType)
-            {
-                case LinkType.ITHome:
-                    BaseUri = ITHomeUri;
-                    break;
-                case LinkType.Coolapk:
-                    BaseUri = CoolapkUri;
-                    break;
-                case LinkType.Bilibili:
-                    BaseUri = BilibiliUri;
-                    break;
-                default:
-                    BaseUri = null;
-                    break;
-            }
             return new Uri(BaseUri, u);
         }
 
@@ -199,12 +162,6 @@ namespace CoolapkLite.Helpers
                 case UriType.SearchWords: return "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
                 case UriType.SearchCreateTags: return "/v6/feed/searchTag?q={0}&page={1}{2}";
                 case UriType.SearchCreateUsers: return "/v6/user/search?q={0}&page={1}{2}";
-                //开发者中心
-                case UriType.GetDevMyList: return "/do?c=apk&m=myList&listType={0}&p={1}";
-                //IT之家
-                case UriType.GetITHomeFeed: return "/api/content/getcontentdetail?id={0}";
-                //BibiBili
-                case UriType.GetBilibiliFeed: return "/dynamic_svr/v1/dynamic_svr/get_dynamic_detail";
                 default: throw new ArgumentException($"{typeof(UriType).FullName}值错误");
             }
         }

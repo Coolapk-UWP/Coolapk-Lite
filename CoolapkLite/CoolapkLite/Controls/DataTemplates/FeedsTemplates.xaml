@@ -323,124 +323,107 @@
                 <Grid
                     Grid.Row="7"
                     Margin="0,4"
+                    Padding="8"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
+                    Tag="{Binding ExtraUrl}"
+                    Tapped="OnTopTapped"
                     Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
-                    <Grid
-                        Padding="8"
-                        Tag="{Binding ExtraUrl}"
-                        Tapped="OnTopTapped"
-                        Visibility="{Binding ShowLinkSourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Border
-                            Width="56"
-                            Height="56"
-                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                            </Border.Background>
-                        </Border>
-                        <Border
-                            Width="56"
-                            Height="56"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
-                            <FontIcon
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Glyph="&#xE71B;" />
-                        </Border>
-                        <StackPanel
-                            Grid.Column="1"
-                            Margin="8,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center">
-                            <TextBlock
-                                MaxLines="2"
-                                Text="{Binding ExtraTitle}"
-                                TextTrimming="WordEllipsis"
-                                TextWrapping="Wrap"
-                                Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{Binding ExtraSubtitle}"
-                                TextWrapping="Wrap"
-                                Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
-                        </StackPanel>
-                    </Grid>
-                    <Grid
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="56"
+                        Height="56"
+                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        </Border.Background>
+                    </Border>
+                    <Border
+                        Width="56"
+                        Height="56"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding ShowLinkSourceFeed, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding LinkSourceFeed}" />
-                        <ProgressRing
-                            Width="24"
-                            Height="24"
-                            IsActive="{Binding LinkSourceFeed.Succeed, Converter={StaticResource BoolNegationConverter}, ConverterParameter='true'}"
-                            Visibility="{Binding LinkSourceFeed.Succeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-                    </Grid>
+                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                        <FontIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE71B;" />
+                    </Border>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            MaxLines="2"
+                            Text="{Binding ExtraTitle}"
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding ExtraSubtitle}"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    </StackPanel>
                 </Grid>
                 <Grid
                     Grid.Row="8"
                     Margin="0,4"
+                    Padding="8"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
+                    Tag="{Binding MediaUrl}"
+                    Tapped="OnTopTapped"
                     Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
-                    <Grid
-                        Padding="8"
-                        Tag="{Binding MediaUrl}"
-                        Tapped="OnTopTapped">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Border
-                            Width="56"
-                            Height="56"
-                            Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{Binding MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                            </Border.Background>
-                        </Border>
-                        <Border
-                            Width="56"
-                            Height="56"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                            BorderThickness="1"
-                            Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
-                            <FontIcon
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Glyph="&#xE786;" />
-                        </Border>
-                        <StackPanel
-                            Grid.Column="1"
-                            Margin="8,0"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Center">
-                            <TextBlock
-                                MaxLines="2"
-                                Text="视频分享"
-                                TextTrimming="WordEllipsis"
-                                TextWrapping="Wrap" />
-                            <TextBlock
-                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                Text="{Binding MediaSubtitle}"
-                                TextWrapping="Wrap"
-                                Visibility="{Binding MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
-                        </StackPanel>
-                    </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="56"
+                        Height="56"
+                        Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        </Border.Background>
+                    </Border>
+                    <Border
+                        Width="56"
+                        Height="56"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                        <FontIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE786;" />
+                    </Border>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            MaxLines="2"
+                            Text="视频分享"
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="Wrap" />
+                        <TextBlock
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding MediaSubtitle}"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    </StackPanel>
                 </Grid>
                 <ListView
                     Grid.Row="9"
