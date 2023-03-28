@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -28,6 +29,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -259,7 +261,7 @@ namespace CoolapkLite.Helpers
             return builder.ToString();
         }
 
-        public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function)
+        public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function, CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
             Task<TResult> task = taskCompletionSource.Task;
@@ -274,7 +276,7 @@ namespace CoolapkLite.Helpers
                 {
                     taskCompletionSource.SetException(e);
                 }
-            });
+            }, cancellationToken);
             TResult taskResult = task.Result;
             return taskResult;
         }
@@ -314,43 +316,37 @@ namespace CoolapkLite.Helpers
             switch (Type)
             {
                 case NavigationThemeTransition.DrillIn:
-                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo()));
+                    _ = AppTitle?.MainFrame.Navigate(pageType, e, new DrillInNavigationTransitionInfo());
                     break;
                 case NavigationThemeTransition.Entrance:
-                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo()));
+                    _ = AppTitle?.MainFrame.Navigate(pageType, e, new EntranceNavigationTransitionInfo());
                     break;
                 case NavigationThemeTransition.Suppress:
-                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo()));
+                    _ = AppTitle?.MainFrame.Navigate(pageType, e, new SuppressNavigationTransitionInfo());
                     break;
                 case NavigationThemeTransition.Default:
-                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e));
+                    _ = AppTitle?.MainFrame.Navigate(pageType, e);
                     break;
                 default:
-                    _ = AppTitle?.Dispatcher.AwaitableRunAsync(() => AppTitle?.MainFrame.Navigate(pageType, e));
+                    _ = AppTitle?.MainFrame.Navigate(pageType, e);
                     break;
             }
         }
         
         public static async Task ShowImageAsync(ImageModel image)
         {
-            CoreApplicationView View = CoreApplication.CreateNewView();
-            int ViewId = 0;
-            await View.ExecuteOnUIThreadAsync(() =>
+            if (WindowHelper.IsSupportedAppWindow)
             {
-                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
-                {
-                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
-                }
-                Window window = Window.Current;
-                WindowHelper.TrackWindow(window);
-                Frame frame = new Frame();
+                (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                window.TitleBar.ExtendsContentIntoTitleBar = true;
+                ThemeHelper.Initialize();
                 frame.Navigate(typeof(ShowImagePage), image);
-                window.Content = frame;
-                ThemeHelper.Initialize(window);
-                window.Activate();
-                ViewId = ApplicationView.GetForCurrentView().Id;
-            });
-            _ = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(ViewId);
+                await window.TryShowAsync();
+            }
+            else
+            {
+                ((Page)AppTitle).Frame.Navigate(typeof(ShowImagePage), image);
+            }
         }
     }
 

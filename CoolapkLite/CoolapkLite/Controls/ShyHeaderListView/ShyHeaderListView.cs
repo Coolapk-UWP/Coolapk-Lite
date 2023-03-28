@@ -29,7 +29,7 @@ namespace CoolapkLite.Controls
         private double _offset;
         private double _topheight;
         private CompositionPropertySet _propSet;
-        private readonly ScrollProgressProvider _progressProvider;
+        private ScrollProgressProvider _progressProvider;
         private bool HasGetElementVisual => ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         public static readonly DependencyProperty TopHeaderProperty =
@@ -186,7 +186,6 @@ namespace CoolapkLite.Controls
             if (HasGetElementVisual)
             {
                 _progressProvider = new ScrollProgressProvider();
-                ScrollViewerExtensions.SetEnableMiddleClickScrolling(this, true);
                 _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
             }
         }
@@ -242,6 +241,7 @@ namespace CoolapkLite.Controls
             if (_listViewHeader != null)
             {
                 _listViewHeader.Loaded += ListViewHeader_Loaded;
+                _listViewHeader.Unloaded += ListViewHeader_Unloaded;
             }
             base.OnApplyTemplate();
         }
@@ -324,12 +324,15 @@ namespace CoolapkLite.Controls
         {
             Grid TopHeader = sender as Grid;
             _topheight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            if (_progressProvider != null)
-            {
-                _progressProvider.Threshold = _topheight;
-            }
             if (HasGetElementVisual)
             {
+                if (_progressProvider == null)
+                {
+                    _progressProvider = new ScrollProgressProvider();
+                    _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+                    _progressProvider.ScrollViewer = _scrollViewer;
+                }
+                _progressProvider.Threshold = _topheight;
                 _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
                 _propSet.InsertScalar("height", (float)_topheight);
             }
@@ -350,6 +353,13 @@ namespace CoolapkLite.Controls
 
             if (HasGetElementVisual)
             {
+                if (_progressProvider == null)
+                {
+                    _progressProvider = new ScrollProgressProvider();
+                    _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+                    _progressProvider.ScrollViewer = _scrollViewer;
+                }
+
                 Visual _headerVisual = ElementCompositionPreview.GetElementVisual(ListViewHeader);
                 CompositionPropertySet _manipulationPropertySet = ElementCompositionPreview.GetScrollViewerManipulationPropertySet(_scrollViewer);
 
@@ -368,6 +378,12 @@ namespace CoolapkLite.Controls
             {
                 _topheight = Math.Max(0, _topHeader.ActualHeight - HeaderMargin);
             }
+        }
+
+        private void ListViewHeader_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _progressProvider.ProgressChanged -= ProgressProvider_ProgressChanged;
+            _progressProvider = null;
         }
     }
 

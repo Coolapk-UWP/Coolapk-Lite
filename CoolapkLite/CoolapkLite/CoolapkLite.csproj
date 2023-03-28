@@ -1246,7 +1246,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MicaForUWP">
-      <Version>0.1.8</Version>
+      <Version>0.1.9</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>

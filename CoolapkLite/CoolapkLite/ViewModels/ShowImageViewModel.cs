@@ -12,8 +12,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using Windows.UI.Core;
-using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels
 {
@@ -51,7 +49,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        private bool isLoading = true;
+        private bool isLoading;
         public bool IsLoading
         {
             get => isLoading;
@@ -104,10 +102,16 @@ namespace CoolapkLite.ViewModels
 
         public void Initialize()
         {
-            Images = BaseImage.ContextArray.Any()
-                ? BaseImage.ContextArray.Select(x => new ImageModel(x.Uri, x.Type)).ToList()
-                : (IList<ImageModel>)new List<ImageModel> { new ImageModel(BaseImage.Uri, BaseImage.Type) };
-            Index = BaseImage.ContextArray.Any() ? BaseImage.ContextArray.IndexOf(BaseImage) : 0;
+            if (BaseImage.ContextArray.Any())
+            {
+                Images = BaseImage.ContextArray;
+                Index = BaseImage.ContextArray.IndexOf(BaseImage);
+            }
+            else
+            {
+                Images = new List<ImageModel> { BaseImage };
+                Index = 0;
+            }
         }
 
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();

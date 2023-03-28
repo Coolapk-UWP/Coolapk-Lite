@@ -73,7 +73,6 @@ namespace CoolapkLite
                 RegisterExceptionHandlingSynchronizationContext();
 
                 MainWindow = Window.Current;
-                WindowHelper.TrackWindow(MainWindow);
 
                 if (ApiInformation.IsTypePresent("Windows.UI.StartScreen.JumpList") && JumpList.IsSupported())
                 {

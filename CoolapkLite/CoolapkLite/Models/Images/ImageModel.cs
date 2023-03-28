@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,8 +14,6 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged, IPic
     {
-        public CoreDispatcher Dispatcher { get; private set; }
-
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
         {
@@ -212,12 +209,10 @@ namespace CoolapkLite.Models.Images
                 {
                     double PixelWidth = bitmapImage.PixelWidth;
                     double PixelHeight = bitmapImage.PixelHeight;
-                    IsLongPic = await Window.Current.Dispatcher.AwaitableRunAsync(
-                        () => ((PixelHeight * Window.Current.Bounds.Width) > PixelWidth * Window.Current.Bounds.Height * 1.5)
-                            && PixelHeight > PixelWidth * 1.5);
-                    IsWidePic = await Window.Current.Dispatcher.AwaitableRunAsync(
-                        () => ((PixelWidth * Window.Current.Bounds.Height) > PixelHeight * Window.Current.Bounds.Width * 1.5)
-                            && PixelWidth > PixelHeight * 1.5);
+                    IsLongPic = ((PixelHeight * Window.Current.Bounds.Width) > PixelWidth * Window.Current.Bounds.Height * 1.5)
+                                && PixelHeight > PixelWidth * 1.5;
+                    IsWidePic = ((PixelWidth * Window.Current.Bounds.Height) > PixelHeight * Window.Current.Bounds.Width * 1.5)
+                                && PixelWidth > PixelHeight * 1.5;
                 }
                 else
                 {
@@ -269,22 +264,11 @@ namespace CoolapkLite.Models.Images
                     }
                 }
             }
-            if (Pic != null) { Dispatcher = Pic.Dispatcher; }
             LoadCompleted?.Invoke(this, null);
             IsLoading = false;
         }
 
-        public async Task Refresh()
-        {
-            if (Dispatcher != null)
-            {
-                await Dispatcher.AwaitableRunAsync(GetImage);
-            }
-            else
-            {
-                await GetImage();
-            }
-        }
+        public async Task Refresh() => await GetImage();
 
         public override string ToString() => Uri;
     }

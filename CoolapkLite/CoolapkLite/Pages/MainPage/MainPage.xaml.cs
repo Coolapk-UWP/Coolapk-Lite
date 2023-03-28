@@ -38,6 +38,7 @@ namespace CoolapkLite
     /// </summary>
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
+        private bool isLoaded;
         public Frame MainFrame => HamburgerMenuFrame;
 
         public MainPage()
@@ -66,10 +67,18 @@ namespace CoolapkLite
             TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             // Add handler for ContentFrame navigation.
             HamburgerMenuFrame.Navigated += On_Navigated;
-            HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
-            HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
-            if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-            { OpenActivatedEventArgs(ActivatedEventArgs); }
+            if (!isLoaded)
+            {
+                HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
+                HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
+                if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
+                { OpenActivatedEventArgs(ActivatedEventArgs); }
+                isLoaded = true;
+            }
+            else
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false);
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -170,12 +179,12 @@ namespace CoolapkLite
             }
         }
 
-        private AppViewBackButtonVisibility TryGoBack()
+        private AppViewBackButtonVisibility TryGoBack(bool goBack = true)
         {
             if (!Dispatcher.HasThreadAccess || !HamburgerMenuFrame.CanGoBack)
             { return AppViewBackButtonVisibility.Collapsed; }
 
-            HamburgerMenuFrame.GoBack();
+            if (goBack) { HamburgerMenuFrame.GoBack(); }
             return AppViewBackButtonVisibility.Visible;
         }
 
