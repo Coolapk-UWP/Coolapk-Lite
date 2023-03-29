@@ -123,6 +123,12 @@
   <data name="circle" xml:space="preserve">
     <value>Друзі</value>
   </data>
+  <data name="follow" xml:space="preserve">
+    <value>Підписки</value>
+  </data>
+  <data name="indexV8" xml:space="preserve">
+    <value>首页</value>
+  </data>
   <data name="product" xml:space="preserve">
     <value>Цифровий</value>
   </data>
