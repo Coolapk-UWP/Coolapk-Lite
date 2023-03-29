@@ -149,6 +149,7 @@
                             Click="Button_Click"
                             Content="前往测试中的页面"
                             Tag="GoToTestingPage" />
+                        <ToggleSwitch Header="是否使用合成动画" IsOn="{x:Bind IsUseCompositor, Mode=TwoWay}" />
                     </StackPanel>
                 </control:HeaderedContentControl>
                 <control:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">

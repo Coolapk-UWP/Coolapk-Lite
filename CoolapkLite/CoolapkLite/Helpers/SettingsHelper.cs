@@ -21,9 +21,11 @@ namespace CoolapkLite.Helpers
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string APIVersion = nameof(APIVersion);
-        public const string UseLiteHome = nameof(UseLiteHome);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
+        public const string IsUseLiteHome = nameof(IsUseLiteHome);
+        public const string IsUseCompositor = nameof(IsUseCompositor);
+        public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string ShowOtherException = nameof(ShowOtherException);
@@ -65,10 +67,6 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(APIVersion, Common.APIVersion.V13);
             }
-            if (!LocalObject.KeyExists(UseLiteHome))
-            {
-                LocalObject.Save(UseLiteHome, false);
-            }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {
                 LocalObject.Save(IsNoPicsMode, false);
@@ -76,6 +74,18 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(TokenVersion))
             {
                 LocalObject.Save(TokenVersion, Common.TokenVersion.TokenV2);
+            }
+            if (!LocalObject.KeyExists(IsUseLiteHome))
+            {
+                LocalObject.Save(IsUseLiteHome, false);
+            }
+            if (!LocalObject.KeyExists(IsUseCompositor))
+            {
+                LocalObject.Save(IsUseCompositor, true);
+            }
+            if (!LocalObject.KeyExists(IsUseMultiWindow))
+            {
+                LocalObject.Save(IsUseMultiWindow, true);
             }
             if (!LocalObject.KeyExists(SelectedAppTheme))
             {

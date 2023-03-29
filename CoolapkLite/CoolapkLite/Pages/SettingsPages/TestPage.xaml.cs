@@ -43,8 +43,14 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal bool IsUseLiteHome
         {
-            get => SettingsHelper.Get<bool>(SettingsHelper.UseLiteHome);
-            set => SettingsHelper.Set(SettingsHelper.UseLiteHome, value);
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome);
+            set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
+        }
+
+        internal bool IsUseCompositor
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);
+            set => SettingsHelper.Set(SettingsHelper.IsUseCompositor, value);
         }
 
         internal string Version

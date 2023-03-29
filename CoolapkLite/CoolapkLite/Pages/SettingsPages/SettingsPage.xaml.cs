@@ -24,14 +24,6 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class SettingsPage : Page, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
-        {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
-        }
-
-
         private const string IssuePath = "https://github.com/Coolapk-UWP/Coolapk-Lite/issues";
 
         internal bool IsLogin
@@ -62,6 +54,19 @@ namespace CoolapkLite.Pages.SettingsPages
                 if (ShowOtherException != value)
                 {
                     SettingsHelper.Set(SettingsHelper.ShowOtherException, value);
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        internal bool IsUseMultiWindow
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow);
+            set
+            {
+                if (ShowOtherException != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsUseMultiWindow, value);
                     RaisePropertyChangedEvent();
                 }
             }
@@ -117,6 +122,13 @@ namespace CoolapkLite.Pages.SettingsPages
                 string name = loader?.GetString("AppName") ?? "酷安 Lite";
                 return $"{name} v{ver}";
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
         public SettingsPage() => InitializeComponent();

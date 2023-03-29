@@ -65,8 +65,8 @@
                                 <ItemsPresenter.Header>
                                     <Grid x:Name="ListViewHeader" Background="{TemplateBinding HeaderBackground}">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto" />
-                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
                                         <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />
@@ -74,9 +74,9 @@
                                         <Grid Grid.Row="1" Height="{TemplateBinding HeaderHeight}">
                                             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <ContentPresenter
                                                     Grid.Column="0"

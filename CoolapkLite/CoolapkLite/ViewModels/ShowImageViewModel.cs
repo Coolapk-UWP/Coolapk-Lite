@@ -17,7 +17,6 @@ namespace CoolapkLite.ViewModels
 {
     public class ShowImageViewModel : INotifyPropertyChanged, IViewModel
     {
-        private readonly ImageModel BaseImage;
         private string ImageName = string.Empty;
         public double[] VerticalOffsets { get; set; } = new double[1];
 
@@ -35,17 +34,20 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        private int index;
+        private int index = -1;
         public int Index
         {
             get => index;
             set
             {
-                ResigerImage(Images[index], Images[value]);
-                index = value;
-                RaisePropertyChangedEvent();
-                Title = GetTitle(Images[value].Uri);
-                ShowOrigin = Images[value].Type.HasFlag(ImageType.Small);
+                if (index != value)
+                {
+                    if (index != -1) { ResigerImage(Images[index], Images[value]); }
+                    index = value;
+                    RaisePropertyChangedEvent();
+                    Title = GetTitle(Images[value].Uri);
+                    ShowOrigin = Images[value].Type.HasFlag(ImageType.Small);
+                }
             }
         }
 
@@ -98,22 +100,20 @@ namespace CoolapkLite.ViewModels
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        public ShowImageViewModel(ImageModel image) => BaseImage = image;
-
-        public void Initialize()
+        public ShowImageViewModel(ImageModel image)
         {
-            if (BaseImage.ContextArray.Any())
+            if (image.ContextArray.Any())
             {
-                Images = BaseImage.ContextArray;
-                Index = BaseImage.ContextArray.IndexOf(BaseImage);
+                Images = image.ContextArray;
+                Index = Images.IndexOf(image);
             }
             else
             {
-                Images = new List<ImageModel> { BaseImage };
+                Images = new List<ImageModel> { image };
                 Index = 0;
             }
         }
-
+        
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
 
         private string GetTitle(string url)

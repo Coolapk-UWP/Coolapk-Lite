@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace CoolapkLite.Controls
         private double _topheight;
         private CompositionPropertySet _propSet;
         private ScrollProgressProvider _progressProvider;
-        private bool HasGetElementVisual => ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
+        private readonly bool HasGetElementVisual = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         public static readonly DependencyProperty TopHeaderProperty =
             DependencyProperty.Register(
@@ -382,8 +383,11 @@ namespace CoolapkLite.Controls
 
         private void ListViewHeader_Unloaded(object sender, RoutedEventArgs e)
         {
-            _progressProvider.ProgressChanged -= ProgressProvider_ProgressChanged;
-            _progressProvider = null;
+            if (_progressProvider != null)
+            {
+                _progressProvider.ProgressChanged -= ProgressProvider_ProgressChanged;
+                _progressProvider = null;
+            }
         }
     }
 

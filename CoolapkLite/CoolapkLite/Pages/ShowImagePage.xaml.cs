@@ -79,7 +79,6 @@ namespace CoolapkLite.Pages
                 Frame.Navigated += On_Navigated;
                 UpdateTitleBarLayout(TitleBar);
             }
-            Provider?.Initialize();
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)

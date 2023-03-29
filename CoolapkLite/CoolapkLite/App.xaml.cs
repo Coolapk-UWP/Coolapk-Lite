@@ -120,7 +120,7 @@ namespace CoolapkLite
                 // 当导航堆栈尚未还原时，导航到第一页，
                 // 并通过将所需信息作为导航参数传入来配置
                 // 参数
-                Type page = SettingsHelper.Get<bool>(SettingsHelper.UseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                 rootFrame.Navigate(page, e);
             }
             else

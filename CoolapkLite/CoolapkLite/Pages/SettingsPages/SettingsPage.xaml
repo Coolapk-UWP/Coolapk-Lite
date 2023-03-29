@@ -47,11 +47,12 @@
                 <control:HeaderedContentControl x:Uid="/SettingsPage/ContentSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <ToggleSwitch
@@ -60,10 +61,17 @@
                             Grid.ColumnSpan="2"
                             Margin="0,2"
                             IsOn="{x:Bind IsNoPicsMode, Mode=TwoWay}" />
+                        
+                        <ToggleSwitch
+                            x:Uid="/SettingsPage/MultiWindowCheckBox"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="2"
+                            Margin="0,2"
+                            IsOn="{x:Bind IsUseMultiWindow, Mode=TwoWay}" />
 
                         <Button
                             x:Uid="/SettingsPage/CleanCacheButton"
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="0"
                             Margin="0,2"
                             Click="Button_Click"
@@ -71,7 +79,7 @@
                             Tag="CleanCache" />
 
                         <ProgressRing
-                            Grid.Row="1"
+                            Grid.Row="2"
                             Grid.Column="1"
                             Margin="8,0"
                             HorizontalAlignment="Left"
@@ -119,12 +127,12 @@
                 <control:HeaderedContentControl x:Uid="/SettingsPage/UpdateSettingsHeader" Style="{StaticResource HeaderStyle}">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
 
