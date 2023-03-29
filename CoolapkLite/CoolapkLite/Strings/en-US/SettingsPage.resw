@@ -199,6 +199,6 @@
     <value>Up to date</value>
   </data>
   <data name="MultiWindowCheckBox.Header" xml:space="preserve">
-    <value>使用多窗口</value>
+    <value>Use Multi Window</value>
   </data>
 </root>
