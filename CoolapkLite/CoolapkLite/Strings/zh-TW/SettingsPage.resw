@@ -199,6 +199,6 @@
     <value>已是最新</value>
   </data>
   <data name="MultiWindowCheckBox.Header" xml:space="preserve">
-    <value>使用多窗口</value>
+    <value>使用多視窗</value>
   </data>
 </root>
