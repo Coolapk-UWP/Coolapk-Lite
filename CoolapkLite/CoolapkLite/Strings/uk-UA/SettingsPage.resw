@@ -198,4 +198,7 @@
   <data name="UpToDate" xml:space="preserve">
     <value>Оновлено</value>
   </data>
+  <data name="MultiWindowCheckBox.Header" xml:space="preserve">
+    <value>使用多窗口</value>
+  </data>
 </root>
