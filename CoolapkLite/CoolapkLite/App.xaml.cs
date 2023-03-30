@@ -257,11 +257,22 @@ namespace CoolapkLite
 
             void RegisterLiveTileTask()
             {
+#if ARM64
+                const string LiveTileTask = "LiveTileTask";
+
+                // If background task is already registered, do nothing
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                { return; }
+
+                // Register (Single Process)
+                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(15, false), true);
+#else
                 if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
                 {
                     // Register (Multi Process)
                     BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
                 }
+#endif
             }
 
             #endregion
@@ -270,11 +281,22 @@ namespace CoolapkLite
 
             void RegisterNotificationsTask()
             {
+#if ARM64
+                const string NotificationsTask = "NotificationsTask";
+
+                // If background task is already registered, do nothing
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                { return; }
+
+                // Register (Single Process)
+                BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
+#else
                 if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
                 {
                     // Register (Single Process)
                     BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
                 }
+#endif
             }
 
             #endregion
