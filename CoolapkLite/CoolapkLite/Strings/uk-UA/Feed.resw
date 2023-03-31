@@ -144,6 +144,9 @@
   <data name="LongPic.Text" xml:space="preserve">
     <value>Довге фото</value>
   </data>
+  <data name="LongPicText" xml:space="preserve">
+    <value>Довге фото</value>
+  </data>
   <data name="MediaShare.Text" xml:space="preserve">
     <value>视频分享</value>
   </data>
@@ -196,6 +199,9 @@
     <value>Закріпити</value>
   </data>
   <data name="WidePic.Text" xml:space="preserve">
+    <value>Широке фото</value>
+  </data>
+  <data name="WidePicText" xml:space="preserve">
     <value>Широке фото</value>
   </data>
 </root>
