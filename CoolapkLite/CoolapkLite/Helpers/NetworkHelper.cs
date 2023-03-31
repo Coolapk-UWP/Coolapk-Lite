@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -24,6 +25,7 @@ namespace CoolapkLite.Helpers
     public static partial class NetworkHelper
     {
         public static readonly HttpClientHandler ClientHandler = new HttpClientHandler();
+        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(4);
         public static readonly HttpClient Client = new HttpClient(ClientHandler);
         private static TokenCreater token;
 
@@ -202,6 +204,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
                 response = await Client.PostAsync(uri, content);
@@ -218,12 +221,17 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStreamAsync(uri);
             }
@@ -238,12 +246,17 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStringAsync(uri);
             }
@@ -257,6 +270,10 @@ namespace CoolapkLite.Helpers
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
             }
         }
     }

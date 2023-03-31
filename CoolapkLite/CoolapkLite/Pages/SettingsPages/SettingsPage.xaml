@@ -38,8 +38,8 @@
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
                     <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind IsNoPicsMode, Mode=TwoWay}" />
-                    <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind IsDisplayOriginPicture, Mode=TwoWay}" />
                     <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind IsUseMultiWindow, Mode=TwoWay}" />
+                    <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind IsDisplayOriginPicture, Mode=TwoWay}" />
                     <control:StackPanel Spacing="8">
                         <Button
                             x:Uid="/SettingsPage/CleanCacheButton"
