@@ -144,6 +144,9 @@
   <data name="LongPic.Text" xml:space="preserve">
     <value>Long Pic</value>
   </data>
+  <data name="LongPicText" xml:space="preserve">
+    <value>Long Pic</value>
+  </data>
   <data name="MediaShare.Text" xml:space="preserve">
     <value>视频分享</value>
   </data>
@@ -196,6 +199,9 @@
     <value>Pin</value>
   </data>
   <data name="WidePic.Text" xml:space="preserve">
+    <value>Wide Pic</value>
+  </data>
+  <data name="WidePicText" xml:space="preserve">
     <value>Wide Pic</value>
   </data>
 </root>
