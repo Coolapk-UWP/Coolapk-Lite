@@ -189,10 +189,10 @@
                     Visibility="{Binding ShowButtons, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button
                         x:Name="LikeButton"
+                        x:Uid="/Feed/LikeButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
-                        ToolTipService.ToolTip="点赞"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
@@ -209,10 +209,10 @@
                     </Button>
                     <Button
                         x:Name="ReplyButton"
+                        x:Uid="/Feed/ReplyButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
-                        ToolTipService.ToolTip="回复"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
@@ -224,11 +224,11 @@
                     </Button>
                     <Button
                         x:Name="ShareButton"
+                        x:Uid="/Feed/ShareButton"
                         Click="FeedButton_Click"
                         Flyout="{StaticResource QRCodeFlyout}"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding ShareUrl}"
-                        ToolTipService.ToolTip="分享"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
@@ -240,9 +240,9 @@
                     </Button>
                     <Button
                         x:Name="MoreButton"
+                        x:Uid="/Feed/MoreButton"
                         Flyout="{StaticResource MoreFlyout}"
-                        Style="{StaticResource TransparentButtonStyle}"
-                        ToolTipService.ToolTip="更多">
+                        Style="{StaticResource TransparentButtonStyle}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10C;" />
                     </Button>
                 </StackPanel>
@@ -274,9 +274,9 @@
                             BorderThickness="1"
                             CornerRadius="{ThemeResource ControlCornerRadius}">
                             <TextBlock
+                                x:Uid="/Feed/Rating"
                                 FontSize="12"
-                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                Text="评分" />
+                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
                         </Border>
                         <TextBlock
                             Grid.Column="2"
@@ -414,8 +414,8 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center">
                         <TextBlock
+                            x:Uid="/Feed/MediaShare"
                             MaxLines="2"
-                            Text="视频分享"
                             TextTrimming="WordEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock
@@ -497,7 +497,7 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         Visibility="{Binding IPLocation, Converter={StaticResource StringVisibilityConverter}}">
-                        <Run Text="发布于" />
+                        <Run x:Uid="/Feed/PublishFrom" />
                         <Run FontWeight="Bold" Text="{Binding IPLocation}" />
                     </TextBlock>
                 </StackPanel>
@@ -721,10 +721,10 @@
                     Orientation="Horizontal">
                     <Button
                         x:Name="LikeButton"
+                        x:Uid="/Feed/LikeButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
-                        ToolTipService.ToolTip="点赞">
+                        Tag="{Binding}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -740,10 +740,10 @@
                     </Button>
                     <Button
                         x:Name="ReplyButton"
+                        x:Uid="/Feed/ReplyButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
-                        ToolTipService.ToolTip="回复">
+                        Tag="{Binding}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                             <TextBlock
@@ -754,9 +754,9 @@
                     </Button>
                     <Button
                         x:Name="MoreButton"
+                        x:Uid="/Feed/MoreButton"
                         Flyout="{StaticResource MoreFlyout}"
-                        Style="{StaticResource TransparentButtonStyle}"
-                        ToolTipService.ToolTip="更多">
+                        Style="{StaticResource TransparentButtonStyle}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10C;" />
                     </Button>
                 </StackPanel>

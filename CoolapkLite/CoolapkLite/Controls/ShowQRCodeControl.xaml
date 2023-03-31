@@ -12,11 +12,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBlock
+            x:Uid="/Feed/ShareFeed"
             Grid.Row="0"
             MaxWidth="200"
             Margin="0,12"
             HorizontalAlignment="Center"
-            Text="点按二维码分享链接"
             TextWrapping="Wrap" />
         <Button
             Grid.Row="1"

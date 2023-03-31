@@ -972,6 +972,8 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
+    <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
     <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">

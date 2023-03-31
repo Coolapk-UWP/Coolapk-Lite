@@ -107,6 +107,7 @@
                                     </Grid>
                                     <Button
                                         x:Name="QRCodeButton"
+                                        x:Uid="/ProfilePage/QRCodeButton"
                                         Grid.Column="4"
                                         Margin="-8,4"
                                         Content="&#xE72D;"
@@ -129,6 +130,7 @@
                                     </Button>
                                     <Button
                                         x:Name="LoginButton"
+                                        x:Uid="/ProfilePage/LoginButton"
                                         Grid.Column="4"
                                         Margin="-8,4"
                                         Click="Button_Click"
@@ -157,10 +159,10 @@
                                                 FontWeight="Bold"
                                                 Text="{Binding ProfileDetail.FeedNum, FallbackValue='0'}" />
                                             <TextBlock
+                                                x:Uid="/FeedListPage/FeedsNum"
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
-                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="动态" />
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                     </Button>
                                     <Button
@@ -177,10 +179,10 @@
                                                 FontWeight="Bold"
                                                 Text="{Binding ProfileDetail.FollowNum, FallbackValue='0'}" />
                                             <TextBlock
+                                                x:Uid="/FeedListPage/FollowNum"
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
-                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="关注" />
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                     </Button>
                                     <Button
@@ -197,10 +199,10 @@
                                                 FontWeight="Bold"
                                                 Text="{Binding ProfileDetail.FansNum, FallbackValue='0'}" />
                                             <TextBlock
+                                                x:Uid="/FeedListPage/FansNum"
                                                 HorizontalAlignment="Center"
                                                 FontSize="12"
-                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="粉丝" />
+                                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -220,9 +222,9 @@
                                             FontSize="16"
                                             Glyph="&#xE932;" />
                                         <TextBlock
+                                            x:Uid="/ProfilePage/CreateFeed"
                                             Margin="0,0,0,2"
-                                            FontSize="16"
-                                            Text="写动态" />
+                                            FontSize="16" />
                                     </controls:StackPanel>
                                 </Button>
                             </controls:StackPanel>
@@ -284,13 +286,13 @@
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">
             <Button
+                x:Uid="/ProfilePage/NotificationButton"
                 VerticalAlignment="Center"
                 Click="Button_Click"
                 Content="&#xE8BD;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                 Style="{StaticResource TitleBarIconButtonStyle}"
-                Tag="NotificationButton"
-                ToolTipService.ToolTip="通知" />
+                Tag="NotificationButton" />
         </controls:TitleBar>
     </Grid>
 </Page>

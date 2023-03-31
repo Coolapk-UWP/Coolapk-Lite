@@ -117,13 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>设置</value>
+  <data name="CopyMenuItem.Text" xml:space="preserve">
+    <value>复制</value>
   </data>
-  <data name="BackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>返回</value>
+  <data name="OriginButton.Label" xml:space="preserve">
+    <value>查看原图</value>
   </data>
-  <data name="RefreshButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="OriginMenuItem.Text" xml:space="preserve">
+    <value>查看原图</value>
+  </data>
+  <data name="RefreshButton.Label" xml:space="preserve">
     <value>刷新</value>
+  </data>
+  <data name="RefreshMenuItem.Text" xml:space="preserve">
+    <value>刷新</value>
+  </data>
+  <data name="SaveButton.Label" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SaveMenuItem.Text" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="ShareButton.Label" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="ShareMenuItem.Text" xml:space="preserve">
+    <value>分享</value>
+  </data>
+  <data name="ShowMenuItem.Text" xml:space="preserve">
+    <value>查看</value>
   </data>
 </root>

@@ -57,10 +57,10 @@
                         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                             <Button
                                 x:Name="ReplyButton"
+                                x:Uid="/Feed/ReplyButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}"
-                                ToolTipService.ToolTip="回复">
+                                Tag="{Binding FeedDetail}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                                     <TextBlock
@@ -74,7 +74,7 @@
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail}"
-                                ToolTipService.ToolTip="点赞">
+                                x:Uid="/Feed/LikeButton">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -96,7 +96,7 @@
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail}"
-                                ToolTipService.ToolTip="收藏">
+                                x:Uid="/Feed/StarButton">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -119,7 +119,7 @@
                                 Flyout="{StaticResource QRCodeFlyout}"
                                 Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding FeedDetail.ShareUrl}"
-                                ToolTipService.ToolTip="分享">
+                                x:Uid="/Feed/ShareButton">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     <TextBlock

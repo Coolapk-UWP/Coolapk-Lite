@@ -41,51 +41,51 @@
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F8;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="背景图">
+                            <MenuFlyoutSubItem x:Uid="/FeedListPage/CoverMenuSubItem">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                                 <MenuFlyoutItem
                                     x:Name="RefreshButton"
+                                    x:Uid="/ShowImagePage/RefreshMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="刷新">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="ShowImageButton"
+                                    x:Uid="/ShowImagePage/ShowMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="查看">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="CopyButton"
+                                    x:Uid="/ShowImagePage/CopyMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="复制">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="ShareButton"
+                                    x:Uid="/ShowImagePage/ShareMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="分享">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="SaveButton"
+                                    x:Uid="/ShowImagePage/SaveMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="保存">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -481,36 +481,36 @@
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
                                                     x:Name="RefreshButton"
+                                                    x:Uid="/ShowImagePage/RefreshMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}"
-                                                    Text="刷新">
+                                                    Tag="{Binding}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutItem
                                                     x:Name="CopyButton"
+                                                    x:Uid="/ShowImagePage/CopyMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}"
-                                                    Text="复制">
+                                                    Tag="{Binding}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutItem
                                                     x:Name="ShareButton"
+                                                    x:Uid="/ShowImagePage/ShareMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}"
-                                                    Text="分享">
+                                                    Tag="{Binding}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
                                                 </MenuFlyoutItem>
                                                 <MenuFlyoutItem
                                                     x:Name="SaveButton"
+                                                    x:Uid="/ShowImagePage/SaveMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}"
-                                                    Text="保存">
+                                                    Tag="{Binding}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -659,16 +659,16 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <TextBlock
+                                    x:Uid="/FeedListPage/OwnerStar"
                                     VerticalAlignment="Center"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Text="机主评分"
                                     Visibility="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 <TextBlock
+                                    x:Uid="/FeedListPage/AllStar"
                                     VerticalAlignment="Center"
                                     FontSize="16"
                                     FontWeight="Bold"
-                                    Text="酷安评分"
                                     Visibility="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 <Grid Grid.Column="1" HorizontalAlignment="Right">
                                     <Grid.ColumnDefinitions>
@@ -677,16 +677,16 @@
                                     </Grid.ColumnDefinitions>
                                     <ToggleButton
                                         x:Name="SeeAllButton"
+                                        x:Uid="/FeedListPage/SeeAllButton"
                                         Grid.Column="1"
                                         Padding="4,2"
-                                        Content="查看全部"
                                         FontSize="12"
                                         IsChecked="{Binding IsChecked, ElementName=OnlyOwnerButton, Converter={StaticResource BoolNegationConverter}, Mode=TwoWay}" />
                                     <ToggleButton
                                         x:Name="OnlyOwnerButton"
+                                        x:Uid="/FeedListPage/OnlyOwnerButton"
                                         Grid.Column="0"
                                         Padding="4,2"
-                                        Content="只看机主"
                                         FontSize="12"
                                         IsChecked="{Binding IsChecked, ElementName=SeeAllButton, Converter={StaticResource BoolNegationConverter}, Mode=TwoWay}" />
                                 </Grid>
@@ -962,51 +962,51 @@
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSubItem Text="背景图">
+                            <MenuFlyoutSubItem x:Uid="/FeedListPage/CoverMenuSubItem">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                                 <MenuFlyoutItem
                                     x:Name="RefreshButton"
+                                    x:Uid="/ShowImagePage/RefreshMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="刷新">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="ShowImageButton"
+                                    x:Uid="/ShowImagePage/ShowMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="查看">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="CopyButton"
+                                    x:Uid="/ShowImagePage/CopyMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="复制">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="ShareButton"
+                                    x:Uid="/ShowImagePage/ShareMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="分享">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
                                     x:Name="SaveButton"
+                                    x:Uid="/ShowImagePage/SaveMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Text="保存">
+                                    Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1074,10 +1074,10 @@
                             Orientation="Horizontal">
                             <Button
                                 x:Name="LikeButton"
+                                x:Uid="/Feed/LikeButton"
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding}"
-                                ToolTipService.ToolTip="点赞">
+                                Tag="{Binding}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"

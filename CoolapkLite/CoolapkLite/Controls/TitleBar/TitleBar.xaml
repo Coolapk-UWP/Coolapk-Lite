@@ -46,8 +46,7 @@
                                     Grid.Column="0"
                                     Content="&#xE72B;"
                                     IsEnabled="{TemplateBinding IsBackEnabled}"
-                                    Style="{ThemeResource TitleBarIconButtonStyle}"
-                                    ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
+                                    Style="{ThemeResource TitleBarIconButtonStyle}" />
 
                                 <TextBlock
                                     x:Name="TitleText"
@@ -92,8 +91,7 @@
                                         helpers:FocusVisualHelper.FocusVisualMargin="0"
                                         Content="&#xE72C;"
                                         IsEnabled="{TemplateBinding IsRefreshEnabled}"
-                                        Style="{StaticResource TitleBarIconButtonStyle}"
-                                        ToolTipService.ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Tag}" />
+                                        Style="{StaticResource TitleBarIconButtonStyle}" />
                                 </Grid>
                             </Grid>
                         </Grid>

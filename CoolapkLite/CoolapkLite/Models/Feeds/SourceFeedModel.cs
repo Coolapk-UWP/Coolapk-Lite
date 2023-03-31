@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -101,7 +102,8 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("message", out JToken message))
             {
-                Message = message.ToString().Replace("<a href=\"\">查看更多</a>", $"<a href=\"{Url}\">查看更多</a>");
+                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
+                Message = message.ToString().Replace("<a href=\"\">查看更多</a>", $"<a href=\"{Url}\">{loader.GetString("ReadMore")}</a>");
             }
 
             if (token.TryGetValue("message_title", out JToken message_title))
