@@ -201,4 +201,7 @@
   <data name="MultiWindowCheckBox.Header" xml:space="preserve">
     <value>Use Multi Window</value>
   </data>
+  <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
+    <value>在图文中显示原图</value>
+  </data>
 </root>
