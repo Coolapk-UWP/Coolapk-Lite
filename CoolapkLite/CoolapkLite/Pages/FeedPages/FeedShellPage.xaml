@@ -8,6 +8,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
         <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
@@ -71,10 +72,10 @@
                             </Button>
                             <Button
                                 x:Name="LikeButton"
+                                x:Uid="/Feed/LikeButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}"
-                                x:Uid="/Feed/LikeButton">
+                                Tag="{Binding FeedDetail}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -93,10 +94,10 @@
                             </Button>
                             <Button
                                 x:Name="StarButton"
+                                x:Uid="/Feed/StarButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}"
-                                x:Uid="/Feed/StarButton">
+                                Tag="{Binding FeedDetail}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -115,11 +116,11 @@
                             </Button>
                             <Button
                                 x:Name="ShareButton"
+                                x:Uid="/Feed/ShareButton"
                                 Click="FeedButton_Click"
                                 Flyout="{StaticResource QRCodeFlyout}"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail.ShareUrl}"
-                                x:Uid="/Feed/ShareButton">
+                                Tag="{Binding FeedDetail.ShareUrl}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     <TextBlock

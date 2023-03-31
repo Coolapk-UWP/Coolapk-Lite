@@ -125,10 +125,8 @@
         <CommandBar
             x:Name="CommandBar"
             VerticalAlignment="Bottom"
+            Background="{ThemeResource TitleBarBackgroundBrush}"
             Visibility="Collapsed">
-            <CommandBar.Background>
-                <SolidColorBrush Opacity="0.8" Color="{StaticResource SystemChromeMediumColor}" />
-            </CommandBar.Background>
             <CommandBar.PrimaryCommands>
                 <AppBarButton
                     x:Uid="/ShowImagePage/RefreshButton"

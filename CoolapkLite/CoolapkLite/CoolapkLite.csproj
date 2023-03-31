@@ -162,7 +162,6 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
     <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs">
       <DependentUpon>ListDetailsView.cs</DependentUpon>
@@ -187,6 +186,13 @@
     </Compile>
     <Compile Include="Controls\QRCode\QRCodeTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\XamlQRCode.cs" />
+    <Compile Include="Controls\SettingsGroup\SettingsGroup.cs">
+      <DependentUpon>SettingsGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsGroup\SettingsGroup.Properties.cs">
+      <DependentUpon>SettingsGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsGroup\SettingsGroupAutomationPeer.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
@@ -1014,10 +1020,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1031,6 +1033,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\QRCode\QRCode.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SettingsGroup\SettingsGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

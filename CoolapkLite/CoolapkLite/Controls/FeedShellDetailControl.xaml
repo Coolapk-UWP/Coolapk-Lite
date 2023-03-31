@@ -92,7 +92,7 @@
                     Tag="{Binding MessageCover}"
                     Tapped="OnTapped"
                     Visibility="{Binding MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}}" />
-                <Border VerticalAlignment="Bottom" Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}">
+                <Border VerticalAlignment="Bottom" Background="{ThemeResource TitleBarBackgroundBrush}">
                     <TextBlock
                         Margin="8,4"
                         FontSize="20"

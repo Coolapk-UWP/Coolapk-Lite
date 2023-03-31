@@ -59,12 +59,25 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
+        internal bool IsDisplayOriginPicture
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture);
+            set
+            {
+                if (IsDisplayOriginPicture != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsDisplayOriginPicture, value);
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         internal bool IsUseMultiWindow
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow);
             set
             {
-                if (ShowOtherException != value)
+                if (IsUseMultiWindow != value)
                 {
                     SettingsHelper.Set(SettingsHelper.IsUseMultiWindow, value);
                     RaisePropertyChangedEvent();
