@@ -15,7 +15,7 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged, IPic
     {
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(4);
+        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
 
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
@@ -197,6 +197,12 @@ namespace CoolapkLite.Models.Images
         private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        public static void SetSemaphoreSlim(int initialCount)
+        {
+            semaphoreSlim.Dispose();
+            semaphoreSlim = new SemaphoreSlim(initialCount);
         }
 
         private async Task GetImage()

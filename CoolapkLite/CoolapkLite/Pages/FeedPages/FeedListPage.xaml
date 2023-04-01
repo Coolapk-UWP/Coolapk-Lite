@@ -309,17 +309,13 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <ListView
-                                        ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-                                        ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
-                                        ItemsSource="{Binding FollowUsers}"
-                                        ShowsScrollingPlaceholders="False">
-                                        <ListView.ItemsPanel>
+                                    <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                        <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <control:StackPanel Orientation="Horizontal" Spacing="-6" />
                                             </ItemsPanelTemplate>
-                                        </ListView.ItemsPanel>
-                                        <ListView.ItemTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Ellipse
                                                     Width="16"
@@ -332,8 +328,8 @@
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                             </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                     <TextBlock
                                         Grid.Column="1"
                                         Margin="4,0"
@@ -558,17 +554,13 @@
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ListView
-                                            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-                                            ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
-                                            ItemsSource="{Binding FollowUsers}"
-                                            ShowsScrollingPlaceholders="False">
-                                            <ListView.ItemsPanel>
+                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                            <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <control:StackPanel Orientation="Horizontal" Spacing="-6" />
                                                 </ItemsPanelTemplate>
-                                            </ListView.ItemsPanel>
-                                            <ListView.ItemTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Ellipse
                                                         Width="16"
@@ -581,8 +573,8 @@
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                 </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                         <TextBlock
                                             Grid.Column="1"
                                             Margin="4,0"
@@ -624,6 +616,7 @@
                         ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                         ItemsSource="{Binding TagArr}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                         ShowsScrollingPlaceholders="False"
                         Style="{StaticResource VerticalListViewStyle}"
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">

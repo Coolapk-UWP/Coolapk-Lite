@@ -24,16 +24,26 @@ namespace CoolapkLite.Helpers
 {
     public static partial class NetworkHelper
     {
-        public static readonly HttpClientHandler ClientHandler = new HttpClientHandler();
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(4);
-        public static readonly HttpClient Client = new HttpClient(ClientHandler);
+        public static readonly HttpClientHandler ClientHandler;
+        public static readonly HttpClient Client;
+
+        private static SemaphoreSlim semaphoreSlim;
         private static TokenCreater token;
 
         static NetworkHelper()
         {
-            ThemeHelper.UISettingChanged.Add((arg) => Client.DefaultRequestHeaders.ReplaceDarkMode());
+            semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
+            ThemeHelper.UISettingChanged.Add((arg) => Client?.DefaultRequestHeaders?.ReplaceDarkMode());
+            ClientHandler = new HttpClientHandler();
+            Client = new HttpClient(ClientHandler);
             SetRequestHeaders();
             SetLoginCookie();
+        }
+
+        public static void SetSemaphoreSlim(int initialCount)
+        {
+            semaphoreSlim.Dispose();
+            semaphoreSlim = new SemaphoreSlim(initialCount);
         }
 
         public static void SetLoginCookie()

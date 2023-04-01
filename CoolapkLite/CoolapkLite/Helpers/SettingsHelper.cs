@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.System.Profile;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -25,10 +24,12 @@ namespace CoolapkLite.Helpers
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
         public const string IsUseCompositor = nameof(IsUseCompositor);
+        public const string CurrentLanguage = nameof(CurrentLanguage);
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string ShowOtherException = nameof(ShowOtherException);
+        public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
         public const string IsDisplayOriginPicture = nameof(IsDisplayOriginPicture);
         public const string CheckUpdateWhenLuanching = nameof(CheckUpdateWhenLuanching);
 
@@ -83,6 +84,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsUseCompositor, true);
             }
+            if (!LocalObject.KeyExists(CurrentLanguage))
+            {
+                LocalObject.Save(CurrentLanguage, LanguageHelper.AutoLanguageCode);
+            }
             if (!LocalObject.KeyExists(IsUseMultiWindow))
             {
                 LocalObject.Save(IsUseMultiWindow, true);
@@ -98,6 +103,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(ShowOtherException))
             {
                 LocalObject.Save(ShowOtherException, true);
+            }
+            if (!LocalObject.KeyExists(SemaphoreSlimCount))
+            {
+                LocalObject.Save(SemaphoreSlimCount, Environment.ProcessorCount);
             }
             if (!LocalObject.KeyExists(IsDisplayOriginPicture))
             {
