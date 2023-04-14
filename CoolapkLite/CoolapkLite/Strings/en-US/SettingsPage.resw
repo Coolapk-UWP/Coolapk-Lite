@@ -202,6 +202,6 @@
     <value>Use Multi Window</value>
   </data>
   <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
-    <value>在图文中显示原图</value>
+    <value>Show original image in graph</value>
   </data>
 </root>
