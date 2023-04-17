@@ -310,7 +310,7 @@
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                 </GridView>
-                <Border
+                <Grid
                     Grid.Row="6"
                     Margin="0,4"
                     HorizontalAlignment="Stretch"
@@ -318,8 +318,14 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     Visibility="{Binding ShowSourceFeed, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding SourceFeed}" />
-                </Border>
+                    <TextBlock
+                        x:Uid="/Feed/SourceFeedNotFount"
+                        Margin="12,8"
+                        Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <Border Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                        <ContentControl DataContext="{Binding SourceFeed}" ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" />
+                    </Border>
+                </Grid>
                 <Grid
                     Grid.Row="7"
                     Margin="0,4"
