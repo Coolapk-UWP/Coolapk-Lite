@@ -7,19 +7,18 @@
 4. 若您对[酷安](https://coolapk.com)如何处理您的数据存在疑虑，请访问[酷安用户服务协议](https://m.coolapk.com/mp/user/agreement)、[酷安隐私保护政策](https://m.coolapk.com/mp/user/privacy)、[酷安二手安全条约](https://m.coolapk.com/mp/user/ershouAgreement)。
 
 ##### 翻译
-感谢 [Crowdin](https://crowdin.com/project/CoolapkLite "Crowdin") 翻译者的支持，如果翻译出现了什么问题，欢迎前来纠正。
-
-已翻译：[![Crowdin](https://badges.crowdin.net/CoolapkLite/localized.svg)](https://crowdin.com/project/CoolapkLite "Crowdin")
+感谢 [Crowdin](https://crowdin.com/project/CoolapkLite "Crowdin") 翻译者的支持。如果翻译出现了什么问题，欢迎前来纠正。并且请认真对待翻译。您所写的一切将会被全世界阅读。
 
 ##### 鸣谢
-|                                          贡献                                        |                      作者                      |
+| 贡献                                                                                 | 作者                                           |
 | ------------------------------------------------------------------------------------ | ---------------------------------------------- |
 | [原作(CoolApk-UWP)](https://github.com/oboard/CoolApk-UWP)                           | [oboard](https://github.com/oboard)            |
 | [Token获取方法(CoolapkTokenCrack)](https://github.com/ZCKun/CoolapkTokenCrack)        | [ZCKun](https://github.com/ZCKun)              |
 | [TokenV2获取方法(CoolapkTokenV2)](https://github.com/XiaoMengXinX/FuckCoolapkTokenV2) | [XiaoMengXinX](https://github.com/XiaoMengXinX)|
 
 ##### 引用及参考
-- [MetroLog](https://github.com/mbrit/MetroLog)
-- [QRCoder](https://github.com/codebude/QRCoder)
-- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net)
-- [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit/)
+- [QRCoder](https://github.com/codebude/QRCoder "QRCoder")
+- [MetroLog](https://github.com/novotnyllc/MetroLog "MetroLog")
+- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net "Bcrypt.Net")
+- [Newtonsoft Json](https://www.newtonsoft.com/json "Newtonsoft Json")
+- [Windows Community Toolkit](https://github.com/CommunityToolkit/WindowsCommunityToolkit "Windows Community Toolkit")

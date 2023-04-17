@@ -10,8 +10,10 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -175,6 +177,12 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();
+                    break;
+                case "OpenCharmSettings":
+                    if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+                    {
+                        SettingsPane.Show();
+                    }
                     break;
                 case "PausedProgressBar":
                     UIHelper.PausedProgressBar();

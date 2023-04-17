@@ -158,6 +158,9 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
+      <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs">
       <DependentUpon>ListDetailsView.cs</DependentUpon>
@@ -392,6 +395,7 @@
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
+    <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -967,6 +971,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\About\About.en-US.md" />
+    <Content Include="Assets\About\About.zh-CN.md" />
+    <Content Include="Assets\About\About.zh-TW.md" />
     <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
@@ -975,6 +982,7 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
     <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
@@ -1014,6 +1022,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\LoginDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Flyouts\SettingsFlyoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1221,6 +1233,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\SettingsFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\ToggleSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1290,9 +1306,6 @@
     </PRIResource>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\MarkDown.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -1324,9 +1337,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\MarkDown.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\NotificationsPage.resw" />
@@ -1408,9 +1418,6 @@
     <PRIResource Include="Strings\uk-UA\MainPage.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\MarkDown.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\uk-UA\NotificationsPage.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -1442,9 +1449,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-TW\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-TW\MarkDown.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-TW\NotificationsPage.resw" />

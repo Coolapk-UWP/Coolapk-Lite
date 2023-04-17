@@ -7,6 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
+    d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
@@ -37,22 +39,22 @@
                     </StackPanel>
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
-                    <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind IsNoPicsMode, Mode=TwoWay}" />
-                    <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind IsUseMultiWindow, Mode=TwoWay}" />
-                    <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind IsDisplayOriginPicture, Mode=TwoWay}" />
+                    <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{Binding IsNoPicsMode, Mode=TwoWay}" />
+                    <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{Binding IsUseMultiWindow, Mode=TwoWay}" />
+                    <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{Binding IsDisplayOriginPicture, Mode=TwoWay}" />
                     <control:StackPanel Spacing="8">
                         <Button
                             x:Uid="/SettingsPage/CleanCacheButton"
                             Click="Button_Click"
-                            IsEnabled="{x:Bind IsCleanCacheButtonEnabled, Mode=OneWay}"
+                            IsEnabled="{Binding IsCleanCacheButtonEnabled}"
                             Tag="CleanCache" />
                         <ProgressRing
                             HorizontalAlignment="Left"
-                            IsActive="{x:Bind IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Visibility="{x:Bind IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                            IsActive="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
+                            Visibility="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                     </control:StackPanel>
                 </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+                <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
                     <HyperlinkButton
                         x:Uid="/SettingsPage/AccountSetting"
                         Click="Button_Click"
@@ -79,22 +81,22 @@
                     </Button>
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
-                    <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind VersionTextBlockText}" />
-                    <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLuanchingCheckBox" IsChecked="{x:Bind CheckUpdateWhenLuanching, Mode=TwoWay}" />
+                    <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{Binding VersionTextBlockText}" />
+                    <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLuanchingCheckBox" IsChecked="{Binding CheckUpdateWhenLuanching, Mode=TwoWay}" />
                     <StackPanel>
                         <Button
                             x:Uid="/SettingsPage/CheckUpdate"
                             Click="Button_Click"
-                            IsEnabled="{x:Bind IsCheckUpdateButtonEnabled, Mode=OneWay}"
+                            IsEnabled="{Binding IsCheckUpdateButtonEnabled}"
                             Tag="CheckUpdate" />
                         <ProgressRing
                             HorizontalAlignment="Left"
-                            IsActive="{x:Bind IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Visibility="{x:Bind IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                            IsActive="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
+                            Visibility="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                     </StackPanel>
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
-                    <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{x:Bind ShowOtherException, Mode=TwoWay}" />
+                    <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{Binding ShowOtherException, Mode=TwoWay}" />
                     <Button Name="Reset" x:Uid="/SettingsPage/ResetSettings">
                         <Button.Flyout>
                             <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
@@ -113,7 +115,7 @@
                     </Button>
                     <HyperlinkButton
                         x:Uid="/SettingsPage/FeedbackLink"
-                        Click="Button_Click"
+                        NavigateUri="https://github.com/Coolapk-UWP/Coolapk-Lite/issues"
                         Tag="FeedBack" />
                     <HyperlinkButton
                         x:Uid="/SettingsPage/LogFolderLink"
@@ -127,15 +129,15 @@
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/AboutSettingsHeader">
                     <cwuc:MarkdownTextBlock
-                        x:Uid="/MarkDown/about"
                         HorizontalAlignment="Left"
                         Background="{ThemeResource SystemControlTransparentBrush}"
-                        FontSize="{Binding FontSize, ElementName=GoToTestPage}"
+                        FontSize="{StaticResource ContentControlFontSize}"
                         LinkClicked="MarkdownTextBlock_LinkClicked"
+                        Text="{Binding AboutTextBlockText}"
                         TextWrapping="Wrap" />
                 </control:SettingsGroup>
             </StackPanel>
         </ScrollViewer>
-        <control:TitleBar x:Name="TitleBar" />
+        <control:TitleBar x:Name="TitleBar" Title="{Binding Title}" />
     </Grid>
 </Page>
