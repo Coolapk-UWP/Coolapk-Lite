@@ -1,7 +1,4 @@
-﻿using CoolapkLite.Models;
-using CoolapkLite.Models.Feeds;
-using CoolapkLite.Models.Upload;
-using Microsoft.Toolkit.Uwp.Helpers;
+﻿using CoolapkLite.Models.Upload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -11,10 +8,8 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 

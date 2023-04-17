@@ -71,7 +71,7 @@ namespace CoolapkLite.Common
             {
                 readyToScroll = true;
 
-                if (newSv.VerticalOffset == 0 && (oldSv == null || oldSv != null && oldSv.VerticalOffset == 0))
+                if (newSv.VerticalOffset == 0 && (oldSv == null || (oldSv != null && oldSv.VerticalOffset == 0)))
                 {
                     StartScrollProgressAnimation(newSv, false);
                 }

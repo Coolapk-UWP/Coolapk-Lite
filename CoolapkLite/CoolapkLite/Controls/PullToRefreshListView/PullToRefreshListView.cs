@@ -485,7 +485,6 @@ namespace CoolapkLite.Controls
             if (_contentTransform == null)
             {
                 UIElement headerContent = VisualTreeHelper.GetChild(_scrollerContent, 0) as UIElement;
-                UIElement itemsPanel = VisualTreeHelper.GetChild(_scrollerContent, 1) as UIElement;
                 UIElement footerContent = VisualTreeHelper.GetChild(_scrollerContent, 2) as UIElement;
 
                 if (_headerTransform == null && VisualTreeHelper.GetChildrenCount(headerContent) > 0)
@@ -506,7 +505,7 @@ namespace CoolapkLite.Controls
                     }
                 }
 
-                if (itemsPanel == null)
+                if (!(VisualTreeHelper.GetChild(_scrollerContent, 1) is UIElement itemsPanel))
                 {
                     return;
                 }
@@ -718,16 +717,17 @@ namespace CoolapkLite.Controls
 
         private static void OnUseRefreshContainerWhenPossibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            PullToRefreshListView list = d as PullToRefreshListView;
-            if (list == null)
+            if (!(d is PullToRefreshListView list))
             {
                 return;
             }
 
             if (list.UseRefreshContainerWhenPossible && IsRefreshContainerSupported)
             {
-                ResourceDictionary dict = new ResourceDictionary();
-                dict.Source = new System.Uri("ms-appx:///Controls/PullToRefreshListView/PullToRefreshListViewRefreshContainerTemplate.xaml");
+                ResourceDictionary dict = new ResourceDictionary
+                {
+                    Source = new System.Uri("ms-appx:///Controls/PullToRefreshListView/PullToRefreshListViewRefreshContainerTemplate.xaml")
+                };
                 list._previousTemplateUsed = list.Template;
                 list.Template = dict["PullToRefreshListViewRefreshContainerTemplate"] as ControlTemplate;
             }

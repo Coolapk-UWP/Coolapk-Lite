@@ -3,10 +3,7 @@ using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Models.Feeds

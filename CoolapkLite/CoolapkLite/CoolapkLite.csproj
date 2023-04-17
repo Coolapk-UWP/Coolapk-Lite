@@ -20,6 +20,7 @@
     <PackageCertificateKeyFile />
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Never</AppxBundle>
@@ -404,6 +405,16 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Package.StoreAssociation.xml" />
+    <Content Include="Assets\About\About.en-US.md" />
+    <Content Include="Assets\About\About.uk-UA.md" />
+    <Content Include="Assets\About\About.zh-CN.md" />
+    <Content Include="Assets\About\About.zh-TW.md" />
+    <Content Include="Assets\BadgeLogo.scale-100.png" />
+    <Content Include="Assets\BadgeLogo.scale-125.png" />
+    <Content Include="Assets\BadgeLogo.scale-150.png" />
+    <Content Include="Assets\BadgeLogo.scale-200.png" />
+    <Content Include="Assets\BadgeLogo.scale-400.png" />
     <Content Include="Assets\Emoji\%28cos滑稽%29.png" />
     <Content Include="Assets\Emoji\%28haha%29.png" />
     <Content Include="Assets\Emoji\%28OK%29.png" />
@@ -924,6 +935,7 @@
     <Content Include="Assets\LargeTile.scale-150.png" />
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\NoPic\image_empty.png" />
     <Content Include="Assets\NoPic\img_placeholder.png" />
     <Content Include="Assets\NoPic\img_placeholder_night.png" />
@@ -935,10 +947,12 @@
     <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\SplashScreen.scale-125.png" />
     <Content Include="Assets\SplashScreen.scale-150.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Assets\Square150x150Logo.scale-100.png" />
     <Content Include="Assets\Square150x150Logo.scale-125.png" />
     <Content Include="Assets\Square150x150Logo.scale-150.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-400.png" />
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-16.png" />
     <Content Include="Assets\Square44x44Logo.altform-lightunplated_targetsize-24.png" />
@@ -952,9 +966,11 @@
     <Content Include="Assets\Square44x44Logo.scale-100.png" />
     <Content Include="Assets\Square44x44Logo.scale-125.png" />
     <Content Include="Assets\Square44x44Logo.scale-150.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-400.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-16.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-256.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-32.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-48.png" />
@@ -970,27 +986,9 @@
     <Content Include="Assets\Wide310x150Logo.scale-100.png" />
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
-    <Content Include="Assets\About\About.en-US.md" />
-    <Content Include="Assets\About\About.zh-CN.md" />
-    <Content Include="Assets\About\About.zh-TW.md" />
-    <None Include="Package.StoreAssociation.xml" />
-    <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
-    <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
-    <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
-    <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
-    <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
-    <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
-    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1296,64 +1294,6 @@
     </SDKReference>
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\SettingsPage.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\FeedListPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\Feed.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\LoginDialog.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\BrowserPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\CirclePage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\Feed.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\FeedListPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\FeedShellPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\NotificationsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\SettingsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\TitleBar.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\LoginDialog.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\BCrypt.Net\BCrypt.Net.csproj">
       <Project>{001d1687-3e63-4b1a-8d4c-a9bb3631a511}</Project>
       <Name>BCrypt.Net</Name>
@@ -1392,74 +1332,73 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PRIResource Include="Strings\en-US\BrowserPage.resw" />
+    <PRIResource Include="Strings\en-US\CirclePage.resw" />
+    <PRIResource Include="Strings\en-US\CreateFeedControl.resw" />
+    <PRIResource Include="Strings\en-US\Feed.resw" />
+    <PRIResource Include="Strings\en-US\FeedListPage.resw" />
+    <PRIResource Include="Strings\en-US\FeedShellPage.resw" />
+    <PRIResource Include="Strings\en-US\LoginDialog.resw" />
+    <PRIResource Include="Strings\en-US\MainPage.resw" />
+    <PRIResource Include="Strings\en-US\NotificationsPage.resw" />
+    <PRIResource Include="Strings\en-US\ProfilePage.resw" />
+    <PRIResource Include="Strings\en-US\Resources.resw" />
+    <PRIResource Include="Strings\en-US\SettingsPage.resw" />
+    <PRIResource Include="Strings\en-US\SettingsPane.resw" />
+    <PRIResource Include="Strings\en-US\ShowImagePage.resw" />
+    <PRIResource Include="Strings\en-US\TitleBar.resw" />
+    <PRIResource Include="Strings\uk-UA\BrowserPage.resw" />
+    <PRIResource Include="Strings\uk-UA\CirclePage.resw" />
+    <PRIResource Include="Strings\uk-UA\CreateFeedControl.resw" />
+    <PRIResource Include="Strings\uk-UA\Feed.resw" />
+    <PRIResource Include="Strings\uk-UA\FeedListPage.resw" />
+    <PRIResource Include="Strings\uk-UA\FeedShellPage.resw" />
+    <PRIResource Include="Strings\uk-UA\LoginDialog.resw" />
+    <PRIResource Include="Strings\uk-UA\MainPage.resw" />
+    <PRIResource Include="Strings\uk-UA\NotificationsPage.resw" />
+    <PRIResource Include="Strings\uk-UA\ProfilePage.resw" />
+    <PRIResource Include="Strings\uk-UA\Resources.resw" />
+    <PRIResource Include="Strings\uk-UA\SettingsPage.resw" />
+    <PRIResource Include="Strings\uk-UA\SettingsPane.resw" />
+    <PRIResource Include="Strings\uk-UA\ShowImagePage.resw" />
+    <PRIResource Include="Strings\uk-UA\TitleBar.resw" />
+    <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
+    <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
     <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\BrowserPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\CirclePage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\Feed.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\FeedListPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\FeedShellPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\LoginDialog.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\NotificationsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\SettingsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\TitleBar.resw" />
-  </ItemGroup>
-  <ItemGroup>
+    <PRIResource Include="Strings\zh-CN\Feed.resw" />
+    <PRIResource Include="Strings\zh-CN\FeedListPage.resw" />
+    <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
+    <PRIResource Include="Strings\zh-CN\LoginDialog.resw" />
+    <PRIResource Include="Strings\zh-CN\MainPage.resw" />
+    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
+    <PRIResource Include="Strings\zh-CN\Resources.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\SettingsPage.resw">
+      <SubType>Designer</SubType>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
+    <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
+    <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
     <PRIResource Include="Strings\zh-TW\BrowserPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\CirclePage.resw" />
-  </ItemGroup>
-  <ItemGroup>
+    <PRIResource Include="Strings\zh-TW\CreateFeedControl.resw" />
     <PRIResource Include="Strings\zh-TW\Feed.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\FeedListPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\FeedShellPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\LoginDialog.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\NotificationsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
+    <PRIResource Include="Strings\zh-TW\ProfilePage.resw" />
     <PRIResource Include="Strings\zh-TW\Resources.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\SettingsPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
+    <PRIResource Include="Strings\zh-TW\SettingsPane.resw" />
+    <PRIResource Include="Strings\zh-TW\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

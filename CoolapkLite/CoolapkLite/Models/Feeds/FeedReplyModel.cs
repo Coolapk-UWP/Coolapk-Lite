@@ -2,12 +2,9 @@
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
-using System.Net.Http;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Models.Feeds

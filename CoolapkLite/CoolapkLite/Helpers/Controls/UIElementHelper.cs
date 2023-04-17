@@ -1,5 +1,4 @@
-﻿using System.Xml.Linq;
-using Windows.Foundation.Metadata;
+﻿using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

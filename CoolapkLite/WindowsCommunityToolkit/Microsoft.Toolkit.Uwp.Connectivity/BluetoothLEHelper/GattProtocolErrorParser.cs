@@ -70,27 +70,15 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
                 return "Invalid Handle";
             }
 
-            if (errorValue == GattProtocolError.InvalidOffset)
-            {
-                return "Invalid Offset";
-            }
-
-            if (errorValue == GattProtocolError.InvalidPdu)
-            {
-                return "Invalid Pdu";
-            }
-
-            if (errorValue == GattProtocolError.PrepareQueueFull)
-            {
-                return "Prepare Queue Full";
-            }
-
-            if (errorValue == GattProtocolError.ReadNotPermitted)
-            {
-                return "Read Not Permitted";
-            }
-
-            return errorValue == GattProtocolError.RequestNotSupported
+            return errorValue == GattProtocolError.InvalidOffset
+                ? "Invalid Offset"
+                : errorValue == GattProtocolError.InvalidPdu
+                ? "Invalid Pdu"
+                : errorValue == GattProtocolError.PrepareQueueFull
+                ? "Prepare Queue Full"
+                : errorValue == GattProtocolError.ReadNotPermitted
+                ? "Read Not Permitted"
+                : errorValue == GattProtocolError.RequestNotSupported
                 ? "Request Not Supported"
                 : errorValue == GattProtocolError.UnlikelyError
                 ? "UnlikelyError"

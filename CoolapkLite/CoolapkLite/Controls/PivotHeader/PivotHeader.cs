@@ -75,10 +75,7 @@ namespace CoolapkLite.Controls
 
         private async void HidePivotHeader()
         {
-            if (cts != null)
-            {
-                cts.Cancel();
-            }
+            cts?.Cancel();
 
             cts = new CancellationTokenSource(TimeSpan.FromSeconds(20));
             PivotPanel PivotPanel = (PivotPanel)await WaitForLoaded(Pivot, () => Pivot?.FindDescendant<PivotPanel>() as FrameworkElement, c => c != null, cts.Token);
@@ -119,13 +116,9 @@ namespace CoolapkLite.Controls
             }
 
             DependencyObject container = ContainerFromItem(item);
-            if (container == null)
-            {
-                return null;
-            }
-
-            Grid grid = VisualTreeHelper.GetChild(container, 0) as Grid;
-            return grid == null ? null : grid.FindName("Indicator") as Rectangle;
+            return container == null
+                ? null
+                : !(VisualTreeHelper.GetChild(container, 0) is Grid grid) ? null : grid.FindName("Indicator") as Rectangle;
         }
 
         private async Task<T> WaitForLoaded<T>(FrameworkElement element, Func<T> func, Predicate<T> pre, CancellationToken cancellationToken)

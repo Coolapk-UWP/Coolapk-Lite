@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.ViewModels.FeedPages;
+﻿using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Resources;
