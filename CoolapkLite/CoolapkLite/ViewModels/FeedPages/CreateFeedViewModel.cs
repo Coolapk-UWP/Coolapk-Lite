@@ -57,6 +57,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             await CreateTopicItemSourse.Refresh(reset);
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is CreateFeedViewModel model && Equals(model);
+
         public async Task ReadFile(IStorageFile file)
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())

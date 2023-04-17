@@ -16,7 +16,10 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
+using Windows.System;
 using Windows.System.Profile;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
@@ -85,12 +88,20 @@ namespace CoolapkLite
             // 只需确保窗口处于活动状态
             if (!(MainWindow.Content is Frame rootFrame))
             {
-                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
+                {
+                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                }
 
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+
+                if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+                {
+                    rootFrame.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+                }
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
@@ -154,6 +165,28 @@ namespace CoolapkLite
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+                if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    CoreVirtualKeyStates shift = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift);
+                    if (shift.HasFlag(CoreVirtualKeyStates.Down))
+                    {
+                        switch (args.VirtualKey)
+                        {
+                            case VirtualKey.X:
+                                SettingsPane.Show();
+                                args.Handled = true;
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         private void AddBrushResource()

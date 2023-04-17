@@ -15,7 +15,6 @@ namespace CoolapkLite.ViewModels.FeedPages
     public class CollectionViewModel : IViewModel, INotifyPropertyChanged
     {
         protected string ID;
-        public double[] VerticalOffsets { get; set; } = new double[3];
 
         private string title = string.Empty;
         public string Title
@@ -123,6 +122,9 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
             }
         }
+
+        bool IViewModel.IsEqual(IViewModel other) => other is CollectionViewModel model && IsEqual(model);
+        public bool IsEqual(CollectionViewModel other) => ID == other.ID;
     }
 
     public class CollectionItemSourse : EntityItemSourse

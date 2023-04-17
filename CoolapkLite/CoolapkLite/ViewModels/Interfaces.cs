@@ -18,7 +18,8 @@ namespace CoolapkLite.ViewModels
 
     public interface IViewModel : INotifyPropertyChanged
     {
-        Task Refresh(bool reset);
         string Title { get; }
+        Task Refresh(bool reset);
+        bool IsEqual(IViewModel other);
     }
 }

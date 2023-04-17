@@ -76,9 +76,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is FeedListViewModel ViewModel
-                && (Provider == null
-                    || Provider.ListType != ViewModel.ListType
-                    || Provider.ID != ViewModel.ID))
+                && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
                 DataContext = Provider;

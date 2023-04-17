@@ -25,7 +25,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is AdaptiveViewModel ViewModel
-                && (Provider == null || Provider.Uri != ViewModel.Uri))
+                && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
                 DataContext = Provider;
