@@ -47,6 +47,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is IndexViewModel model && IsEqual(model);
+        public bool IsEqual(IndexViewModel other) => !string.IsNullOrWhiteSpace(Uri) ? Uri == other.Uri : Provider == other.Provider;
+
         private string GetUri(string uri)
         {
             if (uri.Contains("&title="))

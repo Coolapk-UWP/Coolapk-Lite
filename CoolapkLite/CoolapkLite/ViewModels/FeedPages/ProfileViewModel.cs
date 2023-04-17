@@ -68,6 +68,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
+
         private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserProfile, id), true);

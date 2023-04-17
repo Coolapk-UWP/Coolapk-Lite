@@ -1,4 +1,5 @@
-﻿using Windows.Foundation.Metadata;
+﻿using System.Xml.Linq;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -110,7 +111,7 @@ namespace CoolapkLite.Helpers
         /// <summary>
         /// Gets a value that indicates whether the element automatically gets focus when the user interacts with it.
         /// </summary>
-        /// <param name="element">The flyout associated with this element.</param>
+        /// <param name="element">The element from which the property value is read.</param>
         /// <returns>
         /// A value that indicates whether the element automatically gets focus when the user interacts with it.
         /// </returns>
@@ -145,6 +146,60 @@ namespace CoolapkLite.Helpers
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "AllowFocusOnInteraction"))
             {
                 element.AllowFocusOnInteraction = GetAllowFocusOnInteraction(element);
+            }
+        }
+
+        #endregion
+
+        #region CanContentRenderOutsideBounds
+
+        /// <summary>
+        /// Gets the value of the CanContentRenderOutsideBounds dependency property <see cref="ScrollViewer.CanContentRenderOutsideBounds"/> XAML attached property on a specified element.
+        /// </summary>
+        /// <param name="element">The element from which the property value is read.</param>
+        /// <returns>
+        /// The value of the property, as obtained from the property store.
+        /// </returns>
+        public static bool GetCanContentRenderOutsideBounds(DependencyObject element)
+        {
+            return (bool)element.GetValue(CanContentRenderOutsideBoundsProperty);
+        }
+
+        /// <summary>
+        /// Sets the value of the CanContentRenderOutsideBounds dependency property <see cref="ScrollViewer.CanContentRenderOutsideBounds"/> XAML attached property on a specified element.
+        /// </summary>
+        /// <param name="element">The element on which to set the property value.</param>
+        /// <param name="value">The value to set.</param>
+        public static void SetCanContentRenderOutsideBounds(DependencyObject element, bool value)
+        {
+            element.SetValue(CanContentRenderOutsideBoundsProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the CanContentRenderOutsideBounds dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CanContentRenderOutsideBoundsProperty =
+            DependencyProperty.RegisterAttached(
+                "CanContentRenderOutsideBounds",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnCanContentRenderOutsideBoundsChanged));
+
+        private static void OnCanContentRenderOutsideBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ScrollContentPresenter ScrollContentPresenter)
+            {
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollContentPresenter", "CanContentRenderOutsideBounds"))
+                {
+                    ScrollContentPresenter.CanContentRenderOutsideBounds = GetCanContentRenderOutsideBounds(ScrollContentPresenter);
+                }
+            }
+            else if (d is DependencyObject element)
+            {
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollViewer", "CanContentRenderOutsideBoundsProperty"))
+                {
+                    element.SetValue(ScrollViewer.CanContentRenderOutsideBoundsProperty, GetCanContentRenderOutsideBounds(element));
+                }
             }
         }
 

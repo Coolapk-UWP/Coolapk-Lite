@@ -13,41 +13,41 @@
     <Page.Resources>
         <MenuFlyout x:Key="FlipViewContextFlyout">
             <MenuFlyoutItem
+                x:Uid="/ShowImagePage/RefreshMenuItem"
                 Click="AppBarButton_Click"
-                Tag="Refresh"
-                Text="刷新">
+                Tag="Refresh">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                 </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
+                x:Uid="/ShowImagePage/CopyMenuItem"
                 Click="AppBarButton_Click"
-                Tag="Copy"
-                Text="复制">
+                Tag="Copy">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                 </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
+                x:Uid="/ShowImagePage/ShareMenuItem"
                 Click="AppBarButton_Click"
-                Tag="Share"
-                Text="分享">
+                Tag="Share">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                 </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
+                x:Uid="/ShowImagePage/SaveMenuItem"
                 Click="AppBarButton_Click"
-                Tag="Save"
-                Text="保存">
+                Tag="Save">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                 </helpers:FlyoutBaseHelper.Icon>
             </MenuFlyoutItem>
             <MenuFlyoutItem
+                x:Uid="/ShowImagePage/OriginMenuItem"
                 Click="AppBarButton_Click"
                 Tag="Origin"
-                Text="查看原图"
                 Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
@@ -101,7 +101,7 @@
                     helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"
                     Background="{ThemeResource SystemControlHighlightTransparentBrush}"
                     ItemsSource="{Binding Images}"
-                    SelectedIndex="{Binding Index, Mode=TwoWay}"
+                    SelectedIndex="{Binding Index, Mode=TwoWay, FallbackValue='-1'}"
                     Tapped="FlipView_Tapped">
                     <FlipView.ItemTemplate>
                         <DataTemplate>
@@ -119,20 +119,18 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsActive="{Binding IsLoading}"
-                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible'}" />
             </Grid>
         </Grid>
         <CommandBar
             x:Name="CommandBar"
             VerticalAlignment="Bottom"
+            Background="{ThemeResource TitleBarBackgroundBrush}"
             Visibility="Collapsed">
-            <CommandBar.Background>
-                <SolidColorBrush Opacity="0.8" Color="{StaticResource SystemChromeMediumColor}" />
-            </CommandBar.Background>
             <CommandBar.PrimaryCommands>
                 <AppBarButton
+                    x:Uid="/ShowImagePage/RefreshButton"
                     Click="AppBarButton_Click"
-                    Label="刷新"
                     Tag="Refresh"
                     ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
                     <AppBarButton.Icon>
@@ -140,8 +138,8 @@
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton
+                    x:Uid="/ShowImagePage/ShareButton"
                     Click="AppBarButton_Click"
-                    Label="分享"
                     Tag="Share"
                     ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
                     <AppBarButton.Icon>
@@ -149,8 +147,8 @@
                     </AppBarButton.Icon>
                 </AppBarButton>
                 <AppBarButton
+                    x:Uid="/ShowImagePage/SaveButton"
                     Click="AppBarButton_Click"
-                    Label="保存"
                     Tag="Save"
                     ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
                     <AppBarButton.Icon>
@@ -160,10 +158,10 @@
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarButton
+                    x:Uid="/ShowImagePage/OriginButton"
                     Click="AppBarButton_Click"
-                    Label="查看原图"
                     Tag="Origin"
-                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                     </AppBarButton.Icon>

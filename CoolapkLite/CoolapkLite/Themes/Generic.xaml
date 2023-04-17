@@ -6,9 +6,9 @@
         <ResourceDictionary Source="ms-appx:///Controls/TwoPaneView/TwoPaneView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PivotHeader/PivotHeader.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenu.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/SettingsGroup/SettingsGroup.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/ListDetailsView/ListDetailsView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/ShyHeaderListView/ShyHeaderListView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PullToRefreshListView/PullToRefreshListView.xaml" />
-        <ResourceDictionary Source="ms-appx:///Controls/HeaderedContentControl/HeaderedContentControl.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

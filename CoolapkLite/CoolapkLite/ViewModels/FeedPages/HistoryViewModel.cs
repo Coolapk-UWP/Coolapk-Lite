@@ -56,6 +56,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is HistoryViewModel model && IsEqual(model);
+        public bool IsEqual(HistoryViewModel other) => Title == other.Title;
+
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
             List<Entity> Models = new List<Entity>();

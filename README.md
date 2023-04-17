@@ -3,13 +3,13 @@
 # Coolapk UWP
 一个基于UWP平台的酷安客户端精简版
 
-[![Build Status](https://dev.azure.com/wherewhere/Coolapk-UWP/_apis/build/status/Coolapk-UWP.Coolapk-Lite?branchName=master)](https://dev.azure.com/wherewhere/Coolapk-UWP/_build/latest?definitionId=5&branchName=master)
+[![Build Status](https://dev.azure.com/wherewhere/Coolapk-UWP/_apis/build/status/Coolapk-UWP.Coolapk-Lite?branchName=master)](https://dev.azure.com/wherewhere/Coolapk-UWP/_build/latest?definitionId=5&branchName=master "Build Status")
 
 [![LICENSE](https://img.shields.io/github/license/Coolapk-UWP/Coolapk-Lite.svg?label=License&style=flat-square)](https://github.com/Coolapk-UWP/Coolapk-Lite/blob/master/LICENSE "LICENSE")
 [![Issues](https://img.shields.io/github/issues/Coolapk-UWP/Coolapk-Lite.svg?label=Issues&style=flat-square)](https://github.com/Coolapk-UWP/Coolapk-Lite/issues "Issues")
 [![Stargazers](https://img.shields.io/github/stars/Coolapk-UWP/Coolapk-Lite.svg?label=Stars&style=flat-square)](https://github.com/Coolapk-UWP/Coolapk-Lite/stargazers "Stargazers")
 
-[![Microsoft Store](https://img.shields.io/badge/download-%e4%b8%8b%e8%bd%bd-magenta.svg?label=Microsoft%20Store&logo=Microsoft&style=for-the-badge&color=11a2f8)](https://apps.microsoft.com/store/detail/9NB8J1BH0D7T "Microsoft Store")
+[![Microsoft Store](https://img.shields.io/badge/download-%e4%b8%8b%e8%bd%bd-magenta.svg?label=Microsoft%20Store&logo=Microsoft&style=for-the-badge&color=11a2f8)](https://www.microsoft.com/store/apps/9NB8J1BH0D7T "Microsoft Store")
 [![GitHub All Releases](https://img.shields.io/github/downloads/Coolapk-UWP/Coolapk-Lite/total.svg?label=DOWNLOAD&logo=github&style=for-the-badge)](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest "GitHub All Releases")
 
 ## 目录
@@ -22,6 +22,7 @@
     - [更新应用](#更新应用)
   - [使用到的模块](#使用到的模块)
   - [衍生项目](#衍生项目)
+  - [参与人员](#参与人员)
   - [鸣谢](#鸣谢)
 
 ## 如何安装应用
@@ -65,6 +66,9 @@
 ## 衍生项目
 - [Coolapk-API-Collect](https://github.com/Coolapk-UWP/Coolapk-API-Collect "Coolapk-API-Collect")
 
+## 参与人员
+[![Contributors](https://contrib.rocks/image?repo=Coolapk-UWP/Coolapk-Lite)](https://github.com/Coolapk-UWP/Coolapk-Lite/graphs/contributors "Contributors")
+
 ## 鸣谢
 - 酷安UWP原作者[@一块小板子](http://www.coolapk.com/u/695942)([Github](https://github.com/oboard))
 - OpenCoolapk作者[@roykio](http://www.coolapk.com/u/703542)([Github](https://github.com/roykio))
@@ -72,3 +76,6 @@
 - Coolapk-kotlin作者[@bjzhou](http://www.coolapk.com/u/528097)([Github](https://github.com/bjzhou))
 - 以及所有为酷安UWP项目做出贡献的同志们
 - **铺路尚未成功，同志仍需努力！**
+
+## Star 数量统计
+[![Star 数量统计](https://starchart.cc/Coolapk-UWP/Coolapk-Lite.svg)](https://starchart.cc/Coolapk-UWP/Coolapk-Lite "Star 数量统计")

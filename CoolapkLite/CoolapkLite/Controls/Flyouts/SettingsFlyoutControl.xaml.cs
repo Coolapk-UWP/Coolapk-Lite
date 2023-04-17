@@ -8,25 +8,33 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
 
-// https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
+//https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
-namespace CoolapkLite.Pages.SettingsPages
+namespace CoolapkLite.Controls
 {
-    /// <summary>
-    /// 可用于自身或导航至 Frame 内部的空白页。
-    /// </summary>
-    public sealed partial class SettingsPage : Page
+    public sealed partial class SettingsFlyoutControl : SettingsFlyout
     {
         internal SettingsViewModel Provider;
 
-        public SettingsPage() => InitializeComponent();
-
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public SettingsFlyoutControl()
         {
-            base.OnNavigatedTo(e);
+            InitializeComponent();
             Provider = SettingsViewModel.Caches ?? new SettingsViewModel();
+            ThemeHelper.UISettingChanged.Add(mode =>
+            {
+                switch (mode)
+                {
+                    case UISettingChangedType.LightMode:
+                        RequestedTheme = ElementTheme.Light;
+                        break;
+                    case UISettingChangedType.DarkMode:
+                        RequestedTheme = ElementTheme.Dark;
+                        break;
+                    default:
+                        break;
+                }
+            });
             switch (ThemeHelper.ActualTheme)
             {
                 case ElementTheme.Light:
@@ -53,14 +61,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         flyout_reset.Hide();
                     }
-                    _ = Frame.Navigate(typeof(SettingsPage));
-                    Frame.GoBack();
                     break;
                 case "MyDevice":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
-                    break;
-                case "TestPage":
-                    _ = Frame.Navigate(typeof(TestPage));
+                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
                     break;
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
@@ -72,7 +75,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     Provider?.CheckUpdate();
                     break;
                 case "AccountSetting":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
+                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();

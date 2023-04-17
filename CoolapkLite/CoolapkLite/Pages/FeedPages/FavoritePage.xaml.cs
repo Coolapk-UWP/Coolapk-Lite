@@ -18,15 +18,13 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private FavoriteViewModel Provider;
 
-        public FavoritePage()
-        {
-            InitializeComponent();
-        }
+        public FavoritePage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is FavoriteViewModel ViewModel)
+            if (e.Parameter is FavoriteViewModel ViewModel
+                && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;

@@ -87,6 +87,9 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is HTMLViewModel model && IsEqual(model);
+        public bool IsEqual(HTMLViewModel other) => uri == other.uri;
+
         private async Task Load_HTML(Uri uri)
         {
             UIHelper.ShowProgressBar();

@@ -68,5 +68,8 @@ namespace CoolapkLite.ViewModels.BrowserPages
         }
 
         public Task Refresh(bool reset) => throw new NotImplementedException();
+
+        bool IViewModel.IsEqual(IViewModel other) => other is BrowserViewModel model && IsEqual(model);
+        public bool IsEqual(BrowserViewModel other) => Uri == other.Uri;
     }
 }

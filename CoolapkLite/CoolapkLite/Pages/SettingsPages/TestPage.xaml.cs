@@ -1,13 +1,19 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
+using Windows.Globalization;
 using Windows.System;
+using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -22,10 +28,38 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class TestPage : Page, INotifyPropertyChanged
     {
+        internal List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+
+        internal bool IsExtendsTitleBar
+        {
+            get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+            set
+            {
+                if (IsExtendsTitleBar != value)
+                {
+                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
+                    ThemeHelper.UpdateSystemCaptionButtonColors();
+                }
+            }
+        }
+
         internal bool IsUseAPI2
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
             set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
+        }
+
+        internal int APIVersion
+        {
+            get => (int)SettingsHelper.Get<APIVersion>(SettingsHelper.APIVersion) - 5;
+            set
+            {
+                if (APIVersion != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 5);
+                    NetworkHelper.SetRequestHeaders();
+                }
+            }
         }
 
         internal bool IsUseTokenV2
@@ -43,32 +77,27 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal bool IsUseLiteHome
         {
-            get => SettingsHelper.Get<bool>(SettingsHelper.UseLiteHome);
-            set => SettingsHelper.Set(SettingsHelper.UseLiteHome, value);
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome);
+            set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
         }
 
-        internal string Version
+        internal bool IsUseCompositor
         {
-            get => SettingsHelper.Get<string>(SettingsHelper.APIVersion);
-            set
-            {
-                if (Version != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.APIVersion, value.ToString());
-                    NetworkHelper.SetRequestHeaders();
-                }
-            }
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);
+            set => SettingsHelper.Set(SettingsHelper.IsUseCompositor, value);
         }
 
-        internal bool IsExtendsTitleBar
+        internal double SemaphoreSlimCount
         {
-            get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+            get => SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount);
             set
             {
-                if (IsExtendsTitleBar != value)
+                if (SemaphoreSlimCount != value)
                 {
-                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
-                    ThemeHelper.UpdateSystemCaptionButtonColors();
+                    int result = (int)Math.Floor(value);
+                    SettingsHelper.Set(SettingsHelper.SemaphoreSlimCount, result);
+                    NetworkHelper.SetSemaphoreSlim(result);
+                    ImageModel.SetSemaphoreSlim(result);
                 }
             }
         }
@@ -149,6 +178,12 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();
                     break;
+                case "OpenCharmSettings":
+                    if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+                    {
+                        SettingsPane.Show();
+                    }
+                    break;
                 case "PausedProgressBar":
                     UIHelper.PausedProgressBar();
                     break;
@@ -166,6 +201,41 @@ namespace CoolapkLite.Pages.SettingsPages
                 //    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
                 //    break;
                 default:
+                    break;
+            }
+        }
+
+        private void ComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox ComboBox = sender as ComboBox;
+            switch (ComboBox.Tag.ToString())
+            {
+                case "Language":
+                    string lang = SettingsHelper.Get<string>(SettingsHelper.CurrentLanguage);
+                    lang = lang == LanguageHelper.AutoLanguageCode ? LanguageHelper.GetCurrentLanguage() : lang;
+                    CultureInfo culture = new CultureInfo(lang);
+                    ComboBox.SelectedItem = culture;
+                    break;
+            }
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox ComboBox = sender as ComboBox;
+            switch (ComboBox.Tag.ToString())
+            {
+                case "Language":
+                    CultureInfo culture = ComboBox.SelectedItem as CultureInfo;
+                    if (culture.Name != LanguageHelper.GetCurrentLanguage())
+                    {
+                        ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
+                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
+                    }
+                    else
+                    {
+                        ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
+                    }
                     break;
             }
         }

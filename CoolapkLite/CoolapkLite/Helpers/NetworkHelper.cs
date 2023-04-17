@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Security.ExchangeActiveSyncProvisioning;
@@ -23,15 +24,26 @@ namespace CoolapkLite.Helpers
 {
     public static partial class NetworkHelper
     {
-        public static readonly HttpClientHandler ClientHandler = new HttpClientHandler();
-        public static readonly HttpClient Client = new HttpClient(ClientHandler);
+        public static readonly HttpClientHandler ClientHandler;
+        public static readonly HttpClient Client;
+
+        private static SemaphoreSlim semaphoreSlim;
         private static TokenCreater token;
 
         static NetworkHelper()
         {
-            ThemeHelper.UISettingChanged.Add((arg) => Client.DefaultRequestHeaders.ReplaceDarkMode());
+            semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
+            ThemeHelper.UISettingChanged.Add((arg) => Client?.DefaultRequestHeaders?.ReplaceDarkMode());
+            ClientHandler = new HttpClientHandler();
+            Client = new HttpClient(ClientHandler);
             SetRequestHeaders();
             SetLoginCookie();
+        }
+
+        public static void SetSemaphoreSlim(int initialCount)
+        {
+            semaphoreSlim.Dispose();
+            semaphoreSlim = new SemaphoreSlim(initialCount);
         }
 
         public static void SetLoginCookie()
@@ -202,6 +214,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
                 response = await Client.PostAsync(uri, content);
@@ -218,12 +231,17 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStreamAsync(uri);
             }
@@ -238,12 +256,17 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
 
         public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStringAsync(uri);
             }
@@ -257,6 +280,10 @@ namespace CoolapkLite.Helpers
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
+            }
+            finally
+            {
+                semaphoreSlim.Release();
             }
         }
     }

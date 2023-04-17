@@ -25,30 +25,10 @@ namespace CoolapkLite.Controls
             SetValue(TemplateSettingsProperty, new TitleBarTemplateSettings());
 
             SizeChanged += OnSizeChanged;
-
-            Window window = Window.Current;
-            if (window != null)
-            {
-                window.Activated += OnWindowActivated;
-            }
         }
 
         protected override void OnApplyTemplate()
         {
-            Window window = Window.Current;
-            if (window != null)
-            {
-                Grid dragRegion = (Grid)GetTemplateChild("DragRegion");
-                if (dragRegion != null)
-                {
-                    window.SetTitleBar(dragRegion);
-                }
-                else
-                {
-                    window.SetTitleBar(null);
-                }
-            }
-
             Button backButton = (Button)GetTemplateChild("BackButton");
             if (backButton != null)
             {
@@ -137,11 +117,6 @@ namespace CoolapkLite.Controls
         public void OnTopPaddingPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             UpdateTopPadding();
-        }
-
-        public void OnWindowActivated(object sender, WindowActivatedEventArgs args)
-        {
-            VisualStateManager.GoToState(this, (args.WindowActivationState == CoreWindowActivationState.Deactivated) ? "Deactivated" : "Activated", false);
         }
 
         public void UpdateBackButton()

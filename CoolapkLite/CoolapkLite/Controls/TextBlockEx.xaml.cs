@@ -247,7 +247,7 @@ namespace CoolapkLite.Controls
                                 Image image = new Image();
                                 InlineUIContainer container = new InlineUIContainer();
 
-                                imageModel = new ImageModel(src, ImageType.OriginImage);
+                                imageModel = new ImageModel(src, SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ImageType.OriginImage : ImageType.SmallImage);
                                 image.SetBinding(Image.SourceProperty, new Binding
                                 {
                                     Source = imageModel,
@@ -282,10 +282,7 @@ namespace CoolapkLite.Controls
                                     NewLine();
                                     imageArrayBuider.Add(imageModel);
 
-                                    Grid Grid = new Grid
-                                    {
-                                        CornerRadius = new CornerRadius(4)
-                                    };
+                                    Grid Grid = new Grid { Padding = new Thickness(0, 0, 0, 8) };
 
                                     StackPanel IsGIFPanel = new StackPanel
                                     {
@@ -303,7 +300,6 @@ namespace CoolapkLite.Controls
 
                                     Border GIFBorder = new Border
                                     {
-                                        CornerRadius = new CornerRadius(0, 0, 4, 0),
                                         Child = new TextBlock
                                         {
                                             Text = _loader.GetString("GIF"),
@@ -323,11 +319,10 @@ namespace CoolapkLite.Controls
 
                                     Border WidePicBorder = new Border
                                     {
-                                        CornerRadius = new CornerRadius(0, 0, 0, 4),
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("WidePic.Text")
+                                            Text = _loader.GetString("WidePicText")
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -341,11 +336,10 @@ namespace CoolapkLite.Controls
 
                                     Border LongPicTextBorder = new Border
                                     {
-                                        CornerRadius = new CornerRadius(0, 0, 0, 4),
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("LongPic.Text")
+                                            Text = _loader.GetString("LongPicText")
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -385,6 +379,7 @@ namespace CoolapkLite.Controls
                                         {
                                             LineHeight = FontSize + 10,
                                             TextAlignment = TextAlignment.Center,
+                                            Foreground = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"]
                                         };
                                         Run run = new Run { Text = WebUtility.HtmlDecode(alt) };
                                         paragraph2.Inlines.Add(run);

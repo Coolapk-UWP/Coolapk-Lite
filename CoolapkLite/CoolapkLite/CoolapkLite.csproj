@@ -17,16 +17,12 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <PackageCertificateThumbprint>0CDF4A03E9BE9DD789894BB3C7AD3DEDECD9AB25</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>
-    </PackageCertificateKeyFile>
+    <PackageCertificateKeyFile />
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Always</AppxBundle>
+    <AppxBundle>Never</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
@@ -34,7 +30,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
@@ -45,7 +41,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
@@ -59,7 +55,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
@@ -70,7 +66,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
@@ -84,7 +80,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
@@ -96,7 +92,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
     <OutputPath>bin\ARM64\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
@@ -110,7 +106,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
@@ -121,7 +117,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
@@ -162,7 +158,9 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\HeaderedContentControl\HeaderedContentControl.cs" />
+    <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
+      <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
     <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs">
       <DependentUpon>ListDetailsView.cs</DependentUpon>
@@ -187,6 +185,13 @@
     </Compile>
     <Compile Include="Controls\QRCode\QRCodeTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\XamlQRCode.cs" />
+    <Compile Include="Controls\SettingsGroup\SettingsGroup.cs">
+      <DependentUpon>SettingsGroup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsGroup\SettingsGroup.Properties.cs">
+      <DependentUpon>SettingsGroup.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SettingsGroup\SettingsGroupAutomationPeer.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
@@ -226,6 +231,7 @@
     <Compile Include="Common\ExceptionHandling.cs" />
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
+    <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
@@ -389,6 +395,7 @@
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
+    <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -964,6 +971,10 @@
     <Content Include="Assets\Wide310x150Logo.scale-125.png" />
     <Content Include="Assets\Wide310x150Logo.scale-150.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\About\About.en-US.md" />
+    <Content Include="Assets\About\About.zh-CN.md" />
+    <Content Include="Assets\About\About.zh-TW.md" />
+    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -971,6 +982,9 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
+    <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
+    <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
     <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
@@ -1011,9 +1025,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\HeaderedContentControl\HeaderedContentControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Controls\Flyouts\SettingsFlyoutControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1028,6 +1042,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\QRCode\QRCode.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\SettingsGroup\SettingsGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1215,6 +1233,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\SettingsFlyout.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Styles\ToggleSwitch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1266,6 +1288,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <SDKReference Include="WindowsDesktop, Version=10.0.22621.0">
+      <Name>Windows Desktop Extensions for the UWP</Name>
+    </SDKReference>
     <SDKReference Include="WindowsMobile, Version=10.0.22621.0">
       <Name>Windows Mobile Extensions for the UWP</Name>
     </SDKReference>
@@ -1279,9 +1304,6 @@
     <PRIResource Include="Strings\zh-CN\SettingsPage.resw">
       <SubType>Designer</SubType>
     </PRIResource>
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\zh-CN\MarkDown.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
@@ -1315,9 +1337,6 @@
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\MainPage.resw" />
-  </ItemGroup>
-  <ItemGroup>
-    <PRIResource Include="Strings\en-US\MarkDown.resw" />
   </ItemGroup>
   <ItemGroup>
     <PRIResource Include="Strings\en-US\NotificationsPage.resw" />
@@ -1399,9 +1418,6 @@
     <PRIResource Include="Strings\uk-UA\MainPage.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\uk-UA\MarkDown.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\uk-UA\NotificationsPage.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -1435,9 +1451,6 @@
     <PRIResource Include="Strings\zh-TW\MainPage.resw" />
   </ItemGroup>
   <ItemGroup>
-    <PRIResource Include="Strings\zh-TW\MarkDown.resw" />
-  </ItemGroup>
-  <ItemGroup>
     <PRIResource Include="Strings\zh-TW\NotificationsPage.resw" />
   </ItemGroup>
   <ItemGroup>
@@ -1449,7 +1462,6 @@
   <ItemGroup>
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

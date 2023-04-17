@@ -13,7 +13,6 @@ namespace CoolapkLite.ViewModels.FeedPages
     internal class FavoriteViewModel : DataSourceBase<Entity>, IViewModel
     {
         public string Title { get; }
-        public double[] VerticalOffsets { get; set; } = new double[1];
 
         internal FavoriteViewModel()
         {
@@ -42,6 +41,9 @@ namespace CoolapkLite.ViewModels.FeedPages
                 _ = await LoadMoreItemsAsync(20);
             }
         }
+
+        bool IViewModel.IsEqual(IViewModel other) => other is FavoriteViewModel model && IsEqual(model);
+        public bool IsEqual(FavoriteViewModel other) => Title == other.Title;
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {

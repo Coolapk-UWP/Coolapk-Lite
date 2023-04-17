@@ -4,16 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:globalization="using:System.Globalization"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
-    <Page.Resources>
-        <Style x:Key="HeaderStyle" TargetType="control:HeaderedContentControl">
-            <Setter Property="Margin" Value="0,8" />
-            <Setter Property="FontSize" Value="18" />
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-        </Style>
-    </Page.Resources>
     <Grid>
         <ScrollViewer Margin="{StaticResource ScrollViewerMargin}" Padding="{StaticResource ScrollViewerPadding}">
             <StackPanel Margin="{StaticResource StackPanelMargin}" Padding="12,0">
@@ -22,208 +16,214 @@
                         <ReorderThemeTransition />
                     </TransitionCollection>
                 </StackPanel.ChildrenTransitions>
-                <control:HeaderedContentControl Header="通知测试" Style="{StaticResource HeaderStyle}">
-                    <StackPanel>
-                        <TextBox
-                            x:Name="NotifyMessage"
-                            Margin="0,2"
-                            Header="输入信息" />
-                        <StackPanel Margin="0,2" Orientation="Horizontal">
+                <control:SettingsGroup Header="通知测试">
+                    <control:StackPanel Spacing="4">
+                        <TextBox x:Name="NotifyMessage" Header="输入信息" />
+                        <control:StackPanel Orientation="Horizontal" Spacing="4">
                             <Button
                                 Click="Button_Click"
                                 Content="应用内通知"
                                 Tag="ShowMessage" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="切换进度条状态"
                                 Tag="PrograssRingState" />
-                        </StackPanel>
-                        <StackPanel Margin="0,2" Orientation="Horizontal">
+                        </control:StackPanel>
+                        <control:StackPanel Orientation="Horizontal" Spacing="4">
                             <Button
-                                Margin="0,0,2,0"
                                 Click="Button_Click"
                                 Content="生成同步错误"
                                 Tag="ShowError" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="生成异步错误"
                                 Tag="ShowAsyncError" />
-                        </StackPanel>
-                        <StackPanel Margin="0,2" Orientation="Horizontal">
+                        </control:StackPanel>
+                        <control:StackPanel Orientation="Horizontal" Spacing="4">
                             <Button
-                                Margin="0,0,2,0"
                                 Click="Button_Click"
                                 Content="打开进度条"
                                 Tag="ShowProgressBar" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="暂停"
                                 Tag="PausedProgressBar" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="错误"
                                 Tag="ErrorProgressBar" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="关闭"
                                 Tag="HideProgressBar" />
-                        </StackPanel>
-                        <Slider
-                            Header="修改进度条数值"
-                            TickFrequency="10"
-                            TickPlacement="Outside"
-                            ValueChanged="Slider_ValueChanged" />
-                    </StackPanel>
-                </control:HeaderedContentControl>
-                <control:HeaderedContentControl Header="网络测试" Style="{StaticResource HeaderStyle}">
-                    <StackPanel>
-                        <TextBox
-                            x:Name="WebUrl"
-                            Margin="0,2"
-                            Header="输入链接" />
-                        <StackPanel Margin="0,2" Orientation="Horizontal">
+                        </control:StackPanel>
+                    </control:StackPanel>
+                    <Slider
+                        Header="修改进度条数值"
+                        TickFrequency="10"
+                        TickPlacement="Outside"
+                        ValueChanged="Slider_ValueChanged" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="网络测试">
+                    <control:StackPanel Spacing="4">
+                        <TextBox x:Name="WebUrl" Header="输入链接" />
+                        <control:StackPanel Orientation="Horizontal" Spacing="4">
                             <Button
-                                Margin="0,0,2,0"
                                 Click="Button_Click"
                                 Content="打开内置浏览器"
                                 Tag="OpenBrowser" />
                             <Button
-                                Margin="2,0"
                                 Click="Button_Click"
                                 Content="打开系统浏览器"
                                 Tag="OpenEdge" />
-                        </StackPanel>
+                        </control:StackPanel>
                         <Button
-                            Margin="0,2"
                             Click="Button_Click"
                             Content="获取内容"
                             Tag="GetContent" />
-                        <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
-                        <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind IsUseTokenV2, Mode=TwoWay}" />
-                        <ComboBox
-                            x:Name="ComboBoxVersion"
-                            Grid.Row="13"
-                            Header="选择兼容版本号(需要重启)"
-                            PlaceholderText="选择版本号"
-                            SelectedItem="{x:Bind Version, Mode=TwoWay}">
-                            <x:String>V6</x:String>
-                            <x:String>V7</x:String>
-                            <x:String>V8</x:String>
-                            <x:String>V9</x:String>
-                            <x:String>V10</x:String>
-                            <x:String>V11</x:String>
-                            <x:String>V12</x:String>
-                            <x:String>V13</x:String>
-                            <x:String>小程序</x:String>
-                        </ComboBox>
-                    </StackPanel>
-                </control:HeaderedContentControl>
-                <control:HeaderedContentControl Header="界面测试" Style="{StaticResource HeaderStyle}">
-                    <StackPanel>
-                        <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind IsExtendsTitleBar, Mode=TwoWay}" />
-                        <StackPanel Margin="0,2" Orientation="Horizontal">
-                            <Button
-                                Margin="0,0,2,0"
-                                Click="Button_Click"
-                                Content="进入画中画模式"
-                                Tag="EnterPIP" />
-                            <Button
-                                Margin="2,0"
-                                Click="Button_Click"
-                                Content="退出"
-                                Tag="OutPIP" />
-                        </StackPanel>
-                        <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind IsUseLiteHome, Mode=TwoWay}" />
-                        <!--<Button
-                            Margin="0,2"
-                            Click="Button_Click"
-                            Content="前往粉丝分析页面"
-                            Tag="GoToFansAnalyzePage" />-->
+                    </control:StackPanel>
+                    <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
+                    <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind IsUseTokenV2, Mode=TwoWay}" />
+                    <ComboBox
+                        x:Name="ComboBoxVersion"
+                        Header="选择兼容版本号(需要重启)"
+                        PlaceholderText="选择版本号"
+                        SelectedIndex="{x:Bind APIVersion, Mode=TwoWay}">
+                        <ComboBoxItem>小程序</ComboBoxItem>
+                        <ComboBoxItem>V6</ComboBoxItem>
+                        <ComboBoxItem>V7</ComboBoxItem>
+                        <ComboBoxItem>V8</ComboBoxItem>
+                        <ComboBoxItem>V9</ComboBoxItem>
+                        <ComboBoxItem>V10</ComboBoxItem>
+                        <ComboBoxItem>V11</ComboBoxItem>
+                        <ComboBoxItem>V12</ComboBoxItem>
+                        <ComboBoxItem>V13</ComboBoxItem>
+                    </ComboBox>
+                    <Slider
+                        Header="可同时加载的图片数"
+                        Maximum="256"
+                        Minimum="1"
+                        TickFrequency="1"
+                        TickPlacement="Outside"
+                        Value="{x:Bind SemaphoreSlimCount, Mode=TwoWay}" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="界面测试">
+                    <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind IsExtendsTitleBar, Mode=TwoWay}" />
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
                         <Button
-                            Margin="0,2"
+                            Click="Button_Click"
+                            Content="进入画中画模式"
+                            Tag="EnterPIP" />
+                        <Button
+                            Click="Button_Click"
+                            Content="退出"
+                            Tag="OutPIP" />
+                    </control:StackPanel>
+                    <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind IsUseLiteHome, Mode=TwoWay}" />
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
+                        <!--<Button
+                        Click="Button_Click"
+                        Content="前往粉丝分析页面"
+                        Tag="GoToFansAnalyzePage" />-->
+                        <Button
                             Click="Button_Click"
                             Content="前往测试中的页面"
                             Tag="GoToTestingPage" />
-                    </StackPanel>
-                </control:HeaderedContentControl>
-                <control:HeaderedContentControl Header="文本测试" Style="{StaticResource HeaderStyle}">
-                    <StackPanel>
-                        <TextBox
-                            x:Name="UnformattedText"
-                            Margin="0,2"
-                            AcceptsReturn="True"
-                            Header="输入文本"
-                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto"
-                            TextWrapping="Wrap" />
-                        <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
-                    </StackPanel>
-                </control:HeaderedContentControl>
-                <control:HeaderedContentControl Header="发帖测试" Style="{StaticResource HeaderStyle}">
-                    <control:CreateFeedControl FeedType="Feed" />
-                </control:HeaderedContentControl>
-                <Grid Background="#181819" Visibility="Collapsed">
-                    <FontIcon FontSize="900" Glyph="" />
-                    <Grid Visibility="Collapsed">
-                        <Border
-                            Width="531"
-                            Height="406"
-                            Margin="0,0,90,62"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            Background="#212121"
-                            BorderBrush="#212121"
-                            CornerRadius="90" />
-                        <FontIcon
-                            Margin="0,0,90,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Bottom"
-                            FontSize="500"
-                            Glyph="" />
+                        <Button
+                            Click="Button_Click"
+                            Content="打开 Charm 设置"
+                            Tag="OpenCharmSettings" />
+                    </control:StackPanel>
+                    <ToggleSwitch Header="是否使用合成动画" IsOn="{x:Bind IsUseCompositor, Mode=TwoWay}" />
+                    <ComboBox
+                        Header="切换语言(需要重启)"
+                        ItemsSource="{x:Bind SupportCultures}"
+                        Loaded="ComboBox_Loaded"
+                        SelectionChanged="ComboBox_SelectionChanged"
+                        Tag="Language">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="globalization:CultureInfo">
+                                <TextBlock>
+                                    <Run Text="{x:Bind DisplayName}" />
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="文本测试">
+                    <TextBox
+                        x:Name="UnformattedText"
+                        AcceptsReturn="True"
+                        Header="输入文本"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        TextWrapping="Wrap" />
+                    <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="发帖测试">
+                    <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="一个图片" Visibility="Collapsed">
+                    <Grid Background="#181819" Visibility="Collapsed">
+                        <FontIcon FontSize="900" Glyph="&#xEB5E;" />
+                        <Grid Visibility="Collapsed">
+                            <Border
+                                Width="531"
+                                Height="406"
+                                Margin="0,0,90,62"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                Background="#212121"
+                                BorderBrush="#212121"
+                                CornerRadius="90" />
+                            <FontIcon
+                                Margin="0,0,90,0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"
+                                FontSize="500"
+                                Glyph="" />
+                        </Grid>
                     </Grid>
-                </Grid>
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                    <Rectangle Width="20" Height="20">
-                        <Rectangle.Fill>
-                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
-                        </Rectangle.Fill>
-                    </Rectangle>
-                </StackPanel>
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="强调色">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                        <Rectangle Width="20" Height="20">
+                            <Rectangle.Fill>
+                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
+                            </Rectangle.Fill>
+                        </Rectangle>
+                    </StackPanel>
+                </control:SettingsGroup>
                 <Border Height="8" />
             </StackPanel>
         </ScrollViewer>

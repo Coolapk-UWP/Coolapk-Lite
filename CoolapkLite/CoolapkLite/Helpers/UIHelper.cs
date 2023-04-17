@@ -332,10 +332,10 @@ namespace CoolapkLite.Helpers
                     break;
             }
         }
-        
+
         public static async Task ShowImageAsync(ImageModel image)
         {
-            if (WindowHelper.IsSupportedAppWindow)
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupportedAppWindow)
             {
                 (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
                 window.TitleBar.ExtendsContentIntoTitleBar = true;
