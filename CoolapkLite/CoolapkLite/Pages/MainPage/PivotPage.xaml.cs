@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.BackgroundTasks;
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -47,7 +48,7 @@ namespace CoolapkLite.Pages
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
-            NotificationsTask.Instance?.GetNums();
+            NotificationsModel.Instance?.Update();
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
         }

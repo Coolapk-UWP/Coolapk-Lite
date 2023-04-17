@@ -50,7 +50,7 @@ namespace CoolapkLite
             CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
-            NotificationsTask.Instance?.GetNums();
+            NotificationsModel.Instance?.Update();
             LiveTileTask.Instance?.UpdateTile();
             UpdateTitleBarLayout(TitleBar);
         }

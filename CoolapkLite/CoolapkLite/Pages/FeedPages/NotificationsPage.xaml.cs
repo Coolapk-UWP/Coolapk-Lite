@@ -1,5 +1,4 @@
-﻿using CoolapkLite.BackgroundTasks;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
@@ -25,15 +24,15 @@ namespace CoolapkLite.Pages.FeedPages
         private bool isLoaded;
         private Action Refresh;
 
-        private NotificationsTask _notificationsTask;
-        public NotificationsTask NotificationsTask
+        private NotificationsModel _notificationsModel = NotificationsModel.Instance;
+        public NotificationsModel NotificationsModel
         {
-            get => _notificationsTask;
+            get => _notificationsModel;
             set
             {
-                if (_notificationsTask != value)
+                if (_notificationsModel != value)
                 {
-                    _notificationsTask = value;
+                    _notificationsModel = value;
                     RaisePropertyChangedEvent();
                 }
             }
@@ -59,10 +58,9 @@ namespace CoolapkLite.Pages.FeedPages
             if (!isLoaded)
             {
                 Pivot.SelectedIndex = PivotIndex;
-                NotificationsTask = NotificationsTask.Instance;
                 isLoaded = true;
             }
-            NotificationsTask?.GetNums();
+            NotificationsModel?.Update();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -158,7 +156,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Refresh = () => _ = AdaptivePage.Refresh(true);
             }
-            NotificationsTask?.GetNums();
+            NotificationsModel?.Update();
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
@@ -166,7 +164,7 @@ namespace CoolapkLite.Pages.FeedPages
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             Refresh();
-            NotificationsTask?.GetNums();
+            NotificationsModel?.Update();
         }
     }
 }
