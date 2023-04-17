@@ -28,8 +28,10 @@ namespace CoolapkLite.Controls
         {
             DisplayRegionHelper instance = GetDisplayRegionHelperInstance();
 
-            DisplayRegionHelperInfo info = new DisplayRegionHelperInfo();
-            info.Mode = TwoPaneViewMode.SinglePane;
+            DisplayRegionHelperInfo info = new DisplayRegionHelperInfo
+            {
+                Mode = TwoPaneViewMode.SinglePane
+            };
 
             if (instance.m_simulateDisplayRegions)
             {

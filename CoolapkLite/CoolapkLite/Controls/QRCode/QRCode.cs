@@ -97,7 +97,7 @@ namespace CoolapkLite.Controls
                 templateSettings.GeometryGroup = null;
                 return;
             }
-            
+
             if (QRCodePath != null)
             {
                 double length = Math.Min(QRCodePath.ActualWidth, QRCodePath.ActualHeight);

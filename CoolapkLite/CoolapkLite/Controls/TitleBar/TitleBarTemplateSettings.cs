@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Helpers;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {

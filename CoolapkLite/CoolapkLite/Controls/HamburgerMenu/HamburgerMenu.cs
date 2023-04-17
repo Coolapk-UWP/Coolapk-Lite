@@ -162,8 +162,8 @@ namespace CoolapkLite.Controls
 
     public class DisplayModeToBool : IValueConverter
     {
-        private static bool HasConnectedAnimation = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static bool HasConnectedAnimationConfiguration = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
+        private static readonly bool HasConnectedAnimation = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
+        private static readonly bool HasConnectedAnimationConfiguration = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {

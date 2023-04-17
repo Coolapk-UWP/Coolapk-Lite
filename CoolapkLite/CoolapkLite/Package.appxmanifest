@@ -34,6 +34,7 @@
           <uap:Rotation Preference="portraitFlipped" />
           <uap:Rotation Preference="landscapeFlipped" />
         </uap:InitialRotationPreference>
+        <uap:LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\BadgeLogo.png"/>
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.protocol">

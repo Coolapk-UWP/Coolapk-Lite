@@ -113,7 +113,7 @@ namespace CoolapkLite.ViewModels
                 Index = 0;
             }
         }
-        
+
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
 
         bool IViewModel.IsEqual(IViewModel other) => other is ShowImageViewModel model && IsEqual(model);

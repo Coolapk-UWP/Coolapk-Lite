@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
@@ -10,8 +9,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
@@ -25,7 +22,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.ViewManagement;
@@ -33,7 +29,6 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
@@ -496,13 +491,9 @@ namespace CoolapkLite.Helpers
             {
                 Navigate(typeof(BrowserPage), new BrowserViewModel(origin));
             }
-            else if (origin.Contains("://"))
-            {
-                return await Launcher.LaunchUriAsync(origin.ValidateAndGetUri());
-            }
             else
             {
-                return false;
+                return origin.Contains("://") && await Launcher.LaunchUriAsync(origin.ValidateAndGetUri());
             }
 
             return true;
@@ -533,14 +524,7 @@ namespace CoolapkLite.Helpers
                         if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
                         {
                             string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
-                            if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
-                            {
-                                return await OpenLinkAsync(TileArguments);
-                            }
-                            else
-                            {
-                                return false;
-                            }
+                            return !string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments) && await OpenLinkAsync(TileArguments);
                         }
                         else
                         {

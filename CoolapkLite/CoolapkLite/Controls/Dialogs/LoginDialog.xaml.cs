@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;

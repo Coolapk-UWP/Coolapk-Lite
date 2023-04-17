@@ -96,7 +96,7 @@ namespace CoolapkLite
 
         private async void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            if (!(await UIHelper.OpenActivatedEventArgs(args)))
+            if (!await UIHelper.OpenActivatedEventArgs(args))
             {
                 HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
             }

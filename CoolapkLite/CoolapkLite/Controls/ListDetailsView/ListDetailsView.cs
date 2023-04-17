@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
@@ -322,8 +321,7 @@ namespace CoolapkLite.Controls
 
         private void OnCommandBarChanged(string panelName, CommandBar commandbar)
         {
-            Panel panel = GetTemplateChild(panelName) as Panel;
-            if (panel == null)
+            if (!(GetTemplateChild(panelName) is Panel panel))
             {
                 return;
             }

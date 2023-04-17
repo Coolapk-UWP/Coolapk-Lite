@@ -1,8 +1,5 @@
-﻿using CoolapkLite.Helpers;
-using System;
-using Windows.Foundation;
+﻿using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls
 {
@@ -57,7 +54,7 @@ namespace CoolapkLite.Controls
                 typeof(TitleBar),
                 new PropertyMetadata(null));
 
-        public static readonly DependencyProperty TitleProperty = 
+        public static readonly DependencyProperty TitleProperty =
             DependencyProperty.Register(
                 "Title",
                 typeof(string),
