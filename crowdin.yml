@@ -1,3 +1,5 @@
 files:
   - source: /CoolapkLite/CoolapkLite/Strings/zh-CN/
     translation: /CoolapkLite/CoolapkLite/Strings/%locale%/%original_file_name%
+  - source: /CoolapkLite/CoolapkLite/Assets/About/About.zh-CN.md
+    translation: /CoolapkLite/CoolapkLite/Assets/About/About.%locale%.md
