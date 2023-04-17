@@ -198,4 +198,10 @@
   <data name="UpToDate" xml:space="preserve">
     <value>Up to date</value>
   </data>
+  <data name="MultiWindowCheckBox.Header" xml:space="preserve">
+    <value>Use Multi Window</value>
+  </data>
+  <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
+    <value>Show original image in graph</value>
+  </data>
 </root>

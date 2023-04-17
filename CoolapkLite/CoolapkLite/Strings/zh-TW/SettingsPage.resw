@@ -198,4 +198,10 @@
   <data name="UpToDate" xml:space="preserve">
     <value>已是最新</value>
   </data>
+  <data name="MultiWindowCheckBox.Header" xml:space="preserve">
+    <value>使用多視窗</value>
+  </data>
+  <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
+    <value>在圖文中顯示原圖</value>
+  </data>
 </root>
