@@ -53,7 +53,7 @@ namespace CoolapkLite.Controls
                     info.Regions[0] = m_simulateWide0;
                 }
             }
-            else
+            else if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.IApplicationView4"))
             {
                 // ApplicationView::GetForCurrentView throws on failure; in that case we just won't do anything.
                 ApplicationView view = null;
@@ -126,7 +126,7 @@ namespace CoolapkLite.Controls
             if (instance.m_simulateDisplayRegions)
             {
                 // Return the bounds of the simulated window
-                FrameworkElement window = DisplayRegionHelper.WindowElement() as FrameworkElement;
+                FrameworkElement window = WindowElement() as FrameworkElement;
                 Rect rc = new Rect(
                     0, 0,
                     window.ActualWidth,

@@ -4,6 +4,8 @@ using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.Web.Http.Filters;
+using Windows.Web.Http;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -23,6 +25,14 @@ namespace CoolapkLite.Controls.Dialogs
             {
                 DefaultButton = ContentDialogButton.Primary;
             }
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
+            {
+                CloseButtonText = ResourceLoader.GetForCurrentView("LoginDialog").GetString("CloseButtonText");
+            }
+            else
+            {
+                SecondaryButtonText = ResourceLoader.GetForCurrentView("LoginDialog").GetString("CloseButtonText");
+            }
             CheckText();
         }
 
@@ -30,32 +40,27 @@ namespace CoolapkLite.Controls.Dialogs
         {
             if (args.Result == ContentDialogResult.Primary)
             {
-                args.Cancel = true;
-                CheckLogin().Wait();
-            }
-
-            async Task CheckLogin()
-            {
-                UIHelper.ShowProgressBar();
-                ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
                 if (string.IsNullOrWhiteSpace(UID) && !string.IsNullOrWhiteSpace(UserName))
                 {
-                    await GetText(UserName);
+                    GetText(UserName);
                 }
                 else if (string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(UID))
                 {
-                    await GetText(UID);
+                    GetText(UID);
                 }
-                if (await SettingsHelper.Login(UID, UserName, Token))
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
                 {
-                    UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
-                    args.Cancel = false;
+                    HttpCookieManager cookieManager = filter.CookieManager;
+                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                    uid.Value = UID;
+                    username.Value = UserName;
+                    token.Value = Token;
+                    cookieManager.SetCookie(uid);
+                    cookieManager.SetCookie(username);
+                    cookieManager.SetCookie(token);
                 }
-                else
-                {
-                    UIHelper.ShowMessage(loader.GetString("LoginFailed"));
-                }
-                UIHelper.HideProgressBar();
             }
         }
 
@@ -65,9 +70,9 @@ namespace CoolapkLite.Controls.Dialogs
 
         private void CheckText() => IsPrimaryButtonEnabled = !string.IsNullOrEmpty(Token) && (!string.IsNullOrEmpty(UID) || !string.IsNullOrEmpty(UserName));
 
-        private async Task GetText(string name)
+        private void GetText(string name)
         {
-            (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(name);
+            (string UID, string UserName, string UserAvatar) results = UIHelper.AwaitByTaskCompleteSource(() => NetworkHelper.GetUserInfoByNameAsync(name));
             if (!string.IsNullOrWhiteSpace(results.UID))
             {
                 UID = results.UID;

@@ -372,6 +372,9 @@ namespace CoolapkLite
 
             void RegisterToastBackgroundTask()
             {
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
+
                 const string ToastBackgroundTask = "ToastBackgroundTask";
 
                 // If background task is already registered, do nothing

@@ -10,16 +10,19 @@
     <StackPanel>
         <TextBox
             Header="UID"
+            LostFocus="PasswordBox_PasswordChanged"
             PlaceholderText="UID"
             Text="{x:Bind UID, Mode=TwoWay}"
             TextChanged="TextBox_TextChanged" />
         <TextBox
             Header="Username"
+            LostFocus="PasswordBox_PasswordChanged"
             PlaceholderText="Username"
             Text="{x:Bind UserName, Mode=TwoWay}"
             TextChanged="TextBox_TextChanged" />
         <PasswordBox
             Header="Token"
+            LostFocus="PasswordBox_PasswordChanged"
             Password="{x:Bind Token, Mode=TwoWay}"
             PasswordChanged="PasswordBox_PasswordChanged"
             PlaceholderText="Token" />
