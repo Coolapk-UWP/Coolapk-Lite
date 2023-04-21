@@ -160,6 +160,9 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\UserAgentDialog.xaml.cs">
+      <DependentUpon>UserAgentDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
       <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
     </Compile>
@@ -241,6 +244,7 @@
     <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\Update\SystemVersionInfo.cs" />
     <Compile Include="Models\Update\UpdateInfo.cs" />
+    <Compile Include="Models\Update\UserAgent.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
@@ -991,6 +995,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
+    <PRIResource Include="Strings\zh-CN\UserAgentDialog.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1022,6 +1027,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\LoginDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\UserAgentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

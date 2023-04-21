@@ -1,18 +1,23 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Update;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
+using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -29,6 +34,14 @@ namespace CoolapkLite.Pages.SettingsPages
     public sealed partial class TestPage : Page, INotifyPropertyChanged
     {
         internal List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+
+        internal string FrameworkDescription => RuntimeInformation.FrameworkDescription;
+
+        internal string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
+
+        internal string OperatingSystemVersion => SystemInformation.Instance.OperatingSystemVersion.ToString();
+
+        internal string OSArchitecture => RuntimeInformation.OSArchitecture.ToString();
 
         internal bool IsExtendsTitleBar
         {
@@ -49,6 +62,20 @@ namespace CoolapkLite.Pages.SettingsPages
             set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
         }
 
+        internal bool IsCustomUA
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
+            set
+            {
+                if (IsCustomUA != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsCustomUA, value);
+                    NetworkHelper.SetRequestHeaders();
+                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                }
+            }
+        }
+
         internal int APIVersion
         {
             get => (int)SettingsHelper.Get<APIVersion>(SettingsHelper.APIVersion) - 5;
@@ -58,6 +85,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.APIVersion, value + 5);
                     NetworkHelper.SetRequestHeaders();
+                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                 }
             }
         }
@@ -102,6 +130,20 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
+        private string userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+        internal string UserAgent
+        {
+            get => userAgent;
+            set
+            {
+                if (userAgent != value)
+                {
+                    userAgent = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
@@ -120,10 +162,17 @@ namespace CoolapkLite.Pages.SettingsPages
             switch ((sender as FrameworkElement).Tag as string)
             {
                 case "OutPIP":
-                    _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+                    if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
+                    { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
                     break;
                 case "EnterPIP":
-                    if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay)) { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
+                    if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+                    { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
+                    break;
+                case "CustomUA":
+                    UserAgentDialog dialog = new UserAgentDialog(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
+                    await dialog.ShowAsync();
+                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
@@ -180,9 +229,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "OpenCharmSettings":
                     if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
-                    {
-                        SettingsPane.Show();
-                    }
+                    { SettingsPane.Show(); }
                     break;
                 case "PausedProgressBar":
                     UIHelper.PausedProgressBar();
@@ -197,9 +244,6 @@ namespace CoolapkLite.Pages.SettingsPages
                         UIHelper.ShowProgressBar();
                     }
                     break;
-                //case "GoToFansAnalyzePage":
-                //    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("536381"));
-                //    break;
                 default:
                     break;
             }

@@ -27,11 +27,11 @@ namespace CoolapkLite.Controls.Dialogs
             }
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
             {
-                CloseButtonText = ResourceLoader.GetForCurrentView("LoginDialog").GetString("CloseButtonText");
+                CloseButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
             }
             else
             {
-                SecondaryButtonText = ResourceLoader.GetForCurrentView("LoginDialog").GetString("CloseButtonText");
+                SecondaryButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
             }
             CheckText();
         }

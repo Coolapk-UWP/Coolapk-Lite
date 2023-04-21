@@ -2,12 +2,13 @@
     x:Class="CoolapkLite.Controls.Dialogs.LoginDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/LoginDialog/LoginDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
-    <StackPanel>
+    <controls:StackPanel Spacing="4">
         <TextBox
             Header="UID"
             LostFocus="PasswordBox_PasswordChanged"
@@ -26,5 +27,5 @@
             Password="{x:Bind Token, Mode=TwoWay}"
             PasswordChanged="PasswordBox_PasswordChanged"
             PlaceholderText="Token" />
-    </StackPanel>
+    </controls:StackPanel>
 </ContentDialog>

@@ -84,6 +84,15 @@
                     </control:StackPanel>
                     <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind IsUseAPI2, Mode=TwoWay}" />
                     <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind IsUseTokenV2, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        x:Name="IsCustomUAToggle"
+                        Header="是否修改 UserAgent"
+                        IsOn="{x:Bind IsCustomUA, Mode=TwoWay}" />
+                    <Button
+                        Click="Button_Click"
+                        Content="修改 UserAgent"
+                        Tag="CustomUA"
+                        Visibility="{Binding IsOn, ElementName=IsCustomUAToggle, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <ComboBox
                         x:Name="ComboBoxVersion"
                         Header="选择兼容版本号(需要重启)"
@@ -121,10 +130,6 @@
                     </control:StackPanel>
                     <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind IsUseLiteHome, Mode=TwoWay}" />
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
-                        <!--<Button
-                        Click="Button_Click"
-                        Content="前往粉丝分析页面"
-                        Tag="GoToFansAnalyzePage" />-->
                         <Button
                             Click="Button_Click"
                             Content="前往测试中的页面"
@@ -183,6 +188,96 @@
                                 FontSize="500"
                                 Glyph="" />
                         </Grid>
+                    </Grid>
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="设备信息">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Padding="0,0,0,8"
+                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                            Text="框架" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Padding="32,0,0,8"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind FrameworkDescription}"
+                            TextWrapping="WrapWholeWords" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Padding="0,0,0,8"
+                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                            Text="设备类型" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Padding="32,0,0,8"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind DeviceFamily}"
+                            TextWrapping="WrapWholeWords" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Padding="0,0,0,8"
+                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                            Text="操作系统版本" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Padding="32,0,0,8"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind OperatingSystemVersion}"
+                            TextWrapping="WrapWholeWords" />
+
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Padding="0,0,0,8"
+                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                            Text="操作系统构架" />
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Padding="32,0,0,8"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind OSArchitecture}"
+                            TextWrapping="WrapWholeWords" />
+
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Padding="0,0,0,8"
+                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                            Text="当前 UserAgent" />
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Padding="32,0,0,8"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="True"
+                            Text="{x:Bind UserAgent, Mode=OneWay}"
+                            TextWrapping="WrapWholeWords" />
                     </Grid>
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="强调色">

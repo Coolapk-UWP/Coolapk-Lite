@@ -1,4 +1,5 @@
-﻿using MetroLog;
+﻿using CoolapkLite.Models.Update;
+using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
@@ -17,8 +18,10 @@ namespace CoolapkLite.Helpers
         public const string Token = nameof(Token);
         public const string TileUrl = nameof(TileUrl);
         public const string UserName = nameof(UserName);
+        public const string CustomUA = nameof(CustomUA);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string IsFirstRun = nameof(IsFirstRun);
+        public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
@@ -56,6 +59,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(UserName, string.Empty);
             }
+            if (!LocalObject.KeyExists(CustomUA))
+            {
+                LocalObject.Save(CustomUA, UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString()));
+            }
             if (!LocalObject.KeyExists(IsUseAPI2))
             {
                 LocalObject.Save(IsUseAPI2, true);
@@ -63,6 +70,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(IsFirstRun))
             {
                 LocalObject.Save(IsFirstRun, true);
+            }
+            if (!LocalObject.KeyExists(IsCustomUA))
+            {
+                LocalObject.Save(IsCustomUA, false);
             }
             if (!LocalObject.KeyExists(APIVersion))
             {
