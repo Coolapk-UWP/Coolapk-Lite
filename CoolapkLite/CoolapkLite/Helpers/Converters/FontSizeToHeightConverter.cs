@@ -10,13 +10,13 @@ namespace CoolapkLite.Helpers.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             object result = System.Convert.ToDouble(value) * 4 / 3;
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             object result = System.Convert.ToDouble(value) * 3 / 4;
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
     }
 }

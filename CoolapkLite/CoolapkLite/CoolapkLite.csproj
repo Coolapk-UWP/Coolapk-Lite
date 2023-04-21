@@ -210,6 +210,7 @@
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\Controls\WebViewHelper.cs" />
+    <Compile Include="Helpers\Converters\ConverterTools.cs" />
     <Compile Include="Helpers\Converters\NumMultConverter.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />

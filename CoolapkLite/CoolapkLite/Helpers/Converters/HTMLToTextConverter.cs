@@ -10,10 +10,9 @@ namespace CoolapkLite.Helpers.Converters
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             string result = value.ToString().CSStoString();
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language) =>
-            targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => value.Convert(targetType);
     }
 }

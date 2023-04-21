@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -371,37 +372,50 @@ namespace CoolapkLite.Controls
 
             public object Convert(object value, Type targetType, object parameter, string language)
             {
-                double VerticalOffset = (double)value;
-                double result = VerticalOffset < ShyHeaderListView._topheight ? 0 : -ShyHeaderListView._topheight + VerticalOffset;
-                _ = VerticalOffset >= ShyHeaderListView._topheight || ShyHeaderListView._topheight == 0
-                    ? VisualStateManager.GoToState(ShyHeaderListView, "OnThreshold", true)
-                    : VisualStateManager.GoToState(ShyHeaderListView, "BeforeThreshold", true);
-                return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+                double offset = System.Convert.ToDouble(value);
+                UpdateVisualState(offset);
+                double result = offset < ShyHeaderListView._topheight ? 0 : -ShyHeaderListView._topheight + offset;
+                return result.Convert(targetType);
             }
 
-            public object ConvertBack(object value, Type targetType, object parameter, string language) => throw new NotImplementedException();
+            public object ConvertBack(object value, Type targetType, object parameter, string language)
+            {
+                double offset = System.Convert.ToDouble(value);
+                double result = offset + ShyHeaderListView._topheight;
+                return result.Convert(targetType);
+            }
+
+            private void UpdateVisualState(double offset)
+            {
+                _ = offset >= ShyHeaderListView._topheight || ShyHeaderListView._topheight == 0
+                    ? VisualStateManager.GoToState(ShyHeaderListView, "OnThreshold", true)
+                    : VisualStateManager.GoToState(ShyHeaderListView, "BeforeThreshold", true);
+            }
         }
     }
 
     public class ShyHeaderItem : DependencyObject
     {
-        public static readonly DependencyProperty TagProperty = DependencyProperty.Register(
-           "Tag",
-           typeof(object),
-           typeof(ShyHeaderItem),
-           null);
+        public static readonly DependencyProperty TagProperty =
+            DependencyProperty.Register(
+                nameof(Tag),
+                typeof(object),
+                typeof(ShyHeaderItem),
+                null);
 
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(
-           "Header",
-           typeof(string),
-           typeof(ShyHeaderItem),
-           null);
+        public static readonly DependencyProperty HeaderProperty =
+            DependencyProperty.Register(
+                nameof(Header),
+                typeof(string),
+                typeof(ShyHeaderItem),
+                null);
 
-        public static readonly DependencyProperty ItemSourceProperty = DependencyProperty.Register(
-           "ItemSource",
-           typeof(object),
-           typeof(ShyHeaderItem),
-           null);
+        public static readonly DependencyProperty ItemSourceProperty =
+            DependencyProperty.Register(
+                nameof(ItemSource),
+                typeof(object),
+                typeof(ShyHeaderItem),
+                null);
 
         public object Tag
         {
