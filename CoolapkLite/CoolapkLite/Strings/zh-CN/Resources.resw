@@ -126,6 +126,9 @@
   <data name="AppName" xml:space="preserve">
     <value>酷安 Lite</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
   <data name="CoolapkProtocol" xml:space="preserve">
     <value>酷安网页跳转</value>
   </data>
