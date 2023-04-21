@@ -126,6 +126,9 @@
   <data name="AppName" xml:space="preserve">
     <value>Coolapk Lite</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
   <data name="CoolapkProtocol" xml:space="preserve">
     <value>Coolapk Web Jump</value>
   </data>
