@@ -5,7 +5,7 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    x:Uid="/LoginDialog/LoginDialog"
+    x:Uid="/ContentDialog/LoginDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
     <controls:StackPanel Spacing="4">

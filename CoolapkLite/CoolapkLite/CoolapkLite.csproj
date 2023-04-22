@@ -1000,7 +1000,7 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <PRIResource Include="Strings\zh-CN\UserAgentDialog.resw" />
+    <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1390,7 +1390,6 @@
     <PRIResource Include="Strings\zh-CN\Feed.resw" />
     <PRIResource Include="Strings\zh-CN\FeedListPage.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
-    <PRIResource Include="Strings\zh-CN\LoginDialog.resw" />
     <PRIResource Include="Strings\zh-CN\MainPage.resw" />
     <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
       <SubType>Designer</SubType>

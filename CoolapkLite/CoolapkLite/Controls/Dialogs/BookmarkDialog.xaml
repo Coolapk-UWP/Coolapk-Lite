@@ -5,15 +5,14 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="添加收藏夹"
+    x:Uid="/ContentDialog/BookmarkDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsPrimaryButtonEnabled="{Binding Text, ElementName=URLTextBox, Converter={StaticResource StringToBoolConverter}}"
-    PrimaryButtonText="保存"
     mc:Ignorable="d">
     <controls:StackPanel Spacing="4">
         <TextBox
             x:Name="TitleTextBox"
-            Header="名称"
+            x:Uid="/ContentDialog/TitleTextBox"
             Text="{x:Bind BookmarkTitle, Mode=TwoWay}" />
         <TextBox
             x:Name="URLTextBox"
