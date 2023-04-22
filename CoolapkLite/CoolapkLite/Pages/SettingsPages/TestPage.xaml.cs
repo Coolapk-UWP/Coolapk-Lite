@@ -78,12 +78,12 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal int APIVersion
         {
-            get => (int)SettingsHelper.Get<APIVersion>(SettingsHelper.APIVersion) - 5;
+            get => (int)SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion) - 4;
             set
             {
                 if (APIVersion != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 5);
+                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 4);
                     NetworkHelper.SetRequestHeaders();
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                 }
@@ -92,12 +92,12 @@ namespace CoolapkLite.Pages.SettingsPages
 
         internal bool IsUseTokenV2
         {
-            get => SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion) == TokenVersion.TokenV2;
+            get => SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion) == TokenVersions.TokenV2;
             set
             {
                 if (IsUseTokenV2 != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersion.TokenV2 : TokenVersion.TokenV1));
+                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersions.TokenV2 : TokenVersions.TokenV1));
                     NetworkHelper.SetRequestHeaders();
                 }
             }
@@ -170,8 +170,13 @@ namespace CoolapkLite.Pages.SettingsPages
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
                 case "CustomUA":
-                    UserAgentDialog dialog = new UserAgentDialog(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
-                    await dialog.ShowAsync();
+                    UserAgentDialog userAgentDialog = new UserAgentDialog(UserAgent);
+                    await userAgentDialog.ShowAsync();
+                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    break;
+                case "CustomAPI":
+                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);
+                    await _APIVersionDialog.ShowAsync();
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "OpenEdge":

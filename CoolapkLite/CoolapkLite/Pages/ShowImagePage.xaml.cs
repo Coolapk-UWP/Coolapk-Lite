@@ -10,6 +10,7 @@ using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Input;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -47,7 +48,6 @@ namespace CoolapkLite.Pages
                 Provider = ViewModel;
                 DataContext = Provider;
             }
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }
         }
@@ -55,29 +55,39 @@ namespace CoolapkLite.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (!this.IsAppWindow())
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed -= AppWindow_Changed;
+            }
+            else
             {
                 Window.Current.SetTitleBar(null);
+                SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
                 CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
                 TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
                 TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
                 Frame.Navigated -= On_Navigated;
             }
-            SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed -= System_BackPressed; }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!this.IsAppWindow())
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed += AppWindow_Changed;
+            }
+            else
             {
                 Window.Current.SetTitleBar(CustomTitleBar);
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false);
+                SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
                 CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                SystemNavigationManager.AppViewBackButtonVisibility = TryGoBack(false);
                 if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
                 { UpdateContentLayout(false); }
                 TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+                SystemNavigationManager.BackRequested += System_BackRequested;
                 TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
                 Frame.Navigated += On_Navigated;
                 UpdateTitleBarLayout(TitleBar);
@@ -103,6 +113,12 @@ namespace CoolapkLite.Pages
             {
                 e.Handled = TryGoBack() == AppViewBackButtonVisibility.Visible;
             }
+        }
+
+        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
+        {
+            bool IsVisible = sender.TitleBar.IsVisible;
+            CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private AppViewBackButtonVisibility TryGoBack(bool goBack = true)
@@ -143,7 +159,7 @@ namespace CoolapkLite.Pages
                     _ = Provider.Refresh();
                     break;
                 case "Origin":
-                    Provider.Images[Provider.Index].Type = ImageType.OriginImage;
+                    Provider.Images[Provider.Index].Type &= (ImageType)0xFE;
                     Provider.ShowOrigin = false;
                     break;
             }

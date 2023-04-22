@@ -157,6 +157,9 @@
     <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
       <DependentUpon>SearchWord.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\APIVersionDialog.xaml.cs">
+      <DependentUpon>APIVersionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\BookmarkDialog.xaml.cs">
       <DependentUpon>BookmarkDialog.xaml</DependentUpon>
     </Compile>
@@ -247,6 +250,7 @@
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
+    <Compile Include="Models\Update\APIVersion.cs" />
     <Compile Include="Models\Update\SystemVersionInfo.cs" />
     <Compile Include="Models\Update\UpdateInfo.cs" />
     <Compile Include="Models\Update\UserAgent.cs" />
@@ -1027,6 +1031,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\DataTemplates\SearchWord.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\APIVersionDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -95,9 +95,10 @@
                         Visibility="{Binding IsOn, ElementName=IsCustomUAToggle, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <ComboBox
                         x:Name="ComboBoxVersion"
-                        Header="选择兼容版本号(需要重启)"
+                        Header="选择兼容版本号"
                         PlaceholderText="选择版本号"
                         SelectedIndex="{x:Bind APIVersion, Mode=TwoWay}">
+                        <ComboBoxItem>Custom</ComboBoxItem>
                         <ComboBoxItem>小程序</ComboBoxItem>
                         <ComboBoxItem>V6</ComboBoxItem>
                         <ComboBoxItem>V7</ComboBoxItem>
@@ -108,6 +109,10 @@
                         <ComboBoxItem>V12</ComboBoxItem>
                         <ComboBoxItem>V13</ComboBoxItem>
                     </ComboBox>
+                    <Button
+                        Click="Button_Click"
+                        Content="自定义版本号"
+                        Tag="CustomAPI" />
                     <Slider
                         Header="可同时加载的图片数"
                         Maximum="256"

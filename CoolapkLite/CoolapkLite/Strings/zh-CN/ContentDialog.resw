@@ -171,4 +171,22 @@
   <data name="TitleTextBox.Header" xml:space="preserve">
     <value>名称</value>
   </data>
+  <data name="APIVersionCodeTextBox.Header" xml:space="preserve">
+    <value>酷安版本代号</value>
+  </data>
+  <data name="APIVersionCodeTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>酷安应用的版本代号，如 1905301</value>
+  </data>
+  <data name="APIVersionDialog.PrimaryButtonText" xml:space="preserve">
+    <value>完成</value>
+  </data>
+  <data name="APIVersionDialog.Title" xml:space="preserve">
+    <value>API 版本</value>
+  </data>
+  <data name="APIVersionTextBox.Header" xml:space="preserve">
+    <value>酷安版本号</value>
+  </data>
+  <data name="APIVersionTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>酷安应用的版本号，如 9.2.2</value>
+  </data>
 </root>

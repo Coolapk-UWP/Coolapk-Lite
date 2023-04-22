@@ -23,6 +23,7 @@ namespace CoolapkLite.Helpers
         public const string CustomUA = nameof(CustomUA);
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
+        public const string CustomAPI = nameof(CustomAPI);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
@@ -70,6 +71,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsUseAPI2, true);
             }
+            if (!LocalObject.KeyExists(CustomAPI))
+            {
+                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
+            }
             if (!LocalObject.KeyExists(IsFirstRun))
             {
                 LocalObject.Save(IsFirstRun, true);
@@ -80,7 +85,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalObject.Save(APIVersion, Common.APIVersion.V13);
+                LocalObject.Save(APIVersion, Common.APIVersions.V13);
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {
@@ -88,7 +93,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TokenVersion))
             {
-                LocalObject.Save(TokenVersion, Common.TokenVersion.TokenV2);
+                LocalObject.Save(TokenVersion, Common.TokenVersions.TokenV2);
             }
             if (!LocalObject.KeyExists(IsUseLiteHome))
             {
