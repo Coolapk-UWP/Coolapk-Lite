@@ -172,21 +172,21 @@
     <value>Name</value>
   </data>
   <data name="APIVersionCodeTextBox.Header" xml:space="preserve">
-    <value>酷安版本代号</value>
+    <value>Coolapk Version Code</value>
   </data>
   <data name="APIVersionCodeTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>酷安应用的版本代号，如 1905301</value>
+    <value>The version code of Coolapk APP, e.g. 1905301</value>
   </data>
   <data name="APIVersionDialog.PrimaryButtonText" xml:space="preserve">
     <value>Done</value>
   </data>
   <data name="APIVersionDialog.Title" xml:space="preserve">
-    <value>API 版本</value>
+    <value>API Version</value>
   </data>
   <data name="APIVersionTextBox.Header" xml:space="preserve">
-    <value>酷安版本号</value>
+    <value>Coolapk Version</value>
   </data>
   <data name="APIVersionTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>酷安应用的版本号，如 9.2.2</value>
+    <value>The version of Coolapk APP, e.g. 9.2.2</value>
   </data>
 </root>
