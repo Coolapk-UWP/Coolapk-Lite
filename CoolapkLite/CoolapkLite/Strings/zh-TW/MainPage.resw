@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bookmark" xml:space="preserve">
+    <value>收藏</value>
+  </data>
   <data name="Browser" xml:space="preserve">
     <value>瀏覽器</value>
   </data>
   <data name="Circle" xml:space="preserve">
     <value>圈子</value>
-  </data>
-  <data name="Favorite" xml:space="preserve">
-    <value>收藏</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>歷史</value>
