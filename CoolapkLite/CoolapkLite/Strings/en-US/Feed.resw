@@ -193,7 +193,7 @@
     <value>Sorry, this feed has been deleted.</value>
   </data>
   <data name="StarButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Bookmark</value>
+    <value>收藏</value>
   </data>
   <data name="StickUp.Text" xml:space="preserve">
     <value>Pin</value>
