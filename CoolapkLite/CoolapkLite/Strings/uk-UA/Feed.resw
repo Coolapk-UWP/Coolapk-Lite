@@ -193,7 +193,7 @@
     <value>Вибачте, цей канал видалено.</value>
   </data>
   <data name="StarButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Закладка</value>
+    <value>收藏</value>
   </data>
   <data name="StickUp.Text" xml:space="preserve">
     <value>Закріпити</value>
