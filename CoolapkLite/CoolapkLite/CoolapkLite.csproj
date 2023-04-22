@@ -406,7 +406,6 @@
     <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
-    <Compile Include="ViewModels\Providers\SearchListProvider.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
   </ItemGroup>

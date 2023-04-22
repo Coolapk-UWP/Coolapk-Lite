@@ -4,7 +4,6 @@ using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -26,17 +25,13 @@ namespace CoolapkLite.Pages.FeedPages
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is IndexViewModel ViewModel
-                && Provider?.IsEqual(ViewModel) != true)
+                && Provider == null)
             {
                 Provider = ViewModel;
                 DataContext = Provider;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);
-            }
-            else
-            {
-                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             }
         }
 

@@ -1,88 +1,43 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls.DataTemplates;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Feeds;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
-using static CoolapkLite.Models.Feeds.FeedModel;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class IndexViewModel : DataSourceBase<Entity>, IViewModel
+    internal class IndexViewModel : EntityItemSourse, IViewModel
     {
-        public readonly string Uri;
-        protected bool IsInitPage => Uri == "/main/init";
-        protected bool IsIndexPage => !Uri.Contains("?");
-        protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
-
-        internal bool ShowTitleBar { get; }
-        private readonly CoolapkListProvider Provider;
-
         public string Title { get; protected set; }
 
-        internal IndexViewModel(string uri, bool showTitleBar = true)
+        internal IndexViewModel(string uri)
         {
-            Uri = GetUri(uri);
-            ShowTitleBar = showTitleBar;
             Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             Provider = new CoolapkListProvider(
-                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
+                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, "/main/indexV8", "?", p),
                 GetEntities,
                 "entityId");
         }
 
-        public async Task Refresh(bool reset = false)
+        bool IViewModel.IsEqual(IViewModel other) => other is IndexViewModel model && Equals(model);
+
+        private IEnumerable<Entity> GetEntities(JObject json)
         {
-            if (reset)
+            if (json.TryGetValue("entityTemplate", out JToken t) && t?.ToString() == "configCard")
             {
-                await Reset();
-            }
-            else
-            {
-                _ = await LoadItemsAsync(20);
-            }
-        }
-
-        bool IViewModel.IsEqual(IViewModel other) => other is IndexViewModel model && IsEqual(model);
-        public bool IsEqual(IndexViewModel other) => !string.IsNullOrWhiteSpace(Uri) ? Uri == other.Uri : Provider == other.Provider;
-
-        private string GetUri(string uri)
-        {
-            if (uri.Contains("&title="))
-            {
-                const string Value = "&title=";
-                Title = uri.Substring(uri.LastIndexOf(Value, StringComparison.Ordinal) + Value.Length);
-            }
-
-            if (uri.IndexOf("/page", StringComparison.Ordinal) == -1 && (uri.StartsWith("#", StringComparison.Ordinal) || (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))))
-            {
-                uri = "/page/dataList?url=" + uri;
-            }
-            else if (uri.IndexOf("/page", StringComparison.Ordinal) == 0 && !uri.Contains("/page/dataList"))
-            {
-                uri = uri.Replace("/page", "/page/dataList");
-            }
-            return uri.Replace("#", "%23");
-        }
-
-        private IEnumerable<Entity> GetEntities(JObject jo)
-        {
-            if (jo.TryGetValue("entityTemplate", out JToken t) && t?.ToString() == "configCard")
-            {
-                JObject j = JObject.Parse(jo.Value<string>("extraData"));
+                JObject j = JObject.Parse(json.Value<string>("extraData"));
                 Title = j.Value<string>("pageTitle");
                 yield return null;
             }
-            else if (jo.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
+            else if (json.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
             else if (tt?.ToString() == "feedCoolPictureGridCard")
             {
-                foreach (JObject item in jo.Value<JArray>("entities"))
+                foreach (JToken item in json.Value<JArray>("entities"))
                 {
-                    Entity entity = GetEntity(item, IsHotFeedPage);
+                    Entity entity = EntityTemplateSelector.GetEntity((JObject)item, true);
                     if (entity != null)
                     {
                         yield return entity;
@@ -91,56 +46,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             else
             {
-                yield return GetEntity(jo, IsHotFeedPage);
+                yield return EntityTemplateSelector.GetEntity(json, true);
             }
             yield break;
-        }
-
-        private static Entity GetEntity(JObject jo, bool isHotFeedPage = false)
-        {
-            switch (jo.Value<string>("entityType"))
-            {
-                case "feed":
-                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.IsFirstPageFeed : FeedDisplayMode.Normal);
-                default:
-                    if (jo.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))
-                    {
-                        switch (entityTemplate.ToString())
-                        {
-                            case "headCard":
-                            case "imageCard":
-                            case "imageCarouselCard_1": return new IndexPageHasEntitiesModel(jo, EntityType.Image);
-                            default: return null;
-                        }
-                    }
-                    return null;
-            }
-        }
-
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-        {
-            List<Entity> Models = new List<Entity>();
-            while (Models.Count < count)
-            {
-                int temp = Models.Count;
-                if (Models.Count > 0) { _currentPage++; }
-                await Provider.GetEntity(Models, _currentPage);
-                if (Models.Count <= 0 || Models.Count <= temp) { break; }
-            }
-            return Models;
-        }
-
-        protected override void AddItems(IList<Entity> items)
-        {
-            if (items != null)
-            {
-                foreach (Entity item in items)
-                {
-                    if (item is NullEntity) { continue; }
-                    Add(item);
-                    InvokeProgressChanged(item, items);
-                }
-            }
         }
     }
 }
