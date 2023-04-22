@@ -262,7 +262,7 @@ namespace CoolapkLite
                     case AppCapabilityAccessStatus.DeniedByUser:
                     case AppCapabilityAccessStatus.DeniedBySystem:
                         // Do something
-                        await AppCapability.Create("wifiData").RequestAccessAsync();
+                        await wifiData.RequestAccessAsync();
                         break;
                 }
             }
@@ -372,6 +372,9 @@ namespace CoolapkLite
 
             void RegisterToastBackgroundTask()
             {
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
+
                 const string ToastBackgroundTask = "ToastBackgroundTask";
 
                 // If background task is already registered, do nothing

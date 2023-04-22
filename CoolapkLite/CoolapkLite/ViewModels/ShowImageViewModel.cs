@@ -15,7 +15,7 @@ using Windows.Storage.Streams;
 
 namespace CoolapkLite.ViewModels
 {
-    public class ShowImageViewModel : INotifyPropertyChanged, IViewModel
+    public class ShowImageViewModel : IViewModel
     {
         private string ImageName = string.Empty;
         public double[] VerticalOffsets { get; set; } = new double[1];
@@ -111,6 +111,13 @@ namespace CoolapkLite.ViewModels
             {
                 Images = new List<ImageModel> { image };
                 Index = 0;
+            }
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture))
+            {
+                foreach (ImageModel Image in Images)
+                {
+                    Image.Type &= (ImageType)0xFE;
+                }
             }
         }
 

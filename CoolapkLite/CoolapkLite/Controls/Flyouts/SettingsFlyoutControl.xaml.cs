@@ -52,7 +52,7 @@ namespace CoolapkLite.Controls
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Reset":
                     SettingsHelper.LocalObject.Clear();

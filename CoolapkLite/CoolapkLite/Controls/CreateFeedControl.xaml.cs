@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Users;
@@ -111,7 +112,7 @@ namespace CoolapkLite.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "CloseButton":
                     Hide();
@@ -123,7 +124,7 @@ namespace CoolapkLite.Controls
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Send":
                     CreateDataContent();
@@ -459,13 +460,10 @@ namespace CoolapkLite.Controls
             {
                 result = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png"));
             }
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
-        {
-            return targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => value.Convert(targetType);
     }
 
     public class EmojiNameConverter : IValueConverter
@@ -474,14 +472,14 @@ namespace CoolapkLite.Controls
         {
             string data = value.ToString();
             string result = data[0] == '(' ? $"#{data}" : data;
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             string data = value.ToString();
             string result = data[0] == '#' ? data.Substring(1) : data;
-            return targetType.IsInstanceOfType(result) ? result : XamlBindingHelper.ConvertValue(targetType, result);
+            return result.Convert(targetType);
         }
     }
 

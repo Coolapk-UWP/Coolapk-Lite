@@ -1,11 +1,14 @@
 ﻿using CoolapkLite.Controls;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -15,34 +18,57 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class IndexPage : Page
+    public sealed partial class BookmarkPage : Page
     {
-        private IndexViewModel Provider;
+        private BookmarkViewModel Provider;
 
-        public IndexPage() => InitializeComponent();
+        public BookmarkPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is IndexViewModel ViewModel
+            if (e.Parameter is BookmarkViewModel ViewModel
                 && Provider == null)
             {
                 Provider = ViewModel;
                 DataContext = Provider;
-                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);
             }
         }
 
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            base.OnNavigatedFrom(e);
-            Provider.LoadMoreStarted -= UIHelper.ShowProgressBar;
-            Provider.LoadMoreCompleted -= UIHelper.HideProgressBar;
+            FrameworkElement element = sender as FrameworkElement;
+            switch (element.Name)
+            {
+                case "AddBookmark":
+                    BookmarkDialog dialog = new BookmarkDialog();
+                    ContentDialogResult result = await dialog.ShowAsync();
+                    if (result == ContentDialogResult.Primary)
+                    {
+                        Provider.Bookmarks.Add(new Bookmark(dialog.BookmarkURL, dialog.BookmarkTitle));
+                        _ = Refresh();
+                    }
+                    break;
+                case "RemoveBookmark":
+                    _ = Provider.Bookmarks.Remove(element.Tag as Bookmark);
+                    _ = Refresh();
+                    break;
+            }
         }
 
-        private async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+
+            if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
+
+            if (e != null) { e.Handled = true; }
+
+            _ = UIHelper.OpenLinkAsync(element.Tag.ToString());
+        }
+
+        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 

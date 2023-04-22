@@ -1,9 +1,12 @@
-﻿using MetroLog;
+﻿using CoolapkLite.Models;
+using CoolapkLite.Models.Update;
+using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -17,8 +20,12 @@ namespace CoolapkLite.Helpers
         public const string Token = nameof(Token);
         public const string TileUrl = nameof(TileUrl);
         public const string UserName = nameof(UserName);
+        public const string CustomUA = nameof(CustomUA);
+        public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
+        public const string CustomAPI = nameof(CustomAPI);
         public const string IsFirstRun = nameof(IsFirstRun);
+        public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
@@ -35,8 +42,8 @@ namespace CoolapkLite.Helpers
 
         public static Type Get<Type>(string key) => LocalObject.Read<Type>(key);
         public static void Set<Type>(string key, Type value) => LocalObject.Save(key, value);
-        public static void SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync(key, value);
-        public static async Task<Type> GetFile<Type>(string key) => await LocalObject.ReadFileAsync<Type>(key);
+        public static Task<Type> GetFile<Type>(string key) => LocalObject.ReadFileAsync<Type>($"Settings/{key}");
+        public static Task SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync($"Settings/{key}", value);
 
         public static void SetDefaultSettings()
         {
@@ -56,17 +63,29 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(UserName, string.Empty);
             }
+            if (!LocalObject.KeyExists(CustomUA))
+            {
+                LocalObject.Save(CustomUA, UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString()));
+            }
             if (!LocalObject.KeyExists(IsUseAPI2))
             {
                 LocalObject.Save(IsUseAPI2, true);
+            }
+            if (!LocalObject.KeyExists(CustomAPI))
+            {
+                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
             }
             if (!LocalObject.KeyExists(IsFirstRun))
             {
                 LocalObject.Save(IsFirstRun, true);
             }
+            if (!LocalObject.KeyExists(IsCustomUA))
+            {
+                LocalObject.Save(IsCustomUA, false);
+            }
             if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalObject.Save(APIVersion, Common.APIVersion.V13);
+                LocalObject.Save(APIVersion, Common.APIVersions.V13);
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {
@@ -74,7 +93,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TokenVersion))
             {
-                LocalObject.Save(TokenVersion, Common.TokenVersion.TokenV2);
+                LocalObject.Save(TokenVersion, Common.TokenVersions.TokenV2);
             }
             if (!LocalObject.KeyExists(IsUseLiteHome))
             {
@@ -115,6 +134,17 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(CheckUpdateWhenLuanching))
             {
                 LocalObject.Save(CheckUpdateWhenLuanching, true);
+            }
+            SetDefaultFileSettings();
+        }
+
+        public static async void SetDefaultFileSettings()
+        {
+            StorageFolder folder = LocalObject.Folder;
+            StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
+            if (await settings.TryGetItemAsync(Bookmark) == null)
+            {
+                await SetFile(Bookmark, Models.Bookmark.GetDefaultBookmarks());
             }
         }
     }

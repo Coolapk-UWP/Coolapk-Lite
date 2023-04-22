@@ -159,7 +159,7 @@ namespace CoolapkLite
                 return;
             }
             // Get the page type before navigation so you can prevent duplicate
-            // entries in the backstack.
+            // entries in the back stack.
             Type PreNavPageType = HamburgerMenuFrame.CurrentSourcePageType;
 
             // Only navigate if the selected page isn't currently loaded.
@@ -411,8 +411,8 @@ namespace CoolapkLite
             {
                 new MenuItem() { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel("/main/indexV8"), Index = 0},
                 new MenuItem() { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
-                new MenuItem() { Icon = "\uE113", Name = loader.GetString("Favorite"), PageType = typeof(FavoritePage),ViewModels = new FavoriteViewModel(), Index = 2 },
-                new MenuItem() { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage),ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
+                new MenuItem() { Icon = "\uE113", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
+                new MenuItem() { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
             };
             return items;
         }

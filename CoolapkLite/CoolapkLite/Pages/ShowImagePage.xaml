@@ -57,10 +57,6 @@
     </Page.Resources>
     <Grid>
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
             <Grid.ChildrenTransitions>
                 <TransitionCollection>
                     <ReorderThemeTransition />
@@ -71,7 +67,7 @@
                 Height="32"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
-                Background="{ThemeResource SystemControlHighlightTransparentBrush}"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 Canvas.ZIndex="1"
                 IsHitTestVisible="True">
                 <Grid.ColumnDefinitions>
@@ -84,32 +80,61 @@
                         <ReorderThemeTransition />
                     </TransitionCollection>
                 </Grid.ChildrenTransitions>
-                <TextBlock
-                    x:Name="AppTitle"
+                <Border
                     Grid.Column="1"
-                    Padding="12,0"
+                    Margin="12,0"
+                    Padding="4,2"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    MaxLines="1"
-                    Style="{StaticResource CaptionTextBlockStyle}"
-                    Text="{Binding Title}"
-                    TextTrimming="CharacterEllipsis" />
+                    Background="{ThemeResource TitleBarBackgroundBrush}"
+                    CornerRadius="6"
+                    Visibility="{Binding Visibility, ElementName=CommandBar}">
+                    <TextBlock
+                        x:Name="AppTitle"
+                        MaxLines="1"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        Text="{Binding Title}"
+                        TextTrimming="CharacterEllipsis" />
+                </Border>
             </Grid>
             <Grid x:Name="FlipViewGrid" Grid.Row="1">
                 <FlipView
                     x:Name="FlipView"
                     helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"
-                    Background="{ThemeResource SystemControlHighlightTransparentBrush}"
+                    Background="{ThemeResource SystemControlTransparentBrush}"
                     ItemsSource="{Binding Images}"
-                    SelectedIndex="{Binding Index, Mode=TwoWay, FallbackValue='-1'}"
-                    Tapped="FlipView_Tapped">
+                    SelectedIndex="{Binding Index, Mode=TwoWay, FallbackValue='-1'}">
                     <FlipView.ItemTemplate>
                         <DataTemplate>
-                            <Image
-                                x:Name="Image"
-                                CanDrag="True"
-                                RenderTransformOrigin="0.5,0.5"
-                                Source="{Binding Pic, Mode=OneWay}" />
+                            <ScrollViewer
+                                x:Name="ImageScrollViewer"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{ThemeResource SystemControlTransparentBrush}"
+                                DoubleTapped="ScrollViewer_DoubleTapped"
+                                HorizontalScrollBarVisibility="Hidden"
+                                HorizontalScrollMode="Auto"
+                                MaxZoomFactor="3"
+                                MinZoomFactor="0.5"
+                                Tapped="ScrollViewer_Tapped"
+                                VerticalScrollBarVisibility="Hidden"
+                                VerticalScrollMode="Auto"
+                                ViewChanged="ScrollViewer_ViewChanged"
+                                ZoomMode="Enabled">
+                                <Image
+                                    x:Name="Image"
+                                    MaxWidth="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                    MaxHeight="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    CanDrag="True"
+                                    DragStarting="Image_DragStarting"
+                                    ManipulationDelta="Image_ManipulationDelta"
+                                    PointerMoved="Image_PointerMoved"
+                                    PointerPressed="Image_PointerPressed"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    Source="{Binding Pic, Mode=OneWay}" />
+                            </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
                 </FlipView>
@@ -161,7 +186,7 @@
                     x:Uid="/ShowImagePage/OriginButton"
                     Click="AppBarButton_Click"
                     Tag="Origin"
-                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}">
+                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                     </AppBarButton.Icon>

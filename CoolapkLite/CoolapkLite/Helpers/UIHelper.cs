@@ -519,7 +519,8 @@ namespace CoolapkLite.Helpers
                                 return await OpenLinkAsync(LaunchActivatedEventArgs.Arguments);
                         }
                     }
-                    else if (LaunchActivatedEventArgs.TileActivatedInfo != null)
+                    else if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2")
+                            && LaunchActivatedEventArgs.TileActivatedInfo != null)
                     {
                         if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
                         {

@@ -261,6 +261,5 @@ namespace CoolapkLite.Controls
 
             return isInMultipleRegions;
         }
-
     }
 }

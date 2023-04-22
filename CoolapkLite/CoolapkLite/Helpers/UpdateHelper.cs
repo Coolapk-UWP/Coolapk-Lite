@@ -75,8 +75,8 @@ namespace CoolapkLite.Helpers
                 : nums.Count <= 2
                     ? new SystemVersionInfo(nums[0], nums[1], 0, 0)
                     : nums.Count <= 3
-                                    ? new SystemVersionInfo(nums[0], nums[1], nums[2], 0)
-                                    : new SystemVersionInfo(nums[0], nums[1], nums[2], nums[3]);
+                        ? new SystemVersionInfo(nums[0], nums[1], nums[2], 0)
+                        : new SystemVersionInfo(nums[0], nums[1], nums[2], nums[3]);
         }
 
         private static string GetVersionNumbers(string version)

@@ -2,14 +2,14 @@
     x:Class="CoolapkLite.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:CoolapkLite.Common"
     xmlns:converter="using:CoolapkLite.Helpers.Converters"
     xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <common:AccentColorResource />
                 <ResourceDictionary Source="ms-appx:///Themes/CustomStyles.xaml" />
-                <!--<ResourceDictionary Source="ms-appx:///Styles/Brushes/MicaBrushes.xaml"/>
-                <ResourceDictionary Source="ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
 
             <x:Double x:Key="PageTitleHeight">80</x:Double>
@@ -32,6 +32,7 @@
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" GreaterThan="0" />
 
             <converter:NumMultConverter x:Key="NumMultConverter" />
+            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
