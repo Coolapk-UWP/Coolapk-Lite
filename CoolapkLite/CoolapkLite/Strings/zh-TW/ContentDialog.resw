@@ -172,10 +172,10 @@
     <value>名稱</value>
   </data>
   <data name="APIVersionCodeTextBox.Header" xml:space="preserve">
-    <value>酷安版本代号</value>
+    <value>酷安版本代號</value>
   </data>
   <data name="APIVersionCodeTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>酷安应用的版本代号，如 1905301</value>
+    <value>酷安應用的版本代號，如 1905301</value>
   </data>
   <data name="APIVersionDialog.PrimaryButtonText" xml:space="preserve">
     <value>完成</value>
@@ -184,9 +184,9 @@
     <value>API 版本</value>
   </data>
   <data name="APIVersionTextBox.Header" xml:space="preserve">
-    <value>酷安版本号</value>
+    <value>酷安版本號</value>
   </data>
   <data name="APIVersionTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>酷安应用的版本号，如 9.2.2</value>
+    <value>酷安應用的版本號，如 9.2.2</value>
   </data>
 </root>
