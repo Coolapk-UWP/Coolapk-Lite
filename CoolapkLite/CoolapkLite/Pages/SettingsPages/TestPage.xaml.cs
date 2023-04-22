@@ -159,7 +159,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "OutPIP":
                     if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))

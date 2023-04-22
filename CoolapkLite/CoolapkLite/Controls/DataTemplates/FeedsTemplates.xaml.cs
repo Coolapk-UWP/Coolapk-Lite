@@ -42,7 +42,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (e != null) { e.Handled = true; }
 
-            _ = UIHelper.OpenLinkAsync(element.Tag as string);
+            _ = UIHelper.OpenLinkAsync(element.Tag.ToString());
         }
 
         private void OnTopTapped(object sender, TappedRoutedEventArgs e)
@@ -63,7 +63,7 @@ namespace CoolapkLite.Controls.DataTemplates
                     UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
                     break;
                 default:
-                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
             }
         }
@@ -141,7 +141,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 default:
                     DisabledCopy();
-                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag as string);
+                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
             }
         }

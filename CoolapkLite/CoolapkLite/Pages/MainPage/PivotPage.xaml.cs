@@ -178,7 +178,7 @@ namespace CoolapkLite.Pages
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "User":
                     _ = await SettingsHelper.CheckLoginAsync()

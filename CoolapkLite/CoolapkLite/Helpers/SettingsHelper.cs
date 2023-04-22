@@ -1,10 +1,12 @@
-﻿using CoolapkLite.Models.Update;
+﻿using CoolapkLite.Models;
+using CoolapkLite.Models.Update;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -19,6 +21,7 @@ namespace CoolapkLite.Helpers
         public const string TileUrl = nameof(TileUrl);
         public const string UserName = nameof(UserName);
         public const string CustomUA = nameof(CustomUA);
+        public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string IsCustomUA = nameof(IsCustomUA);
@@ -38,8 +41,8 @@ namespace CoolapkLite.Helpers
 
         public static Type Get<Type>(string key) => LocalObject.Read<Type>(key);
         public static void Set<Type>(string key, Type value) => LocalObject.Save(key, value);
-        public static void SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync(key, value);
-        public static async Task<Type> GetFile<Type>(string key) => await LocalObject.ReadFileAsync<Type>(key);
+        public static Task<Type> GetFile<Type>(string key) => LocalObject.ReadFileAsync<Type>($"Settings/{key}");
+        public static Task SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync($"Settings/{key}", value);
 
         public static void SetDefaultSettings()
         {
@@ -126,6 +129,17 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(CheckUpdateWhenLuanching))
             {
                 LocalObject.Save(CheckUpdateWhenLuanching, true);
+            }
+            SetDefaultFileSettings();
+        }
+
+        public static async void SetDefaultFileSettings()
+        {
+            StorageFolder folder = LocalObject.Folder;
+            StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
+            if (await settings.TryGetItemAsync(Bookmark) == null)
+            {
+                await SetFile(Bookmark, Models.Bookmark.GetDefaultBookmarks());
             }
         }
     }

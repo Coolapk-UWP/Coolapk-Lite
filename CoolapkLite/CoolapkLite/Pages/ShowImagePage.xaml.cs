@@ -128,7 +128,7 @@ namespace CoolapkLite.Pages
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Copy":
                     Provider.CopyPic();

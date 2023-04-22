@@ -112,7 +112,7 @@ namespace CoolapkLite.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "CloseButton":
                     Hide();
@@ -124,7 +124,7 @@ namespace CoolapkLite.Controls
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag as string)
+            switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Send":
                     CreateDataContent();

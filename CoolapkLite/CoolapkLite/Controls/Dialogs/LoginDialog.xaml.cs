@@ -13,9 +13,47 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class LoginDialog : ContentDialog
     {
-        private string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-        private string UserName = SettingsHelper.Get<string>(SettingsHelper.UserName);
-        private string Token = SettingsHelper.Get<string>(SettingsHelper.Token);
+        private string _UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+        internal string UID
+        {
+            get => _UID;
+            set
+            {
+                if (_UID != value)
+                {
+                    _UID = value;
+                    CheckText();
+                }
+            }
+        }
+
+        private string userName = SettingsHelper.Get<string>(SettingsHelper.UserName);
+        internal string UserName
+        {
+            get => userName;
+            set
+            {
+                if (userName != value)
+                {
+                    userName = value;
+                    CheckText();
+                }
+            }
+        }
+
+        private string token = SettingsHelper.Get<string>(SettingsHelper.Token);
+        internal string Token
+        {
+            get => token;
+            set
+            {
+                if (token != value)
+                {
+                    token = value;
+                    CheckText();
+                }
+            }
+        }
 
         public LoginDialog()
         {
@@ -63,10 +101,6 @@ namespace CoolapkLite.Controls.Dialogs
                 }
             }
         }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e) => CheckText();
-
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e) => CheckText();
 
         private void CheckText() => IsPrimaryButtonEnabled = !string.IsNullOrEmpty(Token) && (!string.IsNullOrEmpty(UID) || !string.IsNullOrEmpty(UserName));
 

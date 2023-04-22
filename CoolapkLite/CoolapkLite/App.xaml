@@ -32,6 +32,7 @@
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" GreaterThan="0" />
 
             <converter:NumMultConverter x:Key="NumMultConverter" />
+            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
