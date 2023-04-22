@@ -1003,7 +1003,6 @@
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Properties\Default.rd.xml" />
-    <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -1365,7 +1364,6 @@
     <PRIResource Include="Strings\en-US\Feed.resw" />
     <PRIResource Include="Strings\en-US\FeedListPage.resw" />
     <PRIResource Include="Strings\en-US\FeedShellPage.resw" />
-    <PRIResource Include="Strings\en-US\LoginDialog.resw" />
     <PRIResource Include="Strings\en-US\MainPage.resw" />
     <PRIResource Include="Strings\en-US\NotificationsPage.resw" />
     <PRIResource Include="Strings\en-US\ProfilePage.resw" />
@@ -1380,7 +1378,6 @@
     <PRIResource Include="Strings\uk-UA\Feed.resw" />
     <PRIResource Include="Strings\uk-UA\FeedListPage.resw" />
     <PRIResource Include="Strings\uk-UA\FeedShellPage.resw" />
-    <PRIResource Include="Strings\uk-UA\LoginDialog.resw" />
     <PRIResource Include="Strings\uk-UA\MainPage.resw" />
     <PRIResource Include="Strings\uk-UA\NotificationsPage.resw" />
     <PRIResource Include="Strings\uk-UA\ProfilePage.resw" />
@@ -1391,6 +1388,7 @@
     <PRIResource Include="Strings\uk-UA\TitleBar.resw" />
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
+    <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
     <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw">
       <SubType>Designer</SubType>
     </PRIResource>
@@ -1417,7 +1415,6 @@
     <PRIResource Include="Strings\zh-TW\Feed.resw" />
     <PRIResource Include="Strings\zh-TW\FeedListPage.resw" />
     <PRIResource Include="Strings\zh-TW\FeedShellPage.resw" />
-    <PRIResource Include="Strings\zh-TW\LoginDialog.resw" />
     <PRIResource Include="Strings\zh-TW\MainPage.resw" />
     <PRIResource Include="Strings\zh-TW\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-TW\ProfilePage.resw" />
