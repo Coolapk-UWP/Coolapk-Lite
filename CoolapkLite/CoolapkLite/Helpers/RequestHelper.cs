@@ -29,12 +29,12 @@ namespace CoolapkLite.Helpers
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
-                UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                UIHelper.ShowMessage("加载失败");
                 return (false, null);
             }
             if (!token.TryGetValue("data", out JToken data) && token.TryGetValue("message", out JToken message))
             {
-                UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
+                UIHelper.ShowMessage(message.ToString());
                 return (false, null);
             }
             else { return (data != null && !string.IsNullOrWhiteSpace(data.ToString()), data); }
@@ -45,7 +45,7 @@ namespace CoolapkLite.Helpers
             string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground);
             if (string.IsNullOrWhiteSpace(results))
             {
-                UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                UIHelper.ShowMessage("加载失败");
                 return (false, results);
             }
             else { return (true, results); }
@@ -60,13 +60,13 @@ namespace CoolapkLite.Helpers
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
-                UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                UIHelper.ShowMessage("加载失败");
                 return (false, null);
             }
             if (!token.TryGetValue("data", out JToken data) && token.TryGetValue("message", out JToken message))
             {
                 bool _isSucceed = token.TryGetValue("error", out JToken error) && error.ToObject<int>() == 0;
-                UIHelper.ShowInAppMessage(MessageType.Message, message.ToString());
+                UIHelper.ShowMessage(message.ToString());
                 return (_isSucceed, token);
             }
             else
@@ -82,7 +82,7 @@ namespace CoolapkLite.Helpers
             string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
             if (string.IsNullOrEmpty(json))
             {
-                UIHelper.ShowInAppMessage(MessageType.Message, "加载失败");
+                UIHelper.ShowMessage("加载失败");
                 return (false, null);
             }
             else { return (true, json); }
