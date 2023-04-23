@@ -121,7 +121,7 @@
     <value>Налаштування</value>
   </data>
   <data name="BackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>返回</value>
+    <value>Назад</value>
   </data>
   <data name="RefreshButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Оновити</value>
