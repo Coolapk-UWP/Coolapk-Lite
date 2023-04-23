@@ -1360,6 +1360,7 @@
   <ItemGroup>
     <PRIResource Include="Strings\en-US\BrowserPage.resw" />
     <PRIResource Include="Strings\en-US\CirclePage.resw" />
+    <PRIResource Include="Strings\en-US\ContentDialog.resw" />
     <PRIResource Include="Strings\en-US\CreateFeedControl.resw" />
     <PRIResource Include="Strings\en-US\Feed.resw" />
     <PRIResource Include="Strings\en-US\FeedListPage.resw" />
@@ -1372,8 +1373,10 @@
     <PRIResource Include="Strings\en-US\SettingsPane.resw" />
     <PRIResource Include="Strings\en-US\ShowImagePage.resw" />
     <PRIResource Include="Strings\en-US\TitleBar.resw" />
+    <PRIResource Include="Strings\en-US\UserAgentDialog.resw" />
     <PRIResource Include="Strings\uk-UA\BrowserPage.resw" />
     <PRIResource Include="Strings\uk-UA\CirclePage.resw" />
+    <PRIResource Include="Strings\uk-UA\ContentDialog.resw" />
     <PRIResource Include="Strings\uk-UA\CreateFeedControl.resw" />
     <PRIResource Include="Strings\uk-UA\Feed.resw" />
     <PRIResource Include="Strings\uk-UA\FeedListPage.resw" />
@@ -1386,6 +1389,7 @@
     <PRIResource Include="Strings\uk-UA\SettingsPane.resw" />
     <PRIResource Include="Strings\uk-UA\ShowImagePage.resw" />
     <PRIResource Include="Strings\uk-UA\TitleBar.resw" />
+    <PRIResource Include="Strings\uk-UA\UserAgentDialog.resw" />
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
     <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
@@ -1409,8 +1413,10 @@
     <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
+    <PRIResource Include="Strings\zh-CN\UserAgentDialog.resw" />
     <PRIResource Include="Strings\zh-TW\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-TW\CirclePage.resw" />
+    <PRIResource Include="Strings\zh-TW\ContentDialog.resw" />
     <PRIResource Include="Strings\zh-TW\CreateFeedControl.resw" />
     <PRIResource Include="Strings\zh-TW\Feed.resw" />
     <PRIResource Include="Strings\zh-TW\FeedListPage.resw" />
@@ -1423,6 +1429,7 @@
     <PRIResource Include="Strings\zh-TW\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-TW\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
+    <PRIResource Include="Strings\zh-TW\UserAgentDialog.resw" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

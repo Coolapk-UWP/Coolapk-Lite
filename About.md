@@ -11,15 +11,12 @@
 
 已翻译：[![Crowdin](https://badges.crowdin.net/CoolapkLite/localized.svg)](https://crowdin.com/project/CoolapkLite "Crowdin")
 
-##### 鸣谢
-|                                          贡献                                        |                      作者                      |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------- |
-| [原作(CoolApk-UWP)](https://github.com/oboard/CoolApk-UWP)                           | [oboard](https://github.com/oboard)            |
-| [Token获取方法(CoolapkTokenCrack)](https://github.com/ZCKun/CoolapkTokenCrack)        | [ZCKun](https://github.com/ZCKun)              |
-| [TokenV2获取方法(CoolapkTokenV2)](https://github.com/XiaoMengXinX/FuckCoolapkTokenV2) | [XiaoMengXinX](https://github.com/XiaoMengXinX)|
+##### 参与人员
+[![Contributors](https://contrib.rocks/image?repo=Coolapk-UWP/Coolapk-Lite)](https://github.com/Coolapk-UWP/Coolapk-Lite/graphs/contributors "Contributors")
 
 ##### 引用及参考
-- [MetroLog](https://github.com/mbrit/MetroLog)
-- [QRCoder](https://github.com/codebude/QRCoder)
-- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net)
-- [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit/)
+- [QRCoder](https://github.com/codebude/QRCoder "QRCoder")
+- [MetroLog](https://github.com/novotnyllc/MetroLog "MetroLog")
+- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net "Bcrypt.Net")
+- [Newtonsoft Json](https://www.newtonsoft.com/json "Newtonsoft Json")
+- [Windows Community Toolkit](https://github.com/CommunityToolkit/WindowsCommunityToolkit "Windows Community Toolkit")
