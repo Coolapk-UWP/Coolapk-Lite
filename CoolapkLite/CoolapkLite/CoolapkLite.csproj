@@ -8,6 +8,7 @@
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CoolapkLite</RootNamespace>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
     <AssemblyName>CoolapkLite</AssemblyName>
     <DefaultLanguage>zh-CN</DefaultLanguage>
     <LangVersion>7.3</LangVersion>
@@ -139,6 +140,8 @@
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
     <Compile Include="BackgroundTasks\NotificationsTask.cs" />
     <Compile Include="Common\AccentColorResource.cs" />
+    <Compile Include="Common\CustomBrushResource.cs" />
+    <Compile Include="Common\CustomControlResource.cs" />
     <Compile Include="Controls\CollectionDetailControl.xaml.cs">
       <DependentUpon>CollectionDetailControl.xaml</DependentUpon>
     </Compile>
