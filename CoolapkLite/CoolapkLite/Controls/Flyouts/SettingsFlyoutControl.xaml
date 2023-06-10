@@ -38,7 +38,7 @@
             <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{Binding IsNoPicsMode, Mode=TwoWay}" />
             <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{Binding IsUseMultiWindow, Mode=TwoWay}" />
             <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{Binding IsDisplayOriginPicture, Mode=TwoWay}" />
-            <local:StackPanel Spacing="8">
+            <local:StackPanel Orientation="Horizontal" Spacing="8">
                 <Button
                     x:Uid="/SettingsPage/CleanCacheButton"
                     Click="Button_Click"
@@ -79,7 +79,7 @@
         <local:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
             <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{Binding VersionTextBlockText}" />
             <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLuanchingCheckBox" IsChecked="{Binding CheckUpdateWhenLuanching, Mode=TwoWay}" />
-            <StackPanel>
+            <local:StackPanel Orientation="Horizontal" Spacing="8">
                 <Button
                     x:Uid="/SettingsPage/CheckUpdate"
                     Click="Button_Click"
@@ -89,7 +89,7 @@
                     HorizontalAlignment="Left"
                     IsActive="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                     Visibility="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-            </StackPanel>
+            </local:StackPanel>
         </local:SettingsGroup>
         <local:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
             <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{Binding ShowOtherException, Mode=TwoWay}" />

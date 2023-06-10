@@ -1,10 +1,12 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -12,6 +14,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels
 {
@@ -19,6 +22,8 @@ namespace CoolapkLite.ViewModels
     {
         private string ImageName = string.Empty;
         public double[] VerticalOffsets { get; set; } = new double[1];
+
+        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
@@ -95,13 +100,21 @@ namespace CoolapkLite.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
-        public ShowImageViewModel(ImageModel image)
+        public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
             if (image.ContextArray.Any())
             {
                 Images = image.ContextArray;

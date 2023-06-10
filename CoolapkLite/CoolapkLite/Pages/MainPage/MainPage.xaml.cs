@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
@@ -14,6 +15,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -69,8 +71,8 @@ namespace CoolapkLite
             HamburgerMenuFrame.Navigated += On_Navigated;
             if (!isLoaded)
             {
-                HamburgerMenu.ItemsSource = MenuItem.GetMainItems();
-                HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems();
+                HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
+                HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems(Dispatcher);
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
                 { OpenActivatedEventArgs(ActivatedEventArgs); }
                 isLoaded = true;
@@ -262,16 +264,24 @@ namespace CoolapkLite
 
         #region 进度条
 
-        public void ShowProgressBar()
+        public async void ShowProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
             ProgressBar.ShowPaused = false;
         }
 
-        public void ShowProgressBar(double value)
+        public async void ShowProgressBar(double value)
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -279,24 +289,36 @@ namespace CoolapkLite
             ProgressBar.Value = value;
         }
 
-        public void PausedProgressBar()
+        public async void PausedProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
             ProgressBar.ShowPaused = true;
         }
 
-        public void ErrorProgressBar()
+        public async void ErrorProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowPaused = false;
             ProgressBar.ShowError = true;
         }
 
-        public void HideProgressBar()
+        public async void HideProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Collapsed;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -304,8 +326,13 @@ namespace CoolapkLite
             ProgressBar.Value = 0;
         }
 
-        public void ShowMessage(string message = null)
+        public async void ShowMessage(string message = null)
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
             if (CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar)
             {
                 AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
@@ -324,6 +351,8 @@ namespace CoolapkLite
         public int Index { get; set; }
         public Type PageType { get; set; }
         public IViewModel ViewModels { get; set; }
+
+        public CoreDispatcher Dispatcher { get; }
 
         public string name;
         public string Name
@@ -374,10 +403,19 @@ namespace CoolapkLite
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
+
+        public MenuItem(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         private async void SetUserAvatar(bool isLogin)
         {
@@ -389,9 +427,13 @@ namespace CoolapkLite
                     (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(UID);
                     if (results.UID != UID) { return; }
                     Name = results.UserName;
-                    Image = new BitmapImage(new Uri(results.UserAvatar));
                     PageType = typeof(ProfilePage);
                     ViewModels = new ProfileViewModel();
+                    if (Dispatcher?.HasThreadAccess == false)
+                    {
+                        await Dispatcher.ResumeForegroundAsync();
+                    }
+                    Image = new BitmapImage(new Uri(results.UserAvatar));
                 }
             }
             else
@@ -405,24 +447,24 @@ namespace CoolapkLite
 
         private static readonly ResourceLoader loader = ResourceLoader.GetForCurrentView("MainPage");
 
-        public static ObservableCollection<MenuItem> GetMainItems()
+        public static ObservableCollection<MenuItem> GetMainItems(CoreDispatcher dispatcher)
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem() { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel("/main/indexV8"), Index = 0},
-                new MenuItem() { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
-                new MenuItem() { Icon = "\uE113", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
-                new MenuItem() { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
+                new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel(dispatcher), Index = 0},
+                new MenuItem(dispatcher) { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
+                new MenuItem(dispatcher) { Icon = "\uE113", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
+                new MenuItem(dispatcher) { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
             };
             return items;
         }
 
-        public static ObservableCollection<MenuItem> GetOptionsItems()
+        public static ObservableCollection<MenuItem> GetOptionsItems(CoreDispatcher dispatcher)
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem() { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
-                 new MenuItem() { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
+                 new MenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
+                 new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
             };
             return items;
         }

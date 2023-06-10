@@ -1,6 +1,8 @@
-﻿using CoolapkLite.ViewModels.DataSource;
+﻿using CoolapkLite.Common;
+using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -25,23 +27,32 @@ namespace CoolapkLite.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
-        public static readonly DependencyProperty IDProperty = DependencyProperty.Register(
-           nameof(ID),
-           typeof(int),
-           typeof(CollectionDetailControl),
-           new PropertyMetadata(0, OnIDPropertyChanged));
+        public static readonly DependencyProperty IDProperty =
+            DependencyProperty.Register(
+                nameof(ID),
+                typeof(int),
+                typeof(CollectionDetailControl),
+                new PropertyMetadata(0, OnIDPropertyChanged));
 
         public int ID
         {
             get => (int)GetValue(IDProperty);
             set => SetValue(IDProperty, value);
         }
+
         private static void OnIDPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.OldValue != e.NewValue)
@@ -50,10 +61,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        public CollectionDetailControl()
-        {
-            this.InitializeComponent();
-        }
+        public CollectionDetailControl() => InitializeComponent();
 
         private async void OnIDPropertyChanged(DependencyPropertyChangedEventArgs e)
         {

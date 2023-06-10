@@ -1,21 +1,25 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Update;
-using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.System.Profile;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
     public class SettingsViewModel : IViewModel
     {
         public static SettingsViewModel Caches { get; set; }
+
+        public CoreDispatcher Dispatcher { get; }
 
         public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
 
@@ -139,9 +143,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
         public string VersionTextBlockText
@@ -151,30 +162,29 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 string ver = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
                 ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
                 string name = loader?.GetString("AppName") ?? "酷安 Lite";
-                GetAboutTextBlockText();
+                _ = GetAboutTextBlockText();
                 return $"{name} v{ver}";
             }
         }
 
-        public SettingsViewModel()
+        public SettingsViewModel(CoreDispatcher dispatcher)
         {
             Caches = this;
+            Dispatcher = dispatcher;
             SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
         }
 
-        private void GetAboutTextBlockText()
+        private async Task GetAboutTextBlockText()
         {
-            _ = Task.Run(async () =>
+            await ThreadSwitcher.ResumeBackgroundAsync();
+            string langcode = LanguageHelper.GetPrimaryLanguage();
+            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langcode}.md");
+            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
+            if (file != null)
             {
-                string langcode = LanguageHelper.GetPrimaryLanguage();
-                Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langcode}.md");
-                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
-                if (file != null)
-                {
-                    string markdown = await FileIO.ReadTextAsync(file);
-                    _ = DispatcherHelper.ExecuteOnUIThreadAsync(() => AboutTextBlockText = markdown);
-                }
-            });
+                string markdown = await FileIO.ReadTextAsync(file);
+                AboutTextBlockText = markdown;
+            }
         }
 
         public async void CleanCache()

@@ -56,13 +56,13 @@ namespace CoolapkLite.Pages.SettingsPages
             return items;
         }
 
-        protected override void AddItems(IList<string> items)
+        protected override async Task AddItemsAsync(IList<string> items)
         {
             if (items != null)
             {
                 foreach (string item in items)
                 {
-                    Add(item);
+                    await AddAsync(item);
                 }
             }
         }

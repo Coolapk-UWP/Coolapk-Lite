@@ -6,6 +6,7 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -13,7 +14,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public string Title { get; protected set; }
 
-        internal IndexViewModel(string uri)
+        internal IndexViewModel(CoreDispatcher dispatcher): base(dispatcher)
         {
             Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             Provider = new CoolapkListProvider(
@@ -26,27 +27,33 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private IEnumerable<Entity> GetEntities(JObject json)
         {
-            if (json.TryGetValue("entityTemplate", out JToken t) && t?.ToString() == "configCard")
+            if (json.TryGetValue("entityTemplate", out JToken entityTemplate))
             {
-                JObject j = JObject.Parse(json.Value<string>("extraData"));
-                Title = j.Value<string>("pageTitle");
-                yield return null;
-            }
-            else if (json.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
-            else if (tt?.ToString() == "feedCoolPictureGridCard")
-            {
-                foreach (JToken item in json.Value<JArray>("entities"))
+                if (entityTemplate?.ToString() == "configCard")
                 {
-                    Entity entity = EntityTemplateSelector.GetEntity((JObject)item, true);
-                    if (entity != null)
+                    JObject extraData = JObject.Parse(json.Value<string>("extraData"));
+                    Title = extraData.Value<string>("pageTitle");
+                    yield return null;
+                }
+                else if (entityTemplate?.ToString() == "fabCard")
+                {
+                    yield return null;
+                }
+                else if (entityTemplate?.ToString() == "feedCoolPictureGridCard")
+                {
+                    foreach (JToken item in json.Value<JArray>("entities"))
                     {
-                        yield return entity;
+                        Entity entity = EntityTemplateSelector.GetEntity((JObject)item, true);
+                        if (entity != null)
+                        {
+                            yield return entity;
+                        }
                     }
                 }
-            }
-            else
-            {
-                yield return EntityTemplateSelector.GetEntity(json, true);
+                else
+                {
+                    yield return EntityTemplateSelector.GetEntity(json, true);
+                }
             }
             yield break;
         }

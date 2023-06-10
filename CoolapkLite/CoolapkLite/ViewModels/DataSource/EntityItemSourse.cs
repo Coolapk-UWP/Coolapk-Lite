@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
 
 namespace CoolapkLite.ViewModels.DataSource
 {
@@ -12,6 +15,10 @@ namespace CoolapkLite.ViewModels.DataSource
     {
         protected CoolapkListProvider Provider;
         protected CoolapkListProvider SubProvider;
+
+        public EntityItemSourse() : base(Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher) { }
+
+        public EntityItemSourse(CoreDispatcher dispatcher) : base(dispatcher) { }
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
@@ -33,7 +40,7 @@ namespace CoolapkLite.ViewModels.DataSource
             return Models;
         }
 
-        protected override void AddItems(IList<Entity> items)
+        protected override async Task AddItemsAsync(IList<Entity> items)
         {
             if (items != null)
             {
@@ -41,7 +48,7 @@ namespace CoolapkLite.ViewModels.DataSource
                 {
                     if (!(item is NullEntity))
                     {
-                        Add(item);
+                        await AddAsync(item);
                         AddSubProvider(item);
                     }
                 }

@@ -20,7 +20,7 @@ namespace CoolapkLite.Controls
         public SettingsFlyoutControl()
         {
             InitializeComponent();
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel();
+            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
             ThemeHelper.UISettingChanged.Add(mode =>
             {
                 switch (mode)

@@ -26,7 +26,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel();
+            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
             switch (ThemeHelper.ActualTheme)
             {
                 case ElementTheme.Light:

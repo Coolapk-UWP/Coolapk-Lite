@@ -34,16 +34,13 @@ namespace CoolapkLite.Common
             this[AccentLight3Key] = sender.GetColorValue(UIColorType.AccentLight3);
         }
 
-        private void OnColorValuesChanged(UISettings sender, object args)
+        private async void OnColorValuesChanged(UISettings sender, object args)
         {
-            if (Dispatcher != null)
+            if (Dispatcher?.HasThreadAccess == false)
             {
-                _ = Dispatcher.AwaitableRunAsync(() => UpdateSystemAccentColors(sender));
+                await Dispatcher.ResumeForegroundAsync();
             }
-            else
-            {
-                UpdateSystemAccentColors(sender);
-            }
+            UpdateSystemAccentColors(sender);
         }
     }
 }
