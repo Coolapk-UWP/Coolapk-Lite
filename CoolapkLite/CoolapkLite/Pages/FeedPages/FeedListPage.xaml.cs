@@ -150,10 +150,10 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = (element.Tag as ICanLike).ChangeLike();
                     break;
                 case "FansButton":
-                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
                     break;
                 case "ReportButton":
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
                     break;
                 case "FollowButton":
                     _ = (element.Tag as ICanFollow).ChangeFollow();
@@ -162,7 +162,7 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = Provider.PinSecondaryTile(element.Tag as Entity);
                     break;
                 case "FollowsButton":
-                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
                     break;
                 default:
                     break;
@@ -187,7 +187,7 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = image.Refresh();
                     break;
                 case "ShowImageButton":
-                    _ = UIHelper.ShowImageAsync(image);
+                    _ = this.ShowImageAsync(image);
                     break;
                 case "OriginButton":
                     image.Type = ImageType.OriginImage;
@@ -221,11 +221,11 @@ namespace CoolapkLite.Pages.FeedPages
             object Tag = (sender as FrameworkElement).Tag;
             if (Tag is ImageModel image)
             {
-                _ = UIHelper.ShowImageAsync(image);
+                _ = this.ShowImageAsync(image);
             }
             else if (Tag is string url)
             {
-                _ = UIHelper.OpenLinkAsync(url);
+                _ = this.OpenLinkAsync(url);
             }
         }
 

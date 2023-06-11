@@ -106,7 +106,7 @@ namespace CoolapkLite.Pages.FeedPages
                                     Edge = EdgeTransitionLocation.Bottom
                                 }
                             }
-                        }.Show();
+                        }.Show(this);
                     }
                     break;
 
@@ -117,7 +117,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case "ReportButton":
                     DisabledCopy();
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
                     break;
 
                 case "ShareButton":
@@ -126,7 +126,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 default:
                     DisabledCopy();
-                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
             }
         }

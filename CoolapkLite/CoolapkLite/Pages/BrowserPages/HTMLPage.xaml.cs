@@ -34,7 +34,7 @@ namespace CoolapkLite.Pages.BrowserPages
             if (args.Uri != null)
             {
                 args.Cancel = true;
-                _ = UIHelper.OpenLinkAsync(args.Uri.AbsoluteUri);
+                _ = this.OpenLinkAsync(args.Uri.AbsoluteUri);
             }
         }
 

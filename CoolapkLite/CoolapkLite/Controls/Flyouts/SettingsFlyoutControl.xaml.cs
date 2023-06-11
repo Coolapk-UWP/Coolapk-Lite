@@ -63,7 +63,7 @@ namespace CoolapkLite.Controls
                     }
                     break;
                 case "MyDevice":
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
                     break;
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
@@ -75,7 +75,7 @@ namespace CoolapkLite.Controls
                     Provider?.CheckUpdate();
                     break;
                 case "AccountSetting":
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();
@@ -109,6 +109,6 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = UIHelper.OpenLinkAsync(e.Link);
+        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = this.OpenLinkAsync(e.Link);
     }
 }

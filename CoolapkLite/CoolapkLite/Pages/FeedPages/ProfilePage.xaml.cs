@@ -102,16 +102,16 @@ namespace CoolapkLite.Pages.FeedPages
             switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "FeedsButton":
-                    UIHelper.Navigate(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
                     break;
                 case "FollowsButton":
-                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
                     break;
                 case "FansButton":
-                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
                     break;
                 case "LoginButton":
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
                     break;
                 case "CreateFeedButton":
                     new CreateFeedControl
@@ -124,10 +124,10 @@ namespace CoolapkLite.Pages.FeedPages
                                 Edge = EdgeTransitionLocation.Bottom
                             }
                         }
-                    }.Show();
+                    }.Show(this);
                     break;
                 case "NotificationButton":
-                    UIHelper.Navigate(typeof(NotificationsPage));
+                    _ = this.NavigateAsync(typeof(NotificationsPage));
                     break;
                 default:
                     break;

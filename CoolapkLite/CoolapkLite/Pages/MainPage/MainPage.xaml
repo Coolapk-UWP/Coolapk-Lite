@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     Background="{ThemeResource ApplicationPageBackgroundBrush}"
+    Loaded="Page_Loaded"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -59,6 +60,7 @@
             <Grid
                 x:Name="CustomTitleBar"
                 Grid.Row="1"
+                Height="32"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Background="{ThemeResource SystemControlTransparentBrush}"

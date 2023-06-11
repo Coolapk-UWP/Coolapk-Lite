@@ -1,7 +1,10 @@
-﻿using Windows.UI.Core;
+﻿using CoolapkLite.Helpers;
+using System.Xml.Linq;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Controls
@@ -46,7 +49,7 @@ namespace CoolapkLite.Controls
             Window.Current.SizeChanged -= Window_SizeChanged;
         }
 
-        public void Show()
+        public void Show(UIElement element)
         {
             if (Parent is Grid grid)
             {
@@ -64,6 +67,8 @@ namespace CoolapkLite.Controls
                 Child = _rootGrid
             };
             _rootGrid.Children.Add(this);
+            
+            _popup.SetXAMLRoot(element);
 
             _popup.IsOpen = true;
         }

@@ -6,8 +6,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Background="{ThemeResource SolidBackgroundFillColorBaseWindowBrush}"
+    Background="{ThemeResource ApplicationPageBackgroundBrush}"
     NavigationCacheMode="Enabled"
+    Loaded="Page_Loaded"
     mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="controls:TitleBar">
@@ -24,6 +25,7 @@
             <Grid
                 x:Name="CustomTitleBar"
                 Grid.Row="1"
+                Height="32"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Background="{ThemeResource SystemControlTransparentBrush}"

@@ -2,7 +2,6 @@
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
-using CoolapkLite.Models.Update;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -21,6 +20,7 @@ using Windows.System;
 using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -170,17 +170,32 @@ namespace CoolapkLite.Pages.SettingsPages
             switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "OutPIP":
-                    if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
+                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
                     break;
                 case "EnterPIP":
-                    if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
+                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
                 case "CustomUA":
                     UserAgentDialog userAgentDialog = new UserAgentDialog(UserAgent);
                     await userAgentDialog.ShowAsync();
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    break;
+                case "NewWindow":
+                    if (WindowHelper.IsSupportedAppWindow)
+                    {
+                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                        window.TitleBar.ExtendsContentIntoTitleBar = true;
+                        ThemeHelper.Initialize();
+                        frame.Navigate(page);
+                        await window.TryShowAsync();
+                    }
                     break;
                 case "CustomAPI":
                     APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);

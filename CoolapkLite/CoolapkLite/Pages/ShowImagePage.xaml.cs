@@ -115,12 +115,6 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args)
-        {
-            bool IsVisible = sender.TitleBar.IsVisible;
-            CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
-        }
-
         private AppViewBackButtonVisibility TryGoBack(bool goBack = true)
         {
             if (!Dispatcher.HasThreadAccess || !Frame.CanGoBack)
@@ -226,6 +220,8 @@ namespace CoolapkLite.Pages
             ScrollViewer view = (sender as FrameworkElement).Parent as ScrollViewer;
             _ = view.ChangeView(view.HorizontalOffset - (e.Delta.Translation.X * view.ZoomFactor), view.VerticalOffset - (e.Delta.Translation.Y * view.ZoomFactor), null);
         }
+
+        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateContentLayout(sender.TitleBar.IsVisible);
 
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender.IsVisible);
 

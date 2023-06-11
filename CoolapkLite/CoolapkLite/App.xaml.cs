@@ -137,9 +137,9 @@ namespace CoolapkLite
                 Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                 rootFrame.Navigate(page, e);
             }
-            else
+            else if (rootFrame.Content is IHaveTitleBar page)
             {
-                _ = UIHelper.OpenActivatedEventArgs(e);
+                _ = page.OpenActivatedEventArgs(e);
             }
 
             // 确保当前窗口处于活动状态

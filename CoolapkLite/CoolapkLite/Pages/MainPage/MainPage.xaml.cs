@@ -10,6 +10,7 @@ using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -24,6 +25,7 @@ using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -49,24 +51,17 @@ namespace CoolapkLite
             UIHelper.AppTitle = this;
             UIHelper.ShellDispatcher = Dispatcher;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             NotificationsModel.Instance?.Update();
             LiveTileTask.Instance?.UpdateTile();
-            UpdateTitleBarLayout(TitleBar);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Window.Current.SetTitleBar(CustomTitleBar);
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             // Add handler for ContentFrame navigation.
             HamburgerMenuFrame.Navigated += On_Navigated;
             if (!isLoaded)
@@ -75,30 +70,53 @@ namespace CoolapkLite
                 HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems(Dispatcher);
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
                 { OpenActivatedEventArgs(ActivatedEventArgs); }
+                else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo()); }
                 isLoaded = true;
-            }
-            else
-            {
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false);
             }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Window.Current.SetTitleBar(null);
-            SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed -= AppWindow_Changed;
+            }
+            else
+            {
+                Window.Current.SetTitleBar(null);
+                SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
+                TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
+            }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed -= System_BackPressed; }
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             HamburgerMenuFrame.Navigated -= On_Navigated;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed += AppWindow_Changed;
+            }
+            else
+            {
+                Window.Current.SetTitleBar(CustomTitleBar);
+                SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+                TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+                UpdateTitleBarLayout(TitleBar);
+                if (isLoaded)
+                { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false); }
+            }
         }
 
         private async void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            if (!await UIHelper.OpenActivatedEventArgs(args))
+            if (!await HamburgerMenuFrame.OpenActivatedEventArgs(args))
             {
                 HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
             }
@@ -107,7 +125,8 @@ namespace CoolapkLite
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
             HideProgressBar();
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack();
+            if (isLoaded && !this.IsAppWindow())
+            { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(); }
             if (HamburgerMenuFrame.SourcePageType != null)
             {
                 MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
@@ -203,6 +222,8 @@ namespace CoolapkLite
             CustomTitleBar.Visibility = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
+        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateTitleBarLayout(sender.TitleBar.IsVisible);
+
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
@@ -213,21 +234,23 @@ namespace CoolapkLite
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, sender.Text), true);
+                ObservableCollection<object> observableCollection = new ObservableCollection<object>();
+                sender.ItemsSource = observableCollection;
+                string keyWord = sender.Text;
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                 if (isSucceed && result != null && result is JArray array && array.Count > 0)
                 {
-                    ObservableCollection<object> observableCollection = new ObservableCollection<object>();
-                    sender.ItemsSource = observableCollection;
                     foreach (JToken token in array)
                     {
                         switch (token.Value<string>("entityType"))
                         {
                             case "apk":
-                                observableCollection.Add(new SearchWord(token as JObject));
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
                                 break;
                             case "searchWord":
                             default:
-                                observableCollection.Add(new SearchWord(token as JObject));
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
                                 break;
                         }
                     }
@@ -333,9 +356,11 @@ namespace CoolapkLite
                 await Dispatcher.ResumeForegroundAsync();
             }
 
-            if (CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar)
+            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+
+            if (this.IsAppWindow())
             {
-                AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+                this.GetWindowForElement().Title = message ?? string.Empty;
             }
             else
             {

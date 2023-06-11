@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Pages.BrowserPages;
@@ -18,6 +19,7 @@ using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -43,24 +45,17 @@ namespace CoolapkLite.Pages
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             NotificationsModel.Instance?.Update();
             LiveTileTask.Instance?.UpdateTile();
-            UpdateTitleBarLayout(TitleBar);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Window.Current.SetTitleBar(CustomTitleBar);
-            SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
             // Add handler for ContentFrame navigation.
             PivotContentFrame.Navigated += On_Navigated;
             Pivot.ItemsSource = GetMainItems();
@@ -71,19 +66,43 @@ namespace CoolapkLite.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Window.Current.SetTitleBar(null);
-            SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed -= AppWindow_Changed;
+            }
+            else
+            {
+                Window.Current.SetTitleBar(null);
+                SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
+                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
+                TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
+            }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed -= System_BackPressed; }
-            CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-            TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
-            TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             PivotContentFrame.Navigated -= On_Navigated;
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Changed += AppWindow_Changed;
+            }
+            else
+            {
+                Window.Current.SetTitleBar(CustomTitleBar);
+                SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
+                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
+                TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+                TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+                UpdateTitleBarLayout(TitleBar);
+            }
         }
 
         private void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            _ = UIHelper.OpenActivatedEventArgs(args);
+            _ = PivotContentFrame.OpenActivatedEventArgs(args);
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -94,7 +113,10 @@ namespace CoolapkLite.Pages
                 Pivot.Visibility = Visibility.Collapsed;
                 PivotContentFrame.Visibility = Visibility.Visible;
             }
-            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
+            if (!this.IsAppWindow())
+            {
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
+            }
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
@@ -191,21 +213,32 @@ namespace CoolapkLite.Pages
             }
         }
 
+        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateTitleBarLayout(sender.TitleBar.IsVisible);
+
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
         #region 进度条
-        public void ShowProgressBar()
+
+        public async void ShowProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
             ProgressBar.ShowPaused = false;
         }
 
-        public void ShowProgressBar(double value)
+        public async void ShowProgressBar(double value)
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -213,24 +246,36 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = value;
         }
 
-        public void PausedProgressBar()
+        public async void PausedProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
             ProgressBar.ShowPaused = true;
         }
 
-        public void ErrorProgressBar()
+        public async void ErrorProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowPaused = false;
             ProgressBar.ShowError = true;
         }
 
-        public void HideProgressBar()
+        public async void HideProgressBar()
         {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
             ProgressBar.Visibility = Visibility.Collapsed;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -238,17 +283,25 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = 0;
         }
 
-        public void ShowMessage(string message = null)
+        public async void ShowMessage(string message = null)
         {
-            if (CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar)
+            if (!Dispatcher.HasThreadAccess)
             {
-                AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Title = message ?? string.Empty;
             }
             else
             {
                 ApplicationView.GetForCurrentView().Title = message ?? string.Empty;
             }
         }
+
         #endregion
 
         public static ObservableCollection<PivotItem> GetMainItems()

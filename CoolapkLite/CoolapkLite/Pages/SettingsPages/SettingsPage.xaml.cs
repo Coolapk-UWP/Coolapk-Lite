@@ -106,6 +106,6 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
-        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = UIHelper.OpenLinkAsync(e.Link);
+        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = this.OpenLinkAsync(e.Link);
     }
 }

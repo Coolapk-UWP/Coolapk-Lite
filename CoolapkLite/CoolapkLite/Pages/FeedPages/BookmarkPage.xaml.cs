@@ -65,7 +65,7 @@ namespace CoolapkLite.Pages.FeedPages
 
             if (e != null) { e.Handled = true; }
 
-            _ = UIHelper.OpenLinkAsync(element.Tag.ToString());
+            _ = this.OpenLinkAsync(element.Tag.ToString());
         }
 
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);

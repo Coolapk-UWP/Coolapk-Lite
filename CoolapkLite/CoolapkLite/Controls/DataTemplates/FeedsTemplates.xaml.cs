@@ -42,7 +42,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (e != null) { e.Handled = true; }
 
-            _ = UIHelper.OpenLinkAsync(element.Tag.ToString());
+            _ = element.OpenLinkAsync(element.Tag.ToString());
         }
 
         private void OnTopTapped(object sender, TappedRoutedEventArgs e)
@@ -51,7 +51,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (e != null) { e.Handled = true; }
 
-            _ = UIHelper.OpenLinkAsync(element.Tag.ToString());
+            _ = element.OpenLinkAsync(element.Tag.ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -60,10 +60,10 @@ namespace CoolapkLite.Controls.DataTemplates
             switch (element.Name)
             {
                 case "SeeAllButton":
-                    UIHelper.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
+                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
                     break;
                 default:
-                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
             }
         }
@@ -96,7 +96,7 @@ namespace CoolapkLite.Controls.DataTemplates
                                     Edge = EdgeTransitionLocation.Bottom
                                 }
                             }
-                        }.Show();
+                        }.Show(element);
                     }
                     else if (element.Tag is FeedReplyModel reply)
                     {
@@ -111,7 +111,7 @@ namespace CoolapkLite.Controls.DataTemplates
                                     Edge = EdgeTransitionLocation.Bottom
                                 }
                             }
-                        }.Show();
+                        }.Show(element);
                     }
                     break;
 
@@ -127,7 +127,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "ReportButton":
                     DisabledCopy();
-                    UIHelper.Navigate(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
                     break;
 
                 case "ShareButton":
@@ -141,7 +141,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 default:
                     DisabledCopy();
-                    _ = UIHelper.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
             }
         }
@@ -162,7 +162,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 if (provider != null)
                 {
-                    UIHelper.Navigate(typeof(FeedListPage), provider);
+                    _ = sender.NavigateAsync(typeof(FeedListPage), provider);
                 }
             }
         }
