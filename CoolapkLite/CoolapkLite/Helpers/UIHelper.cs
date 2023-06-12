@@ -6,7 +6,6 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources;
 using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
 using Windows.System;
@@ -51,6 +49,10 @@ namespace CoolapkLite.Helpers
         public static async void ShowProgressBar()
         {
             IsShowingProgressBar = true;
+            if (!AppTitle.Dispatcher.HasThreadAccess)
+            {
+                await AppTitle.Dispatcher.ResumeForegroundAsync();
+            }
             if (HasStatusBar)
             {
                 AppTitle?.HideProgressBar();
@@ -66,6 +68,10 @@ namespace CoolapkLite.Helpers
         public static async void ShowProgressBar(double value)
         {
             IsShowingProgressBar = true;
+            if (!AppTitle.Dispatcher.HasThreadAccess)
+            {
+                await AppTitle.Dispatcher.ResumeForegroundAsync();
+            }
             if (HasStatusBar)
             {
                 AppTitle?.HideProgressBar();
@@ -81,6 +87,10 @@ namespace CoolapkLite.Helpers
         public static async void PausedProgressBar()
         {
             IsShowingProgressBar = true;
+            if (!AppTitle.Dispatcher.HasThreadAccess)
+            {
+                await AppTitle.Dispatcher.ResumeForegroundAsync();
+            }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -91,6 +101,10 @@ namespace CoolapkLite.Helpers
         public static async void ErrorProgressBar()
         {
             IsShowingProgressBar = true;
+            if (!AppTitle.Dispatcher.HasThreadAccess)
+            {
+                await AppTitle.Dispatcher.ResumeForegroundAsync();
+            }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -101,6 +115,10 @@ namespace CoolapkLite.Helpers
         public static async void HideProgressBar()
         {
             IsShowingProgressBar = false;
+            if (!AppTitle.Dispatcher.HasThreadAccess)
+            {
+                await AppTitle.Dispatcher.ResumeForegroundAsync();
+            }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -114,6 +132,10 @@ namespace CoolapkLite.Helpers
             if (!IsShowingMessage)
             {
                 IsShowingMessage = true;
+                if (!AppTitle.Dispatcher.HasThreadAccess)
+                {
+                    await AppTitle.Dispatcher.ResumeForegroundAsync();
+                }
                 while (MessageList.Count > 0)
                 {
                     if (HasStatusBar)
