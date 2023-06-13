@@ -6,7 +6,6 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -14,7 +13,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public string Title { get; protected set; }
 
-        internal IndexViewModel(CoreDispatcher dispatcher): base(dispatcher)
+        internal IndexViewModel()
         {
             Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             Provider = new CoolapkListProvider(

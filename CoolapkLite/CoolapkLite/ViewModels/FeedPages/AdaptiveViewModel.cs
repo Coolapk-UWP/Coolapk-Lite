@@ -156,7 +156,24 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
                                 branch),
-                        (o) => new Entity[] { new FeedModel(o) },
+                        EntityTemplateSelector.GetEntities,
+                        "uid"));
+        }
+
+        public static AdaptiveViewModel GetUserCollectionListProvider(string uid)
+        {
+            return string.IsNullOrEmpty(uid)
+                ? throw new ArgumentException(nameof(uid))
+                : new AdaptiveViewModel(
+                    new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetCollectionList,
+                                string.Empty,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        EntityTemplateSelector.GetEntities,
                         "uid"));
         }
 

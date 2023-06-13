@@ -110,6 +110,12 @@ namespace CoolapkLite.Pages.SettingsPages
             set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
         }
 
+        internal bool IsUseBlurBrush
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush);
+            set => SettingsHelper.Set(SettingsHelper.IsUseBlurBrush, value);
+        }
+
         internal bool IsUseCompositor
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);

@@ -30,6 +30,7 @@ namespace CoolapkLite.Helpers
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
+        public const string IsUseBlurBrush = nameof(IsUseBlurBrush);
         public const string IsUseCompositor = nameof(IsUseCompositor);
         public const string CurrentLanguage = nameof(CurrentLanguage);
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
@@ -98,6 +99,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(IsUseLiteHome))
             {
                 LocalObject.Save(IsUseLiteHome, false);
+            }
+            if (!LocalObject.KeyExists(IsUseBlurBrush))
+            {
+                LocalObject.Save(IsUseBlurBrush, true);
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {

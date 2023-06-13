@@ -8,6 +8,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -106,6 +107,6 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
-        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = this.OpenLinkAsync(e.Link);
+        private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = Frame.OpenLinkAsync(e.Link);
     }
 }

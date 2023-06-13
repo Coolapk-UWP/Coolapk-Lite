@@ -70,14 +70,15 @@
                             Text="GIF" />
                     </Border>
                 </StackPanel>
-                <ProgressRing
+                <!-- 如果你觉得你的设备性能很好的话可以吧注释去掉 -->
+                <!--<ProgressRing
                     Width="50"
                     Height="50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     IsActive="{Binding IsLoading}"
-                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />-->
                 <StackPanel
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"

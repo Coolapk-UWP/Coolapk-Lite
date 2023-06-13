@@ -56,6 +56,8 @@ namespace CoolapkLite.Controls.DataTemplates
                 }
                 else if (str.Contains("我的收藏单"))
                 {
+                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid)); }
                 }
                 else if (str.Contains("我的问答"))
                 {
@@ -99,6 +101,8 @@ namespace CoolapkLite.Controls.DataTemplates
                 }
                 else if (url.Contains("我的收藏单"))
                 {
+                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid)); }
                 }
                 else if (url.Contains("我的问答"))
                 {

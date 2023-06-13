@@ -20,6 +20,7 @@
     <DataTemplate x:Key="FeedDefaultTemplate">
         <UserControl
             x:Name="RootGrid"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
@@ -323,7 +324,7 @@
                         Margin="12,8"
                         Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <Border Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <ContentControl DataContext="{Binding SourceFeed}" ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" />
+                        <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding SourceFeed}" />
                     </Border>
                 </Grid>
                 <Grid
@@ -514,6 +515,7 @@
     <DataTemplate x:Key="SourceFeedDefaultTemplate">
         <UserControl
             x:Name="RootGrid"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
@@ -611,6 +613,7 @@
     <DataTemplate x:Key="FeedReplyDefaultTemplate">
         <UserControl
             x:Name="RootGrid"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged">
             <UserControl.Resources>

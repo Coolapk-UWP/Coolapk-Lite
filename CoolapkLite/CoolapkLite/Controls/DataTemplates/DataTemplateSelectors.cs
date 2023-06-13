@@ -3,6 +3,7 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using static CoolapkLite.Models.Feeds.FeedModel;
@@ -121,27 +122,32 @@ namespace CoolapkLite.Controls.DataTemplates
 
     public static class EntityTemplateSelector
     {
-        public static Entity GetEntity(JObject jo, bool isHotFeedPage = false)
+        public static Entity GetEntity(JObject json, bool isHotFeedPage = false)
         {
-            switch (jo.Value<string>("entityType"))
+            switch (json.Value<string>("entityType"))
             {
                 case "feed":
-                case "discovery": return new FeedModel(jo, isHotFeedPage ? FeedDisplayMode.IsFirstPageFeed : FeedDisplayMode.Normal);
-                case "history": return new HistoryModel(jo);
-                case "collection": return new CollectionModel(jo);
+                case "discovery": return new FeedModel(json, isHotFeedPage ? FeedDisplayMode.IsFirstPageFeed : FeedDisplayMode.Normal);
+                case "history": return new HistoryModel(json);
+                case "collection": return new CollectionModel(json);
                 default:
-                    if (jo.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))
+                    if (json.TryGetValue("entityTemplate", out JToken entityTemplate) && !string.IsNullOrEmpty(entityTemplate.ToString()))
                     {
                         switch (entityTemplate.ToString())
                         {
                             case "headCard":
                             case "imageCard":
-                            case "imageCarouselCard_1": return new IndexPageHasEntitiesModel(jo, EntityType.Image);
+                            case "imageCarouselCard_1": return new IndexPageHasEntitiesModel(json, EntityType.Image);
                             default: return null;
                         }
                     }
                     return null;
             }
+        }
+
+        public static IEnumerable<Entity> GetEntities(JObject json)
+        {
+            yield return GetEntity(json);
         }
     }
 }
