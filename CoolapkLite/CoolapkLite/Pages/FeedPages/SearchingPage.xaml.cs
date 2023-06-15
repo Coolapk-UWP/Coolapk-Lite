@@ -1,7 +1,9 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
@@ -95,21 +97,23 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, sender.Text), true);
+                ObservableCollection<object> observableCollection = new ObservableCollection<object>();
+                sender.ItemsSource = observableCollection;
+                string keyWord = sender.Text;
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                 if (isSucceed && result != null && result is JArray array && array.Count > 0)
                 {
-                    ObservableCollection<object> observableCollection = new ObservableCollection<object>();
-                    sender.ItemsSource = observableCollection;
                     foreach (JToken token in array)
                     {
                         switch (token.Value<string>("entityType"))
                         {
                             case "apk":
-                                observableCollection.Add(new SearchWord(token as JObject));
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
                                 break;
                             case "searchWord":
                             default:
-                                observableCollection.Add(new SearchWord(token as JObject));
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
                                 break;
                         }
                     }

@@ -9,6 +9,7 @@ using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Activation;
@@ -207,8 +208,14 @@ namespace CoolapkLite.Pages
                         ? PivotContentFrame.Navigate(typeof(ProfilePage), new ProfileViewModel())
                         : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
                     break;
+                case "Bookmark":
+                    _ = PivotContentFrame.Navigate(typeof(BookmarkPage), new BookmarkViewModel());
+                    break;
                 case "Setting":
-                    PivotContentFrame.Navigate(typeof(SettingsPage));
+                    _ = PivotContentFrame.Navigate(typeof(SettingsPage));
+                    break;
+                case "SearchButton":
+                    _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(string.Empty));
                     break;
             }
         }
@@ -218,6 +225,63 @@ namespace CoolapkLite.Pages
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
+
+        #region 搜索框
+
+        private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+        {
+            if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
+            {
+                ObservableCollection<object> observableCollection = new ObservableCollection<object>();
+                sender.ItemsSource = observableCollection;
+                string keyWord = sender.Text;
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                if (isSucceed && result != null && result is JArray array && array.Count > 0)
+                {
+                    foreach (JToken token in array)
+                    {
+                        switch (token.Value<string>("entityType"))
+                        {
+                            case "apk":
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                break;
+                            case "searchWord":
+                            default:
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            //if (args.ChosenSuggestion is AppModel app)
+            //{
+            //    UIHelper.NavigateInSplitPane(typeof(AppPages.AppPage), "https://www.coolapk.com" + app.Url);
+            //}
+            //else
+            if (args.ChosenSuggestion is SearchWord word)
+            {
+                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
+            }
+            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
+            {
+                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
+            }
+        }
+
+        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
+        {
+            if (args.SelectedItem is SearchWord searchWord)
+            {
+                sender.Text = searchWord.ToString();
+            }
+        }
+
+        #endregion
 
         #region 进度条
 

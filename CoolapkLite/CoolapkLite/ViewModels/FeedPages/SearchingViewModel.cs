@@ -8,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -77,7 +76,6 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (reset)
             {
-                List<PivotItem> ItemSource = new List<PivotItem>();
                 if (SearchFeedItemSourse == null)
                 {
                     SearchFeedItemSourse = new SearchFeedItemSourse(Title);

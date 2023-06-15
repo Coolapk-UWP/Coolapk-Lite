@@ -142,7 +142,6 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public event EventHandler LoadMoreStarted;
         public event EventHandler LoadMoreCompleted;
-        public event EventHandler<double> LoadMoreProgressChanged;
 
         #region Overridable methods
 
@@ -156,7 +155,6 @@ namespace CoolapkLite.ViewModels.DataSource
                 foreach (T item in items)
                 {
                     await AddAsync(item);
-                    InvokeProgressChanged(item, items);
                 }
             }
         }
@@ -169,8 +167,6 @@ namespace CoolapkLite.ViewModels.DataSource
             }
             Add(item);
         }
-
-        protected virtual void InvokeProgressChanged(T item, IList<T> items) => LoadMoreProgressChanged?.Invoke((double)(items.IndexOf(item) + 1) / items.Count);
 
         protected abstract Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count);
 

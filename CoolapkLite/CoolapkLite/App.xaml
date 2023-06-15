@@ -25,16 +25,6 @@
 
             <FontFamily x:Key="SymbolThemeFontFamily">Segoe Fluent Icons,Segoe MDL2 Assets,Segoe UI Symbol</FontFamily>
 
-            <converters:StringFormatConverter x:Key="StringFormatConverter" />
-            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
-            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-            <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
-            <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
-            <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" GreaterThan="0" />
-
-            <converter:NumMultConverter x:Key="NumMultConverter" />
-            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
-
             <Style TargetType="Frame">
                 <Setter Property="ContentTransitions">
                     <Setter.Value>
@@ -44,6 +34,16 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            
+            <converters:StringFormatConverter x:Key="StringFormatConverter" />
+            <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+            <converters:StringVisibilityConverter x:Key="StringVisibilityConverter" />
+            <converters:CollectionVisibilityConverter x:Key="CollectionVisibilityConverter" />
+            <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" GreaterThan="0" />
+
+            <converter:NumMultConverter x:Key="NumMultConverter" />
+            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

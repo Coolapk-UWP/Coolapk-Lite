@@ -7,6 +7,7 @@ using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -318,12 +319,12 @@ namespace CoolapkLite.Helpers
                 (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
                 window.TitleBar.ExtendsContentIntoTitleBar = true;
                 ThemeHelper.Initialize();
-                frame.Navigate(typeof(ShowImagePage), image);
+                frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
                 return await window.TryShowAsync();
             }
             else
             {
-                return (mainPage as Page).Frame.Navigate(typeof(ShowImagePage), image);
+                return (mainPage as Page).Frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
             }
         }
     }

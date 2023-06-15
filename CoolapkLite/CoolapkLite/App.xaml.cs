@@ -26,6 +26,7 @@ using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 namespace CoolapkLite
@@ -135,7 +136,7 @@ namespace CoolapkLite
                 // 并通过将所需信息作为导航参数传入来配置
                 // 参数
                 Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                rootFrame.Navigate(page, e);
+                rootFrame.Navigate(page, e, new DrillInNavigationTransitionInfo());
             }
             else if (rootFrame.Content is IHaveTitleBar page)
             {

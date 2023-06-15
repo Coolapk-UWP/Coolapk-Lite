@@ -6,14 +6,20 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     Background="{ThemeResource ApplicationPageBackgroundBrush}"
-    NavigationCacheMode="Enabled"
     Loaded="Page_Loaded"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
-        <Style TargetType="controls:TitleBar">
-            <Setter Property="CompactModeThresholdWidth" Value="-1" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <templates:SearchWord />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="controls:TitleBar">
+                <Setter Property="CompactModeThresholdWidth" Value="-1" />
+            </Style>
+        </ResourceDictionary>
     </Page.Resources>
     <Grid>
         <Grid Margin="0,-32,0,0">
@@ -57,15 +63,43 @@
                 Grid.Row="1"
                 Margin="{StaticResource PivotTitleMargin}"
                 helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+                IsTabStop="True"
                 SelectionChanged="Pivot_SelectionChanged">
                 <Pivot.RightHeader>
-                    <Button
-                        x:Name="RefreshButton"
-                        VerticalAlignment="Center"
-                        Click="RefreshButton_Click"
-                        Content="&#xE72C;"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <AutoSuggestBox
+                                x:Name="AutoSuggestBox"
+                                x:Uid="/MainPage/SearchBox"
+                                Width="220"
+                                VerticalAlignment="Center"
+                                ItemTemplateSelector="{StaticResource SearchWordSelector}"
+                                QueryIcon="Find"
+                                QuerySubmitted="AutoSuggestBox_QuerySubmitted"
+                                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
+                                TextChanged="AutoSuggestBox_TextChanged"
+                                Visibility="Collapsed" />
+                            <Button
+                                x:Name="SearchButton"
+                                Click="AppBarButton_Click"
+                                Content="&#xE721;"
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                Style="{StaticResource TitleBarIconButtonStyle}"
+                                Tag="SearchButton" />
+                        </Grid>
+                        <Button
+                            x:Name="RefreshButton"
+                            Grid.Column="1"
+                            VerticalAlignment="Center"
+                            Click="RefreshButton_Click"
+                            Content="&#xE72C;"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Style="{StaticResource TitleBarIconButtonStyle}" />
+                    </Grid>
                 </Pivot.RightHeader>
             </Pivot>
             <Frame
@@ -76,6 +110,15 @@
                 x:Name="CommandBar"
                 Grid.Row="2"
                 VerticalAlignment="Bottom">
+                <AppBarButton
+                    Click="AppBarButton_Click"
+                    Label="书签"
+                    Tag="Bookmark"
+                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE734;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
                 <AppBarButton
                     Click="AppBarButton_Click"
                     Label="用户"
@@ -102,5 +145,27 @@
             VerticalAlignment="Top"
             Background="{ThemeResource SystemControlTransparentBrush}"
             IsIndeterminate="False" />
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SearchButton.Visibility" Value="Visible" />
+                        <Setter Target="AutoSuggestBox.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="641" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SearchButton.Visibility" Value="Collapsed" />
+                        <Setter Target="AutoSuggestBox.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
