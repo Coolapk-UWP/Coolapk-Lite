@@ -11,12 +11,12 @@
                 TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
-                x:Key="ApplicationPageBackgroundBrush"
-                Amount="10"
+                x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintOpacity="0.91" />
+                TintOpacity="0.8" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <media:BackdropBlurBrush
@@ -26,16 +26,17 @@
                 TintColor="{ThemeResource CardStrokeColorDefaultSolid}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
-                x:Key="ApplicationPageBackgroundBrush"
-                Amount="10"
+                x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 

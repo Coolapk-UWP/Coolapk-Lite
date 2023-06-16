@@ -6,7 +6,6 @@
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
             <StaticResource x:Key="HamburgerMenuDefaultPaneBackground" ResourceKey="SystemControlAcrylicElementBrush" />
-            <StaticResource x:Key="HamburgerMenuExpandedPaneBackground" ResourceKey="SolidBackgroundFillColorTransparent" />
             <StaticResource x:Key="HamburgerMenuContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
 
             <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlTransparentBrush" />
@@ -41,7 +40,6 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <StaticResource x:Key="HamburgerMenuDefaultPaneBackground" ResourceKey="SystemControlAcrylicElementBrush" />
-            <StaticResource x:Key="HamburgerMenuExpandedPaneBackground" ResourceKey="SolidBackgroundFillColorTransparent" />
             <StaticResource x:Key="HamburgerMenuContentBackground" ResourceKey="LayerFillColorDefaultBrush" />
 
             <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlTransparentBrush" />
@@ -76,7 +74,6 @@
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="HamburgerMenuDefaultPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
-            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="HamburgerMenuContentBackground" Color="{ThemeResource SystemColorWindowColor}" />
 
             <StaticResource x:Key="HamburgerMenuItemBackground" ResourceKey="SystemControlBackgroundBaseLowBrush" />

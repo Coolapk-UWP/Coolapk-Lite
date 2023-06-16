@@ -6,6 +6,7 @@
                 Opacity="0.99"
                 Color="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush
@@ -13,10 +14,12 @@
                 Opacity="0.99"
                 Color="{ThemeResource CardStrokeColorDefaultSolid}" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
