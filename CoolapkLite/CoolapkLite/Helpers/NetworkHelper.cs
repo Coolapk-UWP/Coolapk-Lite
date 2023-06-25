@@ -75,10 +75,10 @@ namespace CoolapkLite.Helpers
 
         public static void SetRequestHeaders()
         {
-            EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
+            string Culture = LanguageHelper.GetPrimaryLanguage();
+            EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
             APIVersions APIVersion = SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion);
             TokenVersions TokenVersion = SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion);
-            string Culture = LanguageHelper.GetPrimaryLanguage();
 
             token = new TokenCreater(TokenVersion);
             Client.DefaultRequestHeaders.Clear();
@@ -96,7 +96,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                Client.DefaultRequestHeaders.UserAgent.ParseAdd($"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0) (#Build; {deviceInfo.SystemManufacturer}; {deviceInfo.SystemProductName}; {deviceInfo.SystemProductName}_{deviceInfo.SystemSku}; {SystemInformation.Instance.OperatingSystemVersion})");
+                Client.DefaultRequestHeaders.UserAgent.ParseAdd($"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0) (#Build; {DeviceInfo.SystemManufacturer}; {DeviceInfo.SystemProductName}; {DeviceInfo.SystemProductName}_{DeviceInfo.SystemSku}; {SystemInformation.Instance.OperatingSystemVersion})");
             }
 
             switch (APIVersion)
@@ -150,10 +150,10 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 case APIVersions.V13:
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.2.0-2306152-universal");
-                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.2.0");
-                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2306152");
-                    Client.DefaultRequestHeaders.Add("X-App-Code", "2306152");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.2.1-2306161-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.2.1");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2306161");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2306161");
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
                 case APIVersions.Custom:

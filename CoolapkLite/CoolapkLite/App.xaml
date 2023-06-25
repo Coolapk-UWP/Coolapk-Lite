@@ -34,7 +34,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <converters:StringFormatConverter x:Key="StringFormatConverter" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
