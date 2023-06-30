@@ -193,7 +193,7 @@ namespace CoolapkLite.Pages
             {
                 Refresh();
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
+            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
                 _ = ItemsSource.Refresh(true);
             }

@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppExtensions;
 using Windows.ApplicationModel.AppService;
-using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
@@ -225,11 +227,21 @@ namespace CoolapkLite.Common
             // New extension?
             if (existingExt == null)
             {
-                // get the extension's properties, such as its logo
-                var properties = await ext.GetExtensionPropertiesAsync() as PropertySet;
-                var fileStream = await (ext.AppInfo.DisplayInfo.GetLogo(new Windows.Foundation.Size(1, 1))).OpenReadAsync();
                 BitmapImage logo = new BitmapImage();
-                logo.SetSource(fileStream);
+                // get the extension's properties, such as its logo
+                PropertySet properties = await ext.GetExtensionPropertiesAsync() as PropertySet;
+
+                try
+                {
+                    using (IRandomAccessStreamWithContentType fileStream = await ext.AppInfo.DisplayInfo.GetLogo(new Size(1, 1)).OpenReadAsync())
+                    {
+                        logo.SetSource(fileStream);
+                    }
+                }
+                catch
+                {
+                    logo = null;
+                }
 
                 Extension newExtension = new Extension(ext, properties, logo);
                 Extensions.Add(newExtension);
@@ -376,10 +388,12 @@ namespace CoolapkLite.Common
 
         public bool Loaded { get; private set; } // whether the package has been loaded or not.
 
+        public StorageFolder PublicFolder { get; private set; } // the folder that the extension shares.
+
         public AppExtension AppExtension { get; private set; }
 
         public Visibility Visible { get; private set; } // Whether the extension should be visible in the list of extensions
-        
+
         #endregion
 
         /// <summary>
@@ -393,7 +407,7 @@ namespace CoolapkLite.Common
                 try
                 {
                     // make the app service call
-                    using (var connection = new AppServiceConnection())
+                    using (AppServiceConnection connection = new AppServiceConnection())
                     {
                         // service name is defined in appxmanifest properties
                         connection.AppServiceName = _serviceName;
@@ -438,22 +452,31 @@ namespace CoolapkLite.Common
         {
             // ensure this is the same uid
             string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
-            if (identifier != this.UniqueId)
+            if (identifier != UniqueId)
             {
                 return;
             }
 
-            var properties = await ext.GetExtensionPropertiesAsync() as PropertySet;
+            PropertySet properties = await ext.GetExtensionPropertiesAsync() as PropertySet;
 
-            // get the logo for the extension
-            var fileStream = await (ext.AppInfo.DisplayInfo.GetLogo(new Windows.Foundation.Size(1, 1))).OpenReadAsync();
-            BitmapImage logo = new BitmapImage();
-            logo.SetSource(fileStream);
+            try
+            {
+                // get the logo for the extension
+                using (IRandomAccessStreamWithContentType fileStream = await ext.AppInfo.DisplayInfo.GetLogo(new Size(1, 1)).OpenReadAsync())
+                {
+                    BitmapImage logo = new BitmapImage();
+                    logo.SetSource(fileStream);
+                    Logo = logo;
+                }
+            }
+            catch
+            {
+                Logo = null;
+            }
 
             // update the extension
-            this.AppExtension = ext;
+            AppExtension = ext;
             _properties = properties;
-            Logo = logo;
 
             #region Update Properties
 
@@ -464,7 +487,7 @@ namespace CoolapkLite.Common
                 if (_properties.ContainsKey("Service"))
                 {
                     PropertySet serviceProperty = _properties["Service"] as PropertySet;
-                    this._serviceName = serviceProperty["#text"].ToString();
+                    _serviceName = serviceProperty["#text"].ToString();
                 }
             }
 
@@ -495,7 +518,7 @@ namespace CoolapkLite.Common
 
             // The public folder is shared between the extension and the host.
             // We don't use it in this sample but you can see https://github.com/Microsoft/Build2016-B808-AppExtensibilitySample for an example of it can be used.
-            _ = await AppExtension.GetPublicFolderAsync();
+            PublicFolder = await AppExtension.GetPublicFolderAsync();
 
             Loaded = true;
             Visible = Visibility.Visible;

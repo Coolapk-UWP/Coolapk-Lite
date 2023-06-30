@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class IndexViewModel : EntityItemSourse, IViewModel
+    internal class IndexViewModel : EntityItemSource, IViewModel
     {
         public string Title { get; protected set; }
 

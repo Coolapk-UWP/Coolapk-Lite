@@ -160,7 +160,7 @@ namespace CoolapkLite.Controls
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ShyHeaderListView.ItemsSource is EntityItemSourse entities)
+            if (ShyHeaderListView.ItemsSource is EntityItemSource entities)
             {
                 _ = entities.Refresh(true);
             }

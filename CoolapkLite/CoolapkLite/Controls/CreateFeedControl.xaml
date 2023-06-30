@@ -134,7 +134,7 @@
                                     <ListView
                                         Grid.Row="1"
                                         Padding="4,0"
-                                        ItemsSource="{x:Bind Provider.CreateUserItemSourse, Mode=OneWay}"
+                                        ItemsSource="{x:Bind Provider.CreateUserItemSource, Mode=OneWay}"
                                         SelectionChanged="ListView_SelectionChanged"
                                         Tag="UserList">
                                         <ListView.ItemTemplate>
@@ -161,7 +161,7 @@
                                     <ProgressBar
                                         VerticalAlignment="Top"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
-                                        IsIndeterminate="{x:Bind Provider.CreateUserItemSourse.IsLoading, Mode=OneWay}" />
+                                        IsIndeterminate="{x:Bind Provider.CreateUserItemSource.IsLoading, Mode=OneWay}" />
                                 </Grid>
                             </PivotItem>
                             <PivotItem x:Uid="/CreateFeedControl/TopicPivotItem">
@@ -185,7 +185,7 @@
                                     <ListView
                                         Grid.Row="1"
                                         Padding="4,0"
-                                        ItemsSource="{x:Bind Provider.CreateTopicItemSourse, Mode=OneWay}"
+                                        ItemsSource="{x:Bind Provider.CreateTopicItemSource, Mode=OneWay}"
                                         SelectionChanged="ListView_SelectionChanged"
                                         Tag="TopicList">
                                         <ListView.ItemTemplate>
@@ -212,7 +212,7 @@
                                     <ProgressBar
                                         VerticalAlignment="Top"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
-                                        IsIndeterminate="{x:Bind Provider.CreateTopicItemSourse.IsLoading, Mode=OneWay}" />
+                                        IsIndeterminate="{x:Bind Provider.CreateTopicItemSource.IsLoading, Mode=OneWay}" />
                                 </Grid>
                             </PivotItem>
                         </Pivot>

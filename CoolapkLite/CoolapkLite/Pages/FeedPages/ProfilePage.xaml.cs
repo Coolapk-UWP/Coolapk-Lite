@@ -90,7 +90,7 @@ namespace CoolapkLite.Pages.FeedPages
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
-            if (ListView.ItemsSource is EntityItemSourse entities)
+            if (ListView.ItemsSource is EntityItemSource entities)
             {
                 _ = entities.Refresh(true);
             }

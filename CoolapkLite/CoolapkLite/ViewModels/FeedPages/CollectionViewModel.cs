@@ -100,8 +100,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                                             (p, firstItem, lastItem) => UriHelper.GetUri(UriType.DataList, url.ToString().Replace("#", "%23").Replace("/", "%2F").Replace("?", "%3F").Replace("=", "%3D").Replace("&", "%26"), $"&page={p}" + (string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}") + (string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}")),
                                             EntityTemplateSelector.GetEntities,
                                             "id");
-                                        CollectionItemSourse CollectionItemSourse = new CollectionItemSourse(ID, Provider);
-                                        ShyHeaderItem ShyHeaderItem = new ShyHeaderItem { ItemSource = CollectionItemSourse };
+                                        CollectionItemSource CollectionItemSource = new CollectionItemSource(ID, Provider);
+                                        ShyHeaderItem ShyHeaderItem = new ShyHeaderItem { ItemSource = CollectionItemSource };
                                         if (entity.TryGetValue("title", out JToken title) && !string.IsNullOrEmpty(title.ToString()))
                                         {
                                             ShyHeaderItem.Header = title.ToString();
@@ -122,11 +122,11 @@ namespace CoolapkLite.ViewModels.FeedPages
         public bool IsEqual(CollectionViewModel other) => ID == other.ID;
     }
 
-    public class CollectionItemSourse : EntityItemSourse
+    public class CollectionItemSource : EntityItemSource
     {
         public string ID;
 
-        public CollectionItemSourse(string id, CoolapkListProvider provider)
+        public CollectionItemSource(string id, CoolapkListProvider provider)
         {
             ID = id;
             Provider = provider;

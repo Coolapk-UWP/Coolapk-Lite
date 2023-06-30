@@ -55,7 +55,7 @@ namespace CoolapkLite.Pages.FeedPages
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
-            if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
+            if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
                 Refresh = () => _ = ItemsSource.Refresh(true);
             }
@@ -70,7 +70,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Refresh();
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSourse ItemsSource)
+            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
                 _ = ItemsSource.Refresh(true);
             }
@@ -79,7 +79,7 @@ namespace CoolapkLite.Pages.FeedPages
         private async void ListView_RefreshRequested(object sender, EventArgs e)
         {
             ListView ListView = sender as ListView;
-            if (ListView.ItemsSource is EntityItemSourse ItemsSource)
+            if (ListView.ItemsSource is EntityItemSource ItemsSource)
             {
                 await ItemsSource.Refresh(true);
             }
