@@ -70,7 +70,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             JObject detail = (JObject)result;
             return detail != null ? new CollectionModel(detail) : null;
         }
-        
+
         public async Task Refresh(bool reset = false)
         {
             if (Detail == null || reset)

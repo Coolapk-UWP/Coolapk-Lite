@@ -1,11 +1,9 @@
 ﻿using CoolapkLite.Helpers;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.Web.Http.Filters;
 using Windows.Web.Http;
+using Windows.Web.Http.Filters;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 

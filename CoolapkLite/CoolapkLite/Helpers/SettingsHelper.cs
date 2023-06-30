@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Models;
-using CoolapkLite.Models.Update;
+﻿using CoolapkLite.Models.Update;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;

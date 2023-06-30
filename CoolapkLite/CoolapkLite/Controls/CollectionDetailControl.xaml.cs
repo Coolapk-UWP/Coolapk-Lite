@@ -27,7 +27,7 @@ namespace CoolapkLite.Controls
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)

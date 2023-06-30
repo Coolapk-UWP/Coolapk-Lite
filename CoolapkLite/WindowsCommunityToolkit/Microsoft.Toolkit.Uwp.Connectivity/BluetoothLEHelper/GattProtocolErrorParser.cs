@@ -20,57 +20,27 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
         {
             string errorString = "Protocol Error";
 
-            if (errorValue.HasValue == false)
-            {
-                return errorString;
-            }
-
-            if (errorValue == GattProtocolError.AttributeNotFound)
-            {
-                return "Attribute Not Found";
-            }
-
-            if (errorValue == GattProtocolError.AttributeNotLong)
-            {
-                return "Attribute Not Long";
-            }
-
-            if (errorValue == GattProtocolError.InsufficientAuthentication)
-            {
-                return "Insufficient Authentication";
-            }
-
-            if (errorValue == GattProtocolError.InsufficientAuthorization)
-            {
-                return "Insufficient Authorization";
-            }
-
-            if (errorValue == GattProtocolError.InsufficientEncryption)
-            {
-                return "Insufficient Encryption";
-            }
-
-            if (errorValue == GattProtocolError.InsufficientEncryptionKeySize)
-            {
-                return "Insufficient Encryption Key Size";
-            }
-
-            if (errorValue == GattProtocolError.InsufficientResources)
-            {
-                return "Insufficient Resources";
-            }
-
-            if (errorValue == GattProtocolError.InvalidAttributeValueLength)
-            {
-                return "Invalid Attribute Value Length";
-            }
-
-            if (errorValue == GattProtocolError.InvalidHandle)
-            {
-                return "Invalid Handle";
-            }
-
-            return errorValue == GattProtocolError.InvalidOffset
+            return errorValue.HasValue == false
+                ? errorString
+                : errorValue == GattProtocolError.AttributeNotFound
+                ? "Attribute Not Found"
+                : errorValue == GattProtocolError.AttributeNotLong
+                ? "Attribute Not Long"
+                : errorValue == GattProtocolError.InsufficientAuthentication
+                ? "Insufficient Authentication"
+                : errorValue == GattProtocolError.InsufficientAuthorization
+                ? "Insufficient Authorization"
+                : errorValue == GattProtocolError.InsufficientEncryption
+                ? "Insufficient Encryption"
+                : errorValue == GattProtocolError.InsufficientEncryptionKeySize
+                ? "Insufficient Encryption Key Size"
+                : errorValue == GattProtocolError.InsufficientResources
+                ? "Insufficient Resources"
+                : errorValue == GattProtocolError.InvalidAttributeValueLength
+                ? "Invalid Attribute Value Length"
+                : errorValue == GattProtocolError.InvalidHandle
+                ? "Invalid Handle"
+                : errorValue == GattProtocolError.InvalidOffset
                 ? "Invalid Offset"
                 : errorValue == GattProtocolError.InvalidPdu
                 ? "Invalid Pdu"
@@ -84,7 +54,9 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
                 ? "UnlikelyError"
                 : errorValue == GattProtocolError.UnsupportedGroupType
                 ? "Unsupported Group Type"
-                : errorValue == GattProtocolError.WriteNotPermitted ? "Write Not Permitted" : errorString;
+                : errorValue == GattProtocolError.WriteNotPermitted
+                ? "Write Not Permitted"
+                : errorString;
         }
     }
 }
