@@ -1,5 +1,7 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Upload;
 using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
@@ -10,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
@@ -17,6 +20,7 @@ using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.ViewModels.FeedPages
@@ -39,6 +43,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        public CoreDispatcher Dispatcher { get; }
+
         public readonly CreateUserItemSourse CreateUserItemSourse = new CreateUserItemSourse();
         public readonly CreateTopicItemSourse CreateTopicItemSourse = new CreateTopicItemSourse();
 
@@ -46,10 +52,19 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
+
+        public CreateFeedViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         public async Task Refresh(bool reset)
         {
@@ -139,12 +154,27 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public async Task<List<string>> UploadPic()
+        public async Task<IList<string>> UploadPic()
         {
-            int i = 0;
-            List<string> results = new List<string>();
+            IList<string> results = new List<string>();
             if (!Pictures.Any()) { return results; }
             UIHelper.ShowMessage("上传图片");
+            if (ExtensionManager.IsSupported)
+            {
+                await ExtensionManager.Instance.Initialize(Dispatcher);
+                if (ExtensionManager.Instance.Extensions.Any())
+                {
+                    List<UploadFileFragment> fragments = new List<UploadFileFragment>();
+                    foreach (WriteableBitmap pic in Pictures)
+                    {
+                        fragments.Add(await UploadFileFragment.FromWriteableBitmap(pic));
+                    }
+                    results = await RequestHelper.UploadImages(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
+                    UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+                    return results;
+                }
+            }
+            int i = 0;
             foreach (WriteableBitmap pic in Pictures)
             {
                 i++;

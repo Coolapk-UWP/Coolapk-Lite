@@ -13,12 +13,12 @@ namespace CoolapkLite.Helpers
     // arbitrary UIElement (GetWindowForElement).  To do this, we keep track
     // of all active Windows.  The app code must call WindowHelper.CreateWindow
     // rather than "new Window" so we can keep track of all the relevant
-    // windows.  In the future, we would like to support this in platform APIs.
+    // windows. In the future, we would like to support this in platform APIs.
     public static class WindowHelper
     {
-        public static bool IsSupportedAppWindow => ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
+        public static bool IsSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
 
-        public static bool IsAppWindow(this UIElement element) => IsSupportedAppWindow && element?.XamlRoot?.Content != null && ActiveWindows.ContainsKey(element.XamlRoot.Content);
+        public static bool IsAppWindow(this UIElement element) => IsSupported && element?.XamlRoot?.Content != null && ActiveWindows.ContainsKey(element.XamlRoot.Content);
 
         public static async Task<(AppWindow, Frame)> CreateWindow()
         {
@@ -53,6 +53,6 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static Dictionary<UIElement, AppWindow> ActiveWindows { get; } = IsSupportedAppWindow ? new Dictionary<UIElement, AppWindow>() : null;
+        public static Dictionary<UIElement, AppWindow> ActiveWindows { get; } = IsSupported ? new Dictionary<UIElement, AppWindow>() : null;
     }
 }

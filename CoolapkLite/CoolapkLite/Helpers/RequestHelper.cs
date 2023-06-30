@@ -1,4 +1,6 @@
-﻿using CoolapkLite.Models.Upload;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Upload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -9,6 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
@@ -133,26 +136,19 @@ namespace CoolapkLite.Helpers
         }
 #pragma warning restore 0612
 
-        public static async void UploadImagePrepare(IList<UploadFileFragment> images)
+        public static async Task<string[]> UploadImages(IEnumerable<UploadFileFragment> fragments, Extension extension)
         {
-            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            ValueSet message = new ValueSet
             {
-                string json = JsonConvert.SerializeObject(images, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-                using (StringContent uploadBucket = new StringContent("image"))
-                using (StringContent uploadDir = new StringContent("feed"))
-                using (StringContent is_anonymous = new StringContent("0"))
-                using (StringContent uploadFileList = new StringContent(json))
-                {
-                    content.Add(uploadBucket, "uploadBucket");
-                    content.Add(uploadDir, "uploadDir");
-                    content.Add(is_anonymous, "is_anonymous");
-                    content.Add(uploadFileList, "uploadFileList");
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content);
-                    if (isSucceed)
-                    {
-                    }
-                }
-            }
+                ["UID"] = SettingsHelper.Get<string>(SettingsHelper.Uid),
+                ["UserName"] = SettingsHelper.Get<string>(SettingsHelper.UserName),
+                ["Token"] = SettingsHelper.Get<string>(SettingsHelper.Token),
+                ["TokenVersion"] = (int)SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion),
+                ["UserAgent"] = JsonConvert.SerializeObject(UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
+                ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
+                ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() })
+            };
+            return await extension.Invoke(message) as string[];
         }
 
         public static async Task<(bool isSucceed, string result)> UploadImage(byte[] image, string name)
@@ -183,6 +179,25 @@ namespace CoolapkLite.Helpers
         {
             (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true);
             return isSucceed;
+        }
+
+        private class IgnoreIgnoredContractResolver : DefaultContractResolver
+        {
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                IList<JsonProperty> list = base.CreateProperties(type, memberSerialization);
+                if (list != null)
+                {
+                    foreach (JsonProperty item in list)
+                    {
+                        if (item.Ignored)
+                        {
+                            item.Ignored = false;
+                        }
+                    }
+                }
+                return list;
+            }
         }
     }
 }

@@ -142,6 +142,7 @@
     <Compile Include="Common\AccentColorResource.cs" />
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
+    <Compile Include="Common\ExtensionManager.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
     <Compile Include="Controls\CollectionDetailControl.xaml.cs">
       <DependentUpon>CollectionDetailControl.xaml</DependentUpon>

@@ -193,7 +193,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "NewWindow":
-                    if (WindowHelper.IsSupportedAppWindow)
+                    if (WindowHelper.IsSupported)
                     {
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();

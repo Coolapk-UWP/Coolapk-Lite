@@ -314,7 +314,7 @@ namespace CoolapkLite.Helpers
         {
             if (!mainPage.Dispatcher.HasThreadAccess)
             { await mainPage.Dispatcher.ResumeForegroundAsync(); }
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupportedAppWindow)
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupported)
             {
                 (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
                 window.TitleBar.ExtendsContentIntoTitleBar = true;
