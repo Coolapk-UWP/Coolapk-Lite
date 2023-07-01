@@ -255,8 +255,11 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "HideProgressBar":
                     UIHelper.HideProgressBar();
                     break;
-                case "GoToTestingPage":
-                    _ = Frame.Navigate(typeof(BlankPage));
+                case "GoToExtensionPage":
+                    if (ExtensionManager.IsSupported)
+                    {
+                        _ = Frame.Navigate(typeof(ExtensionPage));
+                    }
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();

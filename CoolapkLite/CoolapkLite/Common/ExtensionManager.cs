@@ -25,8 +25,10 @@ namespace CoolapkLite.Common
     /// </summary>
     public class ExtensionManager
     {
+        public const string OSSUploader = "CoolapkUWP.OSSUploader";
+
         public static bool IsSupported { get; } = ApiInformation.IsTypePresent("Windows.ApplicationModel.AppExtensions.AppExtension");
-        public static ExtensionManager Instance { get; } = IsSupported ? new ExtensionManager("CoolapkUWP.OSSUploader") : null;
+        public static ExtensionManager Instance { get; } = IsSupported ? new ExtensionManager(OSSUploader) : null;
 
         private CoreDispatcher _dispatcher; // used to run code on the UI thread for code that may update UI
         private readonly AppExtensionCatalog _catalog; // the catalog of app extensions available to this host
@@ -94,6 +96,8 @@ namespace CoolapkLite.Common
         /// </summary>
         public async Task FindAndLoadExtensions()
         {
+            Extensions.Clear();
+
             #region Error Checking
 
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
@@ -246,7 +250,7 @@ namespace CoolapkLite.Common
                 Extension newExtension = new Extension(ext, properties, logo);
                 Extensions.Add(newExtension);
 
-                await newExtension.MarkAsLoaded();
+                newExtension.MarkAsLoaded();
             }
             else // update scenario
             {
@@ -270,7 +274,7 @@ namespace CoolapkLite.Common
             {
                 await _dispatcher.ResumeForegroundAsync();
             }
-            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ToList().ForEach(async e => { await e.MarkAsLoaded(); });
+            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ToList().ForEach(e => e.MarkAsLoaded());
         }
 
         /// <summary>
@@ -388,8 +392,6 @@ namespace CoolapkLite.Common
 
         public bool Loaded { get; private set; } // whether the package has been loaded or not.
 
-        public StorageFolder PublicFolder { get; private set; } // the folder that the extension shares.
-
         public AppExtension AppExtension { get; private set; }
 
         public Visibility Visible { get; private set; } // Whether the extension should be visible in the list of extensions
@@ -493,14 +495,14 @@ namespace CoolapkLite.Common
 
             #endregion
 
-            await MarkAsLoaded();
+            MarkAsLoaded();
         }
 
         /// <summary>
         /// Prepares the extension so that the ExtensionManager can present it as an available extension
         /// </summary>
         /// <returns></returns>
-        public async Task MarkAsLoaded()
+        public void MarkAsLoaded()
         {
             // make sure package is OK to load
             if (!AppExtension.Package.Status.VerifyIsOK())
@@ -518,7 +520,7 @@ namespace CoolapkLite.Common
 
             // The public folder is shared between the extension and the host.
             // We don't use it in this sample but you can see https://github.com/Microsoft/Build2016-B808-AppExtensibilitySample for an example of it can be used.
-            PublicFolder = await AppExtension.GetPublicFolderAsync();
+            //_ = await AppExtension.GetPublicFolderAsync();
 
             Loaded = true;
             Visible = Visibility.Visible;
@@ -530,10 +532,10 @@ namespace CoolapkLite.Common
         /// Enable the extension for use
         /// </summary>
         /// <returns></returns>
-        public async Task Enable()
+        public void Enable()
         {
             Enabled = true;
-            await MarkAsLoaded();
+            MarkAsLoaded();
         }
 
         /// <summary>

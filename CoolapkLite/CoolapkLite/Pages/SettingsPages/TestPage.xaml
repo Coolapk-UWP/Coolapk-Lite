@@ -137,8 +137,8 @@
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="前往测试中的页面"
-                            Tag="GoToTestingPage" />
+                            Content="管理插件"
+                            Tag="GoToExtensionPage" />
                         <Button
                             Click="Button_Click"
                             Content="打开 Charm 设置"

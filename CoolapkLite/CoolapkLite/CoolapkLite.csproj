@@ -236,7 +236,7 @@
     <Compile Include="Common\ScrollProgressProvider.cs" />
     <Compile Include="Helpers\RequestHelper.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
-    <Compile Include="Common\TokenCreater.cs" />
+    <Compile Include="Common\TokenCreator.cs" />
     <Compile Include="Helpers\UpdateHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
     <Compile Include="Helpers\Converters\EmptyObjectToVisibilityConverter.cs" />
@@ -276,8 +276,8 @@
     <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
       <DependentUpon>SearchingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\SettingsPages\BlankPage.xaml.cs">
-      <DependentUpon>BlankPage.xaml</DependentUpon>
+    <Compile Include="Pages\SettingsPages\ExtensionPage.xaml.cs">
+      <DependentUpon>ExtensionPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\DataTemplateSelectors.cs" />
     <Compile Include="Controls\DataTemplates\FeedsTemplates.xaml.cs">
@@ -1114,7 +1114,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SettingsPages\BlankPage.xaml">
+    <Page Include="Pages\SettingsPages\ExtensionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
