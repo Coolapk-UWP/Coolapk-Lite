@@ -45,6 +45,7 @@
                 <TextBlock
                     Grid.Column="1"
                     Margin="0,0,0,2"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FontSize="12"
                     Text="{Binding Title}"
@@ -60,10 +61,41 @@
             Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
             <controls:TextBlockEx
                 Margin="4"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 IsTextSelectionEnabled="True"
                 Text="{Binding Message}" />
         </Grid>
     </DataTemplate>
 
+    <DataTemplate x:Key="VoteItemTemplate">
+        <Grid
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="0,0,0,1"
+            Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Ellipse
+                Width="10"
+                Height="10"
+                Margin="8,4,8,8"
+                VerticalAlignment="Center"
+                Stroke="{ThemeResource TextFillColorSecondaryBrush}"
+                StrokeThickness="1">
+                <Ellipse.Fill>
+                    <SolidColorBrush Color="{Binding Color}" />
+                </Ellipse.Fill>
+            </Ellipse>
+            <controls:TextBlockEx
+                Grid.Column="1"
+                Margin="0,4"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                IsTextSelectionEnabled="True"
+                Text="{Binding Title}"
+                TextWrapping="Wrap" />
+        </Grid>
+    </DataTemplate>
 </ResourceDictionary>

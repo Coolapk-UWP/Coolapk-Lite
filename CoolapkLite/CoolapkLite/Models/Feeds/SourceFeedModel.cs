@@ -41,6 +41,7 @@ namespace CoolapkLite.Models.Feeds
 
         public int RatingStar { get; private set; }
 
+        public bool IsVoteFeed { get; private set; }
         public bool IsRatingFeed { get; private set; }
         public bool IsCoolPicture { get; private set; }
         public bool IsQuestionFeed { get; private set; }
@@ -116,9 +117,8 @@ namespace CoolapkLite.Models.Feeds
                 FeedType = feedType.ToString();
                 switch (FeedType)
                 {
-                    case "question":
-                        IsQuestionFeed = true;
-                        Url = Url.Replace("/feed/", "/question/");
+                    case "vote":
+                        IsVoteFeed = true;
                         break;
                     case "rating":
                         IsRatingFeed = true;
@@ -126,6 +126,10 @@ namespace CoolapkLite.Models.Feeds
                         {
                             RatingStar = star.ToObject<int>();
                         }
+                        break;
+                    case "question":
+                        IsQuestionFeed = true;
+                        Url = Url.Replace("/feed/", "/question/");
                         break;
                 }
             }

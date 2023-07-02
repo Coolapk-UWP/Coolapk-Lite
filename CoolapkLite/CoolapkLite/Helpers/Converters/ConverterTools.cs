@@ -35,7 +35,7 @@ namespace CoolapkLite.Helpers.Converters
         /// <param name="value">The value to convert</param>
         /// <param name="targetType">The target type</param>
         /// <returns>The converted value</returns>
-        internal static object Convert(this object value, Type targetType)
+        internal static object Convert(object value, Type targetType)
         {
             return targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
         }
@@ -46,7 +46,7 @@ namespace CoolapkLite.Helpers.Converters
         /// <param name="value">The value to convert</param>
         /// <param name="targetType">The target type</param>
         /// <returns>The converted value</returns>
-        internal static T Convert<T>(this object value)
+        internal static T Convert<T>(object value)
         {
             Type targetType = typeof(T);
             object result = targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);

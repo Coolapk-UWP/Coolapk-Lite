@@ -481,10 +481,10 @@ namespace CoolapkLite.Controls
             {
                 result = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png"));
             }
-            return result.Convert(targetType);
+            return ConverterTools.Convert(result, targetType);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language) => value.Convert(targetType);
+        public object ConvertBack(object value, Type targetType, object parameter, string language) => ConverterTools.Convert(value, targetType);
     }
 
     public class EmojiNameConverter : IValueConverter
@@ -493,14 +493,14 @@ namespace CoolapkLite.Controls
         {
             string data = value.ToString();
             string result = data[0] == '(' ? $"#{data}" : data;
-            return result.Convert(targetType);
+            return ConverterTools.Convert(result, targetType);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             string data = value.ToString();
             string result = data[0] == '#' ? data.Substring(1) : data;
-            return result.Convert(targetType);
+            return ConverterTools.Convert(result, targetType);
         }
     }
 

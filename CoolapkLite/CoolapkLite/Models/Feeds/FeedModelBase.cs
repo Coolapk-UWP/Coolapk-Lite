@@ -1,10 +1,14 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models.Images;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI;
+using static QRCoder.PayloadGenerator;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -97,7 +101,9 @@ namespace CoolapkLite.Models.Feeds
         public int ID => EntityID;
         public int UID => UserInfo.UID;
         public int ShareNum { get; private set; }
+        public int TotalVoteNum { get; private set; }
         public int ReplyRowsCount { get; private set; }
+        public int TotalCommentNum { get; private set; }
         public int QuestionAnswerNum { get; private set; }
         public int QuestionFollowNum { get; private set; }
 
@@ -113,6 +119,8 @@ namespace CoolapkLite.Models.Feeds
         public string IPLocation { get; private set; }
         public string ExtraTitle { get; private set; }
         public string DeviceTitle { get; private set; }
+        public string VoteEndTime { get; private set; }
+        public string VoteStartTime { get; private set; }
         public string ExtraSubtitle { get; private set; }
         public string MediaSubtitle { get; private set; }
 
@@ -120,6 +128,7 @@ namespace CoolapkLite.Models.Feeds
         public ImageModel MediaPic { get; private set; }
         public SourceFeedModel SourceFeed { get; private set; }
 
+        public ImmutableArray<VoteItem> VoteRows { get; private set; } = ImmutableArray<VoteItem>.Empty;
         public ImmutableArray<RelationRowsItem> RelationRows { get; private set; } = ImmutableArray<RelationRowsItem>.Empty;
         public ImmutableArray<SourceFeedReplyModel> ReplyRows { get; private set; } = ImmutableArray<SourceFeedReplyModel>.Empty;
 
@@ -156,6 +165,38 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("forwardnum", out JToken forwardnum))
             {
                 ShareNum = forwardnum.ToObject<int>();
+            }
+
+            if (IsVoteFeed)
+            {
+                if (token.TryGetValue("vote", out JToken v))
+                {
+                    JObject vote = (JObject)v;
+                    if (vote.TryGetValue("total_vote_num", out JToken total_vote_num))
+                    {
+                        TotalVoteNum = total_vote_num.ToObject<int>();
+                    }
+
+                    if (vote.TryGetValue("total_comment_num", out JToken total_comment_num))
+                    {
+                        TotalCommentNum = total_comment_num.ToObject<int>();
+                    }
+
+                    if (vote.TryGetValue("start_time", out JToken start_time))
+                    {
+                        VoteStartTime = start_time.ToObject<long>().ConvertUnixTimeStampToReadable(null);
+                    }
+
+                    if (vote.TryGetValue("end_time", out JToken end_time))
+                    {
+                        VoteEndTime = end_time.ToObject<long>().ConvertUnixTimeStampToReadable(null);
+                    }
+
+                    if (vote.TryGetValue("options", out JToken options))
+                    {
+                        VoteRows = options.Select(item => new VoteItem((JObject)item)).ToImmutableArray();
+                    }
+                }
             }
 
             if (IsQuestionFeed)
@@ -344,6 +385,65 @@ namespace CoolapkLite.Models.Feeds
             if (!isSucceed) { return; }
 
             Followed = !Followed;
+        }
+    }
+
+    public class VoteItem
+    {
+        public int ID { get; set; }
+        public int Order { get; set; }
+        public int VoteID { get; set; }
+        public int Status { get; set; }
+
+        public string Title { get; set; }
+
+        public Color Color { get; set; }
+
+        public VoteItem(JObject token)
+        {
+            if (token.TryGetValue("id", out JToken id))
+            {
+                ID = id.ToObject<int>();
+            }
+
+            if (token.TryGetValue("order", out JToken order))
+            {
+                Order = order.ToObject<int>();
+            }
+
+            if (token.TryGetValue("vote_id", out JToken vote_id))
+            {
+                VoteID = vote_id.ToObject<int>();
+            }
+
+            if (token.TryGetValue("status", out JToken status))
+            {
+                Status = status.ToObject<int>();
+            }
+
+            if (token.TryGetValue("title", out JToken title))
+            {
+                Title = title.ToString();
+            }
+
+            if (token.TryGetValue("color", out JToken color))
+            {
+                if (!string.IsNullOrEmpty(color.ToString()))
+                {
+                    try
+                    {
+                        Color = color.ToString().ToColor();
+                    }
+                    catch
+                    {
+                        Color = Colors.Transparent;
+                    }
+                }
+                else
+                {
+                    Color = Colors.Transparent;
+                }
+            }
         }
     }
 
