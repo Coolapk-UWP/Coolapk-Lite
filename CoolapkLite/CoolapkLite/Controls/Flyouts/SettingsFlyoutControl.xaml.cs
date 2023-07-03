@@ -15,13 +15,15 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class SettingsFlyoutControl : SettingsFlyout
     {
+        private Action<UISettingChangedType> UISettingChanged;
+
         internal SettingsViewModel Provider;
 
-        public SettingsFlyoutControl()
+        public SettingsFlyoutControl() => InitializeComponent();
+
+        private void SettingsFlyout_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
-            ThemeHelper.UISettingChanged.Add(mode =>
+            UISettingChanged = (mode) =>
             {
                 switch (mode)
                 {
@@ -34,7 +36,21 @@ namespace CoolapkLite.Controls
                     default:
                         break;
                 }
-            });
+                UpdateThemeRadio();
+            };
+            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
+            ThemeHelper.UISettingChanged.Add(UISettingChanged);
+            DataContext = Provider;
+            UpdateThemeRadio();
+        }
+
+        private void SettingsFlyout_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ThemeHelper.UISettingChanged.Remove(UISettingChanged);
+        }
+
+        private void UpdateThemeRadio()
+        {
             switch (ThemeHelper.ActualTheme)
             {
                 case ElementTheme.Light:
@@ -47,7 +63,6 @@ namespace CoolapkLite.Controls
                     Default.IsChecked = true;
                     break;
             }
-            DataContext = Provider;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

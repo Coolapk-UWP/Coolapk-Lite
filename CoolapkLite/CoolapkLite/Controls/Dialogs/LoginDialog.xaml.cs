@@ -56,7 +56,6 @@ namespace CoolapkLite.Controls.Dialogs
         public LoginDialog()
         {
             InitializeComponent();
-            Closing += OnClosing;
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
             {
                 DefaultButton = ContentDialogButton.Primary;

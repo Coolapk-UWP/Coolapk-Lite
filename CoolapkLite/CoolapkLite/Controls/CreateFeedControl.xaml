@@ -7,6 +7,8 @@
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Padding="10"
+    Loaded="Picker_Loaded"
+    Unloaded="Picker_Unloaded"
     mc:Ignorable="d">
     <local:Picker.Resources>
         <ResourceDictionary>

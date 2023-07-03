@@ -30,6 +30,7 @@ namespace CoolapkLite.Helpers
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
         public const string IsUseBlurBrush = nameof(IsUseBlurBrush);
+        public const string TileUpdateTime = nameof(TileUpdateTime);
         public const string IsUseCompositor = nameof(IsUseCompositor);
         public const string CurrentLanguage = nameof(CurrentLanguage);
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
@@ -38,7 +39,7 @@ namespace CoolapkLite.Helpers
         public const string ShowOtherException = nameof(ShowOtherException);
         public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
         public const string IsDisplayOriginPicture = nameof(IsDisplayOriginPicture);
-        public const string CheckUpdateWhenLuanching = nameof(CheckUpdateWhenLuanching);
+        public const string CheckUpdateWhenLaunching = nameof(CheckUpdateWhenLaunching);
 
         public static Type Get<Type>(string key) => LocalObject.Read<Type>(key);
         public static void Set<Type>(string key, Type value) => LocalObject.Save(key, value);
@@ -103,6 +104,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsUseBlurBrush, true);
             }
+            if (!LocalObject.KeyExists(TileUpdateTime))
+            {
+                LocalObject.Save(TileUpdateTime, SystemInformation.Instance.OperatingSystemVersion.Build < 21996 ? 15u : 0u);
+            }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
                 LocalObject.Save(IsUseCompositor, true);
@@ -135,9 +140,9 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsDisplayOriginPicture, false);
             }
-            if (!LocalObject.KeyExists(CheckUpdateWhenLuanching))
+            if (!LocalObject.KeyExists(CheckUpdateWhenLaunching))
             {
-                LocalObject.Save(CheckUpdateWhenLuanching, true);
+                LocalObject.Save(CheckUpdateWhenLaunching, true);
             }
             SetDefaultFileSettings();
         }

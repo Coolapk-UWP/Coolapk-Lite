@@ -10,7 +10,9 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
+    Loaded="SettingsFlyout_Loaded"
     Style="{StaticResource DefaultSettingsFlyoutStyle}"
+    Unloaded="SettingsFlyout_Unloaded"
     mc:Ignorable="d">
     <StackPanel>
         <StackPanel.ChildrenTransitions>
@@ -49,6 +51,14 @@
                     IsActive="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                     Visibility="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
             </local:StackPanel>
+            <Slider
+                x:Uid="/SettingsPage/TileUpdateTimeSlider"
+                Maximum="1440"
+                Minimum="0"
+                StepFrequency="15"
+                TickFrequency="15"
+                TickPlacement="Outside"
+                Value="{Binding TileUpdateTime, Mode=TwoWay}" />
         </local:SettingsGroup>
         <local:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
             <HyperlinkButton
@@ -78,7 +88,7 @@
         </local:SettingsGroup>
         <local:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
             <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{Binding VersionTextBlockText}" />
-            <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLuanchingCheckBox" IsChecked="{Binding CheckUpdateWhenLuanching, Mode=TwoWay}" />
+            <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{Binding CheckUpdateWhenLaunching, Mode=TwoWay}" />
             <local:StackPanel Orientation="Horizontal" Spacing="8">
                 <Button
                     x:Uid="/SettingsPage/CheckUpdate"

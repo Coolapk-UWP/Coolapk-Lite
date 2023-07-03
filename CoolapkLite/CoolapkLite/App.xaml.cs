@@ -285,16 +285,23 @@ namespace CoolapkLite
         private static async void RegisterBackgroundTask()
         {
             // Check for background access (optional)
-            await BackgroundExecutionManager.RequestAccessAsync();
+            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
 
-            RegisterLiveTileTask();
-            RegisterNotificationsTask();
-            RegisterToastBackgroundTask();
+            if (status != BackgroundAccessStatus.Unspecified
+                && status != BackgroundAccessStatus.Denied
+                && status != (BackgroundAccessStatus)7)
+            {
+                RegisterLiveTileTask();
+                RegisterNotificationsTask();
+                RegisterToastBackgroundTask();
+            }
 
             #region LiveTileTask
 
             void RegisterLiveTileTask()
             {
+                uint time = SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
+                if (time < 15) { return; }
 #if ARM64
                 const string LiveTileTask = "LiveTileTask";
 
@@ -303,12 +310,12 @@ namespace CoolapkLite
                 { return; }
 
                 // Register (Single Process)
-                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(15, false), true);
+                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
 #else
                 if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
                 {
                     // Register (Multi Process)
-                    BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(15, false), true);
+                    BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(time, false), true);
                 }
 #endif
             }
@@ -331,7 +338,7 @@ namespace CoolapkLite
 #else
                 if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
                 {
-                    // Register (Single Process)
+                    // Register (Multi Process)
                     BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
                 }
 #endif

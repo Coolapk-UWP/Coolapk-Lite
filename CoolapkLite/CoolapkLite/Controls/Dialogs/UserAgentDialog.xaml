@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/UserAgentDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    Closing="OnClosing"
     mc:Ignorable="d">
     <controls:StackPanel Spacing="4">
         <TextBox

@@ -17,6 +17,8 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -80,14 +82,24 @@ namespace CoolapkLite.Controls
         {
             InitializeComponent();
             Provider = new CreateFeedViewModel(Dispatcher);
-            Clipboard.ContentChanged += Clipboard_ContentChanged;
-            Clipboard_ContentChanged(null, null);
-            UpdateTitle();
-
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             {
                 CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Collapsed;
             }
+        }
+
+        private void Picker_Loaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+            Clipboard.ContentChanged += Clipboard_ContentChanged;
+            Clipboard_ContentChanged(null, null);
+            UpdateTitle();
+        }
+
+        private void Picker_Unloaded(object sender, RoutedEventArgs e)
+        {
+            Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
+            Clipboard.ContentChanged -= Clipboard_ContentChanged;
         }
 
         private void UpdateTitle()
@@ -433,6 +445,27 @@ namespace CoolapkLite.Controls
         {
             _ = Provider.DropFile(e.DataView);
             e.Handled = true;
+        }
+
+        private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
+        {
+            if (args.EventType.ToString().Contains("Down"))
+            {
+                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+                if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
+                {
+                    switch (args.VirtualKey)
+                    {
+                        case VirtualKey.V:
+                            if (PastePic.IsEnabled)
+                            {
+                                _ = Provider.DropFile(Clipboard.GetContent());
+                                args.Handled = true;
+                            }
+                            break;
+                    }
+                }
+            }
         }
 
         private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckData(Clipboard.GetContent()));

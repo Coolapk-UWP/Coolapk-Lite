@@ -36,10 +36,7 @@ namespace CoolapkLite.Common
 
         public int Count => _list.Count;
 
-        public void Add(Action<TEventArgs> callback)
-        {
-            _list.Add(new Method(callback));
-        }
+        public void Add(Action<TEventArgs> callback) => _list.Add(new Method(callback));
 
         public void Remove(Action<TEventArgs> callback)
         {
@@ -67,9 +64,6 @@ namespace CoolapkLite.Common
             }
         }
 
-        public void Clear()
-        {
-            _list.Clear();
-        }
+        public void Clear() => _list.Clear();
     }
 }

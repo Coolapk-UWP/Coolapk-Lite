@@ -86,14 +86,27 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public bool? CheckUpdateWhenLuanching
+        public bool? CheckUpdateWhenLaunching
         {
-            get => SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLuanching);
+            get => SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching);
             set
             {
-                if (CheckUpdateWhenLuanching != value)
+                if (CheckUpdateWhenLaunching != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.CheckUpdateWhenLuanching, value);
+                    SettingsHelper.Set(SettingsHelper.CheckUpdateWhenLaunching, value);
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        public uint TileUpdateTime
+        {
+            get => SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
+            set
+            {
+                if (TileUpdateTime != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.TileUpdateTime, value);
                     RaisePropertyChangedEvent();
                 }
             }
@@ -221,7 +234,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             IsCheckUpdateButtonEnabled = true;
         }
 
-        public Task Refresh(bool reset) => throw new NotImplementedException();
+        public Task Refresh(bool reset) => GetAboutTextBlockText();
 
         bool IViewModel.IsEqual(IViewModel other) => Equals(other);
     }
