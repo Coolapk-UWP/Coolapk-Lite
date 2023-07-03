@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using System;
-using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -28,20 +27,24 @@ namespace CoolapkLite.Controls.DataTemplates
                 {
                     Interval = TimeSpan.FromSeconds(20)
                 };
-                timer.Tick += (o, a) =>
+                timer.Tick += (_, __) =>
                 {
-                    if (view.SelectedIndex + 1 >= view.Items.Count())
+                    if (view.SelectedIndex != -1)
                     {
-                        while (view.SelectedIndex > 0)
+                        if (view.SelectedIndex + 1 >= view.Items.Count)
                         {
-                            view.SelectedIndex -= 1;
+                            while (view.SelectedIndex > 0)
+                            {
+                                view.SelectedIndex -= 1;
+                            }
+                        }
+                        else
+                        {
+                            view.SelectedIndex += 1;
                         }
                     }
-                    else
-                    {
-                        view.SelectedIndex += 1;
-                    }
                 };
+                view.Unloaded += (_, __) => timer.Stop();
                 timer.Start();
             }
         }

@@ -53,7 +53,6 @@ namespace CoolapkLite.Controls
         public PivotHeader()
         {
             DefaultStyleKey = typeof(PivotHeader);
-
             SelectionChanged += ShyHeader_SelectionChanged;
         }
 

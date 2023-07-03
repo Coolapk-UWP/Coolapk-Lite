@@ -19,9 +19,7 @@ namespace CoolapkLite.Controls
         public TitleBar()
         {
             DefaultStyleKey = typeof(TitleBar);
-
             SetValue(TemplateSettingsProperty, new TitleBarTemplateSettings());
-
             SizeChanged += OnSizeChanged;
         }
 

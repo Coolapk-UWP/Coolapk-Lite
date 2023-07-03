@@ -134,6 +134,15 @@ namespace CoolapkLite.ViewModels
             }
         }
 
+        ~ShowImageViewModel()
+        {
+            foreach (ImageModel image in images)
+            {
+                image.LoadStarted -= OnLoadStarted;
+                image.LoadCompleted -= OnLoadCompleted;
+            }
+        }
+
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
 
         bool IViewModel.IsEqual(IViewModel other) => other is ShowImageViewModel model && IsEqual(model);

@@ -191,6 +191,9 @@ namespace CoolapkLite.Controls
         {
             if (DesignMode.DesignModeEnabled == false)
             {
+                Loaded -= OnLoaded;
+                Unloaded -= OnUnloaded;
+
                 SystemNavigationManager.GetForCurrentView().BackRequested -= OnBackRequested;
                 if (_frame != null)
                 {

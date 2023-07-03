@@ -168,7 +168,7 @@ namespace CoolapkLite.Controls
         }
 
         /// <summary>
-        /// Handler for SizeChanged event, handles cliping
+        /// Handler for SizeChanged event, handles clipping
         /// </summary>
         private void RefreshableListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {

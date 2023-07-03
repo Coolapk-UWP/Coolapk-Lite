@@ -23,6 +23,11 @@ namespace CoolapkLite.Common
             }
         }
 
+        ~AccentColorResource()
+        {
+            _uiSettings.ColorValuesChanged -= OnColorValuesChanged;
+        }
+
         public void UpdateSystemAccentColors(UISettings sender)
         {
             this[AccentDark1Key] = sender.GetColorValue(UIColorType.AccentDark1);
