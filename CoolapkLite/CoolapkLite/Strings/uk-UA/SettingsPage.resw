@@ -138,8 +138,8 @@
   <data name="CheckUpdate.Content" xml:space="preserve">
     <value>Перевірити наявність оновлень</value>
   </data>
-  <data name="CheckUpdateWhenLuanchingCheckBox.Content" xml:space="preserve">
-    <value>Перевірити наявність оновлень під час запуску</value>
+  <data name="CheckUpdateWhenLaunchingCheckBox.Content" xml:space="preserve">
+    <value>启动时检查更新</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
     <value>Очистити кеш</value>
@@ -203,5 +203,8 @@
   </data>
   <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
     <value>在图文中显示原图</value>
+  </data>
+  <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
+    <value>磁贴更新间隔分钟 (小于 15 分钟停止更新)</value>
   </data>
 </root>
