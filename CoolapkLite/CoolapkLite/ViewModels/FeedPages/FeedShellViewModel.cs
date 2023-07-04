@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 
@@ -101,6 +102,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (FeedDetail == null || reset)
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
+                if (FeedDetail == null) { return; }
                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
                 Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
@@ -155,6 +157,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (FeedDetail == null || reset)
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
+                if (FeedDetail == null) { return; }
                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
                 Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
@@ -193,6 +196,35 @@ namespace CoolapkLite.ViewModels.FeedPages
                 base.ItemSource = ItemSource;
             }
             await ReplyItemSource?.Refresh(reset);
+        }
+    }
+
+    public class VoteViewModel : FeedShellViewModel
+    {
+        internal VoteViewModel(string id) : base(id) { }
+
+        public override async Task Refresh(bool reset = false)
+        {
+            if (FeedDetail == null || reset)
+            {
+                FeedDetail = await GetFeedDetailAsync(ID);
+                if (FeedDetail == null) { return; }
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                Title = FeedDetail.Title;
+                foreach (VoteItem vote in FeedDetail.VoteRows)
+                {
+                    VoteItemSource VoteItemSource = new VoteItemSource(vote.ID.ToString(), vote.VoteID.ToString());
+                    VoteItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
+                    VoteItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ItemSource.Add(new ShyHeaderItem
+                    {
+                        Header = vote.Title,
+                        ItemSource = VoteItemSource
+                    });
+                }
+                base.ItemSource = ItemSource;
+            }
+            await (ItemSource.FirstOrDefault()?.ItemSource as EntityItemSource)?.Refresh(reset);
         }
     }
 
@@ -361,6 +393,32 @@ namespace CoolapkLite.ViewModels.FeedPages
                     UriType.GetAnswers,
                     id,
                     answerSortType,
+                    p,
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                GetEntities,
+                "id");
+        }
+
+        private IEnumerable<Entity> GetEntities(JObject json)
+        {
+            yield return new FeedModel(json);
+        }
+    }
+
+    public class VoteItemSource : EntityItemSource
+    {
+        public string ID;
+
+        public VoteItemSource(string id, string fid)
+        {
+            ID = id;
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) =>
+                UriHelper.GetUri(
+                    UriType.GetVoteComments,
+                    fid,
+                    id,
                     p,
                     string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                     string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),

@@ -232,7 +232,7 @@ namespace CoolapkLite.Pages
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                ObservableCollection<object> observableCollection = new ObservableCollection<object>();
+                ObservableCollection<Entity> observableCollection = new ObservableCollection<Entity>();
                 sender.ItemsSource = observableCollection;
                 string keyWord = sender.Text;
                 await ThreadSwitcher.ResumeBackgroundAsync();
@@ -244,7 +244,7 @@ namespace CoolapkLite.Pages
                         switch (token.Value<string>("entityType"))
                         {
                             case "apk":
-                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token as JObject)));
                                 break;
                             case "searchWord":
                             default:
@@ -258,12 +258,11 @@ namespace CoolapkLite.Pages
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            //if (args.ChosenSuggestion is AppModel app)
-            //{
-            //    UIHelper.NavigateInSplitPane(typeof(AppPages.AppPage), "https://www.coolapk.com" + app.Url);
-            //}
-            //else
-            if (args.ChosenSuggestion is SearchWord word)
+            if (args.ChosenSuggestion is AppModel app)
+            {
+                _ = PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}"));
+            }
+            else if (args.ChosenSuggestion is SearchWord word)
             {
                 _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
             }
@@ -275,7 +274,11 @@ namespace CoolapkLite.Pages
 
         private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
         {
-            if (args.SelectedItem is SearchWord searchWord)
+            if (args.SelectedItem is AppModel app)
+            {
+                sender.Text = app.Title;
+            }
+            else if (args.SelectedItem is SearchWord searchWord)
             {
                 sender.Text = searchWord.ToString();
             }

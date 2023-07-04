@@ -119,6 +119,7 @@ namespace CoolapkLite.Models.Feeds
                 {
                     case "vote":
                         IsVoteFeed = true;
+                        Url = Url.Replace("/feed/", "/vote/");
                         break;
                     case "rating":
                         IsRatingFeed = true;

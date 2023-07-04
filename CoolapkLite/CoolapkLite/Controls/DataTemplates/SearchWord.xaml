@@ -24,58 +24,65 @@
     </DataTemplate>
 
     <DataTemplate x:Key="Apps">
-        <ListViewItem Tag="{Binding Url}">
-            <Grid Padding="-10,8">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="56" />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
+        <Grid Padding="0,8" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Ellipse
+                Width="40"
+                Height="40"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
+                <Ellipse.Fill>
+                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
+                </Ellipse.Fill>
+            </Ellipse>
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Ellipse
-                    Grid.RowSpan="3"
-                    Width="40"
-                    Height="40"
-                    Margin="8"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
-                    </Ellipse.Fill>
-                </Ellipse>
                 <TextBlock
                     Grid.Row="0"
-                    Grid.Column="1"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
                     Text="{Binding Title}" />
-                <StackPanel
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Orientation="Horizontal">
-                    <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{Binding FollowNum}" />
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding FollowNum}" />
                     <TextBlock
                         x:Uid="/FeedListPage/FollowNum"
                         Margin="0,0,5,0"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
-                    <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{Binding DownloadNum}" />
+                        HorizontalAlignment="Left"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding DownloadNum}" />
                     <TextBlock
                         x:Uid="/FeedListPage/DownloadNum"
                         Margin="0,0,5,0"
-                        Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" />
-                    <TextBlock Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}" Text="{Binding LastUpdate}" />
+                        HorizontalAlignment="Left"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock
+                        HorizontalAlignment="Left"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding LastUpdate}" />
                 </StackPanel>
                 <TextBlock
                     Grid.Row="2"
-                    Grid.Column="1"
-                    Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                    HorizontalAlignment="Left"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     MaxLines="2"
-                    Text="{Binding Introduce}"
+                    Text="{Binding Description}"
+                    TextTrimming="CharacterEllipsis"
                     TextWrapping="Wrap" />
             </Grid>
-        </ListViewItem>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>
