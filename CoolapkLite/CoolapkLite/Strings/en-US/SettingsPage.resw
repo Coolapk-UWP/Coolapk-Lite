@@ -139,7 +139,7 @@
     <value>Check for updates</value>
   </data>
   <data name="CheckUpdateWhenLaunchingCheckBox.Content" xml:space="preserve">
-    <value>启动时检查更新</value>
+    <value>Check for updates at startup</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
     <value>Clear the cache</value>
@@ -205,6 +205,6 @@
     <value>Show original image in graph</value>
   </data>
   <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
-    <value>磁贴更新间隔分钟 (小于 15 分钟停止更新)</value>
+    <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
   </data>
 </root>
