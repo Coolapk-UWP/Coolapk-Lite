@@ -142,7 +142,7 @@
                                         Source="{Binding Pic, Mode=OneWay}" />
                                 </ScrollViewer>
                                 <Grid
-                                    Height="200"
+                                    Height="250"
                                     Margin="0,0,28,0"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
@@ -158,17 +158,18 @@
                                     <RepeatButton
                                         x:Name="ZoomUp"
                                         Grid.Row="0"
-                                        Width="32"
-                                        Height="32"
+                                        Width="48"
+                                        Height="48"
                                         HorizontalAlignment="Center"
                                         Click="Button_Click"
                                         Content="&#xE8A3;"
+                                        FontSize="20"
                                         Style="{StaticResource TitleBarIconRepeatButtonStyle}"
                                         Tag="{Binding ElementName=ImageScrollViewer}"
                                         ToolTipService.ToolTip="放大" />
                                     <Slider
                                         Grid.Row="1"
-                                        Margin="0,8"
+                                        Margin="0,2"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Stretch"
                                         Maximum="300"
@@ -178,11 +179,12 @@
                                     <RepeatButton
                                         x:Name="ZoomDown"
                                         Grid.Row="2"
-                                        Width="32"
-                                        Height="32"
+                                        Width="48"
+                                        Height="48"
                                         HorizontalAlignment="Center"
                                         Click="Button_Click"
                                         Content="&#xE71F;"
+                                        FontSize="20"
                                         Style="{StaticResource TitleBarIconRepeatButtonStyle}"
                                         Tag="{Binding ElementName=ImageScrollViewer}"
                                         ToolTipService.ToolTip="缩小" />

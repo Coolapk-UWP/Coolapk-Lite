@@ -100,6 +100,7 @@ namespace CoolapkLite.Models.Feeds
 
         public int ID => EntityID;
         public int UID => UserInfo.UID;
+        public int VoteType { get; private set; }
         public int ShareNum { get; private set; }
         public int TotalVoteNum { get; private set; }
         public int ReplyRowsCount { get; private set; }
@@ -113,6 +114,7 @@ namespace CoolapkLite.Models.Feeds
         public bool ShowRelationRows { get; private set; }
 
         public string Info { get; private set; }
+        public string VoteTag { get; private set; }
         public string InfoHTML { get; private set; }
         public string ExtraUrl { get; private set; }
         public string MediaUrl { get; private set; }
@@ -190,6 +192,16 @@ namespace CoolapkLite.Models.Feeds
                     if (vote.TryGetValue("end_time", out JToken end_time))
                     {
                         VoteEndTime = end_time.ToObject<long>().ConvertUnixTimeStampToReadable(null);
+                    }
+
+                    if (vote.TryGetValue("type", out JToken type))
+                    {
+                        VoteType = type.ToObject<int>();
+                    }
+
+                    if (vote.TryGetValue("link_tag", out JToken link_tag))
+                    {
+                        VoteTag = link_tag.ToString();
                     }
 
                     if (vote.TryGetValue("options", out JToken options))

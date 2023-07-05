@@ -272,6 +272,15 @@ namespace CoolapkLite
             {
                 _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
             }
+            else
+            {
+                return;
+            }
+
+            if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.CompactInline)
+            {
+                HamburgerMenu.IsPaneOpen = false;
+            }
         }
 
         private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
