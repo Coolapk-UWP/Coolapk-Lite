@@ -148,7 +148,7 @@
     <value>用于酷安的设备识别，如 GM1910</value>
   </data>
   <data name="UserAgentDialog.PrimaryButtonText" xml:space="preserve">
-    <value>完成</value>
+    <value>Завершено</value>
   </data>
   <data name="UserAgentDialog.Title" xml:space="preserve">
     <value>修改 UserAgent</value>

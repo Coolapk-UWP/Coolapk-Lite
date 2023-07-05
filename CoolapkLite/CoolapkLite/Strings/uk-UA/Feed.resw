@@ -151,7 +151,7 @@
     <value>视频分享</value>
   </data>
   <data name="MoreButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>更多</value>
+    <value>Докладніше</value>
   </data>
   <data name="PinTile.Text" xml:space="preserve">
     <value>固定到开始</value>
@@ -193,7 +193,7 @@
     <value>Вибачте, цей канал видалено.</value>
   </data>
   <data name="StarButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>收藏</value>
+    <value>Закладка</value>
   </data>
   <data name="StickUp.Text" xml:space="preserve">
     <value>Закріпити</value>

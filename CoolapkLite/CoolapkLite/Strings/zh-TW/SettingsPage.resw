@@ -204,4 +204,7 @@
   <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
     <value>在圖文中顯示原圖</value>
   </data>
+  <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
+    <value>磁貼更新間隔分鐘 (小於 15 分鐘停止更新)</value>
+  </data>
 </root>

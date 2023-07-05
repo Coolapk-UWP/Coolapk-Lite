@@ -204,4 +204,7 @@
   <data name="DisplayOriginPictureCheckBox.Header" xml:space="preserve">
     <value>Show original image in graph</value>
   </data>
+  <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
+    <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
+  </data>
 </root>
