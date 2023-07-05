@@ -139,7 +139,7 @@
     <value>Перевірити наявність оновлень</value>
   </data>
   <data name="CheckUpdateWhenLaunchingCheckBox.Content" xml:space="preserve">
-    <value>启动时检查更新</value>
+    <value>Перевірити наявність оновлень під час запуску</value>
   </data>
   <data name="CleanCacheButton.Content" xml:space="preserve">
     <value>Очистити кеш</value>
