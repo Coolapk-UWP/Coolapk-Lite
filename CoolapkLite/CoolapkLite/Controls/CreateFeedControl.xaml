@@ -114,7 +114,7 @@
                                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                             </Style>
                         </Flyout.FlyoutPresenterStyle>
-                        <Pivot>
+                        <Pivot helpers:TipsRectangleHelper.TipTargetName="SelectedPipe">
                             <PivotItem x:Uid="/CreateFeedControl/UserPivotItem">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -273,7 +273,7 @@
                                     </DataTemplate>
                                 </AutoSuggestBox.ItemTemplate>
                             </AutoSuggestBox>
-                            <Pivot Grid.Row="1">
+                            <Pivot Grid.Row="1" helpers:TipsRectangleHelper.TipTargetName="SelectedPipe">
                                 <PivotItem Header="常规">
                                     <GridView
                                         Padding="8,0"

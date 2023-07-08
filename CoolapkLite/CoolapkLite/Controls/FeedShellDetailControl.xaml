@@ -389,7 +389,7 @@
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="True"
                         Text="{Binding MessageRawOutput}"
-                        Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}}" />
+                        Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
                 </Grid>
             </local:StackPanel>
             <Grid
@@ -419,7 +419,7 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
-                Visibility="{Binding VoteRows, Converter={StaticResource CollectionVisibilityConverter}}">
+                Visibility="{Binding VoteRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed'}">
                 <ListView
                     HorizontalAlignment="Stretch"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"

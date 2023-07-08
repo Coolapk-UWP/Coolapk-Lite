@@ -144,9 +144,6 @@
     <Compile Include="Common\CustomControlResource.cs" />
     <Compile Include="Common\ExtensionManager.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
-    <Compile Include="Controls\CollectionDetailControl.xaml.cs">
-      <DependentUpon>CollectionDetailControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
@@ -177,21 +174,9 @@
     <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
       <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ListDetailsView\BackButtonBehavior.cs" />
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.BackButton.cs">
-      <DependentUpon>ListDetailsView.cs</DependentUpon>
+    <Compile Include="Controls\Picker\Picker.cs">
+      <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.cs">
-      <DependentUpon>ListDetailsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.Events.cs">
-      <DependentUpon>ListDetailsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ListDetailsView\ListDetailsView.Properties.cs">
-      <DependentUpon>ListDetailsView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ListDetailsView\ListDetailsViewState.cs" />
-    <Compile Include="Controls\Picker\Picker.cs" />
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
     <Compile Include="Controls\QRCode\QRCode.cs">
       <DependentUpon>QRCode.xaml</DependentUpon>
@@ -406,7 +391,6 @@
     <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\BookmarkViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\CollectionViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\CreateFeedViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
@@ -1015,10 +999,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\CollectionDetailControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\CreateFeedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1058,10 +1038,6 @@
     <Page Include="Controls\Flyouts\SettingsFlyoutControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ListDetailsView\ListDetailsView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\Picker\Picker.ThemeResources.xaml">
       <SubType>Designer</SubType>
