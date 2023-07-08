@@ -4,11 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/APIVersionDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Closing="OnClosing"
     mc:Ignorable="d">
+    <helpers:UIElementHelper.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem
+                Click="MenuFlyoutItem_Click"
+                Tag="Refresh"
+                Text="获取最新版本号">
+                <helpers:FlyoutBaseHelper.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE117;" />
+                </helpers:FlyoutBaseHelper.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+    </helpers:UIElementHelper.ContextFlyout>
     <controls:StackPanel Spacing="4">
         <TextBox
             x:Uid="/ContentDialog/APIVersionTextBox"

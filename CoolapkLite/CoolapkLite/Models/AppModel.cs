@@ -15,6 +15,8 @@ namespace CoolapkLite.Models
         public string Title { get; private set; }
         public string FollowNum { get; private set; }
         public string DownloadNum { get; private set; }
+        public string VersionCode { get; private set; }
+        public string VersionName { get; private set; }
         public string Description { get; private set; }
         public string LastUpdate { get; private set; }
         public ImageModel Logo { get; private set; }
@@ -36,6 +38,16 @@ namespace CoolapkLite.Models
             if (token.TryGetValue("downCount", out JToken downCount))
             {
                 DownloadNum = downCount.ToString();
+            }
+
+            if (token.TryGetValue("apkversioncode", out JToken apkversioncode))
+            {
+                VersionCode = apkversioncode.ToString();
+            }
+
+            if (token.TryGetValue("apkversionname", out JToken apkversionname))
+            {
+                VersionName = apkversionname.ToString();
             }
 
             if (token.TryGetValue("title", out JToken title) && !string.IsNullOrEmpty(title.ToString()))
