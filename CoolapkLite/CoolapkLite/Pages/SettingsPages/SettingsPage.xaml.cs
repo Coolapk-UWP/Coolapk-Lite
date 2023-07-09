@@ -80,6 +80,9 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
+                case "ViewCache":
+                    _ = Frame.Navigate(typeof(CachesPage));
+                    break;
                 case "CleanCache":
                     Provider?.CleanCache();
                     break;

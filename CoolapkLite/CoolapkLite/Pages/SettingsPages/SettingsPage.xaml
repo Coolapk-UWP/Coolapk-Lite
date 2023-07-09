@@ -53,6 +53,11 @@
                             IsActive="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                             Visibility="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                     </control:StackPanel>
+                    <Button
+                        x:Uid="/SettingsPage/ViewCacheButton"
+                        Click="Button_Click"
+                        IsEnabled="{Binding IsCleanCacheButtonEnabled}"
+                        Tag="ViewCache" />
                     <Slider
                         x:Uid="/SettingsPage/TileUpdateTimeSlider"
                         Maximum="1440"

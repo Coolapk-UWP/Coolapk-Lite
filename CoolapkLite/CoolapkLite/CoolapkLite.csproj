@@ -262,6 +262,9 @@
     <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
       <DependentUpon>SearchingPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\SettingsPages\CachesPage.xaml.cs">
+      <DependentUpon>CachesPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SettingsPages\ExtensionPage.xaml.cs">
       <DependentUpon>ExtensionPage.xaml</DependentUpon>
     </Compile>
@@ -400,6 +403,7 @@
     <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
+    <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
   </ItemGroup>
@@ -1088,6 +1092,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\FeedPages\SearchingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPages\CachesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

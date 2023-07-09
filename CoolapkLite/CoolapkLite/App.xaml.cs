@@ -10,6 +10,7 @@ using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -162,24 +163,34 @@ namespace CoolapkLite
         private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
         {
             string keyWord = args.QueryText;
+            List<string> results = new List<string>();
             SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
-            (bool isSucceed, JToken result) = await Task.Run(async () => await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true));
-            if (isSucceed && result != null && result is JArray array && array.Count > 0)
+            await Task.Run(async () =>
             {
-                foreach (JToken token in array)
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                if (isSucceed && result != null && result is JArray array && array.Count > 0)
                 {
-                    switch (token.Value<string>("entityType"))
+                    foreach (JToken token in array)
                     {
-                        case "apk":
-                            args.Request.SearchSuggestionCollection.AppendQuerySuggestion(new AppModel(token as JObject).Title);
-                            break;
-                        case "searchWord":
-                        default:
-                            args.Request.SearchSuggestionCollection.AppendQuerySuggestion(new SearchWord(token as JObject).ToString());
-                            break;
+                        string key = string.Empty;
+                        switch (token.Value<string>("entityType"))
+                        {
+                            case "apk":
+                                key = new AppModel(token as JObject).Title;
+                                break;
+                            case "searchWord":
+                            default:
+                                key = new SearchWord(token as JObject).ToString();
+                                break;
+                        }
+                        if (!string.IsNullOrEmpty(key) && !results.Contains(key))
+                        {
+                            results.Add(key);
+                        }
                     }
                 }
-            }
+            });
+            args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results);
             deferral.Complete();
         }
 
