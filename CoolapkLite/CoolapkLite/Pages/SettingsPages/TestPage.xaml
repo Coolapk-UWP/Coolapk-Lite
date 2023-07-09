@@ -137,18 +137,24 @@
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
+                            Content="打开 Charm 设置"
+                            Tag="OpenCharmSettings" />
+                        <Button
+                            Click="Button_Click"
+                            Content="打开 Charm 搜索"
+                            Tag="OpenCharmSearch" />
+                    </control:StackPanel>
+                    <ToggleSwitch Header="是否使用模糊笔刷" IsOn="{x:Bind IsUseBlurBrush, Mode=TwoWay}" />
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
                             Content="管理插件"
                             Tag="GoToExtensionPage" />
                         <Button
                             Click="Button_Click"
-                            Content="打开 Charm 设置"
-                            Tag="OpenCharmSettings" />
+                            Content="新建窗口 (仅支持 1903 及以上)"
+                            Tag="NewWindow" />
                     </control:StackPanel>
-                    <ToggleSwitch Header="是否使用模糊笔刷" IsOn="{x:Bind IsUseBlurBrush, Mode=TwoWay}" />
-                    <Button
-                        Click="Button_Click"
-                        Content="新建窗口 (仅支持 1903 及以上)"
-                        Tag="NewWindow" />
                     <ToggleSwitch Header="是否使用合成动画" IsOn="{x:Bind IsUseCompositor, Mode=TwoWay}" />
                     <ComboBox
                         Header="切换语言 (需要重启)"

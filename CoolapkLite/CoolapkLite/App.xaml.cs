@@ -2,9 +2,13 @@
 using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Pages;
+using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +18,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Search;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
@@ -105,6 +110,13 @@ namespace CoolapkLite
                     Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Styles/SettingsFlyout.xaml") });
                 }
 
+                if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
+                {
+                    SearchPane searchPane = SearchPane.GetForCurrentView();
+                    searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
+                    searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+                }
+
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -145,6 +157,38 @@ namespace CoolapkLite
 
             // 确保当前窗口处于活动状态
             MainWindow.Activate();
+        }
+
+        private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
+        {
+            string keyWord = args.QueryText;
+            SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
+            (bool isSucceed, JToken result) = await Task.Run(async () => await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true));
+            if (isSucceed && result != null && result is JArray array && array.Count > 0)
+            {
+                foreach (JToken token in array)
+                {
+                    switch (token.Value<string>("entityType"))
+                    {
+                        case "apk":
+                            args.Request.SearchSuggestionCollection.AppendQuerySuggestion(new AppModel(token as JObject).Title);
+                            break;
+                        case "searchWord":
+                        default:
+                            args.Request.SearchSuggestionCollection.AppendQuerySuggestion(new SearchWord(token as JObject).ToString());
+                            break;
+                    }
+                }
+            }
+            deferral.Complete();
+        }
+
+        private void SearchPane_QuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
+        {
+            if (!string.IsNullOrEmpty(args.QueryText))
+            {
+                _ = UIHelper.AppTitle.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(args.QueryText));
+            }
         }
 
         /// <summary>
@@ -215,6 +259,10 @@ namespace CoolapkLite
                         {
                             case VirtualKey.X:
                                 SettingsPane.Show();
+                                args.Handled = true;
+                                break;
+                            case VirtualKey.Q:
+                                SearchPane.GetForCurrentView().Show();
                                 args.Handled = true;
                                 break;
                         }

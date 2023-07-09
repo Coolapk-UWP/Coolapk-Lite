@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Search;
 using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
@@ -263,6 +264,10 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();
+                    break;
+                case "OpenCharmSearch":
+                    if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
+                    { SearchPane.GetForCurrentView().Show(); }
                     break;
                 case "OpenCharmSettings":
                     if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
