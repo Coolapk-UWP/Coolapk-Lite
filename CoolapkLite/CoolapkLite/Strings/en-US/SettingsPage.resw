@@ -208,6 +208,6 @@
     <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
   </data>
   <data name="ViewCacheButton.Content" xml:space="preserve">
-    <value>查看缓存</value>
+    <value>View Cache</value>
   </data>
 </root>
