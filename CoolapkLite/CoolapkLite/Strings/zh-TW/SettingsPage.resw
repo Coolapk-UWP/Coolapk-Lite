@@ -208,6 +208,6 @@
     <value>磁貼更新間隔分鐘 (小於 15 分鐘停止更新)</value>
   </data>
   <data name="ViewCacheButton.Content" xml:space="preserve">
-    <value>查看缓存</value>
+    <value>查看快取</value>
   </data>
 </root>
