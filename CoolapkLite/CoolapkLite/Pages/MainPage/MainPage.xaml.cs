@@ -294,18 +294,6 @@ namespace CoolapkLite
             }
         }
 
-        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            if (args.SelectedItem is AppModel app)
-            {
-                sender.Text = app.Title;
-            }
-            else if (args.SelectedItem is SearchWord searchWord)
-            {
-                sender.Text = searchWord.ToString();
-            }
-        }
-
         #endregion
 
         #region 进度条

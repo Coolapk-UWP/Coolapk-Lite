@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -96,6 +97,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         #region 搜索框
 
+        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -104,22 +107,30 @@ namespace CoolapkLite.Pages.FeedPages
                 sender.ItemsSource = observableCollection;
                 string keyWord = sender.Text;
                 await ThreadSwitcher.ResumeBackgroundAsync();
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
-                if (isSucceed && result != null && result is JArray array && array.Count > 0)
+                await semaphoreSlim.WaitAsync();
+                try
                 {
-                    foreach (JToken token in array)
+                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                    if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
-                        switch (token.Value<string>("entityType"))
+                        foreach (JToken token in array)
                         {
-                            case "apk":
-                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token as JObject)));
-                                break;
-                            case "searchWord":
-                            default:
-                                await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
-                                break;
+                            switch (token.Value<string>("entityType"))
+                            {
+                                case "apk":
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token as JObject)));
+                                    break;
+                                case "searchWord":
+                                default:
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                    break;
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    semaphoreSlim.Release();
                 }
             }
         }
@@ -139,18 +150,6 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Provider.Title = sender.Text;
                 await Provider.Refresh(true);
-            }
-        }
-
-        private void AutoSuggestBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
-        {
-            if (args.SelectedItem is AppModel app)
-            {
-                sender.Text = app.Title;
-            }
-            else if (args.SelectedItem is SearchWord searchWord)
-            {
-                sender.Text = searchWord.ToString();
             }
         }
 

@@ -104,7 +104,6 @@
                         ItemTemplateSelector="{StaticResource SearchWordSelector}"
                         QueryIcon="Find"
                         QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                        SuggestionChosen="AutoSuggestBox_SuggestionChosen"
                         TextChanged="AutoSuggestBox_TextChanged" />
                 </controls:HamburgerMenu.AutoSuggestBox>
                 <Frame

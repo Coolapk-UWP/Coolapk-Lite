@@ -56,7 +56,6 @@
                 ItemTemplateSelector="{StaticResource SearchWordSelector}"
                 QueryIcon="Find"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                SuggestionChosen="AutoSuggestBox_SuggestionChosen"
                 Text="{Binding Title, Mode=OneWay}"
                 TextChanged="AutoSuggestBox_TextChanged" />
             <Button
