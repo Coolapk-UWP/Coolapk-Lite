@@ -278,7 +278,7 @@ namespace CoolapkLite.Controls
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.CommandBarFlyout"))
             {
                 InputBox.ContextFlyout.Opening += Menu_Opening;
                 InputBox.ContextFlyout.Closing += Menu_Closing;
