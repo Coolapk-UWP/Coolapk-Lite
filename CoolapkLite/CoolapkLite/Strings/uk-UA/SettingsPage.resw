@@ -207,4 +207,7 @@
   <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
     <value>磁贴更新间隔分钟 (小于 15 分钟停止更新)</value>
   </data>
+  <data name="ViewCacheButton.Content" xml:space="preserve">
+    <value>查看缓存</value>
+  </data>
 </root>
