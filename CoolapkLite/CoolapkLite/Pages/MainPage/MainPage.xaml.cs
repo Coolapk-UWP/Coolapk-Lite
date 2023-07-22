@@ -53,7 +53,7 @@ namespace CoolapkLite
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
-            NotificationsModel.Instance?.Update();
+            _ = (NotificationsModel.Instance?.Update());
             LiveTileTask.Instance?.UpdateTile();
         }
 

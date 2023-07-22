@@ -44,6 +44,20 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
+        private NotificationsModel _notificationsModel;
+        public NotificationsModel NotificationsModel
+        {
+            get => _notificationsModel;
+            private set
+            {
+                if (_notificationsModel != value)
+                {
+                    _notificationsModel = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public ProfileViewModel()
         {
             Provider = new CoolapkListProvider(
@@ -58,7 +72,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (IsLogin)
             {
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                NotificationsModel = NotificationsModel.Instance;
                 ProfileDetail = await GetFeedDetailAsync(UID);
+                await NotificationsModel.Update();
                 await Reset();
             }
             else

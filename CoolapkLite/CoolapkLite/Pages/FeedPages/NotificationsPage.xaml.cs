@@ -69,7 +69,7 @@ namespace CoolapkLite.Pages.FeedPages
                 Pivot.SelectedIndex = PivotIndex;
                 isLoaded = true;
             }
-            NotificationsModel?.Update();
+            _ = NotificationsModel?.Update();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -165,7 +165,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Refresh = () => _ = AdaptivePage.Refresh(true);
             }
-            NotificationsModel?.Update();
+            _ = NotificationsModel?.Update();
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
@@ -173,7 +173,7 @@ namespace CoolapkLite.Pages.FeedPages
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             Refresh();
-            NotificationsModel?.Update();
+            _ = NotificationsModel?.Update();
         }
     }
 }

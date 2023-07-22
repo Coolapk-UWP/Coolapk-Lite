@@ -285,14 +285,22 @@
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">
-            <Button
-                x:Uid="/ProfilePage/NotificationButton"
-                VerticalAlignment="Center"
-                Click="Button_Click"
-                Content="&#xE8BD;"
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
-                Style="{StaticResource TitleBarIconButtonStyle}"
-                Tag="NotificationButton" />
+            <Grid>
+                <Button
+                    x:Uid="/ProfilePage/NotificationButton"
+                    VerticalAlignment="Center"
+                    Click="Button_Click"
+                    Content="&#xE8BD;"
+                    FontFamily="{StaticResource SymbolThemeFontFamily}"
+                    Style="{StaticResource TitleBarIconButtonStyle}"
+                    Tag="NotificationButton" />
+                <controls:InfoBadge
+                    Margin="8"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Visibility="{Binding NotificationsModel.Notification, Converter={StaticResource DoubleToVisibilityConverter}}"
+                    Value="{Binding NotificationsModel.Notification}" />
+            </Grid>
         </controls:TitleBar>
     </Grid>
 </Page>
