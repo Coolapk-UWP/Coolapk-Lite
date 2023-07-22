@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -79,7 +80,7 @@ namespace CoolapkLite
         {
             if (MainWindow == null)
             {
-                RequestWifiAccess();
+                RequestWIFIAccess();
                 RegisterBackgroundTask();
                 RegisterExceptionHandlingSynchronizationContext();
 
@@ -160,6 +161,8 @@ namespace CoolapkLite
             MainWindow.Activate();
         }
 
+        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+
         private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
         {
             string keyWord = args.QueryText;
@@ -167,27 +170,35 @@ namespace CoolapkLite
             SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
             await Task.Run(async () =>
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
-                if (isSucceed && result != null && result is JArray array && array.Count > 0)
+                await semaphoreSlim.WaitAsync();
+                try
                 {
-                    foreach (JToken token in array)
+                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                    if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
-                        string key = string.Empty;
-                        switch (token.Value<string>("entityType"))
+                        foreach (JToken token in array)
                         {
-                            case "apk":
-                                key = new AppModel(token as JObject).Title;
-                                break;
-                            case "searchWord":
-                            default:
-                                key = new SearchWord(token as JObject).ToString();
-                                break;
-                        }
-                        if (!string.IsNullOrEmpty(key) && !results.Contains(key))
-                        {
-                            results.Add(key);
+                            string key = string.Empty;
+                            switch (token.Value<string>("entityType"))
+                            {
+                                case "apk":
+                                    key = new AppModel(token as JObject).Title;
+                                    break;
+                                case "searchWord":
+                                default:
+                                    key = new SearchWord(token as JObject).ToString();
+                                    break;
+                            }
+                            if (!string.IsNullOrEmpty(key) && !results.Contains(key))
+                            {
+                                results.Add(key);
+                            }
                         }
                     }
+                }
+                finally
+                {
+                    semaphoreSlim.Release();
                 }
             });
             args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results);
@@ -282,17 +293,17 @@ namespace CoolapkLite
             }
         }
 
-        private async void RequestWifiAccess()
+        private async void RequestWIFIAccess()
         {
             if (ApiInformation.IsMethodPresent("Windows.Security.Authorization.AppCapabilityAccess.AppCapability", "Create"))
             {
-                AppCapability wifiData = AppCapability.Create("wifiData");
-                switch (wifiData.CheckAccess())
+                AppCapability WIFIData = AppCapability.Create("wifiData");
+                switch (WIFIData.CheckAccess())
                 {
                     case AppCapabilityAccessStatus.DeniedByUser:
                     case AppCapabilityAccessStatus.DeniedBySystem:
                         // Do something
-                        await wifiData.RequestAccessAsync();
+                        await WIFIData.RequestAccessAsync();
                         break;
                 }
             }

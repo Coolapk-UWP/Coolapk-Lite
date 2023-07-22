@@ -8,6 +8,7 @@ using CoolapkLite.ViewModels.Providers;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -24,7 +25,7 @@ namespace CoolapkLite.Pages.FeedPages
         private static int PivotIndex = 0;
 
         private bool isLoaded;
-        private Action Refresh;
+        private Func<bool, Task> RefreshTask;
 
         private NotificationsModel _notificationsModel = NotificationsModel.Instance;
         public NotificationsModel NotificationsModel
@@ -159,21 +160,22 @@ namespace CoolapkLite.Pages.FeedPages
                     default:
                         break;
                 }
-                Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
+                RefreshTask = (reset) => (Frame.Content as AdaptivePage).Refresh(reset);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
             {
-                Refresh = () => _ = AdaptivePage.Refresh(true);
+                RefreshTask = (reset) => AdaptivePage.Refresh(reset);
             }
-            _ = NotificationsModel?.Update();
+        }
+
+        private async Task Refresh(bool reset = false)
+        {
+            await NotificationsModel?.Update();
+            await RefreshTask(reset);
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
 
-        private void RefreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            Refresh();
-            _ = NotificationsModel?.Update();
-        }
+        private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
     }
 }

@@ -298,7 +298,7 @@
                     Margin="8"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Visibility="{Binding NotificationsModel.Notification, Converter={StaticResource DoubleToVisibilityConverter}}"
+                    Visibility="{Binding NotificationsModel.Notification, Converter={StaticResource DoubleToVisibilityConverter}, FallbackValue='Collapsed'}"
                     Value="{Binding NotificationsModel.Notification}" />
             </Grid>
         </controls:TitleBar>

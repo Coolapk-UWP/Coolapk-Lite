@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -23,7 +24,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class SearchingPage : Page
     {
-        private Action Refresh;
+        private Func<bool, Task> Refresh;
         private static int PivotIndex = 0;
         private SearchingViewModel Provider;
 
@@ -59,7 +60,7 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
-                Refresh = () => _ = ItemsSource.Refresh(true);
+                Refresh = (reset) => _ = ItemsSource.Refresh(reset);
             }
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -70,7 +71,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (Refresh != null)
             {
-                Refresh();
+                _ = Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
