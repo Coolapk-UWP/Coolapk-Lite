@@ -207,7 +207,10 @@
   <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
     <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
   </data>
-  <data name="ViewCacheButton.Content" xml:space="preserve">
-    <value>View Cache</value>
+  <data name="ViewCacheItem.Text" xml:space="preserve">
+    <value>查看缓存</value>
+  </data>
+  <data name="OpenLogFileItem.Text" xml:space="preserve">
+    <value>打开最近的日志</value>
   </data>
 </root>
