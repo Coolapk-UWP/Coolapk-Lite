@@ -208,9 +208,9 @@
     <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
   </data>
   <data name="ViewCacheItem.Text" xml:space="preserve">
-    <value>查看缓存</value>
+    <value>View Cache</value>
   </data>
   <data name="OpenLogFileItem.Text" xml:space="preserve">
-    <value>打开最近的日志</value>
+    <value>Open Recent Log</value>
   </data>
 </root>
