@@ -4,6 +4,8 @@ using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -80,9 +82,6 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "LogFolder":
                     _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
-                case "ViewCache":
-                    _ = Frame.Navigate(typeof(CachesPage));
-                    break;
                 case "CleanCache":
                     Provider?.CleanCache();
                     break;
@@ -118,6 +117,24 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "Default":
                     ThemeHelper.RootTheme = ElementTheme.Default;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as FrameworkElement).Tag.ToString())
+            {
+                case "ViewCache":
+                    _ = Frame.Navigate(typeof(CachesPage));
+                    break;
+                case "OpenLogFile":
+                    StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+                    IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+                    StorageFile file = files.FirstOrDefault();
+                    if (file != null) { _ = Launcher.LaunchFileAsync(file); }
                     break;
                 default:
                     break;

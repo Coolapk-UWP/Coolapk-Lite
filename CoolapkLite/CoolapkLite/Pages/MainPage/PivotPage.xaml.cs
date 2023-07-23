@@ -41,9 +41,9 @@ namespace CoolapkLite.Pages
         public PivotPage()
         {
             InitializeComponent();
-            UIHelper.AppTitle = this;
             UIHelper.ShellDispatcher = Dispatcher;
             PivotContentFrame.Navigate(typeof(Page));
+            UIHelper.AppTitle = UIHelper.AppTitle ?? this;
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";

@@ -47,17 +47,26 @@
                             x:Uid="/SettingsPage/CleanCacheButton"
                             Click="Button_Click"
                             IsEnabled="{Binding IsCleanCacheButtonEnabled}"
-                            Tag="CleanCache" />
+                            Tag="CleanCache">
+                            <helpers:UIElementHelper.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem
+                                        x:Uid="/SettingsPage/ViewCacheItem"
+                                        Click="MenuFlyoutItem_Click"
+                                        IsEnabled="{Binding IsCleanCacheButtonEnabled}"
+                                        Tag="ViewCache">
+                                        <helpers:FlyoutBaseHelper.Icon>
+                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE890;" />
+                                        </helpers:FlyoutBaseHelper.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </helpers:UIElementHelper.ContextFlyout>
+                        </Button>
                         <ProgressRing
                             HorizontalAlignment="Left"
                             IsActive="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                             Visibility="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                     </control:StackPanel>
-                    <Button
-                        x:Uid="/SettingsPage/ViewCacheButton"
-                        Click="Button_Click"
-                        IsEnabled="{Binding IsCleanCacheButtonEnabled}"
-                        Tag="ViewCache" />
                     <Slider
                         x:Uid="/SettingsPage/TileUpdateTimeSlider"
                         Maximum="1440"
@@ -133,7 +142,20 @@
                     <HyperlinkButton
                         x:Uid="/SettingsPage/LogFolderLink"
                         Click="Button_Click"
-                        Tag="LogFolder" />
+                        Tag="LogFolder">
+                        <helpers:UIElementHelper.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    x:Uid="/SettingsPage/OpenLogFileItem"
+                                    Click="MenuFlyoutItem_Click"
+                                    Tag="OpenLogFile">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </helpers:UIElementHelper.ContextFlyout>
+                    </HyperlinkButton>
                     <Button
                         x:Name="GoToTestPage"
                         x:Uid="/SettingsPage/GoToTestPage"

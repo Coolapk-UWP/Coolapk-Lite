@@ -202,9 +202,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public async void CleanCache()
         {
-            IsCleanCacheButtonEnabled = true;
-            await ImageCacheHelper.CleanCacheAsync();
             IsCleanCacheButtonEnabled = false;
+            await ImageCacheHelper.CleanCacheAsync();
+            IsCleanCacheButtonEnabled = true;
         }
 
         public async void CheckUpdate()
