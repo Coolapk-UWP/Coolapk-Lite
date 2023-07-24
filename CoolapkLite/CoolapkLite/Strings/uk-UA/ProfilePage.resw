@@ -132,4 +132,7 @@
   <data name="ReadMoreButton.Content" xml:space="preserve">
     <value>Докладніше</value>
   </data>
+  <data name="Title" xml:space="preserve">
+    <value>个人空间</value>
+  </data>
 </root>
