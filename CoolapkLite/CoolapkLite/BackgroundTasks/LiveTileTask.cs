@@ -5,10 +5,12 @@ using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Notifications;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite.BackgroundTasks
 {
@@ -16,28 +18,28 @@ namespace CoolapkLite.BackgroundTasks
     {
         public static LiveTileTask Instance = new LiveTileTask();
 
-        public LiveTileTask()
-        {
-            Instance = Instance ?? this;
-        }
+        public LiveTileTask() => Instance = Instance ?? this;
 
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            UpdateTile();
+            await UpdateTile();
             deferral.Complete();
         }
 
-        public async void UpdateTile()
+        public async Task UpdateTile()
         {
-            Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
-            try
+            if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                await GetData(uri);
-            }
-            catch (Exception ex)
-            {
-                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+                Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
+                try
+                {
+                    await GetData(uri);
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+                }
             }
         }
 
@@ -48,15 +50,12 @@ namespace CoolapkLite.BackgroundTasks
             {
                 JArray array = (JArray)result;
                 if (array.Count < 1) { return; }
-                int i = 0;
-                foreach (JToken item in array)
+                foreach (JToken item in array.Take(5))
                 {
-                    if (i >= 5) { break; }
                     if (((JObject)item).TryGetValue("entityType", out JToken entityType))
                     {
                         if (entityType.ToString() == "feed" || entityType.ToString() == "discovery")
                         {
-                            i++;
                             UpdateTitle(GetFeedTitle((JObject)item));
                         }
                     }

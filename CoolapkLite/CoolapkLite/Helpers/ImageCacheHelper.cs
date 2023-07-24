@@ -56,7 +56,7 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
-            Uri uri = url.ValidateAndGetUri();
+            Uri uri = url.TryGetUri();
             if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
@@ -73,7 +73,7 @@ namespace CoolapkLite.Helpers
                 if (type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
-                    uri = url.ValidateAndGetUri();
+                    uri = url.TryGetUri();
                 }
 
                 if (await dispatcher.AwaitableRunAsync(() => Dispatcher.HasThreadAccess))
@@ -151,7 +151,7 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
-            Uri uri = url.ValidateAndGetUri();
+            Uri uri = url.TryGetUri();
             if (uri == null) { return null; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
@@ -163,7 +163,7 @@ namespace CoolapkLite.Helpers
                 if (type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
-                    uri = url.ValidateAndGetUri();
+                    uri = url.TryGetUri();
                 }
 
                 try
@@ -250,7 +250,7 @@ namespace CoolapkLite.Helpers
         [Obsolete]
         internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, bool isforce = false)
         {
-            Uri uri = url.ValidateAndGetUri();
+            Uri uri = url.TryGetUri();
             if (uri == null) { return NoPic; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)

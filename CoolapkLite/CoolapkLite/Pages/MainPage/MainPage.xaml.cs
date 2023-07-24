@@ -55,7 +55,7 @@ namespace CoolapkLite
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             _ = (NotificationsModel.Instance?.Update());
-            LiveTileTask.Instance?.UpdateTile();
+            _ = (LiveTileTask.Instance?.UpdateTile());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

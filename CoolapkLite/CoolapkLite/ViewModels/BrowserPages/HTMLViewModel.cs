@@ -77,7 +77,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         public HTMLViewModel(string url, CoreDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
-            uri = url.ValidateAndGetUri();
+            uri = url.TryGetUri();
             UISettingChanged = (mode) =>
             {
                 switch (mode)

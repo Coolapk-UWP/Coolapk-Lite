@@ -215,7 +215,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "ShowError":
                     throw new Exception(NotifyMessage.Text);
                 case "GetContent":
-                    Uri uri = WebUrl.Text.ValidateAndGetUri();
+                    Uri uri = WebUrl.Text.TryGetUri();
                     (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, "XMLHttpRequest", false);
                     if (!isSucceed)
                     {

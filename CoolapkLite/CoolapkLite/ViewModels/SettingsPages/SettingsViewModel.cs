@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Update;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.ComponentModel;
 using System.Net.Http;
@@ -172,9 +173,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             get
             {
-                string ver = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
-                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
-                string name = loader?.GetString("AppName") ?? "酷安 Lite";
+                string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? "酷安 Lite";
+                string ver = Package.Current.Id.Version.ToFormattedString(3);
                 _ = GetAboutTextBlockText();
                 return $"{name} v{ver}";
             }
@@ -190,8 +190,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
         private async Task GetAboutTextBlockText()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
-            string langcode = LanguageHelper.GetPrimaryLanguage();
-            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langcode}.md");
+            string langCode = LanguageHelper.GetPrimaryLanguage();
+            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langCode}.md");
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
             if (file != null)
             {

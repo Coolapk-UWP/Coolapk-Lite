@@ -493,7 +493,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                return origin.Contains("://") && await Launcher.LaunchUriAsync(origin.ValidateAndGetUri());
+                return origin.Contains("://") && await Launcher.LaunchUriAsync(origin.TryGetUri());
             }
 
             return true;
@@ -550,11 +550,14 @@ namespace CoolapkLite.Helpers
                         case "http":
                         case "https":
                             return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
+                        case "flags":
+                            await frame.NavigateAsync(typeof(TestPage));
+                            break;
                         case "settings":
                             await frame.NavigateAsync(typeof(SettingsPage));
                             break;
-                        case "flags":
-                            await frame.NavigateAsync(typeof(TestPage));
+                        case "notifications":
+                            await frame.NavigateAsync(typeof(NotificationsPage));
                             break;
                         default:
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);

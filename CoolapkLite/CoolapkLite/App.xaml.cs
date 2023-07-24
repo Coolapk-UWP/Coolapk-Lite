@@ -4,10 +4,12 @@ using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
+using CoolapkLite.Models.Update;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -21,7 +23,6 @@ using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.Storage;
@@ -35,6 +36,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite
 {
@@ -68,6 +70,10 @@ namespace CoolapkLite
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             EnsureWindow(e);
+            if (SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching))
+            {
+                CheckUpdate();
+            }
         }
 
         protected override void OnActivated(IActivatedEventArgs e)
@@ -159,6 +165,35 @@ namespace CoolapkLite
 
             // 确保当前窗口处于活动状态
             MainWindow.Activate();
+        }
+
+        private async void CheckUpdate()
+        {
+            if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            {
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
+                if (results != null && results.IsExistNewVersion)
+                {
+                    ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
+
+                    string name = _loader?.GetString("AppName") ?? "酷安 Lite";
+                    string ver = Package.Current.Id.Version.ToFormattedString(3);
+
+                    new ToastContentBuilder()
+                        .SetToastScenario(ToastScenario.Default)
+                        .AddArgument("action", "hasUpdate")
+                        .AddArgument("url", results.ReleaseUrl)
+                        .AddText(_loader.GetString("HasUpdateTitle"))
+                        .AddText($"{name} v{ver} -> {results.TagName}")
+                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results.PublishedAt.ConvertDateTimeToReadable()))
+                        .AddButton(new ToastButton()
+                            .SetContent(_loader.GetString("GoToGithub"))
+                            .SetBackgroundActivation())
+                        .AddButton(new ToastButton()
+                            .SetDismissActivation())
+                        .Show();
+                }
+            }
         }
 
         private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
@@ -372,9 +407,9 @@ namespace CoolapkLite
             {
                 uint time = SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
                 if (time < 15) { return; }
-#if ARM64
-                const string LiveTileTask = "LiveTileTask";
 
+                const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+#if ARM64
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
                 { return; }
@@ -382,7 +417,7 @@ namespace CoolapkLite
                 // Register (Single Process)
                 BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
 #else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(LiveTileTask))
                 {
                     // Register (Multi Process)
                     BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(time, false), true);
@@ -396,9 +431,8 @@ namespace CoolapkLite
 
             void RegisterNotificationsTask()
             {
+                const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
 #if ARM64
-                const string NotificationsTask = "NotificationsTask";
-
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
                 { return; }
@@ -406,7 +440,7 @@ namespace CoolapkLite
                 // Register (Single Process)
                 BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
 #else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(NotificationsTask))
                 {
                     // Register (Multi Process)
                     BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
@@ -443,7 +477,7 @@ namespace CoolapkLite
             #endregion
         }
 
-        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             base.OnBackgroundActivated(args);
 
@@ -451,30 +485,40 @@ namespace CoolapkLite
 
             switch (args.TaskInstance.Task.Name)
             {
-                case "LiveTileTask":
+                case nameof(LiveTileTask):
                     LiveTileTask.Instance?.Run(args.TaskInstance);
                     break;
 
-                case "NotificationsTask":
+                case nameof(NotificationsTask):
                     NotificationsTask.Instance?.Run(args.TaskInstance);
                     break;
 
                 case "ToastBackgroundTask":
                     if (args.TaskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
                     {
-                        //ToastArguments arguments = ToastArguments.Parse(details.Argument);
-                        ValueSet userInput = details.UserInput;
-
-                        // Perform tasks
+                        ToastArguments arguments = ToastArguments.Parse(details.Argument);
+                        if (arguments.TryGetValue("action", out string action))
+                        {
+                            switch (action)
+                            {
+                                case "hasUpdate":
+                                    if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                    {
+                                        _ = await Launcher.LaunchUriAsync(uri);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
+                    deferral.Complete();
                     break;
 
                 default:
                     deferral.Complete();
                     break;
             }
-
-            deferral.Complete();
         }
 
         public static Window MainWindow { get; private set; }

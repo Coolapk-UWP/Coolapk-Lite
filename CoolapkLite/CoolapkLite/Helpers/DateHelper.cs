@@ -13,34 +13,32 @@ namespace CoolapkLite.Helpers
             JustNow,
         }
 
-        private static readonly DateTime unixDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime UnixDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public static string ConvertUnixTimeStampToReadable(this long time)
-        {
-            return ConvertUnixTimeStampToReadable(time, DateTime.Now);
-        }
+        public static string ConvertUnixTimeStampToReadable(this long time) => ConvertUnixTimeStampToReadable(time, DateTime.Now);
 
-        public static string ConvertUnixTimeStampToReadable(this long time, DateTime? baseTime)
+        public static string ConvertUnixTimeStampToReadable(this long time, DateTime? baseTime) => ConvertDateTimeToReadable(time.ConvertUnixTimeStampToDateTime(), baseTime);
+
+        public static string ConvertDateTimeToReadable(this DateTime time) => ConvertDateTimeToReadable(time, DateTime.Now);
+
+        public static string ConvertDateTimeToReadable(this DateTime time, DateTime? baseTime)
         {
             object obj;
             TimeIntervalType type;
 
-            TimeSpan ttime = new TimeSpan(time * 1000_0000);
-            DateTime tdate = unixDateBase.Add(ttime);
-
             if (baseTime == null)
             {
                 type = TimeIntervalType.MonthsAgo;
-                obj = tdate;
+                obj = time;
             }
             else
             {
-                TimeSpan temp = baseTime.Value.ToUniversalTime().Subtract(tdate);
+                TimeSpan temp = baseTime.Value.ToUniversalTime().Subtract(time);
 
                 if (temp.TotalDays > 30)
                 {
                     type = TimeIntervalType.MonthsAgo;
-                    obj = tdate;
+                    obj = time;
                 }
                 else
                 {
@@ -78,8 +76,8 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static DateTime ConvertUnixTimeStampToDateTime(this long time) => unixDateBase.Add(new TimeSpan(time * 1000_0000));
+        public static DateTime ConvertUnixTimeStampToDateTime(this long time) => UnixDateBase.Add(new TimeSpan(time * 1000_0000));
 
-        public static double ConvertDateTimeToUnixTimeStamp(this DateTime time) => Math.Round(time.ToUniversalTime().Subtract(unixDateBase).TotalSeconds);
+        public static double ConvertDateTimeToUnixTimeStamp(this DateTime time) => Math.Round(time.ToUniversalTime().Subtract(UnixDateBase).TotalSeconds);
     }
 }
