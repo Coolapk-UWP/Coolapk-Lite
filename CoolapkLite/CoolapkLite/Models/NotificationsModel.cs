@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -209,44 +211,109 @@ namespace CoolapkLite.Models
         {
             if (token != null)
             {
-                if (token.TryGetValue("cloudInstall", out JToken cloudInstall) && cloudInstall != null)
+                int increase = 0;
+
+                if (token.TryGetValue("cloudInstall", out JToken cloudInstall))
                 {
-                    CloudInstall = token.Value<int>("cloudInstall");
+                    CloudInstall = cloudInstall.ToObject<int>();
                 }
-                if (token.TryGetValue("notification", out JToken notification) && notification != null)
+
+                if (token.TryGetValue("notification", out JToken notification))
                 {
-                    Notification = token.Value<int>("notification");
+                    Notification = notification.ToObject<int>();
                 }
-                if (token.TryGetValue("badge", out JToken badge) && badge != null)
+
+                if (token.TryGetValue("badge", out JToken badge))
                 {
-                    BadgeNum = token.Value<int>("badge");
+                    int value = badge.ToObject<int>();
+                    increase = value - badgeNum;
+                    BadgeNum = value;
                     UIHelper.SetBadgeNumber(BadgeNum.ToString());
                 }
-                if (token.TryGetValue("contacts_follow", out JToken contacts_follow) && contacts_follow != null)
+
+                if (token.TryGetValue("contacts_follow", out JToken contacts_follow))
                 {
-                    FollowNum = token.Value<int>("contacts_follow");
+                    FollowNum = contacts_follow.ToObject<int>();
                 }
-                if (token.TryGetValue("message", out JToken message) && message != null)
+
+                if (token.TryGetValue("message", out JToken message))
                 {
-                    MessageNum = token.Value<int>("message");
+                    MessageNum = message.ToObject<int>();
                 }
-                if (token.TryGetValue("atme", out JToken atme) && atme != null)
+
+                if (token.TryGetValue("atme", out JToken atme))
                 {
-                    AtMeNum = token.Value<int>("atme");
+                    AtMeNum = atme.ToObject<int>();
                 }
-                if (token.TryGetValue("atcommentme", out JToken atcommentme) && atcommentme != null)
+
+                if (token.TryGetValue("atcommentme", out JToken atcommentme))
                 {
-                    AtCommentMeNum = token.Value<int>("atcommentme");
+                    AtCommentMeNum = atcommentme.ToObject<int>();
                 }
-                if (token.TryGetValue("commentme", out JToken commentme) && commentme != null)
+
+                if (token.TryGetValue("commentme", out JToken commentme))
                 {
-                    CommentMeNum = token.Value<int>("commentme");
+                    CommentMeNum = commentme.ToObject<int>();
                 }
-                if (token.TryGetValue("feedlike", out JToken feedlike) && feedlike != null)
+
+                if (token.TryGetValue("feedlike", out JToken feedlike))
                 {
-                    FeedLikeNum = token.Value<int>("feedlike");
+                    FeedLikeNum = feedlike.ToObject<int>();
+                }
+
+                if (increase > 0)
+                {
+                    CreateToast(increase);
                 }
             }
+        }
+
+        private void CreateToast(int increase)
+        {
+            List<string> builder = new List<string>();
+
+            if (FeedLikeNum > 0)
+            {
+                builder.Add($"{FeedLikeNum} 个未读回复");
+            }
+
+            if (MessageNum > 0)
+            {
+                builder.Add($"{MessageNum} 个未读私信");
+            }
+
+            if (FollowNum > 0)
+            {
+                builder.Add($"{FollowNum} 位新增粉丝");
+            }
+
+            if (AtMeNum > 0)
+            {
+                builder.Add($"{AtMeNum} 个@我的动态");
+            }
+
+            if (AtCommentMeNum > 0)
+            {
+                builder.Add($"{AtCommentMeNum} 个@我的回复");
+            }
+
+            if (CloudInstall > 0)
+            {
+                builder.Add($"{CloudInstall} 个云安装");
+            }
+
+            new ToastContentBuilder()
+                .SetToastScenario(ToastScenario.Default)
+                .AddArgument("action", "hasNotification")
+                .AddText($"新增 {increase} 个未读通知")
+                .AddText($"共有 {BadgeNum} 个未读消息")
+                .AddText(string.Join("，",builder))
+                .AddButton(new ToastButton()
+                    .SetContent("查看")
+                    .SetProtocolActivation(new Uri("coolapk://notifications")))
+                .AddButton(new ToastButton()
+                    .SetDismissActivation())
+                .Show();
         }
     }
 }

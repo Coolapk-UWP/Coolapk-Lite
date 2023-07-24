@@ -513,10 +513,26 @@ namespace CoolapkLite.Helpers
                     {
                         switch (LaunchActivatedEventArgs.Arguments)
                         {
-                            case "settings":
-                                return await frame.NavigateAsync(typeof(SettingsPage));
+                            case "me":
+                                return await frame.NavigateAsync(typeof(ProfilePage), new ProfileViewModel());
+                            case "home":
+                                return await frame.NavigateAsync(typeof(IndexPage), new IndexViewModel());
                             case "flags":
                                 return await frame.NavigateAsync(typeof(TestPage));
+                            case "circle":
+                                return await frame.NavigateAsync(typeof(CirclePage));
+                            case "search":
+                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty));
+                            case "history":
+                                return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel("浏览历史"));
+                            case "settings":
+                                return await frame.NavigateAsync(typeof(SettingsPage));
+                            case "favorites":
+                                return await frame.NavigateAsync(typeof(BookmarkPage), new BookmarkViewModel());
+                            case "extensions":
+                                return await frame.NavigateAsync(typeof(ExtensionPage));
+                            case "notifications":
+                                return await frame.NavigateAsync(typeof(NotificationsPage));
                             default:
                                 return await frame.OpenLinkAsync(LaunchActivatedEventArgs.Arguments);
                         }
@@ -550,23 +566,32 @@ namespace CoolapkLite.Helpers
                         case "http":
                         case "https":
                             return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
+                        case "me":
+                            return await frame.NavigateAsync(typeof(ProfilePage), new ProfileViewModel());
+                        case "home":
+                            return await frame.NavigateAsync(typeof(IndexPage), new IndexViewModel());
                         case "flags":
-                            await frame.NavigateAsync(typeof(TestPage));
-                            break;
+                            return await frame.NavigateAsync(typeof(TestPage));
+                        case "circle":
+                            return await frame.NavigateAsync(typeof(CirclePage));
+                        case "search":
+                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty));
+                        case "history":
+                            return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel("浏览历史"));
                         case "settings":
-                            await frame.NavigateAsync(typeof(SettingsPage));
-                            break;
+                            return await frame.NavigateAsync(typeof(SettingsPage));
+                        case "favorites":
+                            return await frame.NavigateAsync(typeof(BookmarkPage), new BookmarkViewModel());
+                        case "extensions":
+                            return await frame.NavigateAsync(typeof(ExtensionPage));
                         case "notifications":
-                            await frame.NavigateAsync(typeof(NotificationsPage));
-                            break;
+                            return await frame.NavigateAsync(typeof(NotificationsPage));
                         default:
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
                     }
-                    break;
                 default:
                     return false;
             }
-            return true;
         }
 
         private static string Substring(this string str, int startIndex, string endString)
