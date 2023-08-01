@@ -179,7 +179,7 @@ namespace CoolapkLite.Models
             {
                 if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 {
-                    await Update();
+                    await Update(true);
                 }
             };
             timer.Start();
@@ -196,18 +196,18 @@ namespace CoolapkLite.Models
         /// </summary>
         public void Clear() => BadgeNum = FollowNum = MessageNum = AtMeNum = AtCommentMeNum = CommentMeNum = FeedLikeNum = CloudInstall = Notification = 0;
 
-        public async Task Update()
+        public async Task Update(bool notify = false)
         {
             try
             {
                 (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
                 if (!isSucceed) { return; }
-                ChangeNumber((JObject)result);
+                ChangeNumber((JObject)result, notify);
             }
             catch { Clear(); }
         }
 
-        private void ChangeNumber(JObject token)
+        private void ChangeNumber(JObject token, bool notify)
         {
             if (token != null)
             {
@@ -261,7 +261,7 @@ namespace CoolapkLite.Models
                     FeedLikeNum = feedlike.ToObject<int>();
                 }
 
-                if (increase > 0)
+                if (notify && increase > 0)
                 {
                     CreateToast(increase);
                 }
