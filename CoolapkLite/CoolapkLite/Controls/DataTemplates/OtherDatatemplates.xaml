@@ -51,7 +51,7 @@
                 TextTrimming="CharacterEllipsis">
                 <Run Text="{Binding FollowNum}" />
                 <Run Text="{Binding FansNum}" />
-                <Run Text="{Binding LoginTime}" />
+                <Run Text="{Binding LoginText}" />
             </TextBlock>
             <TextBlock
                 Grid.Row="2"

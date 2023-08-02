@@ -143,6 +143,7 @@
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
     <Compile Include="Common\ExtensionManager.cs" />
+    <Compile Include="Common\LanguageCodeResource.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
@@ -212,6 +213,7 @@
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\Controls\WebViewHelper.cs" />
     <Compile Include="Helpers\Converters\ConverterTools.cs" />
+    <Compile Include="Helpers\Converters\DateLineToReadableConverter.cs" />
     <Compile Include="Helpers\Converters\NumMultConverter.cs" />
     <Compile Include="Helpers\Converters\StringToBoolConverter.cs" />
     <Compile Include="Helpers\Converters\ZoomToolTipValueConverter.cs" />
@@ -356,7 +358,7 @@
       <DependentUpon>FeedShellPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Interfaces.cs" />
-    <Compile Include="Pages\MainPage\PivotPage.xaml.cs">
+    <Compile Include="Pages\MainPages\PivotPage.xaml.cs">
       <DependentUpon>PivotPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\BrowserPages\BrowserPage.xaml.cs">
@@ -377,7 +379,7 @@
     <Compile Include="Pages\FeedPages\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MainPage\MainPage.xaml.cs">
+    <Compile Include="Pages\MainPages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SettingsPages\SettingsPage.xaml.cs">
@@ -388,6 +390,9 @@
     </Compile>
     <Compile Include="Pages\ShowImagePage.xaml.cs">
       <DependentUpon>ShowImagePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ToolPages\FansAnalyzePage.xaml.cs">
+      <DependentUpon>FansAnalyzePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BrowserPages\BrowserViewModel.cs" />
@@ -409,6 +414,7 @@
     <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
+    <Compile Include="ViewModels\ToolPages\FansAnalyzeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -1174,7 +1180,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPage\PivotPage.xaml">
+    <Page Include="Pages\MainPages\PivotPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1202,7 +1208,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPage\MainPage.xaml">
+    <Page Include="Pages\MainPages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1215,6 +1221,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ShowImagePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ToolPages\FansAnalyzePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1340,6 +1350,10 @@
     <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Core\Microsoft.Toolkit.Uwp.UI.Controls.Core.csproj">
       <Project>{7e63fd82-2598-46e3-b38f-57613ef74b51}</Project>
       <Name>Microsoft.Toolkit.Uwp.UI.Controls.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid.csproj">
+      <Project>{f73e00d5-9b4c-42b5-8c1d-2699c108352d}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI.Controls.DataGrid</Name>
     </ProjectReference>
     <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Markdown\Microsoft.Toolkit.Uwp.UI.Controls.Markdown.csproj">
       <Project>{3a5c5c2d-2493-415c-bdeb-2b6d97ffcbee}</Project>

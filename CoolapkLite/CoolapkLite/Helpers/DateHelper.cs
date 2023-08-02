@@ -6,11 +6,12 @@ namespace CoolapkLite.Helpers
     {
         public enum TimeIntervalType
         {
+            YearsAgo,
             MonthsAgo,
             DaysAgo,
             HoursAgo,
             MinutesAgo,
-            JustNow,
+            JustNow
         }
 
         private static readonly DateTime UnixDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -28,8 +29,8 @@ namespace CoolapkLite.Helpers
 
             if (baseTime == null)
             {
-                type = TimeIntervalType.MonthsAgo;
-                obj = time;
+                type = TimeIntervalType.YearsAgo;
+                obj = time.ToLocalTime();
             }
             else
             {
@@ -37,27 +38,31 @@ namespace CoolapkLite.Helpers
 
                 if (temp.TotalDays > 30)
                 {
-                    type = TimeIntervalType.MonthsAgo;
-                    obj = time;
+                    type = temp.TotalDays > 365
+                        ? TimeIntervalType.YearsAgo
+                        : TimeIntervalType.MonthsAgo;
+                    obj = time.ToLocalTime();
                 }
                 else
                 {
-                    type =
-                        temp.Days > 0
-                            ? TimeIntervalType.DaysAgo
-                            : temp.Hours > 0
-                                ? TimeIntervalType.HoursAgo
-                                : temp.Minutes > 0
-                                    ? TimeIntervalType.MinutesAgo
-                                    : TimeIntervalType.JustNow;
+                    type = temp.Days > 0
+                        ? TimeIntervalType.DaysAgo
+                        : temp.Hours > 0
+                            ? TimeIntervalType.HoursAgo
+                            : temp.Minutes > 0
+                                ? TimeIntervalType.MinutesAgo
+                                : TimeIntervalType.JustNow;
                     obj = temp;
                 }
             }
 
             switch (type)
             {
+                case TimeIntervalType.YearsAgo:
+                    return ((DateTime)obj).ToString("D");
+
                 case TimeIntervalType.MonthsAgo:
-                    return $"{((DateTime)obj).Year}/{((DateTime)obj).Month}/{((DateTime)obj).Day}";
+                    return ((DateTime)obj).ToString("M");
 
                 case TimeIntervalType.DaysAgo:
                     return $"{((TimeSpan)obj).Days}天前";

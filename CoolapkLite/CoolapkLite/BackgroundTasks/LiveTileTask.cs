@@ -298,7 +298,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                 new AdaptiveText
                                 {
-                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                 },
 
@@ -359,7 +359,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                                 new AdaptiveText
                                                 {
-                                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                                 },
 
@@ -425,7 +425,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                 new AdaptiveText
                                 {
-                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                 },
 

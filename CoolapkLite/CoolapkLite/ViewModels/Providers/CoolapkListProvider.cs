@@ -3,7 +3,6 @@ using CoolapkLite.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +25,7 @@ namespace CoolapkLite.ViewModels.Providers
 
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
-        public async Task GetEntity(List<Entity> Models, int p = 1)
+        public async Task GetEntity<T>(ICollection<T> Models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false);
@@ -44,16 +43,18 @@ namespace CoolapkLite.ViewModels.Providers
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
 
-                    foreach (Entity i in entities)
+                    foreach (Entity entity in entities)
                     {
-                        if (i == null) { continue; }
-                        Models.Add(i);
+                        if (entity is T model)
+                        {
+                            Models.Add(model);
+                        }
                     }
                 }
             }
         }
 
-        public async Task GetEntity(Collection<Entity> Models, int p = 1)
+        public async Task GetEntity<T>(IEnumerable<T> Models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false);
@@ -71,37 +72,12 @@ namespace CoolapkLite.ViewModels.Providers
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
 
-                    foreach (Entity i in entities)
+                    foreach (Entity entity in entities)
                     {
-                        if (i == null) { continue; }
-                        Models.Add(i);
-                    }
-                }
-            }
-        }
-
-        public async Task GetEntity(IEnumerable<Entity> Models, int p = 1)
-        {
-            if (p == 1) { Clear(); }
-            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false);
-            if (result.isSucceed)
-            {
-                JArray array = (JArray)result.result;
-                if (array.Count < 1) { return; }
-                if (string.IsNullOrEmpty(_firstItem))
-                {
-                    _firstItem = RequestHelper.GetId(array.First, _idName);
-                }
-                _lastItem = RequestHelper.GetId(array.Last, _idName);
-                foreach (JObject item in array)
-                {
-                    IEnumerable<Entity> entities = GetEntities(item);
-                    if (entities == null) { continue; }
-
-                    foreach (Entity i in entities)
-                    {
-                        if (i == null) { continue; }
-                        Models = Models.Concat(new Entity[] { i });
+                        if (entity is T model)
+                        {
+                            Models.Concat(new T[] { model });
+                        }
                     }
                 }
             }

@@ -155,6 +155,7 @@
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             TextTrimming="CharacterEllipsis"
+                            ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
                             Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                             <Run Text="{Binding InfoHTML}" />
                             <Run Text="{Binding Info}" />
@@ -172,6 +173,7 @@
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             TextTrimming="CharacterEllipsis"
+                            ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
                             Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}">
                             <Run Text="{Binding Dateline}" />
                             <Run Text="{Binding Info}" />
@@ -641,7 +643,8 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                        Text="{Binding Dateline}" />
+                        Text="{Binding Dateline}"
+                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                 </StackPanel>
                 <controls:TextBlockEx
                     x:Name="Message"
@@ -769,7 +772,8 @@
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding Dateline}" />
+                                Text="{Binding Dateline}"
+                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                             <TextBlock
                                 Margin="2,0,0,0"
                                 HorizontalAlignment="Left"

@@ -2,6 +2,7 @@
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
@@ -54,6 +55,7 @@ namespace CoolapkLite.Models.Feeds
         public string FeedType { get; private set; } = "feed";
 
         public ImageModel Pic { get; private set; }
+        public DateTime DateTime { get; private set; }
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
 
@@ -138,6 +140,7 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("dateline", out JToken dateline))
             {
                 Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                DateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime().ToLocalTime();
             }
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)

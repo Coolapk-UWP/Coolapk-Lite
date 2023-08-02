@@ -3,7 +3,9 @@ using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.Pages.ToolPages;
 using CoolapkLite.ViewModels.BrowserPages;
+using CoolapkLite.ViewModels.ToolPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -256,18 +258,18 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "HideProgressBar":
                     UIHelper.HideProgressBar();
                     break;
-                case "GoToExtensionPage":
-                    if (ExtensionManager.IsSupported)
-                    {
-                        _ = Frame.Navigate(typeof(ExtensionPage));
-                    }
-                    break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();
                     break;
                 case "OpenCharmSearch":
                     if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
                     { SearchPane.GetForCurrentView().Show(); }
+                    break;
+                case "GoToExtensionPage":
+                    if (ExtensionManager.IsSupported)
+                    {
+                        _ = Frame.Navigate(typeof(ExtensionPage));
+                    }
                     break;
                 case "OpenCharmSettings":
                     if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
@@ -276,7 +278,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "PausedProgressBar":
                     UIHelper.PausedProgressBar();
                     break;
-                case "PrograssRingState":
+                case "ProgressRingState":
                     if (UIHelper.IsShowingProgressBar)
                     {
                         UIHelper.HideProgressBar();
@@ -285,6 +287,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         UIHelper.ShowProgressBar();
                     }
+                    break;
+                case "GoToFansAnalyzePage":
+                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("1122745", Dispatcher));
                     break;
                 default:
                     break;

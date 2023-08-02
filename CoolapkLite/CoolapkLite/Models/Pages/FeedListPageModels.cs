@@ -103,7 +103,7 @@ namespace CoolapkLite.Models.Pages
         public string Astro { get; private set; }
         public string Gender { get; private set; }
         public string UserName { get; private set; }
-        public string LoginTime { get; private set; }
+        public string LoginText { get; private set; }
         public string BlockStatus { get; private set; }
         public string VerifyTitle { get; private set; }
 
@@ -194,7 +194,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("logintime", out JToken logintime))
             {
-                LoginTime = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
+                LoginText = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
             }
 
             if (token.TryGetValue("block_status", out JToken block_status))

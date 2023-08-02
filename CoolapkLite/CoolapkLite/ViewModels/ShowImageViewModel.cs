@@ -21,7 +21,6 @@ namespace CoolapkLite.ViewModels
     public class ShowImageViewModel : IViewModel
     {
         private string ImageName = string.Empty;
-        public double[] VerticalOffsets { get; set; } = new double[1];
 
         public CoreDispatcher Dispatcher { get; }
 

@@ -69,7 +69,7 @@ namespace CoolapkLite.Models
         string Bio { get; }
         string Url { get; }
         string UserName { get; }
-        string LoginTime { get; }
+        string LoginText { get; }
 
         ImageModel Cover { get; }
         ImageModel UserAvatar { get; }

@@ -10,6 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <common:AccentColorResource />
                 <common:CustomBrushResource />
+                <common:LanguageCodeResource />
                 <ResourceDictionary Source="ms-appx:///Themes/CustomStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

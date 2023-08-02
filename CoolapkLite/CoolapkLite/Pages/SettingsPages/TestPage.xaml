@@ -27,7 +27,7 @@
                             <Button
                                 Click="Button_Click"
                                 Content="切换进度条状态"
-                                Tag="PrograssRingState" />
+                                Tag="ProgressRingState" />
                         </control:StackPanel>
                         <control:StackPanel Orientation="Horizontal" Spacing="4">
                             <Button
@@ -170,6 +170,10 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
+                    <Button
+                        Click="Button_Click"
+                        Content="前往粉丝分析页面"
+                        Tag="GoToFansAnalyzePage" />
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="文本测试">
                     <TextBox
