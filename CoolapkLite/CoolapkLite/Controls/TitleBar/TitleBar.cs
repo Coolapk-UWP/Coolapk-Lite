@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Markup;
 
 namespace CoolapkLite.Controls
 {
-    [ContentProperty(Name = "CustomContent")]
+    [ContentProperty(Name = nameof(CustomContent))]
     [TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
     [TemplatePart(Name = "TitleText", Type = typeof(TextBlock))]
     [TemplatePart(Name = "CustomContentPresenter", Type = typeof(FrameworkElement))]

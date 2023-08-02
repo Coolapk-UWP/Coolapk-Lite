@@ -4,9 +4,11 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
+using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.ComponentModel;
@@ -163,6 +165,9 @@ namespace CoolapkLite.Pages.FeedPages
                     break;
                 case "FollowsButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
+                    break;
+                case "AnalyzeButton":
+                    _ = this.NavigateAsync(typeof(FansAnalyzePage), new FansAnalyzeViewModel(element.Tag.ToString(), Dispatcher));
                     break;
                 default:
                     break;

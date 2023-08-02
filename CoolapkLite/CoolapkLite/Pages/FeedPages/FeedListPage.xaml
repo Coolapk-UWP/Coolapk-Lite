@@ -92,6 +92,15 @@
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyoutSubItem>
+                            <MenuFlyoutItem
+                                x:Name="AnalyzeButton"
+                                Click="Button_Click"
+                                Tag="{Binding UID}"
+                                Text="查看粉丝分析">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
                     <Grid

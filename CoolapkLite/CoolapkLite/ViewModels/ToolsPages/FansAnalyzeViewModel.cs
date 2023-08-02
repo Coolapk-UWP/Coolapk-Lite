@@ -10,9 +10,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Core;
 
-namespace CoolapkLite.ViewModels.ToolPages
+namespace CoolapkLite.ViewModels.ToolsPages
 {
     public class FansAnalyzeViewModel : IViewModel
     {
@@ -38,8 +39,21 @@ namespace CoolapkLite.ViewModels.ToolPages
             }
         }
 
+        private List<Point> orderedPointList = new List<Point>();
+        public List<Point> OrderedPointList
+        {
+            get => orderedPointList;
+            set
+            {
+                if (orderedPointList != value)
+                {
+                    orderedPointList = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
 
-private ObservableCollection<ContactModel> filteredContactModel = new ObservableCollection<ContactModel>();
+        private ObservableCollection<ContactModel> filteredContactModel = new ObservableCollection<ContactModel>();
         public ObservableCollection<ContactModel> FilteredContactModel
         {
             get => filteredContactModel;
@@ -84,13 +98,19 @@ private ObservableCollection<ContactModel> filteredContactModel = new Observable
                 "fuid");
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is FansAnalyzeViewModel model && IsEqual(model);
+
+        public bool IsEqual(FansAnalyzeViewModel other) => !string.IsNullOrWhiteSpace(ID) ? ID == other.ID : Provider == other.Provider;
+
         public async Task Refresh(bool reset)
         {
             UIHelper.ShowProgressBar();
             if (reset)
             {
+                OrderedPointList.Clear();
                 Title = (await NetworkHelper.GetUserInfoByNameAsync(ID)).UserName + "的粉丝分析";
                 await GetContactModels();
+                await GetOrderedPointList();
             }
             FilteredContactModel = new ObservableCollection<ContactModel>(ContactModels);
             UIHelper.HideProgressBar();
@@ -107,6 +127,24 @@ private ObservableCollection<ContactModel> filteredContactModel = new Observable
                 if (ContactModels.Count <= 0 || ContactModels.Count <= temp) { break; }
                 page++;
             }
+        }
+
+        private async Task GetOrderedPointList()
+        {
+            await ThreadSwitcher.ResumeBackgroundAsync();
+            OrderedPointList.Clear();
+            IOrderedEnumerable<ContactModel> FanListByDate = ContactModels.OrderBy(item => item.DateLine);
+            int temp = FanListByDate.FirstOrDefault().DateLine, num = 0;
+            foreach (ContactModel contact in FanListByDate)
+            {
+                if (temp != contact.DateLine)
+                {
+                    OrderedPointList.Add(new Point { X = temp, Y = num });
+                    temp = contact.DateLine;
+                }
+                num++;
+            }
+            OrderedPointList.Add(new Point { X = temp, Y = num });
         }
 
         public async Task SortData(string sortBy, bool ascending)
@@ -175,11 +213,6 @@ private ObservableCollection<ContactModel> filteredContactModel = new Observable
             {
                 UIHelper.HideProgressBar();
             }
-        }
-
-        public bool IsEqual(IViewModel other)
-        {
-            throw new NotImplementedException();
         }
     }
 }

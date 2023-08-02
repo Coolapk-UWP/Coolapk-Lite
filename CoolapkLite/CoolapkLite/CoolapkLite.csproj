@@ -181,6 +181,9 @@
       <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
+    <Compile Include="Controls\PolylineView\PolylineView.cs" />
+    <Compile Include="Controls\PolylineView\PolylineView.Properties.cs" />
+    <Compile Include="Controls\PolylineView\PolylineViewTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\QRCode.cs">
       <DependentUpon>QRCode.xaml</DependentUpon>
     </Compile>
@@ -391,7 +394,7 @@
     <Compile Include="Pages\ShowImagePage.xaml.cs">
       <DependentUpon>ShowImagePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ToolPages\FansAnalyzePage.xaml.cs">
+    <Compile Include="Pages\ToolsPages\FansAnalyzePage.xaml.cs">
       <DependentUpon>FansAnalyzePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -414,7 +417,7 @@
     <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
-    <Compile Include="ViewModels\ToolPages\FansAnalyzeViewModel.cs" />
+    <Compile Include="ViewModels\ToolsPages\FansAnalyzeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -1068,6 +1071,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\PolylineView\PolylineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\QRCode\QRCode.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1224,7 +1231,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\ToolPages\FansAnalyzePage.xaml">
+    <Page Include="Pages\ToolsPages\FansAnalyzePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

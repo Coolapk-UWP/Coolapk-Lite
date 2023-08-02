@@ -1,13 +1,17 @@
 ﻿using CoolapkLite.Controls;
-using CoolapkLite.ViewModels.ToolPages;
+using CoolapkLite.Helpers.Converters;
+using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace CoolapkLite.Pages.ToolPages
+namespace CoolapkLite.Pages.ToolsPages
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
@@ -21,7 +25,8 @@ namespace CoolapkLite.Pages.ToolPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is FansAnalyzeViewModel ViewModel)
+            if (e.Parameter is FansAnalyzeViewModel ViewModel
+                && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
                 DataContext = Provider;
@@ -83,5 +88,20 @@ namespace CoolapkLite.Pages.ToolPages
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Refresh(true);
+    }
+
+    public class IndexToBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            bool result = System.Convert.ToInt32(value) < 1 ^ ConverterTools.TryParseBool(parameter);
+            return ConverterTools.Convert(result, targetType);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            int result = System.Convert.ToBoolean(value) ^ ConverterTools.TryParseBool(parameter) ? 0 : 1;
+            return ConverterTools.Convert(result, targetType);
+        }
     }
 }
