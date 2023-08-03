@@ -183,8 +183,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
                 // Add the bindings of the child element and push its children onto the stack of remaining elements to search
                 if (searchChild)
                 {
-                    FrameworkElement childElement = child as FrameworkElement;
-                    if (childElement != null)
+                    if (child is FrameworkElement childElement)
                     {
                         dataContext = childElement.DataContext ?? inheritedDataContext;
                         bindingData.AddRange(childElement.GetBindingInfoOfSingleElement(inheritedDataContext, dataItem, twoWayOnly, useBlockList));
@@ -281,17 +280,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
                     (!twoWayOnly || bindingExpression.ParentBinding.Mode == BindingMode.TwoWay) &&
                     bindingExpression.ParentBinding.Source == null)
                 {
-                    object dataContext;
-                    if (bindingTarget == FrameworkElement.DataContextProperty
-                        || (element is ContentPresenter && bindingTarget == ContentPresenter.ContentProperty))
-                    {
-                        dataContext = inheritedDataContext;
-                    }
-                    else
-                    {
-                        dataContext = element.DataContext ?? inheritedDataContext;
-                    }
-
+                    object dataContext = bindingTarget == FrameworkElement.DataContextProperty
+                        || (element is ContentPresenter && bindingTarget == ContentPresenter.ContentProperty)
+                        ? inheritedDataContext
+                        : element.DataContext ?? inheritedDataContext;
                     if (dataItem == dataContext)
                     {
                         bindingData.Add(new BindingInfo(bindingExpression, bindingTarget, element));

@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Automation.Provider;
@@ -32,12 +32,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             get
             {
                 AutomationPeer peer = CreatePeerForElement(this.OwningGrid);
-                if (peer != null)
-                {
-                    return ProviderFromPeer(peer);
-                }
-
-                return null;
+                return peer != null ? ProviderFromPeer(peer) : null;
             }
         }
 
@@ -120,14 +115,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The string that contains the name.</returns>
         protected override string GetNameCore()
         {
-            TextBlock textBlock = this.OwningCell.Content as TextBlock;
-            if (textBlock != null)
+            if (this.OwningCell.Content is TextBlock textBlock)
             {
                 return textBlock.Text;
             }
 
-            TextBox textBox = this.OwningCell.Content as TextBox;
-            if (textBox != null)
+            if (this.OwningCell.Content is TextBox textBox)
             {
                 return textBox.Text;
             }
@@ -135,8 +128,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             if (this.OwningColumn != null && this.OwningRow != null)
             {
                 object cellContent = null;
-                DataGridBoundColumn boundColumn = this.OwningColumn as DataGridBoundColumn;
-                if (boundColumn != null && boundColumn.Binding != null)
+                if (this.OwningColumn is DataGridBoundColumn boundColumn && boundColumn.Binding != null)
                 {
                     cellContent = boundColumn.GetCellValue(this.OwningRow.DataContext, boundColumn.Binding);
                 }
@@ -171,27 +163,27 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 switch (patternInterface)
                 {
                     case PatternInterface.Invoke:
-                    {
-                        if (!this.OwningGrid.IsReadOnly &&
-                            this.OwningColumn != null &&
-                            !this.OwningColumn.IsReadOnly)
                         {
-                            return this;
-                        }
+                            if (!this.OwningGrid.IsReadOnly &&
+                                this.OwningColumn != null &&
+                                !this.OwningColumn.IsReadOnly)
+                            {
+                                return this;
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case PatternInterface.ScrollItem:
-                    {
-                        if (this.OwningGrid.HorizontalScrollBar != null &&
-                            this.OwningGrid.HorizontalScrollBar.Maximum > 0)
                         {
-                            return this;
-                        }
+                            if (this.OwningGrid.HorizontalScrollBar != null &&
+                                this.OwningGrid.HorizontalScrollBar.Maximum > 0)
+                            {
+                                return this;
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
 
                     case PatternInterface.GridItem:
                     case PatternInterface.SelectionItem:
@@ -296,12 +288,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (this.OwningGrid != null && this.OwningRow != null)
-                {
-                    return this.OwningRow.IsSelected;
-                }
-
-                throw DataGridError.DataGridAutomationPeer.OperationCannotBePerformed();
+                return this.OwningGrid != null && this.OwningRow != null
+                    ? this.OwningRow.IsSelected
+                    : throw DataGridError.DataGridAutomationPeer.OperationCannotBePerformed();
             }
         }
 
@@ -310,12 +299,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             get
             {
                 AutomationPeer peer = CreatePeerForElement(this.OwningRow);
-                if (peer != null)
-                {
-                    return ProviderFromPeer(peer);
-                }
-
-                return null;
+                return peer != null ? ProviderFromPeer(peer) : null;
             }
         }
 
@@ -365,8 +349,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 AutomationPeer peer = CreatePeerForElement(this.OwningColumn.HeaderCell);
                 if (peer != null)
                 {
-                    List<IRawElementProviderSimple> providers = new List<IRawElementProviderSimple>(1);
-                    providers.Add(ProviderFromPeer(peer));
+                    List<IRawElementProviderSimple> providers = new List<IRawElementProviderSimple>(1)
+                    {
+                        ProviderFromPeer(peer)
+                    };
                     return providers.ToArray();
                 }
             }
@@ -383,8 +369,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 AutomationPeer peer = CreatePeerForElement(this.OwningRow.HeaderCell);
                 if (peer != null)
                 {
-                    List<IRawElementProviderSimple> providers = new List<IRawElementProviderSimple>(1);
-                    providers.Add(ProviderFromPeer(peer));
+                    List<IRawElementProviderSimple> providers = new List<IRawElementProviderSimple>(1)
+                    {
+                        ProviderFromPeer(peer)
+                    };
                     return providers.ToArray();
                 }
             }

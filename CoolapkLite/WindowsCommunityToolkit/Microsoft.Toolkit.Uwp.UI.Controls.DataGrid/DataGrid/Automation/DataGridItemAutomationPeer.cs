@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
+using System;
+using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
@@ -19,8 +19,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
     public class DataGridItemAutomationPeer : FrameworkElementAutomationPeer,
         IInvokeProvider, IScrollItemProvider, ISelectionItemProvider, ISelectionProvider
     {
-        private object _item;
-        private AutomationPeer _dataGridAutomationPeer;
+        private readonly object _item;
+        private readonly AutomationPeer _dataGridAutomationPeer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataGridItemAutomationPeer"/> class.
@@ -28,17 +28,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         public DataGridItemAutomationPeer(object item, DataGrid dataGrid)
             : base(dataGrid)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
-
             if (dataGrid == null)
             {
                 throw new ArgumentNullException("dataGrid");
             }
 
-            _item = item;
+            _item = item ?? throw new ArgumentNullException("item");
             _dataGridAutomationPeer = FrameworkElementAutomationPeer.CreatePeerForElement(dataGrid);
         }
 
@@ -58,12 +53,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 int index = this.OwningDataGrid.DataConnection.IndexOf(_item);
                 int slot = this.OwningDataGrid.SlotFromRowIndex(index);
 
-                if (this.OwningDataGrid.IsSlotVisible(slot))
-                {
-                    return this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) as DataGridRow;
-                }
-
-                return null;
+                return this.OwningDataGrid.IsSlotVisible(slot) ? this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) as DataGridRow : null;
             }
         }
 
@@ -125,7 +115,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The Rect that represents the bounding rectangle of the UIElement that is associated with this DataGridItemAutomationPeer.</returns>
         protected override Rect GetBoundingRectangleCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.GetBoundingRectangle() : default(Rect);
+            return this.OwningRowPeer != null ? this.OwningRowPeer.GetBoundingRectangle() : default;
         }
 
         /// <summary>
@@ -200,7 +190,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The AutomationPeer for the element that is targeted to the UIElement for this DataGridItemAutomationPeer.</returns>
         protected override AutomationPeer GetLabeledByCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.GetLabeledBy() : null;
+            return this.OwningRowPeer?.GetLabeledBy();
         }
 
         /// <summary>
@@ -284,7 +274,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element is focusable by the keyboard; otherwise false.</returns>
         protected override bool HasKeyboardFocusCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.HasKeyboardFocus() : false;
+            return this.OwningRowPeer != null && this.OwningRowPeer.HasKeyboardFocus();
         }
 
         /// <summary>
@@ -293,7 +283,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element contains data for the user to read; otherwise, false.</returns>
         protected override bool IsContentElementCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsContentElement() : true;
+            return this.OwningRowPeer == null || this.OwningRowPeer.IsContentElement();
         }
 
         /// <summary>
@@ -304,7 +294,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// is understood by the end user as interactive.</returns>
         protected override bool IsControlElementCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsControlElement() : true;
+            return this.OwningRowPeer == null || this.OwningRowPeer.IsControlElement();
         }
 
         /// <summary>
@@ -313,7 +303,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if this DataGridItemAutomationPeer can receive and send events; otherwise, false.</returns>
         protected override bool IsEnabledCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsEnabled() : false;
+            return this.OwningRowPeer != null && this.OwningRowPeer.IsEnabled();
         }
 
         /// <summary>
@@ -322,7 +312,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement associated with this DataGridItemAutomationPeer can accept keyboard focus.</returns>
         protected override bool IsKeyboardFocusableCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsKeyboardFocusable() : false;
+            return this.OwningRowPeer != null && this.OwningRowPeer.IsKeyboardFocusable();
         }
 
         /// <summary>
@@ -331,7 +321,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element is not on the screen; otherwise, false.</returns>
         protected override bool IsOffscreenCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsOffscreen() : true;
+            return this.OwningRowPeer == null || this.OwningRowPeer.IsOffscreen();
         }
 
         /// <summary>
@@ -340,7 +330,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement contains protected content.</returns>
         protected override bool IsPasswordCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsPassword() : false;
+            return this.OwningRowPeer != null && this.OwningRowPeer.IsPassword();
         }
 
         /// <summary>
@@ -349,7 +339,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement is required to be completed on a form.</returns>
         protected override bool IsRequiredForFormCore()
         {
-            return this.OwningRowPeer != null ? this.OwningRowPeer.IsRequiredForForm() : false;
+            return this.OwningRowPeer != null && this.OwningRowPeer.IsRequiredForForm();
         }
 
         /// <summary>
@@ -357,10 +347,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// </summary>
         protected override void SetFocusCore()
         {
-            if (this.OwningRowPeer != null)
-            {
-                this.OwningRowPeer.SetFocus();
-            }
+            this.OwningRowPeer?.SetFocus();
         }
 
         void IInvokeProvider.Invoke()

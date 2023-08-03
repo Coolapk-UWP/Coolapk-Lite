@@ -307,7 +307,7 @@ namespace CoolapkLite.Models
                 .AddArgument("action", "hasNotification")
                 .AddText($"新增 {increase} 个未读通知")
                 .AddText($"共有 {BadgeNum} 个未读消息")
-                .AddText(string.Join("，",builder))
+                .AddText(string.Join("，", builder))
                 .AddButton(new ToastButton()
                     .SetContent("查看")
                     .SetProtocolActivation(new Uri("coolapk://notifications")))

@@ -2,13 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Toolkit.Uwp.Utilities;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -18,11 +18,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
 {
     internal static class Extensions
     {
-        private static Dictionary<DependencyObject, Dictionary<DependencyProperty, int>> _suspendedHandlers = new Dictionary<DependencyObject, Dictionary<DependencyProperty, int>>();
+        private static readonly Dictionary<DependencyObject, Dictionary<DependencyProperty, int>> _suspendedHandlers = new Dictionary<DependencyObject, Dictionary<DependencyProperty, int>>();
 
         public static bool IsHandlerSuspended(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
-            return _suspendedHandlers.ContainsKey(dependencyObject) ? _suspendedHandlers[dependencyObject].ContainsKey(dependencyProperty) : false;
+            return _suspendedHandlers.ContainsKey(dependencyObject) && _suspendedHandlers[dependencyObject].ContainsKey(dependencyProperty);
         }
 
         /// <summary>
@@ -48,8 +48,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
                     DependencyObject parent = VisualTreeHelper.GetParent(child);
                     if (parent == null)
                     {
-                        FrameworkElement childElement = child as FrameworkElement;
-                        if (childElement != null)
+                        if (child is FrameworkElement childElement)
                         {
                             parent = childElement.Parent;
                         }
@@ -72,19 +71,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
         /// <returns>True if the currently focused element is within the visual tree of the parent</returns>
         internal static bool ContainsFocusedElement(this DependencyObject element, UIElement uiElement)
         {
-            return (element == null) ? false : element.ContainsChild(GetFocusedElement(uiElement) as DependencyObject);
+            return element != null && element.ContainsChild(GetFocusedElement(uiElement) as DependencyObject);
         }
 
         private static object GetFocusedElement(UIElement uiElement)
         {
-            if (TypeHelper.IsXamlRootAvailable && uiElement.XamlRoot != null)
-            {
-                return FocusManager.GetFocusedElement(uiElement.XamlRoot);
-            }
-            else
-            {
-                return FocusManager.GetFocusedElement();
-            }
+            return TypeHelper.IsXamlRootAvailable && uiElement.XamlRoot != null
+                ? FocusManager.GetFocusedElement(uiElement.XamlRoot)
+                : FocusManager.GetFocusedElement();
         }
 
         /// <summary>
@@ -158,12 +152,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
             }
 
             // Couldn't get the CustomType because there were no items.
-            if (isICustomTypeProvider)
-            {
-                return null;
-            }
-
-            return itemType;
+            return isICustomTypeProvider ? null : itemType;
         }
 
         public static void SetStyleWithType(this FrameworkElement element, Style style)
@@ -189,14 +178,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
 
         internal static Point Translate(this UIElement fromElement, UIElement toElement, Point fromPoint)
         {
-            if (fromElement == toElement)
-            {
-                return fromPoint;
-            }
-            else
-            {
-                return fromElement.TransformToVisual(toElement).TransformPoint(fromPoint);
-            }
+            return fromElement == toElement ? fromPoint : fromElement.TransformToVisual(toElement).TransformPoint(fromPoint);
         }
 
         // If the parent element goes into a background tab, the elements need to be remeasured
@@ -249,8 +231,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Utilities
             else
             {
                 Debug.Assert(incrementSuspensionCount, "Expected incrementSuspensionCount==true.");
-                _suspendedHandlers[obj] = new Dictionary<DependencyProperty, int>();
-                _suspendedHandlers[obj][dependencyProperty] = 1;
+                _suspendedHandlers[obj] = new Dictionary<DependencyProperty, int>
+                {
+                    [dependencyProperty] = 1
+                };
             }
         }
     }

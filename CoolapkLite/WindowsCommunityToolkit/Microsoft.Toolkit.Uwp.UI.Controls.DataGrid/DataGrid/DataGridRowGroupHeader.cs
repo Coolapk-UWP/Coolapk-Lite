@@ -2,15 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Diagnostics;
-using System.Globalization;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Primitives;
 using Microsoft.Toolkit.Uwp.UI.Controls.Utilities;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Globalization;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
@@ -20,7 +19,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -96,10 +94,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private static void OnHeaderStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             DataGridRowGroupHeader groupHeader = d as DataGridRowGroupHeader;
-            if (groupHeader.HeaderElement != null)
-            {
-                groupHeader.HeaderElement.EnsureStyle(e.OldValue as Style);
-            }
+            groupHeader.HeaderElement?.EnsureStyle(e.OldValue as Style);
         }
 
         /// <summary>
@@ -248,10 +243,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw DataGridError.DataGrid.ValueMustBeGreaterThanOrEqualTo("value", "SublevelIndent", 0);
             }
 
-            if (groupHeader.OwningGrid != null)
-            {
-                groupHeader.OwningGrid.OnSublevelIndentUpdated(groupHeader, newValue);
-            }
+            groupHeader.OwningGrid?.OnSublevelIndentUpdated(groupHeader, newValue);
         }
 
         /// <summary>
@@ -261,7 +253,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return this.RowGroupInfo == null ? null : this.RowGroupInfo.CollectionViewGroup;
+                return this.RowGroupInfo?.CollectionViewGroup;
             }
         }
 
@@ -418,10 +410,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     {
                         if (DataGridFrozenGrid.GetIsFrozen(child) && child.Visibility == Visibility.Visible)
                         {
-                            TranslateTransform transform = new TranslateTransform();
-
-                            // Automatic layout rounding doesn't apply to transforms so we need to Round this
-                            transform.X = Math.Round(this.OwningGrid.HorizontalOffset);
+                            TranslateTransform transform = new TranslateTransform
+                            {
+                                // Automatic layout rounding doesn't apply to transforms so we need to Round this
+                                X = Math.Round(this.OwningGrid.HorizontalOffset)
+                            };
                             child.RenderTransform = transform;
 
                             double childLeftEdge = child.Translate(this, new Point(child.RenderSize.Width, 0)).X - transform.X;
@@ -483,8 +476,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             if (frozenLeftEdge > childLeftEdge)
             {
                 double xClip = Math.Round(frozenLeftEdge - childLeftEdge);
-                RectangleGeometry rg = new RectangleGeometry();
-                rg.Rect = new Rect(xClip, 0, Math.Max(0, child.RenderSize.Width - xClip), child.RenderSize.Height);
+                RectangleGeometry rg = new RectangleGeometry
+                {
+                    Rect = new Rect(xClip, 0, Math.Max(0, child.RenderSize.Width - xClip), child.RenderSize.Height)
+                };
                 child.Clip = rg;
             }
             else

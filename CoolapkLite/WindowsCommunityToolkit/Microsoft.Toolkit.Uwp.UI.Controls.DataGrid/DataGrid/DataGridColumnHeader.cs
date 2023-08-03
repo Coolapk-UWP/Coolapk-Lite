@@ -2,13 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Utilities;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -19,7 +18,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
@@ -130,12 +128,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         {
             get
             {
-                if (this.OwningColumn == null)
-                {
-                    return -1;
-                }
-
-                return this.OwningColumn.Index;
+                return this.OwningColumn == null ? -1 : this.OwningColumn.Index;
             }
         }
 
@@ -151,12 +144,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         {
             get
             {
-                if (this.OwningColumn != null && this.OwningColumn.OwningGrid != null)
-                {
-                    return this.OwningColumn.OwningGrid;
-                }
-
-                return null;
+                return this.OwningColumn != null && this.OwningColumn.OwningGrid != null ? this.OwningColumn.OwningGrid : null;
             }
         }
 
@@ -222,12 +210,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         /// <returns>An automation peer for this <see cref="DataGridColumnHeader"/>.</returns>
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            if (this.OwningGrid != null && this.OwningColumn != this.OwningGrid.ColumnsInternal.FillerColumn)
-            {
-                return new DataGridColumnHeaderAutomationPeer(this);
-            }
-
-            return base.OnCreateAutomationPeer();
+            return this.OwningGrid != null && this.OwningColumn != this.OwningGrid.ColumnsInternal.FillerColumn
+                ? new DataGridColumnHeaderAutomationPeer(this)
+                : base.OnCreateAutomationPeer();
         }
 
         internal void ApplyState(bool useTransitions)
@@ -471,13 +456,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         /// <returns>Whether or not the column can be resized by dragging its header.</returns>
         private static bool CanResizeColumn(DataGridColumn column)
         {
-            if (column.OwningGrid != null && column.OwningGrid.ColumnsInternal != null && column.OwningGrid.UsesStarSizing &&
-                (column.OwningGrid.ColumnsInternal.LastVisibleColumn == column || !DoubleUtil.AreClose(column.OwningGrid.ColumnsInternal.VisibleEdgedColumnsWidth, column.OwningGrid.CellsWidth)))
-            {
-                return false;
-            }
-
-            return column.ActualCanUserResize;
+            return (column.OwningGrid == null || column.OwningGrid.ColumnsInternal == null || !column.OwningGrid.UsesStarSizing ||
+                (column.OwningGrid.ColumnsInternal.LastVisibleColumn != column && DoubleUtil.AreClose(column.OwningGrid.ColumnsInternal.VisibleEdgedColumnsWidth, column.OwningGrid.CellsWidth)))
+&& column.ActualCanUserResize;
         }
 
         private bool TrySetResizeColumn(uint pointerId, DataGridColumn column)
@@ -628,14 +609,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             {
                 Point pointerPosition = pointerPoint.Position;
 
-                if (this.CapturePointer(e.Pointer))
-                {
-                    interactionInfo.CapturedPointer = e.Pointer;
-                }
-                else
-                {
-                    interactionInfo.CapturedPointer = null;
-                }
+                interactionInfo.CapturedPointer = this.CapturePointer(e.Pointer) ? e.Pointer : null;
 
                 DiagnosticsDebug.Assert(interactionInfo.DragMode == DragMode.None, "Expected _dragMode equals None.");
                 DiagnosticsDebug.Assert(interactionInfo.DragColumn == null, "Expected _dragColumn is null.");
@@ -711,37 +685,37 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 switch (interactionInfo.DragMode)
                 {
                     case DragMode.PointerPressed:
-                    {
-                        // Completed a click or tap without dragging, so raise the DataGrid.Sorting event.
-                        InvokeProcessSort();
-                        break;
-                    }
-
-                    case DragMode.Reorder:
-                    {
-                        // Find header hovered over
-                        int targetIndex = this.GetReorderingTargetDisplayIndex(pointerPositionHeaders);
-
-                        if ((!this.OwningColumn.IsFrozen && targetIndex >= this.OwningGrid.FrozenColumnCount) ||
-                            (this.OwningColumn.IsFrozen && targetIndex < this.OwningGrid.FrozenColumnCount))
                         {
-                            this.OwningColumn.DisplayIndex = targetIndex;
-
-                            DataGridColumnEventArgs ea = new DataGridColumnEventArgs(this.OwningColumn);
-                            this.OwningGrid.OnColumnReordered(ea);
+                            // Completed a click or tap without dragging, so raise the DataGrid.Sorting event.
+                            InvokeProcessSort();
+                            break;
                         }
 
-                        DragCompletedEventArgs dragCompletedEventArgs = new DragCompletedEventArgs(pointerPosition.X - interactionInfo.DragStart.Value.X, pointerPosition.Y - interactionInfo.DragStart.Value.Y, false);
-                        this.OwningGrid.OnColumnHeaderDragCompleted(dragCompletedEventArgs);
-                        break;
-                    }
+                    case DragMode.Reorder:
+                        {
+                            // Find header hovered over
+                            int targetIndex = this.GetReorderingTargetDisplayIndex(pointerPositionHeaders);
+
+                            if ((!this.OwningColumn.IsFrozen && targetIndex >= this.OwningGrid.FrozenColumnCount) ||
+                                (this.OwningColumn.IsFrozen && targetIndex < this.OwningGrid.FrozenColumnCount))
+                            {
+                                this.OwningColumn.DisplayIndex = targetIndex;
+
+                                DataGridColumnEventArgs ea = new DataGridColumnEventArgs(this.OwningColumn);
+                                this.OwningGrid.OnColumnReordered(ea);
+                            }
+
+                            DragCompletedEventArgs dragCompletedEventArgs = new DragCompletedEventArgs(pointerPosition.X - interactionInfo.DragStart.Value.X, pointerPosition.Y - interactionInfo.DragStart.Value.Y, false);
+                            this.OwningGrid.OnColumnHeaderDragCompleted(dragCompletedEventArgs);
+                            break;
+                        }
 
                     case DragMode.Drag:
-                    {
-                        DragCompletedEventArgs dragCompletedEventArgs = new DragCompletedEventArgs(0, 0, false);
-                        this.OwningGrid.OnColumnHeaderDragCompleted(dragCompletedEventArgs);
-                        break;
-                    }
+                        {
+                            DragCompletedEventArgs dragCompletedEventArgs = new DragCompletedEventArgs(0, 0, false);
+                            this.OwningGrid.OnColumnHeaderDragCompleted(dragCompletedEventArgs);
+                            break;
+                        }
                 }
 
                 SetResizeCursor(e.Pointer, pointerPosition);
@@ -899,25 +873,22 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             DiagnosticsDebug.Assert(this.OwningGrid != null, "Expected non-null OwningGrid.");
 
             DataGridColumn targetColumn = GetReorderingTargetColumn(pointerPositionHeaders, false /*scroll*/, out _);
-            if (targetColumn != null)
-            {
-                return targetColumn.DisplayIndex > this.OwningColumn.DisplayIndex ? targetColumn.DisplayIndex - 1 : targetColumn.DisplayIndex;
-            }
-            else
-            {
-                return this.OwningGrid.Columns.Count - 1;
-            }
+            return targetColumn != null
+                ? targetColumn.DisplayIndex > this.OwningColumn.DisplayIndex ? targetColumn.DisplayIndex - 1 : targetColumn.DisplayIndex
+                : this.OwningGrid.Columns.Count - 1;
         }
 
         private void OnPointerMove_BeginReorder(uint pointerId, Point pointerPosition)
         {
             DiagnosticsDebug.Assert(this.OwningGrid != null, "Expected non-null OwningGrid.");
 
-            DataGridColumnHeader dragIndicator = new DataGridColumnHeader();
-            dragIndicator.OwningColumn = this.OwningColumn;
-            dragIndicator.IsEnabled = false;
-            dragIndicator.Content = this.Content;
-            dragIndicator.ContentTemplate = this.ContentTemplate;
+            DataGridColumnHeader dragIndicator = new DataGridColumnHeader
+            {
+                OwningColumn = this.OwningColumn,
+                IsEnabled = false,
+                Content = this.Content,
+                ContentTemplate = this.ContentTemplate
+            };
 
             Control dropLocationIndicator = new ContentControl();
             dropLocationIndicator.SetStyleWithType(this.OwningGrid.DropLocationIndicatorStyle);
@@ -1009,7 +980,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 this.OwningGrid.OnColumnHeaderDragDelta(dragDeltaEventArgs);
 
                 // Find header we're hovering over
-                DataGridColumn targetColumn = GetReorderingTargetColumn(pointerPositionHeaders, !this.OwningColumn.IsFrozen /*scroll*/, out var scrollAmount);
+                DataGridColumn targetColumn = GetReorderingTargetColumn(pointerPositionHeaders, !this.OwningColumn.IsFrozen /*scroll*/, out double scrollAmount);
 
                 this.OwningGrid.ColumnHeaders.DragIndicatorOffset = pointerPosition.X - interactionInfo.DragStart.Value.X + scrollAmount;
                 this.OwningGrid.ColumnHeaders.InvalidateArrange();

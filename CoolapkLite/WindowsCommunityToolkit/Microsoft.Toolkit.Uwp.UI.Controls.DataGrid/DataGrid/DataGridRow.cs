@@ -2,15 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Diagnostics;
-using System.Reflection;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Primitives;
 using Microsoft.Toolkit.Uwp.UI.Controls.Utilities;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Reflection;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -19,7 +18,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -87,7 +85,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private const byte DATAGRIDROW_stateNullCode = 255;
 
         // Static arrays to handle state transitions:
-        private static byte[] _idealStateMapping = new byte[]
+        private static readonly byte[] _idealStateMapping = new byte[]
         {
             DATAGRIDROW_stateNormalCode,
             DATAGRIDROW_stateNormalCode,
@@ -107,7 +105,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             DATAGRIDROW_statePointerOverEditingFocusedCode
         };
 
-        private static byte[] _fallbackStateMapping = new byte[]
+        private static readonly byte[] _fallbackStateMapping = new byte[]
         {
             DATAGRIDROW_stateNormalCode, // DATAGRIDROW_statePointerOverCode's fallback
             DATAGRIDROW_statePointerOverEditingFocusedCode, // DATAGRIDROW_statePointerOverEditingCode's fallback
@@ -121,7 +119,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             DATAGRIDROW_stateNormalCode // DATAGRIDROW_stateSelectedFocusedCode's fallback
         };
 
-        private static string[] _stateNames = new string[]
+        private static readonly string[] _stateNames = new string[]
         {
             DATAGRIDROW_statePointerOver,
             DATAGRIDROW_statePointerOverEditing,
@@ -155,7 +153,6 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private FrameworkElement _detailsContent;
         private DataGridDetailsPresenter _detailsElement;
         private DataGridCell _fillerCell;
-        private DataGridRowHeader _headerElement;
         private double _lastHorizontalOffset;
 
         /// <summary>
@@ -229,7 +226,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             if (!source.IsHandlerSuspended(e.Property) && source.OwningGrid != null)
             {
-                Func<DataTemplate, DataTemplate> actualDetailsTemplate = template => (template != null ? template : source.OwningGrid.RowDetailsTemplate);
+                DataTemplate actualDetailsTemplate(DataTemplate template) => template ?? source.OwningGrid.RowDetailsTemplate;
 
                 // We don't always want to apply the new Template because they might have set the same one
                 // we inherited from the DataGrid
@@ -315,9 +312,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private static void OnHeaderPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             DataGridRow row = d as DataGridRow;
-            if (row._headerElement != null)
+            if (row.HeaderCell != null)
             {
-                row._headerElement.Content = e.NewValue;
+                row.HeaderCell.Content = e.NewValue;
             }
         }
 
@@ -342,10 +339,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private static void OnHeaderStylePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            DataGridRow row = d as DataGridRow;
-            if (row != null && row._headerElement != null)
+            if (d is DataGridRow row && row.HeaderCell != null)
             {
-                row._headerElement.EnsureStyle(e.OldValue as Style);
+                row.HeaderCell.EnsureStyle(e.OldValue as Style);
             }
         }
 
@@ -427,8 +423,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     {
                         foreach (DataGridCell dataGridCell in this.Cells)
                         {
-                            FrameworkElement element = dataGridCell.Content as FrameworkElement;
-                            if (element != null)
+                            if (dataGridCell.Content is FrameworkElement element)
                             {
                                 dataGridCell.OwningColumn.RefreshForeground(element, _computedForeground);
                             }
@@ -442,12 +437,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (_detailsElement != null)
-                {
-                    return _detailsElement.ContentHeight;
-                }
-
-                return 0;
+                return _detailsElement != null ? _detailsElement.ContentHeight : 0;
             }
         }
 
@@ -468,10 +458,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     _fillerCell.Visibility = Visibility.Collapsed;
                     _fillerCell.OwningRow = this;
                     _fillerCell.EnsureStyle(null);
-                    if (_cellsElement != null)
-                    {
-                        _cellsElement.Children.Add(_fillerCell);
-                    }
+                    _cellsElement?.Children.Add(_fillerCell);
                 }
 
                 return _fillerCell;
@@ -490,17 +477,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _headerElement != null;
+                return HeaderCell != null;
             }
         }
 
-        internal DataGridRowHeader HeaderCell
-        {
-            get
-            {
-                return _headerElement;
-            }
-        }
+        internal DataGridRowHeader HeaderCell { get; private set; }
 
         /// <summary>
         /// Gets or sets the index of the row.
@@ -561,12 +542,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid != null)
-                {
-                    return this.OwningGrid.IsRowRecyclable(this);
-                }
-
-                return true;
+                return this.OwningGrid == null || this.OwningGrid.IsRowRecyclable(this);
             }
         }
 
@@ -639,7 +615,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 DiagnosticsDebug.Assert(this.OwningGrid != null, "Expected non-null owning DataGrid.");
                 DataTemplate currentDetailsTemplate = this.DetailsTemplate;
 
-                return currentDetailsTemplate != null ? currentDetailsTemplate : this.OwningGrid.RowDetailsTemplate;
+                return currentDetailsTemplate ?? this.OwningGrid.RowDetailsTemplate;
             }
         }
 
@@ -647,17 +623,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid == null)
-                {
-                    throw DataGridError.DataGrid.NoOwningGrid(this.GetType());
-                }
-
-                if (this.Index == -1)
-                {
-                    throw DataGridError.DataGridRow.InvalidRowIndexCannotCompleteOperation();
-                }
-
-                return this.OwningGrid.GetRowDetailsVisibility(this.Index);
+                return this.OwningGrid == null
+                    ? throw DataGridError.DataGrid.NoOwningGrid(this.GetType())
+                    : this.Index == -1
+                    ? throw DataGridError.DataGridRow.InvalidRowIndexCannotCompleteOperation()
+                    : this.OwningGrid.GetRowDetailsVisibility(this.Index);
             }
         }
 
@@ -744,10 +714,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     if (DataGridFrozenGrid.GetIsFrozen(child))
                     {
-                        TranslateTransform transform = new TranslateTransform();
-
-                        // Automatic layout rounding doesn't apply to transforms so we need to Round this
-                        transform.X = Math.Round(this.OwningGrid.HorizontalOffset);
+                        TranslateTransform transform = new TranslateTransform
+                        {
+                            // Automatic layout rounding doesn't apply to transforms so we need to Round this
+                            X = Math.Round(this.OwningGrid.HorizontalOffset)
+                        };
                         child.RenderTransform = transform;
                     }
                 }
@@ -755,8 +726,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             if (_bottomGridLine != null)
             {
-                RectangleGeometry gridlineClipGeometry = new RectangleGeometry();
-                gridlineClipGeometry.Rect = new Rect(this.OwningGrid.HorizontalOffset, 0, Math.Max(0, this.DesiredSize.Width - this.OwningGrid.HorizontalOffset), _bottomGridLine.DesiredSize.Height);
+                RectangleGeometry gridlineClipGeometry = new RectangleGeometry
+                {
+                    Rect = new Rect(this.OwningGrid.HorizontalOffset, 0, Math.Max(0, this.DesiredSize.Width - this.OwningGrid.HorizontalOffset), _bottomGridLine.DesiredSize.Height)
+                };
                 _bottomGridLine.Clip = gridlineClipGeometry;
             }
 
@@ -781,20 +754,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
 
             // Allow the DataGrid specific components to adjust themselves based on new values
-            if (_headerElement != null)
-            {
-                _headerElement.InvalidateMeasure();
-            }
+            HeaderCell?.InvalidateMeasure();
 
-            if (_cellsElement != null)
-            {
-                _cellsElement.InvalidateMeasure();
-            }
+            _cellsElement?.InvalidateMeasure();
 
-            if (_detailsElement != null)
-            {
-                _detailsElement.InvalidateMeasure();
-            }
+            _detailsElement?.InvalidateMeasure();
 
             bool currentAddItemIsDataContext = false;
 #if FEATURE_IEDITABLECOLLECTIONVIEW
@@ -835,11 +799,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 ApplyState(false /*animate*/);
             }
 
-            if (_cellsElement != null)
-            {
-                // If we're applying a new template, we  want to remove the cells from the previous _cellsElement
-                _cellsElement.Children.Clear();
-            }
+            // If we're applying a new template, we  want to remove the cells from the previous _cellsElement
+            _cellsElement?.Children.Clear();
 
             _cellsElement = GetTemplateChild(DATAGRIDROW_elementCells) as DataGridCellsPresenter;
             if (_cellsElement != null)
@@ -873,13 +834,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             _bottomGridLine = GetTemplateChild(DATAGRIDROW_elementBottomGridLine) as Rectangle;
 
-            _headerElement = GetTemplateChild(DATAGRIDROW_elementRowHeader) as DataGridRowHeader;
-            if (_headerElement != null)
+            HeaderCell = GetTemplateChild(DATAGRIDROW_elementRowHeader) as DataGridRowHeader;
+            if (HeaderCell != null)
             {
-                _headerElement.Owner = this;
+                HeaderCell.Owner = this;
                 if (this.Header != null)
                 {
-                    _headerElement.Content = Header;
+                    HeaderCell.Content = Header;
                 }
 
                 EnsureHeaderStyleAndVisibility(null);
@@ -965,9 +926,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal void ApplyHeaderState(bool animate)
         {
-            if (_headerElement != null && this.OwningGrid.AreRowHeadersVisible)
+            if (HeaderCell != null && this.OwningGrid.AreRowHeadersVisible)
             {
-                _headerElement.ApplyOwnerState(animate);
+                HeaderCell.ApplyOwnerState(animate);
             }
         }
 
@@ -1006,21 +967,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 string storyboardName;
                 while (stateCode != DATAGRIDROW_stateNullCode)
                 {
-                    if (stateCode == DATAGRIDROW_stateNormalCode)
-                    {
-                        if (this.Index % 2 == 1)
-                        {
-                            storyboardName = DATAGRIDROW_stateAlternate;
-                        }
-                        else
-                        {
-                            storyboardName = DATAGRIDROW_stateNormal;
-                        }
-                    }
-                    else
-                    {
-                        storyboardName = _stateNames[stateCode];
-                    }
+                    storyboardName = stateCode == DATAGRIDROW_stateNormalCode
+                        ? this.Index % 2 == 1 ? DATAGRIDROW_stateAlternate : DATAGRIDROW_stateNormal
+                        : _stateNames[stateCode];
 
                     if (VisualStateManager.GoToState(this, storyboardName, animate))
                     {
@@ -1054,19 +1003,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 Recycle();
 
-                if (_cellsElement != null)
-                {
-                    _cellsElement.Recycle();
-                }
+                _cellsElement?.Recycle();
 
                 _checkDetailsContentHeight = false;
 
                 // Clear out the old Details cache so it won't be reused for other data
                 _detailsDesiredHeight = double.NaN;
-                if (_detailsElement != null)
-                {
-                    _detailsElement.ClearValue(DataGridDetailsPresenter.ContentHeightProperty);
-                }
+                _detailsElement?.ClearValue(DataGridDetailsPresenter.ContentHeightProperty);
             }
 
             this.Slot = -1;
@@ -1122,7 +1065,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 DiagnosticsDebug.Assert(this.Index != -1, "Expected Index other than -1.");
 
-                var newForeground = this.Index % 2 == 0 || this.OwningGrid.AlternatingRowForeground == null
+                Brush newForeground = this.Index % 2 == 0 || this.OwningGrid.AlternatingRowForeground == null
                     ? this.OwningGrid.RowForeground
                     : this.OwningGrid.AlternatingRowForeground;
 
@@ -1136,10 +1079,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal void EnsureFillerVisibility()
         {
-            if (_cellsElement != null)
-            {
-                _cellsElement.EnsureFillerVisibility();
-            }
+            _cellsElement?.EnsureFillerVisibility();
         }
 
         internal void EnsureGridLines()
@@ -1171,47 +1111,41 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         // Set the proper style for the Header by walking up the Style hierarchy
         internal void EnsureHeaderStyleAndVisibility(Style previousStyle)
         {
-            if (_headerElement != null && this.OwningGrid != null)
+            if (HeaderCell != null && this.OwningGrid != null)
             {
                 if (this.OwningGrid.AreRowHeadersVisible)
                 {
-                    _headerElement.EnsureStyle(previousStyle);
-                    _headerElement.Visibility = Visibility.Visible;
+                    HeaderCell.EnsureStyle(previousStyle);
+                    HeaderCell.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    _headerElement.Visibility = Visibility.Collapsed;
+                    HeaderCell.Visibility = Visibility.Collapsed;
                 }
             }
         }
 
         internal void EnsureHeaderVisibility()
         {
-            if (_headerElement != null && this.OwningGrid != null)
+            if (HeaderCell != null && this.OwningGrid != null)
             {
-                _headerElement.Visibility = this.OwningGrid.AreRowHeadersVisible ? Visibility.Visible : Visibility.Collapsed;
+                HeaderCell.Visibility = this.OwningGrid.AreRowHeadersVisible ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
         private void EnsureHeaderGridLines(Visibility visibility)
         {
-            if (_headerElement != null)
+            if (HeaderCell != null)
             {
-                _headerElement.SeparatorVisibility = visibility;
+                HeaderCell.SeparatorVisibility = visibility;
             }
         }
 
         internal void InvalidateHorizontalArrange()
         {
-            if (_cellsElement != null)
-            {
-                _cellsElement.InvalidateArrange();
-            }
+            _cellsElement?.InvalidateArrange();
 
-            if (_detailsElement != null)
-            {
-                _detailsElement.InvalidateArrange();
-            }
+            _detailsElement?.InvalidateArrange();
         }
 
         // Sets AreDetailsVisible on the row and animates if necessary
@@ -1283,18 +1217,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void DataGridCellCollection_CellAdded(object sender, DataGridCellEventArgs e)
         {
-            if (_cellsElement != null)
-            {
-                _cellsElement.Children.Add(e.Cell);
-            }
+            _cellsElement?.Children.Add(e.Cell);
         }
 
         private void DataGridCellCollection_CellRemoved(object sender, DataGridCellEventArgs e)
         {
-            if (_cellsElement != null)
-            {
-                _cellsElement.Children.Remove(e.Cell);
-            }
+            _cellsElement?.Children.Remove(e.Cell);
         }
 
         private void DataGridRow_PointerCanceled(object sender, PointerRoutedEventArgs e)
@@ -1425,10 +1353,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void OnRowDetailsChanged()
         {
-            if (this.OwningGrid != null)
-            {
-                this.OwningGrid.OnRowDetailsChanged();
-            }
+            this.OwningGrid?.OnRowDetailsChanged();
         }
 
         private void Recycle()

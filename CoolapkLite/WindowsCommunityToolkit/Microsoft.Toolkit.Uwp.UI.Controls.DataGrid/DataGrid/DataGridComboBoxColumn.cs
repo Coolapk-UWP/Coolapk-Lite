@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
+using Microsoft.Toolkit.Uwp.UI.Utilities;
+using Microsoft.Toolkit.Uwp.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,9 +12,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
-using Microsoft.Toolkit.Uwp.UI.Utilities;
-using Microsoft.Toolkit.Uwp.Utilities;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -65,7 +65,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private static void OnItemSourcePropertyChanged(DependencyObject comboBoxDependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var comboColumn = comboBoxDependencyObject as DataGridComboBoxColumn;
+            DataGridComboBoxColumn comboColumn = comboBoxDependencyObject as DataGridComboBoxColumn;
             comboColumn.NotifyPropertyChanged(DATAGRIDCOMBOBOXCOLUMN_itemsSourceName);
         }
 
@@ -109,7 +109,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private static void OnFontFamilyPropertyChanged(DependencyObject comboBoxColumnDependencyObject, DependencyPropertyChangedEventArgs e)
         {
-            var comboColumn = comboBoxColumnDependencyObject as DataGridComboBoxColumn;
+            DataGridComboBoxColumn comboColumn = comboBoxColumnDependencyObject as DataGridComboBoxColumn;
             comboColumn.NotifyPropertyChanged(DATAGRIDCOMBOBOXCOLUMN_fontFamilyName);
         }
 
@@ -211,31 +211,31 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             EnsureColumnTypeAgreement(dataItem);
 
-            var comboBox = new ComboBox
+            ComboBox comboBox = new ComboBox
             {
-                Margin = default(Thickness),
+                Margin = default,
                 HorizontalAlignment = HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Center
             };
 
             if (dataItem != null)
             {
-                var value = TypeHelper.GetNestedPropertyValue(dataItem, Binding.Path.Path);
+                object value = TypeHelper.GetNestedPropertyValue(dataItem, Binding.Path.Path);
 
-                var selection = !string.IsNullOrEmpty(DisplayMemberPath)
+                object selection = !string.IsNullOrEmpty(DisplayMemberPath)
                     ? ItemsSource?.Cast<object>().FirstOrDefault(x => TypeHelper.GetNestedPropertyValue(x, Binding.GetBindingPropertyName()).Equals(value))
                     : ItemsSource?.Cast<object>().FirstOrDefault(x => x.Equals(value));
 
                 comboBox.SelectedItem = selection;
             }
 
-            var itemsSourceBinding = new Binding
+            Binding itemsSourceBinding = new Binding
             {
                 Source = this,
                 Path = new PropertyPath(DATAGRIDCOMBOBOXCOLUMN_itemsSourceName)
             };
 
-            var displayMemberPathBinding = new Binding
+            Binding displayMemberPathBinding = new Binding
             {
                 Source = this,
                 Path = new PropertyPath(DATAGRIDCOMBOBOXCOLUMN_displayMemberPathName)
@@ -269,11 +269,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             comboBox.SelectionChanged += (sender, args) =>
             {
-                var item = args.AddedItems.FirstOrDefault();
+                object item = args.AddedItems.FirstOrDefault();
 
                 if (item != null)
                 {
-                    var newValue = !string.IsNullOrEmpty(DisplayMemberPath)
+                    object newValue = !string.IsNullOrEmpty(DisplayMemberPath)
                         ? item.GetType().GetProperty(Binding.GetBindingPropertyName())?.GetValue(item)
                         : item;
 
@@ -297,7 +297,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             EnsureDisplayMemberPathExists();
             EnsureItemsSourceBinding();
 
-            var textBlockElement = new TextBlock
+            TextBlock textBlockElement = new TextBlock
             {
                 Margin = new Thickness(DATAGRIDCOMBOBOXCOLUMN_leftMargin, 0.0, DATAGRIDCOMBOBOXCOLUMN_rightMargin, 0.0),
                 VerticalAlignment = VerticalAlignment.Center
@@ -349,13 +349,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <param name="uneditedValue">The previous, unedited value in the cell being edited.</param>
         protected override void CancelCellEdit(FrameworkElement editingElement, object uneditedValue)
         {
-            var comboBox = editingElement as ComboBox;
-
-            if (comboBox != null)
+            if (editingElement is ComboBox comboBox)
             {
                 if (uneditedValue != null)
                 {
-                    var property = uneditedValue.GetType().GetNestedProperty(Binding.GetBindingPropertyName());
+                    PropertyInfo property = uneditedValue.GetType().GetNestedProperty(Binding.GetBindingPropertyName());
 
                     if (property == null)
                     {
@@ -363,8 +361,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     }
                     else
                     {
-                        var value = TypeHelper.GetNestedPropertyValue(uneditedValue, Binding.GetBindingPropertyName());
-                        var selection = ItemsSource?.Cast<object>().FirstOrDefault(x => TypeHelper.GetNestedPropertyValue(x, Binding.GetBindingPropertyName()).Equals(value));
+                        object value = TypeHelper.GetNestedPropertyValue(uneditedValue, Binding.GetBindingPropertyName());
+                        object selection = ItemsSource?.Cast<object>().FirstOrDefault(x => TypeHelper.GetNestedPropertyValue(x, Binding.GetBindingPropertyName()).Equals(value));
 
                         comboBox.SelectedItem = selection;
                     }
@@ -384,7 +382,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>The unedited value. </returns>
         protected override object PrepareCellForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
-            if(editingElement is ComboBox comboBox)
+            if (editingElement is ComboBox comboBox)
             {
                 comboBox.IsDropDownOpen = true;
                 return comboBox.SelectedItem;
@@ -403,11 +401,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw new ArgumentNullException(nameof(element));
             }
 
-            var comboBox = element as ComboBox;
-            if (comboBox == null)
+            if (!(element is ComboBox comboBox))
             {
-                var textBlock = element as TextBlock;
-                if (textBlock == null)
+                if (!(element is TextBlock textBlock))
                 {
                     throw DataGridError.DataGrid.ValueIsNotAnInstanceOfEitherOr(nameof(element), typeof(ComboBox), typeof(TextBlock));
                 }
@@ -596,10 +592,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (OwningGrid != null && !string.IsNullOrEmpty(DisplayMemberPath))
             {
-                var textBlock = GetCellContent(row) as TextBlock;
-                if (textBlock != null)
+                if (GetCellContent(row) is TextBlock textBlock)
                 {
-                    var displayValue = GetDisplayValue(row.DataContext);
+                    string displayValue = GetDisplayValue(row.DataContext);
 
                     textBlock.Text = displayValue;
                 }
@@ -610,11 +605,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (Binding?.Path != null && dataItem != null)
             {
-                var value = TypeHelper.GetNestedPropertyValue(dataItem, Binding.Path.Path);
+                object value = TypeHelper.GetNestedPropertyValue(dataItem, Binding.Path.Path);
 
-                var item = ItemsSource?.Cast<object>().FirstOrDefault(x => TypeHelper.GetNestedPropertyValue(x, Binding.GetBindingPropertyName()).Equals(value));
+                object item = ItemsSource?.Cast<object>().FirstOrDefault(x => TypeHelper.GetNestedPropertyValue(x, Binding.GetBindingPropertyName()).Equals(value));
 
-                var displayValue = item?.GetType().GetProperty(DisplayMemberPath).GetValue(item) ?? string.Empty;
+                object displayValue = item?.GetType().GetProperty(DisplayMemberPath).GetValue(item) ?? string.Empty;
 
                 return displayValue as string ?? displayValue.ToString();
             }
@@ -634,7 +629,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw DataGridError.DataGridComboBoxColumn.UnsetBinding(GetType());
             }
 
-            var property = dataItem?.GetType().GetNestedProperty(Binding?.Path?.Path);
+            PropertyInfo property = dataItem?.GetType().GetNestedProperty(Binding?.Path?.Path);
 
             if (property == null && dataItem != null)
             {
@@ -646,8 +641,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (string.IsNullOrEmpty(DisplayMemberPath))
             {
-                var itemsSourceType = ItemsSource?.GetType().GetEnumerableItemType();
-                var dataItemType = dataItem?.GetType().GetNestedPropertyType(Binding?.Path?.Path);
+                Type itemsSourceType = ItemsSource?.GetType().GetEnumerableItemType();
+                Type dataItemType = dataItem?.GetType().GetNestedPropertyType(Binding?.Path?.Path);
 
                 if (dataItemType != null && itemsSourceType != null && itemsSourceType != dataItemType)
                 {
@@ -660,7 +655,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (!string.IsNullOrEmpty(DisplayMemberPath))
             {
-                var type = ItemsSource?.GetItemType();
+                Type type = ItemsSource?.GetItemType();
 
                 if (ItemsSource != null && !type.GetProperties().Any(x => x.Name.Equals(DisplayMemberPath)))
                 {
@@ -673,7 +668,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (!string.IsNullOrEmpty(DisplayMemberPath) && ItemsSource != null)
             {
-                var item = ItemsSource.Cast<object>().FirstOrDefault();
+                object item = ItemsSource.Cast<object>().FirstOrDefault();
 
                 if (item != null && !item.GetType().GetProperties().Any(y => y.Name.Equals(Binding.GetBindingPropertyName())))
                 {
@@ -689,9 +684,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 return;
             }
 
-            var notifyingDataItem = dataItem as INotifyPropertyChanged;
 
-            if (notifyingDataItem == null)
+            if (!(dataItem is INotifyPropertyChanged notifyingDataItem))
             {
                 return;
             }
@@ -715,9 +709,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 return;
             }
 
-            var notifyingDataItem = dataItem as INotifyPropertyChanged;
 
-            if (notifyingDataItem == null)
+            if (!(dataItem is INotifyPropertyChanged notifyingDataItem))
             {
                 return;
             }
@@ -733,7 +726,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (this.OwningGrid != null && Binding?.Path != null && this.Binding.Path.Path == e.PropertyName)
             {
-                var dataGridRow = OwningGrid.GetRowFromItem(dataItem);
+                DataGridRow dataGridRow = OwningGrid.GetRowFromItem(dataItem);
 
                 if (dataGridRow != null && this.GetCellContent(dataGridRow) is TextBlock textBlockElement)
                 {

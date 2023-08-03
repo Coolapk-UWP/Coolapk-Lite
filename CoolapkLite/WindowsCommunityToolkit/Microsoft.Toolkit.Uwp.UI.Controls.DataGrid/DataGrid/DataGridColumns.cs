@@ -2,19 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -82,14 +80,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (!DoubleUtil.IsZero(amount))
             {
-                if (amount < 0)
-                {
-                    amount = DecreaseColumnWidths(displayIndex, amount, userInitiated);
-                }
-                else
-                {
-                    amount = IncreaseColumnWidths(displayIndex, amount, userInitiated);
-                }
+                amount = amount < 0
+                    ? DecreaseColumnWidths(displayIndex, amount, userInitiated)
+                    : IncreaseColumnWidths(displayIndex, amount, userInitiated);
             }
 
             return amount;
@@ -174,8 +167,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             DiagnosticsDebug.Assert(dataGridColumn != null, "Expected non-null dataGridColumn.");
 
-            DataGridBoundColumn dataGridBoundColumn = dataGridColumn as DataGridBoundColumn;
-            if (dataGridBoundColumn != null && dataGridBoundColumn.Binding != null)
+            if (dataGridColumn is DataGridBoundColumn dataGridBoundColumn && dataGridBoundColumn.Binding != null)
             {
                 string path = null;
                 if (dataGridBoundColumn.Binding.Path != null)
@@ -226,11 +218,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             // Removing all the column header cells
             RemoveDisplayedColumnHeaders();
 
-            _horizontalOffset = _negHorizontalOffset = 0;
+            _horizontalOffset = FirstDisplayedScrollingColumnHiddenWidth = 0;
 
-            if (_hScrollBar != null && _hScrollBar.Visibility == Visibility.Visible)
+            if (HorizontalScrollBar != null && HorizontalScrollBar.Visibility == Visibility.Visible)
             {
-                _hScrollBar.Value = 0;
+                HorizontalScrollBar.Value = 0;
             }
         }
 
@@ -336,7 +328,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     for (int i = newDisplayIndex; i < targetColumn.DisplayIndexWithFiller; i++)
                     {
                         column = this.ColumnsInternal.GetColumnAtDisplayIndex(i);
-                        column.DisplayIndexWithFiller = column.DisplayIndexWithFiller + 1;
+                        column.DisplayIndexWithFiller++;
                         if (trackChange)
                         {
                             column.DisplayIndexHasChanged = true; // OnColumnDisplayIndexChanged needs to be raised later on
@@ -350,7 +342,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     for (int i = newDisplayIndex; i > targetColumn.DisplayIndexWithFiller; i--)
                     {
                         column = this.ColumnsInternal.GetColumnAtDisplayIndex(i);
-                        column.DisplayIndexWithFiller = column.DisplayIndexWithFiller - 1;
+                        column.DisplayIndexWithFiller--;
                         if (trackChange)
                         {
                             column.DisplayIndexHasChanged = true; // OnColumnDisplayIndexChanged needs to be raised later on
@@ -392,10 +384,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             foreach (DataGridRow row in GetAllRows())
             {
                 FrameworkElement element = column.GetCellContent(row);
-                if (element != null)
-                {
-                    element.SetStyleWithType(column.ElementStyle);
-                }
+                element?.SetStyleWithType(column.ElementStyle);
             }
 
             InvalidateRowHeightEstimate();
@@ -403,26 +392,17 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal void OnColumnHeaderDragStarted(DragStartedEventArgs e)
         {
-            if (this.ColumnHeaderDragStarted != null)
-            {
-                this.ColumnHeaderDragStarted(this, e);
-            }
+            this.ColumnHeaderDragStarted?.Invoke(this, e);
         }
 
         internal void OnColumnHeaderDragDelta(DragDeltaEventArgs e)
         {
-            if (this.ColumnHeaderDragDelta != null)
-            {
-                this.ColumnHeaderDragDelta(this, e);
-            }
+            this.ColumnHeaderDragDelta?.Invoke(this, e);
         }
 
         internal void OnColumnHeaderDragCompleted(DragCompletedEventArgs e)
         {
-            if (this.ColumnHeaderDragCompleted != null)
-            {
-                this.ColumnHeaderDragCompleted(this, e);
-            }
+            this.ColumnHeaderDragCompleted?.Invoke(this, e);
         }
 
         /// <summary>
@@ -570,14 +550,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             DataGridFillerColumn fillerColumn = this.ColumnsInternal.FillerColumn;
             double totalColumnsWidth = this.ColumnsInternal.VisibleEdgedColumnsWidth;
-            if (finalWidth - totalColumnsWidth > DATAGRID_roundingDelta)
-            {
-                fillerColumn.FillerWidth = finalWidth - totalColumnsWidth;
-            }
-            else
-            {
-                fillerColumn.FillerWidth = 0;
-            }
+            fillerColumn.FillerWidth = finalWidth - totalColumnsWidth > DATAGRID_roundingDelta ? finalWidth - totalColumnsWidth : 0;
         }
 
         internal void OnInsertedColumn_PostNotification(DataGridCellCoordinates newCurrentCellCoordinates, int newDisplayIndex)
@@ -630,8 +603,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 EnsureHorizontalLayout();
             }
 
-            DataGridBoundColumn boundColumn = insertedColumn as DataGridBoundColumn;
-            if (boundColumn != null && !boundColumn.IsAutoGenerated)
+            if (insertedColumn is DataGridBoundColumn boundColumn && !boundColumn.IsAutoGenerated)
             {
                 boundColumn.SetHeaderFromBinding();
             }
@@ -732,33 +704,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     DataGridColumn dataGridColumnNext = this.ColumnsInternal.GetNextVisibleColumn(this.ColumnsItemsInternal[columnIndex]);
                     if (dataGridColumnNext != null)
                     {
-                        if (dataGridColumnNext.Index > columnIndex)
-                        {
-                            newCurrentColumnIndex = dataGridColumnNext.Index - 1;
-                        }
-                        else
-                        {
-                            newCurrentColumnIndex = dataGridColumnNext.Index;
-                        }
+                        newCurrentColumnIndex = dataGridColumnNext.Index > columnIndex ? dataGridColumnNext.Index - 1 : dataGridColumnNext.Index;
                     }
                     else
                     {
                         DataGridColumn dataGridColumnPrevious = this.ColumnsInternal.GetPreviousVisibleNonFillerColumn(this.ColumnsItemsInternal[columnIndex]);
-                        if (dataGridColumnPrevious != null)
-                        {
-                            if (dataGridColumnPrevious.Index > columnIndex)
-                            {
-                                newCurrentColumnIndex = dataGridColumnPrevious.Index - 1;
-                            }
-                            else
-                            {
-                                newCurrentColumnIndex = dataGridColumnPrevious.Index;
-                            }
-                        }
-                        else
-                        {
-                            newCurrentColumnIndex = -1;
-                        }
+                        newCurrentColumnIndex = dataGridColumnPrevious != null
+                            ? dataGridColumnPrevious.Index > columnIndex ? dataGridColumnPrevious.Index - 1 : dataGridColumnPrevious.Index
+                            : -1;
                     }
                 }
                 else if (columnIndex < newCurrentColumnIndex)
@@ -805,8 +758,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 if (this.DisplayData.FirstDisplayedScrollingCol == dataGridColumn.Index)
                 {
                     // Deleted column is first scrolling column
-                    _horizontalOffset -= _negHorizontalOffset;
-                    _negHorizontalOffset = 0;
+                    _horizontalOffset -= FirstDisplayedScrollingColumnHiddenWidth;
+                    FirstDisplayedScrollingColumnHiddenWidth = 0;
                 }
                 else if (!this.ColumnsInternal.DisplayInOrder(this.DisplayData.FirstDisplayedScrollingCol, dataGridColumn.Index))
                 {
@@ -815,9 +768,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     _horizontalOffset -= GetEdgedColumnWidth(dataGridColumn);
                 }
 
-                if (_hScrollBar != null && _hScrollBar.Visibility == Visibility.Visible)
+                if (HorizontalScrollBar != null && HorizontalScrollBar.Visibility == Visibility.Visible)
                 {
-                    _hScrollBar.Value = _horizontalOffset;
+                    HorizontalScrollBar.Value = _horizontalOffset;
                 }
             }
 
@@ -889,8 +842,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             // Create a new DataBoundColumn for the Property
             DataGridBoundColumn newColumn = GetDataGridColumnFromType(propertyType);
-            Binding binding = new Binding();
-            binding.Path = new PropertyPath(propertyName);
+            Binding binding = new Binding
+            {
+                Path = new PropertyPath(propertyName)
+            };
             newColumn.Binding = binding;
             newColumn.Header = header;
             newColumn.IsAutoGenerated = true;
@@ -906,8 +861,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else if (type == typeof(bool?))
             {
-                DataGridCheckBoxColumn column = new DataGridCheckBoxColumn();
-                column.IsThreeState = true;
+                DataGridCheckBoxColumn column = new DataGridCheckBoxColumn
+                {
+                    IsThreeState = true
+                };
                 return column;
             }
 
@@ -948,8 +905,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             DataGridCell dataGridCell = dataGridRow.Cells[dataGridColumn.Index];
             DiagnosticsDebug.Assert(dataGridCell != null, "Expected non-null dataGridCell.");
-            FrameworkElement element = dataGridCell.Content as FrameworkElement;
-            if (element != null)
+            if (dataGridCell.Content is FrameworkElement element)
             {
                 dataGridColumn.RefreshCellContent(element, dataGridRow.ComputedForeground, propertyName);
             }
@@ -1100,7 +1056,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             foreach (KeyValuePair<DataGridColumn, double> starColumnPair in starColumnPairs)
             {
                 double distanceToTarget = starColumnPair.Value * starColumnPair.Key.Width.Value;
-                double distanceAvailable = (starColumnPair.Key.Width.Value * remainingAdjustment) / totalStarWeights;
+                double distanceAvailable = starColumnPair.Key.Width.Value * remainingAdjustment / totalStarWeights;
                 double adjustment = increase ? Math.Min(distanceToTarget, distanceAvailable) : Math.Max(distanceToTarget, distanceAvailable);
 
                 remainingAdjustment -= adjustment;
@@ -1175,7 +1131,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 if (dataGridColumn.IsFrozen)
                 {
                     dataGridColumn = this.ColumnsInternal.FirstVisibleScrollingColumn;
-                    _negHorizontalOffset = 0;
+                    FirstDisplayedScrollingColumnHiddenWidth = 0;
                     if (dataGridColumn == null)
                     {
                         this.DisplayData.FirstDisplayedScrollingCol = this.DisplayData.LastTotallyDisplayedScrollingCol = -1;
@@ -1187,7 +1143,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     }
                 }
 
-                cx -= _negHorizontalOffset;
+                cx -= FirstDisplayedScrollingColumnHiddenWidth;
                 while (cx < displayWidth && dataGridColumn != null)
                 {
                     cx += GetEdgedColumnWidth(dataGridColumn);
@@ -1195,7 +1151,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     dataGridColumn = this.ColumnsInternal.GetNextVisibleColumn(dataGridColumn);
                 }
 
-                var numVisibleScrollingCols = visibleScrollingColumnsTmp;
+                int numVisibleScrollingCols = visibleScrollingColumnsTmp;
 
                 // if we inflate the data area then we paint columns to the left of firstDisplayedScrollingCol
                 if (cx < displayWidth)
@@ -1203,25 +1159,25 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     DiagnosticsDebug.Assert(firstDisplayedScrollingCol >= 0, "Expected positive firstDisplayedScrollingCol.");
 
                     // first minimize value of _negHorizontalOffset
-                    if (_negHorizontalOffset > 0)
+                    if (FirstDisplayedScrollingColumnHiddenWidth > 0)
                     {
                         invalidate = true;
-                        if (displayWidth - cx > _negHorizontalOffset)
+                        if (displayWidth - cx > FirstDisplayedScrollingColumnHiddenWidth)
                         {
-                            cx += _negHorizontalOffset;
-                            _horizontalOffset -= _negHorizontalOffset;
+                            cx += FirstDisplayedScrollingColumnHiddenWidth;
+                            _horizontalOffset -= FirstDisplayedScrollingColumnHiddenWidth;
                             if (_horizontalOffset < DATAGRID_roundingDelta)
                             {
                                 // Snap to zero to avoid trying to partially scroll in first scrolled off column below
                                 _horizontalOffset = 0;
                             }
 
-                            _negHorizontalOffset = 0;
+                            FirstDisplayedScrollingColumnHiddenWidth = 0;
                         }
                         else
                         {
                             _horizontalOffset -= displayWidth - cx;
-                            _negHorizontalOffset -= displayWidth - cx;
+                            FirstDisplayedScrollingColumnHiddenWidth -= displayWidth - cx;
                             cx = displayWidth;
                         }
 
@@ -1234,7 +1190,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     // second try to scroll entire columns
                     if (cx < displayWidth && _horizontalOffset > 0)
                     {
-                        DiagnosticsDebug.Assert(_negHorizontalOffset == 0, "Expected _negHorizontalOffset equals 0.");
+                        DiagnosticsDebug.Assert(FirstDisplayedScrollingColumnHiddenWidth == 0, "Expected _negHorizontalOffset equals 0.");
                         dataGridColumn = this.ColumnsInternal.GetPreviousVisibleScrollingColumn(this.ColumnsItemsInternal[firstDisplayedScrollingCol]);
                         while (dataGridColumn != null && cx + GetEdgedColumnWidth(dataGridColumn) <= displayWidth)
                         {
@@ -1250,17 +1206,17 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     // third try to partially scroll in first scrolled off column
                     if (cx < displayWidth && _horizontalOffset > 0)
                     {
-                        DiagnosticsDebug.Assert(_negHorizontalOffset == 0, "Expected _negHorizontalOffset equals 0.");
+                        DiagnosticsDebug.Assert(FirstDisplayedScrollingColumnHiddenWidth == 0, "Expected _negHorizontalOffset equals 0.");
                         dataGridColumn = this.ColumnsInternal.GetPreviousVisibleScrollingColumn(this.ColumnsItemsInternal[firstDisplayedScrollingCol]);
                         DiagnosticsDebug.Assert(dataGridColumn != null, "Expected non-null dataGridColumn.");
                         DiagnosticsDebug.Assert(GetEdgedColumnWidth(dataGridColumn) > displayWidth - cx, "Expected GetEdgedColumnWidth(dataGridColumn) greater than displayWidth - cx.");
                         firstDisplayedScrollingCol = dataGridColumn.Index;
-                        _negHorizontalOffset = GetEdgedColumnWidth(dataGridColumn) - displayWidth + cx;
+                        FirstDisplayedScrollingColumnHiddenWidth = GetEdgedColumnWidth(dataGridColumn) - displayWidth + cx;
                         _horizontalOffset -= displayWidth - cx;
                         visibleScrollingColumnsTmp++;
                         invalidate = true;
                         cx = displayWidth;
-                        DiagnosticsDebug.Assert(_negHorizontalOffset == GetNegHorizontalOffsetFromHorizontalOffset(_horizontalOffset), "Expected _negHorizontalOffset equals GetNegHorizontalOffsetFromHorizontalOffset(_horizontalOffset).");
+                        DiagnosticsDebug.Assert(FirstDisplayedScrollingColumnHiddenWidth == GetNegHorizontalOffsetFromHorizontalOffset(_horizontalOffset), "Expected _negHorizontalOffset equals GetNegHorizontalOffsetFromHorizontalOffset(_horizontalOffset).");
                     }
 
                     // update the number of visible columns to the new reality
@@ -1308,7 +1264,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             if (this.ColumnsInternal.GetVisibleFrozenEdgedColumnsWidth() >= this.CellsWidth)
             {
                 // Not enough room for scrolling columns.
-                _negHorizontalOffset = 0;
+                FirstDisplayedScrollingColumnHiddenWidth = 0;
                 return -1;
             }
 
@@ -1316,7 +1272,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             if (_horizontalOffset == 0)
             {
-                _negHorizontalOffset = 0;
+                FirstDisplayedScrollingColumnHiddenWidth = 0;
                 return (dataGridColumn == null) ? -1 : dataGridColumn.Index;
             }
 
@@ -1338,14 +1294,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 dataGridColumn = this.ColumnsInternal.FirstVisibleScrollingColumn;
                 if (dataGridColumn == null)
                 {
-                    _negHorizontalOffset = 0;
+                    FirstDisplayedScrollingColumnHiddenWidth = 0;
                     return -1;
                 }
                 else
                 {
-                    if (_negHorizontalOffset != _horizontalOffset)
+                    if (FirstDisplayedScrollingColumnHiddenWidth != _horizontalOffset)
                     {
-                        _negHorizontalOffset = 0;
+                        FirstDisplayedScrollingColumnHiddenWidth = 0;
                     }
 
                     return dataGridColumn.Index;
@@ -1353,7 +1309,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else
             {
-                _negHorizontalOffset = GetEdgedColumnWidth(dataGridColumn) - (cx - _horizontalOffset);
+                FirstDisplayedScrollingColumnHiddenWidth = GetEdgedColumnWidth(dataGridColumn) - (cx - _horizontalOffset);
                 return dataGridColumn.Index;
             }
         }
@@ -1385,7 +1341,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     if (displayIndex >= deletedColumn.DisplayIndexWithFiller)
                     {
                         column = this.ColumnsInternal.GetColumnAtDisplayIndex(displayIndex);
-                        column.DisplayIndexWithFiller = column.DisplayIndexWithFiller - 1;
+                        column.DisplayIndexWithFiller--;
                         column.DisplayIndexHasChanged = true; // OnColumnDisplayIndexChanged needs to be raised later on
                     }
                 }
@@ -1718,11 +1674,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private void InsertDisplayedColumnHeader(DataGridColumn dataGridColumn)
         {
             DiagnosticsDebug.Assert(dataGridColumn != null, "Expected non-null dataGridColumn.");
-            if (_columnHeadersPresenter != null)
+            if (ColumnHeaders != null)
             {
                 dataGridColumn.HeaderCell.Visibility = dataGridColumn.Visibility;
-                DiagnosticsDebug.Assert(!_columnHeadersPresenter.Children.Contains(dataGridColumn.HeaderCell), "Expected dataGridColumn.HeaderCell not contained in _columnHeadersPresenter.Children.");
-                _columnHeadersPresenter.Children.Insert(dataGridColumn.DisplayIndexWithFiller, dataGridColumn.HeaderCell);
+                DiagnosticsDebug.Assert(!ColumnHeaders.Children.Contains(dataGridColumn.HeaderCell), "Expected dataGridColumn.HeaderCell not contained in _columnHeadersPresenter.Children.");
+                ColumnHeaders.Children.Insert(dataGridColumn.DisplayIndexWithFiller, dataGridColumn.HeaderCell);
             }
         }
 
@@ -1762,20 +1718,20 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             if (this.DisplayData.FirstDisplayedScrollingCol != -1 &&
                 !this.ColumnsItemsInternal[columnIndex].IsFrozen &&
-                (columnIndex != this.DisplayData.FirstDisplayedScrollingCol || _negHorizontalOffset > 0))
+                (columnIndex != this.DisplayData.FirstDisplayedScrollingCol || FirstDisplayedScrollingColumnHiddenWidth > 0))
             {
                 int columnsToScroll;
                 if (this.ColumnsInternal.DisplayInOrder(columnIndex, this.DisplayData.FirstDisplayedScrollingCol))
                 {
                     columnsToScroll = this.ColumnsInternal.GetColumnCount(true /*isVisible*/, false /*isFrozen*/, columnIndex, this.DisplayData.FirstDisplayedScrollingCol);
-                    if (_negHorizontalOffset > 0)
+                    if (FirstDisplayedScrollingColumnHiddenWidth > 0)
                     {
                         columnsToScroll++;
                     }
 
                     ScrollColumns(-columnsToScroll);
                 }
-                else if (columnIndex == this.DisplayData.FirstDisplayedScrollingCol && _negHorizontalOffset > 0)
+                else if (columnIndex == this.DisplayData.FirstDisplayedScrollingCol && FirstDisplayedScrollingColumnHiddenWidth > 0)
                 {
                     ScrollColumns(-1);
                 }
@@ -1790,21 +1746,21 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
                     DataGridColumn newFirstDisplayedScrollingCol = this.ColumnsItemsInternal[this.DisplayData.FirstDisplayedScrollingCol];
                     DataGridColumn nextColumn = this.ColumnsInternal.GetNextVisibleColumn(newFirstDisplayedScrollingCol);
-                    double newColumnWidth = GetEdgedColumnWidth(newFirstDisplayedScrollingCol) - _negHorizontalOffset;
+                    double newColumnWidth = GetEdgedColumnWidth(newFirstDisplayedScrollingCol) - FirstDisplayedScrollingColumnHiddenWidth;
                     while (nextColumn != null && widthRemaining >= newColumnWidth)
                     {
                         widthRemaining -= newColumnWidth;
                         newFirstDisplayedScrollingCol = nextColumn;
                         newColumnWidth = GetEdgedColumnWidth(newFirstDisplayedScrollingCol);
                         nextColumn = this.ColumnsInternal.GetNextVisibleColumn(newFirstDisplayedScrollingCol);
-                        _negHorizontalOffset = 0;
+                        FirstDisplayedScrollingColumnHiddenWidth = 0;
                     }
 
-                    _negHorizontalOffset += widthRemaining;
+                    FirstDisplayedScrollingColumnHiddenWidth += widthRemaining;
                     this.DisplayData.LastTotallyDisplayedScrollingCol = columnIndex;
                     if (newFirstDisplayedScrollingCol.Index == columnIndex)
                     {
-                        _negHorizontalOffset = 0;
+                        FirstDisplayedScrollingColumnHiddenWidth = 0;
                         double frozenColumnWidth = this.ColumnsInternal.GetVisibleFrozenEdgedColumnsWidth();
 
                         // If the entire column cannot be displayed, we want to start showing it from its LeftEdge.
@@ -1867,7 +1823,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 DiagnosticsDebug.Assert(this.DisplayData.FirstDisplayedScrollingCol >= 0, "Expected positive DisplayData.FirstDisplayedScrollingCol.");
                 dataGridColumnTmp = this.ColumnsItemsInternal[this.DisplayData.FirstDisplayedScrollingCol];
-                if (_negHorizontalOffset > 0)
+                if (FirstDisplayedScrollingColumnHiddenWidth > 0)
                 {
                     colCount++;
                 }
@@ -1881,7 +1837,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 newFirstVisibleScrollingCol = dataGridColumnTmp;
                 if (newFirstVisibleScrollingCol == null)
                 {
-                    if (_negHorizontalOffset == 0)
+                    if (FirstDisplayedScrollingColumnHiddenWidth == 0)
                     {
                         // no more column to display on the left of the first seen column
                         return;

@@ -31,12 +31,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         /// <returns>true if the grid is frozen; otherwise, false. The default is true.</returns>
         public static bool GetIsFrozen(DependencyObject element)
         {
-            if (element == null)
-            {
-                throw new ArgumentNullException("element");
-            }
-
-            return (bool)element.GetValue(IsFrozenProperty);
+            return element == null ? throw new ArgumentNullException("element") : (bool)element.GetValue(IsFrozenProperty);
         }
 
         /// <summary>

@@ -13,13 +13,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 {
     internal class DataGridDisplayData
     {
-        private Stack<DataGridRow> _fullyRecycledRows; // list of Rows that have been fully recycled (Collapsed)
+        private readonly Stack<DataGridRow> _fullyRecycledRows; // list of Rows that have been fully recycled (Collapsed)
         private int _headScrollingElements; // index of the row in _scrollingRows that is the first displayed row
-        private DataGrid _owner;
-        private Stack<DataGridRow> _recyclableRows; // list of Rows which have not been fully recycled (avoids Measure in several cases)
-        private List<UIElement> _scrollingElements; // circular list of displayed elements
-        private Stack<DataGridRowGroupHeader> _fullyRecycledGroupHeaders; // list of GroupHeaders that have been fully recycled (Collapsed)
-        private Stack<DataGridRowGroupHeader> _recyclableGroupHeaders; // list of GroupHeaders which have not been fully recycled (avoids Measure in several cases)
+        private readonly DataGrid _owner;
+        private readonly Stack<DataGridRow> _recyclableRows; // list of Rows which have not been fully recycled (avoids Measure in several cases)
+        private readonly List<UIElement> _scrollingElements; // circular list of displayed elements
+        private readonly Stack<DataGridRowGroupHeader> _fullyRecycledGroupHeaders; // list of GroupHeaders that have been fully recycled (Collapsed)
+        private readonly Stack<DataGridRowGroupHeader> _recyclableGroupHeaders; // list of GroupHeaders which have not been fully recycled (avoids Measure in several cases)
 
         public DataGridDisplayData(DataGrid owner)
         {
@@ -105,8 +105,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
             {
                 foreach (UIElement element in _scrollingElements)
                 {
-                    DataGridRow row = element as DataGridRow;
-                    if (row != null)
+                    if (element is DataGridRow row)
                     {
                         if (row.IsRecyclable)
                         {
@@ -119,8 +118,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
                     }
                     else
                     {
-                        DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                        if (groupHeader != null)
+                        if (element is DataGridRowGroupHeader groupHeader)
                         {
                             AddRecylableRowGroupHeader(groupHeader);
                         }
@@ -361,15 +359,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
         {
             foreach (UIElement element in this.GetScrollingElements())
             {
-                DataGridRow row = element as DataGridRow;
-                if (row != null)
+                if (element is DataGridRow row)
                 {
                     Debug.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Slot: {0} Row: {1} ", row.Slot, row.Index));
                 }
                 else
                 {
-                    DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                    if (groupHeader != null)
+                    if (element is DataGridRowGroupHeader groupHeader)
                     {
 #if FEATURE_ICOLLECTIONVIEW_GROUP
                         Debug.WriteLine(string.Format(

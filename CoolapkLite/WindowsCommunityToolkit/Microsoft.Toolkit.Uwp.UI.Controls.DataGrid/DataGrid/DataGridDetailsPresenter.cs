@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
+using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
@@ -55,12 +55,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         {
             get
             {
-                if (this.OwningRow != null)
-                {
-                    return this.OwningRow.OwningGrid;
-                }
-
-                return null;
+                return this.OwningRow?.OwningGrid;
             }
         }
 
@@ -118,8 +113,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             else
             {
                 // Clip so Details doesn't obstruct elements to the left (the RowHeader by default) as we scroll to the right
-                RectangleGeometry rg = new RectangleGeometry();
-                rg.Rect = new Rect(xClip, 0, Math.Max(0, width - xClip + rowGroupSpacerWidth), height);
+                RectangleGeometry rg = new RectangleGeometry
+                {
+                    Rect = new Rect(xClip, 0, Math.Max(0, width - xClip + rowGroupSpacerWidth), height)
+                };
                 this.Clip = rg;
             }
 

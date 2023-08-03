@@ -2,11 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
@@ -14,7 +13,6 @@ using Windows.UI.Xaml.Automation.Provider;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
@@ -29,8 +27,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         ISelectionProvider,
         ITableProvider
     {
-        private Dictionary<object, DataGridGroupItemAutomationPeer> _groupItemPeers = new Dictionary<object, DataGridGroupItemAutomationPeer>();
-        private Dictionary<object, DataGridItemAutomationPeer> _itemPeers = new Dictionary<object, DataGridItemAutomationPeer>();
+        private readonly Dictionary<object, DataGridGroupItemAutomationPeer> _groupItemPeers = new Dictionary<object, DataGridGroupItemAutomationPeer>();
+        private readonly Dictionary<object, DataGridItemAutomationPeer> _itemPeers = new Dictionary<object, DataGridItemAutomationPeer>();
         private bool _oldHorizontallyScrollable;
         private double _oldHorizontalScrollPercent;
         private double _oldHorizontalViewSize;
@@ -86,12 +84,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (!this.HorizontallyScrollable)
-                {
-                    return ScrollPatternIdentifiers.NoScroll;
-                }
-
-                return (double)(this.OwningDataGrid.HorizontalScrollBar.Value * 100.0 / this.OwningDataGrid.HorizontalScrollBar.Maximum);
+                return !this.HorizontallyScrollable
+                    ? ScrollPatternIdentifiers.NoScroll
+                    : (double)(this.OwningDataGrid.HorizontalScrollBar.Value * 100.0 / this.OwningDataGrid.HorizontalScrollBar.Maximum);
             }
         }
 
@@ -99,12 +94,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (!this.HorizontallyScrollable || DoubleUtil.IsZero(this.OwningDataGrid.HorizontalScrollBar.Maximum))
-                {
-                    return 100.0;
-                }
-
-                return (double)(this.OwningDataGrid.HorizontalScrollBar.ViewportSize * 100.0 /
+                return !this.HorizontallyScrollable || DoubleUtil.IsZero(this.OwningDataGrid.HorizontalScrollBar.Maximum)
+                    ? 100.0
+                    : (double)(this.OwningDataGrid.HorizontalScrollBar.ViewportSize * 100.0 /
                     (this.OwningDataGrid.HorizontalScrollBar.ViewportSize + this.OwningDataGrid.HorizontalScrollBar.Maximum));
             }
         }
@@ -129,12 +121,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (!this.VerticallyScrollable)
-                {
-                    return ScrollPatternIdentifiers.NoScroll;
-                }
-
-                return (double)(this.OwningDataGrid.VerticalScrollBar.Value * 100.0 / this.OwningDataGrid.VerticalScrollBar.Maximum);
+                return !this.VerticallyScrollable
+                    ? ScrollPatternIdentifiers.NoScroll
+                    : (double)(this.OwningDataGrid.VerticalScrollBar.Value * 100.0 / this.OwningDataGrid.VerticalScrollBar.Maximum);
             }
         }
 
@@ -142,12 +131,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (!this.VerticallyScrollable || DoubleUtil.IsZero(this.OwningDataGrid.VerticalScrollBar.Maximum))
-                {
-                    return 100.0;
-                }
-
-                return (double)(this.OwningDataGrid.VerticalScrollBar.ViewportSize * 100.0 /
+                return !this.VerticallyScrollable || DoubleUtil.IsZero(this.OwningDataGrid.VerticalScrollBar.Maximum)
+                    ? 100.0
+                    : (double)(this.OwningDataGrid.VerticalScrollBar.ViewportSize * 100.0 /
                     (this.OwningDataGrid.VerticalScrollBar.ViewportSize + this.OwningDataGrid.VerticalScrollBar.Maximum));
             }
         }
@@ -554,8 +540,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 column >= 0 && column < this.OwningDataGrid.ColumnsItemsInternal.Count &&
                 this.OwningDataGrid.IsSlotVisible(slot))
             {
-                DataGridRow row = this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) as DataGridRow;
-                if (row != null)
+                if (this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) is DataGridRow row)
                 {
                     DiagnosticsDebug.Assert(column >= 0, "Expected positive column value.");
                     DiagnosticsDebug.Assert(column < this.OwningDataGrid.ColumnsItemsInternal.Count, "Expected smaller column value.");
@@ -572,13 +557,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             if (AutomationPeer.ListenerExists(AutomationEvents.InvokePatternOnInvoked))
             {
                 AutomationPeer peer = FrameworkElementAutomationPeer.FromElement(element);
-                if (peer != null)
-                {
-#if DEBUG_AUTOMATION
-                    Debug.WriteLine(peer.ToString() + ".RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked)");
-#endif
-                    peer.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
-                }
+                peer?.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
             }
         }
 
@@ -672,22 +651,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 List<object> groups = new List<object>(this.OwningDataGrid.DataConnection.CollectionView.CollectionGroups);
                 while (groups.Count > 0)
                 {
-                    ICollectionViewGroup cvGroup = groups[0] as ICollectionViewGroup;
                     groups.RemoveAt(0);
-                    if (cvGroup != null)
+                    if (groups[0] is ICollectionViewGroup cvGroup)
                     {
                         // Add the group's peer to the collection
-                        DataGridGroupItemAutomationPeer peer = null;
-
-                        if (oldChildren.ContainsKey(cvGroup))
-                        {
-                            peer = oldChildren[cvGroup] as DataGridGroupItemAutomationPeer;
-                        }
-                        else
-                        {
-                            peer = new DataGridGroupItemAutomationPeer(cvGroup, this.OwningDataGrid);
-                        }
-
+                        DataGridGroupItemAutomationPeer peer = oldChildren.ContainsKey(cvGroup)
+                            ? oldChildren[cvGroup]
+                            : new DataGridGroupItemAutomationPeer(cvGroup, this.OwningDataGrid);
                         if (peer != null)
                         {
                             DataGridRowGroupHeaderAutomationPeer rghPeer = peer.OwningRowGroupHeaderPeer;
@@ -731,16 +701,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 {
                     if (item != null)
                     {
-                        DataGridItemAutomationPeer peer;
-                        if (oldChildren.ContainsKey(item))
-                        {
-                            peer = oldChildren[item] as DataGridItemAutomationPeer;
-                        }
-                        else
-                        {
-                            peer = new DataGridItemAutomationPeer(item, this.OwningDataGrid);
-                        }
-
+                        DataGridItemAutomationPeer peer = oldChildren.ContainsKey(item)
+                            ? oldChildren[item]
+                            : new DataGridItemAutomationPeer(item, this.OwningDataGrid);
                         if (peer != null)
                         {
                             DataGridRowAutomationPeer rowPeer = peer.OwningRowPeer;
@@ -763,13 +726,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         internal void RaiseAutomationCellSelectedEvent(int slot, int column)
         {
             AutomationPeer cellPeer = GetCellPeer(slot, column);
-            if (cellPeer != null)
-            {
-#if DEBUG_AUTOMATION
-                Debug.WriteLine(cellPeer.ToString() + ".RaiseAutomationEvent(AutomationEvents.SelectionItemPatternOnElementSelected)");
-#endif
-                cellPeer.RaiseAutomationEvent(AutomationEvents.SelectionItemPatternOnElementSelected);
-            }
+            cellPeer?.RaiseAutomationEvent(AutomationEvents.SelectionItemPatternOnElementSelected);
         }
 
         internal void RaiseAutomationFocusChangedEvent(int slot, int column)
@@ -780,29 +737,16 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             {
                 if (this.OwningDataGrid.RowGroupHeadersTable.Contains(slot))
                 {
-                    DataGridRowGroupHeader header = this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) as DataGridRowGroupHeader;
-                    if (header != null)
+                    if (this.OwningDataGrid.DisplayData.GetDisplayedElement(slot) is DataGridRowGroupHeader header)
                     {
                         AutomationPeer headerPeer = CreatePeerForElement(header);
-                        if (headerPeer != null)
-                        {
-#if DEBUG_AUTOMATION
-                            Debug.WriteLine(headerPeer.ToString() + ".RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged)");
-#endif
-                            headerPeer.RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged);
-                        }
+                        headerPeer?.RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged);
                     }
                 }
                 else
                 {
                     AutomationPeer cellPeer = GetCellPeer(slot, column);
-                    if (cellPeer != null)
-                    {
-#if DEBUG_AUTOMATION
-                        Debug.WriteLine(cellPeer.ToString() + ".RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged)");
-#endif
-                        cellPeer.RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged);
-                    }
+                    cellPeer?.RaiseAutomationEvent(AutomationEvents.AutomationFocusChanged);
                 }
             }
         }
@@ -812,44 +756,38 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             switch (editingUnit)
             {
                 case DataGridEditingUnit.Cell:
-                {
-                    DataGridCell cell = row.Cells[column.Index];
-                    AutomationPeer peer = FromElement(cell);
-                    if (peer != null)
                     {
-                        peer.InvalidatePeer();
-                    }
-                    else
-                    {
-                        peer = CreatePeerForElement(cell);
-                    }
+                        DataGridCell cell = row.Cells[column.Index];
+                        AutomationPeer peer = FromElement(cell);
+                        if (peer != null)
+                        {
+                            peer.InvalidatePeer();
+                        }
+                        else
+                        {
+                            peer = CreatePeerForElement(cell);
+                        }
 
-                    if (peer != null)
-                    {
-#if DEBUG_AUTOMATION
-                        Debug.WriteLine(peer.ToString() + ".RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked)");
-#endif
-                        peer.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
-                    }
+                        peer?.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
 
-                    break;
-                }
+                        break;
+                    }
 
                 case DataGridEditingUnit.Row:
-                {
-                    DataGridItemAutomationPeer peer = GetOrCreateItemPeer(row.DataContext);
+                    {
+                        DataGridItemAutomationPeer peer = GetOrCreateItemPeer(row.DataContext);
 #if DEBUG_AUTOMATION
                     Debug.WriteLine("DataGridItemAutomationPeer.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked)");
 #endif
-                    peer.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
-                    break;
-                }
+                        peer.RaiseAutomationEvent(AutomationEvents.InvokePatternOnInvoked);
+                        break;
+                    }
             }
         }
 
         internal void RaiseAutomationScrollEvents()
         {
-            IScrollProvider isp = (IScrollProvider)this;
+            IScrollProvider isp = this;
 
             bool newHorizontallyScrollable = isp.HorizontallyScrollable;
             double newHorizontalViewSize = isp.HorizontalViewSize;
@@ -969,8 +907,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         internal void UpdateRowGroupHeaderPeerEventsSource(DataGridRowGroupHeader header)
         {
             object group = header.RowGroupInfo.CollectionViewGroup;
-            DataGridRowGroupHeaderAutomationPeer peer = DataGridRowGroupHeaderAutomationPeer.FromElement(header) as DataGridRowGroupHeaderAutomationPeer;
-            if (peer != null && group != null && _groupItemPeers.ContainsKey(group))
+            if (DataGridRowGroupHeaderAutomationPeer.FromElement(header) is DataGridRowGroupHeaderAutomationPeer peer && group != null && _groupItemPeers.ContainsKey(group))
             {
                 peer.EventsSource = _groupItemPeers[group];
             }
@@ -978,8 +915,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
 
         internal void UpdateRowPeerEventsSource(DataGridRow row)
         {
-            DataGridRowAutomationPeer peer = FromElement(row) as DataGridRowAutomationPeer;
-            if (peer != null && row.DataContext != null && _itemPeers.ContainsKey(row.DataContext))
+            if (FromElement(row) is DataGridRowAutomationPeer peer && row.DataContext != null && _itemPeers.ContainsKey(row.DataContext))
             {
                 peer.EventsSource = _itemPeers[row.DataContext];
             }

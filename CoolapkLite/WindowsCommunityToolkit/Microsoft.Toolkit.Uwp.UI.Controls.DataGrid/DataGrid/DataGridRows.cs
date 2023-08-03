@@ -2,20 +2,19 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -96,8 +95,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 // is not always up to date enough for this
                 foreach (UIElement element in this.DisplayData.GetScrollingElements())
                 {
-                    DataGridRow row = element as DataGridRow;
-                    if (row != null)
+                    if (element is DataGridRow row)
                     {
                         totalRowsHeight += row.TargetHeight;
                     }
@@ -167,8 +165,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 foreach (object groupObj in collectionViewGroup.GroupItems)
                 {
-                    ICollectionViewGroup subGroup = groupObj as ICollectionViewGroup;
-                    if (subGroup != null)
+                    if (groupObj is ICollectionViewGroup subGroup)
                     {
                         CollapseRowGroup(subGroup, collapseAllSubgroups);
                     }
@@ -198,8 +195,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 foreach (object groupObj in collectionViewGroup.GroupItems)
                 {
-                    ICollectionViewGroup subGroup = groupObj as ICollectionViewGroup;
-                    if (subGroup != null)
+                    if (groupObj is ICollectionViewGroup subGroup)
                     {
                         ExpandRowGroup(subGroup, expandAllSubgroups);
                     }
@@ -237,8 +233,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                          slot > -1 && slot <= this.DisplayData.LastScrollingSlot;
                          slot++)
                     {
-                        DataGridRow row = this.DisplayData.GetDisplayedElement(slot) as DataGridRow;
-                        if (row != null)
+                        if (this.DisplayData.GetDisplayedElement(slot) is DataGridRow row)
                         {
                             if (_selectedItems.ContainsSlot(row.Slot))
                             {
@@ -354,16 +349,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else
             {
-                if (gridLevelRowDetailsVisibility == DataGridRowDetailsVisibilityMode.Visible ||
+                return gridLevelRowDetailsVisibility == DataGridRowDetailsVisibilityMode.Visible ||
                     (gridLevelRowDetailsVisibility == DataGridRowDetailsVisibilityMode.VisibleWhenSelected &&
-                     _selectedItems.ContainsSlot(SlotFromRowIndex(rowIndex))))
-                {
-                    return Visibility.Visible;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
+                     _selectedItems.ContainsSlot(SlotFromRowIndex(rowIndex)))
+                    ? Visibility.Visible
+                    : Visibility.Collapsed;
             }
         }
 
@@ -419,7 +409,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else
             {
-                InsertElement(slot, null, _vScrollBar == null || _vScrollBar.Visibility == Visibility.Visible /*updateVerticalScrollBarOnly*/, false /*isCollapsed*/, isRow);
+                InsertElement(slot, null, VerticalScrollBar == null || VerticalScrollBar.Visibility == Visibility.Visible /*updateVerticalScrollBarOnly*/, false /*isCollapsed*/, isRow);
             }
         }
 
@@ -846,8 +836,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private void AddSlotElement(int slot, UIElement element)
         {
 #if DEBUG
-            DataGridRow row = element as DataGridRow;
-            if (row != null)
+            if (element is DataGridRow row)
             {
                 DiagnosticsDebug.Assert(row.OwningGrid == this, "Expected row.OwningGrid equals this DataGrid.");
                 DiagnosticsDebug.Assert(row.Cells.Count == this.ColumnsItemsInternal.Count, "Expected row.Cells.Count equals this.ColumnsItemsInternal.Count.");
@@ -908,7 +897,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 this.SlotCount += totalSlots - slot;
                 this.VisibleSlotCount += totalSlots - slot;
-                OnAddedElement_Phase2(0, _vScrollBar == null || _vScrollBar.Visibility == Visibility.Visible /*updateVerticalScrollBarOnly*/);
+                OnAddedElement_Phase2(0, VerticalScrollBar == null || VerticalScrollBar.Visibility == Visibility.Visible /*updateVerticalScrollBarOnly*/);
                 OnElementsChanged(true /*grew*/);
             }
         }
@@ -925,10 +914,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 while (slot <= lastSlot)
                 {
                     DataGridRow row = this.DisplayData.GetDisplayedElement(slot) as DataGridRow;
-                    if (row != null)
-                    {
-                        row.ApplyState(true /*animate*/);
-                    }
+                    row?.ApplyState(true /*animate*/);
 
                     slot = GetNextVisibleSlot(slot);
                 }
@@ -1253,8 +1239,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             int treeCount = 1;
 
-            ICollectionViewGroup collectionViewGroup = group as ICollectionViewGroup;
-            if (collectionViewGroup != null)
+            if (group is ICollectionViewGroup collectionViewGroup)
             {
                 if (collectionViewGroup.GroupItems != null && collectionViewGroup.GroupItems.Count > 0)
                 {
@@ -1381,8 +1366,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 foreach (UIElement element in _rowsPresenter.Children)
                 {
-                    DataGridRow row = element as DataGridRow;
-                    if (row != null)
+                    if (element is DataGridRow row)
                     {
                         yield return row;
                     }
@@ -1396,8 +1380,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 foreach (UIElement element in _rowsPresenter.Children)
                 {
-                    DataGridRowGroupHeader rowGroupHeader = element as DataGridRowGroupHeader;
-                    if (rowGroupHeader != null)
+                    if (element is DataGridRowGroupHeader rowGroupHeader)
                     {
                         yield return rowGroupHeader;
                     }
@@ -1459,14 +1442,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void EnsureRowGroupSpacerColumnWidth(int groupLevelCount)
         {
-            if (groupLevelCount == 0)
-            {
-                this.ColumnsInternal.RowGroupSpacerColumn.Width = new DataGridLength(0);
-            }
-            else
-            {
-                this.ColumnsInternal.RowGroupSpacerColumn.Width = new DataGridLength(this.RowGroupSublevelIndents[groupLevelCount - 1]);
-            }
+            this.ColumnsInternal.RowGroupSpacerColumn.Width = groupLevelCount == 0 ? new DataGridLength(0) : new DataGridLength(this.RowGroupSublevelIndents[groupLevelCount - 1]);
         }
 
         private void EnsureRowGroupVisibility(DataGridRowGroupInfo rowGroupInfo, Visibility visibility, bool setCurrent)
@@ -1556,7 +1532,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     {
                         // Estimate the height change if the slots aren't displayed.  If they are displayed, we can add real values
                         double rowCount = lastSlot - firstSlot + 1;
-                        rowCount -= GetRowGroupHeaderCount(firstSlot, lastSlot, Visibility.Collapsed, out var headerHeight);
+                        rowCount -= GetRowGroupHeaderCount(firstSlot, lastSlot, Visibility.Collapsed, out double headerHeight);
                         double detailsCount = GetDetailsCountInclusive(firstSlot, lastSlot);
                         currentHeightChange += headerHeight + (detailsCount * this.RowDetailsHeightEstimate) + (rowCount * this.RowHeightEstimate);
                     }
@@ -1652,10 +1628,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 OnLoadingRow(new DataGridRowEventArgs(dataGridRow));
 
                 DataGridAutomationPeer peer = DataGridAutomationPeer.FromElement(this) as DataGridAutomationPeer;
-                if (peer != null)
-                {
-                    peer.UpdateRowPeerEventsSource(dataGridRow);
-                }
+                peer?.UpdateRowPeerEventsSource(dataGridRow);
             }
 
             return dataGridRow;
@@ -1714,10 +1687,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             groupHeader.UpdateTitleElements();
 
             DataGridAutomationPeer peer = DataGridAutomationPeer.FromElement(this) as DataGridAutomationPeer;
-            if (peer != null)
-            {
-                peer.UpdateRowGroupHeaderPeerEventsSource(groupHeader);
-            }
+            peer?.UpdateRowGroupHeaderPeerEventsSource(groupHeader);
 
             return groupHeader;
         }
@@ -1749,7 +1719,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private double GetHeightEstimate(int fromSlot, int toSlot)
         {
             double rowCount = toSlot - fromSlot + 1;
-            rowCount -= GetRowGroupHeaderCount(fromSlot, toSlot, Visibility.Visible, out var headerHeight);
+            rowCount -= GetRowGroupHeaderCount(fromSlot, toSlot, Visibility.Visible, out double headerHeight);
             double detailsCount = GetDetailsCountInclusive(fromSlot, toSlot);
 
             return headerHeight + (detailsCount * this.RowDetailsHeightEstimate) + (rowCount * this.RowHeightEstimate);
@@ -1869,12 +1839,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
 
             // Check the potential focused row.
-            if (_focusedRow != null && dataContext == _focusedRow.DataContext)
-            {
-                return _focusedRow;
-            }
-
-            return null;
+            return _focusedRow != null && dataContext == _focusedRow.DataContext ? _focusedRow : null;
         }
 
         private DataGridRow GetLoadedRow(object dataContext)
@@ -1958,8 +1923,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
                         groupHeader.LoadVisualsForDisplay();
 
-                        Style lastStyle = _rowGroupHeaderStyles.Count > 0 ? _rowGroupHeaderStyles[_rowGroupHeaderStyles.Count - 1] : null;
-                        EnsureElementStyle(groupHeader, groupHeader.Style, groupHeader.Level < _rowGroupHeaderStyles.Count ? _rowGroupHeaderStyles[groupHeader.Level] : lastStyle);
+                        Style lastStyle = RowGroupHeaderStyles.Count > 0 ? RowGroupHeaderStyles[RowGroupHeaderStyles.Count - 1] : null;
+                        EnsureElementStyle(groupHeader, groupHeader.Style, groupHeader.Level < RowGroupHeaderStyles.Count ? RowGroupHeaderStyles[groupHeader.Level] : lastStyle);
                     }
                 }
 
@@ -2139,8 +2104,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void OnCollectionViewGroupItemRemoved(object groupItems, object removedItem, int removedIndex)
         {
-            ICollectionViewGroup removedGroup = removedItem as ICollectionViewGroup;
-            if (removedGroup != null)
+            if (removedItem is ICollectionViewGroup removedGroup)
             {
                 if (removedGroup.GroupItems != null)
                 {
@@ -2230,8 +2194,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             if (element != null)
             {
 #if DEBUG
-                DataGridRow dataGridRow = element as DataGridRow;
-                if (dataGridRow != null)
+                if (element is DataGridRow dataGridRow)
                 {
                     DiagnosticsDebug.Assert(dataGridRow.Cells.Count == this.ColumnsItemsInternal.Count, "Expected dataGridRow.Cells.Count equals ColumnsItemsInternal.Count.");
 
@@ -2384,7 +2347,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         // When we delete a row in view, we also need to adjust the verticalOffset
                         // in the cases where the deletion causes us to be scrolled further down than
                         // what is possible.
-                        double newVerticalScrollBarMax = _vScrollBar.Maximum - elementDeleted.DesiredSize.Height;
+                        double newVerticalScrollBarMax = VerticalScrollBar.Maximum - elementDeleted.DesiredSize.Height;
                         if (_verticalOffset > newVerticalScrollBarMax)
                         {
                             verticalOffsetAdjustment = elementDeleted.DesiredSize.Height;
@@ -2541,8 +2504,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (groupItems != null && !_groupsVectorChangedListenersTable.ContainsKey(groupItems))
             {
-                WeakEventListener<DataGrid, object, IVectorChangedEventArgs> weakVectorChangedListener = new WeakEventListener<DataGrid, object, IVectorChangedEventArgs>(this);
-                weakVectorChangedListener.OnEventAction = (instance, source, eventArgs) => instance.CollectionViewGroupItems_VectorChanged(source as IObservableVector<object>, eventArgs);
+                WeakEventListener<DataGrid, object, IVectorChangedEventArgs> weakVectorChangedListener = new WeakEventListener<DataGrid, object, IVectorChangedEventArgs>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.CollectionViewGroupItems_VectorChanged(source as IObservableVector<object>, eventArgs)
+                };
                 weakVectorChangedListener.OnDetachAction = (weakEventListener) => groupItems.VectorChanged -= weakVectorChangedListener.OnEvent;
                 groupItems.VectorChanged += weakVectorChangedListener.OnEvent;
 
@@ -2552,8 +2517,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void UnhookVectorChangedListenerFromGroup(IObservableVector<object> groupItems, bool removeFromTable)
         {
-            WeakEventListener<DataGrid, object, IVectorChangedEventArgs> weakVectorChangedListener;
-            if (groupItems != null && _groupsVectorChangedListenersTable.TryGetValue(groupItems, out weakVectorChangedListener))
+            if (groupItems != null && _groupsVectorChangedListenersTable.TryGetValue(groupItems, out WeakEventListener<DataGrid, object, IVectorChangedEventArgs> weakVectorChangedListener))
             {
                 weakVectorChangedListener.Detach();
                 if (removeFromTable)
@@ -2644,8 +2608,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         // retrieved from the slot information
         private void RemoveDisplayedElement(UIElement element, int slot, bool wasDeleted, bool updateSlotInformation)
         {
-            DataGridRow dataGridRow = element as DataGridRow;
-            if (dataGridRow != null)
+            if (element is DataGridRow dataGridRow)
             {
                 if (IsRowRecyclable(dataGridRow))
                 {
@@ -2658,15 +2621,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else
             {
-                DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                if (groupHeader != null)
+                if (element is DataGridRowGroupHeader groupHeader)
                 {
                     OnUnloadingRowGroup(new DataGridRowGroupHeaderEventArgs(groupHeader));
                     this.DisplayData.AddRecylableRowGroupHeader(groupHeader);
                 }
-                else if (_rowsPresenter != null)
+                else
                 {
-                    _rowsPresenter.Children.Remove(element);
+                    _rowsPresenter?.Children.Remove(element);
                 }
             }
 
@@ -2711,13 +2673,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             // and CurrentSlot with the currently edited cell, since OnRemovingElement called
             // SetCurrentCellCore(-1, -1) to temporarily reset the current cell.
             if (_temporarilyResetCurrentCell &&
-                _editingColumnIndex != -1 &&
+                EditingColumnIndex != -1 &&
                 _previousCurrentItem != null &&
                 this.EditingRow != null &&
                 this.EditingRow.Slot != -1)
             {
                 ProcessSelectionAndCurrency(
-                    columnIndex: _editingColumnIndex,
+                    columnIndex: EditingColumnIndex,
                     item: _previousCurrentItem,
                     backupSlot: this.EditingRow.Slot,
                     action: DataGridSelectionAction.None,
@@ -2747,8 +2709,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 foreach (UIElement element in this.DisplayData.GetScrollingElements())
                 {
                     // Raise Unloading Row for all the rows we're displaying
-                    DataGridRow row = element as DataGridRow;
-                    if (row != null)
+                    if (element is DataGridRow row)
                     {
                         if (IsRowRecyclable(row))
                         {
@@ -2758,8 +2719,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     else
                     {
                         // Raise Unloading Row for all the RowGroupHeaders we're displaying
-                        DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                        if (groupHeader != null)
+                        if (element is DataGridRowGroupHeader groupHeader)
                         {
                             OnUnloadingRowGroup(new DataGridRowGroupHeaderEventArgs(groupHeader));
                         }
@@ -2819,7 +2779,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     // Scrolling Down
                     int lastVisibleSlot = GetPreviousVisibleSlot(this.SlotCount);
-                    if (_vScrollBar != null && DoubleUtil.AreClose(_vScrollBar.Maximum, newVerticalOffset))
+                    if (VerticalScrollBar != null && DoubleUtil.AreClose(VerticalScrollBar.Maximum, newVerticalOffset))
                     {
                         // We've scrolled to the bottom of the ScrollBar, automatically place the user at the very bottom
                         // of the DataGrid.  If this produces very odd behavior, evaluate the coping strategy used by
@@ -3050,10 +3010,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 DiagnosticsDebug.Assert(DoubleUtil.GreaterThanOrClose(_verticalOffset, this.NegVerticalOffset), "Expected _verticalOffset greater than or close to NegVerticalOffset.");
 
                 DataGridAutomationPeer peer = DataGridAutomationPeer.FromElement(this) as DataGridAutomationPeer;
-                if (peer != null)
-                {
-                    peer.RaiseAutomationScrollEvents();
-                }
+                peer?.RaiseAutomationScrollEvents();
             }
             finally
             {
@@ -3065,8 +3022,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             DiagnosticsDebug.Assert(IsSlotVisible(slot), "Expected IsSlotVisible(slot) is true.");
             FrameworkElement element = this.DisplayData.GetDisplayedElement(slot) as FrameworkElement;
-            DataGridRow row = this.DisplayData.GetDisplayedElement(slot) as DataGridRow;
-            if (row != null)
+            if (this.DisplayData.GetDisplayedElement(slot) is DataGridRow row)
             {
                 row.ApplyState(true /*animate*/);
                 EnsureRowDetailsVisibility(
@@ -3158,8 +3114,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 foreach (UIElement element in _rowsPresenter.Children)
                 {
-                    DataGridRow row = element as DataGridRow;
-                    if (row != null)
+                    if (element is DataGridRow row)
                     {
                         // Raise UnloadingRow for any row that was visible
                         if (this.IsSlotVisible(row.Slot))
@@ -3171,8 +3126,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                     }
                     else
                     {
-                        DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                        if (groupHeader != null && this.IsSlotVisible(groupHeader.RowGroupInfo.Slot))
+                        if (element is DataGridRowGroupHeader groupHeader && this.IsSlotVisible(groupHeader.RowGroupInfo.Slot))
                         {
                             OnUnloadingRowGroup(new DataGridRowGroupHeaderEventArgs(groupHeader));
                         }
@@ -3272,14 +3226,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 this.NegVerticalOffset = newNegVerticalOffset;
             }
 
-            if (DoubleUtil.GreaterThan(deltaY, displayHeight) || (DoubleUtil.AreClose(deltaY, displayHeight) && DoubleUtil.GreaterThan(this.NegVerticalOffset, 0)))
-            {
-                this.DisplayData.NumTotallyDisplayedScrollingElements = visibleScrollingRows - 1;
-            }
-            else
-            {
-                this.DisplayData.NumTotallyDisplayedScrollingElements = visibleScrollingRows;
-            }
+            this.DisplayData.NumTotallyDisplayedScrollingElements = DoubleUtil.GreaterThan(deltaY, displayHeight) || (DoubleUtil.AreClose(deltaY, displayHeight) && DoubleUtil.GreaterThan(this.NegVerticalOffset, 0))
+                ? visibleScrollingRows - 1
+                : visibleScrollingRows;
 
             if (visibleScrollingRows == 0)
             {
@@ -3349,8 +3298,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (_rowsPresenter != null && _measured && this.RowDetailsTemplate != null)
             {
-                FrameworkElement detailsContent = this.RowDetailsTemplate.LoadContent() as FrameworkElement;
-                if (detailsContent != null)
+                if (this.RowDetailsTemplate.LoadContent() is FrameworkElement detailsContent)
                 {
                     if (this.VisibleSlotCount > 0)
                     {

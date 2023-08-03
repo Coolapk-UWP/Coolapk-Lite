@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.ComponentModel;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Primitives;
@@ -63,17 +62,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The string that contains the help text.</returns>
         protected override string GetHelpTextCore()
         {
-            if (this.OwningHeader.OwningColumn != null && this.OwningHeader.OwningColumn.SortDirection.HasValue)
-            {
-                if (this.OwningHeader.OwningColumn.SortDirection.Value == DataGridSortDirection.Ascending)
-                {
-                    return "Ascending";
-                }
-
-                return "Descending";
-            }
-
-            return base.GetHelpTextCore();
+            return this.OwningHeader.OwningColumn != null && this.OwningHeader.OwningColumn.SortDirection.HasValue
+                ? this.OwningHeader.OwningColumn.SortDirection.Value == DataGridSortDirection.Ascending ? "Ascending" : "Descending"
+                : base.GetHelpTextCore();
         }
 
         /// <summary>
@@ -82,13 +73,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The string that contains the name.</returns>
         protected override string GetNameCore()
         {
-            string header = this.OwningHeader.Content as string;
-            if (header != null)
-            {
-                return header;
-            }
-
-            return base.GetNameCore();
+            return this.OwningHeader.Content is string header ? header : base.GetNameCore();
         }
 
         /// <summary>

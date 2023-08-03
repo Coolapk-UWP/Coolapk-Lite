@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
-using Microsoft.Toolkit.Uwp.Utilities;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml.Data;
@@ -81,8 +81,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             _sourceCollection = collection ?? throw new ArgumentNullException("collection");
 
             // forward collection change events from underlying collection to our listeners.
-            INotifyCollectionChanged incc = collection as INotifyCollectionChanged;
-            if (incc != null)
+            if (collection is INotifyCollectionChanged incc)
             {
                 _sourceWeakEventListener =
                     new WeakEventListener<CollectionView, object, NotifyCollectionChangedEventArgs>(this)
@@ -437,14 +436,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         {
             VerifyRefreshNotDeferred();
 
-            if (CurrentPosition < Count)
-            {
-                return MoveCurrentToPosition(CurrentPosition + 1);
-            }
-            else
-            {
-                return false;
-            }
+            return CurrentPosition < Count && MoveCurrentToPosition(CurrentPosition + 1);
         }
 
         /// <summary>
@@ -455,14 +447,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         {
             VerifyRefreshNotDeferred();
 
-            if (CurrentPosition >= 0)
-            {
-                return MoveCurrentToPosition(CurrentPosition - 1);
-            }
-            else
-            {
-                return false;
-            }
+            return CurrentPosition >= 0 && MoveCurrentToPosition(CurrentPosition - 1);
         }
 
         /// <summary>
@@ -689,7 +674,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             unchecked
             {
                 // invalidate enumerators because of a change
-                ++_timestamp;
+                ++Timestamp;
             }
 
             CollectionChanged?.Invoke(this, args);
@@ -803,7 +788,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
                 throw new ArgumentNullException("args");
             }
 
-            if (_currentChangedMonitor.Busy)
+            if (CurrentChangedMonitor.Busy)
             {
                 if (args.IsCancelable)
                 {
@@ -821,9 +806,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         /// </summary>
         protected virtual void OnCurrentChanged()
         {
-            if (CurrentChanged != null && _currentChangedMonitor.Enter())
+            if (CurrentChanged != null && CurrentChangedMonitor.Enter())
             {
-                using (_currentChangedMonitor)
+                using (CurrentChangedMonitor)
                 {
                     CurrentChanged(this, EventArgs.Empty);
                 }
@@ -896,14 +881,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         {
             get
             {
-                if (IsCurrentInView)
-                {
-                    return GetItemAt(CurrentPosition) == CurrentItem;
-                }
-                else
-                {
-                    return CurrentItem == null;
-                }
+                return IsCurrentInView ? GetItemAt(CurrentPosition) == CurrentItem : CurrentItem == null;
             }
         }
 
@@ -999,40 +977,20 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         //  Internal Properties
         //
         //------------------------------------------------------
-        internal SimpleMonitor CurrentChangedMonitor
-        {
-            get
-            {
-                return _currentChangedMonitor;
-            }
-        }
+        internal SimpleMonitor CurrentChangedMonitor { get; } = new SimpleMonitor();
 
         internal object SyncRoot
         {
             get
             {
-                ICollection collection = SourceCollection as ICollection;
-                if (collection != null && collection.SyncRoot != null)
-                {
-                    return collection.SyncRoot;
-                }
-                else
-                {
-                    return SourceCollection;
-                }
+                return SourceCollection is ICollection collection && collection.SyncRoot != null ? collection.SyncRoot : SourceCollection;
             }
         }
 
         // Timestamp is used by the PlaceholderAwareEnumerator to determine if a
         // collection change has occurred since the enumerator began.  (If so,
         // MoveNext should throw.)
-        internal int Timestamp
-        {
-            get
-            {
-                return _timestamp;
-            }
-        }
+        internal int Timestamp { get; private set; }
 
         //------------------------------------------------------
         //
@@ -1114,11 +1072,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
                 _baseEnumerator.Reset();
             }
 
-            private CollectionView _collectionView;
-            private IEnumerator _baseEnumerator;
+            private readonly CollectionView _collectionView;
+            private readonly IEnumerator _baseEnumerator;
             private Position _position;
-            private object _newItem;
-            private int _timestamp;
+            private readonly object _newItem;
+            private readonly int _timestamp;
         }
 
         //------------------------------------------------------
@@ -1151,11 +1109,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         {
             if (value)
             {
-                _flags = _flags | flags;
+                _flags |= flags;
             }
             else
             {
-                _flags = _flags & ~flags;
+                _flags &= ~flags;
             }
         }
 
@@ -1212,30 +1170,22 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         {
             public bool Enter()
             {
-                if (_entered)
+                if (Busy)
                 {
                     return false;
                 }
 
-                _entered = true;
+                Busy = true;
                 return true;
             }
 
             public void Dispose()
             {
-                _entered = false;
+                Busy = false;
                 GC.SuppressFinalize(this);
             }
 
-            public bool Busy
-            {
-                get
-                {
-                    return _entered;
-                }
-            }
-
-            private bool _entered;
+            public bool Busy { get; private set; }
         }
 
         // Private members and types
@@ -1265,15 +1215,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         internal static readonly object NoNewItem = new object();
 
         // State
-        private IEnumerable _sourceCollection;
+        private readonly IEnumerable _sourceCollection;
         private CollectionViewFlags _flags = CollectionViewFlags.ShouldProcessCollectionChanged | CollectionViewFlags.NeedsRefresh;
-        private int _timestamp;
         private object _currentItem;
         private int _currentPosition;
         private CultureInfo _culture;
         private int _deferLevel;
-        private SimpleMonitor _currentChangedMonitor = new SimpleMonitor();
-        private WeakEventListener<CollectionView, object, NotifyCollectionChangedEventArgs> _sourceWeakEventListener;
+        private readonly WeakEventListener<CollectionView, object, NotifyCollectionChangedEventArgs> _sourceWeakEventListener;
 #if FEATURE_ICOLLECTIONVIEW_FILTER
         private Predicate<object> _filter;
 #endif

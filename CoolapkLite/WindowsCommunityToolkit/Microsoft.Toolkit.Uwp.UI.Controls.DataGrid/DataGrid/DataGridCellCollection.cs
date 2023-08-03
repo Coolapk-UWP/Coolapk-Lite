@@ -2,18 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
 {
     internal class DataGridCellCollection
     {
-        private List<DataGridCell> _cells;
-        private DataGridRow _owningRow;
+        private readonly List<DataGridCell> _cells;
+        private readonly DataGridRow _owningRow;
 
         internal event EventHandler<DataGridCellEventArgs> CellAdded;
 
@@ -46,10 +46,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             cell.OwningRow = _owningRow;
             _cells.Insert(cellIndex, cell);
 
-            if (CellAdded != null)
-            {
-                CellAdded(this, new DataGridCellEventArgs(cell));
-            }
+            CellAdded?.Invoke(this, new DataGridCellEventArgs(cell));
         }
 
         public void RemoveAt(int cellIndex)
@@ -57,22 +54,16 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             DataGridCell dataGridCell = _cells[cellIndex];
             _cells.RemoveAt(cellIndex);
             dataGridCell.OwningRow = null;
-            if (CellRemoved != null)
-            {
-                CellRemoved(this, new DataGridCellEventArgs(dataGridCell));
-            }
+            CellRemoved?.Invoke(this, new DataGridCellEventArgs(dataGridCell));
         }
 
         public DataGridCell this[int index]
         {
             get
             {
-                if (index < 0 || index >= _cells.Count)
-                {
-                    throw DataGridError.DataGrid.ValueMustBeBetween("index", "Index", 0, true, _cells.Count, false);
-                }
-
-                return _cells[index];
+                return index < 0 || index >= _cells.Count
+                    ? throw DataGridError.DataGrid.ValueMustBeBetween("index", "Index", 0, true, _cells.Count, false)
+                    : _cells[index];
             }
         }
     }

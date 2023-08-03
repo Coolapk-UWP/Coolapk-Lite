@@ -2,14 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
+using Microsoft.Toolkit.Uwp.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
-using Microsoft.Toolkit.Uwp.Utilities;
 using Windows.UI.Xaml.Controls;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -19,7 +17,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private List<object> _oldSelectedItemsCache;
         private IndexToValueTable<bool> _oldSelectedSlotsTable;
         private List<object> _selectedItemsCache;
-        private IndexToValueTable<bool> _selectedSlotsTable;
+        private readonly IndexToValueTable<bool> _selectedSlotsTable;
 
         public DataGridSelectedItemsCollection(DataGrid owningGrid)
         {

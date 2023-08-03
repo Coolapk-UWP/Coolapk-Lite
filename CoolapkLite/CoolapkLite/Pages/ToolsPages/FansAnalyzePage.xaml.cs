@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers.Converters;
-using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;

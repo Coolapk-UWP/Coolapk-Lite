@@ -2,18 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Primitives;
 using Microsoft.Toolkit.Uwp.UI.Data.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
@@ -68,12 +66,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid == null || double.IsNaN(this.Width.DisplayValue))
-                {
-                    return this.ActualMinWidth;
-                }
-
-                return this.Width.DisplayValue;
+                return this.OwningGrid == null || double.IsNaN(this.Width.DisplayValue) ? this.ActualMinWidth : this.Width.DisplayValue;
             }
         }
 
@@ -87,18 +80,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.CanUserReorderInternal.HasValue)
-                {
-                    return this.CanUserReorderInternal.Value;
-                }
-                else if (this.OwningGrid != null)
-                {
-                    return this.OwningGrid.CanUserReorderColumns;
-                }
-                else
-                {
-                    return DATAGRIDCOLUMN_defaultCanUserReorder;
-                }
+                return this.CanUserReorderInternal.HasValue
+                    ? this.CanUserReorderInternal.Value
+                    : this.OwningGrid == null || this.OwningGrid.CanUserReorderColumns;
             }
 
             set
@@ -117,27 +101,15 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.CanUserResizeInternal.HasValue)
-                {
-                    return this.CanUserResizeInternal.Value;
-                }
-                else if (this.OwningGrid != null)
-                {
-                    return this.OwningGrid.CanUserResizeColumns;
-                }
-                else
-                {
-                    return DATAGRIDCOLUMN_defaultCanUserResize;
-                }
+                return this.CanUserResizeInternal.HasValue
+                    ? this.CanUserResizeInternal.Value
+                    : this.OwningGrid == null || this.OwningGrid.CanUserResizeColumns;
             }
 
             set
             {
                 this.CanUserResizeInternal = value;
-                if (this.OwningGrid != null)
-                {
-                    this.OwningGrid.OnColumnCanUserResizeChanged(this);
-                }
+                this.OwningGrid?.OnColumnCanUserResizeChanged(this);
             }
         }
 
@@ -202,10 +174,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     Style previousStyle = _cellStyle;
                     _cellStyle = value;
-                    if (this.OwningGrid != null)
-                    {
-                        this.OwningGrid.OnColumnCellStyleChanged(this, previousStyle);
-                    }
+                    this.OwningGrid?.OnColumnCellStyleChanged(this, previousStyle);
                 }
             }
         }
@@ -250,14 +219,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid != null && this.OwningGrid.ColumnsInternal.RowGroupSpacerColumn.IsRepresented)
-                {
-                    return _displayIndexWithFiller - 1;
-                }
-                else
-                {
-                    return _displayIndexWithFiller;
-                }
+                return this.OwningGrid != null && this.OwningGrid.ColumnsInternal.RowGroupSpacerColumn.IsRepresented
+                    ? _displayIndexWithFiller - 1
+                    : _displayIndexWithFiller;
             }
 
             set
@@ -343,10 +307,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     Style previousStyle = _headerStyle;
                     _headerStyle = value;
-                    if (_headerCell != null)
-                    {
-                        _headerCell.EnsureStyle(previousStyle);
-                    }
+                    _headerCell?.EnsureStyle(previousStyle);
                 }
             }
         }
@@ -399,27 +360,18 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid == null)
-                {
-                    return _isReadOnly ?? DATAGRIDCOLUMN_defaultIsReadOnly;
-                }
-
-                if (_isReadOnly != null)
-                {
-                    return _isReadOnly.Value || this.OwningGrid.IsReadOnly;
-                }
-
-                return this.OwningGrid.GetColumnReadOnlyState(this, DATAGRIDCOLUMN_defaultIsReadOnly);
+                return this.OwningGrid == null
+                    ? _isReadOnly ?? DATAGRIDCOLUMN_defaultIsReadOnly
+                    : _isReadOnly != null
+                    ? _isReadOnly.Value || this.OwningGrid.IsReadOnly
+                    : this.OwningGrid.GetColumnReadOnlyState(this, DATAGRIDCOLUMN_defaultIsReadOnly);
             }
 
             set
             {
                 if (value != _isReadOnly)
                 {
-                    if (this.OwningGrid != null)
-                    {
-                        this.OwningGrid.OnColumnReadOnlyStateChanging(this, value);
-                    }
+                    this.OwningGrid?.OnColumnReadOnlyStateChanging(this, value);
 
                     _isReadOnly = value;
                 }
@@ -433,12 +385,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (_maxWidth.HasValue)
-                {
-                    return _maxWidth.Value;
-                }
-
-                return double.PositiveInfinity;
+                return _maxWidth.HasValue ? _maxWidth.Value : double.PositiveInfinity;
             }
 
             set
@@ -472,12 +419,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (_minWidth.HasValue)
-                {
-                    return _minWidth.Value;
-                }
-
-                return 0;
+                return _minWidth.HasValue ? _minWidth.Value : 0;
             }
 
             set
@@ -572,10 +514,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             {
                 if (value != this.Visibility)
                 {
-                    if (this.OwningGrid != null)
-                    {
-                        this.OwningGrid.OnColumnVisibleStateChanging(this);
-                    }
+                    this.OwningGrid?.OnColumnVisibleStateChanging(this);
 
                     _visibility = value;
 
@@ -584,10 +523,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         _headerCell.Visibility = _visibility;
                     }
 
-                    if (this.OwningGrid != null)
-                    {
-                        this.OwningGrid.OnColumnVisibleStateChanged(this);
-                    }
+                    this.OwningGrid?.OnColumnVisibleStateChanged(this);
                 }
             }
         }
@@ -599,18 +535,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (_width.HasValue)
-                {
-                    return _width.Value;
-                }
-                else if (this.OwningGrid != null)
-                {
-                    return this.OwningGrid.ColumnWidth;
-                }
-                else
-                {
-                    return DataGridLength.Auto;
-                }
+                return _width.HasValue ? _width.Value : this.OwningGrid != null ? this.OwningGrid.ColumnWidth : DataGridLength.Auto;
             }
 
             set
@@ -652,12 +577,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningGrid == null || this.OwningGrid.CanUserResizeColumns == false || this is DataGridFillerColumn)
-                {
-                    return false;
-                }
-
-                return this.CanUserResizeInternal ?? true;
+                return this.OwningGrid != null && this.OwningGrid.CanUserResizeColumns != false && !(this is DataGridFillerColumn)
+&& (this.CanUserResizeInternal ?? true);
             }
         }
 
@@ -676,12 +597,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             get
             {
                 double minWidth = _minWidth ?? (this.OwningGrid != null ? this.OwningGrid.MinColumnWidth : 0);
-                if (this.Width.IsStar)
-                {
-                    return Math.Max(DataGrid.DATAGRID_minimumStarColumnWidth, minWidth);
-                }
-
-                return minWidth;
+                return this.Width.IsStar ? Math.Max(DataGrid.DATAGRID_minimumStarColumnWidth, minWidth) : minWidth;
             }
         }
 
@@ -816,14 +732,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             DependencyObject parent = element;
             while (parent != null)
             {
-                DataGridCell cell = parent as DataGridCell;
-                if (cell != null)
+                if (parent is DataGridCell cell)
                 {
                     return cell.OwningColumn;
                 }
 
-                DataGridColumnHeader columnHeader = parent as DataGridColumnHeader;
-                if (columnHeader != null)
+                if (parent is DataGridColumnHeader columnHeader)
                 {
                     return columnHeader.OwningColumn;
                 }
@@ -887,12 +801,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             DiagnosticsDebug.Assert(this.Index < this.OwningGrid.ColumnsItemsInternal.Count, "Expected smaller Index.");
 
             DataGridRow dataGridRow = this.OwningGrid.GetRowFromItem(dataItem);
-            if (dataGridRow == null)
-            {
-                return null;
-            }
-
-            return GetCellContent(dataGridRow);
+            return dataGridRow == null ? null : GetCellContent(dataGridRow);
         }
 
         /// <summary>
@@ -1031,13 +940,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         desiredValue = totalStarDesiredValues * width.Value / totalStarValues;
                     }
                 }
-                else if (width.IsAbsolute)
-                {
-                    desiredValue = width.Value;
-                }
                 else
                 {
-                    desiredValue = this.ActualMinWidth;
+                    desiredValue = width.IsAbsolute ? width.Value : this.ActualMinWidth;
                 }
             }
 
@@ -1062,16 +967,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (this.OwningGrid != null && this.OwningGrid.UseLayoutRounding)
             {
-                double scale;
-                if (TypeHelper.IsXamlRootAvailable && OwningGrid.XamlRoot != null)
-                {
-                    scale = OwningGrid.XamlRoot.RasterizationScale;
-                }
-                else
-                {
-                    scale = Windows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
-                }
-
+                double scale = TypeHelper.IsXamlRootAvailable && OwningGrid.XamlRoot != null
+                    ? OwningGrid.XamlRoot.RasterizationScale
+                    : Windows.Graphics.Display.DisplayInformation.GetForCurrentView().RawPixelsPerViewPixel;
                 double roundedLeftEdge = Math.Floor((scale * leftEdge) + 0.5) / scale;
                 double roundedRightEdge = Math.Floor((scale * (leftEdge + this.ActualWidth)) + 0.5) / scale;
                 this.LayoutRoundedWidth = roundedRightEdge - roundedLeftEdge;
@@ -1129,9 +1027,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal virtual DataGridColumnHeader CreateHeader()
         {
-            DataGridColumnHeader result = new DataGridColumnHeader();
-            result.OwningColumn = this;
-            result.Content = _header;
+            DataGridColumnHeader result = new DataGridColumnHeader
+            {
+                OwningColumn = this,
+                Content = _header
+            };
             result.EnsureStyle(null);
 
             return result;
@@ -1163,18 +1063,20 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         bindingData.BindingExpression.ParentBinding != null &&
                         bindingData.BindingExpression.ParentBinding.UpdateSourceTrigger != UpdateSourceTrigger.Explicit)
                     {
-                        Binding binding = new Binding();
-                        binding.Converter = bindingData.BindingExpression.ParentBinding.Converter;
-                        binding.ConverterLanguage = bindingData.BindingExpression.ParentBinding.ConverterLanguage;
-                        binding.ConverterParameter = bindingData.BindingExpression.ParentBinding.ConverterParameter;
-                        binding.ElementName = bindingData.BindingExpression.ParentBinding.ElementName;
-                        binding.FallbackValue = bindingData.BindingExpression.ParentBinding.FallbackValue;
-                        binding.Mode = bindingData.BindingExpression.ParentBinding.Mode;
-                        binding.Path = new PropertyPath(bindingData.BindingExpression.ParentBinding.Path.Path);
-                        binding.RelativeSource = bindingData.BindingExpression.ParentBinding.RelativeSource;
-                        binding.Source = bindingData.BindingExpression.ParentBinding.Source;
-                        binding.TargetNullValue = bindingData.BindingExpression.ParentBinding.TargetNullValue;
-                        binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
+                        Binding binding = new Binding
+                        {
+                            Converter = bindingData.BindingExpression.ParentBinding.Converter,
+                            ConverterLanguage = bindingData.BindingExpression.ParentBinding.ConverterLanguage,
+                            ConverterParameter = bindingData.BindingExpression.ParentBinding.ConverterParameter,
+                            ElementName = bindingData.BindingExpression.ParentBinding.ElementName,
+                            FallbackValue = bindingData.BindingExpression.ParentBinding.FallbackValue,
+                            Mode = bindingData.BindingExpression.ParentBinding.Mode,
+                            Path = new PropertyPath(bindingData.BindingExpression.ParentBinding.Path.Path),
+                            RelativeSource = bindingData.BindingExpression.ParentBinding.RelativeSource,
+                            Source = bindingData.BindingExpression.ParentBinding.Source,
+                            TargetNullValue = bindingData.BindingExpression.ParentBinding.TargetNullValue,
+                            UpdateSourceTrigger = UpdateSourceTrigger.Explicit
+                        };
                         bindingData.Element.SetBinding(bindingData.BindingTarget, binding);
                         bindingData.BindingExpression = bindingData.Element.GetBindingExpression(bindingData.BindingTarget);
                     }
@@ -1212,12 +1114,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal List<BindingInfo> GetInputBindings(FrameworkElement element, object dataItem)
         {
-            if (_inputBindings != null)
-            {
-                return _inputBindings;
-            }
-
-            return CreateBindings(element, dataItem, true /*twoWay*/);
+            return _inputBindings ?? CreateBindings(element, dataItem, true /*twoWay*/);
         }
 
 #if FEATURE_ICOLLECTIONVIEW_SORT
@@ -1347,7 +1244,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     // Recalculate star weight of this column based on the new desired value
                     this.InheritsWidth = false;
-                    newValue = (this.Width.Value * newDisplayValue) / this.ActualWidth;
+                    newValue = this.Width.Value * newDisplayValue / this.ActualWidth;
                 }
             }
 

@@ -17,12 +17,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <param name="column">The column that the event occurs for.</param>
         public DataGridColumnEventArgs(DataGridColumn column)
         {
-            if (column == null)
-            {
-                throw new ArgumentNullException("column");
-            }
-
-            this.Column = column;
+            this.Column = column ?? throw new ArgumentNullException("column");
         }
 
         /// <summary>

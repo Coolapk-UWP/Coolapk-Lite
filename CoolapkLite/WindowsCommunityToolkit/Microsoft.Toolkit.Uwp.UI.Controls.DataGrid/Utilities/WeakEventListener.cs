@@ -22,7 +22,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
         /// <summary>
         /// WeakReference to the instance listening for the event.
         /// </summary>
-        private WeakReference weakInstance;
+        private readonly WeakReference weakInstance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WeakEventListener{TInstance, TSource, TEventArgs}"/> class.

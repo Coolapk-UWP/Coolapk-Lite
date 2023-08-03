@@ -308,15 +308,17 @@ namespace CoolapkLite.Pages.FeedPages
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            switch (item.GetType().Name)
-            {
-                case "DyhDetail": return DyhDetail;
-                case "UserDetail": return UserDetail;
-                case "TopicDetail": return TopicDetail;
-                case "ProductDetail": return ProductDetail;
-                case "CollectionDetail": return CollectionDetail;
-                default: return Others;
-            }
+            return item is Models.Pages.DyhDetail
+                ? DyhDetail
+                : item is Models.Pages.UserDetail
+                    ? UserDetail
+                    : item is Models.Pages.TopicDetail
+                        ? TopicDetail
+                        : item is Models.Pages.ProductDetail
+                            ? ProductDetail
+                            : item is Models.Pages.CollectionDetail
+                                ? CollectionDetail
+                                : Others;
         }
     }
 }

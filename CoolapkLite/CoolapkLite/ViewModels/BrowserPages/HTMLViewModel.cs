@@ -15,7 +15,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         public CoreDispatcher Dispatcher { get; }
 
         private readonly Uri uri;
-        private Action<UISettingChangedType> UISettingChanged;
+        private readonly Action<UISettingChangedType> UISettingChanged;
 
         private string title;
         public string Title

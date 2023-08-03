@@ -2,22 +2,20 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Data.Utilities;
+using Microsoft.Toolkit.Uwp.UI.Utilities;
+using Microsoft.Toolkit.Uwp.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Toolkit.Uwp.UI.Data.Utilities;
-using Microsoft.Toolkit.Uwp.UI.Utilities;
-using Microsoft.Toolkit.Uwp.Utilities;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml.Data;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
@@ -33,7 +31,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
         private ISupportIncrementalLoading _incrementalItemsSource;
         private object _itemToSelectOnCurrentChanged;
         private IAsyncOperation<LoadMoreItemsResult> _loadingOperation;
-        private DataGrid _owner;
+        private readonly DataGrid _owner;
         private bool _scrollForCurrentChanged;
         private DataGridSelectionAction _selectionActionForCurrentChanged;
         private WeakEventListener<DataGridDataConnection, object, NotifyCollectionChangedEventArgs> _weakCollectionChangedListener;
@@ -55,14 +53,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
         {
             get
             {
-                if (this.List == null)
-                {
-                    return true;
-                }
-                else
-                {
-                    return !this.List.IsReadOnly;
-                }
+                return this.List == null || !this.List.IsReadOnly;
             }
         }
 
@@ -386,8 +377,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
             }
 #endif
 
-            IEditableObject editableDataItem = dataItem as IEditableObject;
-            if (editableDataItem != null)
+            if (dataItem is IEditableObject editableDataItem)
             {
                 editableDataItem.BeginEdit();
                 return true;
@@ -432,8 +422,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
             }
 #endif
 
-            IEditableObject editableDataItem = dataItem as IEditableObject;
-            if (editableDataItem != null)
+            if (dataItem is IEditableObject editableDataItem)
             {
                 editableDataItem.CancelEdit();
                 return true;
@@ -479,10 +468,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 #endif
 
             IEditableObject editableDataItem = dataItem as IEditableObject;
-            if (editableDataItem != null)
-            {
-                editableDataItem.EndEdit();
-            }
+            editableDataItem?.EndEdit();
 
             return true;
         }
@@ -548,7 +534,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
                         }
 
                         // Check if EditableAttribute is defined on the property and if it indicates uneditable
-                        var editableAttribute = propertyInfo.GetCustomAttributes().OfType<EditableAttribute>().FirstOrDefault();
+                        EditableAttribute editableAttribute = propertyInfo.GetCustomAttributes().OfType<EditableAttribute>().FirstOrDefault();
                         if (editableAttribute != null && !editableAttribute.AllowEdit)
                         {
                             return true;
@@ -640,8 +626,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
             ICollectionView collectionView = null;
 
-            ICollectionViewFactory collectionViewFactory = source as ICollectionViewFactory;
-            if (collectionViewFactory != null)
+            if (source is ICollectionViewFactory collectionViewFactory)
             {
                 // If the source is a collection view factory, give it a chance to produce a custom collection view.
                 collectionView = collectionViewFactory.CreateView();
@@ -658,15 +643,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
             if (collectionView == null)
             {
-                IList sourceAsList = source as IList;
-                if (sourceAsList != null)
-                {
-                    collectionView = new ListCollectionView(sourceAsList);
-                }
-                else
-                {
-                    collectionView = new EnumerableCollectionView(source);
-                }
+                collectionView = source is IList sourceAsList ? new ListCollectionView(sourceAsList) : (ICollectionView)new EnumerableCollectionView(source);
             }
 
             return collectionView;
@@ -705,7 +682,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
                 _scrollForCurrentChanged = scrollIntoView;
                 _backupSlotForCurrentChanged = backupSlot;
 
-                var itemIsCollectionViewGroup = item is ICollectionViewGroup;
+                bool itemIsCollectionViewGroup = item is ICollectionViewGroup;
                 this.CollectionView.MoveCurrentTo((itemIsCollectionViewGroup || this.IndexOf(item) == this.NewItemPlaceholderIndex) ? null : item);
 
                 _expectingCurrentChanged = false;
@@ -714,15 +691,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
         internal void UnWireEvents(IEnumerable value)
         {
-            INotifyCollectionChanged notifyingDataSource1 = value as INotifyCollectionChanged;
-            if (notifyingDataSource1 != null && _weakCollectionChangedListener != null)
+            if (value is INotifyCollectionChanged notifyingDataSource1 && _weakCollectionChangedListener != null)
             {
                 _weakCollectionChangedListener.Detach();
                 _weakCollectionChangedListener = null;
             }
 
-            IObservableVector<object> notifyingDataSource2 = value as IObservableVector<object>;
-            if (notifyingDataSource2 != null && _weakVectorChangedListener != null)
+            if (value is IObservableVector<object> notifyingDataSource2 && _weakVectorChangedListener != null)
             {
                 _weakVectorChangedListener.Detach();
                 _weakVectorChangedListener = null;
@@ -756,21 +731,23 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
         internal void WireEvents(IEnumerable value)
         {
-            INotifyCollectionChanged notifyingDataSource1 = value as INotifyCollectionChanged;
-            if (notifyingDataSource1 != null)
+            if (value is INotifyCollectionChanged notifyingDataSource1)
             {
-                _weakCollectionChangedListener = new WeakEventListener<DataGridDataConnection, object, NotifyCollectionChangedEventArgs>(this);
-                _weakCollectionChangedListener.OnEventAction = (instance, source, eventArgs) => instance.NotifyingDataSource_CollectionChanged(source, eventArgs);
-                _weakCollectionChangedListener.OnDetachAction = (weakEventListener) => notifyingDataSource1.CollectionChanged -= weakEventListener.OnEvent;
+                _weakCollectionChangedListener = new WeakEventListener<DataGridDataConnection, object, NotifyCollectionChangedEventArgs>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.NotifyingDataSource_CollectionChanged(source, eventArgs),
+                    OnDetachAction = (weakEventListener) => notifyingDataSource1.CollectionChanged -= weakEventListener.OnEvent
+                };
                 notifyingDataSource1.CollectionChanged += _weakCollectionChangedListener.OnEvent;
             }
             else
             {
-                IObservableVector<object> notifyingDataSource2 = value as IObservableVector<object>;
-                if (notifyingDataSource2 != null)
+                if (value is IObservableVector<object> notifyingDataSource2)
                 {
-                    _weakVectorChangedListener = new WeakEventListener<DataGridDataConnection, object, IVectorChangedEventArgs>(this);
-                    _weakVectorChangedListener.OnEventAction = (instance, source, eventArgs) => instance.NotifyingDataSource_VectorChanged(source as IObservableVector<object>, eventArgs);
+                    _weakVectorChangedListener = new WeakEventListener<DataGridDataConnection, object, IVectorChangedEventArgs>(this)
+                    {
+                        OnEventAction = (instance, source, eventArgs) => instance.NotifyingDataSource_VectorChanged(source as IObservableVector<object>, eventArgs)
+                    };
                     _weakVectorChangedListener.OnDetachAction = (weakEventListener) => notifyingDataSource2.VectorChanged -= _weakVectorChangedListener.OnEvent;
                     notifyingDataSource2.VectorChanged += _weakVectorChangedListener.OnEvent;
                 }
@@ -792,14 +769,18 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
                 // A local variable must be used in the lambda expression or the CollectionView will leak
                 ICollectionView collectionView = this.CollectionView;
 
-                _weakCurrentChangedListener = new WeakEventListener<DataGridDataConnection, object, object>(this);
-                _weakCurrentChangedListener.OnEventAction = (instance, source, eventArgs) => instance.CollectionView_CurrentChanged(source, null);
-                _weakCurrentChangedListener.OnDetachAction = (weakEventListener) => collectionView.CurrentChanged -= weakEventListener.OnEvent;
+                _weakCurrentChangedListener = new WeakEventListener<DataGridDataConnection, object, object>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.CollectionView_CurrentChanged(source, null),
+                    OnDetachAction = (weakEventListener) => collectionView.CurrentChanged -= weakEventListener.OnEvent
+                };
                 this.CollectionView.CurrentChanged += _weakCurrentChangedListener.OnEvent;
 
-                _weakCurrentChangingListener = new WeakEventListener<DataGridDataConnection, object, CurrentChangingEventArgs>(this);
-                _weakCurrentChangingListener.OnEventAction = (instance, source, eventArgs) => instance.CollectionView_CurrentChanging(source, eventArgs);
-                _weakCurrentChangingListener.OnDetachAction = (weakEventListener) => collectionView.CurrentChanging -= weakEventListener.OnEvent;
+                _weakCurrentChangingListener = new WeakEventListener<DataGridDataConnection, object, CurrentChangingEventArgs>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.CollectionView_CurrentChanging(source, eventArgs),
+                    OnDetachAction = (weakEventListener) => collectionView.CurrentChanging -= weakEventListener.OnEvent
+                };
                 this.CollectionView.CurrentChanging += _weakCurrentChangingListener.OnEvent;
             }
 
@@ -812,8 +793,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
             {
                 // Committing Edit could cause our item to move to a group that no longer exists.  In
                 // this case, we need to update the item.
-                ICollectionViewGroup collectionViewGroup = _itemToSelectOnCurrentChanged as ICollectionViewGroup;
-                if (collectionViewGroup != null)
+                if (_itemToSelectOnCurrentChanged is ICollectionViewGroup collectionViewGroup)
                 {
                     DataGridRowGroupInfo groupInfo = _owner.RowGroupInfoFromCollectionViewGroup(collectionViewGroup);
                     if (groupInfo == null)
@@ -1038,24 +1018,19 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
             }
 
             // Determine if incremental loading should be used
-            if (_dataSource is ISupportIncrementalLoading incrementalDataSource)
-            {
-                _incrementalItemsSource = incrementalDataSource;
-            }
-            else if (_owner.ItemsSource is ISupportIncrementalLoading incrementalItemsSource)
-            {
-                _incrementalItemsSource = incrementalItemsSource;
-            }
-            else
-            {
-                _incrementalItemsSource = default(ISupportIncrementalLoading);
-            }
+            _incrementalItemsSource = _dataSource is ISupportIncrementalLoading incrementalDataSource
+                ? incrementalDataSource
+                : _owner.ItemsSource is ISupportIncrementalLoading incrementalItemsSource
+                    ? incrementalItemsSource
+                    : default;
 
             if (_incrementalItemsSource != null && _incrementalItemsSource is INotifyPropertyChanged inpc)
             {
-                _weakIncrementalItemsSourcePropertyChangedListener = new WeakEventListener<DataGridDataConnection, object, PropertyChangedEventArgs>(this);
-                _weakIncrementalItemsSourcePropertyChangedListener.OnEventAction = (instance, source, eventArgs) => instance.NotifyingIncrementalItemsSource(source, eventArgs);
-                _weakIncrementalItemsSourcePropertyChangedListener.OnDetachAction = (weakEventListener) => inpc.PropertyChanged -= weakEventListener.OnEvent;
+                _weakIncrementalItemsSourcePropertyChangedListener = new WeakEventListener<DataGridDataConnection, object, PropertyChangedEventArgs>(this)
+                {
+                    OnEventAction = (instance, source, eventArgs) => instance.NotifyingIncrementalItemsSource(source, eventArgs),
+                    OnDetachAction = (weakEventListener) => inpc.PropertyChanged -= weakEventListener.OnEvent
+                };
                 inpc.PropertyChanged += _weakIncrementalItemsSourcePropertyChangedListener.OnEvent;
             }
 

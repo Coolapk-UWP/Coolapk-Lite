@@ -10,7 +10,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
 {
     internal class IndexToValueTable<T> : IEnumerable<Range<T>>
     {
-        private List<Range<T>> _list;
+        private readonly List<Range<T>> _list;
 
         public IndexToValueTable()
         {
@@ -232,14 +232,9 @@ namespace Microsoft.Toolkit.Uwp.Utilities
         {
             int targetIndex = index - 1;
             int rangeIndex = FindRangeIndex(targetIndex);
-            if (IsCorrectRangeIndex(rangeIndex, targetIndex))
-            {
-                return targetIndex;
-            }
-            else
-            {
-                return rangeIndex >= 0 && rangeIndex < _list.Count ? _list[rangeIndex].UpperBound : -1;
-            }
+            return IsCorrectRangeIndex(rangeIndex, targetIndex)
+                ? targetIndex
+                : rangeIndex >= 0 && rangeIndex < _list.Count ? _list[rangeIndex].UpperBound : -1;
         }
 
         /// <summary>
@@ -447,7 +442,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             else
             {
                 found = false;
-                return default(T);
+                return default;
             }
         }
 

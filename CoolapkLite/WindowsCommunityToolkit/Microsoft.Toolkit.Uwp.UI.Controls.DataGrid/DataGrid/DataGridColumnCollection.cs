@@ -2,17 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
 {
     internal class DataGridColumnCollection : ObservableCollection<DataGridColumn>
     {
-        private DataGrid _owningGrid;
+        private readonly DataGrid _owningGrid;
 
         public DataGridColumnCollection(DataGrid owningGrid)
         {
@@ -258,8 +258,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal bool DisplayInOrder(int columnIndex1, int columnIndex2)
         {
-            int displayIndex1 = ((DataGridColumn)this.ItemsInternal[columnIndex1]).DisplayIndexWithFiller;
-            int displayIndex2 = ((DataGridColumn)this.ItemsInternal[columnIndex2]).DisplayIndexWithFiller;
+            int displayIndex1 = this.ItemsInternal[columnIndex1].DisplayIndexWithFiller;
+            int displayIndex2 = this.ItemsInternal[columnIndex2].DisplayIndexWithFiller;
             return displayIndex1 < displayIndex2;
         }
 
@@ -554,13 +554,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal IEnumerable<DataGridColumn> GetVisibleColumns()
         {
-            Predicate<DataGridColumn> filter = column => column.IsVisible;
+            bool filter(DataGridColumn column) => column.IsVisible;
             return GetDisplayedColumns(filter);
         }
 
         internal IEnumerable<DataGridColumn> GetVisibleFrozenColumns()
         {
-            Predicate<DataGridColumn> filter = column => column.IsVisible && column.IsFrozen;
+            bool filter(DataGridColumn column) => column.IsVisible && column.IsFrozen;
             return GetDisplayedColumns(filter);
         }
 
@@ -580,7 +580,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal IEnumerable<DataGridColumn> GetVisibleScrollingColumns()
         {
-            Predicate<DataGridColumn> filter = column => column.IsVisible && !column.IsFrozen;
+            bool filter(DataGridColumn column) => column.IsVisible && !column.IsFrozen;
             return GetDisplayedColumns(filter);
         }
 

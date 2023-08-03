@@ -111,7 +111,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
         private static string GetDefaultMemberName(this Type type)
         {
             DefaultMemberAttribute defaultMemberAttribute = type.GetTypeInfo().GetCustomAttributes().OfType<DefaultMemberAttribute>().FirstOrDefault();
-            return defaultMemberAttribute == null ? null : defaultMemberAttribute.MemberName;
+            return defaultMemberAttribute?.MemberName;
         }
 
         internal static string GetBindingPropertyName(this Binding binding)
@@ -133,7 +133,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             if (propertyInfo != null)
             {
                 DisplayAttribute displayAttribute = propertyInfo.GetCustomAttributes().OfType<DisplayAttribute>().FirstOrDefault();
-                return displayAttribute == null ? null : displayAttribute.GetShortName();
+                return displayAttribute?.GetShortName();
             }
 
             return null;
@@ -142,12 +142,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
         internal static Type GetEnumerableItemType(this Type enumerableType)
         {
             Type type = FindGenericType(typeof(IEnumerable<>), enumerableType);
-            if (type != null)
-            {
-                return type.GetGenericArguments()[0];
-            }
-
-            return enumerableType;
+            return type != null ? type.GetGenericArguments()[0] : enumerableType;
         }
 
         internal static PropertyInfo GetNestedProperty(this Type parentType, string propertyPath)
@@ -182,7 +177,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             List<string> propertyNames = SplitPropertyPath(propertyPath);
             for (int i = 0; i < propertyNames.Count; i++)
             {
-                propertyInfo = propertyType.GetPropertyOrIndexer(propertyNames[i], out var index);
+                propertyInfo = propertyType.GetPropertyOrIndexer(propertyNames[i], out object[] index);
                 if (propertyInfo == null)
                 {
                     item = null;
@@ -208,12 +203,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             }
 
             PropertyInfo propertyInfo = parentType.GetNestedProperty(propertyPath);
-            if (propertyInfo != null)
-            {
-                return propertyInfo.PropertyType;
-            }
-
-            return null;
+            return propertyInfo?.PropertyType;
         }
 
         /// <summary>
@@ -244,12 +234,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
 
         internal static Type GetNonNullableType(this Type type)
         {
-            if (IsNullableType(type))
-            {
-                return type.GetGenericArguments()[0];
-            }
-
-            return type;
+            return IsNullableType(type) ? type.GetGenericArguments()[0] : type;
         }
 
         /// <summary>
@@ -277,8 +262,8 @@ namespace Microsoft.Toolkit.Uwp.Utilities
                 return null;
             }
 
-            var stringIndex = propertyPath.Substring(1, propertyPath.Length - 2);
-            var indexer = FindIndexerInMembers(type.GetDefaultMembers(), stringIndex, out index);
+            string stringIndex = propertyPath.Substring(1, propertyPath.Length - 2);
+            PropertyInfo indexer = FindIndexerInMembers(type.GetDefaultMembers(), stringIndex, out index);
             if (indexer != null)
             {
                 // We found the indexer, so return it.
@@ -374,7 +359,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             }
             else
             {
-                var propertyPathParts = SplitPropertyPath(propertyPath);
+                List<string> propertyPathParts = SplitPropertyPath(propertyPath);
 
                 if (propertyPathParts.Count == 1)
                 {
@@ -387,7 +372,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
 
                     PropertyInfo propertyInfo = null;
 
-                    for (var i = 0; i < propertyPathParts.Count; i++)
+                    for (int i = 0; i < propertyPathParts.Count; i++)
                     {
                         propertyInfo = temporaryItem?.GetType().GetProperty(propertyPathParts[i]);
 
@@ -455,7 +440,7 @@ namespace Microsoft.Toolkit.Uwp.Utilities
             }
 #endif
 
-            return instance == null ? null : instance.GetType();
+            return instance?.GetType();
         }
 
         internal static bool IsXamlRootAvailable

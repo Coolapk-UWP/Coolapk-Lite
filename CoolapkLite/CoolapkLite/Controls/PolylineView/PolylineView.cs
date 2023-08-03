@@ -4,7 +4,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 namespace CoolapkLite.Controls
 {
@@ -86,7 +85,7 @@ namespace CoolapkLite.Controls
 
                     foreach (Point point in ItemSource)
                     {
-                        points.Add(new Point { X = scaleX * (point.X - miniX) + halfStroke, Y = ActualHeight - scaleY * (point.Y - miniY) - halfStroke });
+                        points.Add(new Point { X = (scaleX * (point.X - miniX)) + halfStroke, Y = ActualHeight - (scaleY * (point.Y - miniY)) - halfStroke });
                     }
 
                     templateSettings.PointCollection = points;

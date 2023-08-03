@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.Utilities;
 using Microsoft.Toolkit.Uwp.UI.Utilities;
@@ -83,7 +82,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         private const byte DATAGRIDROWHEADER_stateSelectedFocusedCode = 15;
         private const byte DATAGRIDROWHEADER_stateNullCode = 255;
 
-        private static byte[] _fallbackStateMapping = new byte[]
+        private static readonly byte[] _fallbackStateMapping = new byte[]
         {
             DATAGRIDROWHEADER_stateNormalCode,
             DATAGRIDROWHEADER_stateNormalCurrentRowCode,
@@ -103,7 +102,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             DATAGRIDROWHEADER_stateNormalCode,
         };
 
-        private static byte[] _idealStateMapping = new byte[]
+        private static readonly byte[] _idealStateMapping = new byte[]
         {
             DATAGRIDROWHEADER_stateNormalCode,
             DATAGRIDROWHEADER_stateNormalCode,
@@ -139,7 +138,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             DATAGRIDROWHEADER_statePointerOverEditingRowFocusedCode
         };
 
-        private static string[] _stateNames = new string[]
+        private static readonly string[] _stateNames = new string[]
         {
             DATAGRIDROWHEADER_statePointerOver,
             DATAGRIDROWHEADER_statePointerOverCurrentRow,
@@ -302,12 +301,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             Size measuredSize = base.MeasureOverride(new Size(measureWidth, measureHeight));
 
             // Auto grow the row header or force it to a fixed width based on the DataGrid's setting
-            if (!double.IsNaN(this.OwningGrid.RowHeaderWidth) || measuredSize.Width < this.OwningGrid.ActualRowHeaderWidth)
-            {
-                return new Size(this.OwningGrid.ActualRowHeaderWidth, measuredSize.Height);
-            }
-
-            return measuredSize;
+            return !double.IsNaN(this.OwningGrid.RowHeaderWidth) || measuredSize.Width < this.OwningGrid.ActualRowHeaderWidth
+                ? new Size(this.OwningGrid.ActualRowHeaderWidth, measuredSize.Height)
+                : measuredSize;
         }
 
         /// <summary>

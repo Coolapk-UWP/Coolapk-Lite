@@ -46,10 +46,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
 
             _view = new ListCollectionView(_snapshot);
 
-            INotifyCollectionChanged incc = _view as INotifyCollectionChanged;
+            INotifyCollectionChanged incc = _view;
             incc.CollectionChanged += new NotifyCollectionChangedEventHandler(EnumerableCollectionView_OnViewChanged);
 
-            INotifyPropertyChanged ipc = _view as INotifyPropertyChanged;
+            INotifyPropertyChanged ipc = _view;
             ipc.PropertyChanged += new PropertyChangedEventHandler(EnumerableCollectionView_OnPropertyChanged);
 
             _view.CurrentChanging += new CurrentChangingEventHandler(EnumerableCollectionView_OnCurrentChanging);
@@ -343,7 +343,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             get
             {
                 EnsureSnapshot();
-                return (_view != null) ? _view.IsEmpty : true;
+                return _view == null || _view.IsEmpty;
             }
         }
 
@@ -666,11 +666,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         //  Private Fields
         //
         //------------------------------------------------------
-        private ListCollectionView _view;
-        private ObservableCollection<object> _snapshot;
+        private readonly ListCollectionView _view;
+        private readonly ObservableCollection<object> _snapshot;
         private IEnumerator _trackingEnumerator;
         private int _ignoreEventsLevel;
-        private bool _pollForChanges;
+        private readonly bool _pollForChanges;
 
         private class IgnoreViewEventsHelper : IDisposable
         {

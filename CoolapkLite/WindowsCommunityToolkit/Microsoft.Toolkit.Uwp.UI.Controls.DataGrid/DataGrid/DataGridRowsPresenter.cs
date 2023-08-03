@@ -2,16 +2,15 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using System;
 using System.Diagnostics;
-using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
@@ -63,8 +62,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             double topEdge = -this.OwningGrid.NegVerticalOffset;
             foreach (UIElement element in this.OwningGrid.DisplayData.GetScrollingElements())
             {
-                DataGridRow row = element as DataGridRow;
-                if (row != null)
+                if (element is DataGridRow row)
                 {
                     DiagnosticsDebug.Assert(row.Index != -1, "Expected Index other than -1."); // A displayed row should always have its index
 
@@ -75,8 +73,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 }
                 else
                 {
-                    DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                    if (groupHeader != null)
+                    if (element is DataGridRowGroupHeader groupHeader)
                     {
                         double leftEdge = this.OwningGrid.AreRowGroupHeadersFrozen ? 0 : -this.OwningGrid.HorizontalOffset;
                         groupHeader.Arrange(new Rect(leftEdge, topEdge, rowDesiredWidth - leftEdge, element.DesiredSize.Height));
@@ -89,8 +86,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
             double finalHeight = Math.Max(topEdge + this.OwningGrid.NegVerticalOffset, finalSize.Height);
 
             // Clip the RowsPresenter so rows cannot overlap other elements in certain styling scenarios
-            RectangleGeometry rg = new RectangleGeometry();
-            rg.Rect = new Rect(0, 0, finalSize.Width, finalHeight);
+            RectangleGeometry rg = new RectangleGeometry
+            {
+                Rect = new Rect(0, 0, finalSize.Width, finalHeight)
+            };
             this.Clip = rg;
 
             return new Size(finalSize.Width, finalHeight);
@@ -147,8 +146,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 }
                 else
                 {
-                    DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                    if (groupHeader != null && groupHeader.HeaderCell != null)
+                    if (element is DataGridRowGroupHeader groupHeader && groupHeader.HeaderCell != null)
                     {
                         headerWidth = Math.Max(headerWidth, groupHeader.HeaderCell.DesiredSize.Width);
                     }
@@ -212,15 +210,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         {
             foreach (UIElement element in this.Children)
             {
-                DataGridRow row = element as DataGridRow;
-                if (row != null)
+                if (element is DataGridRow row)
                 {
                     Debug.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Slot: {0} Row: {1} Visibility: {2} ", row.Slot, row.Index, row.Visibility));
                 }
                 else
                 {
-                    DataGridRowGroupHeader groupHeader = element as DataGridRowGroupHeader;
-                    if (groupHeader != null)
+                    if (element is DataGridRowGroupHeader groupHeader)
                     {
 #if FEATURE_ICOLLECTIONVIEW_GROUP
                         Debug.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Slot: {0} GroupHeader: {1} Visibility: {2}", groupHeader.RowGroupInfo.Slot, groupHeader.RowGroupInfo.CollectionViewGroup.Name, groupHeader.Visibility));

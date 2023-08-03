@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Globalization;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
+using System.Globalization;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls
 {
@@ -49,20 +49,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
     [Windows.Foundation.Metadata.CreateFromString(MethodName = "Microsoft.Toolkit.Uwp.UI.Controls.DataGridLength.ConvertFromString")]
     public struct DataGridLength : IEquatable<DataGridLength>
     {
-        // static instances of value invariant DataGridLengths
-        private static readonly DataGridLength _auto = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.Auto);
-        private static readonly DataGridLength _sizeToCells = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.SizeToCells);
-        private static readonly DataGridLength _sizeToHeader = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.SizeToHeader);
-
-        private static string _starSuffix = "*";
-        private static string[] _valueInvariantUnitStrings = { "auto", "sizetocells", "sizetoheader" };
-        private static DataGridLength[] _valueInvariantDataGridLengths = { DataGridLength.Auto, DataGridLength.SizeToCells, DataGridLength.SizeToHeader };
-
-        private double _desiredValue; // desired value storage
-        private double _displayValue; // display value storage
-        private double _unitValue;    //  unit value storage
-        private DataGridLengthUnitType _unitType; //  unit type storage
-
+        private static readonly string _starSuffix = "*";
+        private static readonly string[] _valueInvariantUnitStrings = { "auto", "sizetocells", "sizetoheader" };
+        private static readonly DataGridLength[] _valueInvariantDataGridLengths = { DataGridLength.Auto, DataGridLength.SizeToCells, DataGridLength.SizeToHeader };
         internal const double DATAGRIDLENGTH_DefaultValue = 1.0;
 
         /// <summary>
@@ -157,10 +146,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw DataGridError.DataGridLength.InvalidUnitType("type");
             }
 
-            _desiredValue = desiredValue;
-            _displayValue = displayValue;
-            _unitValue = (type == DataGridLengthUnitType.Auto) ? DATAGRIDLENGTH_DefaultValue : value;
-            _unitType = type;
+            DesiredValue = desiredValue;
+            DisplayValue = displayValue;
+            Value = (type == DataGridLengthUnitType.Auto) ? DATAGRIDLENGTH_DefaultValue : value;
+            UnitType = type;
         }
 
         /// <summary>
@@ -169,13 +158,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>
         /// A <see cref="DataGridLength"/> structure that represents the standard automatic sizing mode.
         /// </returns>
-        public static DataGridLength Auto
-        {
-            get
-            {
-                return _auto;
-            }
-        }
+        public static DataGridLength Auto { get; } = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.Auto);
 
         /// <summary>
         /// Gets a <see cref="DataGridLength"/> structure that represents the cell-based automatic sizing mode.
@@ -183,13 +166,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>
         /// A <see cref="DataGridLength"/> structure that represents the cell-based automatic sizing mode.
         /// </returns>
-        public static DataGridLength SizeToCells
-        {
-            get
-            {
-                return _sizeToCells;
-            }
-        }
+        public static DataGridLength SizeToCells { get; } = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.SizeToCells);
 
         /// <summary>
         /// Gets a <see cref="DataGridLength"/> structure that represents the header-based automatic sizing mode.
@@ -197,35 +174,17 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>
         /// A <see cref="DataGridLength"/> structure that represents the header-based automatic sizing mode.
         /// </returns>
-        public static DataGridLength SizeToHeader
-        {
-            get
-            {
-                return _sizeToHeader;
-            }
-        }
+        public static DataGridLength SizeToHeader { get; } = new DataGridLength(DATAGRIDLENGTH_DefaultValue, DataGridLengthUnitType.SizeToHeader);
 
         /// <summary>
         /// Gets the desired value of this instance.
         /// </summary>
-        public double DesiredValue
-        {
-            get
-            {
-                return _desiredValue;
-            }
-        }
+        public double DesiredValue { get; }
 
         /// <summary>
         /// Gets the display value of this instance.
         /// </summary>
-        public double DisplayValue
-        {
-            get
-            {
-                return _displayValue;
-            }
-        }
+        public double DisplayValue { get; }
 
         /// <summary>
         /// Gets a value indicating whether this DataGridLength instance holds an absolute (pixel) value.
@@ -234,7 +193,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _unitType == DataGridLengthUnitType.Pixel;
+                return UnitType == DataGridLengthUnitType.Pixel;
             }
         }
 
@@ -245,7 +204,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _unitType == DataGridLengthUnitType.Auto;
+                return UnitType == DataGridLengthUnitType.Auto;
             }
         }
 
@@ -256,7 +215,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _unitType == DataGridLengthUnitType.SizeToCells;
+                return UnitType == DataGridLengthUnitType.SizeToCells;
             }
         }
 
@@ -267,7 +226,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _unitType == DataGridLengthUnitType.SizeToHeader;
+                return UnitType == DataGridLengthUnitType.SizeToHeader;
             }
         }
 
@@ -278,20 +237,14 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                return _unitType == DataGridLengthUnitType.Star;
+                return UnitType == DataGridLengthUnitType.Star;
             }
         }
 
         /// <summary>
         /// Gets the <see cref="DataGridLengthUnitType"/> that represents the current sizing mode.
         /// </summary>
-        public DataGridLengthUnitType UnitType
-        {
-            get
-            {
-                return _unitType;
-            }
-        }
+        public DataGridLengthUnitType UnitType { get; }
 
         /// <summary>
         /// Gets the absolute value of the <see cref="DataGridLength"/> in pixels.
@@ -299,13 +252,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>
         /// The absolute value of the <see cref="DataGridLength"/> in pixels.
         /// </returns>
-        public double Value
-        {
-            get
-            {
-                return _unitValue;
-            }
-        }
+        public double Value { get; }
 
         /// <summary>
         /// Converts a string into a <see cref="DataGridLength"/> instance.
@@ -330,8 +277,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw DataGridError.DataGridLengthConverter.CannotConvertFrom("(null)");
             }
 
-            string stringValue = value as string;
-            if (stringValue != null)
+            if (value is string stringValue)
             {
                 stringValue = stringValue.Trim();
 
@@ -339,16 +285,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 {
                     string stringValueWithoutSuffix = stringValue.Substring(0, stringValue.Length - _starSuffix.Length);
 
-                    double starWeight;
-                    if (string.IsNullOrEmpty(stringValueWithoutSuffix))
-                    {
-                        starWeight = 1;
-                    }
-                    else
-                    {
-                        starWeight = Convert.ToDouble(stringValueWithoutSuffix, culture ?? CultureInfo.CurrentCulture);
-                    }
-
+                    double starWeight = string.IsNullOrEmpty(stringValueWithoutSuffix)
+                        ? 1
+                        : Convert.ToDouble(stringValueWithoutSuffix, culture ?? CultureInfo.CurrentCulture);
                     return new DataGridLength(starWeight, DataGridLengthUnitType.Star);
                 }
 
@@ -363,14 +302,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
             // Conversion from numeric type
             double doubleValue = Convert.ToDouble(value, culture ?? CultureInfo.CurrentCulture);
-            if (double.IsNaN(doubleValue))
-            {
-                return DataGridLength.Auto;
-            }
-            else
-            {
-                return new DataGridLength(doubleValue);
-            }
+            return double.IsNaN(doubleValue) ? DataGridLength.Auto : new DataGridLength(doubleValue);
         }
 
         /// <summary>
@@ -457,12 +389,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         public override bool Equals(object obj)
         {
             DataGridLength? dataGridLength = obj as DataGridLength?;
-            if (dataGridLength.HasValue)
-            {
-                return this == dataGridLength;
-            }
-
-            return false;
+            return dataGridLength.HasValue && this == dataGridLength;
         }
 
         /// <summary>
@@ -471,7 +398,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>hash code</returns>
         public override int GetHashCode()
         {
-            return (int)_unitValue + (int)_unitType + (int)_desiredValue + (int)_displayValue;
+            return (int)Value + (int)UnitType + (int)DesiredValue + (int)DisplayValue;
         }
     }
 }

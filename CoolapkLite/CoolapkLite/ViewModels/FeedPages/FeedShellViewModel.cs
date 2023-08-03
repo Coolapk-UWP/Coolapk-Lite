@@ -235,7 +235,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                         Header = "观点",
                         ItemSource = VoteItemSource
                     });
-                    if(!string.IsNullOrEmpty(FeedDetail.VoteTag))
+                    if (!string.IsNullOrEmpty(FeedDetail.VoteTag))
                     {
                         TagItemSource TagItemSource = new TagItemSource(FeedDetail.VoteTag);
                         TagItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;

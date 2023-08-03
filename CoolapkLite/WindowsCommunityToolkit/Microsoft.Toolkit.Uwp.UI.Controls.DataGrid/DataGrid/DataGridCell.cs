@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Controls.Utilities;
@@ -104,12 +103,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (_rightGridLine != null)
-                {
-                    return _rightGridLine.ActualWidth;
-                }
-
-                return 0;
+                return _rightGridLine != null ? _rightGridLine.ActualWidth : 0;
             }
         }
 
@@ -117,12 +111,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningColumn == null)
-                {
-                    return -1;
-                }
-
-                return this.OwningColumn.Index;
+                return this.OwningColumn == null ? -1 : this.OwningColumn.Index;
             }
         }
 
@@ -170,17 +159,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningRow != null && this.OwningRow.OwningGrid != null)
-                {
-                    return this.OwningRow.OwningGrid;
-                }
-
-                if (this.OwningColumn != null)
-                {
-                    return this.OwningColumn.OwningGrid;
-                }
-
-                return null;
+                return this.OwningRow != null && this.OwningRow.OwningGrid != null ? this.OwningRow.OwningGrid : (this.OwningColumn?.OwningGrid);
             }
         }
 
@@ -194,12 +173,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             get
             {
-                if (this.OwningRow == null)
-                {
-                    return -1;
-                }
-
-                return this.OwningRow.Index;
+                return this.OwningRow == null ? -1 : this.OwningRow.Index;
             }
         }
 
@@ -247,14 +221,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>An automation peer for this <see cref="DataGridCell"/>.</returns>
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            if (this.OwningGrid != null &&
+            return this.OwningGrid != null &&
                 this.OwningColumn != null &&
-                this.OwningColumn != this.OwningGrid.ColumnsInternal.FillerColumn)
-            {
-                return new DataGridCellAutomationPeer(this);
-            }
-
-            return base.OnCreateAutomationPeer();
+                this.OwningColumn != this.OwningGrid.ColumnsInternal.FillerColumn
+                ? new DataGridCellAutomationPeer(this)
+                : base.OnCreateAutomationPeer();
         }
 
         internal void ApplyCellState(bool animate)

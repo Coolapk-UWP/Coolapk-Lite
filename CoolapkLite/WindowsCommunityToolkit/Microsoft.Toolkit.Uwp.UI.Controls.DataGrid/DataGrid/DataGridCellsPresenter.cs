@@ -2,14 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
@@ -34,12 +32,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
         {
             get
             {
-                if (this.OwningRow != null)
-                {
-                    return this.OwningRow.OwningGrid;
-                }
-
-                return null;
+                return this.OwningRow?.OwningGrid;
             }
         }
 
@@ -143,8 +136,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 else
                 {
                     // Clip
-                    RectangleGeometry rg = new RectangleGeometry();
-                    rg.Rect = Rect.Empty;
+                    RectangleGeometry rg = new RectangleGeometry
+                    {
+                        Rect = Rect.Empty
+                    };
                     cell.Clip = rg;
                 }
             }

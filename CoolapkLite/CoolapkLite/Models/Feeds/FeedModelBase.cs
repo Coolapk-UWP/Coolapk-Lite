@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
@@ -8,7 +7,6 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI;
-using static QRCoder.PayloadGenerator;
 
 namespace CoolapkLite.Models.Feeds
 {

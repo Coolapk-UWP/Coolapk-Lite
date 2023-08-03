@@ -2,8 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using Microsoft.Toolkit.Uwp.UI.Controls.Primitives;
+using System.Collections.Generic;
 using Windows.UI.Xaml.Automation.Peers;
 
 namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
@@ -26,12 +26,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (this.OwningRowsPresenter.OwningGrid != null)
-                {
-                    return CreatePeerForElement(this.OwningRowsPresenter.OwningGrid) as DataGridAutomationPeer;
-                }
-
-                return null;
+                return this.OwningRowsPresenter.OwningGrid != null
+                    ? CreatePeerForElement(this.OwningRowsPresenter.OwningGrid) as DataGridAutomationPeer
+                    : null;
             }
         }
 
@@ -59,12 +56,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The children elements.</returns>
         protected override IList<AutomationPeer> GetChildrenCore()
         {
-            if (this.OwningRowsPresenter.OwningGrid == null)
-            {
-                return new List<AutomationPeer>();
-            }
-
-            return this.GridPeer.GetChildPeers();
+            return this.OwningRowsPresenter.OwningGrid == null ? new List<AutomationPeer>() : (IList<AutomationPeer>)this.GridPeer.GetChildPeers();
         }
 
         /// <summary>

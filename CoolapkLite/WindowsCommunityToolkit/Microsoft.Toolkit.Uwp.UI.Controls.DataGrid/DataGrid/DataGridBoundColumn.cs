@@ -2,10 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Microsoft.Toolkit.Uwp.UI.Data.Utilities;
 using Microsoft.Toolkit.Uwp.Utilities;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
@@ -67,13 +67,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         _binding.UpdateSourceTrigger = UpdateSourceTrigger.Explicit;
 
                         // Apply the new Binding to existing rows in the DataGrid
-                        if (this.OwningGrid != null)
-                        {
-                            // TODO: We want to clear the Bindings if Binding is set to null
-                            // but there's no way to do that right now.  Revisit this if UWP
-                            // implements the equivalent of BindingOperations.ClearBinding.
-                            this.OwningGrid.OnColumnBindingChanged(this);
-                        }
+                        // TODO: We want to clear the Bindings if Binding is set to null
+                        // but there's no way to do that right now.  Revisit this if UWP
+                        // implements the equivalent of BindingOperations.ClearBinding.
+                        this.OwningGrid?.OnColumnBindingChanged(this);
                     }
 
                     this.RemoveEditingElement();
@@ -135,10 +132,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 if (_elementStyle != value)
                 {
                     _elementStyle = value;
-                    if (this.OwningGrid != null)
-                    {
-                        this.OwningGrid.OnColumnElementStyleChanged(this);
-                    }
+                    this.OwningGrid?.OnColumnElementStyleChanged(this);
                 }
             }
         }
@@ -147,12 +141,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         internal override List<string> CreateBindingPaths()
         {
-            if (this.Binding != null && this.Binding.Path != null)
-            {
-                return new List<string>() { this.Binding.Path.Path };
-            }
-
-            return base.CreateBindingPaths();
+            return this.Binding != null && this.Binding.Path != null ? new List<string>() { this.Binding.Path.Path } : base.CreateBindingPaths();
         }
 
         internal override List<BindingInfo> CreateBindings(FrameworkElement element, object dataItem, bool twoWay)

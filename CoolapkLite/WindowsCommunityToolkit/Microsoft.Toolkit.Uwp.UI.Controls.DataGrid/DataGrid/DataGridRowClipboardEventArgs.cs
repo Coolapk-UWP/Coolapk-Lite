@@ -13,8 +13,6 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
     public class DataGridRowClipboardEventArgs : EventArgs
     {
         private List<DataGridClipboardCellContent> _clipboardRowContent;
-        private bool _isColumnHeadersRow;
-        private object _item;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataGridRowClipboardEventArgs"/> class.
@@ -23,8 +21,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <param name="isColumnHeadersRow">Whether or not this EventArgs is for the column headers.</param>
         internal DataGridRowClipboardEventArgs(object item, bool isColumnHeadersRow)
         {
-            _isColumnHeadersRow = isColumnHeadersRow;
-            _item = item;
+            IsColumnHeadersRow = isColumnHeadersRow;
+            Item = item;
         }
 
         /// <summary>
@@ -46,23 +44,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <summary>
         /// Gets a value indicating whether this property is true when the ClipboardRowContent represents column headers, in which case the Item is null.
         /// </summary>
-        public bool IsColumnHeadersRow
-        {
-            get
-            {
-                return _isColumnHeadersRow;
-            }
-        }
+        public bool IsColumnHeadersRow { get; }
 
         /// <summary>
         /// Gets the <see cref="DataGrid"/> row item used for preparing the ClipboardRowContent.
         /// </summary>
-        public object Item
-        {
-            get
-            {
-                return _item;
-            }
-        }
+        public object Item { get; }
     }
 }

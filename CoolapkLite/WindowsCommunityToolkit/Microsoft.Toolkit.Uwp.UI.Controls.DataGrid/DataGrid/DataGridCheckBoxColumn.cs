@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using System;
 using System.Collections.Specialized;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -71,8 +71,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </param>
         protected override void CancelCellEdit(FrameworkElement editingElement, object uneditedValue)
         {
-            CheckBox editingCheckBox = editingElement as CheckBox;
-            if (editingCheckBox != null)
+            if (editingElement is CheckBox editingCheckBox)
             {
                 editingCheckBox.IsChecked = (bool?)uneditedValue;
             }
@@ -151,14 +150,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </returns>
         protected override object PrepareCellForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
-            CheckBox editingCheckBox = editingElement as CheckBox;
-            if (editingCheckBox != null)
+            if (editingElement is CheckBox editingCheckBox)
             {
                 bool? uneditedValue = editingCheckBox.IsChecked;
 
-                PointerRoutedEventArgs pointerEventArgs = editingEventArgs as PointerRoutedEventArgs;
                 bool editValue = false;
-                if (pointerEventArgs != null)
+                if (editingEventArgs is PointerRoutedEventArgs pointerEventArgs)
                 {
                     // Editing was triggered by a mouse click
                     Point position = pointerEventArgs.GetCurrentPoint(editingCheckBox).Position;
@@ -213,8 +210,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw new ArgumentNullException("element");
             }
 
-            CheckBox checkBox = element as CheckBox;
-            if (checkBox == null)
+            if (!(element is CheckBox checkBox))
             {
                 throw DataGridError.DataGrid.ValueIsNotAnInstanceOf("element", typeof(CheckBox));
             }
@@ -235,8 +231,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </summary>
         protected internal override void RefreshForeground(FrameworkElement element, Brush computedRowForeground)
         {
-            CheckBox checkBox = element as CheckBox;
-            if (checkBox != null)
+            if (element is CheckBox checkBox)
             {
                 checkBox.Foreground = computedRowForeground;
             }
@@ -297,8 +292,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             if (this.OwningGrid != null && this.OwningGrid.CurrentColumn == this &&
                 this.OwningGrid.IsSlotVisible(this.OwningGrid.CurrentSlot))
             {
-                DataGridRow row = this.OwningGrid.DisplayData.GetDisplayedElement(this.OwningGrid.CurrentSlot) as DataGridRow;
-                if (row != null)
+                if (this.OwningGrid.DisplayData.GetDisplayedElement(this.OwningGrid.CurrentSlot) is DataGridRow row)
                 {
                     CheckBox checkBox = this.GetCellContent(row) as CheckBox;
                     if (checkBox != null)
@@ -317,8 +311,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 this.OwningGrid != null &&
                 this.OwningGrid.CurrentColumn == this)
             {
-                DataGridRow row = this.OwningGrid.DisplayData.GetDisplayedElement(this.OwningGrid.CurrentSlot) as DataGridRow;
-                if (row != null)
+                if (this.OwningGrid.DisplayData.GetDisplayedElement(this.OwningGrid.CurrentSlot) is DataGridRow row)
                 {
                     CheckBox checkBox = this.GetCellContent(row) as CheckBox;
                     if (checkBox == _currentCheckBox)
@@ -337,8 +330,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (this.OwningGrid != null)
             {
-                CheckBox checkBox = this.GetCellContent(e.Row) as CheckBox;
-                if (checkBox != null)
+                if (this.GetCellContent(e.Row) is CheckBox checkBox)
                 {
                     if (this.OwningGrid.CurrentColumnIndex == this.Index && this.OwningGrid.CurrentSlot == e.Row.Slot)
                     {

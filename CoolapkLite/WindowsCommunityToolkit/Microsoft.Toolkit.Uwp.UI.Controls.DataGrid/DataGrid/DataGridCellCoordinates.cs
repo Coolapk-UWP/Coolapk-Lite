@@ -33,13 +33,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
         public override bool Equals(object o)
         {
-            DataGridCellCoordinates dataGridCellCoordinates = o as DataGridCellCoordinates;
-            if (dataGridCellCoordinates != null)
-            {
-                return dataGridCellCoordinates.ColumnIndex == this.ColumnIndex && dataGridCellCoordinates.Slot == this.Slot;
-            }
-
-            return false;
+            return o is DataGridCellCoordinates dataGridCellCoordinates
+&& dataGridCellCoordinates.ColumnIndex == this.ColumnIndex && dataGridCellCoordinates.Slot == this.Slot;
         }
 
         // Avoiding build warning CS0659: 'DataGridCellCoordinates' overrides Object.Equals(object o) but does not override Object.GetHashCode()

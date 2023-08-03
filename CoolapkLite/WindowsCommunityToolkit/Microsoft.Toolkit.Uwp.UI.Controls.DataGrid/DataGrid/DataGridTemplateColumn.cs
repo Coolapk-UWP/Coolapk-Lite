@@ -96,24 +96,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </exception>
         protected override FrameworkElement GenerateEditingElement(DataGridCell cell, object dataItem)
         {
-            if (this.CellEditingTemplate != null)
-            {
-                return this.CellEditingTemplate.LoadContent() as FrameworkElement;
-            }
-
-            if (this.CellTemplate != null)
-            {
-                return this.CellTemplate.LoadContent() as FrameworkElement;
-            }
-
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                return null;
-            }
-            else
-            {
-                throw DataGridError.DataGridTemplateColumn.MissingTemplateForType(typeof(DataGridTemplateColumn));
-            }
+            return this.CellEditingTemplate != null
+                ? this.CellEditingTemplate.LoadContent() as FrameworkElement
+                : this.CellTemplate != null
+                ? this.CellTemplate.LoadContent() as FrameworkElement
+                : Windows.ApplicationModel.DesignMode.DesignModeEnabled
+                ? (FrameworkElement)null
+                : throw DataGridError.DataGridTemplateColumn.MissingTemplateForType(typeof(DataGridTemplateColumn));
         }
 
         /// <summary>
@@ -127,24 +116,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </exception>
         protected override FrameworkElement GenerateElement(DataGridCell cell, object dataItem)
         {
-            if (this.CellTemplate != null)
-            {
-                return this.CellTemplate.LoadContent() as FrameworkElement;
-            }
-
-            if (this.CellEditingTemplate != null)
-            {
-                return this.CellEditingTemplate.LoadContent() as FrameworkElement;
-            }
-
-            if (Windows.ApplicationModel.DesignMode.DesignModeEnabled)
-            {
-                return null;
-            }
-            else
-            {
-                throw DataGridError.DataGridTemplateColumn.MissingTemplateForType(typeof(DataGridTemplateColumn));
-            }
+            return this.CellTemplate != null
+                ? this.CellTemplate.LoadContent() as FrameworkElement
+                : this.CellEditingTemplate != null
+                ? this.CellEditingTemplate.LoadContent() as FrameworkElement
+                : Windows.ApplicationModel.DesignMode.DesignModeEnabled
+                ? (FrameworkElement)null
+                : throw DataGridError.DataGridTemplateColumn.MissingTemplateForType(typeof(DataGridTemplateColumn));
         }
 
         /// <summary>

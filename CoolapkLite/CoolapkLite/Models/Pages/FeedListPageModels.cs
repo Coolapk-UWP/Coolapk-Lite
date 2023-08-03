@@ -365,7 +365,7 @@ namespace CoolapkLite.Models.Pages
             {
                 Description = description.ToString();
             }
-            
+
             if (token.TryGetValue("intro", out JToken intro) && Description != intro.ToString())
             {
                 SubTitle = intro.ToString();

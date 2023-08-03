@@ -2,9 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using System;
 using System.ComponentModel;
-using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
 using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -156,8 +156,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <param name="uneditedValue">The previous, unedited value in the cell being edited.</param>
         protected override void CancelCellEdit(FrameworkElement editingElement, object uneditedValue)
         {
-            TextBox textBox = editingElement as TextBox;
-            if (textBox != null)
+            if (editingElement is TextBox textBox)
             {
                 string uneditedString = uneditedValue as string;
                 textBox.Text = uneditedString ?? string.Empty;
@@ -172,9 +171,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>A new <see cref="T:System.Windows.Controls.TextBox"/> control that is bound to the column's <see cref="P:Microsoft.Toolkit.Uwp.UI.Controls.DataGridBoundColumn.Binding"/> property value.</returns>
         protected override FrameworkElement GenerateEditingElement(DataGridCell cell, object dataItem)
         {
-            TextBox textBox = new TextBox();
-            textBox.VerticalAlignment = VerticalAlignment.Stretch;
-            textBox.Background = new SolidColorBrush(Colors.Transparent);
+            TextBox textBox = new TextBox
+            {
+                VerticalAlignment = VerticalAlignment.Stretch,
+                Background = new SolidColorBrush(Colors.Transparent)
+            };
 
             if (DependencyProperty.UnsetValue != ReadLocalValue(DataGridTextColumn.FontFamilyProperty))
             {
@@ -214,9 +215,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>A new, read-only <see cref="T:System.Windows.Controls.TextBlock"/> element that is bound to the column's <see cref="P:Microsoft.Toolkit.Uwp.UI.Controls.DataGridBoundColumn.Binding"/> property value.</returns>
         protected override FrameworkElement GenerateElement(DataGridCell cell, object dataItem)
         {
-            TextBlock textBlockElement = new TextBlock();
-            textBlockElement.Margin = new Thickness(DATAGRIDTEXTCOLUMN_leftMargin, 0.0, DATAGRIDTEXTCOLUMN_rightMargin, 0.0);
-            textBlockElement.VerticalAlignment = VerticalAlignment.Center;
+            TextBlock textBlockElement = new TextBlock
+            {
+                Margin = new Thickness(DATAGRIDTEXTCOLUMN_leftMargin, 0.0, DATAGRIDTEXTCOLUMN_rightMargin, 0.0),
+                VerticalAlignment = VerticalAlignment.Center
+            };
             if (DependencyProperty.UnsetValue != ReadLocalValue(DataGridTextColumn.FontFamilyProperty))
             {
                 textBlockElement.FontFamily = this.FontFamily;
@@ -255,13 +258,11 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>The unedited value. </returns>
         protected override object PrepareCellForEdit(FrameworkElement editingElement, RoutedEventArgs editingEventArgs)
         {
-            TextBox textBox = editingElement as TextBox;
-            if (textBox != null)
+            if (editingElement is TextBox textBox)
             {
                 string uneditedText = textBox.Text;
                 int len = uneditedText.Length;
-                KeyRoutedEventArgs keyEventArgs = editingEventArgs as KeyRoutedEventArgs;
-                if (keyEventArgs != null && keyEventArgs.Key == Windows.System.VirtualKey.F2)
+                if (editingEventArgs is KeyRoutedEventArgs keyEventArgs && keyEventArgs.Key == Windows.System.VirtualKey.F2)
                 {
                     // Put caret at the end of the text
                     textBox.Select(len, len);
@@ -288,11 +289,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                 throw new ArgumentNullException("element");
             }
 
-            TextBox textBox = element as TextBox;
-            if (textBox == null)
+            if (!(element is TextBox textBox))
             {
-                TextBlock textBlock = element as TextBlock;
-                if (textBlock == null)
+                if (!(element is TextBlock textBlock))
                 {
                     throw DataGridError.DataGrid.ValueIsNotAnInstanceOfEitherOr("element", typeof(TextBox), typeof(TextBlock));
                 }
@@ -372,15 +371,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// </summary>
         protected internal override void RefreshForeground(FrameworkElement element, Brush computedRowForeground)
         {
-            TextBox textBox = element as TextBox;
-            if (textBox != null)
+            if (element is TextBox textBox)
             {
                 RefreshForeground(textBox, computedRowForeground);
             }
             else
             {
-                TextBlock textBlock = element as TextBlock;
-                if (textBlock != null)
+                if (element is TextBlock textBlock)
                 {
                     RefreshForeground(textBlock, computedRowForeground);
                 }

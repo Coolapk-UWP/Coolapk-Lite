@@ -2,15 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Automation.Peers;
+using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
@@ -201,10 +199,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
 
             // This needs to be updated after the filler column is configured
             DataGridColumn lastVisibleColumn = this.OwningGrid.ColumnsInternal.LastVisibleColumn;
-            if (lastVisibleColumn != null)
-            {
-                lastVisibleColumn.HeaderCell.UpdateSeparatorVisibility(lastVisibleColumn);
-            }
+            lastVisibleColumn?.HeaderCell.UpdateSeparatorVisibility(lastVisibleColumn);
 
             return finalSize;
         }
@@ -367,7 +362,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
                 // Since we didn't know the final widths of the columns until we resized,
                 // we waited until now to measure each header
                 double leftEdge = 0;
-                foreach (var column in this.OwningGrid.ColumnsInternal.GetVisibleColumns())
+                foreach (DataGridColumn column in this.OwningGrid.ColumnsInternal.GetVisibleColumns())
                 {
                     column.ComputeLayoutRoundedWidth(leftEdge);
                     column.HeaderCell.Measure(new Size(column.LayoutRoundedWidth, double.PositiveInfinity));
@@ -395,15 +390,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.Primitives
 
             fillerColumn.HeaderCell.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            if (this.DragIndicator != null)
-            {
-                this.DragIndicator.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            }
+            this.DragIndicator?.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            if (this.DropLocationIndicator != null)
-            {
-                this.DropLocationIndicator.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            }
+            this.DropLocationIndicator?.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
             this.OwningGrid.ColumnsInternal.EnsureVisibleEdgedColumnsWidth();
             return new Size(this.OwningGrid.ColumnsInternal.VisibleEdgedColumnsWidth, height);

@@ -37,7 +37,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         public ListCollectionView(IList list)
             : base(list)
         {
-            _internalList = list;
+            InternalList = list;
 
 #if FEATURE_IEDITABLECOLLECTIONVIEW
             RefreshCanAddNew();
@@ -93,7 +93,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             {
 #endif
 #pragma warning disable SA1137 // Elements should have the same indentation
-            _internalList = list;
+            InternalList = list;
 #pragma warning restore SA1137 // Elements should have the same indentation
 #if FEATURE_ICOLLECTIONVIEW_SORT_OR_FILTER
             }
@@ -318,9 +318,9 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
                     return ActiveComparer.Compare(o1, o2);
                 }
 #endif
-                int i1 = InternalList.IndexOf(o1);
-                int i2 = InternalList.IndexOf(o2);
-                return i1 - i2;
+            int i1 = InternalList.IndexOf(o1);
+            int i2 = InternalList.IndexOf(o2);
+            return i1 - i2;
 #if FEATURE_ICOLLECTIONVIEW_GROUP
             }
             else
@@ -1402,14 +1402,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             else
             {
                 // old item was in view
-                if (adjustedNewIndex < 0)
-                {
-                    effectiveAction = EffectiveNotifyCollectionChangedAction.Remove;
-                }
-                else
-                {
-                    effectiveAction = EffectiveNotifyCollectionChangedAction.Move;
-                }
+                effectiveAction = adjustedNewIndex < 0 ? EffectiveNotifyCollectionChangedAction.Remove : EffectiveNotifyCollectionChangedAction.Move;
             }
 
             int originalCurrentPosition = CurrentPosition;
@@ -1701,7 +1694,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             if (!IsGrouping)
             {
 #endif
-                return InternalList.Contains(item);
+            return InternalList.Contains(item);
 #if FEATURE_ICOLLECTIONVIEW_GROUP
             }
             else
@@ -1724,7 +1717,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
 #if FEATURE_IEDITABLECOLLECTIONVIEW
                 return new PlaceholderAwareEnumerator(this, InternalList.GetEnumerator(), _newItem);
 #else
-                return new PlaceholderAwareEnumerator(this, InternalList.GetEnumerator(), NoNewItem);
+            return new PlaceholderAwareEnumerator(this, InternalList.GetEnumerator(), NoNewItem);
 #endif
 #if FEATURE_ICOLLECTIONVIEW_GROUP
             }
@@ -1751,13 +1744,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
         /// <summary>
         /// Gets a protected accessor to private _internalList field.
         /// </summary>
-        protected IList InternalList
-        {
-            get
-            {
-                return _internalList;
-            }
-        }
+        protected IList InternalList { get; private set; }
 
 #if FEATURE_ICOLLECTIONVIEW_SORT
         /// <summary>
@@ -2470,12 +2457,6 @@ namespace Microsoft.Toolkit.Uwp.UI.Data.Utilities
             Reset = 4
         }
 
-        //------------------------------------------------------
-        //
-        //  Private Fields
-        //
-        //------------------------------------------------------
-        private IList _internalList;
         private bool _currentElementWasRemoved;  // true if we need to MoveCurrencyOffDeletedElement
 #if FEATURE_ICOLLECTIONVIEW_FILTER
         private Predicate<object> _activeFilter;

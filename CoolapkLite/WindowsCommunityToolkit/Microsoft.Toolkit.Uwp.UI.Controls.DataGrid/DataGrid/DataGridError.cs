@@ -84,25 +84,13 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals
 
             public static ArgumentOutOfRangeException ValueMustBeBetween(string paramName, string valueName, object lowValue, bool lowInclusive, object highValue, bool highInclusive)
             {
-                string message;
-
-                if (lowInclusive && highInclusive)
-                {
-                    message = "{0} must be greater than or equal to {1} and less than or equal to {2}.";
-                }
-                else if (lowInclusive && !highInclusive)
-                {
-                    message = "{0} must be greater than or equal to {1} and less than {2}.";
-                }
-                else if (!lowInclusive && highInclusive)
-                {
-                    message = "{0} must be greater than {1} and less than or equal to {2}.";
-                }
-                else
-                {
-                    message = "{0} must be greater than {1} and less than {2}.";
-                }
-
+                string message = lowInclusive && highInclusive
+                    ? "{0} must be greater than or equal to {1} and less than or equal to {2}."
+                    : lowInclusive && !highInclusive
+                        ? "{0} must be greater than or equal to {1} and less than {2}."
+                        : !lowInclusive && highInclusive
+                                            ? "{0} must be greater than {1} and less than or equal to {2}."
+                                            : "{0} must be greater than {1} and less than {2}.";
                 return new ArgumentOutOfRangeException(paramName, Format(message, valueName, lowValue, highValue));
             }
 

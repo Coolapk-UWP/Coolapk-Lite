@@ -2,18 +2,16 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Microsoft.Toolkit.Uwp.UI.Controls.DataGridInternals;
+using System;
+using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Automation.Peers;
 using Windows.UI.Xaml.Automation.Provider;
 using Windows.UI.Xaml.Data;
-
 using DiagnosticsDebug = System.Diagnostics.Debug;
 
 namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
@@ -24,8 +22,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
     public class DataGridGroupItemAutomationPeer : FrameworkElementAutomationPeer,
         IExpandCollapseProvider, IGridProvider, IScrollItemProvider, ISelectionProvider
     {
-        private ICollectionViewGroup _group;
-        private AutomationPeer _dataGridAutomationPeer;
+        private readonly ICollectionViewGroup _group;
+        private readonly AutomationPeer _dataGridAutomationPeer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataGridGroupItemAutomationPeer"/> class.
@@ -33,17 +31,12 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         public DataGridGroupItemAutomationPeer(ICollectionViewGroup group, DataGrid dataGrid)
             : base(dataGrid)
         {
-            if (group == null)
-            {
-                throw new ArgumentNullException("group");
-            }
-
             if (dataGrid == null)
             {
                 throw new ArgumentNullException("dataGrid");
             }
 
-            _group = group;
+            _group = group ?? throw new ArgumentNullException("group");
             _dataGridAutomationPeer = FrameworkElementAutomationPeer.CreatePeerForElement(dataGrid);
         }
 
@@ -155,7 +148,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The Rect that represents the bounding rectangle of the UIElement that is associated with this DataGridGroupItemAutomationPeer.</returns>
         protected override Rect GetBoundingRectangleCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.GetBoundingRectangle() : default(Rect);
+            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.GetBoundingRectangle() : default;
         }
 
         /// <summary>
@@ -177,10 +170,10 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
             {
 #endif
 #pragma warning disable SA1137 // Elements should have the same indentation
-                foreach (object item in _group.GroupItems /*Items*/)
-                {
-                    children.Add(this.OwningDataGridPeer.GetOrCreateItemPeer(item));
-                }
+            foreach (object item in _group.GroupItems /*Items*/)
+            {
+                children.Add(this.OwningDataGridPeer.GetOrCreateItemPeer(item));
+            }
 #pragma warning restore SA1137 // Elements should have the same indentation
 #if FEATURE_ICOLLECTIONVIEW_GROUP
             }
@@ -251,7 +244,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>The AutomationPeer for the element that is targeted to the UIElement for this DataGridGroupItemAutomationPeer.</returns>
         protected override AutomationPeer GetLabeledByCore()
         {
-            return (this.OwningRowGroupHeaderPeer != null) ? this.OwningRowGroupHeaderPeer.GetLabeledBy() : null;
+            return this.OwningRowGroupHeaderPeer?.GetLabeledBy();
         }
 
         /// <summary>
@@ -306,15 +299,15 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
                 case PatternInterface.Table:
                     return this;
                 case PatternInterface.ScrollItem:
-                {
-                    if (this.OwningDataGrid.VerticalScrollBar != null &&
-                        this.OwningDataGrid.VerticalScrollBar.Maximum > 0)
                     {
-                        return this;
-                    }
+                        if (this.OwningDataGrid.VerticalScrollBar != null &&
+                            this.OwningDataGrid.VerticalScrollBar.Maximum > 0)
+                        {
+                            return this;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             return base.GetPatternCore(patternInterface);
@@ -326,7 +319,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element is focusable by the keyboard; otherwise false.</returns>
         protected override bool HasKeyboardFocusCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.HasKeyboardFocus() : false;
+            return this.OwningRowGroupHeaderPeer != null && this.OwningRowGroupHeaderPeer.HasKeyboardFocus();
         }
 
         /// <summary>
@@ -335,7 +328,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element contains data for the user to read; otherwise, false.</returns>
         protected override bool IsContentElementCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsContentElement() : true;
+            return this.OwningRowGroupHeaderPeer == null || this.OwningRowGroupHeaderPeer.IsContentElement();
         }
 
         /// <summary>
@@ -346,7 +339,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// is understood by the end user as interactive.</returns>
         protected override bool IsControlElementCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsControlElement() : true;
+            return this.OwningRowGroupHeaderPeer == null || this.OwningRowGroupHeaderPeer.IsControlElement();
         }
 
         /// <summary>
@@ -355,7 +348,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if this DataGridGroupItemAutomationPeer can receive and send events; otherwise, false.</returns>
         protected override bool IsEnabledCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsEnabled() : false;
+            return this.OwningRowGroupHeaderPeer != null && this.OwningRowGroupHeaderPeer.IsEnabled();
         }
 
         /// <summary>
@@ -364,7 +357,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement associated with this DataGridGroupItemAutomationPeer can accept keyboard focus.</returns>
         protected override bool IsKeyboardFocusableCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsKeyboardFocusable() : false;
+            return this.OwningRowGroupHeaderPeer != null && this.OwningRowGroupHeaderPeer.IsKeyboardFocusable();
         }
 
         /// <summary>
@@ -373,7 +366,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the element is not on the screen; otherwise, false.</returns>
         protected override bool IsOffscreenCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsOffscreen() : true;
+            return this.OwningRowGroupHeaderPeer == null || this.OwningRowGroupHeaderPeer.IsOffscreen();
         }
 
         /// <summary>
@@ -382,7 +375,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement contains protected content.</returns>
         protected override bool IsPasswordCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsPassword() : false;
+            return this.OwningRowGroupHeaderPeer != null && this.OwningRowGroupHeaderPeer.IsPassword();
         }
 
         /// <summary>
@@ -391,7 +384,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// <returns>True if the UIElement is required to be completed on a form.</returns>
         protected override bool IsRequiredForFormCore()
         {
-            return this.OwningRowGroupHeaderPeer != null ? this.OwningRowGroupHeaderPeer.IsRequiredForForm() : false;
+            return this.OwningRowGroupHeaderPeer != null && this.OwningRowGroupHeaderPeer.IsRequiredForForm();
         }
 
         /// <summary>
@@ -399,30 +392,21 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         /// </summary>
         protected override void SetFocusCore()
         {
-            if (this.OwningRowGroupHeaderPeer != null)
-            {
-                this.OwningRowGroupHeaderPeer.SetFocus();
-            }
+            this.OwningRowGroupHeaderPeer?.SetFocus();
         }
 
         void IExpandCollapseProvider.Collapse()
         {
             EnsureEnabled();
 
-            if (this.OwningDataGrid != null)
-            {
-                this.OwningDataGrid.CollapseRowGroup(_group, false /*collapseAllSubgroups*/);
-            }
+            this.OwningDataGrid?.CollapseRowGroup(_group, false /*collapseAllSubgroups*/);
         }
 
         void IExpandCollapseProvider.Expand()
         {
             EnsureEnabled();
 
-            if (this.OwningDataGrid != null)
-            {
-                this.OwningDataGrid.ExpandRowGroup(_group, false /*expandAllSubgroups*/);
-            }
+            this.OwningDataGrid?.ExpandRowGroup(_group, false /*expandAllSubgroups*/);
         }
 
         ExpandCollapseState IExpandCollapseProvider.ExpandCollapseState
@@ -446,12 +430,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         {
             get
             {
-                if (this.OwningDataGrid != null)
-                {
-                    return this.OwningDataGrid.Columns.Count;
-                }
-
-                return 0;
+                return this.OwningDataGrid != null ? this.OwningDataGrid.Columns.Count : 0;
             }
         }
 

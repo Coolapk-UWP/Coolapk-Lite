@@ -7,11 +7,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
     /// <summary>
     /// This structure encapsulate the cell information necessary when clipboard content is prepared.
     /// </summary>
-    public struct DataGridClipboardCellContent
+    public readonly struct DataGridClipboardCellContent
     {
-        private DataGridColumn _column;
-        private object _content;
-        private object _item;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataGridClipboardCellContent"/> struct.
@@ -21,43 +18,25 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <param name="content">DataGrid cell value.</param>
         public DataGridClipboardCellContent(object item, DataGridColumn column, object content)
         {
-            _item = item;
-            _column = column;
-            _content = content;
+            Item = item;
+            Column = column;
+            Content = content;
         }
 
         /// <summary>
         /// Gets the <see cref="DataGridColumn"/> column containing the cell.
         /// </summary>
-        public DataGridColumn Column
-        {
-            get
-            {
-                return _column;
-            }
-        }
+        public DataGridColumn Column { get; }
 
         /// <summary>
         /// Gets the <see cref="DataGridCell"/> cell content.
         /// </summary>
-        public object Content
-        {
-            get
-            {
-                return _content;
-            }
-        }
+        public object Content { get; }
 
         /// <summary>
         /// Gets the <see cref="DataGridRow"/> row item containing the cell.
         /// </summary>
-        public object Item
-        {
-            get
-            {
-                return _item;
-            }
-        }
+        public object Item { get; }
 
         /// <summary>
         /// Field-by-field comparison to avoid reflection-based ValueType.Equals.
@@ -72,7 +51,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
 
             DataGridClipboardCellContent clipboardCellContent = (DataGridClipboardCellContent)obj;
-            return _column == clipboardCellContent._column && _content == clipboardCellContent._content && _item == clipboardCellContent._item;
+            return Column == clipboardCellContent.Column && Content == clipboardCellContent.Content && Item == clipboardCellContent.Item;
         }
 
         /// <summary>
@@ -81,7 +60,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>Hash value.</returns>
         public override int GetHashCode()
         {
-            return (_column.GetHashCode() ^ _content.GetHashCode()) ^ _item.GetHashCode();
+            return Column.GetHashCode() ^ Content.GetHashCode() ^ Item.GetHashCode();
         }
 
         /// <summary>
@@ -92,7 +71,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>True if and only if clipboardCellContent1 and clipboardCellContent2 are equal.</returns>
         public static bool operator ==(DataGridClipboardCellContent clipboardCellContent1, DataGridClipboardCellContent clipboardCellContent2)
         {
-            return clipboardCellContent1._column == clipboardCellContent2._column && clipboardCellContent1._content == clipboardCellContent2._content && clipboardCellContent1._item == clipboardCellContent2._item;
+            return clipboardCellContent1.Column == clipboardCellContent2.Column && clipboardCellContent1.Content == clipboardCellContent2.Content && clipboardCellContent1.Item == clipboardCellContent2.Item;
         }
 
         /// <summary>
@@ -103,12 +82,8 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         /// <returns>True if clipboardCellContent1 and clipboardCellContent2 are NOT equal.</returns>
         public static bool operator !=(DataGridClipboardCellContent clipboardCellContent1, DataGridClipboardCellContent clipboardCellContent2)
         {
-            if (clipboardCellContent1._column == clipboardCellContent2._column && clipboardCellContent1._content == clipboardCellContent2._content)
-            {
-                return clipboardCellContent1._item != clipboardCellContent2._item;
-            }
-
-            return true;
+            return clipboardCellContent1.Column != clipboardCellContent2.Column || clipboardCellContent1.Content != clipboardCellContent2.Content
+|| clipboardCellContent1.Item != clipboardCellContent2.Item;
         }
     }
 }

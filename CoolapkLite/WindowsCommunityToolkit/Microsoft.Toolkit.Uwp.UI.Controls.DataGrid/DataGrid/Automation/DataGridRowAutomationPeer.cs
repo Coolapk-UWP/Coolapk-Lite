@@ -51,12 +51,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Automation.Peers
         protected override string GetItemTypeCore()
         {
             string itemType = base.GetItemTypeCore();
-            if (!string.IsNullOrEmpty(itemType))
-            {
-                return itemType;
-            }
-
-            return UI.Controls.Resources.DataGridRowAutomationPeer_ItemType;
+            return !string.IsNullOrEmpty(itemType) ? itemType : UI.Controls.Resources.DataGridRowAutomationPeer_ItemType;
         }
     }
 }
