@@ -171,7 +171,7 @@ namespace CoolapkLite
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite", true);
                 if (results != null && results.IsExistNewVersion)
                 {
                     ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();

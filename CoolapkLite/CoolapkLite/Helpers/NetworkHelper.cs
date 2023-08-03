@@ -238,7 +238,7 @@ namespace CoolapkLite.Helpers
             }
             catch (HttpRequestException e)
             {
-                SettingsHelper.LogManager.GetLogger(nameof(ImageCacheHelper)).Error(e.ExceptionToMessage(), e);
+                SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
                 if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
                 return null;
             }

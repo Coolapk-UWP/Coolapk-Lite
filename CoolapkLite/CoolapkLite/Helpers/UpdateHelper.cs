@@ -14,13 +14,13 @@ namespace CoolapkLite.Helpers
         private const string KKPP_API = "https://v2.kkpp.cc/repos/{0}/{1}/releases/latest";
         private const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
 
-        public static Task<UpdateInfo> CheckUpdateAsync(string username, string repository)
+        public static Task<UpdateInfo> CheckUpdateAsync(string username, string repository, bool isBackground = false)
         {
             PackageVersion currentVersion = Package.Current.Id.Version;
-            return CheckUpdateAsync(username, repository, currentVersion);
+            return CheckUpdateAsync(username, repository, currentVersion, isBackground);
         }
 
-        public static async Task<UpdateInfo> CheckUpdateAsync(string username, string repository, PackageVersion currentVersion)
+        public static async Task<UpdateInfo> CheckUpdateAsync(string username, string repository, PackageVersion currentVersion, bool isBackground = false)
         {
             if (string.IsNullOrEmpty(username))
             {
@@ -32,36 +32,44 @@ namespace CoolapkLite.Helpers
                 throw new ArgumentNullException(nameof(repository));
             }
 
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("User-Agent", username);
-            string url = string.Format(GITHUB_API, username, repository);
-            HttpResponseMessage response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            UpdateInfo result = JsonConvert.DeserializeObject<UpdateInfo>(responseBody);
-
-            if (result != null)
+            try
             {
-                SystemVersionInfo newVersionInfo = GetAsVersionInfo(result.TagName);
-                int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
-                int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
-                int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
-                int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Add("User-Agent", username);
+                string url = string.Format(GITHUB_API, username, repository);
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+                string responseBody = await response.Content.ReadAsStringAsync();
+                UpdateInfo result = JsonConvert.DeserializeObject<UpdateInfo>(responseBody);
 
-                SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
-
-                return new UpdateInfo
+                if (result != null)
                 {
-                    Changelog = result?.Changelog,
-                    CreatedAt = Convert.ToDateTime(result?.CreatedAt),
-                    Assets = result.Assets,
-                    IsPreRelease = result.IsPreRelease,
-                    PublishedAt = Convert.ToDateTime(result?.PublishedAt),
-                    TagName = result.TagName,
-                    ApiUrl = result?.ApiUrl,
-                    ReleaseUrl = result?.ReleaseUrl,
-                    IsExistNewVersion = newVersionInfo > currentVersionInfo
-                };
+                    SystemVersionInfo newVersionInfo = GetAsVersionInfo(result.TagName);
+                    int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
+                    int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
+                    int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
+                    int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
+
+                    SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
+
+                    return new UpdateInfo
+                    {
+                        Changelog = result?.Changelog,
+                        CreatedAt = Convert.ToDateTime(result?.CreatedAt),
+                        Assets = result.Assets,
+                        IsPreRelease = result.IsPreRelease,
+                        PublishedAt = Convert.ToDateTime(result?.PublishedAt),
+                        TagName = result.TagName,
+                        ApiUrl = result?.ApiUrl,
+                        ReleaseUrl = result?.ReleaseUrl,
+                        IsExistNewVersion = newVersionInfo > currentVersionInfo
+                    };
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(UpdateHelper)).Error(e.ExceptionToMessage(), e);
+                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
             }
 
             return null;
