@@ -103,7 +103,7 @@ namespace CoolapkLite
             // 只需确保窗口处于活动状态
             if (!(MainWindow.Content is Frame rootFrame))
             {
-                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                 {
                     CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
                 }

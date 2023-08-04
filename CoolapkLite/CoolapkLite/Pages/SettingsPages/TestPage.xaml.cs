@@ -54,6 +54,7 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 if (IsExtendsTitleBar != value)
                 {
+                    SettingsHelper.Set(SettingsHelper.IsExtendsTitleBar, value);
                     CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
                     ThemeHelper.UpdateSystemCaptionButtonColors();
                 }
