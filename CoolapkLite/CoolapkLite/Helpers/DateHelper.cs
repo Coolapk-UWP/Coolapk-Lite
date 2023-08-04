@@ -11,7 +11,13 @@ namespace CoolapkLite.Helpers
             DaysAgo,
             HoursAgo,
             MinutesAgo,
-            JustNow
+            JustNow,
+            Soon,
+            MinutesLater,
+            HoursLater,
+            DaysLater,
+            MonthsLater,
+            YearsLater,
         }
 
         private static readonly DateTime UnixDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -34,16 +40,17 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                TimeSpan temp = baseTime.Value.ToUniversalTime().Subtract(time);
+                DateTime universalTime = baseTime.Value.ToUniversalTime();
+                TimeSpan temp = universalTime.Subtract(time);
 
-                if (temp.TotalDays > 30)
+                if (temp.Days > 30)
                 {
-                    type = temp.TotalDays > 365
-                        ? TimeIntervalType.YearsAgo
-                        : TimeIntervalType.MonthsAgo;
+                    type = time.Year == universalTime.Year
+                        ? TimeIntervalType.MonthsAgo
+                        : TimeIntervalType.YearsAgo;
                     obj = time.ToLocalTime();
                 }
-                else
+                else if (temp.TotalDays > 0)
                 {
                     type = temp.Days > 0
                         ? TimeIntervalType.DaysAgo
@@ -54,14 +61,34 @@ namespace CoolapkLite.Helpers
                                 : TimeIntervalType.JustNow;
                     obj = temp;
                 }
+                else if (temp.Days > -30)
+                {
+                    type = temp.Days < 0
+                        ? TimeIntervalType.DaysLater
+                        : temp.Hours < 0
+                            ? TimeIntervalType.HoursLater
+                            : temp.Minutes < 0
+                                ? TimeIntervalType.MinutesLater
+                                : TimeIntervalType.Soon;
+                    obj = temp.Negate();
+                }
+                else
+                {
+                    type = time.Year == universalTime.Year
+                        ? TimeIntervalType.MonthsLater
+                        : TimeIntervalType.YearsLater;
+                    obj = time.ToLocalTime();
+                }
             }
 
             switch (type)
             {
                 case TimeIntervalType.YearsAgo:
+                case TimeIntervalType.YearsLater:
                     return ((DateTime)obj).ToString("D");
 
                 case TimeIntervalType.MonthsAgo:
+                case TimeIntervalType.MonthsLater:
                     return ((DateTime)obj).ToString("M");
 
                 case TimeIntervalType.DaysAgo:
@@ -75,6 +102,18 @@ namespace CoolapkLite.Helpers
 
                 case TimeIntervalType.JustNow:
                     return "刚刚";
+
+                case TimeIntervalType.Soon:
+                    return "不久之后";
+
+                case TimeIntervalType.MinutesLater:
+                    return $"{((TimeSpan)obj).Minutes}分钟之后";
+
+                case TimeIntervalType.HoursLater:
+                    return $"{((TimeSpan)obj).Hours}小时之后";
+
+                case TimeIntervalType.DaysLater:
+                    return $"{((TimeSpan)obj).Days}天之后";
 
                 default:
                     return string.Empty;

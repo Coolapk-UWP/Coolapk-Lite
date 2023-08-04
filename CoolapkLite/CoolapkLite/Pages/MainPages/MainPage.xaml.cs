@@ -489,7 +489,7 @@ namespace CoolapkLite
             {
                 new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel(), Index = 0},
                 new MenuItem(dispatcher) { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
-                new MenuItem(dispatcher) { Icon = "\uE113", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
+                new MenuItem(dispatcher) { Icon = "\uE734", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
                 new MenuItem(dispatcher) { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), ViewModels = new HistoryViewModel("浏览历史"), Index = 3},
             };
             return items;

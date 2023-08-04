@@ -289,7 +289,8 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        TextTrimming="CharacterEllipsis">
+                        TextTrimming="CharacterEllipsis"
+                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
                         <Run Text="{Binding Dateline}" />
                         <Run Text="{Binding Info}" />
                         <Hyperlink

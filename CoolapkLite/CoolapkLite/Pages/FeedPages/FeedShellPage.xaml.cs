@@ -124,6 +124,10 @@ namespace CoolapkLite.Pages.FeedPages
                     DisabledCopy();
                     break;
 
+                case "StarButton":
+                    DisabledCopy();
+                    break;
+
                 default:
                     DisabledCopy();
                     _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());

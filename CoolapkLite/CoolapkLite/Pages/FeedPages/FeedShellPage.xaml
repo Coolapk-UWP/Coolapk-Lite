@@ -102,7 +102,7 @@
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                        Glyph="&#xE734;"
+                                        Glyph="&#xE113;"
                                         Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}" />
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
