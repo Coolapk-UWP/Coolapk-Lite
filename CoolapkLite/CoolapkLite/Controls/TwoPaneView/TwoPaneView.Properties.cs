@@ -108,62 +108,62 @@ namespace CoolapkLite.Controls
 
         public double MinTallModeHeight
         {
-            get { return (double)GetValue(MinTallModeHeightProperty); }
-            set { SetValue(MinTallModeHeightProperty, value); }
+            get => (double)GetValue(MinTallModeHeightProperty);
+            set => SetValue(MinTallModeHeightProperty, value);
         }
 
         public double MinWideModeWidth
         {
-            get { return (double)GetValue(MinWideModeWidthProperty); }
-            set { SetValue(MinWideModeWidthProperty, value); }
+            get => (double)GetValue(MinWideModeWidthProperty);
+            set => SetValue(MinWideModeWidthProperty, value);
         }
 
         public TwoPaneViewMode Mode
         {
-            get { return (TwoPaneViewMode)GetValue(ModeProperty); }
-            set { SetValue(ModeProperty, value); }
+            get => (TwoPaneViewMode)GetValue(ModeProperty);
+            set => SetValue(ModeProperty, value);
         }
 
         public UIElement Pane1
         {
-            get { return (UIElement)GetValue(Pane1Property); }
-            set { SetValue(Pane1Property, value); }
+            get => (UIElement)GetValue(Pane1Property);
+            set => SetValue(Pane1Property, value);
         }
 
         public GridLength Pane1Length
         {
-            get { return (GridLength)GetValue(Pane1LengthProperty); }
-            set { SetValue(Pane1LengthProperty, value); }
+            get => (GridLength)GetValue(Pane1LengthProperty);
+            set => SetValue(Pane1LengthProperty, value);
         }
 
         public UIElement Pane2
         {
-            get { return (UIElement)GetValue(Pane2Property); }
-            set { SetValue(Pane2Property, value); }
+            get => (UIElement)GetValue(Pane2Property);
+            set => SetValue(Pane2Property, value);
         }
 
         public GridLength Pane2Length
         {
-            get { return (GridLength)GetValue(Pane2LengthProperty); }
-            set { SetValue(Pane2LengthProperty, value); }
+            get => (GridLength)GetValue(Pane2LengthProperty);
+            set => SetValue(Pane2LengthProperty, value);
         }
 
         public TwoPaneViewPriority PanePriority
         {
-            get { return (TwoPaneViewPriority)GetValue(PanePriorityProperty); }
-            set { SetValue(PanePriorityProperty, value); }
+            get => (TwoPaneViewPriority)GetValue(PanePriorityProperty);
+            set => SetValue(PanePriorityProperty, value);
         }
 
         public TwoPaneViewTallModeConfiguration TallModeConfiguration
         {
-            get { return (TwoPaneViewTallModeConfiguration)GetValue(TallModeConfigurationProperty); }
-            set { SetValue(TallModeConfigurationProperty, value); }
+            get => (TwoPaneViewTallModeConfiguration)GetValue(TallModeConfigurationProperty);
+            set => SetValue(TallModeConfigurationProperty, value);
         }
 
         public TwoPaneViewWideModeConfiguration WideModeConfiguration
         {
-            get { return (TwoPaneViewWideModeConfiguration)GetValue(WideModeConfigurationProperty); }
-            set { SetValue(WideModeConfigurationProperty, value); }
+            get => (TwoPaneViewWideModeConfiguration)GetValue(WideModeConfigurationProperty);
+            set => SetValue(WideModeConfigurationProperty, value);
         }
 
         private static void OnMinLengthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
