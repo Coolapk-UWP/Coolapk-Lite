@@ -23,6 +23,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -5583,7 +5584,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private void DataGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             // Don't process if this is a generated replay of the event.
-            if (e.IsGenerated)
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Input.PointerRoutedEventArgs", "IsGenerated") && e.IsGenerated)
             {
                 return;
             }

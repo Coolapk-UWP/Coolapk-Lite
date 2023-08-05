@@ -217,7 +217,10 @@ namespace CoolapkLite.Controls
             }
             if (_pivotHeader != null)
             {
-                try { _pivotHeader.SelectedIndex = 0; } catch { }
+                if (_pivotHeader.Items.Any())
+                {
+                    _pivotHeader.SelectedIndex = 0;
+                }
                 _pivotHeader.SelectionChanged += PivotHeader_SelectionChanged;
                 if (ShyHeaderItemSource != null)
                 {
