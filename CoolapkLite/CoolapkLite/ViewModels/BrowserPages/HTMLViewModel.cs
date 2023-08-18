@@ -54,8 +54,8 @@ namespace CoolapkLite.ViewModels.BrowserPages
                 if (rawHTML != value)
                 {
                     rawHTML = value;
+                    _ = GetHtmlAsync(value);
                     RaisePropertyChangedEvent();
-                    _ = GetHtmlAsync(value, ThemeHelper.IsDarkTheme() ? "Dark" : "Light");
                 }
             }
         }
@@ -131,6 +131,8 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
             UIHelper.HideProgressBar();
         }
+
+        public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light");
 
         public async Task GetHtmlAsync(string html, string theme)
         {

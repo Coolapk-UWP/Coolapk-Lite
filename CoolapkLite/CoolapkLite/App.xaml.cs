@@ -279,7 +279,7 @@ namespace CoolapkLite
                 new SettingsCommand(
                     "Settings",
                     loader.GetString("Settings"),
-                    (handler) => new SettingsFlyoutControl { RequestedTheme = ThemeHelper.ActualTheme }.Show()));
+                    async (handler) => new SettingsFlyoutControl { RequestedTheme = await ThemeHelper.GetActualThemeAsync() }.Show()));
             args.Request.ApplicationCommands.Add(
                 new SettingsCommand(
                     "Feedback",

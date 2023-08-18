@@ -212,7 +212,7 @@ namespace CoolapkLite.Helpers
             else
             {
                 await dispatcher.ResumeForegroundAsync();
-                return ThemeHelper.IsDarkTheme()
+                return await ThemeHelper.IsDarkThemeAsync()
                     ? new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 }
                     : new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
             }

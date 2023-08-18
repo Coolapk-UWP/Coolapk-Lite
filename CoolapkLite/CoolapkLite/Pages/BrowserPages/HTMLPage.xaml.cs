@@ -21,7 +21,8 @@ namespace CoolapkLite.Pages.BrowserPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is HTMLViewModel ViewModel)
+            if (e.Parameter is HTMLViewModel ViewModel
+                && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
                 DataContext = Provider;

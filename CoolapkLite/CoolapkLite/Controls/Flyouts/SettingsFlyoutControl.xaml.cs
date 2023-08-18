@@ -52,9 +52,9 @@ namespace CoolapkLite.Controls
             ThemeHelper.UISettingChanged.Remove(UISettingChanged);
         }
 
-        private void UpdateThemeRadio()
+        private async void UpdateThemeRadio()
         {
-            switch (ThemeHelper.ActualTheme)
+            switch (await ThemeHelper.GetActualThemeAsync())
             {
                 case ElementTheme.Light:
                     Light.IsChecked = true;

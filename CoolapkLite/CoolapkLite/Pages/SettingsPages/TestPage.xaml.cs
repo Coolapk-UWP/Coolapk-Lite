@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -185,6 +186,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
                     break;
+                case "CloseApp":
+                    CoreApplication.Exit();
+                    break;
                 case "EnterPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
@@ -195,6 +199,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     UserAgentDialog userAgentDialog = new UserAgentDialog(UserAgent);
                     await userAgentDialog.ShowAsync();
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    break;
+                case "GCCollect":
+                    GC.Collect();
                     break;
                 case "NewWindow":
                     if (WindowHelper.IsSupported)
@@ -244,11 +251,26 @@ namespace CoolapkLite.Pages.SettingsPages
                     };
                     _ = await GetJsonDialog.ShowAsync();
                     break;
+                case "RestartApp":
+                    _ = CoreApplication.RequestRestartAsync(string.Empty);
+                    break;
                 case "ShowMessage":
                     UIHelper.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
                     _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text));
+                    break;
+                case "MinimizeApp":
+                    if (ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo"))
+                    {
+                        _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync();
+                    }
+                    break;
+                case "OutFullWindow":
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    else
+                    { ApplicationView.GetForCurrentView().ExitFullScreenMode(); }
                     break;
                 case "ShowAsyncError":
                     await Task.Run(() => throw new Exception(NotifyMessage.Text));
@@ -258,6 +280,12 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "HideProgressBar":
                     UIHelper.HideProgressBar();
+                    break;
+                case "EnterFullWindow":
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    else
+                    { _ = ApplicationView.GetForCurrentView().TryEnterFullScreenMode(); }
                     break;
                 case "ErrorProgressBar":
                     UIHelper.ErrorProgressBar();

@@ -71,7 +71,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static void SetRequestHeaders()
+        public static async void SetRequestHeaders()
         {
             string Culture = LanguageHelper.GetPrimaryLanguage();
             EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
@@ -86,7 +86,7 @@ namespace CoolapkLite.Helpers
             Client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
             Client.DefaultRequestHeaders.Add("X-App-Id", "com.coolapk.market");
             Client.DefaultRequestHeaders.Add("X-App-Device", TokenCreator.DeviceCode);
-            Client.DefaultRequestHeaders.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
+            Client.DefaultRequestHeaders.Add("X-Dark-Mode", await ThemeHelper.IsDarkThemeAsync() ? "1" : "0");
 
             if (SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
             {

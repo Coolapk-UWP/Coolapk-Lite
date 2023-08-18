@@ -126,6 +126,16 @@
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
+                            Content="进入全屏模式"
+                            Tag="EnterFullWindow" />
+                        <Button
+                            Click="Button_Click"
+                            Content="退出"
+                            Tag="OutFullWindow" />
+                    </control:StackPanel>
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
                             Content="进入画中画模式"
                             Tag="EnterPIP" />
                         <Button
@@ -174,6 +184,26 @@
                         Click="Button_Click"
                         Content="前往粉丝分析页面"
                         Tag="GoToFansAnalyzePage" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="应用测试">
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="关闭应用"
+                            Tag="CloseApp" />
+                        <Button
+                            Click="Button_Click"
+                            Content="重启应用"
+                            Tag="RestartApp" />
+                        <Button
+                            Click="Button_Click"
+                            Content="最小化应用"
+                            Tag="MinimizeApp" />
+                    </control:StackPanel>
+                    <Button
+                        Click="Button_Click"
+                        Content="执行 GC 清理"
+                        Tag="GCCollect" />
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="文本测试">
                     <TextBox

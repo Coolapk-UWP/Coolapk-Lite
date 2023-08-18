@@ -1,8 +1,20 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras">
 
   <PropertyGroup>
+    <AssemblyName>BCrypt.Net-Next</AssemblyName>
+    <AssemblyTitle>BCrypt.Net-Next</AssemblyTitle>
+    <Authors>Chris McKee, Ryan D. Emerl, Damien Miller</Authors>
+    <Copyright>2006-2021 Chris McKee, Ryan D. Emerl, Damien Miller</Copyright>
+    <Description>A fixed, enhanced and namespace compatible version of BCrypt.Net port of jBCrypt implemented in C#. It uses a variant of the Blowfish encryption algorithm’s keying schedule, and introduces a work factor, which allows you to determine how expensive the hash function will be, allowing the algorithm to be "future-proof".</Description>
     <LangVersion>7.3</LangVersion>
+    <PackageId>BCrypt.Net-Next</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BcryptNet/bcrypt.net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BcryptNet/bcrypt.net</RepositoryUrl>
+    <Summary>BCrypt.Net, C# implementation of BCrypt, OpenBSD-style Blowfish password hashing</Summary>
     <TargetFramework>uap10.0</TargetFramework>
+    <Title>BCrypt .Net</Title>
+    <Version>4.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
