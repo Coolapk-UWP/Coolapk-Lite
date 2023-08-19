@@ -31,7 +31,7 @@
             <Grid
                 x:Name="CustomTitleBar"
                 Grid.Row="1"
-                Height="32"
+                Height="{StaticResource TitleBarHeight}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Background="{ThemeResource SystemControlTransparentBrush}"
@@ -78,10 +78,16 @@
                                 Width="220"
                                 VerticalAlignment="Center"
                                 ItemTemplateSelector="{StaticResource SearchWordSelector}"
-                                QueryIcon="Find"
                                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                                 TextChanged="AutoSuggestBox_TextChanged"
-                                Visibility="Collapsed" />
+                                Visibility="Collapsed">
+                                <AutoSuggestBox.QueryIcon>
+                                    <FontIcon
+                                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                        FontSize="12"
+                                        Glyph="&#xE721;" />
+                                </AutoSuggestBox.QueryIcon>
+                            </AutoSuggestBox>
                             <Button
                                 x:Name="SearchButton"
                                 Click="AppBarButton_Click"

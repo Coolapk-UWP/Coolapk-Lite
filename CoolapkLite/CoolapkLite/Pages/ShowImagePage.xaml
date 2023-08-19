@@ -67,7 +67,7 @@
             </Grid.ChildrenTransitions>
             <Grid
                 x:Name="CustomTitleBar"
-                Height="32"
+                Height="{StaticResource TitleBarHeight}"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Top"
                 Background="{ThemeResource SystemControlTransparentBrush}"

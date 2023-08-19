@@ -54,10 +54,16 @@
                 VerticalAlignment="Center"
                 IsTabStop="True"
                 ItemTemplateSelector="{StaticResource SearchWordSelector}"
-                QueryIcon="Find"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
                 Text="{Binding Title, Mode=OneWay}"
-                TextChanged="AutoSuggestBox_TextChanged" />
+                TextChanged="AutoSuggestBox_TextChanged">
+                <AutoSuggestBox.QueryIcon>
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="12"
+                        Glyph="&#xE721;" />
+                </AutoSuggestBox.QueryIcon>
+            </AutoSuggestBox>
             <Button
                 x:Name="RefreshButton"
                 Grid.Column="2"

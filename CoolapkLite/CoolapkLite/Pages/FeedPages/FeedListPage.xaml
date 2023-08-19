@@ -12,6 +12,7 @@
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feeds:FeedListViewModel}"
     NavigationCacheMode="Enabled"
+    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
@@ -1200,11 +1201,20 @@
                     <ListView.Header>
                         <Grid x:Name="Pane1Grid">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" MinHeight="32" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                x:Name="Block"
+                                Grid.Row="1"
+                                Height="48" />
                             <ContentControl
                                 x:Name="DetailControl"
+                                Grid.ColumnSpan="2"
                                 Margin="1,0.5"
                                 Padding="{StaticResource StackPanelMargin}"
                                 HorizontalAlignment="Stretch"
@@ -1213,7 +1223,8 @@
                                 ContentTemplate="{Binding DetailDataTemplate}" />
                             <Grid
                                 Grid.Row="1"
-                                Padding="4"
+                                Grid.Column="1"
+                                Padding="4,0"
                                 VerticalAlignment="Center">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -1225,8 +1236,14 @@
                                     VerticalAlignment="Center"
                                     IsTabStop="True"
                                     PlaceholderText="{Binding Title, Converter={StaticResource StringFormatConverter}, ConverterParameter='搜索来自{0}的内容'}"
-                                    QueryIcon="Find"
-                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted" />
+                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted">
+                                    <AutoSuggestBox.QueryIcon>
+                                        <FontIcon
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="12"
+                                            Glyph="&#xE721;" />
+                                    </AutoSuggestBox.QueryIcon>
+                                </AutoSuggestBox>
                                 <control:StackPanel
                                     Grid.Column="2"
                                     VerticalAlignment="Center"
@@ -1258,7 +1275,14 @@
                     x:Name="TitleBar"
                     Title="{Binding Title}"
                     IsRefreshEnabled="True"
-                    RefreshRequested="TitleBar_RefreshEvent" />
+                    RefreshRequested="TitleBar_RefreshEvent">
+                    <Button
+                        x:Name="SearchButton"
+                        Click="SearchButton_Click"
+                        Content="&#xE721;"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                </control:TitleBar>
             </Grid>
         </control:TwoPaneView.Pane1>
         <control:TwoPaneView.Pane2>

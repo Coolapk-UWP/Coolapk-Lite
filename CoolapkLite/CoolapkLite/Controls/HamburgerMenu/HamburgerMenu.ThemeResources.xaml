@@ -304,7 +304,7 @@
                                                 <ColumnDefinition Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <Viewbox Width="16" Height="16">
-                                                <SymbolIcon Symbol="Find" />
+                                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE721;" />
                                             </Viewbox>
                                             <TextBlock
                                                 x:Uid="/MainPage/Search"
