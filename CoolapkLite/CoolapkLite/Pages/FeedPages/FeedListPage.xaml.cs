@@ -98,7 +98,7 @@ namespace CoolapkLite.Pages.FeedPages
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
-            if (ListView.ItemsSource is EntityItemSource entities)
+            if (ReplyListView.ItemsSource is EntityItemSource entities)
             {
                 _ = entities.Refresh(true);
             }
@@ -202,6 +202,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
+            FrameworkElement ListView = sender as FrameworkElement;
+
             Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
             Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
 
@@ -231,6 +233,14 @@ namespace CoolapkLite.Pages.FeedPages
             else if (Tag is string url)
             {
                 _ = this.OpenLinkAsync(url);
+            }
+        }
+
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        {
+            if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
+            {
+                _ = Provider.SearchQuerySubmitted(sender.Text);
             }
         }
 

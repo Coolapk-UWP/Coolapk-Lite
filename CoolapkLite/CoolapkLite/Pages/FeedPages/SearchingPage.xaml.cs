@@ -146,7 +146,7 @@ namespace CoolapkLite.Pages.FeedPages
                 Provider.Title = word.ToString();
                 await Provider.Refresh(true);
             }
-            else if (args.ChosenSuggestion is null)
+            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
                 Provider.Title = sender.Text;
                 await Provider.Refresh(true);

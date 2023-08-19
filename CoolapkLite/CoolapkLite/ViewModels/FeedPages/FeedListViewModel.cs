@@ -3,6 +3,7 @@ using CoolapkLite.Controls;
 using CoolapkLite.Controls.DataTemplates;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
@@ -58,6 +59,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 RaisePropertyChangedEvent();
             }
         }
+
         private FeedListDetailBase detail;
         public FeedListDetailBase Detail
         {
@@ -68,6 +70,17 @@ namespace CoolapkLite.ViewModels.FeedPages
                 RaisePropertyChangedEvent();
                 Title = GetTitleBarText(value);
                 DetailDataTemplate = DataTemplateSelector.SelectTemplate(value);
+            }
+        }
+
+        private SearchItemSource searchItemSource;
+        public SearchItemSource SearchItemSource
+        {
+            get => searchItemSource;
+            protected set
+            {
+                searchItemSource = value;
+                RaisePropertyChangedEvent();
             }
         }
 
@@ -107,6 +120,20 @@ namespace CoolapkLite.ViewModels.FeedPages
                 case FeedListType.DyhPageList: return new DyhViewModel(id);
                 case FeedListType.ProductPageList: return new ProductViewModel(id);
                 case FeedListType.CollectionPageList: return new CollectionViewModel(id);
+                default: return null;
+            }
+        }
+
+        public static SearchItemSource GetSearchProvider(FeedListType type, string keyword, string id)
+        {
+            if (string.IsNullOrEmpty(id) || id == "0") { return null; }
+            switch (type)
+            {
+                case FeedListType.UserPageList: return new SearchItemSource(keyword,"user",id);
+                case FeedListType.TagPageList: return new SearchItemSource(keyword, "tag", id);
+                case FeedListType.DyhPageList: return new SearchItemSource(keyword, "dyh", id);
+                case FeedListType.ProductPageList: return new SearchItemSource(keyword, "product_phone", id);
+                case FeedListType.CollectionPageList: return new SearchItemSource(keyword, "collection", id);
                 default: return null;
             }
         }
@@ -154,10 +181,10 @@ namespace CoolapkLite.ViewModels.FeedPages
                 SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
             };
 
-            string fileex = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            int index = fileex.IndexOfAny(new char[] { '?', '%', '&' });
-            fileex = fileex.Substring(0, index == -1 ? fileex.Length : index);
-            fileSavePicker.FileTypeChoices.Add($"{fileex}文件", new string[] { "." + fileex });
+            string fileEx = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            int index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+            fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
+            fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { "." + fileEx });
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
             if (file != null)
@@ -210,6 +237,21 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             Regex regex = new Regex(@"[^/]+(?!.*/)");
             return regex.IsMatch(url) ? regex.Match(url).Value : "图片";
+        }
+
+        public virtual async Task SearchQuerySubmitted(string keyword)
+        {
+            if (SearchItemSource == null)
+            {
+                SearchItemSource = GetSearchProvider(ListType, keyword, ID);
+                SearchItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
+                SearchItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+            }
+            else if (SearchItemSource.Keyword != Title)
+            {
+                SearchItemSource.Keyword = Title;
+            }
+            await SearchItemSource?.Refresh(true);
         }
 
         public abstract Task<bool> PinSecondaryTile(Entity entity);
@@ -901,6 +943,125 @@ namespace CoolapkLite.ViewModels.FeedPages
                     await AddAsync(item);
                 }
             }
+        }
+    }
+
+    public class SearchItemSource : EntityItemSource, INotifyPropertyChanged
+    {
+        public string Keyword;
+        public string PageType;
+        public string PageParam;
+
+        private int searchFeedTypeComboBoxSelectedIndex = 0;
+        public int SearchFeedTypeComboBoxSelectedIndex
+        {
+            get => searchFeedTypeComboBoxSelectedIndex;
+            set
+            {
+                searchFeedTypeComboBoxSelectedIndex = value;
+                RaisePropertyChangedEvent();
+                UpdateProvider();
+                _ = Refresh(true);
+            }
+        }
+
+        private int searchFeedSortTypeComboBoxSelectedIndex = 0;
+        public int SearchFeedSortTypeComboBoxSelectedIndex
+        {
+            get => searchFeedSortTypeComboBoxSelectedIndex;
+            set
+            {
+                searchFeedSortTypeComboBoxSelectedIndex = value;
+                RaisePropertyChangedEvent();
+                UpdateProvider();
+                _ = Refresh(true);
+            }
+        }
+
+        public SearchItemSource(string keyword, string pageType, string pageParam)
+        {
+            Keyword = keyword;
+            PageType = pageType;
+            PageParam = pageParam;
+            string feedType = string.Empty;
+            string sortType = string.Empty;
+            switch (SearchFeedTypeComboBoxSelectedIndex)
+            {
+                case 0: feedType = "all"; break;
+                case 1: feedType = "feed"; break;
+                case 2: feedType = "feedArticle"; break;
+                case 3: feedType = "rating"; break;
+                case 4: feedType = "picture"; break;
+                case 5: feedType = "question"; break;
+                case 6: feedType = "answer"; break;
+                case 7: feedType = "video"; break;
+                case 8: feedType = "ershou"; break;
+                case 9: feedType = "vote"; break;
+            }
+            switch (SearchFeedSortTypeComboBoxSelectedIndex)
+            {
+                case 0: sortType = "default"; break;
+                case 1: sortType = "hot"; break;
+                case 2: sortType = "reply"; break;
+            }
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) =>
+                UriHelper.GetUri(
+                    UriType.SearchTarget,
+                    "feed",
+                    feedType,
+                    sortType,
+                    keyword,
+                    pageType,
+                    pageParam,
+                    p,
+                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                GetEntities,
+                "id");
+        }
+
+        private IEnumerable<Entity> GetEntities(JObject jo)
+        {
+            yield return new FeedModel(jo);
+        }
+
+        private void UpdateProvider()
+        {
+            string feedType = string.Empty;
+            string sortType = string.Empty;
+            switch (SearchFeedTypeComboBoxSelectedIndex)
+            {
+                case 0: feedType = "all"; break;
+                case 1: feedType = "feed"; break;
+                case 2: feedType = "feedArticle"; break;
+                case 3: feedType = "rating"; break;
+                case 4: feedType = "picture"; break;
+                case 5: feedType = "question"; break;
+                case 6: feedType = "answer"; break;
+                case 7: feedType = "video"; break;
+                case 8: feedType = "ershou"; break;
+                case 9: feedType = "vote"; break;
+            }
+            switch (SearchFeedSortTypeComboBoxSelectedIndex)
+            {
+                case 0: sortType = "default"; break;
+                case 1: sortType = "hot"; break;
+                case 2: sortType = "reply"; break;
+            }
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) =>
+                UriHelper.GetUri(
+                    UriType.SearchTarget,
+                    "feed",
+                    feedType,
+                    sortType,
+                    Keyword,
+                    PageType,
+                    PageParam,
+                    p,
+                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                GetEntities,
+                "uid");
         }
     }
 }

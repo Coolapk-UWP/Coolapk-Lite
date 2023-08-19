@@ -235,7 +235,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
-                    UriType.SearchUsers,
+                    UriType.Search,
+                    "user",
                     keyword,
                     p,
                     p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
@@ -259,7 +260,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
-                    UriType.SearchTags,
+                    UriType.Search,
+                    "feedTopic",
                     keyword,
                     p,
                     p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),

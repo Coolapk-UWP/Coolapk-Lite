@@ -108,7 +108,7 @@ namespace CoolapkLite.Controls
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
             doc.LoadHtml(Text.Replace("<!--break-->", string.Empty));
             Paragraph paragraph = new Paragraph { LineHeight = FontSize + 10 };
-            ImmutableArray<ImageModel>.Builder imageArrayBuider = ImmutableArray.CreateBuilder<ImageModel>();
+            ImmutableArray<ImageModel>.Builder imageArrayBuilder = ImmutableArray.CreateBuilder<ImageModel>();
             void NewLine()
             {
                 RichTextBlock.Blocks.Add(paragraph);
@@ -280,7 +280,7 @@ namespace CoolapkLite.Controls
                                 else
                                 {
                                     NewLine();
-                                    imageArrayBuider.Add(imageModel);
+                                    imageArrayBuilder.Add(imageModel);
 
                                     Grid Grid = new Grid { Padding = new Thickness(0, 0, 0, 8) };
 
@@ -418,7 +418,7 @@ namespace CoolapkLite.Controls
                 }
             }
 
-            ImmutableArray<ImageModel> array = imageArrayBuider.ToImmutable();
+            ImmutableArray<ImageModel> array = imageArrayBuilder.ToImmutable();
             foreach (ImageModel item in array)
             {
                 item.ContextArray = array;
