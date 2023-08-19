@@ -254,6 +254,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             await SearchItemSource?.Refresh(true);
         }
 
+        public virtual Task SearchRefresh(bool reset = false) => SearchItemSource?.Refresh(reset);
+
         public abstract Task<bool> PinSecondaryTile(Entity entity);
 
         public abstract Task<FeedListDetailBase> GetDetail();

@@ -272,9 +272,14 @@ namespace CoolapkLite.Models
         {
             List<string> builder = new List<string>();
 
+            if (CommentMeNum > 0)
+            {
+                builder.Add($"{CommentMeNum} 个未读回复");
+            }
+
             if (FeedLikeNum > 0)
             {
-                builder.Add($"{FeedLikeNum} 个未读回复");
+                builder.Add($"{FeedLikeNum} 个点赞");
             }
 
             if (MessageNum > 0)

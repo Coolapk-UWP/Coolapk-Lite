@@ -93,6 +93,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 Provider = ViewModel;
                 DataContext = Provider;
+                TwoPaneView.PanePriority = TwoPaneViewPriority.Pane2;
                 Provider.DataTemplateSelector = DetailTemplateSelector;
                 await Refresh(true);
             }
@@ -276,6 +277,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
 
+        private void SearchRefreshButton_Click(object sender, RoutedEventArgs e) => _ = Provider.SearchRefresh(true);
+
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
 
         #region 界面模式切换
@@ -305,6 +308,16 @@ namespace CoolapkLite.Pages.FeedPages
                 RightGrid.Children.Remove(TitleBar);
             }
 
+            if (SearchBox.Parent != null)
+            {
+                (SearchBox.Parent as Panel).Children.Remove(SearchBox);
+            }
+            else
+            {
+                SearchBoxGrid.Children.Remove(SearchBox);
+                Pane1Grid.Children.Remove(SearchBox);
+            }
+
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
@@ -313,9 +326,19 @@ namespace CoolapkLite.Pages.FeedPages
                 TitleBar.IsRefreshButtonVisible = true;
                 RefreshButton.Visibility = Visibility.Collapsed;
                 SearchButton.Visibility = Visibility.Visible;
+                SearchBoxGrid.Visibility = Visibility.Visible;
                 // Add the details content to Pane1.
                 RightGrid.Children.Add(TitleBar);
                 Pane2Grid.Children.Add(DetailControl);
+                SearchBoxGrid.Children.Add(SearchBox);
+
+                Thickness StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
+                ItemsStackPanel StackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
+                if (StackPanel != null)
+                {
+                    StackPanel.Margin = StackPanelMargin;
+                    StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                }
             }
             // Dual pane.
             else
@@ -325,9 +348,19 @@ namespace CoolapkLite.Pages.FeedPages
                 TitleBar.IsRefreshButtonVisible = false;
                 RefreshButton.Visibility = Visibility.Visible;
                 SearchButton.Visibility = Visibility.Collapsed;
+                SearchBoxGrid.Visibility = Visibility.Collapsed;
                 // Put details content in Pane2.
                 LeftGrid.Children.Add(TitleBar);
                 Pane1Grid.Children.Add(DetailControl);
+                Pane1Grid.Children.Add(SearchBox);
+
+                Thickness StackPanelMargin = new Thickness();
+                ItemsStackPanel StackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
+                if (StackPanel != null)
+                {
+                    StackPanel.Margin = StackPanelMargin;
+                    StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                }
             }
         }
 
