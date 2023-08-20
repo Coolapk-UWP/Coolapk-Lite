@@ -68,6 +68,11 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <ReorderThemeTransition />
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
                                         <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />
                                         </Grid>
@@ -75,6 +80,11 @@
                                             x:Name="InnerFlyoutHeaderGrid"
                                             Grid.Row="1"
                                             Height="{TemplateBinding HeaderHeight}">
+                                            <Grid.ChildrenTransitions>
+                                                <TransitionCollection>
+                                                    <ReorderThemeTransition />
+                                                </TransitionCollection>
+                                            </Grid.ChildrenTransitions>
                                             <ContentPresenter
                                                 x:Name="FlyoutHeader"
                                                 HorizontalAlignment="Stretch"
@@ -97,7 +107,13 @@
                                 Height="{TemplateBinding HeaderHeight}"
                                 VerticalAlignment="Top"
                                 Background="{TemplateBinding HeaderBackground}"
-                                Visibility="Collapsed" />
+                                Visibility="Collapsed">
+                                <Grid.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </Grid.ChildrenTransitions>
+                            </Grid>
                         </Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>

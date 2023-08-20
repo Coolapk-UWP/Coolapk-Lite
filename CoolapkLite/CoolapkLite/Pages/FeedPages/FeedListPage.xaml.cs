@@ -119,7 +119,7 @@ namespace CoolapkLite.Pages.FeedPages
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
-            if (ReplyListView.ItemsSource is EntityItemSource entities)
+            if (FeedsListView.ItemsSource is EntityItemSource entities)
             {
                 _ = entities.Refresh(true);
             }
@@ -323,6 +323,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 HeaderHeight = 40;
                 HeaderMargin = PageTitleHeight;
+                DetailListView.HeaderHeight = 0;
                 TitleBar.IsRefreshButtonVisible = true;
                 RefreshButton.Visibility = Visibility.Collapsed;
                 SearchButton.Visibility = Visibility.Visible;
@@ -345,6 +346,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 HeaderMargin = 0d;
                 HeaderHeight = PageTitleHeight;
+                DetailListView.HeaderHeight = 40;
                 TitleBar.IsRefreshButtonVisible = false;
                 RefreshButton.Visibility = Visibility.Visible;
                 SearchButton.Visibility = Visibility.Collapsed;

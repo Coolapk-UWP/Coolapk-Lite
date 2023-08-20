@@ -1193,6 +1193,7 @@
                 <control:ShyHeaderListView
                     x:Name="DetailListView"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                    HeaderHeight="40"
                     HeaderMargin="{StaticResource PageTitleHeight}"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
@@ -1309,7 +1310,7 @@
         <control:TwoPaneView.Pane2>
             <Grid x:Name="RightGrid">
                 <control:ShyHeaderPivotListView
-                    x:Name="ReplyListView"
+                    x:Name="FeedsListView"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                     HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"

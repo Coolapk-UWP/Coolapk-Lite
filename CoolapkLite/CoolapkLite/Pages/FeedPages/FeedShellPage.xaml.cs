@@ -177,7 +177,7 @@ namespace CoolapkLite.Pages.FeedPages
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
-                ListControl.HeaderHeight = double.NaN;
+                ListControl.HeaderHeight = 40;
                 ListControl.HeaderMargin = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = true;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;
