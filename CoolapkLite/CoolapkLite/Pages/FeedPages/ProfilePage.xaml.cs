@@ -134,6 +134,20 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            FrameworkElement element = sender as FrameworkElement;
+            switch (element.Tag.ToString())
+            {
+                case "FeedsButton":
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
+                    break;
+                default:
+                    _ = this.OpenLinkAsync(element.Tag.ToString());
+                    break;
+            }
+        }
+
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)

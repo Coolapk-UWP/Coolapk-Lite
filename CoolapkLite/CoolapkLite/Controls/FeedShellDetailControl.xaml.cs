@@ -78,60 +78,12 @@ namespace CoolapkLite.Controls
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = SecondaryTile.Exists(tileId);
-            if (isPinned)
-            {
-                UIHelper.ShowMessage(loader.GetString("AlreadyPinnedTile"));
-                return isPinned;
-            }
-            else
-            {
-                // Use a display name you like
-                string displayName = feed.Title;
-
-                // Provide all the required info in arguments so that when user
-                // clicks your tile, you can navigate them to the correct content
-                string arguments = feed.Url;
-
-                // Initialize the tile with required arguments
-                SecondaryTile tile = new SecondaryTile(
-                    tileId,
-                    displayName,
-                    arguments,
-                    new Uri("ms-appx:///Assets/Square150x150Logo.png"),
-                    TileSize.Default);
-
-                // Enable wide and large tile sizes
-                tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.png");
-                tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTile.png");
-
-                // Add a small size logo for better looking small tile
-                tile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/SmallTile.png");
-
-                // Add a unique corner logo for the secondary tile
-                tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.png");
-
-                // Show the display name on all sizes
-                tile.VisualElements.ShowNameOnSquare150x150Logo = true;
-                tile.VisualElements.ShowNameOnWide310x150Logo = true;
-                tile.VisualElements.ShowNameOnSquare310x310Logo = true;
-
-                // Pin the tile
-                isPinned = await tile.RequestCreateAsync();
-
-                if (isPinned) { UIHelper.ShowMessage(loader.GetString("PinnedTileSucceeded")); }
-            }
-
+            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, feed.Title, feed.Url);
             if (isPinned)
             {
                 try
                 {
-                    TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
-                    tileUpdater.Clear();
-                    tileUpdater.EnableNotificationQueue(true);
-                    TileContent tileContent = LiveTileTask.GetFeedTitle(feed);
-                    TileNotification tileNotification = new TileNotification(tileContent.GetXml());
-                    tileUpdater.Update(tileNotification);
+                    LiveTileTask.UpdateTile(tileId, LiveTileTask.GetFeedTile(feed));
                 }
                 catch (Exception ex)
                 {
