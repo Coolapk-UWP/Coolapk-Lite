@@ -69,7 +69,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 detail = value;
                 RaisePropertyChangedEvent();
                 Title = GetTitleBarText(value);
-                DetailDataTemplate = DataTemplateSelector.SelectTemplate(value);
+                DetailDataTemplate = DataTemplateSelector?.SelectTemplate(value);
             }
         }
 

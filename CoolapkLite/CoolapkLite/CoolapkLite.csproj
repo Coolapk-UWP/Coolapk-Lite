@@ -175,14 +175,20 @@
     <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
       <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InfoBadge\InfoBadge.cs" />
+    <Compile Include="Controls\InfoBadge\InfoBadge.cs">
+      <DependentUpon>InfoBadge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\InfoBadge\InfoBadgeTemplateSettings.cs" />
     <Compile Include="Controls\Picker\Picker.cs">
       <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
-    <Compile Include="Controls\PolylineView\PolylineView.cs" />
-    <Compile Include="Controls\PolylineView\PolylineView.Properties.cs" />
+    <Compile Include="Controls\PolylineView\PolylineView.cs">
+      <DependentUpon>PolylineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PolylineView\PolylineView.Properties.cs">
+      <DependentUpon>PolylineView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PolylineView\PolylineViewTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\QRCode.cs">
       <DependentUpon>QRCode.xaml</DependentUpon>
@@ -201,6 +207,9 @@
     <Compile Include="Controls\SettingsGroup\SettingsGroupAutomationPeer.cs" />
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ShyHeaderPivotListView\ShyHeaderPivotListView.cs">
+      <DependentUpon>ShyHeaderPivotListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StackPanel.cs" />
     <Compile Include="Controls\TitleBar\TitleBar.cs">
@@ -1086,6 +1095,10 @@
     <Page Include="Controls\ShyHeaderListView\ShyHeaderListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ShyHeaderPivotListView\ShyHeaderPivotListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\TitleBar\TitleBar.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -1190,20 +1190,17 @@
         TallModeConfiguration="SinglePane">
         <control:TwoPaneView.Pane1>
             <Grid x:Name="LeftGrid">
-                <ListView
+                <control:ShyHeaderListView
                     x:Name="DetailListView"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                    HeaderMargin="{StaticResource PageTitleHeight}"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{Binding SearchItemSource}"
                     Loaded="ListView_Loaded"
                     ShowsScrollingPlaceholders="False">
-                    <ListView.Header>
+                    <control:ShyHeaderListView.TopHeader>
                         <Grid x:Name="Pane1Grid">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
                             <ContentControl
                                 x:Name="DetailControl"
                                 Grid.ColumnSpan="2"
@@ -1214,8 +1211,60 @@
                                 Content="{Binding Detail}"
                                 ContentTemplate="{Binding DetailDataTemplate}" />
                         </Grid>
-                    </ListView.Header>
-                </ListView>
+                    </control:ShyHeaderListView.TopHeader>
+                    <control:ShyHeaderListView.FlyoutHeader>
+                        <Grid x:Name="DetailFlyoutHeader">
+                            <Grid
+                                x:Name="SearchBox"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Padding="4"
+                                VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="4" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <AutoSuggestBox
+                                    x:Name="AutoSuggestBox"
+                                    VerticalAlignment="Center"
+                                    IsTabStop="True"
+                                    PlaceholderText="{Binding Title, Converter={StaticResource StringFormatConverter}, ConverterParameter='搜索来自{0}的内容'}"
+                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted">
+                                    <AutoSuggestBox.QueryIcon>
+                                        <FontIcon
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="12"
+                                            Glyph="&#xE721;" />
+                                    </AutoSuggestBox.QueryIcon>
+                                </AutoSuggestBox>
+                                <control:StackPanel
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="4">
+                                    <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding SearchItemSource.SearchFeedTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
+                                        <x:String>全部</x:String>
+                                        <x:String>动态</x:String>
+                                        <x:String>图文</x:String>
+                                        <x:String>点评</x:String>
+                                        <x:String>酷图</x:String>
+                                        <x:String>提问</x:String>
+                                        <x:String>回答</x:String>
+                                        <x:String>视频</x:String>
+                                        <x:String>二手</x:String>
+                                        <x:String>投票</x:String>
+                                    </ComboBox>
+                                    <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding SearchItemSource.SearchFeedSortTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
+                                        <x:String>实时</x:String>
+                                        <x:String>热度</x:String>
+                                        <x:String>评论数</x:String>
+                                    </ComboBox>
+                                </control:StackPanel>
+                            </Grid>
+                        </Grid>
+                    </control:ShyHeaderListView.FlyoutHeader>
+                </control:ShyHeaderListView>
                 <Grid
                     x:Name="SearchBoxGrid"
                     VerticalAlignment="Top"
@@ -1233,54 +1282,6 @@
                         x:Name="Block"
                         Grid.Row="1"
                         Height="48" />
-                    <Grid
-                        x:Name="SearchBox"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Padding="4"
-                        VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="4" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <AutoSuggestBox
-                            x:Name="AutoSuggestBox"
-                            VerticalAlignment="Center"
-                            IsTabStop="True"
-                            PlaceholderText="{Binding Title, Converter={StaticResource StringFormatConverter}, ConverterParameter='搜索来自{0}的内容'}"
-                            QuerySubmitted="AutoSuggestBox_QuerySubmitted">
-                            <AutoSuggestBox.QueryIcon>
-                                <FontIcon
-                                    FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                    FontSize="12"
-                                    Glyph="&#xE721;" />
-                            </AutoSuggestBox.QueryIcon>
-                        </AutoSuggestBox>
-                        <control:StackPanel
-                            Grid.Column="2"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal"
-                            Spacing="4">
-                            <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding SearchItemSource.SearchFeedTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
-                                <x:String>全部</x:String>
-                                <x:String>动态</x:String>
-                                <x:String>图文</x:String>
-                                <x:String>点评</x:String>
-                                <x:String>酷图</x:String>
-                                <x:String>提问</x:String>
-                                <x:String>回答</x:String>
-                                <x:String>视频</x:String>
-                                <x:String>二手</x:String>
-                                <x:String>投票</x:String>
-                            </ComboBox>
-                            <ComboBox VerticalAlignment="Center" SelectedIndex="{Binding SearchItemSource.SearchFeedSortTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
-                                <x:String>实时</x:String>
-                                <x:String>热度</x:String>
-                                <x:String>评论数</x:String>
-                            </ComboBox>
-                        </control:StackPanel>
-                    </Grid>
                     <Button
                         x:Name="SearchRefreshButton"
                         Grid.Row="1"
@@ -1307,7 +1308,7 @@
         </control:TwoPaneView.Pane1>
         <control:TwoPaneView.Pane2>
             <Grid x:Name="RightGrid">
-                <control:ShyHeaderListView
+                <control:ShyHeaderPivotListView
                     x:Name="ReplyListView"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
@@ -1317,10 +1318,10 @@
                     Loaded="ListView_Loaded"
                     ShowsScrollingPlaceholders="False"
                     ShyHeaderItemSource="{Binding ItemSource}">
-                    <control:ShyHeaderListView.TopHeader>
+                    <control:ShyHeaderPivotListView.TopHeader>
                         <Grid x:Name="Pane2Grid" />
-                    </control:ShyHeaderListView.TopHeader>
-                    <control:ShyHeaderListView.RightHeader>
+                    </control:ShyHeaderPivotListView.TopHeader>
+                    <control:ShyHeaderPivotListView.RightHeader>
                         <Button
                             x:Name="RefreshButton"
                             VerticalAlignment="Center"
@@ -1328,8 +1329,8 @@
                             Content="&#xE72C;"
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Style="{StaticResource TitleBarIconButtonStyle}" />
-                    </control:ShyHeaderListView.RightHeader>
-                </control:ShyHeaderListView>
+                    </control:ShyHeaderPivotListView.RightHeader>
+                </control:ShyHeaderPivotListView>
             </Grid>
         </control:TwoPaneView.Pane2>
     </control:TwoPaneView>

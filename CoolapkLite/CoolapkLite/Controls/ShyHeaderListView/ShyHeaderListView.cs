@@ -2,9 +2,6 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.Converters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation.Metadata;
 using Windows.UI.Composition;
 using Windows.UI.Xaml;
@@ -19,16 +16,14 @@ namespace CoolapkLite.Controls
 {
     [TemplatePart(Name = "TopHeader", Type = typeof(Grid))]
     [TemplatePart(Name = "ListViewHeader", Type = typeof(Grid))]
-    [TemplatePart(Name = "PivotHeader", Type = typeof(PivotHeader))]
     [TemplatePart(Name = "ScrollViewer", Type = typeof(ScrollViewer))]
-    public sealed class ShyHeaderListView : ListView, IShyHeader
+    public class ShyHeaderListView : ListView
     {
         private Grid _topHeader;
         private Grid _listViewHeader;
-        private PivotHeader _pivotHeader;
         private ScrollViewer _scrollViewer;
 
-        private double _topheight;
+        private double _topHeight;
         private CompositionPropertySet _propSet;
         private ScrollProgressProvider _progressProvider;
         private readonly bool HasGetElementVisual = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
@@ -40,16 +35,9 @@ namespace CoolapkLite.Controls
                 typeof(ShyHeaderListView),
                 null);
 
-        public static readonly DependencyProperty LeftHeaderProperty =
+        public static readonly DependencyProperty FlyoutHeaderProperty =
             DependencyProperty.Register(
-                nameof(LeftHeader),
-                typeof(object),
-                typeof(ShyHeaderListView),
-                null);
-
-        public static readonly DependencyProperty RightHeaderProperty =
-            DependencyProperty.Register(
-                nameof(RightHeader),
+                nameof(FlyoutHeader),
                 typeof(object),
                 typeof(ShyHeaderListView),
                 null);
@@ -82,45 +70,16 @@ namespace CoolapkLite.Controls
                 typeof(ShyHeaderListView),
                 null);
 
-        public static readonly DependencyProperty ShyHeaderItemSourceProperty =
-            DependencyProperty.Register(
-                nameof(ShyHeaderItemSource),
-                typeof(IList<ShyHeaderItem>),
-                typeof(ShyHeaderListView),
-                new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
-
-        public static readonly DependencyProperty ShyHeaderSelectedIndexProperty =
-            DependencyProperty.Register(
-                nameof(ShyHeaderSelectedIndex),
-                typeof(int),
-                typeof(ShyHeaderListView),
-                new PropertyMetadata(-1, OnShyHeaderSelectedIndexPropertyChanged));
-
-        public static readonly DependencyProperty ShyHeaderSelectedItemProperty =
-            DependencyProperty.Register(
-                nameof(ShyHeaderSelectedItem),
-                typeof(object),
-                typeof(ShyHeaderListView),
-                null);
-
-        public event SelectionChangedEventHandler ShyHeaderSelectionChanged;
-
         public object TopHeader
         {
             get => GetValue(TopHeaderProperty);
             set => SetValue(TopHeaderProperty, value);
         }
 
-        public object LeftHeader
+        public object FlyoutHeader
         {
-            get => GetValue(LeftHeaderProperty);
-            set => SetValue(LeftHeaderProperty, value);
-        }
-
-        public object RightHeader
-        {
-            get => GetValue(RightHeaderProperty);
-            set => SetValue(RightHeaderProperty, value);
+            get => GetValue(FlyoutHeaderProperty);
+            set => SetValue(FlyoutHeaderProperty, value);
         }
 
         public double HeaderMargin
@@ -147,40 +106,6 @@ namespace CoolapkLite.Controls
             set => SetValue(TopHeaderBackgroundProperty, value);
         }
 
-        public IList<ShyHeaderItem> ShyHeaderItemSource
-        {
-            get => (IList<ShyHeaderItem>)GetValue(ShyHeaderItemSourceProperty);
-            set => SetValue(ShyHeaderItemSourceProperty, value);
-        }
-
-        public int ShyHeaderSelectedIndex
-        {
-            get => (int)GetValue(ShyHeaderSelectedIndexProperty);
-            set => SetValue(ShyHeaderSelectedIndexProperty, value);
-        }
-
-        public object ShyHeaderSelectedItem
-        {
-            get => GetValue(ShyHeaderSelectedItemProperty);
-            set => SetValue(ShyHeaderSelectedItemProperty, value);
-        }
-
-        private static void OnShyHeaderItemSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue != e.OldValue)
-            {
-                (d as ShyHeaderListView).UpdateShyHeaderItem(e.NewValue as IList<ShyHeaderItem>);
-            }
-        }
-
-        private static void OnShyHeaderSelectedIndexPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (e.NewValue != e.OldValue)
-            {
-                (d as ShyHeaderListView).UpdateShyHeaderSelectedIndex(e.NewValue as int?);
-            }
-        }
-
         public ShyHeaderListView()
         {
             DefaultStyleKey = typeof(ShyHeaderListView);
@@ -197,10 +122,6 @@ namespace CoolapkLite.Controls
             {
                 _topHeader.SizeChanged -= TopHeader_SizeChanged;
             }
-            if (_pivotHeader != null)
-            {
-                _pivotHeader.SelectionChanged -= PivotHeader_SelectionChanged;
-            }
             if (_listViewHeader != null)
             {
                 _listViewHeader.Loaded -= ListViewHeader_Loaded;
@@ -208,24 +129,11 @@ namespace CoolapkLite.Controls
 
             _topHeader = (Grid)GetTemplateChild("TopHeader");
             _listViewHeader = (Grid)GetTemplateChild("ListViewHeader");
-            _pivotHeader = (PivotHeader)GetTemplateChild("PivotHeader");
             _scrollViewer = (ScrollViewer)GetTemplateChild("ScrollViewer");
 
             if (_topHeader != null)
             {
                 _topHeader.SizeChanged += TopHeader_SizeChanged;
-            }
-            if (_pivotHeader != null)
-            {
-                if (_pivotHeader.Items.Any())
-                {
-                    _pivotHeader.SelectedIndex = 0;
-                }
-                _pivotHeader.SelectionChanged += PivotHeader_SelectionChanged;
-                if (ShyHeaderItemSource != null)
-                {
-                    UpdateShyHeaderItem();
-                }
             }
             if (_scrollViewer != null)
             {
@@ -266,45 +174,10 @@ namespace CoolapkLite.Controls
                 : VisualStateManager.GoToState(this, "BeforeThreshold", true);
         }
 
-        private void PivotHeader_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ShyHeaderSelectedIndex = (sender as PivotHeader).SelectedIndex;
-            IList<object> AddedItems = (from item in ShyHeaderItemSource
-                                        where e.AddedItems.Contains(item.Header)
-                                        select (object)item).ToList();
-            IList<object> RemovedItems = (from item in ShyHeaderItemSource
-                                          where e.RemovedItems.Contains(item.Header)
-                                          select (object)item).ToList();
-            ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
-        }
-
-        private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
-        {
-            items = items ?? ShyHeaderItemSource;
-            if (items == null) { return; }
-            if (_pivotHeader != null)
-            {
-                _pivotHeader.ItemsSource = (from item in items
-                                            select item?.Header ?? string.Empty).ToArray();
-            }
-            if (_pivotHeader?.SelectedIndex == -1)
-            {
-                try { _pivotHeader.SelectedIndex = 0; } catch { }
-            }
-        }
-
-        private void UpdateShyHeaderSelectedIndex(int? index = null)
-        {
-            index = index ?? SelectedIndex;
-            if (index == -1) { return; }
-            ShyHeaderSelectedItem = ShyHeaderItemSource[(int)index];
-            ItemsSource = ShyHeaderItemSource[(int)index].ItemSource;
-        }
-
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
-            _topheight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+            _topHeight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
             if (HasGetElementVisual)
             {
                 if (_progressProvider == null)
@@ -313,11 +186,11 @@ namespace CoolapkLite.Controls
                     _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
                     _progressProvider.ScrollViewer = _scrollViewer;
                 }
-                _progressProvider.Threshold = _topheight;
+                _progressProvider.Threshold = _topHeight;
                 _propSet = _propSet ?? Window.Current.Compositor.CreatePropertySet();
-                _propSet.InsertScalar("height", (float)_topheight);
+                _propSet.InsertScalar("height", (float)_topHeight);
             }
-            _ = _scrollViewer.VerticalOffset >= _topheight || _topheight == 0
+            _ = _scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0
                 ? VisualStateManager.GoToState(this, "OnThreshold", true)
                 : VisualStateManager.GoToState(this, "BeforeThreshold", true);
         }
@@ -352,7 +225,7 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                _topheight = Math.Max(0, _topHeader.ActualHeight - HeaderMargin);
+                _topHeight = Math.Max(0, _topHeader.ActualHeight - HeaderMargin);
             }
         }
 
@@ -375,65 +248,23 @@ namespace CoolapkLite.Controls
             {
                 double offset = System.Convert.ToDouble(value);
                 UpdateVisualState(offset);
-                double result = offset < ShyHeaderListView._topheight ? 0 : -ShyHeaderListView._topheight + offset;
+                double result = offset < ShyHeaderListView._topHeight ? 0 : -ShyHeaderListView._topHeight + offset;
                 return ConverterTools.Convert(result, targetType);
             }
 
             public object ConvertBack(object value, Type targetType, object parameter, string language)
             {
                 double offset = System.Convert.ToDouble(value);
-                double result = offset + ShyHeaderListView._topheight;
+                double result = offset + ShyHeaderListView._topHeight;
                 return ConverterTools.Convert(result, targetType);
             }
 
             private void UpdateVisualState(double offset)
             {
-                _ = offset >= ShyHeaderListView._topheight || ShyHeaderListView._topheight == 0
+                _ = offset >= ShyHeaderListView._topHeight || ShyHeaderListView._topHeight == 0
                     ? VisualStateManager.GoToState(ShyHeaderListView, "OnThreshold", true)
                     : VisualStateManager.GoToState(ShyHeaderListView, "BeforeThreshold", true);
             }
-        }
-    }
-
-    public class ShyHeaderItem : DependencyObject
-    {
-        public static readonly DependencyProperty TagProperty =
-            DependencyProperty.Register(
-                nameof(Tag),
-                typeof(object),
-                typeof(ShyHeaderItem),
-                null);
-
-        public static readonly DependencyProperty HeaderProperty =
-            DependencyProperty.Register(
-                nameof(Header),
-                typeof(string),
-                typeof(ShyHeaderItem),
-                null);
-
-        public static readonly DependencyProperty ItemSourceProperty =
-            DependencyProperty.Register(
-                nameof(ItemSource),
-                typeof(object),
-                typeof(ShyHeaderItem),
-                null);
-
-        public object Tag
-        {
-            get => GetValue(TagProperty);
-            set => SetValue(TagProperty, value);
-        }
-
-        public object Header
-        {
-            get => GetValue(HeaderProperty);
-            set => SetValue(HeaderProperty, value);
-        }
-
-        public object ItemSource
-        {
-            get => GetValue(ItemSourceProperty);
-            set => SetValue(ItemSourceProperty, value);
         }
     }
 }

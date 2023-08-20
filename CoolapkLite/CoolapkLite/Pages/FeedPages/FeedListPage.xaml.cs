@@ -352,7 +352,7 @@ namespace CoolapkLite.Pages.FeedPages
                 // Put details content in Pane2.
                 LeftGrid.Children.Add(TitleBar);
                 Pane1Grid.Children.Add(DetailControl);
-                Pane1Grid.Children.Add(SearchBox);
+                DetailFlyoutHeader.Children.Add(SearchBox);
 
                 Thickness StackPanelMargin = new Thickness();
                 ItemsStackPanel StackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
