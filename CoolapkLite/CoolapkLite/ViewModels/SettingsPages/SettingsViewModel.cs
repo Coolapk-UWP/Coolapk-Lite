@@ -4,7 +4,6 @@ using CoolapkLite.Models.Update;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.ComponentModel;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -173,7 +172,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             get
             {
-                string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? "酷安 Lite";
+                string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName;
                 string ver = Package.Current.Id.Version.ToFormattedString(3);
                 _ = GetAboutTextBlockText();
                 return $"{name} v{ver}";
@@ -214,7 +213,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 ResourceLoader _loader = ResourceLoader.GetForCurrentView("SettingsPage");
                 UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
-                if (results != null && results.IsExistNewVersion)
+                if (results == null) { return; }
+                if (results.IsExistNewVersion)
                 {
                     UIHelper.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
                 }
@@ -223,19 +223,18 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     UIHelper.ShowMessage(_loader.GetString("UpToDate"));
                 }
             }
-            catch (HttpRequestException ex)
-            {
-                UIHelper.ShowHttpExceptionMessage(ex);
-            }
             catch (Exception ex)
             {
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
                 UIHelper.ShowMessage(ex.Message);
             }
-            IsCheckUpdateButtonEnabled = true;
+            IsCleanCacheButtonEnabled = true;
         }
 
         public Task Refresh(bool reset) => GetAboutTextBlockText();
 
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
+        bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);
+
+        public bool IsEqual(SettingsViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
     }
 }

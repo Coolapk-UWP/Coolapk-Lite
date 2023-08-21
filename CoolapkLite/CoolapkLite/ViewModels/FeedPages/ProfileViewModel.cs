@@ -85,7 +85,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
+        bool IViewModel.IsEqual(IViewModel other) => other is ProfileViewModel model && IsEqual(model);
+
+        public bool IsEqual(ProfileViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
 
         private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
         {

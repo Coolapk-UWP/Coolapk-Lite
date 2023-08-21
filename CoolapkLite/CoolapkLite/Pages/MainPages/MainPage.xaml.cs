@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -51,7 +52,7 @@ namespace CoolapkLite
             InitializeComponent();
             UIHelper.ShellDispatcher = Dispatcher;
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
-            AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+            AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             _ = (NotificationsModel.Instance?.Update());
@@ -367,7 +368,7 @@ namespace CoolapkLite
                 await Dispatcher.ResumeForegroundAsync();
             }
 
-            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
 
             if (this.IsAppWindow())
             {

@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
@@ -46,7 +47,7 @@ namespace CoolapkLite.Pages
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
-            AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+            AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             _ = (NotificationsModel.Instance?.Update());
@@ -356,7 +357,7 @@ namespace CoolapkLite.Pages
                 await Dispatcher.ResumeForegroundAsync();
             }
 
-            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? "酷安 Lite";
+            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
 
             if (this.IsAppWindow())
             {

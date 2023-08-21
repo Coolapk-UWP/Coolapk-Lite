@@ -215,6 +215,24 @@ namespace CoolapkLite.Helpers
                     : ActualTheme == ElementTheme.Dark;
         }
 
+        public static async void UpdateExtendViewIntoTitleBar(bool IsExtendsTitleBar)
+        {
+            if (CurrentApplicationWindow?.Dispatcher?.HasThreadAccess == false)
+            {
+                await CurrentApplicationWindow.Dispatcher.ResumeForegroundAsync();
+            }
+
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = IsExtendsTitleBar;
+
+            if (WindowHelper.IsSupported)
+            {
+                foreach (AppWindow window in WindowHelper.ActiveWindows.Values)
+                {
+                    window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
+                }
+            }
+        }
+
         public static async void UpdateSystemCaptionButtonColors()
         {
             bool IsDark = await IsDarkThemeAsync();

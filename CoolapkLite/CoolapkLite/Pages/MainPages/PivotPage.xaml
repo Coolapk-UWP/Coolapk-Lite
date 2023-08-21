@@ -71,6 +71,11 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <ReorderThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
                         <Grid HorizontalAlignment="Right" VerticalAlignment="Center">
                             <AutoSuggestBox
                                 x:Name="AutoSuggestBox"

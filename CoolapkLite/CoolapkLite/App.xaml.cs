@@ -169,6 +169,7 @@ namespace CoolapkLite
 
         private async void CheckUpdate()
         {
+            await ThreadSwitcher.ResumeBackgroundAsync();
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite", true);
@@ -176,16 +177,16 @@ namespace CoolapkLite
                 {
                     ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
 
-                    string name = _loader?.GetString("AppName") ?? "酷安 Lite";
+                    string name = _loader?.GetString("AppName") ?? Package.Current.DisplayName;
                     string ver = Package.Current.Id.Version.ToFormattedString(3);
 
                     new ToastContentBuilder()
                         .SetToastScenario(ToastScenario.Default)
                         .AddArgument("action", "hasUpdate")
-                        .AddArgument("url", results.ReleaseUrl)
+                        .AddArgument("url", results?.ReleaseUrl)
                         .AddText(_loader.GetString("HasUpdateTitle"))
-                        .AddText($"{name} v{ver} -> {results.TagName}")
-                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results.PublishedAt.ConvertDateTimeToReadable()))
+                        .AddText($"{name} v{ver} -> {results?.TagName}")
+                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeToReadable()))
                         .AddButton(new ToastButton()
                             .SetContent(_loader.GetString("GoToGithub"))
                             .SetBackgroundActivation())

@@ -56,7 +56,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 if (IsExtendsTitleBar != value)
                 {
                     SettingsHelper.Set(SettingsHelper.IsExtendsTitleBar, value);
-                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
+                    ThemeHelper.UpdateExtendViewIntoTitleBar(value);
                     ThemeHelper.UpdateSystemCaptionButtonColors();
                 }
             }
@@ -208,7 +208,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                        window.TitleBar.ExtendsContentIntoTitleBar = true;
+                        window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
                         ThemeHelper.Initialize();
                         frame.Navigate(page);
                         await window.TryShowAsync();

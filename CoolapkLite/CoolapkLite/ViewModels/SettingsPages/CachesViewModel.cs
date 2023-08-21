@@ -68,12 +68,14 @@ namespace CoolapkLite.ViewModels.SettingsPages
             UIHelper.HideProgressBar();
         }
 
+        bool IViewModel.IsEqual(IViewModel other) => other is CachesViewModel model && IsEqual(model);
+
+        public bool IsEqual(CachesViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
+        
         public async Task RemoveImage(StorageFile file)
         {
             await file.DeleteAsync();
             Images.Remove(file);
         }
-
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
     }
 }

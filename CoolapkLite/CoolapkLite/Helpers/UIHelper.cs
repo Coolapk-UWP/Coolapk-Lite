@@ -316,7 +316,7 @@ namespace CoolapkLite.Helpers
             if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupported)
             {
                 (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                window.TitleBar.ExtendsContentIntoTitleBar = true;
+                window.TitleBar.ExtendsContentIntoTitleBar = SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar);
                 ThemeHelper.Initialize();
                 frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
                 return await window.TryShowAsync();

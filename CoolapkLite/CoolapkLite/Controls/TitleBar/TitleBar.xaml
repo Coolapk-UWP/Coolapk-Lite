@@ -25,7 +25,7 @@
                                 <ReorderThemeTransition />
                             </TransitionCollection>
                         </Grid.ChildrenTransitions>
-                        
+
                         <Grid
                             x:Name="TitleRoot"
                             Grid.Row="1"
@@ -41,7 +41,7 @@
                                     <ReorderThemeTransition />
                                 </TransitionCollection>
                             </Grid.ChildrenTransitions>
-                            
+
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -51,7 +51,7 @@
                                     <ColumnDefinition Width="Auto" />
                                     <!--  3: custom content  -->
                                 </Grid.ColumnDefinitions>
-                                
+
                                 <Grid.ChildrenTransitions>
                                     <TransitionCollection>
                                         <ReorderThemeTransition />

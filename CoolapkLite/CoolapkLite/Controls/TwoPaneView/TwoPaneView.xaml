@@ -62,7 +62,7 @@
                                         </VisualTransition.Storyboard>
                                     </VisualTransition>
                                 </VisualStateGroup.Transitions>
-                                
+
                                 <VisualState x:Name="ViewMode_LeftRight" />
 
                                 <VisualState x:Name="ViewMode_RightLeft">
