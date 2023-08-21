@@ -42,6 +42,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <ReorderThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Border
                 x:Name="Block"
                 Grid.Column="0"
@@ -83,6 +88,11 @@
             SizeChanged="Pivot_SizeChanged">
             <Pivot.RightHeader>
                 <StackPanel x:Name="RightHeader" Orientation="Horizontal">
+                    <StackPanel.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </StackPanel.ChildrenTransitions>
                     <ComboBox
                         Margin="8,6,4,6"
                         VerticalAlignment="Bottom"

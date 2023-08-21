@@ -35,6 +35,11 @@
             TallModeConfiguration="SinglePane">
             <controls:TwoPaneView.Pane1>
                 <Grid x:Name="LeftGrid">
+                    <Grid.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </Grid.ChildrenTransitions>
                     <ScrollViewer
                         x:Name="DetailScrollViewer"
                         Margin="{StaticResource ScrollViewerMargin}"
@@ -140,6 +145,11 @@
             </controls:TwoPaneView.Pane1>
             <controls:TwoPaneView.Pane2>
                 <Grid x:Name="RightGrid">
+                    <Grid.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </Grid.ChildrenTransitions>
                     <controls:FeedShellListControl
                         x:Name="ListControl"
                         Padding="0,0,0,40"

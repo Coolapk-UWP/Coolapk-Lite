@@ -28,8 +28,12 @@ namespace CoolapkLite.Controls
         public Picker()
         {
             DefaultStyleKey = typeof(Picker);
-            Unloaded += Picker_Unloaded;
-            Window.Current.SizeChanged += Window_SizeChanged;
+            Loaded += (sender, args) =>
+            {
+                Window.Current.SizeChanged -= Window_SizeChanged;
+                Window.Current.SizeChanged += Window_SizeChanged;
+            };
+            Unloaded += (sender, args) => Window.Current.SizeChanged -= Window_SizeChanged;
         }
 
         private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
@@ -39,12 +43,6 @@ namespace CoolapkLite.Controls
                 _rootGrid.Width = Window.Current.Bounds.Width;
                 _rootGrid.Height = Window.Current.Bounds.Height;
             }
-        }
-
-        private void Picker_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Unloaded -= Picker_Unloaded;
-            Window.Current.SizeChanged -= Window_SizeChanged;
         }
 
         public void Show(UIElement element)

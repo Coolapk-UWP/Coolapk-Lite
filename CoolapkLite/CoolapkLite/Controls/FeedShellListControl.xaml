@@ -44,6 +44,11 @@
         </local:ShyHeaderPivotListView.LeftHeader>
         <local:ShyHeaderPivotListView.RightHeader>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
                 <Border
                     x:Name="ToggleSwitchBorder"
                     Margin="4,0"

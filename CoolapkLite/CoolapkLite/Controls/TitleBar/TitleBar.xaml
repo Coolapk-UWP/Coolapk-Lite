@@ -20,6 +20,12 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <ReorderThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+                        
                         <Grid
                             x:Name="TitleRoot"
                             Grid.Row="1"
@@ -30,6 +36,12 @@
                                 <ColumnDefinition Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.RightPaddingColumnGridLength}" />
                             </Grid.ColumnDefinitions>
 
+                            <Grid.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </Grid.ChildrenTransitions>
+                            
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -39,6 +51,12 @@
                                     <ColumnDefinition Width="Auto" />
                                     <!--  3: custom content  -->
                                 </Grid.ColumnDefinitions>
+                                
+                                <Grid.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </Grid.ChildrenTransitions>
 
                                 <Button
                                     x:Name="BackButton"
@@ -70,6 +88,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
+                                    <Grid.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <ReorderThemeTransition />
+                                        </TransitionCollection>
+                                    </Grid.ChildrenTransitions>
                                     <ContentPresenter
                                         x:Name="CustomContentPresenter"
                                         Grid.Column="0"

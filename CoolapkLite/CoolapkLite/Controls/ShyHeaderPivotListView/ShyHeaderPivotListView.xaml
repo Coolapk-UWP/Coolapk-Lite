@@ -94,6 +94,11 @@
                                                     <ColumnDefinition Width="*" />
                                                     <ColumnDefinition Width="Auto" />
                                                 </Grid.ColumnDefinitions>
+                                                <Grid.ChildrenTransitions>
+                                                    <TransitionCollection>
+                                                        <ReorderThemeTransition />
+                                                    </TransitionCollection>
+                                                </Grid.ChildrenTransitions>
                                                 <ContentPresenter
                                                     Grid.Column="0"
                                                     VerticalAlignment="Center"

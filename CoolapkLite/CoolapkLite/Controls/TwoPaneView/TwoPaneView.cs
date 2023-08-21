@@ -42,8 +42,12 @@ namespace CoolapkLite.Controls
             DefaultStyleKey = typeof(TwoPaneView);
             SizeChanged -= OnSizeChanged;
             SizeChanged += OnSizeChanged;
-            Window.Current.SizeChanged -= OnWindowSizeChanged;
-            Window.Current.SizeChanged += OnWindowSizeChanged;
+            Loaded += (sender, args) =>
+            {
+                Window.Current.SizeChanged -= OnWindowSizeChanged;
+                Window.Current.SizeChanged += OnWindowSizeChanged;
+            };
+            Unloaded += (sender, args) => Window.Current.SizeChanged -= OnWindowSizeChanged;
         }
 
         /// <summary>
