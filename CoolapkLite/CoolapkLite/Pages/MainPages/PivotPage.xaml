@@ -7,7 +7,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
-    Background="{ThemeResource ApplicationPageBackgroundBrush}"
+    Background="{ThemeResource ApplicationPivotBackgroundBrush}"
     Loaded="Page_Loaded"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
@@ -115,11 +115,13 @@
             <Frame
                 x:Name="PivotContentFrame"
                 Grid.Row="1"
+                Background="{ThemeResource ApplicationPageBackgroundBrush}"
                 Visibility="Collapsed" />
             <CommandBar
                 x:Name="CommandBar"
                 Grid.Row="2"
-                VerticalAlignment="Bottom">
+                VerticalAlignment="Bottom"
+                Background="{ThemeResource ApplicationPivotBackgroundBrush}">
                 <AppBarButton
                     Click="AppBarButton_Click"
                     Label="书签"

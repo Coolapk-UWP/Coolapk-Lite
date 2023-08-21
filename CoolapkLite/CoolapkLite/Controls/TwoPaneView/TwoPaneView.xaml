@@ -46,14 +46,6 @@
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ModeStates">
                                 <VisualStateGroup.Transitions>
-                                    <!--<VisualTransition From="ViewMode_OneOnly" To="ViewMode_TwoOnly">
-                                        <VisualTransition.Storyboard>
-                                            <Storyboard>
-                                                <DrillInThemeAnimation EntranceTargetName="PART_Pane2" ExitTargetName="PART_Pane1" />
-                                            </Storyboard>
-                                        </VisualTransition.Storyboard>
-                                    </VisualTransition>-->
-
                                     <VisualTransition From="ViewMode_TwoOnly" To="ViewMode_OneOnly">
                                         <VisualTransition.Storyboard>
                                             <Storyboard>

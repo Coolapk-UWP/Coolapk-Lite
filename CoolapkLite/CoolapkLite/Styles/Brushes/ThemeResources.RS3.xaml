@@ -13,6 +13,12 @@
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="ApplicationPivotBackgroundBrush"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
@@ -28,11 +34,18 @@
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="ApplicationPivotBackgroundBrush"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
             <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>

@@ -25,6 +25,7 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -169,6 +170,14 @@ namespace CoolapkLite.Pages
             else
             {
                 PivotContentFrame.GoBack();
+                Storyboard storyboard = new Storyboard();
+                storyboard.Children.Add(new DrillOutThemeAnimation
+                {
+                    EntranceTarget = Pivot,
+                    ExitTarget = PivotContentFrame,
+                    FillBehavior = FillBehavior.Stop
+                });
+                storyboard.Begin();
                 Pivot.Visibility = Visibility.Visible;
                 PivotContentFrame.Visibility = Visibility.Collapsed;
             }

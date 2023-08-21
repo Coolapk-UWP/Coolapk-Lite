@@ -1,15 +1,20 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
+using System.ComponentModel;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Input;
+using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -50,6 +55,7 @@ namespace CoolapkLite.Pages
             }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }
+            Provider.PropertyChanged += Provider_PropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -57,7 +63,9 @@ namespace CoolapkLite.Pages
             base.OnNavigatedFrom(e);
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed -= AppWindow_Changed;
+                AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Changed -= AppWindow_Changed;
+                appWindow.Title = string.Empty;
             }
             else
             {
@@ -70,13 +78,28 @@ namespace CoolapkLite.Pages
             }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed -= System_BackPressed; }
+            Provider.PropertyChanged -= Provider_PropertyChanged;
+        }
+
+        private void Provider_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Provider.Title):
+                    UpdateTitle(Provider.Title);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed += AppWindow_Changed;
+                AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Changed += AppWindow_Changed;
+                appWindow.Title = Provider.Title;
             }
             else
             {
@@ -88,6 +111,7 @@ namespace CoolapkLite.Pages
                 { UpdateContentLayout(false); }
                 TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
                 SystemNavigationManager.BackRequested += System_BackRequested;
+                ApplicationView.GetForCurrentView().Title = Provider.Title;
                 TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
                 Frame.Navigated += On_Navigated;
                 UpdateTitleBarLayout(TitleBar);
@@ -222,6 +246,23 @@ namespace CoolapkLite.Pages
                 x = _clickPoint.X - point.X;
                 y = _clickPoint.Y - point.Y;
                 _ = scrollViewer.ChangeView(scrollViewer.HorizontalOffset + x, scrollViewer.VerticalOffset + y, null);
+            }
+        }
+
+        public async void UpdateTitle(string title = null)
+        {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Title = title ?? string.Empty;
+            }
+            else
+            {
+                ApplicationView.GetForCurrentView().Title = title ?? string.Empty;
             }
         }
 
