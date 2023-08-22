@@ -3,11 +3,11 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI;
 using System.ComponentModel;
-using Windows.ApplicationModel;
+using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
@@ -28,10 +28,38 @@ namespace CoolapkLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ShowImagePage : Page
+    public sealed partial class ShowImagePage : Page, INotifyPropertyChanged
     {
         private Point _clickPoint = new Point(0, 0);
         private ShowImageViewModel Provider;
+
+        private ScrollViewer scrollViewer;
+        internal ScrollViewer ScrollViewer
+        {
+            get => scrollViewer;
+            set
+            {
+                if (scrollViewer != value)
+                {
+                    scrollViewer = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        {
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
 
         public ShowImagePage()
         {
@@ -116,6 +144,7 @@ namespace CoolapkLite.Pages
                 Frame.Navigated += On_Navigated;
                 UpdateTitleBarLayout(TitleBar);
             }
+            UpdateScrollViewer(FlipView);
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -162,15 +191,13 @@ namespace CoolapkLite.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            ScrollViewer scrollViewer = element.Tag as ScrollViewer;
-            switch (element.Name)
+            switch ((sender as FrameworkElement).Name)
             {
                 case "ZoomUp":
-                    _ = scrollViewer.ChangeView(null, null, scrollViewer.ZoomFactor + 0.1f);
+                    _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor + 0.1f);
                     break;
                 case "ZoomDown":
-                    _ = scrollViewer.ChangeView(null, null, scrollViewer.ZoomFactor - 0.1f);
+                    _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor - 0.1f);
                     break;
             }
         }
@@ -265,6 +292,16 @@ namespace CoolapkLite.Pages
                 ApplicationView.GetForCurrentView().Title = title ?? string.Empty;
             }
         }
+
+        public void UpdateScrollViewer(FlipView flipView)
+        {
+            if (flipView != null && flipView.SelectedItem != null)
+            {
+                ScrollViewer = flipView.ContainerFromItem(flipView.SelectedItem)?.FindDescendant<ScrollViewer>();
+            }
+        }
+
+        private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateScrollViewer(sender as FlipView);
 
         private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateContentLayout(sender.TitleBar.IsVisible);
 

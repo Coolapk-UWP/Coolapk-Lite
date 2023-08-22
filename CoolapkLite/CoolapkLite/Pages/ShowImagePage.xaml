@@ -6,6 +6,7 @@
     xmlns:cwuh="using:Microsoft.Toolkit.Uwp.UI.Helpers"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:images="using:CoolapkLite.Models.Images"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:viewmodels="using:CoolapkLite.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShowImageViewModel}"
@@ -51,7 +52,7 @@
                 x:Uid="/ShowImagePage/OriginMenuItem"
                 Click="AppBarButton_Click"
                 Tag="Origin"
-                Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
+                Visibility="{x:Bind Provider.ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                 </helpers:FlyoutBaseHelper.Icon>
@@ -93,123 +94,120 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="6"
-                    Visibility="{Binding IsShowHub, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <TextBlock
                         x:Name="AppTitle"
                         MaxLines="1"
                         Style="{StaticResource CaptionTextBlockStyle}"
-                        Text="{Binding Title}"
+                        Text="{x:Bind Provider.Title, Mode=OneWay}"
                         TextTrimming="CharacterEllipsis" />
                 </Border>
             </Grid>
             <Grid x:Name="FlipViewGrid" Grid.Row="1">
+                <Grid.Resources>
+                    <cwuh:BindableValueHolder x:Key="ScrollViewerProxy" Value="{x:Bind ScrollViewer, Mode=OneWay}" />
+                </Grid.Resources>
                 <FlipView
                     x:Name="FlipView"
                     helpers:UIElementHelper.ContextFlyout="{StaticResource FlipViewContextFlyout}"
                     Background="{ThemeResource SystemControlTransparentBrush}"
-                    ItemsSource="{Binding Images}"
-                    SelectedIndex="{Binding Index, Mode=TwoWay, FallbackValue='-1'}">
-                    <FlipView.Resources>
-                        <cwuh:BindableValueHolder x:Key="IsShowHubProxy" Value="{Binding IsShowHub}" />
-                    </FlipView.Resources>
+                    ItemsSource="{x:Bind Provider.Images, Mode=OneWay}"
+                    SelectedIndex="{x:Bind Provider.Index, FallbackValue='-1', Mode=TwoWay}"
+                    SelectionChanged="FlipView_SelectionChanged">
                     <FlipView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <ScrollViewer
-                                    x:Name="ImageScrollViewer"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Background="{ThemeResource SystemControlTransparentBrush}"
-                                    DoubleTapped="ScrollViewer_DoubleTapped"
-                                    HorizontalScrollBarVisibility="Hidden"
-                                    HorizontalScrollMode="Auto"
-                                    MaxZoomFactor="3"
-                                    MinZoomFactor="0.5"
-                                    Tapped="ScrollViewer_Tapped"
-                                    VerticalScrollBarVisibility="Hidden"
-                                    VerticalScrollMode="Auto"
-                                    ViewChanged="ScrollViewer_ViewChanged"
-                                    ZoomMode="Enabled">
-                                    <Image
-                                        x:Name="Image"
-                                        MaxWidth="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
-                                        MaxHeight="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        CanDrag="True"
-                                        DragStarting="Image_DragStarting"
-                                        PointerMoved="Image_PointerMoved"
-                                        PointerPressed="Image_PointerPressed"
-                                        RenderTransformOrigin="0.5,0.5"
-                                        Source="{Binding Pic, Mode=OneWay}" />
-                                </ScrollViewer>
-                                <Grid
-                                    Height="250"
-                                    Margin="0,0,28,0"
-                                    HorizontalAlignment="Right"
+                        <DataTemplate x:DataType="images:ImageModel">
+                            <ScrollViewer
+                                x:Name="ImageScrollViewer"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{ThemeResource SystemControlTransparentBrush}"
+                                DoubleTapped="ScrollViewer_DoubleTapped"
+                                HorizontalScrollBarVisibility="Hidden"
+                                HorizontalScrollMode="Auto"
+                                MaxZoomFactor="3"
+                                MinZoomFactor="0.5"
+                                Tapped="ScrollViewer_Tapped"
+                                VerticalScrollBarVisibility="Hidden"
+                                VerticalScrollMode="Auto"
+                                ViewChanged="ScrollViewer_ViewChanged"
+                                ZoomMode="Enabled">
+                                <Image
+                                    x:Name="Image"
+                                    MaxWidth="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                    MaxHeight="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Background="{ThemeResource TitleBarBackgroundBrush}"
-                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                    BorderThickness="1"
-                                    Visibility="{Binding Value, Source={StaticResource IsShowHubProxy}, Converter={StaticResource BoolToVisibilityConverter}}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-                                    <RepeatButton
-                                        x:Name="ZoomUp"
-                                        Grid.Row="0"
-                                        Width="48"
-                                        Height="48"
-                                        HorizontalAlignment="Center"
-                                        Click="Button_Click"
-                                        Content="&#xE8A3;"
-                                        FontSize="20"
-                                        Style="{StaticResource TitleBarIconRepeatButtonStyle}"
-                                        Tag="{Binding ElementName=ImageScrollViewer}"
-                                        ToolTipService.ToolTip="放大" />
-                                    <Slider
-                                        Grid.Row="1"
-                                        Margin="0,2"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Stretch"
-                                        Maximum="300"
-                                        Minimum="50"
-                                        Orientation="Vertical"
-                                        ThumbToolTipValueConverter="{StaticResource ZoomToolTipValueConverter}"
-                                        Value="{Binding ZoomFactor, ElementName=ImageScrollViewer, Converter={StaticResource NumMultConverter}, ConverterParameter='100', Mode=TwoWay}" />
-                                    <RepeatButton
-                                        x:Name="ZoomDown"
-                                        Grid.Row="2"
-                                        Width="48"
-                                        Height="48"
-                                        HorizontalAlignment="Center"
-                                        Click="Button_Click"
-                                        Content="&#xE71F;"
-                                        FontSize="20"
-                                        Style="{StaticResource TitleBarIconRepeatButtonStyle}"
-                                        Tag="{Binding ElementName=ImageScrollViewer}"
-                                        ToolTipService.ToolTip="缩小" />
-                                </Grid>
-                            </Grid>
+                                    CanDrag="True"
+                                    DragStarting="Image_DragStarting"
+                                    PointerMoved="Image_PointerMoved"
+                                    PointerPressed="Image_PointerPressed"
+                                    RenderTransformOrigin="0.5,0.5"
+                                    Source="{x:Bind Pic, Mode=OneWay}" />
+                            </ScrollViewer>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
                 </FlipView>
+                <Grid
+                    Height="250"
+                    Margin="0,0,28,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource TitleBarBackgroundBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <RepeatButton
+                        x:Name="ZoomUp"
+                        Grid.Row="0"
+                        Width="48"
+                        Height="48"
+                        HorizontalAlignment="Center"
+                        Click="Button_Click"
+                        Content="&#xE8A3;"
+                        FontSize="20"
+                        Style="{StaticResource TitleBarIconRepeatButtonStyle}"
+                        ToolTipService.ToolTip="放大" />
+                    <Slider
+                        Grid.Row="1"
+                        Margin="0,2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Stretch"
+                        Maximum="300"
+                        Minimum="50"
+                        Orientation="Vertical"
+                        ThumbToolTipValueConverter="{StaticResource ZoomToolTipValueConverter}"
+                        Value="{Binding Value.ZoomFactor, Source={StaticResource ScrollViewerProxy}, Converter={StaticResource NumMultConverter}, ConverterParameter='100', Mode=TwoWay}" />
+                    <RepeatButton
+                        x:Name="ZoomDown"
+                        Grid.Row="2"
+                        Width="48"
+                        Height="48"
+                        HorizontalAlignment="Center"
+                        Click="Button_Click"
+                        Content="&#xE71F;"
+                        FontSize="20"
+                        Style="{StaticResource TitleBarIconRepeatButtonStyle}"
+                        ToolTipService.ToolTip="缩小" />
+                </Grid>
                 <ProgressRing
                     Width="60"
                     Height="60"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    IsActive="{Binding IsLoading}"
-                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible'}" />
+                    IsActive="{x:Bind Provider.IsLoading, Mode=OneWay}"
+                    Visibility="{x:Bind Provider.IsLoading, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible', Mode=OneWay}" />
             </Grid>
         </Grid>
         <CommandBar
             x:Name="CommandBar"
             VerticalAlignment="Bottom"
             Background="{ThemeResource TitleBarBackgroundBrush}"
-            Visibility="{Binding IsShowHub, Converter={StaticResource BoolToVisibilityConverter}}">
+            Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton
                     x:Uid="/ShowImagePage/RefreshButton"

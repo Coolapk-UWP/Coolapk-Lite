@@ -97,7 +97,7 @@ namespace CoolapkLite.Helpers
                 if (d is FrameworkElement ele)
                 {
                     string token = GetToken(ele);
-                    bool isenable = GetIsEnable(ele);
+                    bool isEnable = GetIsEnable(ele);
                     TipsRectangleServiceConfig config = GetConfig(ele);
                     if (!string.IsNullOrWhiteSpace(token))
                     {
@@ -119,7 +119,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].TargetItem != null)
                                     {
-                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem, isenable);
+                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem, isEnable);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
@@ -132,7 +132,7 @@ namespace CoolapkLite.Helpers
                                     }
                                     else if (TokenRectangles[token].SourceItem != null)
                                     {
-                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele, isenable);
+                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele, isEnable);
                                         TokenRectangles.Remove(token);
                                     }
                                 }
