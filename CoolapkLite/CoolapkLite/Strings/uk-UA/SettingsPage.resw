@@ -208,9 +208,12 @@
     <value>磁贴更新间隔分钟 (小于 15 分钟停止更新)</value>
   </data>
   <data name="ViewCacheItem.Text" xml:space="preserve">
-    <value>查看缓存</value>
+    <value>查看缓存图片</value>
   </data>
   <data name="OpenLogFileItem.Text" xml:space="preserve">
     <value>打开最近的日志</value>
+  </data>
+  <data name="OpenCacheFolder.Text" xml:space="preserve">
+    <value>打开缓存目录</value>
   </data>
 </root>
