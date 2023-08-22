@@ -20,7 +20,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class BookmarkPage : Page
     {
-        private BookmarkViewModel Provider;
+        internal BookmarkViewModel Provider;
 
         public BookmarkPage() => InitializeComponent();
 

@@ -30,8 +30,8 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            UISettingChanged = (mode) => UpdateThemeRadio();
             Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
+            UISettingChanged = (mode) => UpdateThemeRadio();
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
             DataContext = Provider;
             UpdateThemeRadio();
@@ -80,7 +80,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Frame.Navigate(typeof(TestPage));
                     break;
                 case "LogFolder":
-                    _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
                     Provider?.CleanCache();
@@ -129,6 +129,9 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 case "ViewCache":
                     _ = Frame.Navigate(typeof(CachesPage));
+                    break;
+                case "OpenCache":
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists));
                     break;
                 case "OpenLogFile":
                     StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);

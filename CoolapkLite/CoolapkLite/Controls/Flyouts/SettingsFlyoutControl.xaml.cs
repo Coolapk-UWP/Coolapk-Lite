@@ -84,7 +84,7 @@ namespace CoolapkLite.Controls
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
                     break;
                 case "LogFolder":
-                    _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
                     Provider?.CleanCache();
@@ -133,6 +133,9 @@ namespace CoolapkLite.Controls
             {
                 case "ViewCache":
                     _ = this.NavigateAsync(typeof(CachesPage));
+                    break;
+                case "OpenCache":
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists));
                     break;
                 case "OpenLogFile":
                     StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);

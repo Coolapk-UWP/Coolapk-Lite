@@ -24,7 +24,7 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty ItemSourceProperty =
             DependencyProperty.Register(
                 nameof(ItemSource),
-                typeof(IList<ShyHeaderItem>),
+                typeof(IEnumerable<ShyHeaderItem>),
                 typeof(FeedShellListControl),
                 null);
 
@@ -67,9 +67,9 @@ namespace CoolapkLite.Controls
             set => SetValue(HeaderHeightProperty, value);
         }
 
-        public IList<ShyHeaderItem> ItemSource
+        public IEnumerable<ShyHeaderItem> ItemSource
         {
-            get => (IList<ShyHeaderItem>)GetValue(ItemSourceProperty);
+            get => (IEnumerable<ShyHeaderItem>)GetValue(ItemSourceProperty);
             set => SetValue(ItemSourceProperty, value);
         }
 

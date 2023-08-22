@@ -12,29 +12,15 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     internal class HistoryViewModel : DataSourceBase<Entity>, IViewModel
     {
-        public string Title { get; }
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
 
         private readonly CoolapkListProvider Provider;
         private readonly UriType _type = UriType.CheckLoginInfo;
 
-        internal HistoryViewModel(string title)
+        internal HistoryViewModel()
         {
-            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
-            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
-            Title = title;
-            switch (title)
-            {
-                case "我的常去":
-                    _type = UriType.GetUserRecentHistory;
-                    break;
-                case "浏览历史":
-                    _type = UriType.GetUserHistory;
-                    break;
-                default: throw new ArgumentException(nameof(title));
-            }
-
             Provider = new CoolapkListProvider(
-                (p, firstItem, lastItem) => UriHelper.GetUri(_type, p, firstItem, lastItem),
+                (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserHistory, p, firstItem, lastItem),
                 GetEntities,
                 "id");
         }

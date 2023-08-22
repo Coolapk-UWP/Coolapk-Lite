@@ -26,7 +26,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedShellPage : Page
     {
-        private FeedShellViewModel Provider;
+        internal FeedShellViewModel Provider;
         private static UserActivitySession _currentActivity;
 
         public FeedShellPage() => InitializeComponent();
@@ -101,10 +101,7 @@ namespace CoolapkLite.Pages.FeedPages
                             FeedType = CreateFeedType.Reply,
                             PopupTransitions = new TransitionCollection
                             {
-                                new EdgeUIThemeTransition
-                                {
-                                    Edge = EdgeTransitionLocation.Bottom
-                                }
+                                new PopupThemeTransition()
                             }
                         }.Show(this);
                     }

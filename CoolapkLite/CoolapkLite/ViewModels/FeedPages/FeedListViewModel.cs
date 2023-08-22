@@ -9,7 +9,6 @@ using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
-using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -22,11 +21,8 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
-using Windows.UI.Notifications;
-using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using TileSize = Windows.UI.StartScreen.TileSize;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {

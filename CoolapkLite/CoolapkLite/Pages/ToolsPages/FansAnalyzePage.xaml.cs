@@ -17,7 +17,7 @@ namespace CoolapkLite.Pages.ToolsPages
     /// </summary>
     public sealed partial class FansAnalyzePage : Page
     {
-        private FansAnalyzeViewModel Provider;
+        internal FansAnalyzeViewModel Provider;
 
         public FansAnalyzePage() => InitializeComponent();
 

@@ -68,7 +68,7 @@
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="WriteableBitmap">
                     <Border Width="102" Height="102">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
@@ -76,7 +76,7 @@
                                     x:Name="DeletePic"
                                     x:Uid="/CreateFeedControl/DeletePicItem"
                                     Click="MenuFlyoutItem_Click"
-                                    Tag="{Binding}">
+                                    Tag="{x:Bind}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -84,7 +84,7 @@
                             </MenuFlyout>
                         </helpers:UIElementHelper.ContextFlyout>
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind}" Stretch="UniformToFill" />
                         </Border.Background>
                     </Border>
                 </DataTemplate>

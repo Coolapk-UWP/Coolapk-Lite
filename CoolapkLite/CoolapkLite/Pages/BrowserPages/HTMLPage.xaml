@@ -27,7 +27,7 @@
         </ScrollViewer>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsBackButtonVisible="False"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"

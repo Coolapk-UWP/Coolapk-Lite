@@ -7,6 +7,7 @@
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:BookmarkViewModel}"
     mc:Ignorable="d">
@@ -21,10 +22,10 @@
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:Bookmark">
                     <Grid
                         Background="{ThemeResource SystemControlTransparentBrush}"
-                        Tag="{Binding Url}"
+                        Tag="{x:Bind Url}"
                         Tapped="Grid_Tapped">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -44,17 +45,17 @@
                             Margin="0,0,0,2"
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="{Binding Title}"
+                            Text="{x:Bind Title}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding Title}" />
+                            ToolTipService.ToolTip="{x:Bind Title}" />
                         <TextBlock
                             Grid.Column="3"
                             Margin="0,0,0,2"
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Url}"
+                            Text="{x:Bind Url}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding Url}" />
+                            ToolTipService.ToolTip="{x:Bind Url}" />
                         <Button
                             x:Name="RemoveBookmark"
                             Grid.Column="4"
@@ -66,7 +67,7 @@
                             Click="Button_Click"
                             Content="&#xE711;"
                             Style="{StaticResource TitleBarIconButtonStyle}"
-                            Tag="{Binding}" />
+                            Tag="{x:Bind}" />
                     </Grid>
                 </DataTemplate>
             </control:PullToRefreshListView.ItemTemplate>

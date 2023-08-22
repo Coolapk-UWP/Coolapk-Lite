@@ -32,7 +32,7 @@ namespace CoolapkLite.Pages
     {
         private bool isShowHub = true;
         private Point _clickPoint = new Point(0, 0);
-        private ShowImageViewModel Provider;
+        internal ShowImageViewModel Provider;
 
         private ScrollViewer scrollViewer;
         internal ScrollViewer ScrollViewer

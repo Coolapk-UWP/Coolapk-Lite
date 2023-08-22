@@ -15,7 +15,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         private readonly CoolapkListProvider Provider;
 
         public string UID = string.Empty;
-        public string Title => ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
 
         private bool isLogin;
         public bool IsLogin

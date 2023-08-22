@@ -14,7 +14,7 @@ namespace CoolapkLite.Pages.BrowserPages
     /// </summary>
     public sealed partial class HTMLPage : Page
     {
-        private HTMLViewModel Provider;
+        internal HTMLViewModel Provider;
 
         public HTMLPage() => InitializeComponent();
 

@@ -28,7 +28,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class ProfilePage : Page, INotifyPropertyChanged
     {
-        private ProfileViewModel Provider;
+        internal ProfileViewModel Provider;
         private DateTime dateTime = default;
 
         private double headerMargin;
@@ -119,10 +119,7 @@ namespace CoolapkLite.Pages.FeedPages
                         FeedType = CreateFeedType.Feed,
                         PopupTransitions = new TransitionCollection
                         {
-                            new EdgeUIThemeTransition
-                            {
-                                Edge = EdgeTransitionLocation.Bottom
-                            }
+                            new PopupThemeTransition()
                         }
                     }.Show(this);
                     break;

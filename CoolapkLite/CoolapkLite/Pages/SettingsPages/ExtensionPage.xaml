@@ -15,12 +15,12 @@
             x:Name="ListView"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{Binding Extensions}"
+            ItemsSource="{x:Bind Provider.Extensions}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="common:Extension">
                     <Grid Padding="8" Background="{ThemeResource SystemControlTransparentBrush}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -39,35 +39,35 @@
                             Margin="0,0,8,0"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Source="{Binding Logo}"
-                            ToolTipService.ToolTip="{Binding AppExtension.Id}" />
+                            Source="{x:Bind Logo}"
+                            ToolTipService.ToolTip="{x:Bind AppExtension.Id}" />
                         <TextBlock
                             Grid.Row="0"
                             Grid.Column="1"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             IsTextSelectionEnabled="True"
-                            Text="{Binding AppExtension.AppInfo.DisplayInfo.DisplayName}"
-                            ToolTipService.ToolTip="{Binding AppExtension.AppInfo.DisplayInfo.DisplayName}" />
+                            Text="{x:Bind AppExtension.AppInfo.DisplayInfo.DisplayName}"
+                            ToolTipService.ToolTip="{x:Bind AppExtension.AppInfo.DisplayInfo.DisplayName}" />
                         <TextBlock
                             Grid.Row="1"
                             Grid.Column="1"
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="True"
-                            Text="{Binding AppExtension.Package.Id.FullName}"
+                            Text="{x:Bind AppExtension.Package.Id.FullName}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding AppExtension.Package.Id.FullName}" />
+                            ToolTipService.ToolTip="{x:Bind AppExtension.Package.Id.FullName}" />
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="1"
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="True"
-                            Text="{Binding AppExtension.AppInfo.DisplayInfo.Description}"
+                            Text="{x:Bind AppExtension.AppInfo.DisplayInfo.Description}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding AppExtension.AppInfo.DisplayInfo.Description}"
-                            Visibility="{Binding AppExtension.AppInfo.DisplayInfo.Description, Converter={StaticResource StringVisibilityConverter}}" />
+                            ToolTipService.ToolTip="{x:Bind AppExtension.AppInfo.DisplayInfo.Description}"
+                            Visibility="{x:Bind AppExtension.AppInfo.DisplayInfo.Description, Converter={StaticResource StringVisibilityConverter}}" />
                         <Button
                             x:Name="Uninstall"
                             Grid.RowSpan="3"
@@ -75,7 +75,7 @@
                             Click="Button_Click"
                             Content="&#xE74D;"
                             Style="{StaticResource TitleBarIconButtonStyle}"
-                            Tag="{Binding}"
+                            Tag="{x:Bind}"
                             ToolTipService.ToolTip="卸载" />
                     </Grid>
                 </DataTemplate>

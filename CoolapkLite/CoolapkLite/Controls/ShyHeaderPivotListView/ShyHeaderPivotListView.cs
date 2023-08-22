@@ -32,7 +32,7 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty ShyHeaderItemSourceProperty =
             DependencyProperty.Register(
                 nameof(ShyHeaderItemSource),
-                typeof(IList<ShyHeaderItem>),
+                typeof(IEnumerable<ShyHeaderItem>),
                 typeof(ShyHeaderPivotListView),
                 new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
 
@@ -46,7 +46,7 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty ShyHeaderSelectedItemProperty =
             DependencyProperty.Register(
                 nameof(ShyHeaderSelectedItem),
-                typeof(object),
+                typeof(ShyHeaderItem),
                 typeof(ShyHeaderPivotListView),
                 null);
 
@@ -64,9 +64,9 @@ namespace CoolapkLite.Controls
             set => SetValue(RightHeaderProperty, value);
         }
 
-        public IList<ShyHeaderItem> ShyHeaderItemSource
+        public IEnumerable<ShyHeaderItem> ShyHeaderItemSource
         {
-            get => (IList<ShyHeaderItem>)GetValue(ShyHeaderItemSourceProperty);
+            get => (IEnumerable<ShyHeaderItem>)GetValue(ShyHeaderItemSourceProperty);
             set => SetValue(ShyHeaderItemSourceProperty, value);
         }
 
@@ -76,9 +76,9 @@ namespace CoolapkLite.Controls
             set => SetValue(ShyHeaderSelectedIndexProperty, value);
         }
 
-        public object ShyHeaderSelectedItem
+        public ShyHeaderItem ShyHeaderSelectedItem
         {
-            get => GetValue(ShyHeaderSelectedItemProperty);
+            get => (ShyHeaderItem)GetValue(ShyHeaderSelectedItemProperty);
             set => SetValue(ShyHeaderSelectedItemProperty, value);
         }
 
@@ -137,7 +137,7 @@ namespace CoolapkLite.Controls
             ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
         }
 
-        private void UpdateShyHeaderItem(IList<ShyHeaderItem> items = null)
+        private void UpdateShyHeaderItem(IEnumerable<ShyHeaderItem> items = null)
         {
             items = items ?? ShyHeaderItemSource;
             if (items == null) { return; }
@@ -156,8 +156,8 @@ namespace CoolapkLite.Controls
         {
             index = index ?? SelectedIndex;
             if (index == -1) { return; }
-            ShyHeaderSelectedItem = ShyHeaderItemSource[(int)index];
-            ItemsSource = ShyHeaderItemSource[(int)index].ItemSource;
+            ShyHeaderSelectedItem = ShyHeaderItemSource.ElementAt(index.Value);
+            ItemsSource = ShyHeaderSelectedItem.ItemSource;
         }
     }
 

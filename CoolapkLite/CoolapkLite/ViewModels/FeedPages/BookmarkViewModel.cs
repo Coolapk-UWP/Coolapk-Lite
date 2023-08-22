@@ -11,7 +11,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public class BookmarkViewModel : IViewModel
     {
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Bookmark");
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Bookmark");
 
         private ObservableCollection<Bookmark> _bookmarks;
         public ObservableCollection<Bookmark> Bookmarks

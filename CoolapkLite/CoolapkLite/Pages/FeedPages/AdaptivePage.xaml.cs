@@ -17,7 +17,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class AdaptivePage : Page
     {
-        private AdaptiveViewModel Provider;
+        internal AdaptiveViewModel Provider;
 
         public AdaptivePage() => InitializeComponent();
 

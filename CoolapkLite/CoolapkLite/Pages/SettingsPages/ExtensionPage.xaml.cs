@@ -20,7 +20,7 @@ namespace CoolapkLite.Pages.SettingsPages
     {
         internal ExtensionManager Provider;
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Extension");
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Extension");
 
         public ExtensionPage() => InitializeComponent();
 

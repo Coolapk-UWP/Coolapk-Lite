@@ -17,7 +17,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class HistoryPage : Page
     {
-        private HistoryViewModel Provider;
+        internal HistoryViewModel Provider;
 
         public HistoryPage() => InitializeComponent();
 

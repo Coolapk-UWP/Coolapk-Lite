@@ -27,7 +27,7 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private Func<bool, Task> Refresh;
         private static int PivotIndex = 0;
-        private SearchingViewModel Provider;
+        internal SearchingViewModel Provider;
 
         public SearchingPage() => InitializeComponent();
 

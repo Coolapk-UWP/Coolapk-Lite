@@ -11,11 +11,10 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     internal class IndexViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; protected set; }
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
 
         internal IndexViewModel()
         {
-            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
             Provider = new CoolapkListProvider(
                 (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, "/main/indexV8", "?", p),
                 GetEntities,
@@ -28,17 +27,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (json.TryGetValue("entityTemplate", out JToken entityTemplate))
             {
-                if (entityTemplate?.ToString() == "configCard")
-                {
-                    JObject extraData = JObject.Parse(json.Value<string>("extraData"));
-                    Title = extraData.Value<string>("pageTitle");
-                    yield return null;
-                }
-                else if (entityTemplate?.ToString() == "fabCard")
-                {
-                    yield return null;
-                }
-                else if (entityTemplate?.ToString() == "feedCoolPictureGridCard")
+                if (entityTemplate?.ToString() == "feedCoolPictureGridCard")
                 {
                     foreach (JToken item in json.Value<JArray>("entities"))
                     {

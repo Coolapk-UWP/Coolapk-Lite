@@ -60,7 +60,7 @@
                 IsTabStop="True"
                 ItemTemplateSelector="{StaticResource SearchWordSelector}"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                Text="{Binding Title, Mode=OneWay}"
+                Text="{x:Bind Provider.Title, Mode=OneWay}"
                 TextChanged="AutoSuggestBox_TextChanged">
                 <AutoSuggestBox.QueryIcon>
                     <FontIcon
@@ -96,7 +96,7 @@
                     <ComboBox
                         Margin="8,6,4,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SearchFeedItemSource.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{x:Bind Provider.SearchFeedItemSource.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>全部</x:String>
                         <x:String>动态</x:String>
                         <x:String>图文</x:String>
@@ -111,7 +111,7 @@
                     <ComboBox
                         Margin="4,6,8,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SearchFeedItemSource.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{x:Bind Provider.SearchFeedItemSource.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>实时</x:String>
                         <x:String>热度</x:String>
                         <x:String>评论数</x:String>
@@ -123,7 +123,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchFeedItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchFeedItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -133,7 +133,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchUserItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchUserItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -143,7 +143,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchTopicItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchTopicItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />

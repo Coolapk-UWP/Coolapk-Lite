@@ -524,7 +524,7 @@ namespace CoolapkLite.Helpers
                             case "search":
                                 return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty));
                             case "history":
-                                return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel("浏览历史"));
+                                return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel());
                             case "settings":
                                 return await frame.NavigateAsync(typeof(SettingsPage));
                             case "favorites":
@@ -577,7 +577,7 @@ namespace CoolapkLite.Helpers
                         case "search":
                             return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty));
                         case "history":
-                            return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel("浏览历史"));
+                            return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel());
                         case "settings":
                             return await frame.NavigateAsync(typeof(SettingsPage));
                         case "favorites":

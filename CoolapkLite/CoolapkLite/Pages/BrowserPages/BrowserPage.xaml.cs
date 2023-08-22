@@ -20,7 +20,7 @@ namespace CoolapkLite.Pages.BrowserPages
     /// </summary>
     public sealed partial class BrowserPage : Page
     {
-        private BrowserViewModel Provider;
+        internal BrowserViewModel Provider;
 
         public BrowserPage() => InitializeComponent();
 

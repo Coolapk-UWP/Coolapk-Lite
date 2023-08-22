@@ -44,7 +44,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedListPage : Page, INotifyPropertyChanged
     {
-        private FeedListViewModel Provider;
+        internal FeedListViewModel Provider;
 
         private double headerMargin;
         internal double HeaderMargin

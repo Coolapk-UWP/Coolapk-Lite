@@ -21,7 +21,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public CoreDispatcher Dispatcher { get; }
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
 
         public static string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
 

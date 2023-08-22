@@ -303,7 +303,8 @@ namespace CoolapkLite.Controls
                                         Child = new TextBlock
                                         {
                                             Text = _loader.GetString("GIF"),
-                                            Margin = new Thickness(2, 0, 2, 0)
+                                            Margin = new Thickness(2, 0, 2, 0),
+                                            Foreground = new SolidColorBrush(Colors.White)
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -322,7 +323,8 @@ namespace CoolapkLite.Controls
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("WidePicText")
+                                            Text = _loader.GetString("WidePicText"),
+                                            Foreground = new SolidColorBrush(Colors.White)
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };
@@ -339,7 +341,8 @@ namespace CoolapkLite.Controls
                                         Child = new TextBlock
                                         {
                                             Margin = new Thickness(2, 0, 2, 0),
-                                            Text = _loader.GetString("LongPicText")
+                                            Text = _loader.GetString("LongPicText"),
+                                            Foreground = new SolidColorBrush(Colors.White)
                                         },
                                         Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                                     };

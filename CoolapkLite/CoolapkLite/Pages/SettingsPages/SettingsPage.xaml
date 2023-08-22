@@ -56,7 +56,15 @@
                                         IsEnabled="{Binding IsCleanCacheButtonEnabled}"
                                         Tag="ViewCache">
                                         <helpers:FlyoutBaseHelper.Icon>
-                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE890;" />
+                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
+                                        </helpers:FlyoutBaseHelper.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem
+                                        x:Uid="/SettingsPage/OpenCacheFolder"
+                                        Click="MenuFlyoutItem_Click"
+                                        Tag="OpenCache">
+                                        <helpers:FlyoutBaseHelper.Icon>
+                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE838;" />
                                         </helpers:FlyoutBaseHelper.Icon>
                                     </MenuFlyoutItem>
                                 </MenuFlyout>
@@ -76,7 +84,7 @@
                         TickPlacement="Outside"
                         Value="{Binding TileUpdateTime, Mode=TwoWay}" />
                 </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+                <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <HyperlinkButton
                         x:Uid="/SettingsPage/AccountSetting"
                         Click="Button_Click"

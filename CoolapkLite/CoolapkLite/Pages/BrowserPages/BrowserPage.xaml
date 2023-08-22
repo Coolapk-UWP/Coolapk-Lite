@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsBackButtonVisible="False"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
@@ -29,7 +29,7 @@
                     Background="{ThemeResource SystemControlTransparentBrush}"
                     BorderThickness="0"
                     Click="GotoSystemBrowserButton_Click"
-                    Visibility="{Binding IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                    Visibility="{x:Bind Provider.IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                 <Button
                     x:Name="TryLoginButton"
                     x:Uid="/BrowserPage/BackButton"
@@ -37,7 +37,7 @@
                     Background="{ThemeResource SystemControlTransparentBrush}"
                     BorderThickness="0"
                     Click="TryLoginButton_Click"
-                    Visibility="{Binding IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind Provider.IsLoginPage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <helpers:UIElementHelper.ContextFlyout>
                         <MenuFlyout>
                             <MenuFlyoutItem

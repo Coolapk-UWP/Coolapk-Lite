@@ -54,7 +54,15 @@
                                 IsEnabled="{Binding IsCleanCacheButtonEnabled}"
                                 Tag="ViewCache">
                                 <helpers:FlyoutBaseHelper.Icon>
-                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE890;" />
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Uid="/SettingsPage/OpenCacheFolder"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="OpenCache">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE838;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
                         </MenuFlyout>

@@ -30,7 +30,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -54,7 +54,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             await ThreadSwitcher.ResumeBackgroundAsync();
             try
             {
-                StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("ImageCache");
+                StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists);
                 if (ImageCache != null)
                 {
                     IReadOnlyList<StorageFile> images = await ImageCache.GetFilesAsync();

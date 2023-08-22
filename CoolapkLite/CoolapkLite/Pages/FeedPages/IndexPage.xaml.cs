@@ -17,7 +17,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class IndexPage : Page
     {
-        private IndexViewModel Provider;
+        internal IndexViewModel Provider;
 
         public IndexPage() => InitializeComponent();
 
