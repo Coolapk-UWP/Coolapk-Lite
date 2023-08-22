@@ -62,7 +62,9 @@
                 x:Name="Pivot"
                 Grid.Row="1"
                 Margin="{StaticResource PivotTitleMargin}"
-                helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+                helpers:TipsRectangleHelper.IndicatorName="SelectionIndicator"
+                helpers:TipsRectangleHelper.IsEnable="True"
+                helpers:TipsRectangleHelper.Orientation="Horizontal"
                 IsTabStop="True"
                 SelectionChanged="Pivot_SelectionChanged">
                 <Pivot.RightHeader>

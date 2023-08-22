@@ -1,388 +1,135 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using Windows.Foundation.Metadata;
+﻿using CoolapkLite.Common;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
 {
-    /// <summary>
-    /// Based on <see cref="Material Libs" href="https://github.com/cnbluefire/MaterialLibs"./>
-    /// </summary>
     public class TipsRectangleHelper : DependencyObject
     {
-        private static readonly Dictionary<string, TipsRectangleServiceItem> TokenRectangles = new Dictionary<string, TipsRectangleServiceItem>();
-        private static readonly Collection<WeakReference<Selector>> Selectors = new Collection<WeakReference<Selector>>();
-        private static readonly Collection<WeakReference<Pivot>> Pivots = new Collection<WeakReference<Pivot>>();
+        #region IsEnable
 
-        private static bool HasConnectedAnimation => ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static bool HasConnectedAnimationConfiguration => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
-
-        public static string GetToken(FrameworkElement obj)
-        {
-            return (string)obj.GetValue(TokenProperty);
-        }
-
-        public static void SetToken(FrameworkElement obj, string value)
-        {
-            obj.SetValue(TokenProperty, value);
-        }
-
-        public static readonly DependencyProperty TokenProperty =
-            DependencyProperty.RegisterAttached("Token", typeof(string), typeof(TipsRectangleHelper), new PropertyMetadata(null));
-
-        public static bool GetIsEnable(FrameworkElement obj)
-        {
-            return HasConnectedAnimation && (bool)obj.GetValue(IsEnableProperty);
-        }
-
-        public static void SetIsEnable(FrameworkElement obj, bool value)
-        {
-            obj.SetValue(IsEnableProperty, value);
-        }
-
+        /// <summary>
+        /// Identifies the <see cref="IsEnable"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty IsEnableProperty =
-            DependencyProperty.RegisterAttached("IsEnable", typeof(bool), typeof(TipsRectangleHelper), new PropertyMetadata(true));
+            DependencyProperty.Register(
+                "IsEnable",
+                typeof(bool),
+                typeof(TipsRectangleHelper),
+                new PropertyMetadata(false, OnIsEnablePropertyChanged));
 
-        public static TipsRectangleServiceStates GetState(FrameworkElement obj)
+        public static bool GetIsEnable(ItemsControl control)
         {
-            return (TipsRectangleServiceStates)obj.GetValue(StateProperty);
+            return (bool)control.GetValue(IsEnableProperty);
         }
 
-        public static void SetState(FrameworkElement obj, TipsRectangleServiceStates value)
+        public static void SetIsEnable(ItemsControl control, bool value)
         {
-            obj.SetValue(StateProperty, value);
+            control.SetValue(IsEnableProperty, value);
         }
 
-        public static readonly DependencyProperty StateProperty =
-            DependencyProperty.RegisterAttached("State", typeof(TipsRectangleServiceStates), typeof(TipsRectangleHelper), new PropertyMetadata(TipsRectangleServiceStates.None, StatePropertyChanged));
-
-        public static TipsRectangleServiceConfig GetConfig(DependencyObject obj)
+        private static void OnIsEnablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            return (TipsRectangleServiceConfig)obj.GetValue(ConfigProperty);
-        }
-
-        public static void SetConfig(DependencyObject obj, TipsRectangleServiceConfig value)
-        {
-            obj.SetValue(ConfigProperty, value);
-        }
-
-        public static readonly DependencyProperty ConfigProperty =
-            DependencyProperty.RegisterAttached("Config", typeof(TipsRectangleServiceConfig), typeof(TipsRectangleHelper), new PropertyMetadata(TipsRectangleServiceConfig.Default));
-
-        public static string GetTipTargetName(DependencyObject obj)
-        {
-            return (string)obj.GetValue(TipTargetNameProperty);
-        }
-
-        public static void SetTipTargetName(DependencyObject obj, string value)
-        {
-            obj.SetValue(TipTargetNameProperty, value);
-        }
-
-        public static readonly DependencyProperty TipTargetNameProperty =
-            DependencyProperty.RegisterAttached("TipTargetName", typeof(string), typeof(TipsRectangleHelper), new PropertyMetadata(null, TipTargetNamePropertyChanged));
-
-        private static void StatePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if ((int)e.NewValue != (int)e.OldValue && e.NewValue != null)
+            if (d is ItemsControl itemsControl)
             {
-                TipsRectangleServiceStates state = (TipsRectangleServiceStates)e.NewValue;
-                if (d is FrameworkElement ele)
+                AnimateSelectionProvider provider = new AnimateSelectionProvider
                 {
-                    string token = GetToken(ele);
-                    bool isEnable = GetIsEnable(ele);
-                    TipsRectangleServiceConfig config = GetConfig(ele);
-                    if (!string.IsNullOrWhiteSpace(token))
-                    {
-                        switch (state)
-                        {
-                            case TipsRectangleServiceStates.None:
-                                {
-                                    if (TokenRectangles.ContainsKey(token))
-                                    {
-                                        TokenRectangles.Remove(token);
-                                    }
-                                }
-                                break;
-                            case TipsRectangleServiceStates.From:
-                                {
-                                    if (!TokenRectangles.ContainsKey(token))
-                                    {
-                                        TokenRectangles[token] = new TipsRectangleServiceItem(ele, null);
-                                    }
-                                    else if (TokenRectangles[token].TargetItem != null)
-                                    {
-                                        TryStartAnimation(token, config, ele, TokenRectangles[token].TargetItem, isEnable);
-                                        TokenRectangles.Remove(token);
-                                    }
-                                }
-                                break;
-                            case TipsRectangleServiceStates.To:
-                                {
-                                    if (!TokenRectangles.ContainsKey(token))
-                                    {
-                                        TokenRectangles[token] = new TipsRectangleServiceItem(null, ele);
-                                    }
-                                    else if (TokenRectangles[token].SourceItem != null)
-                                    {
-                                        TryStartAnimation(token, config, TokenRectangles[token].SourceItem, ele, isEnable);
-                                        TokenRectangles.Remove(token);
-                                    }
-                                }
-                                break;
-                        }
-                    }
-                }
+                    ItemsControls = new ItemsControl[] { itemsControl },
+                    IndicatorName = GetIndicatorName(itemsControl),
+                    Orientation = GetOrientation(itemsControl)
+                };
+                SetProvider(itemsControl, provider);
             }
         }
 
-        private static void TipTargetNamePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        #endregion
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                "Provider",
+                typeof(AnimateSelectionProvider),
+                typeof(TipsRectangleHelper),
+                null);
+
+        public static AnimateSelectionProvider GetProvider(ItemsControl control)
         {
-            if (e.NewValue != e.OldValue && e.NewValue is string TargetName)
-            {
-                if (d is Selector selector)
-                {
-                    bool IsIn = false;
-                    WeakReference<Selector> weak_tmp = null;
-                    foreach (WeakReference<Selector> item in Selectors)
-                    {
-                        if (item.TryGetTarget(out Selector tmp))
-                        {
-                            if (tmp == selector)
-                            {
-                                IsIn = true;
-                                weak_tmp = item;
-                            }
-                        }
-                    }
-                    if (string.IsNullOrEmpty(TargetName))
-                    {
-                        if (IsIn)
-                        {
-                            Selectors.Remove(weak_tmp);
-                            selector.SelectionChanged -= Selector_SelectionChanged;
-                        }
-                    }
-                    else
-                    {
-                        if (!IsIn)
-                        {
-                            if (selector is ListViewBase || selector is ListBox)
-                            {
-                                weak_tmp = new WeakReference<Selector>(selector);
-                                Selectors.Add(weak_tmp);
-                                selector.SelectionChanged += Selector_SelectionChanged;
-                            }
-                        }
-                    }
-                }
-                else if (d is Pivot pivot)
-                {
-                    bool IsIn = false;
-                    WeakReference<Pivot> weak_tmp = null;
-                    foreach (WeakReference<Pivot> item in Pivots)
-                    {
-                        if (item.TryGetTarget(out Pivot tmp))
-                        {
-                            if (tmp == pivot)
-                            {
-                                IsIn = true;
-                                weak_tmp = item;
-                            }
-                        }
-                    }
-                    if (string.IsNullOrEmpty(TargetName))
-                    {
-                        if (IsIn)
-                        {
-                            Pivots.Remove(weak_tmp);
-                            pivot.SelectionChanged -= Pivot_SelectionChanged;
-                        }
-                    }
-                    else
-                    {
-                        if (!IsIn)
-                        {
-                            weak_tmp = new WeakReference<Pivot>(pivot);
-                            Pivots.Add(weak_tmp);
-                            pivot.SelectionChanged += Pivot_SelectionChanged;
-                        }
-                    }
-                }
-            }
+            return (AnimateSelectionProvider)control.GetValue(ProviderProperty);
         }
 
-        private static void Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static void SetProvider(ItemsControl control, AnimateSelectionProvider value)
         {
-            Selector selector = (Selector)sender;
-            if (!GetIsEnable(selector)) { return; }
-            if (selector is ListViewBase listView)
-            {
-                if (listView.SelectionMode == ListViewSelectionMode.None || listView.SelectionMode == ListViewSelectionMode.Multiple)
-                {
-                    return;
-                }
-            }
-            else if (selector is ListBox listBox)
-            {
-                if (listBox.SelectionMode == SelectionMode.Multiple)
-                {
-                    return;
-                }
-            }
-
-            string name = GetTipTargetName(selector);
-            string token = GetToken(selector);
-            TipsRectangleServiceConfig config = GetConfig(selector);
-
-            DependencyObject SourceItemContainer = null;
-            DependencyObject TargetItemContainer = null;
-            FrameworkElement SourceItemTips = null;
-            FrameworkElement TargetItemTips = null;
-
-            if (e.AddedItems.Count == 1 && e.RemovedItems.Count == 1)
-            {
-                object targetItem = e.AddedItems.FirstOrDefault();
-                TargetItemContainer = selector.ContainerFromItem(targetItem);
-                TargetItemTips = TargetItemContainer?.FindDescendant(name);
-
-                object sourceItem = e.RemovedItems.FirstOrDefault();
-                SourceItemContainer = selector.ContainerFromItem(sourceItem);
-                SourceItemTips = SourceItemContainer?.FindDescendant(name);
-            }
-            if (SourceItemTips != null && TargetItemTips != null)
-            {
-                if (string.IsNullOrWhiteSpace(token))
-                {
-                    token = selector.GetHashCode().ToString();
-                }
-
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
-            }
+            control.SetValue(ProviderProperty, value);
         }
 
-        private static void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        #endregion
+
+        #region IndicatorName
+
+        /// <summary>
+        /// Identifies the IndicatorName dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IndicatorNameProperty =
+            DependencyProperty.Register(
+                "IndicatorName",
+                typeof(string),
+                typeof(TipsRectangleHelper),
+                new PropertyMetadata(null, OnIndicatorNamePropertyChanged));
+
+        public static string GetIndicatorName(ItemsControl control)
         {
-            Pivot pivot = (Pivot)sender;
-            if (!GetIsEnable(pivot)) { return; }
-
-            string name = GetTipTargetName(pivot);
-            string token = GetToken(pivot);
-            TipsRectangleServiceConfig config = GetConfig(pivot);
-
-            DependencyObject SourceItemContainer = null;
-            DependencyObject TargetItemContainer = null;
-            FrameworkElement SourceItemTips = null;
-            FrameworkElement TargetItemTips = null;
-
-            if (e.AddedItems.Count == 1 && e.RemovedItems.Count == 1)
-            {
-                object targetItem = e.AddedItems.FirstOrDefault();
-                TargetItemContainer = pivot.ContainerFromItem(targetItem);
-                if (TargetItemContainer == null) { return; }
-                UIElementCollection targetItemHeaders = pivot?.FindDescendant<PivotHeaderPanel>().Children;
-                foreach (UIElement header in targetItemHeaders)
-                {
-                    if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (TargetItemContainer as PivotItem).Header.ToString())
-                    {
-                        TargetItemTips = item?.FindDescendant(name);
-                        break;
-                    }
-                }
-
-                object sourceItem = e.RemovedItems.FirstOrDefault();
-                SourceItemContainer = pivot.ContainerFromItem(sourceItem);
-                if (SourceItemContainer == null) { return; }
-                UIElementCollection sourceItemHeaders = pivot?.FindDescendant<PivotHeaderPanel>().Children;
-                foreach (UIElement header in sourceItemHeaders)
-                {
-                    if (header is PivotHeaderItem item && item?.FindDescendant<TextBlock>().Text == (SourceItemContainer as PivotItem).Header.ToString())
-                    {
-                        SourceItemTips = item?.FindDescendant(name);
-                        break;
-                    }
-                }
-            }
-            if (SourceItemTips != null && TargetItemTips != null)
-            {
-                if (string.IsNullOrWhiteSpace(token))
-                {
-                    token = pivot.GetHashCode().ToString();
-                }
-
-                TryStartAnimation(token, config, SourceItemTips, TargetItemTips);
-            }
+            return (string)control.GetValue(IndicatorNameProperty);
         }
 
-        private static void TryStartAnimation(string token, TipsRectangleServiceConfig config, FrameworkElement source, FrameworkElement target, bool isenable = true)
+        public static void SetIndicatorName(ItemsControl control, string value)
         {
-            try
-            {
-                if (isenable && source.ActualHeight > 0 && source.ActualWidth > 0)
-                {
-                    ConnectedAnimationService service = ConnectedAnimationService.GetForCurrentView();
-                    if (source != target)
-                    {
-                        service.GetAnimation(token)?.Cancel();
-                        service.DefaultDuration = TimeSpan.FromSeconds(0.33d);
-                        ConnectedAnimation animation = service.PrepareToAnimate(token, source);
-                        if (HasConnectedAnimationConfiguration)
-                        {
-                            animation.Configuration = GetConfiguration(config);
-                        }
-                        animation.TryStart(target);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-                Debug.WriteLine(ex.StackTrace);
-            }
+            control.SetValue(IndicatorNameProperty, value);
         }
 
-        private static ConnectedAnimationConfiguration GetConfiguration(TipsRectangleServiceConfig selectedName)
+        private static void OnIndicatorNamePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            switch (selectedName)
+            if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
             {
-                case TipsRectangleServiceConfig.Gravity:
-                    return new GravityConnectedAnimationConfiguration();
-                case TipsRectangleServiceConfig.Direct:
-                    return new DirectConnectedAnimationConfiguration();
-                case TipsRectangleServiceConfig.Basic:
-                    return new BasicConnectedAnimationConfiguration();
-                case TipsRectangleServiceConfig.Default:
-                default:
-                    return new BasicConnectedAnimationConfiguration();
+                provider.IndicatorName = GetIndicatorName(itemsControl);
             }
         }
-    }
 
-    internal class TipsRectangleServiceItem
-    {
-        public FrameworkElement SourceItem { get; set; }
-        public FrameworkElement TargetItem { get; set; }
-        public TipsRectangleServiceItem(FrameworkElement SourceItem, FrameworkElement TargetItem)
+        #endregion
+
+        #region Orientation
+
+        /// <summary>
+        /// Identifies the <see cref="Orientation"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty OrientationProperty =
+            DependencyProperty.Register(
+                nameof(Orientation),
+                typeof(Orientation),
+                typeof(TipsRectangleHelper),
+                new PropertyMetadata(Orientation.Vertical, OnOrientationPropertyChanged));
+
+        public static Orientation GetOrientation(ItemsControl control)
         {
-            this.SourceItem = SourceItem;
-            this.TargetItem = TargetItem;
+            return (Orientation)control.GetValue(OrientationProperty);
         }
-    }
 
-    public enum TipsRectangleServiceStates
-    {
-        None, From, To
-    }
+        public static void SetOrientation(ItemsControl control, Orientation value)
+        {
+            control.SetValue(OrientationProperty, value);
+        }
 
-    public enum TipsRectangleServiceConfig
-    {
-        Default, Gravity, Direct, Basic
+        private static void OnOrientationPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
+            {
+                provider.Orientation = GetOrientation(itemsControl);
+            }
+        }
+
+        #endregion
     }
 }

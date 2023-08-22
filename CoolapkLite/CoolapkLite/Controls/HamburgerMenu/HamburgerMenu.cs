@@ -2,11 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using System;
+using System.Collections.Generic;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Controls
@@ -27,6 +30,7 @@ namespace CoolapkLite.Controls
         private ListViewBase _optionsListView;
         private ListViewItem _paneAutoSuggestItem;
         private VisualStateGroup _windowsSizeGroup;
+        private AnimateSelectionProvider _selectionProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HamburgerMenu"/> class.
@@ -99,6 +103,17 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Loading += HamburgerListView_Loading;
                 _paneAutoSuggestItem.Tapped += PaneAutoSuggestButton_Tapped;
             }
+
+            _selectionProvider = new AnimateSelectionProvider
+            {
+                IndicatorName = "SelectionIndicator",
+                Orientation = Orientation.Vertical,
+                ItemsControls = new ItemsControl[]
+                {
+                    _buttonsListView,
+                    _optionsListView
+                }
+            };
 
             UpdateTitleBarPadding();
 

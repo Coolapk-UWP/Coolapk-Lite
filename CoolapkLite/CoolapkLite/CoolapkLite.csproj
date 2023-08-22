@@ -140,6 +140,7 @@
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
     <Compile Include="BackgroundTasks\NotificationsTask.cs" />
     <Compile Include="Common\AccentColorResource.cs" />
+    <Compile Include="Common\AnimateSelectionProvider.cs" />
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
     <Compile Include="Common\ExtensionManager.cs" />

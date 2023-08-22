@@ -82,7 +82,9 @@
             x:Name="Pivot"
             Grid.Row="1"
             Margin="0,-9,0,0"
-            helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+            helpers:TipsRectangleHelper.IndicatorName="SelectionIndicator"
+            helpers:TipsRectangleHelper.IsEnable="True"
+            helpers:TipsRectangleHelper.Orientation="Horizontal"
             Loaded="Pivot_Loaded"
             SelectionChanged="Pivot_SelectionChanged"
             SizeChanged="Pivot_SizeChanged">
