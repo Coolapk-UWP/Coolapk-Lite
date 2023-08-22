@@ -163,7 +163,7 @@ namespace CoolapkLite.Controls
             base.OnApplyTemplate();
         }
 
-        private void ChangeVisualState(bool isThreshold)
+        private void UpdateVisualState(bool isThreshold)
         {
             _ = isThreshold ? VisualStateManager.GoToState(this, "OnThreshold", true)
                 : VisualStateManager.GoToState(this, "BeforeThreshold", true);
@@ -195,12 +195,12 @@ namespace CoolapkLite.Controls
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            ChangeVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
+            UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
         }
 
         private void ProgressProvider_ProgressChanged(object sender, double args)
         {
-            ChangeVisualState(args == 1 || _progressProvider.Threshold == 0);
+            UpdateVisualState(args == 1 || _progressProvider.Threshold == 0);
         }
 
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -217,7 +217,7 @@ namespace CoolapkLite.Controls
                 }
                 _progressProvider.Threshold = _topHeight;
             }
-            ChangeVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
+            UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
         }
 
         private void ListViewHeader_Loaded(object sender, RoutedEventArgs e)

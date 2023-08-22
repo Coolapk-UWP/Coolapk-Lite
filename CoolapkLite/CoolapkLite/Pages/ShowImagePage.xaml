@@ -85,6 +85,7 @@
                     </TransitionCollection>
                 </Grid.ChildrenTransitions>
                 <Border
+                    x:Name="AppTitleBorder"
                     Grid.Column="1"
                     Margin="12,0"
                     Padding="4,2"
@@ -93,8 +94,7 @@
                     Background="{ThemeResource TitleBarBackgroundBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="6"
-                    Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    CornerRadius="6">
                     <TextBlock
                         x:Name="AppTitle"
                         MaxLines="1"
@@ -148,14 +148,14 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
                 <Grid
+                    x:Name="ZoomSliderGrid"
                     Height="250"
                     Margin="0,0,28,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Background="{ThemeResource TitleBarBackgroundBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    BorderThickness="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
@@ -206,8 +206,7 @@
         <CommandBar
             x:Name="CommandBar"
             VerticalAlignment="Bottom"
-            Background="{ThemeResource TitleBarBackgroundBrush}"
-            Visibility="{x:Bind Provider.IsShowHub, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+            Background="{ThemeResource TitleBarBackgroundBrush}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton
                     x:Uid="/ShowImagePage/RefreshButton"
@@ -249,5 +248,43 @@
                 </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="HubVisibilityStates">
+                <VisualStateGroup.Transitions>
+                    <VisualTransition From="HubVisible" To="HubCollapsed">
+                        <VisualTransition.Storyboard>
+                            <Storyboard>
+                                <PopOutThemeAnimation TargetName="AppTitleBorder" />
+                                <PopOutThemeAnimation TargetName="ZoomSliderGrid" />
+                                <PopOutThemeAnimation TargetName="CommandBar" />
+                            </Storyboard>
+                        </VisualTransition.Storyboard>
+                    </VisualTransition>
+                    <VisualTransition From="HubCollapsed" To="HubVisible">
+                        <VisualTransition.Storyboard>
+                            <Storyboard Duration="{StaticResource ControlFasterAnimationDuration}">
+                                <PopInThemeAnimation TargetName="AppTitleBorder" />
+                                <PopInThemeAnimation TargetName="ZoomSliderGrid" />
+                                <PopInThemeAnimation TargetName="CommandBar" />
+                            </Storyboard>
+                        </VisualTransition.Storyboard>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
+                <VisualState x:Name="HubVisible">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleBorder.Visibility" Value="Visible" />
+                        <Setter Target="ZoomSliderGrid.Visibility" Value="Visible" />
+                        <Setter Target="CommandBar.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="HubCollapsed">
+                    <VisualState.Setters>
+                        <Setter Target="AppTitleBorder.Visibility" Value="Collapsed" />
+                        <Setter Target="ZoomSliderGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="CommandBar.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

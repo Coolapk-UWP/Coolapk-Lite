@@ -30,6 +30,7 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class ShowImagePage : Page, INotifyPropertyChanged
     {
+        private bool isShowHub = true;
         private Point _clickPoint = new Point(0, 0);
         private ShowImageViewModel Provider;
 
@@ -227,14 +228,14 @@ namespace CoolapkLite.Pages
 
         private void ScrollViewer_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Provider.IsShowHub = !Provider.IsShowHub;
+            UpdateHubVisibilityStates();
         }
 
         private void ScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
             scrollViewer.ChangeView(0, 0, 1);
-            Provider.IsShowHub = !Provider.IsShowHub;
+            UpdateHubVisibilityStates();
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -299,6 +300,13 @@ namespace CoolapkLite.Pages
             {
                 ScrollViewer = flipView.ContainerFromItem(flipView.SelectedItem)?.FindDescendant<ScrollViewer>();
             }
+        }
+
+        private void UpdateHubVisibilityStates()
+        {
+            isShowHub = !isShowHub;
+            _ = isShowHub ? VisualStateManager.GoToState(this, "HubVisible", true)
+                : VisualStateManager.GoToState(this, "HubCollapsed", true);
         }
 
         private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateScrollViewer(sender as FlipView);
