@@ -54,14 +54,16 @@
 
             <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
 
-            <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundPressed" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelected" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPressed" ResourceKey="TextFillColorTertiaryBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorTransparentBrush" />
         </ResourceDictionary>
@@ -115,14 +117,16 @@
 
             <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
 
-            <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlTransparentBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundPressed" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundDisabled" ResourceKey="TextFillColorDisabledBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundPressed" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelected" ResourceKey="SubtleFillColorTransparentBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPressed" ResourceKey="TextFillColorTertiaryBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SubtleFillColorTransparentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SubtleFillColorTransparentBrush" />
         </ResourceDictionary>
@@ -179,26 +183,15 @@
             <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="HamburgerMenuItemForeground" />
             <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelected" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPointerOver" ResourceKey="HamburgerMenuItemForeground" />
+            <StaticResource x:Key="TopHamburgerMenuItemForegroundSelectedPressed" ResourceKey="HamburgerMenuItemForeground" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundPointerOver" ResourceKey="SystemControlHighlightAccentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundPressed" ResourceKey="SystemControlHighlightAccentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelected" ResourceKey="SystemControlHighlightAccentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPointerOver" ResourceKey="SystemControlHighlightAccentBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemBackgroundSelectedPressed" ResourceKey="SystemControlHighlightAccentBrush" />
-
-            <StaticResource x:Key="TopHamburgerMenuItemRevealBackgroundFocused" ResourceKey="SystemControlHighlightAccentBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemRevealIconForegroundFocused" ResourceKey="SystemControlHighlightAltChromeWhiteBrush" />
-            <StaticResource x:Key="TopHamburgerMenuItemRevealContentForegroundFocused" ResourceKey="SystemControlHighlightAltChromeWhiteBrush" />
-
-            <StaticResource x:Key="TopHamburgerMenuItemSeparatorForeground" ResourceKey="SystemControlForegroundBaseLowBrush" />
-
-            <StaticResource x:Key="HamburgerMenuButtonBackgroundPointerOver" ResourceKey="SystemControlHighlightListLowBrush" />
-            <StaticResource x:Key="HamburgerMenuButtonBackgroundPressed" ResourceKey="SystemControlHighlightListMediumBrush" />
-            <StaticResource x:Key="HamburgerMenuButtonBackgroundDisabled" ResourceKey="SystemControlBackgroundBaseLowBrush" />
-            <StaticResource x:Key="HamburgerMenuButtonForegroundPointerOver" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="HamburgerMenuButtonForegroundPressed" ResourceKey="SystemControlHighlightAltBaseHighBrush" />
-            <StaticResource x:Key="HamburgerMenuButtonForegroundDisabled" ResourceKey="SystemControlDisabledBaseMediumLowBrush" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
 
@@ -208,7 +201,6 @@
     <x:Double x:Key="PaneToggleButtonWidth">48</x:Double>
     <x:Double x:Key="HamburgerMenuItemOnLeftMinHeight">40</x:Double>
     <x:Double x:Key="HamburgerMenuTopPaneHeight">40</x:Double>
-    <x:Double x:Key="ListViewItemDisabledThemeOpacity">0.55</x:Double>
 
     <Thickness x:Key="HamburgerMenuItemBorderThickness">1</Thickness>
     <Thickness x:Key="TopHamburgerMenuItemContentOnlyContentPresenterMargin">12,0</Thickness>

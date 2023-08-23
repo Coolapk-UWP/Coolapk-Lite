@@ -131,24 +131,32 @@ namespace CoolapkLite.Pages
             { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(); }
             if (HamburgerMenuFrame.SourcePageType != null)
             {
-                MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
-                if (item != default)
+                if (e.Parameter is BrowserViewModel browserViewModel)
                 {
-                    HamburgerMenu.SelectedOptionsIndex = -1;
-                    HamburgerMenu.SelectedIndex = item.Index;
+                    HamburgerMenu.SelectedIndex = -1;
+                    HamburgerMenu.SelectedOptionsIndex = browserViewModel.IsLoginPage == true ? 0 : -1;
                 }
                 else
                 {
-                    item = (HamburgerMenu.OptionsItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
+                    MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                     if (item != default)
                     {
-                        HamburgerMenu.SelectedIndex = -1;
-                        HamburgerMenu.SelectedOptionsIndex = item.Index;
+                        HamburgerMenu.SelectedOptionsIndex = -1;
+                        HamburgerMenu.SelectedIndex = item.Index;
                     }
                     else
                     {
-                        HamburgerMenu.SelectedIndex = -1;
-                        HamburgerMenu.SelectedOptionsIndex = -1;
+                        item = (HamburgerMenu.OptionsItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
+                        if (item != default)
+                        {
+                            HamburgerMenu.SelectedIndex = -1;
+                            HamburgerMenu.SelectedOptionsIndex = item.Index;
+                        }
+                        else
+                        {
+                            HamburgerMenu.SelectedIndex = -1;
+                            HamburgerMenu.SelectedOptionsIndex = -1;
+                        }
                     }
                 }
             }
