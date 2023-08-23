@@ -64,7 +64,8 @@
                                     Grid.Column="0"
                                     Content="&#xE72B;"
                                     IsEnabled="{TemplateBinding IsBackEnabled}"
-                                    Style="{ThemeResource TitleBarIconButtonStyle}" />
+                                    Style="{ThemeResource TitleBarIconButtonStyle}"
+                                    Visibility="Collapsed" />
 
                                 <TextBlock
                                     x:Name="TitleText"
@@ -114,7 +115,8 @@
                                         helpers:FocusVisualHelper.FocusVisualMargin="0"
                                         Content="&#xE72C;"
                                         IsEnabled="{TemplateBinding IsRefreshEnabled}"
-                                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                                        Style="{StaticResource TitleBarIconButtonStyle}"
+                                        Visibility="Collapsed" />
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -126,7 +128,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="BackButtonVisibilityGroup">
-                                <VisualState x:Name="BackButtonVisible" />
+                                <VisualState x:Name="BackButtonVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="BackButton.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="BackButtonCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
@@ -136,7 +142,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="RefreshButtonVisibilityGroup">
-                                <VisualState x:Name="RefreshButtonVisible" />
+                                <VisualState x:Name="RefreshButtonVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="RefreshButton.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="RefreshButtonCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="RefreshButton.Visibility" Value="Collapsed" />

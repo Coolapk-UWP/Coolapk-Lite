@@ -14,7 +14,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="PivotHeaderItem">
                     <Grid
-                        x:Name="LayoutRoot"
+                        x:Name="Grid"
                         Background="{TemplateBinding Background}"
                         Control.IsTemplateFocusTarget="True">
                         <Grid.RenderTransform>
@@ -30,8 +30,7 @@
                             BorderThickness="{TemplateBinding BorderThickness}" />
                         <ContentPresenter
                             x:Name="ContentPresenter"
-                            Grid.Column="1"
-                            Margin="{ThemeResource TopNavigationViewItemContentOnlyContentPresenterMargin}"
+                            Margin="{ThemeResource TopHamburgerMenuItemContentOnlyContentPresenterMargin}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             AutomationProperties.AccessibilityView="Raw"
@@ -39,7 +38,6 @@
                             ContentTemplate="{TemplateBinding ContentTemplate}"
                             ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
                             ContentTransitions="{TemplateBinding ContentTransitions}"
-                            Foreground="{TemplateBinding Foreground}"
                             OpticalMarginAlignment="TrimSideBearings"
                             TextWrapping="NoWrap" />
                         <Grid
@@ -89,7 +87,7 @@
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundSelected}" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundSelected}" />
                                         <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelected}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundSelected}" />
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
@@ -97,14 +95,14 @@
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPointerOver}" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPointerOver}" />
                                         <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundPointerOver}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPointerOver}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="SelectedPointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPointerOver}" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPointerOver}" />
                                         <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPointerOver}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPointerOver}" />
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
@@ -112,14 +110,14 @@
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPressed">
                                     <VisualState.Setters>
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPressed}" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPressed}" />
                                         <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundPressed}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPressed}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="SelectedPressed">
                                     <VisualState.Setters>
-                                        <Setter Target="LayoutRoot.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPressed}" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPressed}" />
                                         <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPressed}" />
                                         <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPressed}" />
                                         <Setter Target="SelectionIndicator.Opacity" Value="1.0" />

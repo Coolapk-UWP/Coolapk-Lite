@@ -15,7 +15,6 @@ namespace CoolapkLite.ViewModels.FeedPages
         public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
 
         private readonly CoolapkListProvider Provider;
-        private readonly UriType _type = UriType.CheckLoginInfo;
 
         internal HistoryViewModel()
         {

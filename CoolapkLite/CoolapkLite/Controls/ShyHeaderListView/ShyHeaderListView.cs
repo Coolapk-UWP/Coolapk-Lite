@@ -30,7 +30,6 @@ namespace CoolapkLite.Controls
 
         private double _topHeight;
         private bool? _isThreshold;
-        private CompositionPropertySet _propSet;
         private ScrollProgressProvider _progressProvider;
         private readonly bool HasGetElementVisual = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 

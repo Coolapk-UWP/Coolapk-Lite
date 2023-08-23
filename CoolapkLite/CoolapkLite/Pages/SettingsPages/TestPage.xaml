@@ -218,7 +218,7 @@
                 <control:SettingsGroup Header="发帖测试">
                     <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />
                 </control:SettingsGroup>
-                <control:SettingsGroup Header="一个图片" Visibility="Collapsed">
+                <!--<control:SettingsGroup Header="一个图片" Visibility="Collapsed">
                     <Grid Background="#181819" Visibility="Collapsed">
                         <FontIcon FontSize="900" Glyph="&#xEB5E;" />
                         <Grid Visibility="Collapsed">
@@ -239,7 +239,7 @@
                                 Glyph="" />
                         </Grid>
                     </Grid>
-                </control:SettingsGroup>
+                </control:SettingsGroup>-->
                 <control:SettingsGroup Header="设备信息">
                     <Grid>
                         <Grid.ColumnDefinitions>

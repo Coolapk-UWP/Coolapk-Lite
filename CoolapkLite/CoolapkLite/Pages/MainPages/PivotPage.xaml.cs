@@ -385,13 +385,13 @@ namespace CoolapkLite.Pages
             ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");
             ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
             {
-                new PivotItem() { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem() { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
-                new PivotItem() { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
-                new PivotItem() { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
-                new PivotItem() { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
-                new PivotItem() { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
-                new PivotItem() { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
+                new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
+                new PivotItem { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
+                new PivotItem { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
+                new PivotItem { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
+                new PivotItem { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
+                new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
             };
             return items;
         }

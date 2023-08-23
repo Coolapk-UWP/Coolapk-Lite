@@ -13,8 +13,6 @@ namespace CoolapkLite.Controls
     {
         private PivotHeader _pivotHeader;
 
-        private double _topHeight;
-
         public static readonly DependencyProperty LeftHeaderProperty =
             DependencyProperty.Register(
                 nameof(LeftHeader),
