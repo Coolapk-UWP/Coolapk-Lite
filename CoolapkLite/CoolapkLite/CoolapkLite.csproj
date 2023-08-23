@@ -351,7 +351,7 @@
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
-    <Compile Include="Helpers\TipsRectangleHelper.cs" />
+    <Compile Include="Helpers\Controls\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\Converters\FontSizeToHeightConverter.cs" />
     <Compile Include="Helpers\Converters\HTMLToTextConverter.cs" />

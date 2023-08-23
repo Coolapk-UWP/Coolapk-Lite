@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
+﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,17 +11,19 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Hosting;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Common
 {
     public class AnimateSelectionProvider : DependencyObject
     {
-        private readonly bool HasGetElementVisual = /*SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) &&*/ ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
-
         private static readonly Vector2 c_frame1point1 = new Vector2(0.9f, 0.1f);
         private static readonly Vector2 c_frame1point2 = new Vector2(1.0f, 0.2f);
         private static readonly Vector2 c_frame2point1 = new Vector2(0.1f, 0.9f);
         private static readonly Vector2 c_frame2point2 = new Vector2(0.2f, 1f);
+
+        private readonly bool HasGetElementVisual = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         #region IndicatorName
 
@@ -94,18 +97,18 @@ namespace CoolapkLite.Common
             {
                 if (itemsControl is Selector selector)
                 {
-                    selector.SelectionChanged -= itemsControl_SelectionChanged;
-                    selector.SelectionChanged += itemsControl_SelectionChanged;
+                    selector.SelectionChanged -= ItemsControl_SelectionChanged;
+                    selector.SelectionChanged += ItemsControl_SelectionChanged;
                 }
                 else if(itemsControl is Pivot pivot)
                 {
-                    pivot.SelectionChanged -= itemsControl_SelectionChanged;
-                    pivot.SelectionChanged += itemsControl_SelectionChanged;
+                    pivot.SelectionChanged -= ItemsControl_SelectionChanged;
+                    pivot.SelectionChanged += ItemsControl_SelectionChanged;
                 }
             }
         }
 
-        private void itemsControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ItemsControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (sender is ListViewBase listView)
             {
@@ -147,12 +150,6 @@ namespace CoolapkLite.Common
         // when the layout is invalidated as it's called in OnLayoutUpdated.
         private void AnimateSelectionChanged(object nextItem)
         {
-            // If we are delaying animation due to item movement in top nav overflow, don't do anything
-            if (m_lastSelectedItemPendingAnimationInTopNav != null)
-            {
-                return;
-            }
-
             UIElement prevIndicator = m_activeIndicator;
             UIElement nextIndicator = FindSelectionIndicator(nextItem);
 
@@ -173,7 +170,7 @@ namespace CoolapkLite.Common
                 else
                 {
                     // If the last animation is still playing, force it to complete.
-                    OnAnimationComplete(null, null);
+                    OnAnimationComplete();
                 }
             }
 
@@ -211,60 +208,112 @@ namespace CoolapkLite.Common
                         areElementsAtSameDepth = prevPosPoint.X == nextPosPoint.X;
                     }
 
-                    Visual visual = ElementCompositionPreview.GetElementVisual(paneContentGrid);
-                    CompositionScopedBatch scopedBatch = visual.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
-
-                    if (!areElementsAtSameDepth)
+                    if (HasGetElementVisual)
                     {
-                        bool isNextBelow = prevPosPoint.Y < nextPosPoint.Y;
-                        if (prevIndicator.RenderSize.Height > prevIndicator.RenderSize.Width)
+                        Visual visual = ElementCompositionPreview.GetElementVisual(paneContentGrid);
+                        CompositionScopedBatch scopedBatch = visual.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
+
+                        if (!areElementsAtSameDepth)
                         {
-                            PlayIndicatorNonSameLevelAnimations(prevIndicator, true, isNextBelow ? false : true);
+                            bool isNextBelow = prevPosPoint.Y < nextPosPoint.Y;
+                            if (prevIndicator.RenderSize.Height > prevIndicator.RenderSize.Width)
+                            {
+                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, isNextBelow ? false : true);
+                            }
+                            else
+                            {
+                                PlayIndicatorNonSameLevelTopPrimaryAnimation(prevIndicator, true);
+                            }
+
+                            if (nextIndicator.RenderSize.Height > nextIndicator.RenderSize.Width)
+                            {
+                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow ? true : false);
+                            }
+                            else
+                            {
+                                PlayIndicatorNonSameLevelTopPrimaryAnimation(nextIndicator, false);
+                            }
                         }
                         else
                         {
-                            PlayIndicatorNonSameLevelTopPrimaryAnimation(prevIndicator, true);
+                            double outgoingEndPosition = nextPos - prevPos;
+                            double incomingStartPosition = prevPos - nextPos;
+
+                            // Play the animation on both the previous and next indicators
+                            PlayIndicatorAnimations(prevIndicator,
+                                0,
+                                outgoingEndPosition,
+                                prevSize,
+                                nextSize,
+                                true);
+                            PlayIndicatorAnimations(nextIndicator,
+                                incomingStartPosition,
+                                0,
+                                prevSize,
+                                nextSize,
+                                false);
                         }
 
-                        if (nextIndicator.RenderSize.Height > nextIndicator.RenderSize.Width)
-                        {
-                            PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow ? true : false);
-                        }
-                        else
-                        {
-                            PlayIndicatorNonSameLevelTopPrimaryAnimation(nextIndicator, false);
-                        }
+                        scopedBatch.End();
+                        m_prevIndicator = prevIndicator;
+                        m_nextIndicator = nextIndicator;
 
+                        scopedBatch.Completed += (sender, args) => OnAnimationComplete();
                     }
                     else
                     {
-                        double outgoingEndPosition = nextPos - prevPos;
-                        double incomingStartPosition = prevPos - nextPos;
+                        Storyboard storyboard = new Storyboard();
 
-                        // Play the animation on both the previous and next indicators
-                        PlayIndicatorAnimations(prevIndicator,
-                            0,
-                            outgoingEndPosition,
-                            prevSize,
-                            nextSize,
-                            true);
-                        PlayIndicatorAnimations(nextIndicator,
-                            incomingStartPosition,
-                            0,
-                            prevSize,
-                            nextSize,
-                            false);
-                    }
-
-                    scopedBatch.End();
-                    m_prevIndicator = prevIndicator;
-                    m_nextIndicator = nextIndicator;
-
-                    scopedBatch.Completed +=
-                        (object sender, CompositionBatchCompletedEventArgs args) =>
+                        if (!areElementsAtSameDepth)
                         {
-                            OnAnimationComplete(sender, args);
-                        };
+                            bool isNextBelow = prevPosPoint.Y < nextPosPoint.Y;
+                            if (prevIndicator.RenderSize.Height > prevIndicator.RenderSize.Width)
+                            {
+                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, isNextBelow ? false : true, storyboard.Children);
+                            }
+                            else
+                            {
+                                PlayIndicatorNonSameLevelTopPrimaryAnimation(prevIndicator, true, storyboard.Children);
+                            }
+
+                            if (nextIndicator.RenderSize.Height > nextIndicator.RenderSize.Width)
+                            {
+                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow ? true : false, storyboard.Children);
+                            }
+                            else
+                            {
+                                PlayIndicatorNonSameLevelTopPrimaryAnimation(nextIndicator, false, storyboard.Children);
+                            }
+                        }
+                        else
+                        {
+                            double outgoingEndPosition = nextPos - prevPos;
+                            double incomingStartPosition = prevPos - nextPos;
+
+                            // Play the animation on both the previous and next indicators
+                            PlayIndicatorAnimations(prevIndicator,
+                                0,
+                                outgoingEndPosition,
+                                prevSize,
+                                nextSize,
+                                true,
+                                storyboard.Children);
+                            PlayIndicatorAnimations(nextIndicator,
+                                incomingStartPosition,
+                                0,
+                                prevSize,
+                                nextSize,
+                                false,
+                                storyboard.Children);
+                        }
+
+                        m_prevIndicator = prevIndicator;
+                        m_nextIndicator = nextIndicator;
+
+                        storyboard.Completed += (sender, args) => OnAnimationComplete();
+
+                        storyboard.Begin();
+                    }
                 }
                 else
                 {
@@ -385,7 +434,265 @@ namespace CoolapkLite.Common
             }
         }
 
-        private void OnAnimationComplete(object sender, CompositionBatchCompletedEventArgs args)
+        private void PlayIndicatorNonSameLevelAnimations(UIElement indicator, bool isOutgoing, bool fromTop, TimelineCollection animations)
+        {
+            // Determine scaling of indicator (whether it is appearing or disappearing)
+            double beginScale = isOutgoing ? 1.0 : 0.0;
+            double endScale = isOutgoing ? 0.0 : 1.0;
+            DoubleAnimationUsingKeyFrames scaleAnim = new DoubleAnimationUsingKeyFrames
+            {
+                KeyFrames =
+                {
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                        Value = beginScale
+                    },
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(600)),
+                        Value = endScale
+                    }
+                },
+                Duration = TimeSpan.FromMilliseconds(600)
+            };
+            animations.Add(scaleAnim);
+
+            // Determine where the indicator is animating from/to
+            Size size = indicator.RenderSize;
+            double dimension = IsTopNavigationView ? size.Width : size.Height;
+            double newCenter = fromTop ? 0.0 : dimension;
+            Point indicatorCenterPoint = new Point
+            {
+                Y = newCenter
+            };
+
+            Storyboard.SetTarget(scaleAnim, indicator);
+            Storyboard.SetTargetProperty(scaleAnim, s_scaleYPath);
+            PrepareIndicatorForAnimation(indicator, indicatorCenterPoint);
+        }
+
+        private void PlayIndicatorNonSameLevelTopPrimaryAnimation(UIElement indicator, bool isOutgoing, TimelineCollection animations)
+        {
+            // Determine scaling of indicator (whether it is appearing or disappearing)
+            double beginScale = isOutgoing ? 1.0 : 0.0;
+            double endScale = isOutgoing ? 0.0 : 1.0;
+            DoubleAnimationUsingKeyFrames scaleAnim = new DoubleAnimationUsingKeyFrames
+            {
+                KeyFrames =
+                {
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                        Value = beginScale
+                    },
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(600)),
+                        Value = endScale
+                    }
+                },
+                Duration = TimeSpan.FromMilliseconds(600)
+            };
+            animations.Add(scaleAnim);
+
+            // Determine where the indicator is animating from/to
+            Size size = indicator.RenderSize;
+            double newCenter = size.Width / 2;
+            Point indicatorCenterPoint = new Point
+            {
+                Y = newCenter
+            };
+
+            Storyboard.SetTarget(scaleAnim, indicator);
+            Storyboard.SetTargetProperty(scaleAnim, s_scaleXPath);
+            PrepareIndicatorForAnimation(indicator, indicatorCenterPoint);
+        }
+
+        private void PlayIndicatorAnimations(UIElement indicator, double from, double to, Size beginSize, Size endSize, bool isOutgoing, TimelineCollection animations)
+        {
+            Size size = indicator.RenderSize;
+            double dimension = IsTopNavigationView ? size.Width : size.Height;
+
+            double beginScale = 1.0;
+            double endScale = 1.0;
+            if (IsTopNavigationView && size.Width > 0.001)
+            {
+                beginScale = beginSize.Width / size.Width;
+                endScale = endSize.Width / size.Width;
+            }
+
+            if (isOutgoing)
+            {
+                // fade the outgoing indicator so it looks nice when animating over the scroll area
+                DoubleAnimationUsingKeyFrames opacityAnim = new DoubleAnimationUsingKeyFrames
+                {
+                    KeyFrames =
+                    {
+                        new DiscreteDoubleKeyFrame
+                        {
+                            KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                            Value = 1.0
+                        },
+                        new DiscreteDoubleKeyFrame
+                        {
+                            KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200)),
+                            Value = 1.0
+                        },
+                        new SplineDoubleKeyFrame
+                        {
+                            KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(600)),
+                            Value = 0.0,
+                            KeySpline = new KeySpline
+                            {
+                                ControlPoint1 = new Point
+                                {
+                                    X = c_frame2point1.X,
+                                    Y = c_frame2point1.Y
+                                },
+                                ControlPoint2 = new Point
+                                {
+                                    X = c_frame2point2.X,
+                                    Y = c_frame2point2.Y
+                                }
+                            }
+                        }
+                    },
+                    Duration = TimeSpan.FromMilliseconds(600)
+                };
+                Storyboard.SetTarget(opacityAnim, indicator);
+                Storyboard.SetTargetProperty(opacityAnim, s_opacityPath);
+                animations.Add(opacityAnim);
+            }
+
+            DoubleAnimationUsingKeyFrames posAnim = new DoubleAnimationUsingKeyFrames
+            {
+                KeyFrames =
+                {
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                        Value = from < to ? from : (from + (dimension * (beginScale - 1)))
+                    },
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200)),
+                        Value = from < to ? (to + (dimension * (endScale - 1))) : to
+                    }
+                },
+                Duration = TimeSpan.FromMilliseconds(600)
+            };
+            Storyboard.SetTarget(posAnim, indicator);
+            animations.Add(posAnim);
+
+            DoubleAnimationUsingKeyFrames scaleAnim = new DoubleAnimationUsingKeyFrames
+            {
+                KeyFrames =
+                {
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                        Value = beginScale
+                    },
+                    new SplineDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200)),
+                        Value = Math.Abs(to - from) / dimension + (from < to ? endScale : beginScale),
+                        KeySpline = new KeySpline
+                        {
+                            ControlPoint1 = new Point
+                            {
+                                X = c_frame1point1.X,
+                                Y = c_frame1point1.Y
+                            },
+                            ControlPoint2 = new Point
+                            {
+                                X = c_frame1point2.X,
+                                Y = c_frame1point2.Y
+                            }
+                        }
+                    },
+                    new SplineDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(600)),
+                        Value = endScale,
+                        KeySpline = new KeySpline
+                        {
+                            ControlPoint1 = new Point
+                            {
+                                X = c_frame2point1.X,
+                                Y = c_frame2point1.Y
+                            },
+                            ControlPoint2 = new Point
+                            {
+                                X = c_frame2point2.X,
+                                Y = c_frame2point2.Y
+                            }
+                        }
+                    }
+                },
+                Duration = TimeSpan.FromMilliseconds(600)
+            };
+            Storyboard.SetTarget(scaleAnim, indicator);
+            animations.Add(scaleAnim);
+
+            DoubleAnimationUsingKeyFrames centerAnim = new DoubleAnimationUsingKeyFrames
+            {
+                KeyFrames =
+                {
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(0)),
+                        Value = from < to ? 0.0 : dimension
+                    },
+                    new DiscreteDoubleKeyFrame
+                    {
+                        KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200)),
+                        Value = from < to ? dimension : 0.0
+                    }
+                },
+                Duration = TimeSpan.FromMilliseconds(200)
+            };
+            Storyboard.SetTarget(centerAnim, indicator);
+            animations.Add(centerAnim);
+
+            if (IsTopNavigationView)
+            {
+                Storyboard.SetTargetProperty(posAnim, s_translateXPath);
+                Storyboard.SetTargetProperty(scaleAnim, s_scaleXPath);
+                Storyboard.SetTargetProperty(centerAnim, s_centerXPath);
+            }
+            else
+            {
+                Storyboard.SetTargetProperty(posAnim, s_translateYPath);
+                Storyboard.SetTargetProperty(scaleAnim, s_scaleYPath);
+                Storyboard.SetTargetProperty(centerAnim, s_centerYPath);
+            }
+
+            PrepareIndicatorForAnimation(indicator);
+        }
+
+        private void PrepareIndicatorForAnimation(UIElement indicator, Point? centerPoint = null)
+        {
+            if (!(indicator.RenderTransform is CompositeTransform))
+            {
+                indicator.RenderTransform = new CompositeTransform();
+            }
+
+            if (centerPoint.HasValue)
+            {
+                CompositeTransform scaleTransform = (CompositeTransform)indicator.RenderTransform;
+                scaleTransform.CenterX = centerPoint.Value.X;
+                scaleTransform.CenterY = centerPoint.Value.Y;
+            }
+
+            if (indicator.CacheMode == null)
+            {
+                indicator.CacheMode = m_bitmapCache;
+            }
+        }
+
+        private void OnAnimationComplete()
         {
             UIElement indicator = m_prevIndicator;
             ResetElementAnimationProperties(indicator, 0.0f);
@@ -401,11 +708,31 @@ namespace CoolapkLite.Common
             if (element != null)
             {
                 element.Opacity = desiredOpacity;
-                if (ElementCompositionPreview.GetElementVisual(element) is Visual visual)
+
+                if (HasGetElementVisual)
                 {
-                    visual.Offset = new Vector3(0.0f, 0.0f, 0.0f);
-                    visual.Scale = new Vector3(1.0f, 1.0f, 1.0f);
-                    visual.Opacity = desiredOpacity;
+                    if (ElementCompositionPreview.GetElementVisual(element) is Visual visual)
+                    {
+                        visual.Offset = new Vector3(0.0f, 0.0f, 0.0f);
+                        visual.Scale = new Vector3(1.0f, 1.0f, 1.0f);
+                        visual.Opacity = desiredOpacity;
+                    }
+                }
+                else
+                {
+                    if (element.RenderTransform is CompositeTransform compositeTransform)
+                    {
+                        compositeTransform.SetValue(CompositeTransform.TranslateXProperty, 0.0);
+                        compositeTransform.SetValue(CompositeTransform.TranslateYProperty, 0.0);
+                        compositeTransform.SetValue(CompositeTransform.ScaleXProperty, 1.0);
+                        compositeTransform.SetValue(CompositeTransform.ScaleYProperty, 1.0);
+                        compositeTransform.ClearValue(CompositeTransform.CenterXProperty);
+                        compositeTransform.ClearValue(CompositeTransform.CenterYProperty);
+                    }
+                    else
+                    {
+                        element.ClearValue(UIElement.RenderTransformProperty);
+                    }
                 }
             }
         }
@@ -420,7 +747,7 @@ namespace CoolapkLite.Common
                     {
                         return FindSelectionIndicator(pivot, item);
                     }
-                    else if (itemsControl.ContainerFromItem(item) is FrameworkElement container)
+                    else if (itemsControl.ContainerFromItem(item) is UIElement container)
                     {
                         if (container.FindDescendant(IndicatorName) is UIElement indicator)
                         {
@@ -443,24 +770,21 @@ namespace CoolapkLite.Common
         {
             if (item != null && pivot != null)
             {
-                if (pivot.ContainerFromItem(item) is PivotItem container)
+                int index = pivot.Items.IndexOf(item);
+                if (index != -1)
                 {
-                    UIElementCollection targetItemHeaders = pivot?.FindDescendant<PivotHeaderPanel>().Children;
-                    foreach (UIElement header in targetItemHeaders)
+                    if (pivot.FindDescendant<PivotHeaderPanel>()?.Children[index] is UIElement container)
                     {
-                        if (header is PivotHeaderItem pivotHeaderItem && pivotHeaderItem?.FindDescendant<TextBlock>().Text == container.Header.ToString())
+                        if (container.FindDescendant(IndicatorName) is UIElement indicator)
                         {
-                            if (pivotHeaderItem.FindDescendant(IndicatorName) is UIElement indicator)
-                            {
-                                return indicator;
-                            }
-                            else
-                            {
-                                // Indicator was not found, so maybe the layout hasn't updated yet.
-                                // So let's do that now.
-                                pivotHeaderItem.UpdateLayout();
-                                return pivotHeaderItem.FindDescendant(IndicatorName);
-                            }
+                            return indicator;
+                        }
+                        else
+                        {
+                            // Indicator was not found, so maybe the layout hasn't updated yet.
+                            // So let's do that now.
+                            container.UpdateLayout();
+                            return container.FindDescendant(IndicatorName);
                         }
                     }
                 }
@@ -472,7 +796,16 @@ namespace CoolapkLite.Common
         private UIElement m_prevIndicator;
         private UIElement m_nextIndicator;
         private UIElement m_activeIndicator;
-        private readonly object m_lastSelectedItemPendingAnimationInTopNav;
+
+        private const string s_opacityPath = "Opacity";
+        private const string s_centerXPath = "(UIElement.RenderTransform).(CompositeTransform.CenterX)";
+        private const string s_centerYPath = "(UIElement.RenderTransform).(CompositeTransform.CenterY)";
+        private const string s_scaleXPath = "(UIElement.RenderTransform).(CompositeTransform.ScaleX)";
+        private const string s_scaleYPath = "(UIElement.RenderTransform).(CompositeTransform.ScaleY)";
+        private const string s_translateXPath = "(UIElement.RenderTransform).(CompositeTransform.TranslateX)";
+        private const string s_translateYPath = "(UIElement.RenderTransform).(CompositeTransform.TranslateY)";
+
+        readonly BitmapCache m_bitmapCache = new BitmapCache();
 
         private bool IsTopNavigationView => Orientation == Orientation.Horizontal;
     }
