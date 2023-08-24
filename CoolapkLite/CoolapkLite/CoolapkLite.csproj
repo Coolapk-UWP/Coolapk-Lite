@@ -213,6 +213,8 @@
       <DependentUpon>ShyHeaderPivotListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StackPanel.cs" />
+    <Compile Include="Controls\TextBlockEx\TextBlockEx.cs" />
+    <Compile Include="Controls\TextBlockEx\TextBlockEx.Properties.cs" />
     <Compile Include="Controls\TitleBar\TitleBar.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
@@ -228,6 +230,7 @@
     <Compile Include="Helpers\Converters\ConverterTools.cs" />
     <Compile Include="Helpers\Converters\DateLineToReadableConverter.cs" />
     <Compile Include="Helpers\Converters\NumMultConverter.cs" />
+    <Compile Include="Helpers\Converters\NumAddConverter.cs" />
     <Compile Include="Helpers\Converters\StringToBoolConverter.cs" />
     <Compile Include="Helpers\Converters\ZoomToolTipValueConverter.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
@@ -335,9 +338,6 @@
     <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
       <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TextBlockEx.xaml.cs">
-      <DependentUpon>TextBlockEx.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TwoPaneView\TwoPaneView.cs">
       <DependentUpon>TwoPaneView.xaml</DependentUpon>
     </Compile>
@@ -353,7 +353,6 @@
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
     <Compile Include="Helpers\Controls\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Helpers\Converters\FontSizeToHeightConverter.cs" />
     <Compile Include="Helpers\Converters\HTMLToTextConverter.cs" />
     <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
@@ -1193,7 +1192,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TextBlockEx.xaml">
+    <Page Include="Controls\TextBlockEx\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

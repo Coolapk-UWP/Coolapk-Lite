@@ -14,6 +14,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -24,95 +25,41 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// 基于 Cyenoch 的 MyRichTextBlock 控件和 Coolapk UWP 项目的 TextBlockEx 控件重制
     /// </summary>
-    public sealed partial class TextBlockEx : UserControl
+    [ContentProperty(Name = nameof(Text))]
+    [TemplatePart(Name = RichTextBlockName, Type = typeof(RichTextBlock))]
+    public partial class TextBlockEx : Control
     {
+        private const string RichTextBlockName = "PART_RichTextBlock";
         public const string AuthorBorder = "<div class=\"author-border\"/>";
+
+        private RichTextBlock RichTextBlock;
         private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
 
-        public static readonly DependencyProperty TextProperty =
-            DependencyProperty.Register(
-                nameof(Text),
-                typeof(string),
-                typeof(TextBlockEx),
-                new PropertyMetadata(string.Empty, new PropertyChangedCallback(OnTextChanged)));
+        /// <summary>
+        /// Creates a new instance of the <see cref="TextBlockEx"/> class.
+        /// </summary>
+        public TextBlockEx() => DefaultStyleKey = typeof(TextBlockEx);
 
-        public static readonly DependencyProperty MaxLinesProperty =
-            DependencyProperty.Register(
-                nameof(MaxLines),
-                typeof(int),
-                typeof(TextBlockEx),
-                null);
-
-        public static readonly DependencyProperty TextTrimmingProperty =
-            DependencyProperty.Register(
-                nameof(TextTrimming),
-                typeof(TextTrimming),
-                typeof(TextBlockEx),
-                new PropertyMetadata(TextTrimming.CharacterEllipsis));
-
-        public static readonly DependencyProperty TextWrappingProperty =
-            DependencyProperty.Register(
-                nameof(TextWrapping),
-                typeof(TextWrapping),
-                typeof(TextBlockEx),
-                new PropertyMetadata(TextWrapping.Wrap));
-
-        public static readonly DependencyProperty IsTextSelectionEnabledProperty =
-            DependencyProperty.Register(
-                nameof(IsTextSelectionEnabled),
-                typeof(bool),
-                typeof(TextBlockEx),
-                new PropertyMetadata(false));
-
-        public string Text
+        protected override void OnApplyTemplate()
         {
-            get => (string)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
+            base.OnApplyTemplate();
+            RichTextBlock = GetTemplateChild(RichTextBlockName) as RichTextBlock;
+            RenderTextBlock();
         }
 
-        public int MaxLines
+        private void RenderTextBlock()
         {
-            get => (int)GetValue(MaxLinesProperty);
-            set => SetValue(MaxLinesProperty, value);
-        }
-
-        public TextTrimming TextTrimming
-        {
-            get => (TextTrimming)GetValue(TextTrimmingProperty);
-            set => SetValue(TextTrimmingProperty, value);
-        }
-
-        public TextWrapping TextWrapping
-        {
-            get => (TextWrapping)GetValue(TextWrappingProperty);
-            set => SetValue(TextWrappingProperty, value);
-        }
-
-        public bool IsTextSelectionEnabled
-        {
-            get => (bool)GetValue(IsTextSelectionEnabledProperty);
-            set => SetValue(IsTextSelectionEnabledProperty, value);
-        }
-
-        private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            (d as TextBlockEx).GetTextBlock();
-        }
-
-        public TextBlockEx() => InitializeComponent();
-
-        private void GetTextBlock()
-        {
+            if (RichTextBlock == null) { return; }
             RichTextBlock.Blocks.Clear();
             HtmlDocument doc = new HtmlDocument();
             Regex emojis = new Regex(@"(\[\S*?\]|#\(\S*?\))");
             doc.LoadHtml(Text.Replace("<!--break-->", string.Empty));
-            Paragraph paragraph = new Paragraph { LineHeight = FontSize + 10 };
+            Paragraph paragraph = new Paragraph();
             ImmutableArray<ImageModel>.Builder imageArrayBuilder = ImmutableArray.CreateBuilder<ImageModel>();
             void NewLine()
             {
                 RichTextBlock.Blocks.Add(paragraph);
-                paragraph = new Paragraph { LineHeight = FontSize + 10 };
+                paragraph = new Paragraph();
             }
             void AddText(string item) => paragraph.Inlines.Add(new Run { Text = WebUtility.HtmlDecode(item) });
             HtmlNodeCollection nodes = doc.DocumentNode.ChildNodes;
@@ -143,10 +90,11 @@ namespace CoolapkLite.Controls
                                             };
                                             viewbox.SetBinding(WidthProperty, new Binding
                                             {
+                                                Path = new PropertyPath(nameof(FontSize)),
                                                 Source = this,
-                                                Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToHeightConverter(),
-                                                Path = new PropertyPath(nameof(FontSize))
+                                                Converter = new NumMultConverter(),
+                                                ConverterParameter = 4d / 3d,
+                                                Mode = BindingMode.OneWay
                                             });
                                             container.Child = viewbox;
                                             paragraph.Inlines.Add(container);
@@ -169,10 +117,11 @@ namespace CoolapkLite.Controls
                                             };
                                             viewbox.SetBinding(WidthProperty, new Binding
                                             {
+                                                Path = new PropertyPath(nameof(FontSize)),
                                                 Source = this,
-                                                Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToHeightConverter(),
-                                                Path = new PropertyPath(nameof(FontSize))
+                                                Converter = new NumMultConverter(),
+                                                ConverterParameter = 4d / 3d,
+                                                Mode = BindingMode.OneWay
                                             });
                                             container.Child = viewbox;
                                             paragraph.Inlines.Add(container);
@@ -190,10 +139,11 @@ namespace CoolapkLite.Controls
                                             };
                                             viewbox.SetBinding(WidthProperty, new Binding
                                             {
+                                                Path = new PropertyPath(nameof(FontSize)),
                                                 Source = this,
-                                                Mode = BindingMode.OneWay,
-                                                Converter = new FontSizeToHeightConverter(),
-                                                Path = new PropertyPath(nameof(FontSize))
+                                                Converter = new NumMultConverter(),
+                                                ConverterParameter = 4d / 3d,
+                                                Mode = BindingMode.OneWay
                                             });
                                             container.Child = viewbox;
                                             paragraph.Inlines.Add(container);
@@ -250,9 +200,9 @@ namespace CoolapkLite.Controls
                                 imageModel = new ImageModel(src, SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ImageType.OriginImage : ImageType.SmallImage);
                                 image.SetBinding(Image.SourceProperty, new Binding
                                 {
+                                    Path = new PropertyPath(nameof(imageModel.Pic)),
                                     Source = imageModel,
-                                    Mode = BindingMode.OneWay,
-                                    Path = new PropertyPath(nameof(imageModel.Pic))
+                                    Mode = BindingMode.OneWay
                                 });
                                 if (!string.IsNullOrEmpty(alt))
                                 {
@@ -269,10 +219,11 @@ namespace CoolapkLite.Controls
                                     };
                                     viewbox.SetBinding(WidthProperty, new Binding
                                     {
+                                        Path = new PropertyPath(nameof(FontSize)),
                                         Source = this,
-                                        Mode = BindingMode.OneWay,
-                                        Converter = new FontSizeToHeightConverter(),
-                                        Path = new PropertyPath(nameof(FontSize))
+                                        Converter = new NumMultConverter(),
+                                        ConverterParameter = 4d / 3d,
+                                        Mode = BindingMode.OneWay
                                     });
                                     container.Child = viewbox;
                                     paragraph.Inlines.Add(container);
@@ -330,10 +281,10 @@ namespace CoolapkLite.Controls
                                     };
                                     WidePicBorder.SetBinding(VisibilityProperty, new Binding
                                     {
+                                        Path = new PropertyPath(nameof(imageModel.IsWidePic)),
                                         Source = imageModel,
-                                        Mode = BindingMode.OneWay,
                                         Converter = new BoolToVisibilityConverter(),
-                                        Path = new PropertyPath(nameof(imageModel.IsWidePic))
+                                        Mode = BindingMode.OneWay
                                     });
 
                                     Border LongPicTextBorder = new Border
@@ -348,10 +299,10 @@ namespace CoolapkLite.Controls
                                     };
                                     LongPicTextBorder.SetBinding(VisibilityProperty, new Binding
                                     {
+                                        Path = new PropertyPath(nameof(imageModel.IsLongPic)),
                                         Source = imageModel,
-                                        Mode = BindingMode.OneWay,
                                         Converter = new BoolToVisibilityConverter(),
-                                        Path = new PropertyPath(nameof(imageModel.IsLongPic))
+                                        Mode = BindingMode.OneWay
                                     });
 
                                     PicSizePanel.Children.Add(WidePicBorder);
@@ -392,27 +343,34 @@ namespace CoolapkLite.Controls
                                 break;
 
                             case "div":
-                                container = new InlineUIContainer();
-                                Border border = new Border
+                                if (node.GetAttributeValue("class", string.Empty) == "author-border")
                                 {
-                                    Margin = new Thickness(4, 0, 4, -4),
-                                    CornerRadius = new CornerRadius(4),
-                                    BorderThickness = new Thickness(1),
-                                    VerticalAlignment = VerticalAlignment.Center,
-                                    BorderBrush = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
-                                };
-                                TextBlock textBlock = new TextBlock
-                                {
-                                    FontSize = 12,
-                                    Margin = new Thickness(1),
-                                    IsTextSelectionEnabled = true,
-                                    Text = _loader.GetString("FeedAuthorText"),
-                                    Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
-                                };
+                                    container = new InlineUIContainer();
+                                    Border border = new Border
+                                    {
+                                        Margin = new Thickness(4, 0, 4, -4),
+                                        CornerRadius = new CornerRadius(4),
+                                        BorderThickness = new Thickness(1),
+                                        VerticalAlignment = VerticalAlignment.Center,
+                                        BorderBrush = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
+                                    };
+                                    TextBlock textBlock = new TextBlock
+                                    {
+                                        FontSize = 12,
+                                        Margin = new Thickness(1),
+                                        IsTextSelectionEnabled = true,
+                                        Text = _loader.GetString("FeedAuthorText"),
+                                        Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
+                                    };
 
-                                border.Child = textBlock;
-                                container.Child = border;
-                                paragraph.Inlines.Add(container);
+                                    border.Child = textBlock;
+                                    container.Child = border;
+                                    paragraph.Inlines.Add(container);
+                                }
+                                else
+                                {
+                                    AddText(node.InnerText);
+                                }
                                 break;
 
                             default: break;

@@ -1,0 +1,49 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:converters="using:CoolapkLite.Helpers.Converters">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary>
+            <converters:NumAddConverter x:Key="NumAddConverter" />
+        </ResourceDictionary>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style BasedOn="{StaticResource DefaultTextBlockExStyle}" TargetType="controls:TextBlockEx" />
+
+    <Style x:Key="DefaultTextBlockExStyle" TargetType="controls:TextBlockEx">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:TextBlockEx">
+                    <Border
+                        Padding="{TemplateBinding Padding}"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <RichTextBlock
+                            x:Name="PART_RichTextBlock"
+                            CharacterSpacing="{TemplateBinding CharacterSpacing}"
+                            FontFamily="{TemplateBinding FontFamily}"
+                            FontSize="{TemplateBinding FontSize}"
+                            FontStretch="{TemplateBinding FontStretch}"
+                            LineHeight="{Binding FontSize, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource NumAddConverter}, ConverterParameter='10'}"
+                            FontStyle="{TemplateBinding FontStyle}"
+                            FontWeight="{TemplateBinding FontWeight}"
+                            Foreground="{TemplateBinding Foreground}"
+                            IsColorFontEnabled="{TemplateBinding IsColorFontEnabled}"
+                            IsTextScaleFactorEnabled="{TemplateBinding IsTextScaleFactorEnabled}"
+                            IsTextSelectionEnabled="{TemplateBinding IsTextSelectionEnabled}"
+                            MaxLines="{TemplateBinding MaxLines}"
+                            SelectionHighlightColor="{TemplateBinding SelectionHighlightColor}"
+                            TextAlignment="{TemplateBinding TextAlignment}"
+                            TextLineBounds="{TemplateBinding TextLineBounds}"
+                            TextReadingOrder="{TemplateBinding TextReadingOrder}"
+                            TextTrimming="{TemplateBinding TextTrimming}"
+                            TextWrapping="{TemplateBinding TextWrapping}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
