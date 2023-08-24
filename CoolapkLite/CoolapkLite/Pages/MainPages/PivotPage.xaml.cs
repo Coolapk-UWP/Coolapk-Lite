@@ -111,7 +111,6 @@ namespace CoolapkLite.Pages
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
-            HideProgressBar();
             if (PivotContentFrame.Visibility == Visibility.Collapsed)
             {
                 Pivot.Visibility = Visibility.Collapsed;
@@ -121,6 +120,7 @@ namespace CoolapkLite.Pages
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
             }
+            UIHelper.HideProgressBar();
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)

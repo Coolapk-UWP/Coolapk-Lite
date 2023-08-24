@@ -126,7 +126,6 @@ namespace CoolapkLite.Pages
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
-            HideProgressBar();
             if (isLoaded && !this.IsAppWindow())
             { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(); }
             if (HamburgerMenuFrame.SourcePageType != null)
@@ -160,6 +159,7 @@ namespace CoolapkLite.Pages
                     }
                 }
             }
+            UIHelper.HideProgressBar();
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)

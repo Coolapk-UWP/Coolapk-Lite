@@ -144,7 +144,7 @@
                             <VisualStateGroup x:Name="RefreshButtonVisibilityGroup">
                                 <VisualState x:Name="RefreshButtonVisible">
                                     <VisualState.Setters>
-                                        <Setter Target="RefreshButton.Visibility" Value="Collapsed" />
+                                        <Setter Target="RefreshButton.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="RefreshButtonCollapsed">
@@ -161,7 +161,11 @@
                                         <Setter Target="ProgressRing.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="ProgressCollapsed" />
+                                <VisualState x:Name="ProgressCollapsed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ProgressRing.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="IconVisibilityGroup">
@@ -170,7 +174,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="TitleTextVisibilityGroup">
-                                <VisualState x:Name="TitleTextVisible" />
+                                <VisualState x:Name="TitleTextVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="TitleText.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="TitleTextCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="TitleText.Visibility" Value="Collapsed" />
