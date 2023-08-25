@@ -580,7 +580,7 @@
     <DataTemplate x:Key="SourceFeedDefaultTemplate">
         <UserControl
             x:Name="RootGrid"
-            Padding="8,4"
+            Margin="8,4"
             Background="{ThemeResource SystemControlTransparentBrush}"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"

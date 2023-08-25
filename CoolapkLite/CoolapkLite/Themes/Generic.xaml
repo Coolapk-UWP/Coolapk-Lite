@@ -11,6 +11,7 @@
         <ResourceDictionary Source="ms-appx:///Controls/SettingsGroup/SettingsGroup.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenu.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/ShyHeaderListView/ShyHeaderListView.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/MediaPlayerElementEx/MediaPlayerElementEx.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PullToRefreshListView/PullToRefreshListView.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/ShyHeaderPivotListView/ShyHeaderPivotListView.xaml" />
     </ResourceDictionary.MergedDictionaries>

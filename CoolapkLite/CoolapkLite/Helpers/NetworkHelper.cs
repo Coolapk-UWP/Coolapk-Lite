@@ -174,11 +174,21 @@ namespace CoolapkLite.Helpers
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
+                if (uri.Host.Contains("coolapk"))
                 {
-                    if (item.Name == "uid" ||
-                        item.Name == "username" ||
-                        item.Name == "token")
+                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
+                    {
+                        if (item.Name == "uid" ||
+                            item.Name == "username" ||
+                            item.Name == "token")
+                        {
+                            yield return (item.Name, item.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
                     {
                         yield return (item.Name, item.Value);
                     }

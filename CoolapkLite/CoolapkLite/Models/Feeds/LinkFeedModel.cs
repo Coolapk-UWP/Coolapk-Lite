@@ -15,8 +15,7 @@ namespace CoolapkLite.Models.Feeds
     public enum LinkType
     {
         ITHome,
-        Coolapk,
-        BiliBili
+        Coolapk
     }
 
     public class LinkFeedModel : ISourceFeedModel, INotifyPropertyChanged
@@ -176,16 +175,6 @@ namespace CoolapkLite.Models.Feeds
             {
                 GetJson(url.TryGetUri(), LinkType.Coolapk);
             }
-            //else if (url.Contains("bilibili") && url.Contains("t.bilibili"))
-            //{
-            //    Match match = Regex.Match(url, @"/t.*?/(\w+)");
-            //    if (match.Success && match.Groups.Count >= 2)
-            //    {
-            //        Uri uri = new Uri("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail");
-            //        MultipartFormDataContent content = new MultipartFormDataContent { { new StringContent(match.Groups[1].Value), "dynamic_id" } };
-            //        GetJson(uri, LinkType.BiliBili, content);
-            //    }
-            //}
             else if (url.Contains("ithome") && url.Contains("content"))
             {
                 Match match = Regex.Match(url, @"(\?|%3F|&|%26)id(=|%3D)([\w]+)");
@@ -207,26 +196,12 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        //private async void GetJson(Uri uri, LinkType type, MultipartFormDataContent content)
-        //{
-        //    (bool isSucceed, string result) = await RequestHelper.PostStringAsync(uri, content);
-        //    if (isSucceed && !string.IsNullOrEmpty(result))
-        //    {
-        //        JObject json = JObject.Parse(result);
-        //        ReadJson(json, type);
-        //    }
-        //}
-
         private void ReadJson(JObject json, LinkType type)
         {
             switch (type)
             {
                 case LinkType.Coolapk:
                     ParseCoolapk(json);
-                    IsSucceed = true;
-                    break;
-                case LinkType.BiliBili:
-                    ParseBiliBili(json);
                     IsSucceed = true;
                     break;
                 case LinkType.ITHome:
@@ -261,24 +236,14 @@ namespace CoolapkLite.Models.Feeds
                 {
                     Url = url.ToString();
                 }
-                if (data.TryGetValue("feedType", out JToken feedType) && feedType.ToString() == "feedArticle")
+                if (data.TryGetValue("message", out JToken message))
                 {
-                    if (data.TryGetValue("message", out JToken message))
+                    MessageRawOutput = message.ToString();
+                    int length = MessageRawOutput.Contains("</a>") ? 200 : 120;
+                    if (MessageRawOutput.Length - length >= 7)
                     {
-                        Message = message.ToString();
-                        if (Message.Contains("</a>") ? Message.Length - 200 >= 7 : Message.Length - 120 >= 7)
-                        {
-                            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
-                            Message = message.ToString().Substring(0, 120);
-                            Message = Message.Contains("</a>") ? message.ToString().Substring(0, 200) + "...<a href=\"" + Url + "\">" + loader.GetString("ReadMore") + "</a>" : Message + "...<a href=\"" + Url + "\">" + loader.GetString("ReadMore") + "</a>";
-                        }
-                    }
-                }
-                else
-                {
-                    if (data.TryGetValue("message", out JToken message))
-                    {
-                        Message = message.ToString();
+                        ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
+                        Message = $"{MessageRawOutput.Substring(0, length)}...<a href=\"{Url}\">{loader.GetString("ReadMore")}</a>";
                     }
                 }
                 if (data.TryGetValue("dateline", out JToken dateline))
@@ -301,75 +266,6 @@ namespace CoolapkLite.Models.Feeds
                     {
                         item.ContextArray = PicArr;
                     }
-                }
-            }
-        }
-
-        private void ParseBiliBili(JObject json)
-        {
-            if (json.TryGetValue("data", out JToken v1))
-            {
-                JObject data = (JObject)v1;
-                if (data.TryGetValue("card", out JToken v2))
-                {
-                    JObject card = (JObject)v2;
-                    if (card.TryGetValue("card", out JToken v3))
-                    {
-                        JObject card1 = JObject.Parse(v3.ToString());
-                        if (card1.TryGetValue("item", out JToken v4))
-                        {
-                            JObject item = (JObject)v4;
-                            if (item.TryGetValue("description", out JToken description))
-                            {
-                                Message = description.ToString();
-                            }
-                            if (item.TryGetValue("title", out JToken title))
-                            {
-                                MessageTitle = title.ToString();
-                            }
-                            if (item.TryGetValue("upload_time", out JToken upload_time))
-                            {
-                                Dateline = upload_time.ToObject<long>().ConvertUnixTimeStampToReadable();
-                            }
-                            if (item.TryGetValue("pictures", out JToken pictures) && (pictures as JArray).Count > 0)
-                            {
-                                PicArr = pictures.Select(x => (x as JObject).TryGetValue("img_src", out JToken img_src) ? img_src.ToString() : null)
-                                    .Where(x => !string.IsNullOrEmpty(x))
-                                    .Select(x => new ImageModel(x, ImageType.OriginImage))
-                                    .ToImmutableArray();
-                                foreach (ImageModel items in PicArr)
-                                {
-                                    items.ContextArray = PicArr;
-                                }
-                            }
-                        }
-                        if (card1.TryGetValue("user", out JToken v5))
-                        {
-                            JObject user = (JObject)v5;
-                            LinkUserModel UserModel = new LinkUserModel();
-                            if (user.TryGetValue("name", out JToken name))
-                            {
-                                UserModel.UserName = name.ToString();
-                            }
-                            if (user.TryGetValue("uid", out JToken uid))
-                            {
-                                UserModel.Url = "https://space.bilibili.com/" + uid.ToString();
-                            }
-                            UserInfo = UserModel;
-                        }
-                    }
-                }
-                if (data.TryGetValue("desc", out JToken v6))
-                {
-                    JObject desc = (JObject)v6;
-                    if (data.TryGetValue("dynamic_id_str", out JToken dynamic_id_str))
-                    {
-                        Url = "https://t.bilibili.com/" + dynamic_id_str;
-                    }
-                }
-                if (Message.Length - 120 >= 7)
-                {
-                    Message = message.ToString().Substring(0, 120) + "...<a href=\"" + Url + "\">";
                 }
             }
         }

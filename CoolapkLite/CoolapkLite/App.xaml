@@ -11,6 +11,7 @@
                 <common:AccentColorResource />
                 <common:CustomBrushResource />
                 <common:LanguageCodeResource />
+                <common:CustomControlResource />
                 <ResourceDictionary Source="ms-appx:///Themes/CustomStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

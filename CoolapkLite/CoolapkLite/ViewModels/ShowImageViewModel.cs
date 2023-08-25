@@ -46,7 +46,7 @@ namespace CoolapkLite.ViewModels
             {
                 if (index != value)
                 {
-                    if (index != -1) { ResigerImage(Images[index], Images[value]); }
+                    if (index != -1) { RegisterImage(Images[index], Images[value]); }
                     index = value;
                     RaisePropertyChangedEvent();
                     Title = GetTitle(Images[value].Uri);
@@ -149,8 +149,8 @@ namespace CoolapkLite.ViewModels
 
         private string GetTitle(string url)
         {
-            Regex regex = new Regex(@"[^/]+(?!.*/)");
-            ImageName = regex.IsMatch(url) ? regex.Match(url).Value : "查看图片";
+            Match match = Regex.Match(url, @"[^/]+(?!.*/)");
+            ImageName = match.Success ? match.Value : "查看图片";
             return $"{ImageName} ({Index + 1}/{Images.Count})";
         }
 
@@ -225,10 +225,10 @@ namespace CoolapkLite.ViewModels
                 SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
             };
 
-            string fileex = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            int index = fileex.IndexOfAny(new char[] { '?', '%', '&' });
-            fileex = fileex.Substring(0, index == -1 ? fileex.Length : index);
-            fileSavePicker.FileTypeChoices.Add($"{fileex}文件", new string[] { "." + fileex });
+            string fileEx = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            int index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+            fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
+            fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { "." + fileEx });
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
             if (file != null)
@@ -246,12 +246,12 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        private void ResigerImage(ImageModel oldvalue, ImageModel newvalue)
+        private void RegisterImage(ImageModel oldValue, ImageModel newValue)
         {
-            oldvalue.LoadStarted -= OnLoadStarted;
-            oldvalue.LoadCompleted -= OnLoadCompleted;
-            newvalue.LoadStarted += OnLoadStarted;
-            newvalue.LoadCompleted += OnLoadCompleted;
+            oldValue.LoadStarted -= OnLoadStarted;
+            oldValue.LoadCompleted -= OnLoadCompleted;
+            newValue.LoadStarted += OnLoadStarted;
+            newValue.LoadCompleted += OnLoadCompleted;
         }
 
         private void OnLoadStarted(ImageModel sender, object args) => IsLoading = true;

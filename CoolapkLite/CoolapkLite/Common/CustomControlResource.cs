@@ -10,9 +10,13 @@ namespace CoolapkLite.Common
 
         private void AddResource()
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.MediaPlayerElement"))
             {
-                AddResourceDictionary("ms-appx:///Styles/SettingsFlyout.xaml");
+                AddResourceDictionary("ms-appx:///Controls/MediaPlayerElementEx/MediaPlayerElementEx.ThemeResources.RS1.xaml");
+            }
+            else
+            {
+                AddResourceDictionary("ms-appx:///Controls/MediaPlayerElementEx/MediaPlayerElementEx.ThemeResources.TH1.xaml");
             }
 
             void AddResourceDictionary(string Source)

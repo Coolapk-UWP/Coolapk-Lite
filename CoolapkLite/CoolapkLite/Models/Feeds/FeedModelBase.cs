@@ -126,6 +126,7 @@ namespace CoolapkLite.Models.Feeds
 
         public ImageModel ExtraPic { get; private set; }
         public ImageModel MediaPic { get; private set; }
+        public ImageModel MediaCover { get; private set; }
         public SourceFeedModel SourceFeed { get; private set; }
         public LinkFeedModel LinkSourceFeed { get; private set; }
 
@@ -263,6 +264,15 @@ namespace CoolapkLite.Models.Feeds
                 if (token.TryGetValue("media_pic", out JToken media_pic))
                 {
                     MediaPic = new ImageModel(media_pic.ToString(), ImageType.Icon);
+                }
+
+                if (token.TryGetValue("media_info", out JToken v) && !string.IsNullOrEmpty(v.ToString()))
+                {
+                    JObject media_info = JObject.Parse(v.ToString());
+                    if (media_info.TryGetValue("cover", out JToken cover))
+                    {
+                        MediaCover = new ImageModel(cover.ToString(), ImageType.OriginImage);
+                    }
                 }
             }
 
