@@ -159,7 +159,7 @@ namespace CoolapkLite.Controls
                         break;
                     case HtmlNodeType.Element:
                         string content = node.InnerText;
-                        switch (node.OriginalName)
+                        switch (node.OriginalName.ToLowerInvariant())
                         {
                             case "a":
                                 string tag = node.GetAttributeValue("t", string.Empty);
@@ -373,7 +373,9 @@ namespace CoolapkLite.Controls
                                 }
                                 break;
 
-                            default: break;
+                            default:
+                                AddText(node.InnerText);
+                                break;
                         }
                         break;
                 }

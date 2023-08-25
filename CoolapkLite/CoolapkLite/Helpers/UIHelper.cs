@@ -491,12 +491,14 @@ namespace CoolapkLite.Helpers
             {
                 return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin));
             }
-            else
+            else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                return origin.Contains("://") && await Launcher.LaunchUriAsync(origin.TryGetUri());
+                if (!frame.Dispatcher.HasThreadAccess)
+                { await frame.Dispatcher.ResumeForegroundAsync(); }
+                return await Launcher.LaunchUriAsync(uri);
             }
 
-            return true;
+            return false;
         }
 
         public static Task<bool> OpenActivatedEventArgs(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>

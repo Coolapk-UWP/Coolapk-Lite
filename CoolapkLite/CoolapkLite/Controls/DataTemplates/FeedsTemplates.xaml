@@ -380,57 +380,61 @@
                 <Grid
                     Grid.Row="8"
                     Margin="0,4"
-                    Padding="8"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     Tag="{Binding ExtraUrl}"
                     Tapped="OnTopTapped"
                     Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Border
-                        Width="56"
-                        Height="56"
-                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                        </Border.Background>
+                    <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            Width="56"
+                            Height="56"
+                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                            </Border.Background>
+                        </Border>
+                        <Border
+                            Width="56"
+                            Height="56"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                            <FontIcon
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                Glyph="&#xE71B;" />
+                        </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="8,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Center">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                MaxLines="2"
+                                Text="{Binding ExtraTitle}"
+                                TextTrimming="WordEllipsis"
+                                TextWrapping="Wrap"
+                                Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                Text="{Binding ExtraSubtitle}"
+                                TextWrapping="Wrap"
+                                Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                        </StackPanel>
+                    </Grid>
+                    <Border Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding LinkSourceFeed}" />
                     </Border>
-                    <Border
-                        Width="56"
-                        Height="56"
-                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                        BorderThickness="1"
-                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
-                        <FontIcon
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
-                            Glyph="&#xE71B;" />
-                    </Border>
-                    <StackPanel
-                        Grid.Column="1"
-                        Margin="8,0"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center">
-                        <TextBlock
-                            HorizontalAlignment="Left"
-                            MaxLines="2"
-                            Text="{Binding ExtraTitle}"
-                            TextTrimming="WordEllipsis"
-                            TextWrapping="Wrap"
-                            Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                        <TextBlock
-                            HorizontalAlignment="Left"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding ExtraSubtitle}"
-                            TextWrapping="Wrap"
-                            Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
-                    </StackPanel>
                 </Grid>
                 <Grid
                     Grid.Row="9"
@@ -576,11 +580,12 @@
     <DataTemplate x:Key="SourceFeedDefaultTemplate">
         <UserControl
             x:Name="RootGrid"
+            Padding="8,4"
             Background="{ThemeResource SystemControlTransparentBrush}"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
-            Tapped="OnRootTapped">
+            Tapped="OnTopTapped">
             <UserControl.Resources>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -616,7 +621,6 @@
                 </MenuFlyout>
             </UserControl.Resources>
             <Grid
-                Padding="8,4"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
@@ -635,8 +639,19 @@
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="FeedButton_Click"
-                        Content="{Binding UserInfo.UserName}"
-                        Tag="{Binding UserInfo.Url}" />
+                        Tag="{Binding UserInfo.Url}">
+                        <StackPanel Orientation="Horizontal">
+                            <Ellipse Width="20" Height="20">
+                                <Ellipse.Fill>
+                                    <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock
+                                Margin="4,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{Binding UserInfo.UserName}" />
+                        </StackPanel>
+                    </Button>
                     <TextBlock
                         Margin="4"
                         HorizontalAlignment="Left"

@@ -88,8 +88,9 @@ namespace CoolapkLite.Models.Feeds
         {
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
-                DateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime().ToLocalTime();
+                DateTime dateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime();
+                Dateline = dateTime.ConvertDateTimeToReadable();
+                DateTime = dateTime.ToLocalTime();
             }
 
             if (token.TryGetValue("message", out JToken message))

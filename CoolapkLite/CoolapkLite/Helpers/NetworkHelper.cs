@@ -11,8 +11,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -148,10 +150,10 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 case APIVersions.V13:
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3-2307071-universal");
-                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.3");
-                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2307071");
-                    Client.DefaultRequestHeaders.Add("X-App-Code", "2307071");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.3-2308241-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.3.3");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2308241");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2308241");
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
                 case APIVersions.Custom:
@@ -371,16 +373,37 @@ namespace CoolapkLite.Helpers
 
         public static string ExpandShortUrl(this Uri ShortUrl)
         {
-            string NativeUrl = null;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ShortUrl);
             try { _ = req.HaveResponse; }
             catch (WebException ex)
             {
                 HttpWebResponse res = ex.Response as HttpWebResponse;
                 if (res.StatusCode == HttpStatusCode.Found)
-                { NativeUrl = res.Headers["Location"]; }
+                { return res.Headers["Location"] ?? ShortUrl.ToString(); }
             }
-            return NativeUrl ?? ShortUrl.ToString();
+            return ShortUrl.ToString();
+        }
+
+        public static async Task<Uri> ExpandShortUrlAsync(this Uri ShortUrl)
+        {
+            if (ShortUrl.Host == "s.click.taobao.com")
+            {
+                using (HttpClient request = new HttpClient())
+                {
+                    HttpResponseMessage response = await request.GetAsync(ShortUrl);
+                    string urlA = response.RequestMessage.RequestUri.ToString();
+                    string urlB = WebUtility.UrlDecode(urlA);
+                    string urlC = urlB.Remove(0, 35);
+                    request.DefaultRequestHeaders.Add("referer", urlB);
+                    response = await request.GetAsync(urlC);
+                    return response.RequestMessage.RequestUri;
+                }
+            }
+            else
+            {
+                HttpResponseMessage res = await Client.GetAsync(ShortUrl);
+                return res.RequestMessage.RequestUri ?? ShortUrl;
+            }
         }
 
         public static Uri TryGetUri(this string url)

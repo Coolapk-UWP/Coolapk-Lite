@@ -127,6 +127,7 @@ namespace CoolapkLite.Models.Feeds
         public ImageModel ExtraPic { get; private set; }
         public ImageModel MediaPic { get; private set; }
         public SourceFeedModel SourceFeed { get; private set; }
+        public LinkFeedModel LinkSourceFeed { get; private set; }
 
         public ImmutableArray<VoteItem> VoteRows { get; private set; } = ImmutableArray<VoteItem>.Empty;
         public ImmutableArray<RelationRowsItem> RelationRows { get; private set; } = ImmutableArray<RelationRowsItem>.Empty;
@@ -243,17 +244,14 @@ namespace CoolapkLite.Models.Feeds
                 {
                     ExtraUrl = extra_url.ToString();
 
-                    if (ExtraUrl.Contains("b23.tv") || ExtraUrl.Contains("t.cn"))
-                    {
-                        ExtraUrl = ExtraUrl.TryGetUri()?.ExpandShortUrl();
-                    }
-
                     ExtraSubtitle = ExtraUrl.TryGetUri(out Uri ExtraUri) ? ExtraUri.Host : ExtraUrl;
 
                     if (token.TryGetValue("extra_pic", out JToken extra_pic))
                     {
                         ExtraPic = new ImageModel(extra_pic.ToString(), ImageType.Icon);
                     }
+
+                    LinkSourceFeed = new LinkFeedModel(ExtraUrl);
                 }
             }
 

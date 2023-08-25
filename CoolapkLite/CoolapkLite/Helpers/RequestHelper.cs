@@ -93,12 +93,13 @@ namespace CoolapkLite.Helpers
 
         private static (int page, Uri uri) GetPage(this Uri uri)
         {
-            Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
-            if (pageregex.IsMatch(uri.ToString()))
+            Regex pageRegex = new Regex(@"([&?])page=(\\d+)(\\??)");
+            Match match = pageRegex.Match(uri.ToString());
+            if (match.Success)
             {
-                int pagenum = Convert.ToInt32(pageregex.Match(uri.ToString()).Groups[2].Value);
-                Uri baseuri = new Uri(pageregex.Match(uri.ToString()).Groups[3].Value == "?" ? pageregex.Replace(uri.ToString(), pageregex.Match(uri.ToString()).Groups[1].Value) : pageregex.Replace(uri.ToString(), string.Empty));
-                return (pagenum, baseuri);
+                int pageNum = Convert.ToInt32(match.Groups[2].Value);
+                Uri baseUri = new Uri(match.Groups[3].Value == "?" ? pageRegex.Replace(uri.ToString(), match.Groups[1].Value) : pageRegex.Replace(uri.ToString(), string.Empty));
+                return (pageNum, baseUri);
             }
             else
             {

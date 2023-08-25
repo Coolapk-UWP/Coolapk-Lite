@@ -111,7 +111,7 @@ namespace CoolapkLite.Models.Feeds
                                         case "text":
                                             if (item.TryGetValue("message", out JToken message))
                                             {
-                                                builder.Append(message.ToString());
+                                                _ = builder.Append(message.ToString());
                                             }
                                             break;
 
@@ -119,7 +119,7 @@ namespace CoolapkLite.Models.Feeds
                                             if (item.TryGetValue("uri", out JToken uri))
                                             {
                                                 item.TryGetValue("description", out JToken description);
-                                                builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\">{description}</a>\n");
+                                                _ = builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\">{description}</a>\n");
                                             }
                                             break;
                                     }
@@ -149,7 +149,7 @@ namespace CoolapkLite.Models.Feeds
                                         case "text":
                                             if (item.TryGetValue("message", out JToken message))
                                             {
-                                                builder.Append(message.ToString());
+                                                _ = builder.Append(message.ToString());
                                             }
                                             break;
 
@@ -157,7 +157,7 @@ namespace CoolapkLite.Models.Feeds
                                             if (item.TryGetValue("url", out JToken uri))
                                             {
                                                 item.TryGetValue("description", out JToken description);
-                                                builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\"/>\n");
+                                                _ = builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\"/>\n");
                                             }
                                             break;
                                     }

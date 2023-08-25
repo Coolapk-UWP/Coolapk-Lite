@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
@@ -12,7 +13,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Pages
 {
-    public abstract class FeedListDetailBase : Entity, INotifyPropertyChanged
+    public abstract class FeedListDetailBase : Entity, ICanCopy, INotifyPropertyChanged
     {
         private bool isCopyEnabled;
         public bool IsCopyEnabled
@@ -801,10 +802,8 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("coverArr", out JToken coverArr) && (coverArr as JArray).Count > 0)
             {
-                CoverArr = coverArr.Select(
-                    x => !string.IsNullOrEmpty(x.ToString())
-                        ? new ImageModel(x.ToString(), ImageType.OriginImage) : null)
-                    .Where(x => x != null)
+                CoverArr = coverArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
+                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
                     .ToImmutableArray();
 
                 foreach (ImageModel item in CoverArr)

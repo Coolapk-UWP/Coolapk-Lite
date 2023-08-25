@@ -130,7 +130,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 default:
                     DisabledCopy();
-                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());
                     break;
             }
         }

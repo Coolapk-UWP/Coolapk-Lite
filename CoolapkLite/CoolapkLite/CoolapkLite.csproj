@@ -257,6 +257,7 @@
     <Compile Include="Common\ExceptionHandling.cs" />
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
+    <Compile Include="Models\Feeds\LinkFeedModel.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="Models\Update\UpdateInfo.cs" />
     <Compile Include="Models\Update\UserAgent.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
+    <Compile Include="Models\Users\LinkUserModel.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
       <DependentUpon>HTMLPage.xaml</DependentUpon>
