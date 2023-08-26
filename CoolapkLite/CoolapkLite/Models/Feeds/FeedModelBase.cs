@@ -6,6 +6,7 @@ using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.UI;
 
 namespace CoolapkLite.Models.Feeds
@@ -118,6 +119,7 @@ namespace CoolapkLite.Models.Feeds
         public string MediaUrl { get; private set; }
         public string IPLocation { get; private set; }
         public string ExtraTitle { get; private set; }
+        public string MediaTitle { get; private set; }
         public string DeviceTitle { get; private set; }
         public string VoteEndTime { get; private set; }
         public string VoteStartTime { get; private set; }
@@ -259,7 +261,6 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("media_url", out JToken media_url))
             {
                 MediaUrl = media_url.ToString();
-                MediaSubtitle = MediaUrl.TryGetUri(out Uri ExtraUri) ? ExtraUri.Host : MediaUrl;
 
                 if (token.TryGetValue("media_pic", out JToken media_pic))
                 {
@@ -269,6 +270,32 @@ namespace CoolapkLite.Models.Feeds
                 if (token.TryGetValue("media_info", out JToken media_info) && !string.IsNullOrEmpty(media_info.ToString()))
                 {
                     MediaInfo = JObject.Parse(media_info.ToString());
+
+                    if (MediaInfo.TryGetValue("name", out JToken name))
+                    {
+                        MediaTitle = name.ToString();
+                    }
+
+                    if (MediaInfo.TryGetValue("artistName", out JToken artistName))
+                    {
+                        MediaSubtitle = artistName.ToString();
+                    }
+
+                    if (string.IsNullOrEmpty(media_pic?.ToString()) && MediaInfo.TryGetValue("cover", out JToken cover))
+                    {
+                        MediaPic = new ImageModel(cover.ToString(), ImageType.OriginImage);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(MediaTitle))
+                {
+                    ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
+                    MediaTitle = loader.GetString("MediaShare");
+                }
+
+                if (string.IsNullOrEmpty(MediaSubtitle))
+                {
+                    MediaSubtitle = MediaUrl.TryGetUri(out Uri ExtraUri) ? ExtraUri.Host : MediaUrl;
                 }
             }
 

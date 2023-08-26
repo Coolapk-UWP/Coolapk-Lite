@@ -385,6 +385,7 @@
                     BorderThickness="1"
                     Tag="{Binding ExtraUrl}"
                     Tapped="OnTopTapped"
+                    ToolTipService.ToolTip="{Binding ExtraUrl}"
                     Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <Grid.ColumnDefinitions>
@@ -445,6 +446,7 @@
                     BorderThickness="1"
                     Tag="{Binding MediaUrl}"
                     Tapped="OnTopTapped"
+                    ToolTipService.ToolTip="{Binding MediaUrl}"
                     Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -477,9 +479,9 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Center">
                         <TextBlock
-                            x:Uid="/Feed/MediaShare"
                             HorizontalAlignment="Left"
                             MaxLines="2"
+                            Text="{Binding MediaTitle}"
                             TextTrimming="WordEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock

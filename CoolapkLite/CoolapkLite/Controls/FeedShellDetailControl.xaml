@@ -481,6 +481,7 @@
                 BorderThickness="1"
                 Tag="{Binding ExtraUrl}"
                 Tapped="OnTapped"
+                ToolTipService.ToolTip="{Binding ExtraUrl}"
                 Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
                 <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                     <Grid.ColumnDefinitions>
