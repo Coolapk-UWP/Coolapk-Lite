@@ -27,7 +27,29 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private Func<bool, Task> Refresh;
         private static int PivotIndex = 0;
-        internal SearchingViewModel Provider;
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(SearchingViewModel),
+                typeof(SearchingPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public SearchingViewModel Provider
+        {
+            get => (SearchingViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public SearchingPage() => InitializeComponent();
 
@@ -38,7 +60,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 if (Provider.PivotIndex != -1)
                 { PivotIndex = Provider.PivotIndex; }
                 await Provider.Refresh(true);

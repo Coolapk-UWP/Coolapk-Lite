@@ -17,7 +17,28 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class IndexPage : Page
     {
-        internal IndexViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(IndexViewModel),
+                typeof(IndexPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public IndexViewModel Provider
+        {
+            get => (IndexViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public IndexPage() => InitializeComponent();
 
@@ -28,7 +49,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider == null)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);

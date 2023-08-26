@@ -20,7 +20,28 @@ namespace CoolapkLite.Pages.BrowserPages
     /// </summary>
     public sealed partial class BrowserPage : Page
     {
-        internal BrowserViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(BrowserViewModel),
+                typeof(BrowserPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public BrowserViewModel Provider
+        {
+            get => (BrowserViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public BrowserPage() => InitializeComponent();
 
@@ -31,7 +52,6 @@ namespace CoolapkLite.Pages.BrowserPages
             if (e.Parameter is BrowserViewModel ViewModel)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 if (Provider.Uri != null)
                 {
                     WebView.Navigate(Provider.Uri);

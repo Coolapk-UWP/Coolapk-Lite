@@ -23,17 +23,37 @@ namespace CoolapkLite.Pages.SettingsPages
     {
         private Action<UISettingChangedType> UISettingChanged;
 
-        internal SettingsViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(SettingsViewModel),
+                typeof(SettingsPage),
+                new PropertyMetadata(SettingsViewModel.Caches));
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public SettingsViewModel Provider
+        {
+            get => (SettingsViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public SettingsPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
+            Provider = Provider ?? SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
             UISettingChanged = (mode) => UpdateThemeRadio();
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
-            DataContext = Provider;
             UpdateThemeRadio();
         }
 

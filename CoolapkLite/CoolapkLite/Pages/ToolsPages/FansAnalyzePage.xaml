@@ -12,6 +12,7 @@
     xmlns:toolspages="using:CoolapkLite.ViewModels.ToolsPages"
     xmlns:users="using:CoolapkLite.Models.Users"
     d:DataContext="{d:DesignInstance Type=toolspages:FansAnalyzeViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -296,7 +297,7 @@
         </Pivot>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsBackButtonVisible="False"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"

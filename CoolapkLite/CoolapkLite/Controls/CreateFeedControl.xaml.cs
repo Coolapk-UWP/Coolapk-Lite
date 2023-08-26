@@ -45,7 +45,30 @@ namespace CoolapkLite.Controls
         private readonly string[] TraditionEmojis = EmojiHelper.Tradition;
         private readonly string[] ClassicEmojis = EmojiHelper.Classic;
 
-        public CreateFeedViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(CreateFeedViewModel),
+                typeof(CreateFeedControl),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Picker"/>.
+        /// </summary>
+        public CreateFeedViewModel Provider
+        {
+            get => (CreateFeedViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
+
+        #region FeedType
 
         public static readonly DependencyProperty FeedTypeProperty =
             DependencyProperty.Register(
@@ -60,6 +83,10 @@ namespace CoolapkLite.Controls
             set => SetValue(FeedTypeProperty, value);
         }
 
+        #endregion
+
+        #region ReplyID
+
         public static readonly DependencyProperty ReplyIDProperty =
             DependencyProperty.Register(
                 nameof(ReplyID),
@@ -72,6 +99,8 @@ namespace CoolapkLite.Controls
             get => (int)GetValue(ReplyIDProperty);
             set => SetValue(ReplyIDProperty, value);
         }
+
+        #endregion
 
         private static void OnFeedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

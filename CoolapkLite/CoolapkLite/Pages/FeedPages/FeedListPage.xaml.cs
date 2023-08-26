@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Controls;
+﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
@@ -11,13 +10,10 @@ using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
@@ -42,45 +38,70 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class FeedListPage : Page, INotifyPropertyChanged
+    public sealed partial class FeedListPage : Page
     {
-        internal FeedListViewModel Provider;
+        #region Provider
 
-        private double headerMargin;
-        internal double HeaderMargin
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(FeedListViewModel),
+                typeof(FeedListPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public FeedListViewModel Provider
         {
-            get => headerMargin;
-            private set
-            {
-                headerMargin = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (FeedListViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
         }
 
-        private double headerHeight;
-        internal double HeaderHeight
+        #endregion
+
+        #region HeaderMargin
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderMargin"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(FeedListPage),
+                new PropertyMetadata((double)Application.Current.Resources["PageTitleHeight"]));
+
+        public double HeaderMargin
         {
-            get => headerHeight;
-            private set
-            {
-                headerHeight = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (double)GetValue(HeaderMarginProperty);
+            private set => SetValue(HeaderMarginProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        #region HeaderHeight
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(FeedListPage),
+                new PropertyMetadata(40d));
+
+        public double HeaderHeight
         {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            get => (double)GetValue(HeaderHeightProperty);
+            private set => SetValue(HeaderHeightProperty, value);
         }
+
+        #endregion
 
         public FeedListPage() => InitializeComponent();
 
@@ -92,7 +113,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 TwoPaneView.PanePriority = TwoPaneViewPriority.Pane2;
                 Provider.DataTemplateSelector = DetailTemplateSelector;
                 await Refresh(true);

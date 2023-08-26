@@ -11,6 +11,7 @@
     xmlns:viewmodels="using:CoolapkLite.ViewModels"
     d:DataContext="{d:DesignInstance Type=viewmodels:ShowImageViewModel}"
     Background="{ThemeResource ApplicationPageBackgroundBrush}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     Loaded="Page_Loaded"
     mc:Ignorable="d">
     <Page.Resources>

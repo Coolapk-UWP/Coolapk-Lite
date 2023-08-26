@@ -17,7 +17,28 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class AdaptivePage : Page
     {
-        internal AdaptiveViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(AdaptiveViewModel),
+                typeof(AdaptivePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public AdaptiveViewModel Provider
+        {
+            get => (AdaptiveViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public AdaptivePage() => InitializeComponent();
 
@@ -28,7 +49,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);

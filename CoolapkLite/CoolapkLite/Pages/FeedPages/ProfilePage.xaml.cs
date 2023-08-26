@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Controls;
+﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
@@ -7,12 +6,9 @@ using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -26,46 +22,72 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ProfilePage : Page, INotifyPropertyChanged
+    public sealed partial class ProfilePage : Page
     {
-        internal ProfileViewModel Provider;
         private DateTime dateTime = default;
 
-        private double headerMargin;
-        internal double HeaderMargin
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(ProfileViewModel),
+                typeof(ProfilePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public ProfileViewModel Provider
         {
-            get => headerMargin;
-            private set
-            {
-                headerMargin = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (ProfileViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
         }
 
-        private double headerHeight;
-        internal double HeaderHeight
+        #endregion
+
+        #region HeaderMargin
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderMargin"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(ProfilePage),
+                new PropertyMetadata((double)Application.Current.Resources["PageTitleHeight"]));
+
+        public double HeaderMargin
         {
-            get => headerHeight;
-            private set
-            {
-                headerHeight = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (double)GetValue(HeaderMarginProperty);
+            private set => SetValue(HeaderMarginProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        #region HeaderHeight
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(ProfilePage),
+                new PropertyMetadata(double.NaN));
+
+        public double HeaderHeight
         {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            get => (double)GetValue(HeaderHeightProperty);
+            private set => SetValue(HeaderHeightProperty, value);
         }
+
+        #endregion
 
         public ProfilePage() => InitializeComponent();
 
@@ -75,7 +97,6 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is ProfileViewModel ViewModel && Provider == null)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
             }

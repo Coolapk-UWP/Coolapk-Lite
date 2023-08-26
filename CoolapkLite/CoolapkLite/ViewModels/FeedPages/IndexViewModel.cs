@@ -9,11 +9,11 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class IndexViewModel : EntityItemSource, IViewModel
+    public class IndexViewModel : EntityItemSource, IViewModel
     {
         public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
 
-        internal IndexViewModel()
+        public IndexViewModel()
         {
             Provider = new CoolapkListProvider(
                 (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, "/main/indexV8", "?", p),

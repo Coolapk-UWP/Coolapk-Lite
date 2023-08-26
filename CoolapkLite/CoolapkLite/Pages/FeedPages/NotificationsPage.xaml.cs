@@ -1,13 +1,10 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.Providers;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,40 +17,32 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class NotificationsPage : Page, INotifyPropertyChanged
+    public sealed partial class NotificationsPage : Page
     {
         private static int PivotIndex = 0;
 
         private bool isLoaded;
         private Func<bool, Task> RefreshTask;
 
-        private NotificationsModel _notificationsModel = NotificationsModel.Instance;
+        #region NotificationsModel
+
+        /// <summary>
+        /// Identifies the <see cref="NotificationsModel"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NotificationsModelProperty =
+            DependencyProperty.Register(
+                nameof(NotificationsModel),
+                typeof(NotificationsModel),
+                typeof(NotificationsPage),
+                new PropertyMetadata(NotificationsModel.Instance));
+
         public NotificationsModel NotificationsModel
         {
-            get => _notificationsModel;
-            set
-            {
-                if (_notificationsModel != value)
-                {
-                    _notificationsModel = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            get => (NotificationsModel)GetValue(NotificationsModelProperty);
+            private set => SetValue(NotificationsModelProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
+        #endregion
 
         public NotificationsPage() => InitializeComponent();
 

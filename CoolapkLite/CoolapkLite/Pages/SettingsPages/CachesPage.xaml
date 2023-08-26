@@ -10,6 +10,7 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     xmlns:storage="using:Windows.Storage"
     d:DataContext="{d:DesignInstance Type=settingspages:CachesViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     mc:Ignorable="d">
     <Grid>
         <control:PullToRefreshListView

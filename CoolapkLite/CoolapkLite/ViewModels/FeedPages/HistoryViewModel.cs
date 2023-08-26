@@ -10,13 +10,13 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class HistoryViewModel : DataSourceBase<Entity>, IViewModel
+    public class HistoryViewModel : DataSourceBase<Entity>, IViewModel
     {
         public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
 
         private readonly CoolapkListProvider Provider;
 
-        internal HistoryViewModel()
+        public HistoryViewModel()
         {
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserHistory, p, firstItem, lastItem),

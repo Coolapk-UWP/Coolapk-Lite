@@ -10,6 +10,8 @@
     xmlns:models="using:CoolapkLite.Models"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:BookmarkViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
         <control:PullToRefreshListView
@@ -17,7 +19,7 @@
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{Binding Bookmarks}"
+            ItemsSource="{x:Bind Provider.Bookmarks, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
@@ -74,7 +76,7 @@
         </control:PullToRefreshListView>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">

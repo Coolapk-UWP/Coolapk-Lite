@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     d:DataContext="{d:DesignInstance Type=feedpages:ProfileViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -70,7 +71,7 @@
                                         DoubleTapped="Grid_DoubleTapped"
                                         IsDoubleTapEnabled="True">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding ProfileDetail.UserAvatar.Pic, Mode=OneWay}" />
+                                            <ImageBrush ImageSource="{x:Bind Provider.ProfileDetail.UserAvatar.Pic, Mode=OneWay}" />
                                         </Ellipse.Fill>
                                     </Ellipse>
                                     <Grid Grid.Column="2">
@@ -79,7 +80,7 @@
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock FontWeight="SemiBold" Text="{Binding ProfileDetail.UserName, FallbackValue='登录'}" />
+                                        <TextBlock FontWeight="SemiBold" Text="{x:Bind Provider.ProfileDetail.UserName, FallbackValue='登录', Mode=OneWay}" />
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />
@@ -91,12 +92,12 @@
                                                 FontSize="12"
                                                 FontStyle="Italic"
                                                 Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                                Text="{Binding ProfileDetail.LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}', FallbackValue='Lv.0'}" />
+                                                Text="{x:Bind Provider.ProfileDetail.LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}', FallbackValue='Lv.0', Mode=OneWay}" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
                                                 FontSize="12"
-                                                Text="{Binding ProfileDetail.NextLevelNowExperience}" />
+                                                Text="{x:Bind Provider.ProfileDetail.NextLevelNowExperience, Mode=OneWay}" />
                                         </Grid>
                                         <ProgressBar
                                             x:Name="NextLevelPercentage"
@@ -105,7 +106,7 @@
                                             Margin="0,4"
                                             Tag="/feed/18221454"
                                             Tapped="Grid_Tapped"
-                                            Value="{Binding ProfileDetail.NextLevelPercentage}" />
+                                            Value="{x:Bind Provider.ProfileDetail.NextLevelPercentage, Mode=OneWay}" />
                                     </Grid>
                                     <Button
                                         x:Name="QRCodeButton"
@@ -114,7 +115,7 @@
                                         Margin="-8,4"
                                         Content="&#xE72D;"
                                         Style="{StaticResource TitleBarIconButtonStyle}"
-                                        Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                         <Button.Flyout>
                                             <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                                                 <Flyout.FlyoutPresenterStyle>
@@ -126,7 +127,7 @@
                                                         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                                                     </Style>
                                                 </Flyout.FlyoutPresenterStyle>
-                                                <controls:ShowQRCodeControl QRCodeText="{Binding ProfileDetail.Url}" />
+                                                <controls:ShowQRCodeControl QRCodeText="{x:Bind Provider.ProfileDetail.Url, Mode=OneWay}" />
                                             </Flyout>
                                         </Button.Flyout>
                                     </Button>
@@ -139,9 +140,9 @@
                                         Content="&#xE78B;"
                                         Style="{StaticResource TitleBarIconButtonStyle}"
                                         Tag="LoginButton"
-                                        Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                        Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                                 </Grid>
-                                <Grid x:Name="ButtonGrid" Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <Grid x:Name="ButtonGrid" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
@@ -159,7 +160,7 @@
                                                 HorizontalAlignment="Center"
                                                 FontSize="20"
                                                 FontWeight="Bold"
-                                                Text="{Binding ProfileDetail.FeedNum, FallbackValue='0'}" />
+                                                Text="{x:Bind Provider.ProfileDetail.FeedNum, FallbackValue='0', Mode=OneWay}" />
                                             <TextBlock
                                                 x:Uid="/FeedListPage/FeedsNum"
                                                 HorizontalAlignment="Center"
@@ -179,7 +180,7 @@
                                                 HorizontalAlignment="Center"
                                                 FontSize="20"
                                                 FontWeight="Bold"
-                                                Text="{Binding ProfileDetail.FollowNum, FallbackValue='0'}" />
+                                                Text="{x:Bind Provider.ProfileDetail.FollowNum, FallbackValue='0', Mode=OneWay}" />
                                             <TextBlock
                                                 x:Uid="/FeedListPage/FollowNum"
                                                 HorizontalAlignment="Center"
@@ -199,7 +200,7 @@
                                                 HorizontalAlignment="Center"
                                                 FontSize="20"
                                                 FontWeight="Bold"
-                                                Text="{Binding ProfileDetail.FansNum, FallbackValue='0'}" />
+                                                Text="{x:Bind Provider.ProfileDetail.FansNum, FallbackValue='0', Mode=OneWay}" />
                                             <TextBlock
                                                 x:Uid="/FeedListPage/FansNum"
                                                 HorizontalAlignment="Center"
@@ -214,7 +215,7 @@
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                     Click="Button_Click"
                                     Tag="CreateFeedButton"
-                                    Visibility="{Binding IsLogin, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                     <controls:StackPanel
                                         Margin="8,0"
                                         Orientation="Horizontal"
@@ -254,7 +255,7 @@
                                 x:Name="ListView"
                                 Padding="12"
                                 ItemTemplateSelector="{StaticResource ProfileCardTemplateSelector}"
-                                ItemsSource="{Binding}"
+                                ItemsSource="{x:Bind Provider, Mode=OneWay}"
                                 Loaded="ListView_Loaded"
                                 ScrollViewer.HorizontalScrollMode="Disabled"
                                 ScrollViewer.VerticalScrollMode="Auto">
@@ -283,7 +284,7 @@
         </controls:TwoPaneView>
         <controls:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">
@@ -300,8 +301,8 @@
                     Margin="8"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
-                    Visibility="{Binding NotificationsModel.BadgeNum, Converter={StaticResource DoubleToVisibilityConverter}, FallbackValue='Collapsed'}"
-                    Value="{Binding NotificationsModel.BadgeNum}" />
+                    Visibility="{x:Bind Provider.NotificationsModel.BadgeNum, Converter={StaticResource DoubleToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}"
+                    Value="{x:Bind Provider.NotificationsModel.BadgeNum, Mode=OneWay}" />
             </Grid>
         </controls:TitleBar>
     </Grid>

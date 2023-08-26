@@ -11,7 +11,6 @@ using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
@@ -26,8 +25,30 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedShellPage : Page
     {
-        internal FeedShellViewModel Provider;
         private static UserActivitySession _currentActivity;
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(FeedShellViewModel),
+                typeof(FeedShellPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public FeedShellViewModel Provider
+        {
+            get => (FeedShellViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public FeedShellPage() => InitializeComponent();
 
@@ -38,7 +59,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 await Provider.Refresh(true);
                 if (Provider.FeedDetail != null)
                 {

@@ -5,7 +5,6 @@ using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -28,39 +27,53 @@ namespace CoolapkLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ShowImagePage : Page, INotifyPropertyChanged
+    public sealed partial class ShowImagePage : Page
     {
         private bool isShowHub = true;
         private Point _clickPoint = new Point(0, 0);
-        internal ShowImageViewModel Provider;
 
-        private ScrollViewer scrollViewer;
-        internal ScrollViewer ScrollViewer
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(ShowImageViewModel),
+                typeof(ShowImagePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public ShowImageViewModel Provider
         {
-            get => scrollViewer;
-            set
-            {
-                if (scrollViewer != value)
-                {
-                    scrollViewer = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            get => (ShowImageViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        #region ScrollViewer
+
+        /// <summary>
+        /// Identifies the <see cref="ScrollViewer"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ScrollViewerProperty =
+            DependencyProperty.Register(
+                nameof(ScrollViewer),
+                typeof(ScrollViewer),
+                typeof(ShowImagePage),
+                null);
+
+        public ScrollViewer ScrollViewer
         {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            get => (ScrollViewer)GetValue(ScrollViewerProperty);
+            private set => SetValue(ScrollViewerProperty, value);
         }
+
+        #endregion
 
         public ShowImagePage()
         {
@@ -75,12 +88,10 @@ namespace CoolapkLite.Pages
             if (e.Parameter is ImageModel Model)
             {
                 Provider = new ShowImageViewModel(Model, Dispatcher);
-                DataContext = Provider;
             }
             else if (e.Parameter is ShowImageViewModel ViewModel)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
             }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }

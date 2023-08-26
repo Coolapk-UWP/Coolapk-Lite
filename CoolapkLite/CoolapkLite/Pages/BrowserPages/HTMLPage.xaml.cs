@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.BrowserPages;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -14,7 +15,28 @@ namespace CoolapkLite.Pages.BrowserPages
     /// </summary>
     public sealed partial class HTMLPage : Page
     {
-        internal HTMLViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(HTMLViewModel),
+                typeof(HTMLPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public HTMLViewModel Provider
+        {
+            get => (HTMLViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public HTMLPage() => InitializeComponent();
 

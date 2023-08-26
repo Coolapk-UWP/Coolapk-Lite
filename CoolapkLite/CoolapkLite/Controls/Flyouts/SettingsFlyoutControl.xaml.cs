@@ -20,7 +20,28 @@ namespace CoolapkLite.Controls
     {
         private Action<UISettingChangedType> UISettingChanged;
 
-        internal SettingsViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(SettingsViewModel),
+                typeof(SettingsFlyoutControl),
+                new PropertyMetadata(SettingsViewModel.Caches));
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="SettingsFlyout"/>.
+        /// </summary>
+        public SettingsViewModel Provider
+        {
+            get => (SettingsViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public SettingsFlyoutControl() => InitializeComponent();
 
@@ -43,7 +64,6 @@ namespace CoolapkLite.Controls
             };
             Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
-            DataContext = Provider;
             UpdateThemeRadio();
         }
 

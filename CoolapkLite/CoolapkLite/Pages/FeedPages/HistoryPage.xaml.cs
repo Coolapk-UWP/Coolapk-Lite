@@ -3,7 +3,6 @@ using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -17,7 +16,28 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class HistoryPage : Page
     {
-        internal HistoryViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(HistoryViewModel),
+                typeof(HistoryPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public HistoryViewModel Provider
+        {
+            get => (HistoryViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public HistoryPage() => InitializeComponent();
 
@@ -28,14 +48,9 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
                 Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
                 await Refresh(true);
-            }
-            else
-            {
-                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
             }
         }
 
