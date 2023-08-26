@@ -147,8 +147,8 @@
   <data name="LongPicText" xml:space="preserve">
     <value>長圖</value>
   </data>
-  <data name="MediaShare.Text" xml:space="preserve">
-    <value>視頻分享</value>
+  <data name="MediaShare" xml:space="preserve">
+    <value>视频分享</value>
   </data>
   <data name="MoreButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>更多</value>
