@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CoolapkLite.Controls">
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI">
     <Style x:Key="DefaultMediaPlayerElementExStyle" TargetType="controls:MediaPlayerElementEx">
         <Setter Property="Template">
             <Setter.Value>
@@ -11,11 +12,21 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
-                        <MediaElement
-                            x:Name="PART_MediaElement"
-                            AreTransportControlsEnabled="True"
-                            AutoPlay="False"
-                            PosterSource="{TemplateBinding PosterSource}" />
+                        <Border
+                            x:Name="PART_MediaElementBorder"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            ui:FrameworkElementExtensions.EnableActualSizeBinding="True">
+                            <MediaElement
+                                x:Name="PART_MediaElement"
+                                Width="{Binding (ui:FrameworkElementExtensions.ActualWidth), ElementName=PART_MediaElementBorder}"
+                                Height="{Binding (ui:FrameworkElementExtensions.ActualHeight), ElementName=PART_MediaElementBorder}"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                AreTransportControlsEnabled="True"
+                                AutoPlay="False"
+                                PosterSource="{Binding TemplateSettings.PosterSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                        </Border>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

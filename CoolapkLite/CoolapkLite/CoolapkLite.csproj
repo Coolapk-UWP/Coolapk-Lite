@@ -144,6 +144,7 @@
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
     <Compile Include="Common\ExtensionManager.cs" />
+    <Compile Include="Common\HttpRandomAccessStream.cs" />
     <Compile Include="Common\LanguageCodeResource.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
@@ -181,6 +182,7 @@
     </Compile>
     <Compile Include="Controls\InfoBadge\InfoBadgeTemplateSettings.cs" />
     <Compile Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.cs" />
+    <Compile Include="Controls\MediaPlayerElementEx\MediaPlayerElementExTemplateSettings.cs" />
     <Compile Include="Controls\Picker\Picker.cs">
       <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>

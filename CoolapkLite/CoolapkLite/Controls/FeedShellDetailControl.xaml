@@ -535,9 +535,10 @@
             <Grid
                 Grid.Row="10"
                 Margin="0,4"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 Tag="{Binding MediaUrl}"
                 Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
-                <local:MediaPlayerElementEx Source="{Binding MediaUrl}" />
+                <local:MediaPlayerElementEx MediaInfo="{Binding MediaInfo}" />
             </Grid>
             <ListView
                 Grid.Row="11"
