@@ -11,10 +11,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -245,8 +243,8 @@ namespace CoolapkLite.Helpers
                 //await semaphoreSlim.WaitAsync();
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
-                response = await Client.PostAsync(uri, content);
-                return await response.Content.ReadAsStringAsync();
+                response = await Client.PostAsync(uri, content).ConfigureAwait(false);
+                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
@@ -271,7 +269,7 @@ namespace CoolapkLite.Helpers
             {
                 //await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
-                return await Client.GetStreamAsync(uri);
+                return await Client.GetStreamAsync(uri).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
@@ -296,7 +294,7 @@ namespace CoolapkLite.Helpers
             {
                 //await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
-                return await Client.GetStringAsync(uri);
+                return await Client.GetStringAsync(uri).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
@@ -336,7 +334,7 @@ namespace CoolapkLite.Helpers
             string str = string.Empty;
             try
             {
-                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}"));
+                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}")).ConfigureAwait(false);
 
                 JObject token = JObject.Parse(str);
                 if (token.TryGetValue("dataRow", out JToken v1))
@@ -400,18 +398,18 @@ namespace CoolapkLite.Helpers
             {
                 using (HttpClient request = new HttpClient())
                 {
-                    HttpResponseMessage response = await request.GetAsync(ShortUrl);
+                    HttpResponseMessage response = await request.GetAsync(ShortUrl).ConfigureAwait(false);
                     string urlA = response.RequestMessage.RequestUri.ToString();
                     string urlB = WebUtility.UrlDecode(urlA);
                     string urlC = urlB.Remove(0, 35);
                     request.DefaultRequestHeaders.Add("referer", urlB);
-                    response = await request.GetAsync(urlC);
+                    response = await request.GetAsync(urlC).ConfigureAwait(false);
                     return response.RequestMessage.RequestUri;
                 }
             }
             else
             {
-                HttpResponseMessage res = await Client.GetAsync(ShortUrl);
+                HttpResponseMessage res = await Client.GetAsync(ShortUrl).ConfigureAwait(false);
                 return res.RequestMessage.RequestUri ?? ShortUrl;
             }
         }

@@ -23,6 +23,7 @@ namespace CoolapkLite.Helpers
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string CustomAPI = nameof(CustomAPI);
+        public const string IsFullLoad = nameof(IsFullLoad);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
@@ -76,6 +77,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(CustomAPI))
             {
                 LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
+            }
+            if (!LocalObject.KeyExists(IsFullLoad))
+            {
+                LocalObject.Save(IsFullLoad, true);
             }
             if (!LocalObject.KeyExists(IsFirstRun))
             {

@@ -4,13 +4,8 @@
 
 using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using System;
-using System.Collections.Generic;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Controls
 {
@@ -173,20 +168,5 @@ namespace CoolapkLite.Controls
         {
             VisualStateManager.GoToState(this, AutoSuggestBox == null ? "AutoSuggestBoxCollapsed" : "AutoSuggestBoxVisible", true);
         }
-    }
-
-    public class DisplayModeToBool : IValueConverter
-    {
-        private static readonly bool HasConnectedAnimation = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static readonly bool HasConnectedAnimationConfiguration = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return !HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode
-                ? !(split.ToString() == mode) && HasConnectedAnimation
-                : (object)HasConnectedAnimation;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
     }
 }

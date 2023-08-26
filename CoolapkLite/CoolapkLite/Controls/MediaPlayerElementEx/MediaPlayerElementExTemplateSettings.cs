@@ -1,16 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.Xaml.Media;
+﻿using CoolapkLite.Models.Images;
 using Windows.UI.Xaml;
-using CoolapkLite.Models.Images;
 
 namespace CoolapkLite.Controls
 {
     public class MediaPlayerElementExTemplateSettings : DependencyObject
     {
+        #region Title
+
+        /// <summary>
+        /// Identifies the <see cref="Title"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(
+                nameof(Title),
+                typeof(string),
+                typeof(MediaPlayerElementExTemplateSettings),
+                null);
+
+        public string Title
+        {
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
+
+        #endregion
+
+        #region Artist
+
+        /// <summary>
+        /// Identifies the <see cref="Artist"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ArtistProperty =
+            DependencyProperty.Register(
+                nameof(Artist),
+                typeof(string),
+                typeof(MediaPlayerElementExTemplateSettings),
+                null);
+
+        public string Artist
+        {
+            get => (string)GetValue(ArtistProperty);
+            set => SetValue(ArtistProperty, value);
+        }
+
+        #endregion
+
         #region PosterSource
 
         /// <summary>
@@ -23,6 +57,9 @@ namespace CoolapkLite.Controls
                 typeof(MediaPlayerElementExTemplateSettings),
                 null);
 
+        /// <summary>
+        /// Gets or sets the image source that is used for a placeholder image during <see cref="MediaPlayerElementEx"/> loading transition states.
+        /// </summary>
         public ImageModel PosterSource
         {
             get => (ImageModel)GetValue(PosterSourceProperty);

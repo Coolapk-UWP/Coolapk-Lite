@@ -68,6 +68,12 @@ namespace CoolapkLite.Pages.SettingsPages
             set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
         }
 
+        internal bool IsFullLoad
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
+            set => SettingsHelper.Set(SettingsHelper.IsFullLoad, value);
+        }
+
         internal bool IsCustomUA
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);

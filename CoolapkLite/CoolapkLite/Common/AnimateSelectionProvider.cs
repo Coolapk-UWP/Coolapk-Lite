@@ -23,7 +23,7 @@ namespace CoolapkLite.Common
         private static readonly Vector2 c_frame2point1 = new Vector2(0.1f, 0.9f);
         private static readonly Vector2 c_frame2point2 = new Vector2(0.2f, 1f);
 
-        private readonly bool HasGetElementVisual = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
+        private readonly bool IsGetElementVisualSupported = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         #region IndicatorName
 
@@ -208,7 +208,7 @@ namespace CoolapkLite.Common
                         areElementsAtSameDepth = prevPosPoint.X == nextPosPoint.X;
                     }
 
-                    if (HasGetElementVisual)
+                    if (IsGetElementVisualSupported)
                     {
                         Visual visual = ElementCompositionPreview.GetElementVisual(paneContentGrid);
                         CompositionScopedBatch scopedBatch = visual.Compositor.CreateScopedBatch(CompositionBatchTypes.Animation);
@@ -709,7 +709,7 @@ namespace CoolapkLite.Common
             {
                 element.Opacity = desiredOpacity;
 
-                if (HasGetElementVisual)
+                if (IsGetElementVisualSupported)
                 {
                     if (ElementCompositionPreview.GetElementVisual(element) is Visual visual)
                     {

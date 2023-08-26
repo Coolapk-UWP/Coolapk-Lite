@@ -113,10 +113,7 @@
                         </AutoSuggestBox.QueryIcon>
                     </AutoSuggestBox>
                 </controls:HamburgerMenu.AutoSuggestBox>
-                <Frame
-                    x:Name="HamburgerMenuFrame"
-                    x:FieldModifier="Public"
-                    Background="{ThemeResource HamburgerMenuContentBackground}" />
+                <Frame x:Name="HamburgerMenuFrame" Background="{ThemeResource HamburgerMenuContentBackground}" />
             </controls:HamburgerMenu>
         </Grid>
         <ProgressBar

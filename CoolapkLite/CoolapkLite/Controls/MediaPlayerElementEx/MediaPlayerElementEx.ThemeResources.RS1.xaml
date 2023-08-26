@@ -23,9 +23,10 @@
                                 Height="{Binding (ui:FrameworkElementExtensions.ActualHeight), ElementName=PART_MediaElementBorder}"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                AreTransportControlsEnabled="True"
-                                AutoPlay="False"
-                                PosterSource="{Binding TemplateSettings.PosterSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" />
+                                AreTransportControlsEnabled="{TemplateBinding AreTransportControlsEnabled}"
+                                AutoPlay="{TemplateBinding AutoPlay}"
+                                PosterSource="{Binding TemplateSettings.PosterSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                                Stretch="{TemplateBinding Stretch}" />
                         </Border>
                     </Border>
                 </ControlTemplate>

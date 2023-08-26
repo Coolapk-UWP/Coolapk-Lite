@@ -25,7 +25,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground = false)
         {
-            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
             JObject token;
             try { token = JObject.Parse(results); }
@@ -45,7 +45,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, string request = "com.coolapk.market", bool isBackground = false)
         {
-            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(results))
             {
                 UIHelper.ShowMessage("加载失败");
@@ -56,7 +56,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
+            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json)) { return (false, null); }
             JObject token;
             try { token = JObject.Parse(json); }
@@ -75,14 +75,14 @@ namespace CoolapkLite.Helpers
             else
             {
                 return data != null && !string.IsNullOrWhiteSpace(data.ToString())
-                ? ((bool isSucceed, JToken result))(true, data)
-                : ((bool isSucceed, JToken result))(token != null && !string.IsNullOrEmpty(token.ToString()), token);
+                    ? (true, data)
+                    : (token != null && !string.IsNullOrEmpty(token.ToString()), token);
             }
         }
 
         public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
+            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json))
             {
                 UIHelper.ShowMessage("加载失败");
@@ -123,14 +123,18 @@ namespace CoolapkLite.Helpers
 #pragma warning disable 0612
         public static async Task<BitmapImage> GetImageAsync(string uri, bool isBackground = false)
         {
-            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha);
+            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha).ConfigureAwait(false);
             StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
 
-            Stream s = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground);
-
-            using (Stream ss = await file.OpenStreamForWriteAsync())
+            using (Stream stream = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground).ConfigureAwait(false))
+            using (Stream fileStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
             {
-                await s.CopyToAsync(ss);
+                await stream.CopyToAsync(fileStream).ConfigureAwait(false);
+            }
+
+            if (ImageCacheHelper.Dispatcher?.HasThreadAccess == false)
+            {
+                await ImageCacheHelper.Dispatcher.ResumeForegroundAsync();
             }
 
             return new BitmapImage(new Uri(file.Path));
@@ -168,7 +172,7 @@ namespace CoolapkLite.Helpers
 
                     content.Add(picFile);
 
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content);
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content).ConfigureAwait(false);
 
                     if (isSucceed) { return (isSucceed, result.ToString()); }
                 }
@@ -178,7 +182,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> CheckLogin()
         {
-            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true);
+            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
             return isSucceed;
         }
 

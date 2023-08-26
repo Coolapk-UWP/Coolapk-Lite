@@ -11,6 +11,7 @@ using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.Web.Http;
 
 namespace CoolapkLite.Controls
@@ -21,11 +22,12 @@ namespace CoolapkLite.Controls
     {
         private const string MediaElementName = "PART_MediaElement";
         private const string MediaElementBorderName = "PART_MediaElementBorder";
-        private readonly bool IsSupportedMediaPlayerElement = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.MediaPlayerElement");
+        public static bool IsMediaPlayerElementSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.MediaPlayerElement");
 
         private Uri _mediaUri;
-        private FrameworkElement MediaElement;
         private FrameworkElement MediaElementBorder;
+
+        public FrameworkElement MediaElement;
 
         private AdaptiveMediaSource _mediaSource;
         private AdaptiveMediaSource AdaptiveMediaSource
@@ -55,6 +57,52 @@ namespace CoolapkLite.Controls
             }
         }
 
+        #region AreTransportControlsEnabled 
+
+        /// <summary>
+        /// Identifies the <see cref="AreTransportControlsEnabled"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AreTransportControlsEnabledProperty =
+            DependencyProperty.Register(
+                nameof(AreTransportControlsEnabled),
+                typeof(bool),
+                typeof(MediaPlayerElementEx),
+                new PropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets a value that determines whether the standard transport controls are enabled.
+        /// </summary>
+        public bool AreTransportControlsEnabled
+        {
+            get => (bool)GetValue(AreTransportControlsEnabledProperty);
+            set => SetValue(AreTransportControlsEnabledProperty, value);
+        }
+
+        #endregion
+
+        #region AutoPlay 
+
+        /// <summary>
+        /// Identifies the <see cref="AutoPlay"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AutoPlayProperty =
+            DependencyProperty.Register(
+                nameof(AutoPlay),
+                typeof(bool),
+                typeof(MediaPlayerElementEx),
+                new PropertyMetadata(true));
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether media will begin playback automatically when the <see cref="MediaInfo"/> property is set.
+        /// </summary>
+        public bool AutoPlay
+        {
+            get => (bool)GetValue(AutoPlayProperty);
+            set => SetValue(AutoPlayProperty, value);
+        }
+
+        #endregion
+
         #region MediaInfo
 
         /// <summary>
@@ -76,6 +124,29 @@ namespace CoolapkLite.Controls
         private static void OnMediaInfoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((MediaPlayerElementEx)d).UpdateMediaInfo();
+        }
+
+        #endregion
+
+        #region Stretch 
+
+        /// <summary>
+        /// Identifies the <see cref="Stretch"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty StretchProperty =
+            DependencyProperty.Register(
+                nameof(Stretch),
+                typeof(Stretch),
+                typeof(MediaPlayerElementEx),
+                new PropertyMetadata(Stretch.Uniform));
+
+        /// <summary>
+        /// Gets or sets a value that describes how an <see cref="MediaPlayerElementEx"/> should be stretched to fill the destination rectangle.
+        /// </summary>
+        public Stretch Stretch
+        {
+            get => (Stretch)GetValue(StretchProperty);
+            set => SetValue(StretchProperty, value);
         }
 
         #endregion
@@ -146,6 +217,16 @@ namespace CoolapkLite.Controls
         private void ParseMediaInfo(JObject json)
         {
             MediaPlayerElementExTemplateSettings templateSettings = TemplateSettings;
+
+            if (json.TryGetValue("name", out JToken name))
+            {
+                templateSettings.Title = name.ToString();
+            }
+
+            if (MediaInfo.TryGetValue("artistName", out JToken artistName))
+            {
+                templateSettings.Artist = artistName.ToString();
+            }
 
             if (json.TryGetValue("cover", out JToken cover))
             {
@@ -270,7 +351,7 @@ namespace CoolapkLite.Controls
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
-                else if (IsSupportedMediaPlayerElement && MediaElement is MediaPlayerElement mediaPlayerElement)
+                else if (IsMediaPlayerElementSupported && MediaElement is MediaPlayerElement mediaPlayerElement)
                 {
                     mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
                     mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(_mediaSource);
@@ -285,7 +366,7 @@ namespace CoolapkLite.Controls
                 {
                     mediaElement.Source = uri;
                 }
-                else if (IsSupportedMediaPlayerElement && MediaElement is MediaPlayerElement mediaPlayerElement)
+                else if (IsMediaPlayerElementSupported && MediaElement is MediaPlayerElement mediaPlayerElement)
                 {
                     mediaPlayerElement.Source = MediaSource.CreateFromUri(uri);
                 }
@@ -306,7 +387,7 @@ namespace CoolapkLite.Controls
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
-                else if (IsSupportedMediaPlayerElement && MediaElement is MediaPlayerElement mediaPlayerElement)
+                else if (IsMediaPlayerElementSupported && MediaElement is MediaPlayerElement mediaPlayerElement)
                 {
                     mediaPlayerElement.SetMediaPlayer(new MediaPlayer());
                     mediaPlayerElement.MediaPlayer.Source = MediaSource.CreateFromAdaptiveMediaSource(AdaptiveMediaSource);
@@ -322,7 +403,7 @@ namespace CoolapkLite.Controls
                 {
                     mediaElement.SetSource(HttpRandomAccessStream, HttpRandomAccessStream.ContentType);
                 }
-                else if (IsSupportedMediaPlayerElement && MediaElement is MediaPlayerElement mediaPlayerElement)
+                else if (IsMediaPlayerElementSupported && MediaElement is MediaPlayerElement mediaPlayerElement)
                 {
                     mediaPlayerElement.Source = MediaSource.CreateFromStream(HttpRandomAccessStream, HttpRandomAccessStream.ContentType);
                 }
@@ -348,7 +429,7 @@ namespace CoolapkLite.Controls
                     mediaElement.Source = _mediaUri;
                 }
             }
-            else if (IsSupportedMediaPlayerElement && MediaElement is MediaPlayerElement mediaPlayerElement)
+            else if (IsMediaPlayerElementSupported && MediaElement is MediaPlayerElement mediaPlayerElement)
             {
                 if (AdaptiveMediaSource != null)
                 {

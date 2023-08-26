@@ -16,6 +16,8 @@ namespace CoolapkLite.ViewModels.DataSource
         protected CoolapkListProvider Provider;
         protected CoolapkListProvider SubProvider;
 
+        protected static bool IsFullLoad => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
+
         public EntityItemSource() : base(Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher) { }
 
         public EntityItemSource(CoreDispatcher dispatcher) : base(dispatcher) { }
@@ -23,19 +25,36 @@ namespace CoolapkLite.ViewModels.DataSource
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
             List<Entity> Models = new List<Entity>();
-            while (Models.Count < count)
+            if (Provider != null)
             {
-                int temp = Models.Count;
-                if (Models.Count > 0) { _currentPage++; }
-                if (SubProvider == null)
+                if (IsFullLoad)
                 {
-                    await Provider?.GetEntity(Models, _currentPage);
+                    while (Models.Count < count)
+                    {
+                        int temp = Models.Count;
+                        if (Models.Count > 0) { _currentPage++; }
+                        if (SubProvider == null)
+                        {
+                            await Provider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            await SubProvider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                        }
+                        if (Models.Count <= 0 || Models.Count <= temp) { break; }
+                    }
                 }
                 else
                 {
-                    await SubProvider.GetEntity(Models, _currentPage);
+                    if (SubProvider == null)
+                    {
+                        await Provider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await SubProvider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                    }
                 }
-                if (Models.Count <= 0 || Models.Count <= temp) { break; }
             }
             return Models;
         }
@@ -48,7 +67,7 @@ namespace CoolapkLite.ViewModels.DataSource
                 {
                     if (!(item is NullEntity))
                     {
-                        await AddAsync(item);
+                        await AddAsync(item).ConfigureAwait(false);
                         AddSubProvider(item);
                     }
                 }
@@ -59,7 +78,7 @@ namespace CoolapkLite.ViewModels.DataSource
         {
             if (reset)
             {
-                await Reset();
+                await Reset().ConfigureAwait(false);
             }
             else
             {

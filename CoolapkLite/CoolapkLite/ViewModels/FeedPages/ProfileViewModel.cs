@@ -10,10 +10,8 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class ProfileViewModel : DataSourceBase<Entity>, IViewModel
+    public class ProfileViewModel : EntityItemSource, IViewModel
     {
-        private readonly CoolapkListProvider Provider;
-
         public string UID = string.Empty;
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
 
@@ -67,7 +65,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityType");
         }
 
-        public async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset)
         {
             IsLogin = await SettingsHelper.CheckLoginAsync();
             if (IsLogin)
@@ -128,28 +126,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                         }
                     }
                     else { return null; }
-            }
-        }
-
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-        {
-            List<Entity> Models = new List<Entity>();
-            if (_currentPage <= 1)
-            {
-                await Provider.GetEntity(Models, _currentPage++);
-            }
-            return Models;
-        }
-
-        protected override async Task AddItemsAsync(IList<Entity> items)
-        {
-            if (items != null)
-            {
-                foreach (Entity item in items)
-                {
-                    if (item is NullEntity) { continue; }
-                    await AddAsync(item);
-                }
             }
         }
     }

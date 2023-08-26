@@ -158,6 +158,13 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            if ((DetailControl.MediaPlayerElementEx.MediaElement is MediaElement mediaElement
+                && mediaElement.IsFullWindow)
+                    || (MediaPlayerElementEx.IsMediaPlayerElementSupported
+                    && DetailControl.MediaPlayerElementEx.MediaElement is MediaPlayerElement mediaPlayerElement
+                    && mediaPlayerElement.IsFullWindow))
+            { return; }
+
             double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
 
             // Remove details content from it's parent panel.

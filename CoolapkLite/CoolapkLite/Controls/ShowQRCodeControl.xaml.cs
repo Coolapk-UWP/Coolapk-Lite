@@ -23,7 +23,7 @@ namespace CoolapkLite.Controls
 
         private static void OnQRCodeTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as ShowQRCodeControl).QRCodeText = e.NewValue as string ?? "https://www.coolapk.com"; ;
+            (d as ShowQRCodeControl).QRCodeText = e.NewValue as string ?? "https://www.coolapk.com";
         }
 
         public ShowQRCodeControl() => InitializeComponent();
