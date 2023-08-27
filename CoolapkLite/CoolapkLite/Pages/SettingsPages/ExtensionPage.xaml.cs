@@ -68,7 +68,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "Uninstall":

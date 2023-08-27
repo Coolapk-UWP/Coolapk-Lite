@@ -51,6 +51,7 @@
                     Click="Button_Click"
                     FontSize="12"
                     Tag="{Binding}"
+                    Tapped="Button_Tapped"
                     Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="{Binding Entities, Converter={StaticResource CollectionVisibilityConverter}}">
@@ -98,6 +99,7 @@
                     Click="Button_Click"
                     FontSize="12"
                     Tag="{Binding}"
+                    Tapped="Button_Tapped"
                     Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <ListView
@@ -146,6 +148,7 @@
                 Click="Button_Click"
                 FontSize="12"
                 Tag="{Binding}"
+                Tapped="Button_Tapped"
                 Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
@@ -159,7 +162,8 @@
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="56" />
@@ -207,7 +211,8 @@
             Padding="4"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <StackPanel>
                 <Border
                     Width="36"
@@ -242,7 +247,8 @@
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

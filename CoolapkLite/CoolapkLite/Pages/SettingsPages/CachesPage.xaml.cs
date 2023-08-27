@@ -58,7 +58,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "Delete":

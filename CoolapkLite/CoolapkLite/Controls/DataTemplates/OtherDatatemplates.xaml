@@ -1,5 +1,5 @@
 ﻿<ResourceDictionary
-    x:Class="CoolapkLite.Controls.DataTemplates.OtherDatatemplates"
+    x:Class="CoolapkLite.Controls.DataTemplates.OtherDataTemplates"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrl="using:CoolapkLite.Controls"
@@ -12,9 +12,9 @@
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="OnKeyDown"
+            KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -68,9 +68,9 @@
         <Grid
             Padding="0,8"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="OnKeyDown"
+            KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />
@@ -114,9 +114,9 @@
         <Grid
             Padding="0,8"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="OnKeyDown"
+            KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />

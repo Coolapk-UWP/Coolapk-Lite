@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -239,14 +240,18 @@ namespace CoolapkLite.Pages
 
         private void ScrollViewer_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             UpdateHubVisibilityStates();
+            if (e != null) { e.Handled = true; }
         }
 
         private void ScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             ScrollViewer scrollViewer = sender as ScrollViewer;
             scrollViewer.ChangeView(0, 0, 1);
             UpdateHubVisibilityStates();
+            if (e != null) { e.Handled = true; }
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -265,16 +270,19 @@ namespace CoolapkLite.Pages
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             FrameworkElement element = sender as FrameworkElement;
             PointerPoint pointerPoint = e.GetCurrentPoint(element);
             if (pointerPoint.Properties.IsLeftButtonPressed)
             {
                 _clickPoint = e.GetCurrentPoint(element).Position;
             }
+            if (e != null) { e.Handled = true; }
         }
 
         private void Image_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             FrameworkElement element = sender as FrameworkElement;
             ScrollViewer scrollViewer = element.Parent as ScrollViewer;
             PointerPoint pointerPoint = e.GetCurrentPoint(element);
@@ -286,6 +294,7 @@ namespace CoolapkLite.Pages
                 y = _clickPoint.Y - point.Y;
                 _ = scrollViewer.ChangeView(scrollViewer.HorizontalOffset + x, scrollViewer.VerticalOffset + y, null);
             }
+            if (e != null) { e.Handled = true; }
         }
 
         public async void UpdateTitle(string title = null)

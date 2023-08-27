@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -28,20 +29,20 @@ namespace CoolapkLite.Controls
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "PinTileButton":
                     _ = PinSecondaryTile(element.Tag as FeedDetailModel);
                     break;
                 case "ReportButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
                     break;
                 case "FollowButton":
-                    _ = (element.Tag as ICanFollow).ChangeFollow();
+                    _ = (element.Tag as ICanFollow)?.ChangeFollow();
                     break;
                 default:
-                    _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = this.OpenLinkAsync(element.Tag?.ToString());
                     break;
             }
         }
@@ -95,32 +96,36 @@ namespace CoolapkLite.Controls
 
         private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             DataPackage dp = new DataPackage();
-            dp.SetText(element.Tag.ToString());
+            dp.SetText(element.Tag?.ToString());
             Clipboard.SetContent(dp);
         }
 
-        private void Flyout_Opened(object sender, object _)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Flyout flyout = (Flyout)sender;
-            if (flyout.Content == null)
-            {
-                flyout.Content = new ShowQRCodeControl
-                {
-                    QRCodeText = (string)flyout.Target.Tag
-                };
-            }
-        }
+            if (e?.Handled == true) { return; }
 
-        private void OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            FrameworkElement element = sender as FrameworkElement;
-            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
+
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled == true) { return; }
 
             if (e != null) { e.Handled = true; }
 
-            _ = element.Tag is ImageModel image ? element.ShowImageAsync(image) : this.OpenLinkAsync(element.Tag.ToString());
+            _ = element.Tag is ImageModel image ? element.ShowImageAsync(image) : this.OpenLinkAsync(element.Tag?.ToString());
+        }
+
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
+            {
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    FrameworkElement_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
+            }
         }
 
         private void UrlButton_Click(object sender, RoutedEventArgs e) => _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());

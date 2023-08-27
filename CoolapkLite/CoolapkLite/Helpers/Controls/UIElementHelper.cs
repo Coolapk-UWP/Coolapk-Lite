@@ -69,15 +69,17 @@ namespace CoolapkLite.Helpers
 
         private static void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             if (e.Key == VirtualKey.Menu)
             {
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+                if (e != null) { e.Handled = true; }
             }
         }
 
         private static void OnHolding(object sender, HoldingRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true || !(sender is FrameworkElement element)) { return; }
             FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(element);
             if (flyout is MenuFlyout menu)
             {
@@ -87,11 +89,12 @@ namespace CoolapkLite.Helpers
             {
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
             }
+            if (e != null) { e.Handled = true; }
         }
 
         private static void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true || !(sender is FrameworkElement element)) { return; }
             FlyoutBase flyout = FlyoutBase.GetAttachedFlyout(element);
             if (flyout is MenuFlyout menu)
             {
@@ -101,6 +104,7 @@ namespace CoolapkLite.Helpers
             {
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
             }
+            if (e != null) { e.Handled = true; }
         }
 
         #endregion

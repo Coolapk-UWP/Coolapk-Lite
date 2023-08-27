@@ -9,6 +9,7 @@ using Windows.ApplicationModel.Resources;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
@@ -20,22 +21,28 @@ namespace CoolapkLite.Controls.DataTemplates
 
         public void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
             _ = element.ShowImageAsync(element.Tag as ImageModel);
+            if (e != null) { e.Handled = true; }
         }
 
         public void Image_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
             {
-                Image_Tapped(sender, null);
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    Image_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
             }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            ImageModel image = element.Tag as ImageModel;
+            if (!(sender is FrameworkElement element && element.Tag is ImageModel image)) { return; }
             switch (element.Name)
             {
                 case "CopyButton":
@@ -101,10 +108,10 @@ namespace CoolapkLite.Controls.DataTemplates
                 SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
             };
 
-            string fileex = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            int index = fileex.IndexOfAny(new char[] { '?', '%', '&' });
-            fileex = fileex.Substring(0, index == -1 ? fileex.Length : index);
-            fileSavePicker.FileTypeChoices.Add($"{fileex}文件", new string[] { "." + fileex });
+            string fileEx = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            int index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+            fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
+            fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { "." + fileEx });
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
             if (file != null)
@@ -155,8 +162,8 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private string GetTitle(string url)
         {
-            Regex regex = new Regex(@"[^/]+(?!.*/)");
-            return regex.IsMatch(url) ? regex.Match(url).Value : "图片";
+            Match match = Regex.Match(url, @"[^/]+(?!.*/)");
+            return match.Success ? match.Value : "图片";
         }
     }
 }

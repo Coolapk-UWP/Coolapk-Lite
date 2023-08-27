@@ -27,7 +27,6 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
@@ -180,23 +179,6 @@ namespace CoolapkLite.Helpers
             { ShowMessage($"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}"); }
             else if (e.Message == "An error occurred while sending the request.") { ShowMessage("无法连接网络。"); }
             else { ShowMessage($"请检查网络连接。 {e.Message}"); }
-        }
-
-        public static bool IsOriginSource(object source, object originalSource)
-        {
-            if (source == originalSource) { return true; }
-
-            bool result = false;
-            FrameworkElement DependencyObject = originalSource as FrameworkElement;
-            if (DependencyObject.FindAscendant<ButtonBase>() == null && !(originalSource is ButtonBase) && !(originalSource is RichEditBox))
-            {
-                if (source is FrameworkElement FrameworkElement)
-                {
-                    result = source == DependencyObject.FindAscendant(FrameworkElement.Name);
-                }
-            }
-
-            return DependencyObject.Tag == null && result;
         }
 
         public static void SetBadgeNumber(string badgeGlyphValue)

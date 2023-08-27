@@ -126,7 +126,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void Button_Checked(object sender, RoutedEventArgs _)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "Dark":

@@ -2,7 +2,6 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
-using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
@@ -111,16 +110,13 @@ namespace CoolapkLite.Pages.FeedPages
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
-            if (ListView.ItemsSource is EntityItemSource entities)
-            {
-                _ = entities.Refresh(true);
-            }
             dateTime = DateTime.UtcNow;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag?.ToString())
             {
                 case "FeedsButton":
                     _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
@@ -154,16 +150,18 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            switch (element.Tag.ToString())
+            if (e?.Handled == true) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag?.ToString())
             {
                 case "FeedsButton":
                     _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
                     break;
                 default:
-                    _ = this.OpenLinkAsync(element.Tag.ToString());
+                    _ = this.OpenLinkAsync(element.Tag?.ToString());
                     break;
             }
+            if (e != null) { e.Handled = true; }
         }
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
@@ -180,7 +178,12 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => _ = Provider.Refresh(true);
+        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            _ = Provider.Refresh(true);
+            if (e != null) { e.Handled = true; }
+        }
 
         #region 界面模式切换
 

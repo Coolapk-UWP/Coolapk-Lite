@@ -21,10 +21,12 @@
         <UserControl
             x:Name="RootGrid"
             Background="{ThemeResource SystemControlTransparentBrush}"
+            IsTabStop="True"
+            KeyDown="FrameworkElement_KeyDown"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
-            Tapped="OnRootTapped">
+            Tapped="FrameworkElement_Tapped">
             <UserControl.Resources>
                 <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                     <Flyout.FlyoutPresenterStyle>
@@ -130,7 +132,8 @@
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding UserInfo.Url}">
+                        Tag="{Binding UserInfo.Url}"
+                        Tapped="Button_Tapped">
                         <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
@@ -148,42 +151,51 @@
                             IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             Text="{Binding UserInfo.UserName}"
                             TextTrimming="CharacterEllipsis" />
-                        <TextBlock
+                        <controls:StackPanel
                             Grid.Row="1"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                            TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
-                            Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                            <Run Text="{Binding InfoHTML}" />
-                            <Run Text="{Binding Info}" />
-                            <Hyperlink
-                                Click="DeviceHyperlink_Click"
+                            Orientation="Horizontal"
+                            Spacing="4">
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                UnderlineStyle="None">
-                                <Run Text="{Binding DeviceTitle}" />
-                            </Hyperlink>
-                        </TextBlock>
-                        <TextBlock
-                            Grid.Row="1"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                            TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
-                            Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <Run Text="{Binding Dateline}" />
-                            <Run Text="{Binding Info}" />
-                            <Hyperlink
-                                Click="DeviceHyperlink_Click"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                Text="{Binding Info}"
+                                TextTrimming="CharacterEllipsis" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                UnderlineStyle="None">
-                                <Run Text="{Binding DeviceTitle}" />
-                            </Hyperlink>
-                        </TextBlock>
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                Text="{Binding Dateline}"
+                                TextTrimming="CharacterEllipsis"
+                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                Text="{Binding InfoHTML}"
+                                TextTrimming="CharacterEllipsis"
+                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                            <TextBlock
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                TextTrimming="CharacterEllipsis">
+                                <Hyperlink
+                                    Click="DeviceHyperlink_Click"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    UnderlineStyle="None">
+                                    <Run Text="{Binding DeviceTitle}" />
+                                </Hyperlink>
+                            </TextBlock>
+                        </controls:StackPanel>
                     </Grid>
                 </StackPanel>
                 <StackPanel
@@ -198,6 +210,7 @@
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
+                        Tapped="Button_Tapped"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
@@ -218,6 +231,7 @@
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding}"
+                        Tapped="Button_Tapped"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
@@ -234,6 +248,7 @@
                         Flyout="{StaticResource QRCodeFlyout}"
                         Style="{StaticResource TransparentButtonStyle}"
                         Tag="{Binding ShareUrl}"
+                        Tapped="Button_Tapped"
                         Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
@@ -247,7 +262,8 @@
                         x:Name="MoreButton"
                         x:Uid="/Feed/MoreButton"
                         Flyout="{StaticResource MoreFlyout}"
-                        Style="{StaticResource TransparentButtonStyle}">
+                        Style="{StaticResource TransparentButtonStyle}"
+                        Tapped="Button_Tapped">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10C;" />
                     </Button>
                 </StackPanel>
@@ -383,8 +399,9 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
+                    KeyDown="FrameworkElement_KeyDown"
                     Tag="{Binding ExtraUrl}"
-                    Tapped="OnTopTapped"
+                    Tapped="FrameworkElement_Tapped"
                     ToolTipService.ToolTip="{Binding ExtraUrl}"
                     Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
@@ -444,8 +461,9 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
+                    KeyDown="FrameworkElement_KeyDown"
                     Tag="{Binding MediaUrl}"
-                    Tapped="OnTopTapped"
+                    Tapped="FrameworkElement_Tapped"
                     ToolTipService.ToolTip="{Binding MediaUrl}"
                     Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
@@ -584,10 +602,12 @@
             x:Name="RootGrid"
             Margin="8,4"
             Background="{ThemeResource SystemControlTransparentBrush}"
+            IsTabStop="True"
+            KeyDown="FrameworkElement_KeyDown"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
             Tag="{Binding Url}"
-            Tapped="OnTopTapped">
+            Tapped="FrameworkElement_Tapped">
             <UserControl.Resources>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -641,7 +661,8 @@
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="FeedButton_Click"
-                        Tag="{Binding UserInfo.Url}">
+                        Tag="{Binding UserInfo.Url}"
+                        Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
                             <Ellipse Width="20" Height="20">
                                 <Ellipse.Fill>
@@ -751,7 +772,8 @@
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding UserInfo.Url}">
+                        Tag="{Binding UserInfo.Url}"
+                        Tapped="Button_Tapped">
                         <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
@@ -807,6 +829,7 @@
                                 FontWeight="Normal"
                                 Style="{StaticResource TextBlockButtonStyle}"
                                 Tag="{Binding Rurl}"
+                                Tapped="Button_Tapped"
                                 Visibility="{Binding Rusername, Converter={StaticResource StringVisibilityConverter}}" />
                         </StackPanel>
                     </StackPanel>
@@ -821,7 +844,8 @@
                         x:Uid="/Feed/LikeButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}">
+                        Tag="{Binding}"
+                        Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -840,7 +864,8 @@
                         x:Uid="/Feed/ReplyButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}">
+                        Tag="{Binding}"
+                        Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                             <TextBlock
@@ -853,7 +878,8 @@
                         x:Name="MoreButton"
                         x:Uid="/Feed/MoreButton"
                         Flyout="{StaticResource MoreFlyout}"
-                        Style="{StaticResource TransparentButtonStyle}">
+                        Style="{StaticResource TransparentButtonStyle}"
+                        Tapped="Button_Tapped">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE10C;" />
                     </Button>
                 </StackPanel>
@@ -904,7 +930,8 @@
                         HorizontalContentAlignment="Left"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding}">
+                        Tag="{Binding}"
+                        Tapped="Button_Tapped">
                         <TextBlock
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"

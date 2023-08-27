@@ -20,7 +20,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="UserDetailCard">
                 <Border>
@@ -112,7 +112,9 @@
                         BorderThickness="1"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
-                        Tag="{Binding Cover}">
+                        KeyDown="FrameworkElement_KeyDown"
+                        Tag="{Binding Cover}"
+                        Tapped="FrameworkElement_Tapped">
                         <Border>
                             <Border.Background>
                                 <ImageBrush ImageSource="{Binding Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
@@ -144,6 +146,7 @@
                                         Click="Button_Click"
                                         Style="{StaticResource TransparentButtonStyle}"
                                         Tag="{Binding}"
+                                        Tapped="Button_Tapped"
                                         ToolTipService.ToolTip="{Binding FollowStatus}"
                                         Visibility="{Binding FollowStatus, Converter={StaticResource StringVisibilityConverter}}">
                                         <StackPanel Orientation="Horizontal">
@@ -215,7 +218,8 @@
                                         Padding="0"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
-                                        FontSize="16">
+                                        FontSize="16"
+                                        Tapped="Button_Tapped">
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{Binding FollowNum}" />
                                             <Run x:Uid="/FeedListPage/FollowNum" FontWeight="Thin" />
@@ -226,7 +230,8 @@
                                         Padding="0"
                                         Background="{StaticResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
-                                        FontSize="16">
+                                        FontSize="16"
+                                        Tapped="Button_Tapped">
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{Binding FansNum}" />
                                             <Run x:Uid="/FeedListPage/FansNum" FontWeight="Thin" />
@@ -347,8 +352,9 @@
                                                 <Ellipse
                                                     Width="16"
                                                     Height="16"
+                                                    KeyDown="FrameworkElement_KeyDown"
                                                     Tag="{Binding Url}"
-                                                    Tapped="On_Tapped"
+                                                    Tapped="FrameworkElement_Tapped"
                                                     ToolTipService.ToolTip="{Binding UserName}">
                                                     <Ellipse.Fill>
                                                         <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
@@ -372,6 +378,7 @@
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
@@ -447,8 +454,9 @@
                                     Text="{Binding FollowNum}" />
                                 <Grid
                                     Background="{ThemeResource SystemControlTransparentBrush}"
+                                    KeyDown="FrameworkElement_KeyDown"
                                     Tag="{Binding Uurl}"
-                                    Tapped="On_Tapped">
+                                    Tapped="FrameworkElement_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -473,6 +481,7 @@
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
@@ -517,10 +526,11 @@
                                         VerticalAlignment="Center"
                                         CanDrag="True"
                                         DragStarting="Image_DragStarting"
+                                        KeyDown="FrameworkElement_KeyDown"
                                         Source="{Binding Pic, Mode=OneWay}"
                                         Stretch="UniformToFill"
                                         Tag="{Binding}"
-                                        Tapped="On_Tapped">
+                                        Tapped="FrameworkElement_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
@@ -612,8 +622,9 @@
                                                     <Ellipse
                                                         Width="16"
                                                         Height="16"
+                                                        KeyDown="FrameworkElement_KeyDown"
                                                         Tag="{Binding Url}"
-                                                        Tapped="On_Tapped"
+                                                        Tapped="FrameworkElement_Tapped"
                                                         ToolTipService.ToolTip="{Binding UserName}">
                                                         <Ellipse.Fill>
                                                             <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
@@ -637,6 +648,7 @@
                                     Background="{ThemeResource SystemControlTransparentBrush}"
                                     Click="Button_Click"
                                     Tag="{Binding}"
+                                    Tapped="Button_Tapped"
                                     ToolTipService.ToolTip="{Binding FollowStatus}">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon
@@ -1061,9 +1073,11 @@
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
+                        KeyDown="FrameworkElement_KeyDown"
                         Source="{Binding Cover.Pic, Mode=OneWay}"
                         Stretch="UniformToFill"
-                        Tag="{Binding Cover}" />
+                        Tag="{Binding Cover}"
+                        Tapped="FrameworkElement_Tapped" />
                     <Grid
                         Padding="8"
                         VerticalAlignment="Bottom"
@@ -1118,7 +1132,8 @@
                                 x:Uid="/Feed/LikeButton"
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding}">
+                                Tag="{Binding}"
+                                Tapped="Button_Tapped">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -1137,6 +1152,7 @@
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}"
                                 Visibility="{Binding FollowStatus, Converter={StaticResource StringVisibilityConverter}}">
                                 <StackPanel Orientation="Horizontal">

@@ -88,10 +88,11 @@
                 Visibility="{Binding IsFeedArticle, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}">
                 <Image
                     x:Name="MessageCover"
+                    KeyDown="FrameworkElement_KeyDown"
                     Source="{Binding MessageCover.Pic, Mode=OneWay}"
                     Stretch="UniformToFill"
                     Tag="{Binding MessageCover}"
-                    Tapped="OnTapped"
+                    Tapped="FrameworkElement_Tapped"
                     Visibility="{Binding MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}}" />
                 <Border VerticalAlignment="Bottom" Background="{ThemeResource TitleBarBackgroundBrush}">
                     <TextBlock
@@ -479,8 +480,9 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
+                KeyDown="FrameworkElement_KeyDown"
                 Tag="{Binding ExtraUrl}"
-                Tapped="OnTapped"
+                Tapped="FrameworkElement_Tapped"
                 ToolTipService.ToolTip="{Binding ExtraUrl}"
                 Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
                 <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">

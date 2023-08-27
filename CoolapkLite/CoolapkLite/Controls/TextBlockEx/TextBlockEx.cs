@@ -319,7 +319,12 @@ namespace CoolapkLite.Controls
 
                                     Grid.Children.Add(viewbox);
                                     Grid.Children.Add(PicSizePanel);
-                                    Grid.Tapped += (sender, args) => _ = this.ShowImageAsync(imageModel);
+                                    Grid.Tapped += (sender, args) =>
+                                    {
+                                        if (args.Handled) { return; }
+                                        _ = this.ShowImageAsync(imageModel);
+                                        args.Handled = true;
+                                    };
 
                                     container.Child = Grid;
 

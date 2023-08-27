@@ -28,7 +28,7 @@
                     <Grid
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Tag="{x:Bind Url}"
-                        Tapped="Grid_Tapped">
+                        Tapped="FrameworkElement_Tapped">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -69,7 +69,8 @@
                             Click="Button_Click"
                             Content="&#xE711;"
                             Style="{StaticResource TitleBarIconButtonStyle}"
-                            Tag="{x:Bind}" />
+                            Tag="{x:Bind}"
+                            Tapped="Button_Tapped" />
                     </Grid>
                 </DataTemplate>
             </control:PullToRefreshListView.ItemTemplate>

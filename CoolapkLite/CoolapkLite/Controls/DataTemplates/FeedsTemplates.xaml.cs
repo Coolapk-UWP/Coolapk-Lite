@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -27,38 +28,47 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public FeedsTemplates() => InitializeComponent();
 
-        private void OnRootTapped(object sender, TappedRoutedEventArgs e)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
 
-            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
 
-            if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled == true) { return; }
 
             if (e != null) { e.Handled = true; }
 
-            _ = element.OpenLinkAsync(element.Tag.ToString());
+            _ = element.OpenLinkAsync(element.Tag?.ToString());
         }
 
-        private void OnTopTapped(object sender, TappedRoutedEventArgs e)
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
+            {
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    FrameworkElement_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
+            }
+        }
 
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
             if (e != null) { e.Handled = true; }
-
-            _ = element.OpenLinkAsync(element.Tag.ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "SeeAllButton":
                     _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
                     break;
                 default:
-                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());
                     break;
             }
         }
@@ -73,7 +83,7 @@ namespace CoolapkLite.Controls.DataTemplates
                 }
             }
 
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "ReplyButton":
@@ -116,7 +126,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "ReportButton":
                     DisabledCopy();
-                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
                     break;
 
                 case "ShareButton":
@@ -184,9 +194,9 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             DataPackage dp = new DataPackage();
-            dp.SetText(element.Tag.ToString());
+            dp.SetText(element.Tag?.ToString());
             Clipboard.SetContent(dp);
         }
 

@@ -15,9 +15,9 @@
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="OnKeyDown"
+            KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="*" />
@@ -32,8 +32,9 @@
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                KeyDown="FrameworkElement_KeyDown"
                 Tag="{Binding UserUrl}"
-                Tapped="OnTapped">
+                Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
@@ -56,9 +57,9 @@
         <Grid
             Padding="4"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="OnKeyDown"
+            KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
-            Tapped="OnTapped">
+            Tapped="FrameworkElement_Tapped">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -72,7 +73,8 @@
                     VerticalAlignment="Top"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
-                    Tag="{Binding UserUrl}">
+                    Tag="{Binding UserUrl}"
+                    Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="20" Height="20">
                             <Ellipse.Fill>
@@ -116,7 +118,8 @@
                     VerticalAlignment="Top"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
-                    Tag="{Binding UserUrl}">
+                    Tag="{Binding UserUrl}"
+                    Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse Width="20" Height="20">
                             <Ellipse.Fill>
@@ -172,8 +175,9 @@
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                KeyDown="FrameworkElement_KeyDown"
                 Tag="{Binding UserUrl}"
-                Tapped="OnTapped">
+                Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
                     <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>

@@ -12,6 +12,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -186,20 +187,20 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "LikeButton":
-                    _ = (element.Tag as ICanLike).ChangeLike();
+                    _ = (element.Tag as ICanLike)?.ChangeLike();
                     break;
                 case "FansButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
                     break;
                 case "ReportButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
                     break;
                 case "FollowButton":
-                    _ = (element.Tag as ICanFollow).ChangeFollow();
+                    _ = (element.Tag as ICanFollow)?.ChangeFollow();
                     break;
                 case "PinTileButton":
                     _ = Provider.PinSecondaryTile(element.Tag as Entity);
@@ -208,7 +209,7 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
                     break;
                 case "AnalyzeButton":
-                    _ = this.NavigateAsync(typeof(FansAnalyzePage), new FansAnalyzeViewModel(element.Tag.ToString(), Dispatcher));
+                    _ = this.NavigateAsync(typeof(FansAnalyzePage), new FansAnalyzeViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
                 default:
                     break;
@@ -217,8 +218,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            ImageModel image = (sender as FrameworkElement).Tag as ImageModel;
-            switch ((sender as FrameworkElement).Name)
+            if (!(sender is FrameworkElement element && element.Tag is ImageModel image)) { return; }
+            switch (element.Name)
             {
                 case "CopyButton":
                     Provider.CopyPic(image);
@@ -264,17 +265,35 @@ namespace CoolapkLite.Pages.FeedPages
             await Provider.GetImageDataPackage(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
         }
 
-        private void On_Tapped(object sender, TappedRoutedEventArgs e)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            object Tag = (sender as FrameworkElement).Tag;
-            if (Tag is ImageModel image)
+            if (e?.Handled == true) { return; }
+
+            if (!(sender is FrameworkElement element)) { return; }
+
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled == true) { return; }
+
+            if (e != null) { e.Handled = true; }
+
+            _ = element.Tag is ImageModel image ? this.ShowImageAsync(image) : this.OpenLinkAsync(element.Tag?.ToString());
+        }
+
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
             {
-                _ = this.ShowImageAsync(image);
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    FrameworkElement_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
             }
-            else if (Tag is string url)
-            {
-                _ = this.OpenLinkAsync(url);
-            }
+        }
+
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e != null) { e.Handled = true; }
         }
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
