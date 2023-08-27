@@ -56,10 +56,9 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
-            Uri uri = url.TryGetUri();
-            if (uri == null) { return NoPic; }
+            if (!url.TryGetUri(out Uri uri)) { return NoPic; }
 
-            if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
+            if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0 || uri.IsFile)
             {
                 if (!dispatcher.HasThreadAccess) { await dispatcher.ResumeForegroundAsync(); }
                 return new BitmapImage(uri);
@@ -151,12 +150,15 @@ namespace CoolapkLite.Helpers
 
         internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
-            Uri uri = url.TryGetUri();
-            if (uri == null) { return null; }
+            if (!url.TryGetUri(out Uri uri)) { return null; }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
                 return await StorageFile.GetFileFromApplicationUriAsync(uri);
+            }
+            else if (uri.IsFile)
+            {
+                return await StorageFile.GetFileFromPathAsync(url);
             }
             else
             {

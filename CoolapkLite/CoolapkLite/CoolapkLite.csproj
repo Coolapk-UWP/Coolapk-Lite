@@ -221,6 +221,9 @@
     <Compile Include="Controls\TextBlockEx\TextBlockEx.cs">
       <DependentUpon>TextBlockEx.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TextBlockEx\TextBlockEx.Methods.cs">
+      <DependentUpon>TextBlockEx.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\TextBlockEx\TextBlockEx.Properties.cs">
       <DependentUpon>TextBlockEx.cs</DependentUpon>
     </Compile>

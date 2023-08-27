@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using CoolapkLite.Models.Images;
+using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
@@ -242,5 +244,15 @@ namespace CoolapkLite.Controls
         }
 
         #endregion
+
+        /// <summary>
+        /// Fired when a link element was tapped.
+        /// </summary>
+        public event EventHandler<string> LinkClicked;
+
+        /// <summary>
+        /// Fired when an image element was tapped.
+        /// </summary>
+        public event EventHandler<ImageModel> ImageClicked;
     }
 }
