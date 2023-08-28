@@ -537,12 +537,13 @@ namespace CoolapkLite.Controls
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            object result = ImageCacheHelper.NoPic;
+            object result = null;
             string item = value.ToString();
             if (EmojiHelper.Emojis.Contains(item))
             {
                 result = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png"));
             }
+            result = result ?? ImageCacheHelper.GetNoPic(UIHelper.TryGetForCurrentCoreDispatcher());
             return ConverterTools.Convert(result, targetType);
         }
 

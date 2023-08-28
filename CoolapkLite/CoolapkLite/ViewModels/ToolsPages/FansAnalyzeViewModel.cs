@@ -123,7 +123,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
             while (true)
             {
                 int temp = ContactModels.Count;
-                await Provider.GetEntity(ContactModels, page);
+                await Provider.GetEntity(ContactModels, Dispatcher, page);
                 if (ContactModels.Count <= 0 || ContactModels.Count <= temp) { break; }
                 page++;
             }

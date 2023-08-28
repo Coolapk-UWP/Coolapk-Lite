@@ -247,6 +247,19 @@ namespace CoolapkLite.Helpers
                 return false;
             }
         }
+
+        public static CoreDispatcher TryGetForCurrentCoreDispatcher()
+        {
+            try
+            {
+                return CoreApplication.GetCurrentView().Dispatcher;
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(UIHelper)).Warn(ex.ExceptionToMessage(), ex);
+                return Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher;
+            }
+        }
     }
 
     public enum NavigationThemeTransition

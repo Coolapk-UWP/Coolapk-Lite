@@ -23,6 +23,7 @@ using Windows.Globalization;
 using Windows.System;
 using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -210,15 +211,27 @@ namespace CoolapkLite.Pages.SettingsPages
                     GC.Collect();
                     break;
                 case "NewWindow":
-                    if (WindowHelper.IsSupported)
+                    //if (WindowHelper.IsSupported)
+                    //{
+                    //    Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                    //    (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                    //    window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
+                    //    ThemeHelper.Initialize();
+                    //    frame.Navigate(page);
+                    //    await window.TryShowAsync();
+                    //}
+                    CoreApplicationView newView = CoreApplication.CreateNewView();
+                    int newViewId = await newView.Dispatcher.AwaitableRunAsync(() =>
                     {
-                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                        window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
-                        ThemeHelper.Initialize();
-                        frame.Navigate(page);
-                        await window.TryShowAsync();
-                    }
+                        Frame frame = new Frame();
+                        frame.Navigate(typeof(MainPage), null);
+                        Window.Current.Content = frame;
+                        // You have to activate the window in order to show it later.
+                        Window.Current.Activate();
+
+                        return ApplicationView.GetForCurrentView().Id;
+                    });
+                    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
                     break;
                 case "CustomAPI":
                     APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);

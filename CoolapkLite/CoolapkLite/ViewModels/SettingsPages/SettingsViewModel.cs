@@ -3,6 +3,7 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Update;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -17,15 +18,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public class SettingsViewModel : IViewModel
     {
-        public static SettingsViewModel Caches { get; set; }
+        public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
 
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
-
-        public static string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
-
-        public static string ToolkitVersion => Assembly.Load(new AssemblyName("Microsoft.Toolkit.Uwp")).GetName().Version.ToString();
 
         public bool IsLogin
         {
@@ -112,59 +109,50 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        private bool isCleanCacheButtonEnabled = true;
+        private static bool isCleanCacheButtonEnabled = true;
         public bool IsCleanCacheButtonEnabled
         {
             get => isCleanCacheButtonEnabled;
-            set
-            {
-                if (isCleanCacheButtonEnabled != value)
-                {
-                    isCleanCacheButtonEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCleanCacheButtonEnabled, value);
         }
 
-        private bool isCheckUpdateButtonEnabled = true;
+        private static bool isCheckUpdateButtonEnabled = true;
         public bool IsCheckUpdateButtonEnabled
         {
             get => isCheckUpdateButtonEnabled;
-            set
-            {
-                if (isCheckUpdateButtonEnabled != value)
-                {
-                    isCheckUpdateButtonEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCheckUpdateButtonEnabled, value);
         }
 
-        private string _aboutTextBlockText;
+        private static string _aboutTextBlockText;
         public string AboutTextBlockText
         {
             get => _aboutTextBlockText;
-            set
-            {
-                if (_aboutTextBlockText != value)
-                {
-                    _aboutTextBlockText = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref _aboutTextBlockText, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
-                if (Dispatcher?.HasThreadAccess == false)
+                foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
                 {
-                    await Dispatcher.ResumeForegroundAsync();
+                    if (cache.Key?.HasThreadAccess == false)
+                    {
+                        await cache.Key.ResumeForegroundAsync();
+                    }
+                    cache.Value.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
                 }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 
@@ -179,10 +167,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public SettingsViewModel(CoreDispatcher dispatcher)
+        public SettingsViewModel()
         {
-            Caches = this;
-            Dispatcher = dispatcher;
+            Caches[Dispatcher] = this;
             SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
         }
 

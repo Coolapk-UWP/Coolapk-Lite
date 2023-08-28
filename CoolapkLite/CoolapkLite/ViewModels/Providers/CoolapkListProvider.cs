@@ -1,10 +1,13 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.Providers
 {
@@ -25,10 +28,10 @@ namespace CoolapkLite.ViewModels.Providers
 
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
-        public async Task GetEntity<T>(ICollection<T> Models, int p = 1) where T : Entity
+        public async Task GetEntity<T>(ICollection<T> Models, CoreDispatcher dispatcher, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
-            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false);
+            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
                 JArray array = (JArray)result.result;
@@ -42,6 +45,11 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
+
+                    if (dispatcher?.HasThreadAccess == false)
+                    {
+                        await dispatcher.ResumeForegroundAsync();
+                    }
 
                     foreach (Entity entity in entities)
                     {
@@ -54,10 +62,10 @@ namespace CoolapkLite.ViewModels.Providers
             }
         }
 
-        public async Task GetEntity<T>(IEnumerable<T> Models, int p = 1) where T : Entity
+        public async Task GetEntity<T>(IEnumerable<T> Models, CoreDispatcher dispatcher, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
-            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false);
+            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
                 JArray array = (JArray)result.result;
@@ -71,6 +79,11 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
+
+                    if (dispatcher?.HasThreadAccess == false)
+                    {
+                        await dispatcher.ResumeForegroundAsync();
+                    }
 
                     foreach (Entity entity in entities)
                     {

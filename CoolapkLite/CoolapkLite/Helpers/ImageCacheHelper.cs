@@ -38,25 +38,16 @@ namespace CoolapkLite.Helpers
         private static readonly Uri DarkNoPicUri = new Uri("ms-appx:/Assets/NoPic/img_placeholder_night.png");
         private static readonly Uri WhiteNoPicUri = new Uri("ms-appx:/Assets/NoPic/img_placeholder.png");
 
-        private static BitmapImage DarkNoPicMode { get; set; }
-        private static BitmapImage WhiteNoPicMode { get; set; }
-        internal static BitmapImage NoPic { get => ThemeHelper.IsDarkTheme() ? DarkNoPicMode : WhiteNoPicMode; }
+        private static Dictionary<CoreDispatcher, BitmapImage> DarkNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
+        private static Dictionary<CoreDispatcher, BitmapImage> WhiteNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
 
         internal static CoreDispatcher Dispatcher { get; } = CoreApplication.MainView.Dispatcher;
 
-        static ImageCacheHelper()
-        {
-            ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
-            _ = Dispatcher.AwaitableRunAsync(() =>
-            {
-                DarkNoPicMode = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
-                WhiteNoPicMode = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
-            });
-        }
+        static ImageCacheHelper() => ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
 
         internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
-            if (!url.TryGetUri(out Uri uri)) { return NoPic; }
+            if (!url.TryGetUri(out Uri uri)) { return await GetNoPicAsync(dispatcher); }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0 || uri.IsFile)
             {
@@ -94,14 +85,14 @@ namespace CoolapkLite.Helpers
                         {
                             string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                             UIHelper.ShowMessage(str);
-                            return NoPic;
+                            return await GetNoPicAsync(dispatcher);
                         }
                     }
                     catch (Exception)
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                         UIHelper.ShowMessage(str);
-                        return NoPic;
+                        return await GetNoPicAsync(dispatcher);
                     }
                 }
                 else
@@ -205,19 +196,37 @@ namespace CoolapkLite.Helpers
 
         internal static Task CleanCacheAsync() => ImageCache.Instance.ClearAsync();
 
+        internal static BitmapImage GetNoPic(CoreDispatcher dispatcher)
+        {
+            if (!dispatcher.HasThreadAccess) { return null; }
+
+            if (!DarkNoPicMode.ContainsKey(dispatcher))
+            {
+                DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+            }
+
+            return ThemeHelper.IsDarkTheme()
+                ? DarkNoPicMode[dispatcher]
+                : WhiteNoPicMode[dispatcher];
+        }
+
         internal static async Task<BitmapImage> GetNoPicAsync(CoreDispatcher dispatcher)
         {
-            if (await dispatcher.AwaitableRunAsync(() => Dispatcher.HasThreadAccess))
-            {
-                return NoPic;
-            }
-            else
+            if (!dispatcher.HasThreadAccess)
             {
                 await dispatcher.ResumeForegroundAsync();
-                return await ThemeHelper.IsDarkThemeAsync()
-                    ? new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 }
-                    : new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
             }
+
+            if (!DarkNoPicMode.ContainsKey(dispatcher))
+            {
+                DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+            }
+
+            return await ThemeHelper.IsDarkThemeAsync()
+                ? DarkNoPicMode[dispatcher]
+                : WhiteNoPicMode[dispatcher];
         }
     }
 
@@ -250,18 +259,18 @@ namespace CoolapkLite.Helpers
         }
 
         [Obsolete]
-        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, bool isforce = false)
+        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
             Uri uri = url.TryGetUri();
-            if (uri == null) { return NoPic; }
+            if (uri == null) { return await GetNoPicAsync(dispatcher); }
 
             if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
             {
                 return new BitmapImage(uri);
             }
-            else if (!isforce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
-                return NoPic;
+                return await GetNoPicAsync(dispatcher);
             }
             else
             {
@@ -275,30 +284,30 @@ namespace CoolapkLite.Helpers
                 if (item is null)
                 {
                     StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-                    return await DownloadImageAsync(file, url);
+                    return await DownloadImageAsync(file, url, dispatcher);
                 }
                 else
                 {
-                    return item is StorageFile file ? GetLocalImageAsync(file.Path, isforce) : null;
+                    return item is StorageFile file ? GetLocalImageAsync(file.Path, dispatcher, isForce) : null;
                 }
             }
         }
 
         [Obsolete]
-        private static BitmapImage GetLocalImageAsync(string filename, bool forceGetPic)
+        private static BitmapImage GetLocalImageAsync(string filename, CoreDispatcher dispatcher, bool forceGetPic = false)
         {
             try
             {
-                return (filename is null || (!forceGetPic && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))) ? NoPic : new BitmapImage(new Uri(filename));
+                return (filename is null || (!forceGetPic && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))) ? GetNoPic(dispatcher) : new BitmapImage(new Uri(filename));
             }
             catch (Exception)
             {
-                return NoPic;
+                return GetNoPic(dispatcher);
             }
         }
 
         [Obsolete]
-        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url)
+        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, CoreDispatcher dispatcher)
         {
             try
             {
@@ -312,13 +321,13 @@ namespace CoolapkLite.Helpers
             }
             catch (FileLoadException)
             {
-                return NoPic;
+                return await GetNoPicAsync(dispatcher);
             }
             catch (HttpRequestException)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                 UIHelper.ShowMessage(str);
-                return NoPic;
+                return await GetNoPicAsync(dispatcher);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
@@ -33,7 +34,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 nameof(Provider),
                 typeof(SettingsViewModel),
                 typeof(SettingsPage),
-                new PropertyMetadata(SettingsViewModel.Caches));
+                null);
 
         /// <summary>
         /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
@@ -51,7 +52,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
+            Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel());
             UISettingChanged = (mode) => UpdateThemeRadio();
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
             UpdateThemeRadio();
@@ -65,7 +66,14 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private async void UpdateThemeRadio()
         {
-            switch (await ThemeHelper.GetActualThemeAsync())
+            ElementTheme theme = await ThemeHelper.GetActualThemeAsync();
+
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            switch (theme)
             {
                 case ElementTheme.Light:
                     Light.IsChecked = true;

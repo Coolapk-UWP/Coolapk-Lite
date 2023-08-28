@@ -19,42 +19,21 @@ namespace CoolapkLite.ViewModels.FeedPages
         public bool IsLogin
         {
             get => isLogin;
-            private set
-            {
-                if (isLogin != value)
-                {
-                    isLogin = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref isLogin, value);
         }
 
         private ProfileDetailModel profileDetail;
         public ProfileDetailModel ProfileDetail
         {
             get => profileDetail;
-            private set
-            {
-                if (profileDetail != value)
-                {
-                    profileDetail = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref profileDetail, value);
         }
 
         private NotificationsModel _notificationsModel;
         public NotificationsModel NotificationsModel
         {
             get => _notificationsModel;
-            private set
-            {
-                if (_notificationsModel != value)
-                {
-                    _notificationsModel = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref _notificationsModel, value);
         }
 
         public ProfileViewModel()

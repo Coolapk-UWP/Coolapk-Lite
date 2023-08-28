@@ -30,7 +30,7 @@ namespace CoolapkLite.Controls
                 nameof(Provider),
                 typeof(SettingsViewModel),
                 typeof(SettingsFlyoutControl),
-                new PropertyMetadata(SettingsViewModel.Caches));
+                null);
 
         /// <summary>
         /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="SettingsFlyout"/>.
@@ -62,7 +62,7 @@ namespace CoolapkLite.Controls
                 }
                 UpdateThemeRadio();
             };
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
+            Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel());
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
             UpdateThemeRadio();
         }

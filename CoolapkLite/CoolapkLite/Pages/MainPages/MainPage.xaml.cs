@@ -422,33 +422,19 @@ namespace CoolapkLite.Pages
         public string Icon
         {
             get => icon;
-            set
-            {
-                if (icon != value)
-                {
-                    icon = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref icon, value);
         }
 
         private ImageSource image;
         public ImageSource Image
         {
             get => image;
-            set
-            {
-                if (image != value)
-                {
-                    image = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref image, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -457,6 +443,15 @@ namespace CoolapkLite.Pages
                     await Dispatcher.ResumeForegroundAsync();
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,34 +51,20 @@ namespace CoolapkLite.ViewModels.DataSource
 
         #endregion
 
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         private bool any = false;
         public bool Any
         {
             get => any;
-            set
-            {
-                if (any != value)
-                {
-                    any = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref any, value);
         }
 
         private bool isLoading = false;
         public bool IsLoading
         {
             get => isLoading;
-            set
-            {
-                if (isLoading != value)
-                {
-                    isLoading = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isLoading, value);
         }
 
         protected override event PropertyChangedEventHandler PropertyChanged;
@@ -93,8 +80,15 @@ namespace CoolapkLite.ViewModels.DataSource
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
-
-        public IncrementalLoadingBase(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
+        
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
 
         /// <summary>
         /// We use this method to load data and add to self.

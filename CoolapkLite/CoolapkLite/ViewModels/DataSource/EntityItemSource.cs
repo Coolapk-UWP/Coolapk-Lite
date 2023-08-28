@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace CoolapkLite.ViewModels.DataSource
 {
@@ -17,10 +16,6 @@ namespace CoolapkLite.ViewModels.DataSource
         protected CoolapkListProvider SubProvider;
 
         protected static bool IsFullLoad => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
-
-        public EntityItemSource() : base(Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher) { }
-
-        public EntityItemSource(CoreDispatcher dispatcher) : base(dispatcher) { }
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
@@ -35,11 +30,11 @@ namespace CoolapkLite.ViewModels.DataSource
                         if (Models.Count > 0) { _currentPage++; }
                         if (SubProvider == null)
                         {
-                            await Provider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                            await Provider.GetEntity(Models, Dispatcher, _currentPage).ConfigureAwait(false);
                         }
                         else
                         {
-                            await SubProvider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                            await SubProvider.GetEntity(Models, Dispatcher, _currentPage).ConfigureAwait(false);
                         }
                         if (Models.Count <= 0 || Models.Count <= temp) { break; }
                     }
@@ -48,11 +43,11 @@ namespace CoolapkLite.ViewModels.DataSource
                 {
                     if (SubProvider == null)
                     {
-                        await Provider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                        await Provider.GetEntity(Models, Dispatcher, _currentPage).ConfigureAwait(false);
                     }
                     else
                     {
-                        await SubProvider.GetEntity(Models, _currentPage).ConfigureAwait(false);
+                        await SubProvider.GetEntity(Models, Dispatcher, _currentPage).ConfigureAwait(false);
                     }
                 }
             }

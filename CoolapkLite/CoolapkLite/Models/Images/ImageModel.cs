@@ -21,7 +21,7 @@ namespace CoolapkLite.Models.Images
 
         private readonly Action<UISettingChangedType> UISettingChanged;
 
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
@@ -35,7 +35,7 @@ namespace CoolapkLite.Models.Images
                 else
                 {
                     _ = GetImage();
-                    return ImageCacheHelper.NoPic;
+                    return ImageCacheHelper.GetNoPic(Dispatcher);
                 }
             }
             protected set
@@ -160,16 +160,11 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        public ImageModel(string uri, ImageType type) : this(uri, type, Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher)
+        public ImageModel(string uri, ImageType type)
         {
-        }
-
-        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
             Uri = uri;
             Type = type;
-            UISettingChanged = (mode) =>
+            UISettingChanged = async (mode) =>
             {
                 switch (mode)
                 {
@@ -179,7 +174,7 @@ namespace CoolapkLite.Models.Images
                         {
                             if (pic != null && pic.TryGetTarget(out BitmapImage _))
                             {
-                                Pic = ImageCacheHelper.NoPic;
+                                Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
                             }
                         }
                         break;

@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -24,28 +25,14 @@ namespace CoolapkLite.ViewModels.FeedPages
         public string Title
         {
             get => title;
-            protected set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref title, value);
         }
 
         private bool isShowTitle;
         public bool IsShowTitle
         {
             get => isShowTitle;
-            set
-            {
-                if (isShowTitle != value)
-                {
-                    isShowTitle = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isShowTitle, value);
         }
 
         internal AdaptiveViewModel(string uri, List<Type> types = null)
