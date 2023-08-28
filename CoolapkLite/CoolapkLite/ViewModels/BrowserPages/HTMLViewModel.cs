@@ -12,57 +12,35 @@ namespace CoolapkLite.ViewModels.BrowserPages
 {
     public class HTMLViewModel : IViewModel
     {
-        public CoreDispatcher Dispatcher { get; }
-
         private readonly Uri uri;
         private readonly Action<UISettingChangedType> UISettingChanged;
+
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         private string title;
         public string Title
         {
             get => title;
-            private set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref title, value);
         }
 
         private string html;
         public string HTML
         {
             get => html;
-            private set
-            {
-                if (html != value)
-                {
-                    html = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref html, value);
         }
 
         private string rawHTML;
         public string RawHTML
         {
             get => rawHTML;
-            private set
-            {
-                if (rawHTML != value)
-                {
-                    rawHTML = value;
-                    _ = GetHtmlAsync(value);
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref rawHTML, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -74,9 +52,17 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public HTMLViewModel(string url, CoreDispatcher dispatcher)
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
-            Dispatcher = dispatcher;
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
+        public HTMLViewModel(string url)
+        {
             uri = url.TryGetUri();
             UISettingChanged = (mode) =>
             {

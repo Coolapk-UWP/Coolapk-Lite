@@ -84,24 +84,27 @@ namespace CoolapkLite
 
         private async void EnsureWindow(IActivatedEventArgs e)
         {
-            if (MainWindow == null)
+            if (!isLoaded)
             {
                 RequestWIFIAccess();
                 RegisterBackgroundTask();
                 RegisterExceptionHandlingSynchronizationContext();
-
-                MainWindow = Window.Current;
 
                 if (ApiInformation.IsTypePresent("Windows.UI.StartScreen.JumpList") && JumpList.IsSupported())
                 {
                     JumpList JumpList = await JumpList.LoadCurrentAsync();
                     JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
                 }
+
+                isLoaded = true;
             }
+
+            Window window = Window.Current;
+            WindowHelper.TrackWindow(window);
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
-            if (!(MainWindow.Content is Frame rootFrame))
+            if (!(window.Content is Frame rootFrame))
             {
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                 {
@@ -164,7 +167,7 @@ namespace CoolapkLite
             }
 
             // 确保当前窗口处于活动状态
-            MainWindow.Activate();
+            window.Activate();
         }
 
         private async void CheckUpdate()
@@ -522,6 +525,6 @@ namespace CoolapkLite
             }
         }
 
-        public static Window MainWindow { get; private set; }
+        private bool isLoaded;
     }
 }

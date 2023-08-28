@@ -22,20 +22,13 @@ namespace CoolapkLite.ViewModels
     {
         private string ImageName = string.Empty;
 
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
-        private string title;
+        private string title = string.Empty;
         public string Title
         {
             get => title;
-            protected set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref title, value);
         }
 
         private int index = -1;
@@ -59,47 +52,26 @@ namespace CoolapkLite.ViewModels
         public bool IsLoading
         {
             get => isLoading;
-            protected set
-            {
-                if (isLoading != value)
-                {
-                    isLoading = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref isLoading, value);
         }
 
         private IList<ImageModel> images;
         public IList<ImageModel> Images
         {
             get => images;
-            private set
-            {
-                if (images != value)
-                {
-                    images = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref images, value);
         }
 
         private bool showOrigin = false;
         public bool ShowOrigin
         {
             get => showOrigin;
-            set
-            {
-                if (showOrigin != value)
-                {
-                    showOrigin = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref showOrigin, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -111,9 +83,17 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher)
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
-            Dispatcher = dispatcher;
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
+        public ShowImageViewModel(ImageModel image)
+        {
             if (image.ContextArray.Any())
             {
                 Images = image.ContextArray;

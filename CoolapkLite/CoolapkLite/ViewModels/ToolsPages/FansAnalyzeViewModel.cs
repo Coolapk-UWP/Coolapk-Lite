@@ -20,7 +20,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
         private readonly CoolapkListProvider Provider;
 
         public string ID { get; }
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         public string CachedSortedColumn { get; set; }
         public List<ContactModel> ContactModels { get; set; } = new List<ContactModel>();
@@ -29,47 +29,26 @@ namespace CoolapkLite.ViewModels.ToolsPages
         public string Title
         {
             get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref title, value);
         }
 
         private List<Point> orderedPointList = new List<Point>();
         public List<Point> OrderedPointList
         {
             get => orderedPointList;
-            set
-            {
-                if (orderedPointList != value)
-                {
-                    orderedPointList = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref orderedPointList, value);
         }
 
         private ObservableCollection<ContactModel> filteredContactModel = new ObservableCollection<ContactModel>();
         public ObservableCollection<ContactModel> FilteredContactModel
         {
             get => filteredContactModel;
-            set
-            {
-                if (filteredContactModel != value)
-                {
-                    filteredContactModel = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref filteredContactModel, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -78,6 +57,15 @@ namespace CoolapkLite.ViewModels.ToolsPages
                     await Dispatcher.ResumeForegroundAsync();
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 

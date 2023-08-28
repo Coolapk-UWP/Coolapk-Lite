@@ -46,7 +46,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? new CachesViewModel(Dispatcher);
+            Provider = Provider ?? new CachesViewModel();
             await Refresh(true);
         }
 

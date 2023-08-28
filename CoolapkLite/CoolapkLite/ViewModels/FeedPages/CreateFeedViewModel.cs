@@ -29,30 +29,23 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public static string[] ImageTypes = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 
-        private string title = string.Empty;
-        public string Title
-        {
-            get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        public CoreDispatcher Dispatcher { get; }
-
         public readonly CreateUserItemSource CreateUserItemSource = new CreateUserItemSource();
         public readonly CreateTopicItemSource CreateTopicItemSource = new CreateTopicItemSource();
 
         public readonly ObservableCollection<WriteableBitmap> Pictures = new ObservableCollection<WriteableBitmap>();
 
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+
+        private string title = string.Empty;
+        public string Title
+        {
+            get => title;
+            set => SetProperty(ref title, value);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -64,7 +57,14 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public CreateFeedViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
 
         public async Task Refresh(bool reset)
         {

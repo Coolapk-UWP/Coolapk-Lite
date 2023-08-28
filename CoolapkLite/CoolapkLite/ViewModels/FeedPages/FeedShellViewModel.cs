@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
@@ -10,62 +11,61 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedShellViewModel : IViewModel, INotifyPropertyChanged
+    public abstract class FeedShellViewModel : IViewModel
     {
         protected string ID { get; set; }
+
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         private string title = string.Empty;
         public string Title
         {
             get => title;
-            protected set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref title, value);
         }
 
         private FeedDetailModel feedDetail;
         public FeedDetailModel FeedDetail
         {
             get => feedDetail;
-            protected set
-            {
-                if (feedDetail != value)
-                {
-                    feedDetail = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref feedDetail, value);
         }
 
         private List<ShyHeaderItem> itemSource;
         public List<ShyHeaderItem> ItemSource
         {
             get => itemSource;
-            protected set
-            {
-                if (itemSource != value)
-                {
-                    itemSource = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref itemSource, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         protected FeedShellViewModel(string id)

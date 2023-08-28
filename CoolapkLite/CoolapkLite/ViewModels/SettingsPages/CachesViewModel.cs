@@ -14,7 +14,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public class CachesViewModel : IViewModel
     {
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+
+        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
 
         private ObservableCollection<StorageFile> images = new ObservableCollection<StorageFile>();
         public ObservableCollection<StorageFile> Images
@@ -30,11 +32,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -46,7 +46,14 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public CachesViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
 
         public async Task Refresh(bool reset)
         {

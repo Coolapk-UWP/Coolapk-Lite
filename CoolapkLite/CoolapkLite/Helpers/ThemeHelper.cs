@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Common;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.UI;
@@ -31,31 +33,37 @@ namespace CoolapkLite.Helpers
         public static ElementTheme ActualTheme => GetActualTheme();
 
         public static ElementTheme GetActualTheme() =>
-            CurrentApplicationWindow == null
+            GetActualTheme(Window.Current ?? CurrentApplicationWindow);
+
+        public static ElementTheme GetActualTheme(Window window) =>
+            window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                : CurrentApplicationWindow.Dispatcher.HasThreadAccess
-                    ? CurrentApplicationWindow.Content is FrameworkElement rootElement
+                : window.Dispatcher.HasThreadAccess
+                    ? window.Content is FrameworkElement rootElement
                         && rootElement.RequestedTheme != ElementTheme.Default
                             ? rootElement.RequestedTheme
                             : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
                     : UIHelper.AwaitByTaskCompleteSource(() =>
-                        CurrentApplicationWindow.Dispatcher.AwaitableRunAsync(() =>
-                            CurrentApplicationWindow.Content is FrameworkElement _rootElement
+                        window.Dispatcher.AwaitableRunAsync(() =>
+                            window.Content is FrameworkElement _rootElement
                                 && _rootElement.RequestedTheme != ElementTheme.Default
                                     ? _rootElement.RequestedTheme
                                     : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
                             CoreDispatcherPriority.High));
 
-        public static async Task<ElementTheme> GetActualThemeAsync() =>
-            CurrentApplicationWindow == null
+        public static Task<ElementTheme> GetActualThemeAsync() =>
+            GetActualThemeAsync(Window.Current ?? CurrentApplicationWindow);
+
+        public static async Task<ElementTheme> GetActualThemeAsync(Window window) =>
+            window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                : CurrentApplicationWindow.Dispatcher.HasThreadAccess
-                    ? CurrentApplicationWindow.Content is FrameworkElement rootElement
+                : window.Dispatcher.HasThreadAccess
+                    ? window.Content is FrameworkElement rootElement
                         && rootElement.RequestedTheme != ElementTheme.Default
                             ? rootElement.RequestedTheme
                             : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                    : await CurrentApplicationWindow.Dispatcher.AwaitableRunAsync(() =>
-                        CurrentApplicationWindow.Content is FrameworkElement _rootElement
+                    : await window.Dispatcher.AwaitableRunAsync(() =>
+                        window.Content is FrameworkElement _rootElement
                             && _rootElement.RequestedTheme != ElementTheme.Default
                                 ? _rootElement.RequestedTheme
                                 : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
@@ -75,46 +83,55 @@ namespace CoolapkLite.Helpers
         }
 
         public static ElementTheme GetRootTheme() =>
-            CurrentApplicationWindow == null
+            GetRootTheme(Window.Current ?? CurrentApplicationWindow);
+
+        public static ElementTheme GetRootTheme(Window window) =>
+            window == null
                 ? ElementTheme.Default
-                : CurrentApplicationWindow.Dispatcher.HasThreadAccess
-                    ? CurrentApplicationWindow.Content is FrameworkElement rootElement
+                : window.Dispatcher.HasThreadAccess
+                    ? window.Content is FrameworkElement rootElement
                         ? rootElement.RequestedTheme
                         : ElementTheme.Default
                     : UIHelper.AwaitByTaskCompleteSource(() =>
-                        CurrentApplicationWindow.Dispatcher.AwaitableRunAsync(() =>
-                            CurrentApplicationWindow.Content is FrameworkElement _rootElement
+                        window.Dispatcher.AwaitableRunAsync(() =>
+                            window.Content is FrameworkElement _rootElement
                                 ? _rootElement.RequestedTheme
                                 : ElementTheme.Default,
                             CoreDispatcherPriority.High));
 
-        public static async Task<ElementTheme> GetRootThemeAsync() =>
-            CurrentApplicationWindow == null
+        public static Task<ElementTheme> GetRootThemeAsync() =>
+            GetRootThemeAsync(Window.Current ?? CurrentApplicationWindow);
+
+        public static async Task<ElementTheme> GetRootThemeAsync(Window window) =>
+            window == null
                 ? ElementTheme.Default
-                : CurrentApplicationWindow.Dispatcher.HasThreadAccess
-                    ? CurrentApplicationWindow.Content is FrameworkElement rootElement
+                : window.Dispatcher.HasThreadAccess
+                    ? window.Content is FrameworkElement rootElement
                         ? rootElement.RequestedTheme
                         : ElementTheme.Default
-                    : await CurrentApplicationWindow.Dispatcher.AwaitableRunAsync(() =>
-                        CurrentApplicationWindow.Content is FrameworkElement _rootElement
+                    : await window.Dispatcher.AwaitableRunAsync(() =>
+                        window.Content is FrameworkElement _rootElement
                             ? _rootElement.RequestedTheme
                             : ElementTheme.Default,
                         CoreDispatcherPriority.High);
 
         public static async void SetRootTheme(ElementTheme value)
         {
-            if (CurrentApplicationWindow == null) { return; }
-
-            _ = CurrentApplicationWindow.Dispatcher.AwaitableRunAsync(() =>
+            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
             {
-                if (CurrentApplicationWindow.Content is FrameworkElement rootElement)
+                if (!window.Dispatcher.HasThreadAccess)
+                {
+                    await window.Dispatcher.ResumeForegroundAsync();
+                }
+
+                if (window.Content is FrameworkElement rootElement)
                 {
                     rootElement.RequestedTheme = value;
                 }
 
-                if (WindowHelper.IsSupported)
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
                 {
-                    foreach (FrameworkElement element in WindowHelper.ActiveWindows.Keys)
+                    foreach (FrameworkElement element in appWindows.Keys)
                     {
                         element.RequestedTheme = value;
                     }
@@ -128,25 +145,26 @@ namespace CoolapkLite.Helpers
 
         public static async Task SetRootThemeAsync(ElementTheme value)
         {
-            if (CurrentApplicationWindow == null) { return; }
-
-            if (!CurrentApplicationWindow.Dispatcher.HasThreadAccess)
+            await Task.WhenAll(WindowHelper.ActiveWindows.Values.Select(async (window) =>
             {
-                await CurrentApplicationWindow.Dispatcher.ResumeForegroundAsync();
-            }
-
-            if (CurrentApplicationWindow.Content is FrameworkElement rootElement)
-            {
-                rootElement.RequestedTheme = value;
-            }
-
-            if (WindowHelper.IsSupported)
-            {
-                foreach (FrameworkElement element in WindowHelper.ActiveWindows.Keys)
+                if (!window.Dispatcher.HasThreadAccess)
                 {
-                    element.RequestedTheme = value;
+                    await window.Dispatcher.ResumeForegroundAsync();
                 }
-            }
+
+                if (window.Content is FrameworkElement rootElement)
+                {
+                    rootElement.RequestedTheme = value;
+                }
+
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                {
+                    foreach (FrameworkElement element in appWindows.Keys)
+                    {
+                        element.RequestedTheme = value;
+                    }
+                }
+            }));
 
             SettingsHelper.Set(SettingsHelper.SelectedAppTheme, value);
             UpdateSystemCaptionButtonColors();
@@ -158,7 +176,7 @@ namespace CoolapkLite.Helpers
         public static void Initialize()
         {
             // Save reference as this might be null when the user is in another app
-            CurrentApplicationWindow = Window.Current ?? App.MainWindow;
+            CurrentApplicationWindow = Window.Current;
             RootTheme = SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme);
 
             // Registering to color changes, thus we notice when user changes theme system wide
@@ -168,7 +186,17 @@ namespace CoolapkLite.Helpers
 
         public static async void Initialize(Window window)
         {
+            CurrentApplicationWindow = CurrentApplicationWindow ?? window;
             if (window?.Content is FrameworkElement rootElement)
+            {
+                rootElement.RequestedTheme = await GetActualThemeAsync();
+            }
+            UpdateSystemCaptionButtonColors(window);
+        }
+
+        public static async void Initialize(AppWindow window)
+        {
+            if (window?.GetXamlRootForWindow() is FrameworkElement rootElement)
             {
                 rootElement.RequestedTheme = await GetActualThemeAsync();
             }
@@ -204,7 +232,7 @@ namespace CoolapkLite.Helpers
                     : ActualTheme == ElementTheme.Dark;
         }
 
-        public static bool IsDarkTheme(ElementTheme ActualTheme)
+        public static bool IsDarkTheme(this ElementTheme ActualTheme)
         {
             return Window.Current != null
                 ? ActualTheme == ElementTheme.Default
@@ -215,22 +243,25 @@ namespace CoolapkLite.Helpers
                     : ActualTheme == ElementTheme.Dark;
         }
 
-        public static async void UpdateExtendViewIntoTitleBar(bool IsExtendsTitleBar)
+        public static void UpdateExtendViewIntoTitleBar(bool IsExtendsTitleBar)
         {
-            if (CurrentApplicationWindow?.Dispatcher?.HasThreadAccess == false)
+            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
             {
-                await CurrentApplicationWindow.Dispatcher.ResumeForegroundAsync();
-            }
-
-            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = IsExtendsTitleBar;
-
-            if (WindowHelper.IsSupported)
-            {
-                foreach (AppWindow window in WindowHelper.ActiveWindows.Values)
+                if (!window.Dispatcher.HasThreadAccess)
                 {
-                    window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
+                    await window.Dispatcher.ResumeForegroundAsync();
                 }
-            }
+
+                CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = IsExtendsTitleBar;
+
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                {
+                    foreach (AppWindow appWindow in appWindows.Values)
+                    {
+                        appWindow.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
+                    }
+                }
+            });
         }
 
         public static async void UpdateSystemCaptionButtonColors()
@@ -241,38 +272,41 @@ namespace CoolapkLite.Helpers
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
 
-            if (CurrentApplicationWindow?.Dispatcher?.HasThreadAccess == false)
+            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
             {
-                await CurrentApplicationWindow.Dispatcher.ResumeForegroundAsync();
-            }
-
-            if (UIHelper.HasStatusBar)
-            {
-                StatusBar StatusBar = StatusBar.GetForCurrentView();
-                StatusBar.ForegroundColor = ForegroundColor;
-                StatusBar.BackgroundColor = BackgroundColor;
-                StatusBar.BackgroundOpacity = 0; // 透明度
-            }
-            else
-            {
-                bool ExtendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-                ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
-                TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
-                TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
-                TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
-            }
-
-            if (WindowHelper.IsSupported)
-            {
-                foreach (AppWindow window in WindowHelper.ActiveWindows.Values)
+                if (!window.Dispatcher.HasThreadAccess)
                 {
-                    bool ExtendViewIntoTitleBar = window.TitleBar.ExtendsContentIntoTitleBar;
-                    AppWindowTitleBar TitleBar = window.TitleBar;
+                    await window.Dispatcher.ResumeForegroundAsync();
+                }
+
+                if (UIHelper.HasStatusBar)
+                {
+                    StatusBar StatusBar = StatusBar.GetForCurrentView();
+                    StatusBar.ForegroundColor = ForegroundColor;
+                    StatusBar.BackgroundColor = BackgroundColor;
+                    StatusBar.BackgroundOpacity = 0; // 透明度
+                }
+                else
+                {
+                    bool ExtendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+                    ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
                     TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
                     TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
                     TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
                 }
-            }
+
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                {
+                    foreach (AppWindow appWindow in appWindows.Values)
+                    {
+                        bool ExtendViewIntoTitleBar = appWindow.TitleBar.ExtendsContentIntoTitleBar;
+                        AppWindowTitleBar TitleBar = appWindow.TitleBar;
+                        TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
+                        TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
+                        TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
+                    }
+                }
+            });
         }
 
         public static async void UpdateSystemCaptionButtonColors(Window window)
@@ -303,6 +337,26 @@ namespace CoolapkLite.Helpers
                 TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
                 TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
             }
+        }
+
+        public static async void UpdateSystemCaptionButtonColors(AppWindow window)
+        {
+            if (!(ThreadSwitcher.IsHasThreadAccessPropertyAvailable && window.DispatcherQueue.HasThreadAccess))
+            {
+                await window.DispatcherQueue.ResumeForegroundAsync();
+            }
+
+            bool IsDark = window.GetXamlRootForWindow() is FrameworkElement rootElement ? IsDarkTheme(rootElement.RequestedTheme) : await IsDarkThemeAsync();
+            bool IsHighContrast = new AccessibilitySettings().HighContrast;
+
+            Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
+            Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
+
+            bool ExtendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+            ApplicationViewTitleBar TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            TitleBar.ForegroundColor = TitleBar.ButtonForegroundColor = ForegroundColor;
+            TitleBar.BackgroundColor = TitleBar.InactiveBackgroundColor = BackgroundColor;
+            TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
         }
     }
 

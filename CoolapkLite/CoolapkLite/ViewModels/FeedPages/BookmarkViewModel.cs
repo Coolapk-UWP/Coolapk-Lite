@@ -1,8 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.ViewModels.SettingsPages;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -35,11 +33,14 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (name != null)
             {
-                if (Dispatcher?.HasThreadAccess == false)
+                foreach (KeyValuePair<CoreDispatcher, BookmarkViewModel> cache in Caches)
                 {
-                    await Dispatcher.ResumeForegroundAsync();
+                    if (cache.Key?.HasThreadAccess == false)
+                    {
+                        await cache.Key.ResumeForegroundAsync();
+                    }
+                    cache.Value.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
                 }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
@@ -7,7 +8,9 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -15,55 +18,57 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public int PivotIndex = -1;
 
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+
         private string title = string.Empty;
         public string Title
         {
             get => title;
-            set
-            {
-                title = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref title, value);
         }
 
         private SearchFeedItemSource searchFeedItemSource;
         public SearchFeedItemSource SearchFeedItemSource
         {
             get => searchFeedItemSource;
-            private set
-            {
-                searchFeedItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchFeedItemSource, value);
         }
 
         private SearchUserItemSource searchUserItemSource;
         public SearchUserItemSource SearchUserItemSource
         {
             get => searchUserItemSource;
-            private set
-            {
-                searchUserItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchUserItemSource, value);
         }
 
         private SearchTopicItemSource searchTopicItemSource;
         public SearchTopicItemSource SearchTopicItemSource
         {
             get => searchTopicItemSource;
-            private set
-            {
-                searchTopicItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchTopicItemSource, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         public SearchingViewModel(string keyword, int index = -1)

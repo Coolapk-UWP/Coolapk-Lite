@@ -1,7 +1,15 @@
-﻿using System;
+﻿using CoolapkLite.Common;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
+using Windows.System;
+using Windows.UI;
+using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -16,9 +24,19 @@ namespace CoolapkLite.Helpers
     // windows. In the future, we would like to support this in platform APIs.
     public static class WindowHelper
     {
-        public static bool IsSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
+        public static bool IsAppWindowSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
 
-        public static bool IsAppWindow(this UIElement element) => IsSupported && element?.XamlRoot?.Content != null && ActiveWindows.ContainsKey(element.XamlRoot.Content);
+        public static async Task<bool> CreateWindow(Action<Window> launched)
+        {
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            await newView.Dispatcher.ResumeForegroundAsync();
+            int newViewId = ApplicationView.GetForCurrentView().Id;
+            var newWindow = Window.Current;
+            launched(newWindow);
+            TrackWindow(newWindow);
+            Window.Current.Activate();
+            return await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+        }
 
         public static async Task<(AppWindow, Frame)> CreateWindow()
         {
@@ -29,20 +47,62 @@ namespace CoolapkLite.Helpers
             return (newWindow, newFrame);
         }
 
+        public static void TrackWindow(this Window window)
+        {
+            window.Closed += (sender, args) =>
+            {
+                ActiveWindows.Remove(window.Dispatcher);
+                window = null;
+            };
+            ActiveWindows.Add(window.Dispatcher, window);
+        }
+
         public static void TrackWindow(this AppWindow window, Frame frame)
         {
             window.Closed += (sender, args) =>
             {
-                ActiveWindows?.Remove(frame);
+                if (ActiveAppWindows.TryGetValue(frame.Dispatcher, out Dictionary<UIElement, AppWindow> windows))
+                {
+                    windows?.Remove(frame);
+                }
                 frame.Content = null;
                 window = null;
             };
-            ActiveWindows?.Add(frame, window);
+
+            if (!ActiveAppWindows.ContainsKey(frame.Dispatcher))
+            {
+                ActiveAppWindows[frame.Dispatcher] = new Dictionary<UIElement, AppWindow>();
+            }
+
+            ActiveAppWindows[frame.Dispatcher][frame] = window;
         }
 
-        public static AppWindow GetWindowForElement(this UIElement element)
+        public static bool IsAppWindow(this UIElement element) =>
+            IsAppWindowSupported
+            && element?.XamlRoot?.Content != null
+            && ActiveAppWindows.ContainsKey(element.Dispatcher)
+            && ActiveAppWindows[element.Dispatcher].ContainsKey(element.XamlRoot.Content);
+
+        public static AppWindow GetWindowForElement(this UIElement element) =>
+            IsAppWindowSupported
+            && element?.XamlRoot?.Content != null
+            && ActiveAppWindows.TryGetValue(element.Dispatcher, out var windows)
+            && windows.TryGetValue(element.XamlRoot.Content, out AppWindow window)
+                ? window : null;
+
+        public static UIElement GetXamlRootForWindow(this AppWindow window)
         {
-            return element.IsAppWindow() ? ActiveWindows[element.XamlRoot.Content] : null;
+            foreach (Dictionary<UIElement, AppWindow> windows in ActiveAppWindows.Values)
+            {
+                foreach (KeyValuePair<UIElement, AppWindow> element in windows)
+                {
+                    if (element.Value == window)
+                    {
+                        return element.Key;
+                    }
+                }
+            }
+            return null;
         }
 
         public static void SetXAMLRoot(this UIElement element, UIElement target)
@@ -53,6 +113,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static Dictionary<UIElement, AppWindow> ActiveWindows { get; } = IsSupported ? new Dictionary<UIElement, AppWindow>() : null;
+        public static Dictionary<CoreDispatcher, Window> ActiveWindows { get; } = new Dictionary<CoreDispatcher, Window>();
+        public static Dictionary<CoreDispatcher, Dictionary<UIElement, AppWindow>> ActiveAppWindows { get; } = IsAppWindowSupported ? new Dictionary<CoreDispatcher, Dictionary<UIElement, AppWindow>>() : null;
     }
 }

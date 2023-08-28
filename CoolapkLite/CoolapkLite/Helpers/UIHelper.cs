@@ -6,6 +6,7 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
@@ -308,13 +309,33 @@ namespace CoolapkLite.Helpers
         {
             if (!mainPage.Dispatcher.HasThreadAccess)
             { await mainPage.Dispatcher.ResumeForegroundAsync(); }
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupported)
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow))
             {
-                (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                window.TitleBar.ExtendsContentIntoTitleBar = SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar);
-                ThemeHelper.Initialize();
-                frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
-                return await window.TryShowAsync();
+                if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
+                {
+                    (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                    {
+                        window.TitleBar.ExtendsContentIntoTitleBar = true;
+                    }
+                    ThemeHelper.Initialize(window);
+                    frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
+                    return await window.TryShowAsync();
+                }
+                else
+                {
+                    return await WindowHelper.CreateWindow((window) =>
+                    {
+                        if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
+                        Frame frame = new Frame();
+                        window.Content = frame;
+                        ThemeHelper.Initialize(window);
+                        frame.Navigate(typeof(ShowImagePage), image.Clone(window.Dispatcher), new DrillInNavigationTransitionInfo());
+                    });
+                }
             }
             else
             {
@@ -480,7 +501,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, ShellDispatcher));
+                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin));
             }
             else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {

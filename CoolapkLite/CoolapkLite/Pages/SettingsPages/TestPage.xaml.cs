@@ -29,6 +29,7 @@ using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Animation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -122,6 +123,12 @@ namespace CoolapkLite.Pages.SettingsPages
             set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
         }
 
+        internal bool IsUseAppWindow
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow);
+            set => SettingsHelper.Set(SettingsHelper.IsUseAppWindow, value);
+        }
+
         internal bool IsUseBlurBrush
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush);
@@ -211,27 +218,29 @@ namespace CoolapkLite.Pages.SettingsPages
                     GC.Collect();
                     break;
                 case "NewWindow":
-                    //if (WindowHelper.IsSupported)
-                    //{
-                    //    Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                    //    (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                    //    window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
-                    //    ThemeHelper.Initialize();
-                    //    frame.Navigate(page);
-                    //    await window.TryShowAsync();
-                    //}
-                    CoreApplicationView newView = CoreApplication.CreateNewView();
-                    int newViewId = await newView.Dispatcher.AwaitableRunAsync(() =>
+                    await WindowHelper.CreateWindow((window) =>
                     {
+                        if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
                         Frame frame = new Frame();
-                        frame.Navigate(typeof(MainPage), null);
-                        Window.Current.Content = frame;
-                        // You have to activate the window in order to show it later.
-                        Window.Current.Activate();
-
-                        return ApplicationView.GetForCurrentView().Id;
+                        window.Content = frame;
+                        ThemeHelper.Initialize(window);
+                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                     });
-                    bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+                    break;
+                case "NewAppWindow":
+                    if (WindowHelper.IsAppWindowSupported)
+                    {
+                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                        window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
+                        ThemeHelper.Initialize();
+                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                        await window.TryShowAsync();
+                    }
                     break;
                 case "CustomAPI":
                     APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);

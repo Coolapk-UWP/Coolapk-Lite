@@ -1,9 +1,11 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +23,7 @@ namespace CoolapkLite.Models.Images
 
         private readonly Action<UISettingChangedType> UISettingChanged;
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
@@ -160,8 +162,13 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        public ImageModel(string uri, ImageType type)
+        public ImageModel(string uri, ImageType type) : this(uri, type, UIHelper.TryGetForCurrentCoreDispatcher())
         {
+        }
+
+        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
             Uri = uri;
             Type = type;
             UISettingChanged = async (mode) =>
@@ -229,22 +236,62 @@ namespace CoolapkLite.Models.Images
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher); }
                 BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
                 Pic = bitmapImage;
-                await bitmapImage.Dispatcher.ResumeForegroundAsync();
-                double PixelWidth = bitmapImage.PixelWidth;
-                double PixelHeight = bitmapImage.PixelHeight;
-                Rect Bounds = Window.Current != null
-                    ? await Window.Current.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds)
-                    : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds);
-                IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
-                            && PixelHeight > PixelWidth * 1.5;
-                IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
-                            && PixelWidth > PixelHeight * 1.5;
+                if (bitmapImage != null)
+                {
+                    if (!bitmapImage.Dispatcher.HasThreadAccess)
+                    {
+                        await bitmapImage.Dispatcher.ResumeForegroundAsync();
+                    }
+                    double PixelWidth = bitmapImage.PixelWidth;
+                    double PixelHeight = bitmapImage.PixelHeight;
+                    Rect Bounds = Window.Current != null
+                        ? await Window.Current.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds)
+                        : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds);
+                    IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
+                                && PixelHeight > PixelWidth * 1.5;
+                    IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
+                                && PixelWidth > PixelHeight * 1.5;
+                }
+                else
+                {
+                    IsLongPic = false;
+                    IsWidePic = false;
+                }
             }
             finally
             {
                 LoadCompleted?.Invoke(this, null);
                 semaphoreSlim.Release();
                 IsLoading = false;
+            }
+        }
+
+        public ImageModel Clone(CoreDispatcher dispatcher)
+        {
+            if (contextArray.Any())
+            {
+                ImmutableArray<ImageModel> array = contextArray.Select(x => new ImageModel(x.uri, x.type, dispatcher)).ToImmutableArray();
+                ImageModel image = array.FirstOrDefault(x => x.uri == uri);
+                if (image != null)
+                {
+                    foreach (ImageModel item in array)
+                    {
+                        item.ContextArray = array;
+                    }
+                }
+                else
+                {
+                    image.ContextArray = array;
+                }
+                return image;
+            }
+            else
+            {
+                ImageModel image = new ImageModel(uri, type, dispatcher)
+                {
+                    ContextArray = contextArray.Select(x => new ImageModel(x.uri, x.type, dispatcher)).ToImmutableArray()
+                };
+                return image;
             }
         }
 

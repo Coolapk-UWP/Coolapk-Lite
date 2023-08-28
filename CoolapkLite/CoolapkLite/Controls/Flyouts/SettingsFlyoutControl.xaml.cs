@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
@@ -74,7 +75,14 @@ namespace CoolapkLite.Controls
 
         private async void UpdateThemeRadio()
         {
-            switch (await ThemeHelper.GetActualThemeAsync())
+            ElementTheme theme = await ThemeHelper.GetActualThemeAsync();
+
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            switch (theme)
             {
                 case ElementTheme.Light:
                     Light.IsChecked = true;

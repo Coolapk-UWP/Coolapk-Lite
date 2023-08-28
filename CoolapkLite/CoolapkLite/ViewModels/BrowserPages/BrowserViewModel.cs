@@ -1,8 +1,11 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.BrowserPages
 {
@@ -10,53 +13,50 @@ namespace CoolapkLite.ViewModels.BrowserPages
     {
         private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
 
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+
         private string title;
         public string Title
         {
             get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref title, value);
         }
 
         private Uri uri;
         public Uri Uri
         {
             get => uri;
-            set
-            {
-                if (uri != value)
-                {
-                    uri = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref uri, value);
         }
 
         private bool isLoginPage;
         public bool IsLoginPage
         {
             get => isLoginPage;
-            set
-            {
-                if (isLoginPage != value)
-                {
-                    isLoginPage = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isLoginPage, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         public BrowserViewModel(string url)
@@ -67,7 +67,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             Title = _loader.GetString("Title");
         }
 
-        public Task Refresh(bool reset) => throw new NotImplementedException();
+        public Task Refresh(bool reset) => Task.CompletedTask;
 
         bool IViewModel.IsEqual(IViewModel other) => other is BrowserViewModel model && IsEqual(model);
         public bool IsEqual(BrowserViewModel other) => Uri == other.Uri;

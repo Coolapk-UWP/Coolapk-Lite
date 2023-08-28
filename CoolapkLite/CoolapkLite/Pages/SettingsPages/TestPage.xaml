@@ -155,17 +155,19 @@
                             Content="打开 Charm 搜索"
                             Tag="OpenCharmSearch" />
                     </control:StackPanel>
-                    <ToggleSwitch Header="是否使用模糊笔刷" IsOn="{x:Bind IsUseBlurBrush, Mode=TwoWay}" />
+                    <ToggleSwitch Header="是否使用 AppWindow" IsOn="{x:Bind IsUseAppWindow, Mode=TwoWay}" />
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="管理插件"
-                            Tag="GoToExtensionPage" />
+                            Content="新建窗口"
+                            Tag="NewWindow" />
                         <Button
                             Click="Button_Click"
-                            Content="新建窗口 (仅支持 1903 及以上)"
-                            Tag="NewWindow" />
+                            Content="新建 AppWindow"
+                            Tag="NewAppWindow"
+                            ToolTipService.ToolTip="仅支持 1903 及以上" />
                     </control:StackPanel>
+                    <ToggleSwitch Header="是否使用模糊笔刷" IsOn="{x:Bind IsUseBlurBrush, Mode=TwoWay}" />
                     <ToggleSwitch Header="是否使用合成动画" IsOn="{x:Bind IsUseCompositor, Mode=TwoWay}" />
                     <ComboBox
                         Header="切换语言 (需要重启)"
@@ -181,10 +183,16 @@
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
-                    <Button
-                        Click="Button_Click"
-                        Content="前往粉丝分析页面"
-                        Tag="GoToFansAnalyzePage" />
+                    <control:StackPanel Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="管理插件"
+                            Tag="GoToExtensionPage" />
+                        <Button
+                            Click="Button_Click"
+                            Content="前往粉丝分析页面"
+                            Tag="GoToFansAnalyzePage" />
+                    </control:StackPanel>
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="应用测试">
                     <control:StackPanel Orientation="Horizontal" Spacing="4">
