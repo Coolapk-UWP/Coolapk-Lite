@@ -29,7 +29,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async static void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -39,7 +39,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     {
                         await cache.Key.ResumeForegroundAsync();
                     }
-                    cache.Value.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
                 }
             }
         }

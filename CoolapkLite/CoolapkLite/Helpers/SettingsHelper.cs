@@ -129,7 +129,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseMultiWindow))
             {
-                LocalObject.Save(IsUseMultiWindow, true);
+                LocalObject.Save(IsUseMultiWindow, WindowHelper.IsAppWindowSupported);
             }
             if (!LocalObject.KeyExists(SelectedAppTheme))
             {

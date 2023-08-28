@@ -49,8 +49,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             IsLogin = await SettingsHelper.CheckLoginAsync();
             if (IsLogin)
             {
+                NotificationsModel = NotificationsModel ?? (NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel());
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                NotificationsModel = NotificationsModel.Instance;
                 ProfileDetail = await GetFeedDetailAsync(UID);
                 await NotificationsModel.Update();
                 await Reset();

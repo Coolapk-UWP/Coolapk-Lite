@@ -12,7 +12,6 @@
     d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
     DataContext="{x:Bind Provider, Mode=OneWay}"
     Loaded="SettingsFlyout_Loaded"
-    Style="{StaticResource DefaultSettingsFlyoutStyle}"
     Unloaded="SettingsFlyout_Unloaded"
     mc:Ignorable="d">
     <StackPanel>

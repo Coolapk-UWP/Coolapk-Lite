@@ -157,7 +157,7 @@ namespace CoolapkLite.ViewModels
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                Dispatcher.ShowMessage(str);
                 return null;
             }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
@@ -176,7 +176,7 @@ namespace CoolapkLite.ViewModels
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                Dispatcher.ShowMessage(str);
                 return;
             }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
@@ -194,7 +194,7 @@ namespace CoolapkLite.ViewModels
             if (image == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                Dispatcher.ShowMessage(str);
                 return;
             }
 

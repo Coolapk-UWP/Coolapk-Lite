@@ -50,13 +50,12 @@ namespace CoolapkLite.Pages
         public MainPage()
         {
             InitializeComponent();
-            UIHelper.ShellDispatcher = Dispatcher;
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
-            _ = (NotificationsModel.Instance?.Update());
-            _ = (LiveTileTask.Instance?.UpdateTile());
+            _ = NotificationsModel.Update();
+            _ = LiveTileTask.Instance?.UpdateTile();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -159,7 +158,7 @@ namespace CoolapkLite.Pages
                     }
                 }
             }
-            UIHelper.HideProgressBar();
+            UIHelper.HideProgressBar(this as IHaveTitleBar);
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
@@ -240,7 +239,7 @@ namespace CoolapkLite.Pages
 
         #region 搜索框
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {

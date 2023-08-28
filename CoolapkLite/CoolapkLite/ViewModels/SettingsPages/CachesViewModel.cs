@@ -57,7 +57,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public async Task Refresh(bool reset)
         {
-            UIHelper.ShowProgressBar();
+            Dispatcher.ShowProgressBar();
             await ThreadSwitcher.ResumeBackgroundAsync();
             try
             {
@@ -70,9 +70,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             catch (Exception ex)
             {
-                UIHelper.ShowMessage(ex.ExceptionToMessage());
+                Dispatcher.ShowMessage(ex.ExceptionToMessage());
             }
-            UIHelper.HideProgressBar();
+            Dispatcher.HideProgressBar();
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is CachesViewModel model && IsEqual(model);

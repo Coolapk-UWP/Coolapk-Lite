@@ -118,7 +118,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         #region 搜索框
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {

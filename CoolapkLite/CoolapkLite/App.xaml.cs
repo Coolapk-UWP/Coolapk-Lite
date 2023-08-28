@@ -114,20 +114,6 @@ namespace CoolapkLite
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
 
-                if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
-                {
-                    SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
-                    rootFrame.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
-                    Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Styles/SettingsFlyout.xaml") });
-                }
-
-                if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
-                {
-                    SearchPane searchPane = SearchPane.GetForCurrentView();
-                    searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
-                    searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
-                }
-
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
@@ -200,58 +186,6 @@ namespace CoolapkLite
             }
         }
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
-
-        private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
-        {
-            string keyWord = args.QueryText;
-            List<string> results = new List<string>();
-            SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
-            await Task.Run(async () =>
-            {
-                await semaphoreSlim.WaitAsync();
-                try
-                {
-                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
-                    if (isSucceed && result != null && result is JArray array && array.Count > 0)
-                    {
-                        foreach (JToken token in array)
-                        {
-                            string key = string.Empty;
-                            switch (token.Value<string>("entityType"))
-                            {
-                                case "apk":
-                                    key = new AppModel(token as JObject).Title;
-                                    break;
-                                case "searchWord":
-                                default:
-                                    key = new SearchWord(token as JObject).ToString();
-                                    break;
-                            }
-                            if (!string.IsNullOrEmpty(key) && !results.Contains(key))
-                            {
-                                results.Add(key);
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    semaphoreSlim.Release();
-                }
-            });
-            args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results);
-            deferral.Complete();
-        }
-
-        private void SearchPane_QuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
-        {
-            if (!string.IsNullOrEmpty(args.QueryText))
-            {
-                _ = UIHelper.AppTitle.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(args.QueryText));
-            }
-        }
-
         /// <summary>
         /// 导航到特定页失败时调用
         /// </summary>
@@ -274,62 +208,6 @@ namespace CoolapkLite
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
-        }
-
-        private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
-        {
-            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("SettingsPane");
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Settings",
-                    loader.GetString("Settings"),
-                    async (handler) => new SettingsFlyoutControl { RequestedTheme = await ThemeHelper.GetActualThemeAsync() }.Show()));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Feedback",
-                    loader.GetString("Feedback"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite/issues"))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "LogFolder",
-                    loader.GetString("LogFolder"),
-                    async (handler) => _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Translate",
-                    loader.GetString("Translate"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://crowdin.com/project/CoolapkLite"))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Repository",
-                    loader.GetString("Repository"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite"))));
-        }
-
-        private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
-        {
-            if (args.EventType.ToString().Contains("Down"))
-            {
-                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-                if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
-                {
-                    CoreVirtualKeyStates shift = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift);
-                    if (shift.HasFlag(CoreVirtualKeyStates.Down))
-                    {
-                        switch (args.VirtualKey)
-                        {
-                            case VirtualKey.X:
-                                SettingsPane.Show();
-                                args.Handled = true;
-                                break;
-                            case VirtualKey.Q:
-                                SearchPane.GetForCurrentView().Show();
-                                args.Handled = true;
-                                break;
-                        }
-                    }
-                }
-            }
         }
 
         private async void RequestWIFIAccess()

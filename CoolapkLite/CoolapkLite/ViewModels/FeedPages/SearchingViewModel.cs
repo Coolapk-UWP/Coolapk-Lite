@@ -77,6 +77,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             PivotIndex = index;
         }
 
+        private void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
+
         public async Task Refresh(bool reset = false)
         {
             if (reset)
@@ -84,8 +88,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchFeedItemSource == null)
                 {
                     SearchFeedItemSource = new SearchFeedItemSource(Title);
-                    SearchFeedItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchFeedItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchFeedItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchFeedItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchFeedItemSource.Keyword != Title)
                 {
@@ -94,8 +98,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchUserItemSource == null)
                 {
                     SearchUserItemSource = new SearchUserItemSource(Title);
-                    SearchUserItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchUserItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchUserItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchUserItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchUserItemSource.Keyword != Title)
                 {
@@ -104,8 +108,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchTopicItemSource == null)
                 {
                     SearchTopicItemSource = new SearchTopicItemSource(Title);
-                    SearchTopicItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchTopicItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchTopicItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchTopicItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchTopicItemSource.Keyword != Title)
                 {

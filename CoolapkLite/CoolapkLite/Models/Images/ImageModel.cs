@@ -235,9 +235,9 @@ namespace CoolapkLite.Models.Images
                 await semaphoreSlim.WaitAsync();
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher); }
                 BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
-                Pic = bitmapImage;
                 if (bitmapImage != null)
                 {
+                    Pic = bitmapImage;
                     if (!bitmapImage.Dispatcher.HasThreadAccess)
                     {
                         await bitmapImage.Dispatcher.ResumeForegroundAsync();
@@ -254,6 +254,7 @@ namespace CoolapkLite.Models.Images
                 }
                 else
                 {
+                    Pic = null;
                     IsLongPic = false;
                     IsWidePic = false;
                 }

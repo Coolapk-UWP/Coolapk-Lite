@@ -158,7 +158,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             IList<string> results = new List<string>();
             if (!Pictures.Any()) { return results; }
-            UIHelper.ShowMessage("上传图片");
+            Dispatcher.ShowMessage("上传图片");
             if (ExtensionManager.IsSupported)
             {
                 await ExtensionManager.Instance.Initialize(Dispatcher);
@@ -170,7 +170,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                         fragments.Add(await UploadFileFragment.FromWriteableBitmap(pic));
                     }
                     results = await RequestHelper.UploadImages(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
-                    UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+                    Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
                     return results;
                 }
             }
@@ -198,7 +198,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     (bool isSucceed, string result) = await RequestHelper.UploadImage(bytes, "pic");
                     if (isSucceed) { results.Add(result); }
                 }
-                UIHelper.ShowMessage($"已上传 ({i}/{Pictures.Count})");
+                Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
             }
             return results;
         }

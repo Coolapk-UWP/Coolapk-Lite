@@ -43,7 +43,6 @@ namespace CoolapkLite.Pages
         public PivotPage()
         {
             InitializeComponent();
-            UIHelper.ShellDispatcher = Dispatcher;
             PivotContentFrame.Navigate(typeof(Page));
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
@@ -51,8 +50,8 @@ namespace CoolapkLite.Pages
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
-            _ = (NotificationsModel.Instance?.Update());
-            _ = (LiveTileTask.Instance?.UpdateTile());
+            _ = NotificationsModel.Update();
+            _ = LiveTileTask.Instance?.UpdateTile();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -120,7 +119,7 @@ namespace CoolapkLite.Pages
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
             }
-            UIHelper.HideProgressBar();
+            UIHelper.HideProgressBar(this as IHaveTitleBar);
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
@@ -152,7 +151,7 @@ namespace CoolapkLite.Pages
                             : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
                 Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
+            else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {
                 Refresh = () => _ = AdaptivePage.Refresh(true);
             }
@@ -239,7 +238,7 @@ namespace CoolapkLite.Pages
 
         #region 搜索框
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {

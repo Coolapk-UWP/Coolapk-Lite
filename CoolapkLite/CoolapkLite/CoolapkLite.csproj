@@ -147,6 +147,7 @@
     <Compile Include="Common\ExtensionManager.cs" />
     <Compile Include="Common\HttpRandomAccessStream.cs" />
     <Compile Include="Common\LanguageCodeResource.cs" />
+    <Compile Include="Common\SettingsPaneRegister.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>

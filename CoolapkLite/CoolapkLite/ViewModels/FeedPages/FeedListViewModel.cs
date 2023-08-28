@@ -171,7 +171,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (image == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                Dispatcher.ShowMessage(str);
                 return;
             }
 
@@ -223,7 +223,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                Dispatcher.ShowMessage(str);
                 return;
             }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
@@ -245,8 +245,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (SearchItemSource == null)
             {
                 SearchItemSource = GetSearchProvider(ListType, keyword, ID);
-                SearchItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                SearchItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                SearchItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                SearchItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
             }
             else if (SearchItemSource.Keyword != Title)
             {
@@ -254,6 +254,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             await SearchItemSource?.Refresh(true);
         }
+
+        private void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
 
         public virtual Task SearchRefresh(bool reset = false) => SearchItemSource?.Refresh(reset);
 
@@ -386,7 +390,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 return isPinned;
             }
 
-            UIHelper.ShowMessage(loader.GetString("PinnedTileFailed"));
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
             return isPinned;
         }
     }
@@ -493,7 +497,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 return isPinned;
             }
 
-            UIHelper.ShowMessage(loader.GetString("PinnedTileFailed"));
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
             return isPinned;
         }
     }
@@ -586,7 +590,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 return isPinned;
             }
 
-            UIHelper.ShowMessage(loader.GetString("PinnedTileFailed"));
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
             return isPinned;
         }
     }

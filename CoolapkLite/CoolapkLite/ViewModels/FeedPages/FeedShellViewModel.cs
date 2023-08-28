@@ -83,6 +83,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail != null ? new FeedDetailModel(detail) : null;
         }
 
+        protected void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+
+        protected void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
+
         public abstract Task Refresh(bool reset = false);
 
         bool IViewModel.IsEqual(IViewModel other) => other is FeedShellViewModel model && IsEqual(model);
@@ -108,8 +112,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new ReplyItemSource(ID);
-                    ReplyItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ReplyItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ReplyItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ReplyItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -119,8 +123,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (LikeItemSource == null || LikeItemSource.ID != ID)
                 {
                     LikeItemSource = new LikeItemSource(ID);
-                    LikeItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    LikeItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    LikeItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    LikeItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -130,8 +134,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ShareItemSource == null || ShareItemSource.ID != ID)
                 {
                     ShareItemSource = new ShareItemSource(ID, FeedDetail.FeedType);
-                    ShareItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ShareItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ShareItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ShareItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -163,8 +167,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new QuestionItemSource(ID, "reply");
-                    ReplyItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ReplyItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ReplyItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ReplyItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -174,8 +178,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (LikeItemSource == null || LikeItemSource.ID != ID)
                 {
                     LikeItemSource = new QuestionItemSource(ID, "like");
-                    LikeItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    LikeItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    LikeItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    LikeItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -185,8 +189,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (DatelineItemSource == null || DatelineItemSource.ID != ID)
                 {
                     DatelineItemSource = new QuestionItemSource(ID, "dateline");
-                    DatelineItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    DatelineItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    DatelineItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    DatelineItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -216,8 +220,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     foreach (VoteItem vote in FeedDetail.VoteRows)
                     {
                         VoteItemSource VoteItemSource = new VoteItemSource(vote.ID.ToString(), vote.VoteID.ToString());
-                        VoteItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                        VoteItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                        VoteItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                        VoteItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                         ItemSource.Add(new ShyHeaderItem
                         {
                             Header = vote.Title,
@@ -228,8 +232,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 else
                 {
                     VoteItemSource VoteItemSource = new VoteItemSource(string.Empty, FeedDetail.ID.ToString());
-                    VoteItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    VoteItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    VoteItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    VoteItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                     ItemSource.Add(new ShyHeaderItem
                     {
                         Header = "观点",
@@ -238,8 +242,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     if (!string.IsNullOrEmpty(FeedDetail.VoteTag))
                     {
                         TagItemSource TagItemSource = new TagItemSource(FeedDetail.VoteTag);
-                        TagItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                        TagItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                        TagItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                        TagItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                         ItemSource.Add(new ShyHeaderItem
                         {
                             Header = "话题",

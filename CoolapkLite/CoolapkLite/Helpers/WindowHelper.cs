@@ -49,9 +49,11 @@ namespace CoolapkLite.Helpers
 
         public static void TrackWindow(this Window window)
         {
+            SettingsPaneRegister register = SettingsPaneRegister.Register(window);
             window.Closed += (sender, args) =>
             {
                 ActiveWindows.Remove(window.Dispatcher);
+                register.Unregister();
                 window = null;
             };
             ActiveWindows.Add(window.Dispatcher, window);

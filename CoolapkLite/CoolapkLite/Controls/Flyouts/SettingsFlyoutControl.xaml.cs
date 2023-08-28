@@ -44,7 +44,12 @@ namespace CoolapkLite.Controls
 
         #endregion
 
-        public SettingsFlyoutControl() => InitializeComponent();
+        public SettingsFlyoutControl()
+        {
+            InitializeComponent();
+            ResourceDictionary ThemeResources = new ResourceDictionary { Source = new Uri("ms-appx:///Styles/SettingsFlyout.xaml") };
+            Style = (Style)ThemeResources["DefaultSettingsFlyoutStyle"];
+        }
 
         private void SettingsFlyout_Loaded(object sender, RoutedEventArgs e)
         {

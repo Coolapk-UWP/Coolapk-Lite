@@ -43,13 +43,13 @@ namespace CoolapkLite.ViewModels.Providers
                 _lastItem = RequestHelper.GetId(array.Last, _idName);
                 foreach (JObject item in array)
                 {
-                    IEnumerable<Entity> entities = GetEntities(item);
-                    if (entities == null) { continue; }
-
                     if (dispatcher?.HasThreadAccess == false)
                     {
                         await dispatcher.ResumeForegroundAsync();
                     }
+
+                    IEnumerable<Entity> entities = GetEntities(item);
+                    if (entities == null) { continue; }
 
                     foreach (Entity entity in entities)
                     {
@@ -77,13 +77,13 @@ namespace CoolapkLite.ViewModels.Providers
                 _lastItem = RequestHelper.GetId(array.Last, _idName);
                 foreach (JObject item in array)
                 {
-                    IEnumerable<Entity> entities = GetEntities(item);
-                    if (entities == null) { continue; }
-
                     if (dispatcher?.HasThreadAccess == false)
                     {
                         await dispatcher.ResumeForegroundAsync();
                     }
+
+                    IEnumerable<Entity> entities = GetEntities(item);
+                    if (entities == null) { continue; }
 
                     foreach (Entity entity in entities)
                     {

@@ -84,14 +84,14 @@ namespace CoolapkLite.Helpers
                         catch (Exception)
                         {
                             string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                            UIHelper.ShowMessage(str);
+                            dispatcher.ShowMessage(str);
                             return await GetNoPicAsync(dispatcher);
                         }
                     }
                     catch (Exception)
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                        UIHelper.ShowMessage(str);
+                        dispatcher.ShowMessage(str);
                         return await GetNoPicAsync(dispatcher);
                     }
                 }
@@ -118,14 +118,14 @@ namespace CoolapkLite.Helpers
                         catch (Exception)
                         {
                             string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                            UIHelper.ShowMessage(str);
+                            dispatcher.ShowMessage(str);
                             return null;
                         }
                     }
                     catch (Exception)
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                        UIHelper.ShowMessage(str);
+                        dispatcher.ShowMessage(str);
                         return null;
                     }
                     using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
@@ -326,7 +326,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
+                dispatcher.ShowMessage(str);
                 return await GetNoPicAsync(dispatcher);
             }
         }

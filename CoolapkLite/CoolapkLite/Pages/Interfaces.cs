@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Pages
 {
-    internal interface IHaveTitleBar
+    public interface IHaveTitleBar
     {
         void ShowProgressBar();
         void HideProgressBar();

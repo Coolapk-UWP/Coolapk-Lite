@@ -4,6 +4,7 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.Providers;
+using CoolapkLite.ViewModels.SettingsPages;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -34,7 +35,7 @@ namespace CoolapkLite.Pages.FeedPages
                 nameof(NotificationsModel),
                 typeof(NotificationsModel),
                 typeof(NotificationsPage),
-                new PropertyMetadata(NotificationsModel.Instance));
+                null);
 
         public NotificationsModel NotificationsModel
         {
@@ -45,6 +46,13 @@ namespace CoolapkLite.Pages.FeedPages
         #endregion
 
         public NotificationsPage() => InitializeComponent();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            NotificationsModel = NotificationsModel ?? (NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel());
+            _ = NotificationsModel.Update();
+        }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -59,7 +67,6 @@ namespace CoolapkLite.Pages.FeedPages
                 Pivot.SelectedIndex = PivotIndex;
                 isLoaded = true;
             }
-            _ = NotificationsModel?.Update();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -151,7 +158,7 @@ namespace CoolapkLite.Pages.FeedPages
                 }
                 RefreshTask = (reset) => (Frame.Content as AdaptivePage).Refresh(reset);
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
+            else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {
                 RefreshTask = (reset) => AdaptivePage.Refresh(reset);
             }
@@ -159,7 +166,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async Task Refresh(bool reset = false)
         {
-            await NotificationsModel?.Update();
+            await NotificationsModel.Update();
             await RefreshTask(reset);
         }
 

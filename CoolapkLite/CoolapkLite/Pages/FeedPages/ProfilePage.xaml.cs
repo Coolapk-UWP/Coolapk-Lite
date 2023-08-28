@@ -96,8 +96,8 @@ namespace CoolapkLite.Pages.FeedPages
             if (e.Parameter is ProfileViewModel ViewModel && Provider == null)
             {
                 Provider = ViewModel;
-                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.LoadMoreStarted += OnLoadMoreStarted;
+                Provider.LoadMoreCompleted += OnLoadMoreCompleted;
             }
 
             if (!Provider.IsLogin || dateTime == default || DateTime.UtcNow - dateTime == TimeSpan.FromMinutes(1))
@@ -106,6 +106,17 @@ namespace CoolapkLite.Pages.FeedPages
                 dateTime = DateTime.UtcNow;
             }
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.LoadMoreStarted -= OnLoadMoreStarted;
+            Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
+        }
+
+        private void OnLoadMoreStarted() => this.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => this.HideProgressBar();
 
         private async Task Refresh(bool reset = false)
         {

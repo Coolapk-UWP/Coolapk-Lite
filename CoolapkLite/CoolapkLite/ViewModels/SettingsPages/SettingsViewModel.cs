@@ -132,7 +132,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async static void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -142,7 +142,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     {
                         await cache.Key.ResumeForegroundAsync();
                     }
-                    cache.Value.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
                 }
             }
         }
@@ -203,17 +203,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 if (results == null) { return; }
                 if (results.IsExistNewVersion)
                 {
-                    UIHelper.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
+                    Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
                 }
                 else
                 {
-                    UIHelper.ShowMessage(_loader.GetString("UpToDate"));
+                    Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
                 }
             }
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
-                UIHelper.ShowMessage(ex.Message);
+                Dispatcher.ShowMessage(ex.Message);
             }
             IsCleanCacheButtonEnabled = true;
         }

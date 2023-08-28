@@ -35,7 +35,15 @@ namespace CoolapkLite.ViewModels.BrowserPages
         public string RawHTML
         {
             get => rawHTML;
-            private set => SetProperty(ref rawHTML, value);
+            private set
+            {
+                if (rawHTML != value)
+                {
+                    rawHTML = value;
+                    _ = GetHtmlAsync(value);
+                    RaisePropertyChangedEvent();
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -99,7 +107,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
 
         private async Task Load_HTML(Uri uri)
         {
-            UIHelper.ShowProgressBar();
+            Dispatcher.ShowProgressBar();
             (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest");
             if (isSucceed)
             {
@@ -115,7 +123,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
                     Title = title.ToString();
                 }
             }
-            UIHelper.HideProgressBar();
+            Dispatcher.HideProgressBar();
         }
 
         public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light");
