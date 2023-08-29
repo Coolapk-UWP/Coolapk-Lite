@@ -122,7 +122,7 @@ namespace CoolapkLite
                 }
 
                 // 将框架放在当前窗口中
-                Window.Current.Content = rootFrame;
+                window.Content = rootFrame;
 
                 ThemeHelper.Initialize();
             }

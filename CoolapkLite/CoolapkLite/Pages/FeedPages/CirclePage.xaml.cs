@@ -1,4 +1,5 @@
-﻿using CoolapkLite.ViewModels.FeedPages;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -53,7 +54,7 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         public static ObservableCollection<PivotItem> GetMainItems()
         {

@@ -87,7 +87,7 @@ namespace CoolapkLite.Pages.FeedPages
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {

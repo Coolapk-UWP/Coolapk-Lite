@@ -165,7 +165,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private DataGridRow _focusedRow;
         private FrameworkElement _frozenColumnScrollBarSpacer;
         private bool _hasNoIndicatorStateStoryboardCompletedHandler;
-        private DispatcherQueueTimer _hideScrollBarsTimer;
+        private DispatcherTimer _hideScrollBarsTimer;
 
         // the sum of the widths in pixels of the scrolling columns preceding
         // the first displayed scrolling column
@@ -6155,20 +6155,22 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         {
             if (!_keepScrollBarsShowing)
             {
-                DispatcherQueueTimer hideScrollBarsTimer = null;
+                DispatcherTimer hideScrollBarsTimer = null;
 
                 if (_hideScrollBarsTimer != null)
                 {
                     hideScrollBarsTimer = _hideScrollBarsTimer;
-                    if (hideScrollBarsTimer.IsRunning)
+                    if (hideScrollBarsTimer.IsEnabled)
                     {
                         hideScrollBarsTimer.Stop();
                     }
                 }
                 else
                 {
-                    hideScrollBarsTimer = DispatcherQueue.GetForCurrentThread().CreateTimer();
-                    hideScrollBarsTimer.Interval = TimeSpan.FromMilliseconds(DATAGRID_noScrollBarCountdownMs);
+                    hideScrollBarsTimer = new DispatcherTimer
+                    {
+                        Interval = TimeSpan.FromMilliseconds(DATAGRID_noScrollBarCountdownMs)
+                    };
                     hideScrollBarsTimer.Tick += HideScrollBarsTimerTick;
                     _hideScrollBarsTimer = hideScrollBarsTimer;
                 }
@@ -7908,7 +7910,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             }
             else
             {
-                if (_hideScrollBarsTimer != null && _hideScrollBarsTimer.IsRunning)
+                if (_hideScrollBarsTimer != null && _hideScrollBarsTimer.IsEnabled)
                 {
                     _hideScrollBarsTimer.Stop();
                     _hideScrollBarsTimer.Start();
@@ -7980,7 +7982,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
 
         private void StopHideScrollBarsTimer()
         {
-            if (_hideScrollBarsTimer != null && _hideScrollBarsTimer.IsRunning)
+            if (_hideScrollBarsTimer != null && _hideScrollBarsTimer.IsEnabled)
             {
                 _hideScrollBarsTimer.Stop();
             }

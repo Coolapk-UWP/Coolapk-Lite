@@ -170,7 +170,7 @@ namespace CoolapkLite.Pages.FeedPages
             await RefreshTask(reset);
         }
 
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
     }

@@ -244,9 +244,9 @@ namespace CoolapkLite.Models.Images
                     }
                     double PixelWidth = bitmapImage.PixelWidth;
                     double PixelHeight = bitmapImage.PixelHeight;
-                    Rect Bounds = Window.Current != null
-                        ? await Window.Current.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds)
-                        : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => Window.Current.Bounds);
+                    Rect Bounds = Window.Current is Window window
+                        ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
+                        : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
                     IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
                                 && PixelHeight > PixelWidth * 1.5;
                     IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)

@@ -117,12 +117,13 @@ namespace CoolapkLite.Controls
 
         private void UpdateSize()
         {
-            if (Window.Current.Bounds.Width >= ExpandedModeThresholdWidth)
+            double width = this.GetXAMLRootSize().Width;
+            if (width >= ExpandedModeThresholdWidth)
             {
                 IsPaneOpen = true;
                 DisplayMode = SplitViewDisplayMode.CompactInline;
             }
-            else if (Window.Current.Bounds.Width >= CompactModeThresholdWidth)
+            else if (width >= CompactModeThresholdWidth)
             {
                 IsPaneOpen = false;
                 DisplayMode = SplitViewDisplayMode.CompactOverlay;

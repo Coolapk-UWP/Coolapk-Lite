@@ -2,7 +2,6 @@
 
 using CoolapkLite.Helpers;
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,7 +152,6 @@ namespace CoolapkLite.Common
 
                     // Move position forward.
                     Position += result.Length;
-                    Debug.WriteLine("requestedPosition = {0:N0}", Position);
                     return result;
                 }
 

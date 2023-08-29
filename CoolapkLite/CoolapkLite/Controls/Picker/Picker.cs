@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -79,17 +80,13 @@ namespace CoolapkLite.Controls
                 grid.Children.Remove(this);
             }
 
-            _rootGrid = WindowHelper.IsXamlRootSupported && XamlRoot != null
-                ? new Grid
-                {
-                    Width = XamlRoot.Size.Width,
-                    Height = XamlRoot.Size.Height
-                }
-                : new Grid
-                {
-                    Width = Window.Current.Bounds.Width,
-                    Height = Window.Current.Bounds.Height
-                };
+            Size size = this.GetXAMLRootSize();
+
+            _rootGrid = new Grid
+            {
+                Width = size.Width,
+                Height = size.Height
+            };
 
             _popup = new Popup
             {

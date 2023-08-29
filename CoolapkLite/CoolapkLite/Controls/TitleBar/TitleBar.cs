@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using CoolapkLite.Helpers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
 
@@ -72,7 +73,7 @@ namespace CoolapkLite.Controls
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             TitleBarTemplateSettings templateSettings = TemplateSettings;
-            templateSettings.LeftPaddingColumnGridLength = Window.Current.Bounds.Width > CompactModeThresholdWidth ? new GridLength(0) : new GridLength(48);
+            templateSettings.LeftPaddingColumnGridLength = this.GetXAMLRootSize().Width > CompactModeThresholdWidth ? new GridLength(0) : new GridLength(48);
         }
 
         public void OnBackButtonClick(object sender, RoutedEventArgs args)

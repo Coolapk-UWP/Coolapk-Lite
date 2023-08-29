@@ -1,10 +1,12 @@
 ﻿using CoolapkLite.Common;
+using Microsoft.Toolkit.Uwp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI;
@@ -107,6 +109,13 @@ namespace CoolapkLite.Helpers
             }
             return null;
         }
+
+        public static Size GetXAMLRootSize(this UIElement element) =>
+            IsXamlRootSupported && element.XamlRoot != null
+                ? element.XamlRoot.Size
+                : Window.Current is Window window
+                    ? window.Bounds.ToSize()
+                    : CoreApplication.MainView.CoreWindow.Bounds.ToSize();
 
         public static void SetXAMLRoot(this UIElement element, UIElement target)
         {

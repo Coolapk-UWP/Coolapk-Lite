@@ -318,7 +318,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void SearchRefreshButton_Click(object sender, RoutedEventArgs e) => _ = Provider.SearchRefresh(true);
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         #region 界面模式切换
 
