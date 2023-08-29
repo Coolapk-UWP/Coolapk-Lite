@@ -441,6 +441,7 @@
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPages\TestViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
     <Compile Include="ViewModels\ToolsPages\FansAnalyzeViewModel.cs" />
   </ItemGroup>

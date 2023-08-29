@@ -1,27 +1,20 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
+using CoolapkLite.ViewModels.SettingsPages;
 using CoolapkLite.ViewModels.ToolsPages;
-using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
 using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
-using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
@@ -29,6 +22,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -37,156 +31,37 @@ namespace CoolapkLite.Pages.SettingsPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class TestPage : Page, INotifyPropertyChanged
+    public sealed partial class TestPage : Page
     {
-        internal List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+        #region Provider
 
-        internal string FrameworkDescription => RuntimeInformation.FrameworkDescription;
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(TestViewModel),
+                typeof(TestPage),
+                null);
 
-        internal string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
-
-        internal string OperatingSystemVersion => SystemInformation.Instance.OperatingSystemVersion.ToString();
-
-        internal string OSArchitecture => RuntimeInformation.OSArchitecture.ToString();
-
-        internal bool IsExtendsTitleBar
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public TestViewModel Provider
         {
-            get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-            set
-            {
-                if (IsExtendsTitleBar != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsExtendsTitleBar, value);
-                    ThemeHelper.UpdateExtendViewIntoTitleBar(value);
-                    ThemeHelper.UpdateSystemCaptionButtonColors();
-                }
-            }
+            get => (TestViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
         }
 
-        internal bool IsUseAPI2
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
-            set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
-        }
+        #endregion
 
-        internal bool IsFullLoad
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
-            set => SettingsHelper.Set(SettingsHelper.IsFullLoad, value);
-        }
+        public TestPage() => InitializeComponent();
 
-        internal bool IsCustomUA
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
-            set
-            {
-                if (IsCustomUA != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsCustomUA, value);
-                    NetworkHelper.SetRequestHeaders();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-                }
-            }
-        }
-
-        internal int APIVersion
-        {
-            get => (int)SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion) - 4;
-            set
-            {
-                if (APIVersion != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 4);
-                    NetworkHelper.SetRequestHeaders();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-                }
-            }
-        }
-
-        internal bool IsUseTokenV2
-        {
-            get => SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion) == TokenVersions.TokenV2;
-            set
-            {
-                if (IsUseTokenV2 != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersions.TokenV2 : TokenVersions.TokenV1));
-                    NetworkHelper.SetRequestHeaders();
-                }
-            }
-        }
-
-        internal bool IsUseLiteHome
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome);
-            set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
-        }
-
-        internal bool IsUseAppWindow
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow);
-            set => SettingsHelper.Set(SettingsHelper.IsUseAppWindow, value);
-        }
-
-        internal bool IsUseBlurBrush
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush);
-            set => SettingsHelper.Set(SettingsHelper.IsUseBlurBrush, value);
-        }
-
-        internal bool IsUseCompositor
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);
-            set => SettingsHelper.Set(SettingsHelper.IsUseCompositor, value);
-        }
-
-        internal double SemaphoreSlimCount
-        {
-            get => SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount);
-            set
-            {
-                if (SemaphoreSlimCount != value)
-                {
-                    int result = (int)Math.Floor(value);
-                    SettingsHelper.Set(SettingsHelper.SemaphoreSlimCount, result);
-                    NetworkHelper.SetSemaphoreSlim(result);
-                    ImageModel.SetSemaphoreSlim(result);
-                }
-            }
-        }
-
-        private string userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-        internal string UserAgent
-        {
-            get => userAgent;
-            set
-            {
-                if (userAgent != value)
-                {
-                    userAgent = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        public TestPage()
-        {
-            InitializeComponent();
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
+            base.OnNavigatedTo(e);
+            Provider = Provider ?? (TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel());
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -209,14 +84,15 @@ namespace CoolapkLite.Pages.SettingsPages
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
                 case "CustomUA":
-                    UserAgentDialog userAgentDialog = new UserAgentDialog(UserAgent);
+                    UserAgentDialog userAgentDialog = new UserAgentDialog(Provider.UserAgent);
                     await userAgentDialog.ShowAsync();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "GCCollect":
                     GC.Collect();
                     break;
                 case "NewWindow":
+                    bool IsExtendsTitleBar = Provider.IsExtendsTitleBar;
                     await WindowHelper.CreateWindow((window) =>
                     {
                         if (IsExtendsTitleBar)
@@ -235,7 +111,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     if (WindowHelper.IsAppWindowSupported)
                     {
                         (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                        if (IsExtendsTitleBar)
+                        if (Provider.IsExtendsTitleBar)
                         {
                             window.TitleBar.ExtendsContentIntoTitleBar = true;
                         }
@@ -243,13 +119,13 @@ namespace CoolapkLite.Pages.SettingsPages
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                         await window.TryShowAsync();
-                        UIHelper.HideProgressBar(UIHelper.AppTitle);
+                        Dispatcher.HideProgressBar();
                     }
                     break;
                 case "CustomAPI":
-                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);
+                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(Provider.UserAgent);
                     await _APIVersionDialog.ShowAsync();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));

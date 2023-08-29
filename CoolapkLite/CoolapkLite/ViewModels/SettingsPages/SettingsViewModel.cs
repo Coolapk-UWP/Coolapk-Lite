@@ -5,13 +5,11 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
-using Windows.System.Profile;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
