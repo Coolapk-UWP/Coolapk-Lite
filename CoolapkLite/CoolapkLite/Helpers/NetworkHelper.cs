@@ -426,10 +426,11 @@ namespace CoolapkLite.Helpers
             if (string.IsNullOrWhiteSpace(url)) { return false; }
             try
             {
-                uri = url.Contains("://") ? new Uri(url)
-                    : url[0] == '/' ? new Uri(UriHelper.CoolapkUri, url)
-                    : new Uri($"https://{url}");
-                return true;
+                return url.Contains(":")
+                    ? Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri)
+                    : url[0] == '/'
+                        ? Uri.TryCreate(UriHelper.CoolapkUri, url, out uri)
+                        : Uri.TryCreate($"https://{url}", UriKind.RelativeOrAbsolute, out uri);
             }
             catch (FormatException ex)
             {

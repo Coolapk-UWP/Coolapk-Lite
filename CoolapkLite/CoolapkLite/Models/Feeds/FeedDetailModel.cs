@@ -97,36 +97,7 @@ namespace CoolapkLite.Models.Feeds
                                 QuestionUrl = questionUrl.ToString();
                             }
                         }
-
-                        MessageRawOutput = string.Empty;
-                        StringBuilder builder = new StringBuilder();
-                        if (token.TryGetValue("message_raw_output", out JToken message_raw_output))
-                        {
-                            foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
-                            {
-                                if (item.TryGetValue("type", out JToken type))
-                                {
-                                    switch (type.ToString())
-                                    {
-                                        case "text":
-                                            if (item.TryGetValue("message", out JToken message))
-                                            {
-                                                _ = builder.Append(message.ToString());
-                                            }
-                                            break;
-
-                                        case "image":
-                                            if (item.TryGetValue("uri", out JToken uri))
-                                            {
-                                                item.TryGetValue("description", out JToken description);
-                                                _ = builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\">{description}</a>\n");
-                                            }
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                        MessageRawOutput = builder.ToString();
+                        GetMessageRawOutput();
                         break;
 
                     case "feedArticle":
@@ -135,37 +106,41 @@ namespace CoolapkLite.Models.Feeds
                         {
                             MessageCover = new ImageModel(message_cover.ToString(), ImageType.SmallImage);
                         }
+                        GetMessageRawOutput();
+                        break;
+                }
 
-                        MessageRawOutput = string.Empty;
-                        builder = new StringBuilder();
-                        if (token.TryGetValue("message_raw_output", out message_raw_output))
+                void GetMessageRawOutput()
+                {
+                    MessageRawOutput = string.Empty;
+                    StringBuilder builder = new StringBuilder();
+                    if (token.TryGetValue("message_raw_output", out JToken message_raw_output))
+                    {
+                        foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
                         {
-                            foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
+                            if (item.TryGetValue("type", out JToken type))
                             {
-                                if (item.TryGetValue("type", out JToken type))
+                                switch (type.ToString())
                                 {
-                                    switch (type.ToString())
-                                    {
-                                        case "text":
-                                            if (item.TryGetValue("message", out JToken message))
-                                            {
-                                                _ = builder.Append(message.ToString());
-                                            }
-                                            break;
+                                    case "text":
+                                        if (item.TryGetValue("message", out JToken message))
+                                        {
+                                            _ = builder.Append(message.ToString());
+                                        }
+                                        break;
 
-                                        case "image":
-                                            if (item.TryGetValue("url", out JToken uri))
-                                            {
-                                                item.TryGetValue("description", out JToken description);
-                                                _ = builder.Append($"\n<img src=\"{uri}\" alt=\"{description}\"/>\n");
-                                            }
-                                            break;
-                                    }
+                                    case "image":
+                                        if (item.TryGetValue("url", out JToken url) || item.TryGetValue("uri", out url))
+                                        {
+                                            item.TryGetValue("description", out JToken description);
+                                            _ = builder.Append($"<img src=\"{url}\" alt=\"{description}\"/>");
+                                        }
+                                        break;
                                 }
                             }
                         }
-                        MessageRawOutput = builder.ToString();
-                        break;
+                    }
+                    MessageRawOutput = builder.ToString();
                 }
             }
         }
