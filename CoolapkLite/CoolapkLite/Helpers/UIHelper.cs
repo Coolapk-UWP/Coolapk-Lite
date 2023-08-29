@@ -6,19 +6,16 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Reflection.Metadata;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Xml.Dom;
@@ -88,7 +85,7 @@ namespace CoolapkLite.Helpers
                 await element.Dispatcher.ResumeForegroundAsync();
             }
 
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "XamlRoot")
+            if (WindowHelper.IsXamlRootSupported
                 && element is UIElement uiElement
                 && uiElement.XamlRoot != null)
             {
@@ -96,8 +93,7 @@ namespace CoolapkLite.Helpers
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
 
-            return element.FindAscendant<MainPage>()
-                ?? element.FindAscendant<PivotPage>()
+            return element.FindAscendant<Page>((x) => x is IHaveTitleBar) as IHaveTitleBar
                 ?? await element.Dispatcher.GetAppTitleAsync();
         }
 
@@ -315,8 +311,8 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
-                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
+                Assembly assembly = Assembly.Load(new AssemblyName(AssemblyName));
+                Type supType = assembly.GetType($"{AssemblyName}.{TypeName}");
                 if (supType != null)
                 {
                     try { Activator.CreateInstance(supType); }
@@ -343,15 +339,7 @@ namespace CoolapkLite.Helpers
             }
         }
     }
-
-    public enum NavigationThemeTransition
-    {
-        Default,
-        Entrance,
-        DrillIn,
-        Suppress
-    }
-
+    
     public static partial class UIHelper
     {
         public static async Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>

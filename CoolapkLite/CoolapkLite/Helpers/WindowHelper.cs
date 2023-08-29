@@ -25,6 +25,7 @@ namespace CoolapkLite.Helpers
     public static class WindowHelper
     {
         public static bool IsAppWindowSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
+        public static bool IsXamlRootSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "XamlRoot");
 
         public static async Task<bool> CreateWindow(Action<Window> launched)
         {
@@ -109,7 +110,7 @@ namespace CoolapkLite.Helpers
 
         public static void SetXAMLRoot(this UIElement element, UIElement target)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "XamlRoot"))
+            if (IsXamlRootSupported)
             {
                 element.XamlRoot = target?.XamlRoot;
             }

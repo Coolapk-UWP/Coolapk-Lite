@@ -30,18 +30,45 @@ namespace CoolapkLite.Controls
             DefaultStyleKey = typeof(Picker);
             Loaded += (sender, args) =>
             {
-                Window.Current.SizeChanged -= Window_SizeChanged;
-                Window.Current.SizeChanged += Window_SizeChanged;
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= XamlRoot_SizeChanged;
+                    XamlRoot.Changed += XamlRoot_SizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= Window_SizeChanged;
+                    window.SizeChanged += Window_SizeChanged;
+                }
             };
-            Unloaded += (sender, args) => Window.Current.SizeChanged -= Window_SizeChanged;
+            Unloaded += (sender, args) =>
+            {
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= XamlRoot_SizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= Window_SizeChanged;
+                }
+            };
         }
 
         private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             if (_rootGrid != null)
             {
-                _rootGrid.Width = Window.Current.Bounds.Width;
-                _rootGrid.Height = Window.Current.Bounds.Height;
+                _rootGrid.Width = e.Size.Width;
+                _rootGrid.Height = e.Size.Height;
+            }
+        }
+
+        private void XamlRoot_SizeChanged(XamlRoot sender, XamlRootChangedEventArgs args)
+        {
+            if (_rootGrid != null)
+            {
+                _rootGrid.Width = sender.Size.Width;
+                _rootGrid.Height = sender.Size.Height;
             }
         }
 
@@ -52,11 +79,17 @@ namespace CoolapkLite.Controls
                 grid.Children.Remove(this);
             }
 
-            _rootGrid = new Grid
-            {
-                Width = Window.Current.Bounds.Width,
-                Height = Window.Current.Bounds.Height
-            };
+            _rootGrid = WindowHelper.IsXamlRootSupported && XamlRoot != null
+                ? new Grid
+                {
+                    Width = XamlRoot.Size.Width,
+                    Height = XamlRoot.Size.Height
+                }
+                : new Grid
+                {
+                    Width = Window.Current.Bounds.Width,
+                    Height = Window.Current.Bounds.Height
+                };
 
             _popup = new Popup
             {

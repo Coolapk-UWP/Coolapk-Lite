@@ -23,7 +23,6 @@ using Windows.Globalization;
 using Windows.System;
 using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
-using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -220,7 +219,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "NewWindow":
                     await WindowHelper.CreateWindow((window) =>
                     {
-                        if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                        if (IsExtendsTitleBar)
                         {
                             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
                         }
@@ -236,8 +235,11 @@ namespace CoolapkLite.Pages.SettingsPages
                     if (WindowHelper.IsAppWindowSupported)
                     {
                         (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                        window.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
-                        ThemeHelper.Initialize();
+                        if (IsExtendsTitleBar)
+                        {
+                            window.TitleBar.ExtendsContentIntoTitleBar = true;
+                        }
+                        ThemeHelper.Initialize(window);
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                         await window.TryShowAsync();
