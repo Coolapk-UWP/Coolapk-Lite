@@ -16,18 +16,19 @@ namespace CoolapkLite.Controls.Writers
                     {
                         case "a":
                             return new AnchorWriter();
+                        case "blockquote":
+                            return new BlockQuoteWriter();
                         case "br":
                             return new BrWriter();
-                        case "em":
-                            return new EmWriter();
                         case "img":
                             return new ImageWriter();
-                        case "i":
-                            return new IWriter();
                         case "p":
                             return new ParagraphWriter();
                         case "span":
                             return new SpanWriter();
+                        case "i":
+                        case "em":
+                            return new EmWriter();
                         case "b":
                         case "strong":
                             return new StrongWriter();

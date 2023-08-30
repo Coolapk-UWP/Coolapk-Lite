@@ -1,5 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Containers
@@ -20,13 +22,21 @@ namespace CoolapkLite.Controls.Containers
         public DocumentContainer Create(DependencyObject element)
         {
             DocumentContainer container = null;
-            if (element is Paragraph)
+            if (element is Span span)
             {
-                container = new ParagraphDocumentContainer(element as Paragraph);
+                container = new SpanDocumentContainer(span);
             }
-            else if (element is Span)
+            else if (element is Paragraph paragraph)
             {
-                container = new SpanDocumentContainer(element as Span);
+                container = new ParagraphDocumentContainer(paragraph);
+            }
+            else if (element is StackPanel stackPanel)
+            {
+                container = new StackPanelDocumentContainer(stackPanel);
+            }
+            else if (element is RichTextBlock richTextBlock)
+            {
+                container = new RichTextBlockDocumentContainer(richTextBlock);
             }
 
             if (container != null)
@@ -35,6 +45,21 @@ namespace CoolapkLite.Controls.Containers
             }
 
             return container;
+        }
+
+        public DocumentContainer<T> FindAscendant<T>() where T : DependencyObject
+        {
+            DocumentContainer container = this;
+
+            while (container != null)
+            {
+                if (container is DocumentContainer<T> result)
+                {
+                    return result;
+                }
+                container = container.Parent;
+            }
+            return null;
         }
 
         public DocumentContainer FindAscendant(DependencyObject element)
@@ -50,6 +75,29 @@ namespace CoolapkLite.Controls.Containers
                 container = container.Parent;
             }
             return null;
+        }
+
+        protected static Binding CreateBinding(object source, string path, BindingMode mode = BindingMode.OneWay)
+        {
+            return new Binding
+            {
+                Path = new PropertyPath(path),
+                Source = source,
+                Mode = mode
+            };
+        }
+
+        protected static void SetBinding(DependencyObject source, DependencyProperty property, Action applyChange)
+        {
+            if (source != null)
+            {
+                applyChange();
+
+                source.RegisterPropertyChangedCallback(property, (sender, dp) =>
+                {
+                    applyChange();
+                });
+            }
         }
     }
 

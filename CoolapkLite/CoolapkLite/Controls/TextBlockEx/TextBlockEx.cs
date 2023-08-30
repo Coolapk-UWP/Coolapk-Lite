@@ -1,9 +1,12 @@
 ﻿using CoolapkLite.Controls.Containers;
 using CoolapkLite.Controls.Writers;
+using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
-using Windows.ApplicationModel.Resources;
+using System.Collections.Immutable;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
@@ -20,10 +23,12 @@ namespace CoolapkLite.Controls
     public partial class TextBlockEx : Control
     {
         private const string RichTextBlockName = "PART_RichTextBlock";
+
         public const string AuthorBorder = "<div class=\"author-border\"/>";
 
         private RichTextBlock RichTextBlock;
-        private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
+
+        public ImmutableArray<ImageModel>.Builder ImageArrayBuilder { get; } = ImmutableArray.CreateBuilder<ImageModel>();
 
         /// <summary>
         /// Creates a new instance of the <see cref="TextBlockEx"/> class.
@@ -53,6 +58,13 @@ namespace CoolapkLite.Controls
                 HtmlNode body = doc?.DocumentNode;
 
                 WriteFragments(body, container);
+
+                ImmutableArray<ImageModel> array = ImageArrayBuilder.ToImmutable();
+                foreach (ImageModel item in array)
+                {
+                    item.ContextArray = array;
+                }
+                ImageArrayBuilder.Clear();
             }
         }
 
@@ -64,7 +76,7 @@ namespace CoolapkLite.Controls
                 {
                     HtmlWriter writer = HtmlWriterFactory.Create(childFragment);
 
-                    DependencyObject element = writer?.GetControl(childFragment);
+                    DependencyObject element = writer?.GetControl(childFragment, this);
 
                     if (element != null)
                     {
@@ -88,6 +100,32 @@ namespace CoolapkLite.Controls
                     }
                 }
             }
+        }
+
+        public void OnLinkClicked(string href)
+        {
+            if (LinkClicked == null)
+            {
+                _ = this.OpenLinkAsync(href);
+            }
+            else
+            {
+                LinkClicked.Invoke(this, href);
+            }
+        }
+
+        public void OnImageClicked(ImageModel imageModel, TappedRoutedEventArgs args)
+        {
+            if (args.Handled) { return; }
+            if (LinkClicked == null)
+            {
+                _ = this.ShowImageAsync(imageModel);
+            }
+            else
+            {
+                ImageClicked.Invoke(this, imageModel);
+            }
+            args.Handled = true;
         }
     }
 }

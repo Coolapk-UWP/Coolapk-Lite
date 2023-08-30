@@ -10,7 +10,6 @@ using Windows.ApplicationModel.Resources;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
 
@@ -20,7 +19,7 @@ namespace CoolapkLite.Controls.Writers
     {
         public override string[] TargetTags => new string[] { "img" };
 
-        public override DependencyObject GetControl(HtmlNode fragment)
+        public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             HtmlNode node = fragment;
             string src = GetImageSrc(node);
@@ -28,7 +27,7 @@ namespace CoolapkLite.Controls.Writers
             {
                 try
                 {
-                    return CreateImage(node, src);
+                    return CreateImage(node, src, textBlockEx);
                 }
                 catch (Exception ex)
                 {
@@ -43,19 +42,14 @@ namespace CoolapkLite.Controls.Writers
             return fragment.ParentNode != null && fragment.ParentNode.Name == "p";
         }
 
-        private static DependencyObject CreateImage(HtmlNode node, string src)
+        private static DependencyObject CreateImage(HtmlNode node, string src, TextBlockEx textBlockEx)
         {
             ImageModel imageModel;
             Image image = new Image();
             InlineUIContainer container = new InlineUIContainer();
 
             imageModel = new ImageModel(src, SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ImageType.OriginImage : ImageType.SmallImage);
-            image.SetBinding(Image.SourceProperty, new Binding
-            {
-                Path = new PropertyPath(nameof(imageModel.Pic)),
-                Source = imageModel,
-                Mode = BindingMode.OneWay
-            });
+            image.SetBinding(Image.SourceProperty, CreateBinding(imageModel, nameof(imageModel.Pic)));
 
             string alt = node.GetAttributeValue("alt", string.Empty);
             if (!string.IsNullOrEmpty(alt))
@@ -71,28 +65,24 @@ namespace CoolapkLite.Controls.Writers
                     Margin = new Thickness(0, 0, 0, -4),
                     VerticalAlignment = VerticalAlignment.Center
                 };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(container.FontSize)),
-                    Source = container,
-                    Converter = new NumMultConverter(),
-                    ConverterParameter = 4d / 3d,
-                    Mode = BindingMode.OneWay
-                });
+                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
                 container.Child = viewBox;
             }
             else
             {
+                textBlockEx.ImageArrayBuilder.Add(imageModel);
+                image.Tapped += (sender, args) => textBlockEx.OnImageClicked(imageModel, args);
+
                 Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
 
-                StackPanel IsGIFPanel = new StackPanel
+                StackPanelEx IsGIFPanel = new StackPanelEx
                 {
                     Orientation = Orientation.Horizontal,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left
                 };
 
-                StackPanel PicSizePanel = new StackPanel
+                StackPanelEx PicSizePanel = new StackPanelEx
                 {
                     Orientation = Orientation.Horizontal,
                     VerticalAlignment = VerticalAlignment.Top,
@@ -111,13 +101,7 @@ namespace CoolapkLite.Controls.Writers
                     },
                     Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                 };
-                GIFBorder.SetBinding(UIElement.VisibilityProperty, new Binding
-                {
-                    Source = imageModel,
-                    Mode = BindingMode.OneWay,
-                    Converter = new BoolToVisibilityConverter(),
-                    Path = new PropertyPath(nameof(imageModel.IsGif))
-                });
+                GIFBorder.SetBinding(UIElement.VisibilityProperty, CreateBinding(imageModel, nameof(imageModel.IsGif), new BoolToVisibilityConverter()));
 
                 IsGIFPanel.Children.Add(GIFBorder);
 
@@ -131,13 +115,7 @@ namespace CoolapkLite.Controls.Writers
                     },
                     Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                 };
-                WidePicBorder.SetBinding(UIElement.VisibilityProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(imageModel.IsWidePic)),
-                    Source = imageModel,
-                    Converter = new BoolToVisibilityConverter(),
-                    Mode = BindingMode.OneWay
-                });
+                WidePicBorder.SetBinding(UIElement.VisibilityProperty, CreateBinding(imageModel, nameof(imageModel.IsWidePic), new BoolToVisibilityConverter()));
 
                 Border LongPicTextBorder = new Border
                 {
@@ -149,13 +127,7 @@ namespace CoolapkLite.Controls.Writers
                     },
                     Background = new SolidColorBrush(Color.FromArgb(255, 15, 157, 88))
                 };
-                LongPicTextBorder.SetBinding(UIElement.VisibilityProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(imageModel.IsLongPic)),
-                    Source = imageModel,
-                    Converter = new BoolToVisibilityConverter(),
-                    Mode = BindingMode.OneWay
-                });
+                LongPicTextBorder.SetBinding(UIElement.VisibilityProperty, CreateBinding(imageModel, nameof(imageModel.IsLongPic), new BoolToVisibilityConverter()));
 
                 PicSizePanel.Children.Add(WidePicBorder);
                 PicSizePanel.Children.Add(LongPicTextBorder);
@@ -181,25 +153,20 @@ namespace CoolapkLite.Controls.Writers
 
                 Grid.Children.Add(viewBox);
                 Grid.Children.Add(PicSizePanel);
-                Grid.Tapped += (sender, args) =>
-                {
-                    if (args.Handled) { return; }
-                    _ = Grid.ShowImageAsync(imageModel);
-                    args.Handled = true;
-                };
 
                 if (!string.IsNullOrEmpty(alt))
                 {
-                    Grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
-                    Grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                    Grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    Grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
                     TextBlock textBlock = new TextBlock
                     {
-                        IsTextSelectionEnabled = true,
                         Text = WebUtility.HtmlDecode(alt),
                         Margin = new Thickness(0, 6, 0, 0),
                         TextAlignment = TextAlignment.Center,
                         Foreground = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"]
                     };
+                    textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));
+                    textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(container, nameof(textBlockEx.FontSize)));
                     textBlock.SetValue(Grid.RowProperty, 1);
                     Grid.Children.Add(textBlock);
                 }

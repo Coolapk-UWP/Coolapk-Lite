@@ -9,12 +9,12 @@ namespace CoolapkLite.Controls
     /// Arranges child elements into a single line that can be oriented horizontally
     /// or vertically.
     /// </summary>
-    public class StackPanel : Panel
+    public class StackPanelEx : Panel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StackPanel"/> class.
+        /// Initializes a new instance of the <see cref="StackPanelEx"/> class.
         /// </summary>
-        public StackPanel() { }
+        public StackPanelEx() { }
 
         /// <summary>
         /// Gets or sets the distance between the border and its child object.
@@ -34,7 +34,7 @@ namespace CoolapkLite.Controls
             DependencyProperty.Register(
                 nameof(Padding),
                 typeof(Thickness),
-                typeof(StackPanel),
+                typeof(StackPanelEx),
                 new PropertyMetadata(null, OnLayoutPropertyChanged));
 
         /// <summary>
@@ -55,12 +55,12 @@ namespace CoolapkLite.Controls
             DependencyProperty.Register(
                 nameof(Orientation),
                 typeof(Orientation),
-                typeof(StackPanel),
+                typeof(StackPanelEx),
                 new PropertyMetadata(Orientation.Vertical, OnLayoutPropertyChanged));
 
         /// <summary>
         /// Gets or sets a uniform distance (in pixels) between stacked items. It is applied
-        /// in the direction of the StackPanel's Orientation.
+        /// in the direction of the StackPanelEx's Orientation.
         /// </summary>
         /// <returns>The uniform distance (in pixels) between stacked items.</returns>
         public double Spacing
@@ -76,20 +76,20 @@ namespace CoolapkLite.Controls
             DependencyProperty.Register(
                 nameof(Spacing),
                 typeof(double),
-                typeof(StackPanel),
+                typeof(StackPanelEx),
                 new PropertyMetadata(0.0, OnLayoutPropertyChanged));
 
         private static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != e.OldValue)
             {
-                (d as StackPanel).InvalidateArrange();
+                (d as StackPanelEx).InvalidateArrange();
             }
         }
 
         /// <summary>
-        /// Measures the child elements of a <see cref="StackPanel"/> in anticipation
-        /// of arranging them during the StackPanel.ArrangeOverride(<see cref="Size"/>)
+        /// Measures the child elements of a <see cref="StackPanelEx"/> in anticipation
+        /// of arranging them during the StackPanelEx.ArrangeOverride(<see cref="Size"/>)
         /// pass.
         /// </summary>
         /// <param name="constraint">An upper limit <see cref="Size"/> that should not be exceeded.</param>
@@ -157,11 +157,11 @@ namespace CoolapkLite.Controls
         }
 
         /// <summary>
-        /// Arranges the content of a <see cref="StackPanel"/> element.
+        /// Arranges the content of a <see cref="StackPanelEx"/> element.
         /// </summary>
         /// <param name="arrangeSize">The <see cref="Size"/> that this element should use to arrange its child elements.</param>
         /// <returns>
-        /// The <see cref="Size"/> that represents the arranged size of this <see cref="StackPanel"/>
+        /// The <see cref="Size"/> that represents the arranged size of this <see cref="StackPanelEx"/>
         /// element and its child elements.
         /// </returns>
         protected override Size ArrangeOverride(Size arrangeSize)

@@ -4,14 +4,20 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:converters="using:CoolapkLite.Helpers.Converters">
     <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="TextBlockEx.Themeresources.xaml" />
         <ResourceDictionary>
             <converters:NumAddConverter x:Key="NumAddConverter" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
-
     <Style BasedOn="{StaticResource DefaultTextBlockExStyle}" TargetType="controls:TextBlockEx" />
 
     <Style x:Key="DefaultTextBlockExStyle" TargetType="controls:TextBlockEx">
+        <Setter Property="QuoteBackground" Value="{ThemeResource ControlFillColorTransparentBrush}" />
+        <Setter Property="QuoteForeground" Value="{ThemeResource TextBlockExQuoteForeground}" />
+        <Setter Property="QuoteBorderBrush" Value="{ThemeResource TextBlockExBorderBrush}" />
+        <Setter Property="QuoteBorderThickness" Value="2,0,0,0" />
+        <Setter Property="QuoteMargin" Value="7,5,0,5" />
+        <Setter Property="QuotePadding" Value="7,2,0,4" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:TextBlockEx">

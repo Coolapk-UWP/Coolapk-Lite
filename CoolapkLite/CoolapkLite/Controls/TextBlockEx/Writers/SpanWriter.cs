@@ -8,7 +8,7 @@ namespace CoolapkLite.Controls.Writers
     {
         public override string[] TargetTags => new string[] { "span" };
 
-        public override DependencyObject GetControl(HtmlNode fragment)
+        public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             return new Span();
         }

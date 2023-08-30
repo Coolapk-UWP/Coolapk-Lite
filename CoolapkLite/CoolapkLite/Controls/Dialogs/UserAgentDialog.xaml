@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Closing="OnClosing"
     mc:Ignorable="d">
-    <controls:StackPanel Spacing="4">
+    <controls:StackPanelEx Spacing="4">
         <TextBox
             x:Uid="/ContentDialog/HeaderTextBox"
             PlaceholderText="Dalvik/2.1.0 (Linux; U; Android 11; GM1910 Build/RKQ1.201022.002)"
@@ -30,5 +30,5 @@
             x:Uid="/ContentDialog/OSVersionTextBox"
             PlaceholderText="11"
             Text="{x:Bind UserAgent.OSVersion, Mode=TwoWay}" />
-    </controls:StackPanel>
+    </controls:StackPanelEx>
 </ContentDialog>

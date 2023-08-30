@@ -31,73 +31,73 @@
         </Pivot.RightHeader>
         <PivotItem Tag="CommentMe">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/CommentMe" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.CommentMeNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.CommentMeNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>
         <PivotItem Tag="AtMe">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/AtMe" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.AtMeNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.AtMeNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>
         <PivotItem Tag="AtCommentMe">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/AtCommentMe" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.AtCommentMeNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.AtCommentMeNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>
         <PivotItem Tag="FeedLike">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/FeedLike" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.FeedLikeNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.FeedLikeNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>
         <PivotItem Tag="Follow">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/Follow" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.FollowNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.FollowNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>
         <PivotItem Tag="Message">
             <PivotItem.Header>
-                <controls:StackPanel Orientation="Horizontal" Spacing="4">
+                <controls:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <TextBlock x:Uid="/NotificationsPage/Message" />
                     <controls:InfoBadge
                         VerticalAlignment="Center"
                         Visibility="{x:Bind NotificationsModel.MessageNum, Converter={StaticResource DoubleToVisibilityConverter}, Mode=OneWay}"
                         Value="{x:Bind NotificationsModel.MessageNum, Mode=OneWay}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
             </PivotItem.Header>
             <Frame />
         </PivotItem>

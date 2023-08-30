@@ -124,7 +124,7 @@
                             Padding="10"
                             helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                             Background="{ThemeResource TextOnAccentFillColorSecondaryBrush}">
-                            <control:StackPanel Spacing="8">
+                            <control:StackPanelEx Spacing="8">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -208,7 +208,7 @@
                                     Text="{Binding Bio}"
                                     TextWrapping="WrapWholeWords"
                                     Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
-                                <control:StackPanel Orientation="Horizontal" Spacing="6">
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="6">
                                     <TextBlock VerticalAlignment="Center" FontSize="16">
                                         <Run FontWeight="Bold" Text="{Binding LikeNum}" />
                                         <Run x:Uid="/FeedListPage/LikeNum" FontWeight="Thin" />
@@ -241,8 +241,8 @@
                                         <Run FontWeight="Bold" Text="{Binding FeedNum}" />
                                         <Run x:Uid="/FeedListPage/FeedsNum" FontWeight="Thin" />
                                     </TextBlock>
-                                </control:StackPanel>
-                                <control:StackPanel Orientation="Horizontal" Spacing="4">
+                                </control:StackPanelEx>
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -283,8 +283,8 @@
                                             FontSize="12"
                                             Text="{Binding BlockStatus}" />
                                     </Border>
-                                </control:StackPanel>
-                            </control:StackPanel>
+                                </control:StackPanelEx>
+                            </control:StackPanelEx>
                         </Grid>
                     </Grid>
                 </Border>
@@ -309,7 +309,7 @@
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
-                    <control:StackPanel
+                    <control:StackPanelEx
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Spacing="8">
@@ -327,7 +327,7 @@
                                     <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                            <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -344,7 +344,7 @@
                                     <ItemsControl ItemsSource="{Binding FollowUsers}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                                <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
@@ -369,7 +369,7 @@
                                         FontSize="12"
                                         Text="{Binding FollowNum}" />
                                 </Grid>
-                            </control:StackPanel>
+                            </control:StackPanelEx>
                             <Button
                                 x:Name="FollowButton"
                                 Grid.Column="2"
@@ -402,7 +402,7 @@
                             Text="{Binding SubTitle}"
                             TextWrapping="WrapWholeWords"
                             Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="DyhDetailCard">
@@ -425,7 +425,7 @@
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
-                    <control:StackPanel
+                    <control:StackPanelEx
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Spacing="8">
@@ -443,7 +443,7 @@
                                     <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                            <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -472,7 +472,7 @@
                                         FontSize="12"
                                         Text="{Binding UserName}" />
                                 </Grid>
-                            </control:StackPanel>
+                            </control:StackPanelEx>
                             <Button
                                 x:Name="FollowButton"
                                 Grid.Column="2"
@@ -501,11 +501,11 @@
                             Text="{Binding Description}"
                             TextWrapping="WrapWholeWords"
                             Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="ProductDetailCard">
-                <control:StackPanel Spacing="2">
+                <control:StackPanelEx Spacing="2">
                     <Grid
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -582,7 +582,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1">
-                        <control:StackPanel Spacing="8">
+                        <control:StackPanelEx Spacing="8">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -597,7 +597,7 @@
                                         <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                     </Border.Background>
                                 </Border>
-                                <control:StackPanel Grid.Column="1" Margin="8,0">
+                                <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
                                         FontWeight="SemiBold"
@@ -614,7 +614,7 @@
                                         <ItemsControl ItemsSource="{Binding FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                                    <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
@@ -639,7 +639,7 @@
                                             FontSize="12"
                                             Text="{Binding FollowNum}" />
                                     </Grid>
-                                </control:StackPanel>
+                                </control:StackPanelEx>
                                 <Button
                                     x:Name="FollowButton"
                                     Grid.Column="2"
@@ -668,7 +668,7 @@
                                 Text="{Binding Description}"
                                 TextWrapping="WrapWholeWords"
                                 Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                     </Grid>
                     <ListView
                         HorizontalAlignment="Stretch"
@@ -681,7 +681,7 @@
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <control:StackPanel Orientation="Horizontal" Spacing="2" />
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="2" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
@@ -705,7 +705,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1">
-                        <control:StackPanel>
+                        <control:StackPanelEx>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -994,9 +994,9 @@
                                         Text="{Binding Star1Count}" />
                                 </Grid>
                             </Grid>
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                     </Grid>
-                </control:StackPanel>
+                </control:StackPanelEx>
             </DataTemplate>
             <DataTemplate x:Key="CollectionDetailCard">
                 <Grid
@@ -1090,7 +1090,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <control:StackPanel Spacing="8">
+                        <control:StackPanelEx Spacing="8">
                             <TextBlock
                                 FontSize="20"
                                 Text="{Binding Title}"
@@ -1121,7 +1121,7 @@
                                     <Run Text="{Binding FollowNum}" />
                                 </TextBlock>
                             </Grid>
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Right"

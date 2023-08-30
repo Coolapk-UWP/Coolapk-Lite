@@ -22,7 +22,7 @@ namespace CoolapkLite.Controls.Writers
             return fragment.NodeType == HtmlNodeType.Text;
         }
 
-        public override DependencyObject GetControl(HtmlNode fragment)
+        public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             HtmlNode text = fragment;
             if (text != null && !string.IsNullOrEmpty(text.InnerText))
@@ -71,14 +71,7 @@ namespace CoolapkLite.Controls.Writers
                     Margin = new Thickness(0, 0, 0, -4),
                     VerticalAlignment = VerticalAlignment.Center
                 };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(container.FontSize)),
-                    Source = container,
-                    Converter = new NumMultConverter(),
-                    ConverterParameter = 4d / 3d,
-                    Mode = BindingMode.OneWay
-                });
+                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
                 container.Child = viewBox;
                 return container;
             }
@@ -101,14 +94,7 @@ namespace CoolapkLite.Controls.Writers
                     Margin = new Thickness(0, 0, 0, -4),
                     VerticalAlignment = VerticalAlignment.Center
                 };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(container.FontSize)),
-                    Source = container,
-                    Converter = new NumMultConverter(),
-                    ConverterParameter = 4d / 3d,
-                    Mode = BindingMode.OneWay
-                });
+                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
                 container.Child = viewBox;
                 return container;
             }
@@ -123,14 +109,7 @@ namespace CoolapkLite.Controls.Writers
                     Margin = new Thickness(0, 0, 0, -4),
                     VerticalAlignment = VerticalAlignment.Center
                 };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, new Binding
-                {
-                    Path = new PropertyPath(nameof(container.FontSize)),
-                    Source = container,
-                    Converter = new NumMultConverter(),
-                    ConverterParameter = 4d / 3d,
-                    Mode = BindingMode.OneWay
-                });
+                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
                 container.Child = viewBox;
                 return container;
             }

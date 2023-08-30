@@ -9,7 +9,7 @@ namespace CoolapkLite.Controls.Writers
     {
         public override string[] TargetTags => new string[] { "br" };
 
-        public override DependencyObject GetControl(HtmlNode fragment)
+        public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             //LineBreak doesn't work with hyperlink
             return new Run

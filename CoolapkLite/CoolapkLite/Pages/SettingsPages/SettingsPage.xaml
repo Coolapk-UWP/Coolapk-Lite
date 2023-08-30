@@ -43,7 +43,7 @@
                     <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind Provider.IsNoPicsMode, Mode=TwoWay}" />
                     <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind Provider.IsUseMultiWindow, Mode=TwoWay}" />
                     <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind Provider.IsDisplayOriginPicture, Mode=TwoWay}" />
-                    <control:StackPanel Orientation="Horizontal" Spacing="8">
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="8">
                         <Button
                             x:Uid="/SettingsPage/CleanCacheButton"
                             Click="Button_Click"
@@ -75,7 +75,7 @@
                             HorizontalAlignment="Left"
                             IsActive="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                             Visibility="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                     <Slider
                         x:Uid="/SettingsPage/TileUpdateTimeSlider"
                         Maximum="1440"
@@ -114,7 +114,7 @@
                 <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
                     <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText, Mode=OneWay}" />
                     <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{x:Bind Provider.CheckUpdateWhenLaunching, Mode=TwoWay}" />
-                    <control:StackPanel Orientation="Horizontal" Spacing="8">
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="8">
                         <Button
                             x:Uid="/SettingsPage/CheckUpdate"
                             Click="Button_Click"
@@ -124,7 +124,7 @@
                             HorizontalAlignment="Left"
                             IsActive="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                             Visibility="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                 </control:SettingsGroup>
                 <control:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
                     <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{x:Bind Provider.ShowOtherException, Mode=TwoWay}" />

@@ -11,7 +11,7 @@ namespace CoolapkLite.Controls.Writers
     {
         public override string[] TargetTags => new string[] { "div", "ul", "ol", "dl", "section", "article", "header", "footer", "main", "figure", "details", "summary", "tbody" };
 
-        public override DependencyObject GetControl(HtmlNode fragment)
+        public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             HtmlNode node = fragment;
             if (node.Name.ToLowerInvariant() == "div" && node.GetAttributeValue("class", string.Empty) == "author-border")
@@ -27,14 +27,16 @@ namespace CoolapkLite.Controls.Writers
                     VerticalAlignment = VerticalAlignment.Center,
                     BorderBrush = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
                 };
+
                 TextBlock textBlock = new TextBlock
                 {
                     FontSize = 12,
                     Margin = new Thickness(1),
-                    IsTextSelectionEnabled = true,
                     Text = _loader.GetString("FeedAuthorText"),
                     Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
                 };
+
+                textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));
 
                 border.Child = textBlock;
                 container.Child = border;

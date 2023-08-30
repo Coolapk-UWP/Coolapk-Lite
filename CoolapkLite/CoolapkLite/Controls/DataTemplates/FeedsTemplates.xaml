@@ -151,7 +151,7 @@
                             IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             Text="{Binding UserInfo.UserName}"
                             TextTrimming="CharacterEllipsis" />
-                        <controls:StackPanel
+                        <controls:StackPanelEx
                             Grid.Row="1"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
@@ -195,7 +195,7 @@
                                     <Run Text="{Binding DeviceTitle}" />
                                 </Hyperlink>
                             </TextBlock>
-                        </controls:StackPanel>
+                        </controls:StackPanelEx>
                     </Grid>
                 </StackPanel>
                 <StackPanel
@@ -278,7 +278,7 @@
                     Text="{Binding MessageTitle}"
                     TextWrapping="Wrap"
                     Visibility="{Binding MessageTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                <controls:StackPanel
+                <controls:StackPanelEx
                     Grid.Row="4"
                     Margin="4"
                     Spacing="4">
@@ -315,7 +315,7 @@
                         IsTextSelectionEnabled="{Binding IsCopyEnabled}"
                         Text="{Binding Message}"
                         Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}" />
-                </controls:StackPanel>
+                </controls:StackPanelEx>
                 <GridView
                     Grid.Row="5"
                     MinHeight="0"
@@ -524,7 +524,7 @@
                     Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <controls:StackPanel Orientation="Horizontal" Spacing="6" />
+                            <controls:StackPanelEx Orientation="Horizontal" Spacing="6" />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
                 </ListView>

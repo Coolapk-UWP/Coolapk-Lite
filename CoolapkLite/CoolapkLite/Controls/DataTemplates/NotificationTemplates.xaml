@@ -139,7 +139,7 @@
                     IsTextSelectionEnabled="{Binding FeedDetail.IsCopyEnabled, Mode=OneWay}"
                     Text="{Binding Dateline}" />
             </StackPanel>
-            <control:StackPanel Grid.Row="1" Spacing="4">
+            <control:StackPanelEx Grid.Row="1" Spacing="4">
                 <TextBlock
                     Margin="4,0"
                     FontSize="16"
@@ -152,7 +152,7 @@
                     BorderThickness="1">
                     <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding FeedDetail}" />
                 </Border>
-            </control:StackPanel>
+            </control:StackPanelEx>
         </Grid>
     </DataTemplate>
 

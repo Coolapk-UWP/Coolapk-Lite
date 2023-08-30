@@ -48,15 +48,15 @@
                             x:Name="Pane1Grid"
                             Margin="12"
                             Padding="{StaticResource StackPanelMargin}">
-                            <controls:StackPanel
+                            <controls:StackPanelEx
                                 x:Name="DetailControl"
                                 HorizontalAlignment="Stretch"
                                 Spacing="12">
-                                <controls:StackPanel.ChildrenTransitions>
+                                <controls:StackPanelEx.ChildrenTransitions>
                                     <TransitionCollection>
                                         <ReorderThemeTransition />
                                     </TransitionCollection>
-                                </controls:StackPanel.ChildrenTransitions>
+                                </controls:StackPanelEx.ChildrenTransitions>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -216,7 +216,7 @@
                                     Click="Button_Click"
                                     Tag="CreateFeedButton"
                                     Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                    <controls:StackPanel
+                                    <controls:StackPanelEx
                                         Margin="8,0"
                                         Orientation="Horizontal"
                                         Spacing="8">
@@ -228,9 +228,9 @@
                                             x:Uid="/ProfilePage/CreateFeed"
                                             Margin="0,0,0,2"
                                             FontSize="16" />
-                                    </controls:StackPanel>
+                                    </controls:StackPanelEx>
                                 </Button>
-                            </controls:StackPanel>
+                            </controls:StackPanelEx>
                         </Grid>
                     </ScrollViewer>
                 </Grid>
@@ -241,15 +241,15 @@
                         Margin="{StaticResource ScrollViewerMargin}"
                         Padding="{StaticResource ScrollViewerPadding}"
                         VerticalScrollBarVisibility="Auto">
-                        <controls:StackPanel
+                        <controls:StackPanelEx
                             Margin="12"
                             Padding="{StaticResource StackPanelMargin}"
                             Spacing="12">
-                            <controls:StackPanel.ChildrenTransitions>
+                            <controls:StackPanelEx.ChildrenTransitions>
                                 <TransitionCollection>
                                     <ReorderThemeTransition />
                                 </TransitionCollection>
-                            </controls:StackPanel.ChildrenTransitions>
+                            </controls:StackPanelEx.ChildrenTransitions>
                             <Grid x:Name="Pane2Grid" />
                             <ItemsControl
                                 x:Name="ListView"
@@ -269,7 +269,7 @@
                                 </ItemsControl.ItemContainerTransitions>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <controls:StackPanel
+                                        <controls:StackPanelEx
                                             Orientation="Vertical"
                                             ScrollViewer.HorizontalScrollMode="Disabled"
                                             ScrollViewer.VerticalScrollMode="Auto"
@@ -277,7 +277,7 @@
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                             </ItemsControl>
-                        </controls:StackPanel>
+                        </controls:StackPanelEx>
                     </ScrollViewer>
                 </Grid>
             </controls:TwoPaneView.Pane2>

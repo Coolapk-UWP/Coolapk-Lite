@@ -326,7 +326,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <local:StackPanel
+            <local:StackPanelEx
                 Grid.Row="5"
                 Margin="4"
                 Spacing="4">
@@ -393,7 +393,7 @@
                         Text="{Binding MessageRawOutput}"
                         Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
                 </Grid>
-            </local:StackPanel>
+            </local:StackPanelEx>
             <Grid
                 Grid.Row="6"
                 MinHeight="0"
@@ -562,7 +562,7 @@
                 Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed'}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <local:StackPanel Orientation="Horizontal" Spacing="6" />
+                        <local:StackPanelEx Orientation="Horizontal" Spacing="6" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>

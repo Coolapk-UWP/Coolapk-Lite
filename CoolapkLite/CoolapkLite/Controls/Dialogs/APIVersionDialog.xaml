@@ -22,7 +22,7 @@
             </MenuFlyoutItem>
         </MenuFlyout>
     </helpers:UIElementHelper.ContextFlyout>
-    <controls:StackPanel Spacing="4">
+    <controls:StackPanelEx Spacing="4">
         <TextBox
             x:Uid="/ContentDialog/APIVersionTextBox"
             PlaceholderText="9.2.2"
@@ -31,5 +31,5 @@
             x:Uid="/ContentDialog/APIVersionCodeTextBox"
             PlaceholderText="1905301"
             Text="{x:Bind APIVersion.VersionCode, Mode=TwoWay}" />
-    </controls:StackPanel>
+    </controls:StackPanelEx>
 </ContentDialog>
