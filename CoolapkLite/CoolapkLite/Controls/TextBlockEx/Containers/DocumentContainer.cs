@@ -34,6 +34,10 @@ namespace CoolapkLite.Controls.Containers
             {
                 container = new StackPanelDocumentContainer(stackPanel);
             }
+            else if (element is ContentControl contentControl)
+            {
+                container = new ContentControlDocumentContainer(contentControl);
+            }
             else if (element is RichTextBlock richTextBlock)
             {
                 container = new RichTextBlockDocumentContainer(richTextBlock);

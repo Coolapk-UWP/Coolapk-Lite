@@ -18,6 +18,34 @@ namespace CoolapkLite.Controls.Writers
             return fragment != null && fragment.NodeType == HtmlNodeType.Element && !string.IsNullOrEmpty(fragment.Name) && TargetTags.Any(t => t.Equals(fragment.Name, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public static double GetAttributeValue(HtmlNode node, string name, double def)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException("name");
+            }
+
+            if (!node.HasAttributes)
+            {
+                return def;
+            }
+
+            HtmlAttribute htmlAttribute = node.Attributes[name];
+            if (htmlAttribute == null)
+            {
+                return def;
+            }
+
+            try
+            {
+                return Convert.ToDouble(htmlAttribute.Value);
+            }
+            catch
+            {
+                return def;
+            }
+        }
+
         protected static Binding CreateBinding(object source, string path, BindingMode mode = BindingMode.OneWay)
         {
             return new Binding

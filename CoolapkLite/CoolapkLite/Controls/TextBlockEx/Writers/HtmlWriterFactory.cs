@@ -14,24 +14,49 @@ namespace CoolapkLite.Controls.Writers
                 case HtmlNodeType.Element:
                     switch (node.OriginalName.ToLowerInvariant())
                     {
+                        case "abbr":
+                        case "acronym":
+                            return new AcronymWriter();
                         case "a":
                             return new AnchorWriter();
+                        case "bdi":
+                            return new BdiWriter();
+                        case "bdo":
+                            return new BdoWriter();
+                        case "button":
+                            return new ButtonWriter();
                         case "blockquote":
                             return new BlockQuoteWriter();
                         case "br":
                             return new BrWriter();
+                        case "del":
+                        case "s":
+                        case "strike":
+                            return new DelWriter();
                         case "img":
                             return new ImageWriter();
+                        case "input":
+                            return new InputWriter();
+                        case "ins":
+                        case "u":
+                            return new InsWriter();
                         case "p":
                             return new ParagraphWriter();
                         case "span":
                             return new SpanWriter();
-                        case "i":
-                        case "em":
-                            return new EmWriter();
-                        case "b":
+                        case "progress":
+                        case "meter":
+                            return new ProgressWriter();
                         case "strong":
+                        case "b":
                             return new StrongWriter();
+                        case "em":
+                        case "i":
+                        case "dfn":
+                        case "var":
+                        case "cite":
+                        case "address":
+                            return new EmWriter();
                         case "div":
                         case "ul":
                         case "ol":

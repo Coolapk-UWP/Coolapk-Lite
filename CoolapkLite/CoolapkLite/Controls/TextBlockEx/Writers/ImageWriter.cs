@@ -46,7 +46,6 @@ namespace CoolapkLite.Controls.Writers
         {
             ImageModel imageModel;
             Image image = new Image();
-            InlineUIContainer container = new InlineUIContainer();
 
             imageModel = new ImageModel(src, SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ImageType.OriginImage : ImageType.SmallImage);
             image.SetBinding(Image.SourceProperty, CreateBinding(imageModel, nameof(imageModel.Pic)));
@@ -59,6 +58,7 @@ namespace CoolapkLite.Controls.Writers
 
             if (src.Contains("emoticons"))
             {
+                InlineUIContainer container = new InlineUIContainer();
                 Viewbox viewBox = new Viewbox
                 {
                     Child = image,
@@ -67,13 +67,16 @@ namespace CoolapkLite.Controls.Writers
                 };
                 viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
                 container.Child = viewBox;
+                return container;
             }
             else
             {
                 textBlockEx.ImageArrayBuilder.Add(imageModel);
                 image.Tapped += (sender, args) => textBlockEx.OnImageClicked(imageModel, args);
 
-                Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
+                Border Border = new Border { Padding = new Thickness(0, 12, 0, 12) };
+
+                Grid Grid = new Grid();
 
                 StackPanelEx IsGIFPanel = new StackPanelEx
                 {
@@ -139,8 +142,8 @@ namespace CoolapkLite.Controls.Writers
                     VerticalAlignment = VerticalAlignment.Center
                 };
 
-                int imgHeight = node.GetAttributeValue("height", 0);
-                int width = node.GetAttributeValue("width", 0);
+                double imgHeight = GetAttributeValue(node, "height", 0);
+                double width = GetAttributeValue(node, "width", 0);
 
                 if (imgHeight > 0)
                 {
@@ -166,14 +169,15 @@ namespace CoolapkLite.Controls.Writers
                         Foreground = (SolidColorBrush)Application.Current.Resources["TextFillColorSecondaryBrush"]
                     };
                     textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));
-                    textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(container, nameof(textBlockEx.FontSize)));
+                    textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.FontSize)));
                     textBlock.SetValue(Grid.RowProperty, 1);
                     Grid.Children.Add(textBlock);
                 }
 
-                container.Child = Grid;
+                Border.Child = Grid;
+
+                return Border;
             }
-            return container;
         }
 
         private static string GetImageSrc(HtmlNode img)
