@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Update;
 using Microsoft.Toolkit.Uwp.Helpers;

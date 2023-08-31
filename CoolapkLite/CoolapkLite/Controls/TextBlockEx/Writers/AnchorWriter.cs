@@ -13,31 +13,28 @@ namespace CoolapkLite.Controls.Writers
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
-            if (fragment.NodeType == HtmlNodeType.Element)
+            HtmlNode node = fragment;
+            if (node != null)
             {
-                HtmlNode node = fragment;
-                if (node != null)
+                Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
+
+                string content = node.InnerText;
+                if (content == "查看图片")
                 {
-                    Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
-
-                    string content = node.InnerText;
-                    if (content == "查看图片")
-                    {
-                        hyperlink.Inlines.Add(CreateSymbolRun("\uE158", textBlockEx));
-                    }
-                    else if (!content.StartsWith("@") && !content.StartsWith("#") && !(node.GetAttributeValue("type", null) == "user-detail"))
-                    {
-                        hyperlink.Inlines.Add(CreateSymbolRun("\uE167", textBlockEx));
-                    }
-
-                    if (node.GetAttributeValue("href", null) is string href && !string.IsNullOrEmpty(href))
-                    {
-                        ToolTipService.SetToolTip(hyperlink, new ToolTip { Content = href });
-                        hyperlink.Click += (sender, e) => textBlockEx.OnLinkClicked(href);
-                    }
-
-                    return hyperlink;
+                    hyperlink.Inlines.Add(CreateSymbolRun("\uE158", textBlockEx));
                 }
+                else if (!content.StartsWith("@") && !content.StartsWith("#") && !(node.GetAttributeValue("type", null) == "user-detail"))
+                {
+                    hyperlink.Inlines.Add(CreateSymbolRun("\uE167", textBlockEx));
+                }
+
+                if (node.GetAttributeValue("href", null) is string href && !string.IsNullOrEmpty(href))
+                {
+                    ToolTipService.SetToolTip(hyperlink, new ToolTip { Content = href });
+                    hyperlink.Click += (sender, e) => textBlockEx.OnLinkClicked(href);
+                }
+
+                return hyperlink;
             }
             return null;
         }

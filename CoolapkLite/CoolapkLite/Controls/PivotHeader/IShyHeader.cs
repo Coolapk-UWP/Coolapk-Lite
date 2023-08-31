@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Controls
 {
-    internal interface IShyHeader
+    public interface IShyHeader
     {
         int ShyHeaderSelectedIndex { get; set; }
         ShyHeaderItem ShyHeaderSelectedItem { get; set; }

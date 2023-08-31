@@ -13,7 +13,7 @@ using IObjectSerializer = Microsoft.Toolkit.Helpers.IObjectSerializer;
 
 namespace CoolapkLite.Helpers
 {
-    internal static partial class SettingsHelper
+    public static partial class SettingsHelper
     {
         public const string Uid = nameof(Uid);
         public const string Token = nameof(Token);
@@ -173,7 +173,7 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    internal static partial class SettingsHelper
+    public static partial class SettingsHelper
     {
         public static event TypedEventHandler<string, bool> LoginChanged;
         public static readonly ILogManager LogManager = LogManagerFactory.CreateLogManager();

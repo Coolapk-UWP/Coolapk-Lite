@@ -281,7 +281,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource QAItemSource { get; private set; }
         public FeedListItemSource CollectionItemSource { get; private set; }
 
-        internal UserViewModel(string uid) : base(uid, FeedListType.UserPageList) { }
+        public UserViewModel(string uid) : base(uid, FeedListType.UserPageList) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -395,13 +395,13 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    internal class TagViewModel : FeedListViewModel
+    public class TagViewModel : FeedListViewModel
     {
         public FeedListItemSource LastUpdateItemSource { get; private set; }
         public FeedListItemSource DatelineItemSource { get; private set; }
         public FeedListItemSource PopularItemSource { get; private set; }
 
-        internal TagViewModel(string id) : base(id, FeedListType.TagPageList) { }
+        public TagViewModel(string id) : base(id, FeedListType.TagPageList) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -502,12 +502,12 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    internal class DyhViewModel : FeedListViewModel
+    public class DyhViewModel : FeedListViewModel
     {
         public FeedListItemSource AllItemSource { get; private set; }
         public FeedListItemSource SquareItemSource { get; private set; }
 
-        internal DyhViewModel(string id) : base(id, FeedListType.DyhPageList) { }
+        public DyhViewModel(string id) : base(id, FeedListType.DyhPageList) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -595,7 +595,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    internal class ProductViewModel : FeedListViewModel
+    public class ProductViewModel : FeedListViewModel
     {
         public FeedListItemSource FeedItemSource { get; private set; }
         public FeedListItemSource AnswerItemSource { get; private set; }
@@ -603,7 +603,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource VideoItemSource { get; private set; }
         public FeedListItemSource TradeItemSource { get; private set; }
 
-        internal ProductViewModel(string id) : base(id, FeedListType.ProductPageList) { }
+        public ProductViewModel(string id) : base(id, FeedListType.ProductPageList) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -704,9 +704,9 @@ namespace CoolapkLite.ViewModels.FeedPages
         public override Task<bool> PinSecondaryTile(Entity entity) => Task.Run(() => false);
     }
 
-    internal class CollectionViewModel : FeedListViewModel
+    public class CollectionViewModel : FeedListViewModel
     {
-        internal CollectionViewModel(string id) : base(id, FeedListType.CollectionPageList) { }
+        public CollectionViewModel(string id) : base(id, FeedListType.CollectionPageList) { }
 
         public override async Task Refresh(bool reset = false)
         {

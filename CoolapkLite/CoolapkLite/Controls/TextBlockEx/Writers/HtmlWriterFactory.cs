@@ -29,27 +29,12 @@ namespace CoolapkLite.Controls.Writers
                             return new BlockQuoteWriter();
                         case "br":
                             return new BrWriter();
+                        case "code":
+                            return new CodeWriter();
                         case "del":
                         case "s":
                         case "strike":
                             return new DelWriter();
-                        case "img":
-                            return new ImageWriter();
-                        case "input":
-                            return new InputWriter();
-                        case "ins":
-                        case "u":
-                            return new InsWriter();
-                        case "p":
-                            return new ParagraphWriter();
-                        case "span":
-                            return new SpanWriter();
-                        case "progress":
-                        case "meter":
-                            return new ProgressWriter();
-                        case "strong":
-                        case "b":
-                            return new StrongWriter();
                         case "em":
                         case "i":
                         case "dfn":
@@ -57,6 +42,37 @@ namespace CoolapkLite.Controls.Writers
                         case "cite":
                         case "address":
                             return new EmWriter();
+                        case "h1":
+                        case "h2":
+                        case "h3":
+                        case "h4":
+                        case "h5":
+                        case "h6":
+                            return new HeaderWriter();
+                        case "img":
+                            return new ImageWriter();
+                        case "input":
+                            return new InputWriter();
+                        case "ins":
+                        case "u":
+                            return new InsWriter();
+                        case "kbd":
+                            return new KeyboardWriter();
+                        case "p":
+                            return new ParagraphWriter();
+                        case "pre":
+                            return new PreWriter();
+                        case "progress":
+                        case "meter":
+                            return new ProgressWriter();
+                        case "q":
+                            return new QWriter();
+                        case "label":
+                        case "span":
+                            return new SpanWriter();
+                        case "strong":
+                        case "b":
+                            return new StrongWriter();
                         case "div":
                         case "ul":
                         case "ol":
@@ -71,8 +87,9 @@ namespace CoolapkLite.Controls.Writers
                         case "summary":
                         case "tbody":
                             return new ContainerWriter();
+                        default:
+                            return new SpanWriter();
                     }
-                    break;
             }
             return null;
         }

@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models
 {
-    internal class IndexPageModel : Entity, IHasDescription
+    public class IndexPageModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -148,7 +148,7 @@ namespace CoolapkLite.Models
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class IndexPageMessageCardModel : Entity
+    public class IndexPageMessageCardModel : Entity
     {
         public string Title { get; private set; }
         public bool ShowEntities { get; private set; }
@@ -235,7 +235,7 @@ namespace CoolapkLite.Models
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal enum EntityType
+    public enum EntityType
     {
         Image,
         Others,
@@ -246,7 +246,7 @@ namespace CoolapkLite.Models
         SelectorLink,
     }
 
-    internal class IndexPageHasEntitiesModel : Entity, IHasDescription
+    public class IndexPageHasEntitiesModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -363,14 +363,14 @@ namespace CoolapkLite.Models
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal enum OperationType
+    public enum OperationType
     {
         Login,
         Refresh,
         ShowTitle,
     }
 
-    internal class IndexPageOperationCardModel : Entity, IHasTitle
+    public class IndexPageOperationCardModel : Entity, IHasTitle
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

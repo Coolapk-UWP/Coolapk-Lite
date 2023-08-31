@@ -74,9 +74,7 @@ namespace CoolapkLite.Controls.Writers
                 textBlockEx.ImageArrayBuilder.Add(imageModel);
                 image.Tapped += (sender, args) => textBlockEx.OnImageClicked(imageModel, args);
 
-                Border Border = new Border { Padding = new Thickness(0, 12, 0, 12) };
-
-                Grid Grid = new Grid();
+                Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
 
                 StackPanelEx IsGIFPanel = new StackPanelEx
                 {
@@ -174,9 +172,7 @@ namespace CoolapkLite.Controls.Writers
                     Grid.Children.Add(textBlock);
                 }
 
-                Border.Child = Grid;
-
-                return Border;
+                return Grid;
             }
         }
 

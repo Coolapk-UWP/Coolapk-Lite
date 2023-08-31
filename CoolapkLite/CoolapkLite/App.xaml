@@ -26,6 +26,7 @@
             <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
             <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
 
+            <FontFamily x:Key="CodeThemeFontFamily">Cascadia Code PL,Consolas</FontFamily>
             <FontFamily x:Key="SymbolThemeFontFamily">Segoe Fluent Icons,Segoe MDL2 Assets,Segoe UI Symbol</FontFamily>
 
             <Style TargetType="Frame">

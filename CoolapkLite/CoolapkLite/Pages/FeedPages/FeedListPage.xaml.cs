@@ -410,7 +410,7 @@ namespace CoolapkLite.Pages.FeedPages
         #endregion 界面模式切换
     }
 
-    internal class DetailTemplateSelector : DataTemplateSelector
+    public class DetailTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate DyhDetail { get; set; }

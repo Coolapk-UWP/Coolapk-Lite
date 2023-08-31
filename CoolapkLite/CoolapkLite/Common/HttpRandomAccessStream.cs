@@ -11,7 +11,7 @@ using Windows.Web.Http;
 
 namespace CoolapkLite.Common
 {
-    internal class HttpRandomAccessStream : IRandomAccessStreamWithContentType
+    public class HttpRandomAccessStream : IRandomAccessStreamWithContentType
     {
         private readonly Uri _requestedUri;
         private HttpClient _client;

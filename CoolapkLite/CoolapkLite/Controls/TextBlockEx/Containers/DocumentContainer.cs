@@ -81,6 +81,24 @@ namespace CoolapkLite.Controls.Containers
             return null;
         }
 
+        protected static long SetBinding(DependencyObject source, DependencyProperty property, Action applyChange)
+        {
+            if (source != null)
+            {
+                applyChange();
+                return source.RegisterPropertyChangedCallback(property, (sender, dp) =>
+                {
+                    applyChange();
+                });
+            }
+            return 0;
+        }
+
+        protected static void UnsetBinding(DependencyObject source, DependencyProperty property, long token)
+        {
+            source?.UnregisterPropertyChangedCallback(property, token);
+        }
+
         protected static Binding CreateBinding(object source, string path, BindingMode mode = BindingMode.OneWay)
         {
             return new Binding
@@ -89,19 +107,6 @@ namespace CoolapkLite.Controls.Containers
                 Source = source,
                 Mode = mode
             };
-        }
-
-        protected static void SetBinding(DependencyObject source, DependencyProperty property, Action applyChange)
-        {
-            if (source != null)
-            {
-                applyChange();
-
-                source.RegisterPropertyChangedCallback(property, (sender, dp) =>
-                {
-                    applyChange();
-                });
-            }
         }
     }
 

@@ -59,7 +59,7 @@ namespace CoolapkLite.Controls.Containers
 
         private RichTextBlock FindOrCreateTextBlock(DependencyObject element)
         {
-            var panel = FindOrCreatePanel();
+            Panel panel = FindOrCreatePanel();
             if (!(panel.Children.LastOrDefault() is RichTextBlock textBlock))
             {
                 textBlock = new RichTextBlock();
@@ -71,10 +71,22 @@ namespace CoolapkLite.Controls.Containers
 
                 if (element.GetValue(TextBlockEx.ContainerForegroundProperty) is Brush brush && brush != DependencyProperty.UnsetValue)
                 {
-                    SetBinding(element, TextBlockEx.ContainerForegroundProperty, () =>
-                    {
-                        textBlock.Foreground = TextBlockEx.GetContainerForeground(element);
-                    });
+                    long token = 0;
+                    textBlock.Loaded += (sender, e) =>
+                    token = SetBinding(element, TextBlockEx.ContainerForegroundProperty, () =>
+                    textBlock.Foreground = TextBlockEx.GetContainerForeground(element));
+                    textBlock.Unloaded += (sender, e) =>
+                    UnsetBinding(element, TextBlockEx.ContainerForegroundProperty, token);
+                }
+
+                if (element.GetValue(TextBlockEx.ContainerFontFamilyProperty) is FontFamily fontFamily && fontFamily != DependencyProperty.UnsetValue)
+                {
+                    long token = 0;
+                    textBlock.Loaded += (sender, e) =>
+                    token = SetBinding(element, TextBlockEx.ContainerFontFamilyProperty, () =>
+                    textBlock.FontFamily = TextBlockEx.GetContainerFontFamily(element));
+                    textBlock.Unloaded += (sender, e) =>
+                    UnsetBinding(element, TextBlockEx.ContainerFontFamilyProperty, token);
                 }
 
                 AddChild(textBlock);

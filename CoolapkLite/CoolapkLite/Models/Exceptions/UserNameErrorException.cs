@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoolapkLite.Core.Exceptions
+namespace CoolapkLite.Models.Exceptions
 {
     public sealed class UserNameErrorException : Exception { }
 }

@@ -1,11 +1,8 @@
 ﻿using CoolapkLite.Helpers;
 using HtmlAgilityPack;
 using Microsoft.Toolkit.Uwp.Helpers;
-using System;
-using System.Xml.Linq;
 using Windows.Foundation.Metadata;
 using Windows.UI;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -14,7 +11,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Writers
 {
-    internal class InputWriter : HtmlWriter
+    public class InputWriter : HtmlWriter
     {
         public override string[] TargetTags => new string[] { "input" };
 

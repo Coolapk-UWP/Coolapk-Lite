@@ -42,7 +42,7 @@ namespace CoolapkLite.Models.Pages
         }
     }
 
-    internal class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
+    public class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -117,7 +117,7 @@ namespace CoolapkLite.Models.Pages
 
         public string Url => $"/u/{UID}";
 
-        internal UserDetail(JObject token) : base(token)
+        public UserDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -262,7 +262,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{UserName} - {Bio}";
     }
 
-    internal class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
+    public class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -323,7 +323,7 @@ namespace CoolapkLite.Models.Pages
 
         public ImageModel Pic => Logo;
 
-        internal TopicDetail(JObject token) : base(token)
+        public TopicDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -409,7 +409,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
+    public class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -482,7 +482,7 @@ namespace CoolapkLite.Models.Pages
 
         public string Url => $"/dyh/{ID}";
 
-        internal DyhDetail(JObject token) : base(token)
+        public DyhDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -559,7 +559,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class ProductDetail : FeedListDetailBase, ICanFollow
+    public class ProductDetail : FeedListDetailBase, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -645,7 +645,7 @@ namespace CoolapkLite.Models.Pages
 
         public ImmutableArray<ImageModel> CoverArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
-        internal ProductDetail(JObject token) : base(token)
+        public ProductDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -841,7 +841,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class CollectionDetail : FeedListDetailBase, ICanLike, ICanFollow
+    public class CollectionDetail : FeedListDetailBase, ICanLike, ICanFollow
     {
         private bool followed;
         public bool Followed

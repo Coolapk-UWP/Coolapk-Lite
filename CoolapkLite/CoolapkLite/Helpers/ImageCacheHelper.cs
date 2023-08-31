@@ -33,7 +33,7 @@ namespace CoolapkLite.Helpers
         SmallAvatar = Avatar | Small,
     }
 
-    internal static partial class ImageCacheHelper
+    public static partial class ImageCacheHelper
     {
         private static readonly Uri DarkNoPicUri = new Uri("ms-appx:/Assets/NoPic/img_placeholder_night.png");
         private static readonly Uri WhiteNoPicUri = new Uri("ms-appx:/Assets/NoPic/img_placeholder.png");
@@ -41,11 +41,11 @@ namespace CoolapkLite.Helpers
         private static Dictionary<CoreDispatcher, BitmapImage> DarkNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
         private static Dictionary<CoreDispatcher, BitmapImage> WhiteNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
 
-        internal static CoreDispatcher Dispatcher { get; } = CoreApplication.MainView.Dispatcher;
+        public static CoreDispatcher Dispatcher { get; } = CoreApplication.MainView.Dispatcher;
 
         static ImageCacheHelper() => ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
 
-        internal static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
+        public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
             if (!url.TryGetUri(out Uri uri)) { return await GetNoPicAsync(dispatcher); }
 
@@ -139,7 +139,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        internal static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
+        public static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
             if (!url.TryGetUri(out Uri uri)) { return null; }
 
@@ -194,9 +194,9 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        internal static Task CleanCacheAsync() => ImageCache.Instance.ClearAsync();
+        public static Task CleanCacheAsync() => ImageCache.Instance.ClearAsync();
 
-        internal static BitmapImage GetNoPic(CoreDispatcher dispatcher)
+        public static BitmapImage GetNoPic(CoreDispatcher dispatcher)
         {
             if (!dispatcher.HasThreadAccess) { return null; }
 
@@ -211,7 +211,7 @@ namespace CoolapkLite.Helpers
                 : WhiteNoPicMode[dispatcher];
         }
 
-        internal static async Task<BitmapImage> GetNoPicAsync(CoreDispatcher dispatcher)
+        public static async Task<BitmapImage> GetNoPicAsync(CoreDispatcher dispatcher)
         {
             if (!dispatcher.HasThreadAccess)
             {
@@ -230,7 +230,7 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    internal static partial class ImageCacheHelper
+    public static partial class ImageCacheHelper
     {
         [Obsolete]
         private static readonly Dictionary<ImageType, StorageFolder> folders = new Dictionary<ImageType, StorageFolder>();
@@ -342,7 +342,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        internal static async Task CleanCaptchaCacheAsync()
+        public static async Task CleanCaptchaCacheAsync()
         {
 #pragma warning disable 0612
             await (await GetFolderAsync(ImageType.Captcha)).DeleteAsync();

@@ -46,6 +46,24 @@ namespace CoolapkLite.Controls.Writers
             }
         }
 
+        protected static long SetBinding(DependencyObject source, DependencyProperty property, Action applyChange)
+        {
+            if (source != null)
+            {
+                applyChange();
+                return source.RegisterPropertyChangedCallback(property, (sender, dp) =>
+                {
+                    applyChange();
+                });
+            }
+            return 0;
+        }
+
+        protected static void UnsetBinding(DependencyObject source, DependencyProperty property, long token)
+        {
+            source?.UnregisterPropertyChangedCallback(property, token);
+        }
+
         protected static Binding CreateBinding(object source, string path, BindingMode mode = BindingMode.OneWay)
         {
             return new Binding
