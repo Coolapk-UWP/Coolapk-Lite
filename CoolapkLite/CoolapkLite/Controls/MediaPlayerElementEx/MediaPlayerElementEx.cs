@@ -235,9 +235,8 @@ namespace CoolapkLite.Controls
 
             if (json.TryGetValue("requestParams", out JToken v))
             {
-                JObject request = JObject.Parse(v.ToString())?.First?.First as JObject;
-
-                if (request?.TryGetValue("fromType", out JToken fromType) == true)
+                if (JObject.Parse(v.ToString())?.First?.First is JObject request
+                    && request.TryGetValue("fromType", out JToken fromType))
                 {
                     switch (fromType.ToString())
                     {
