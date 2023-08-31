@@ -76,14 +76,14 @@ namespace CoolapkLite.Controls.Writers
 
                 Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
 
-                StackPanelEx IsGIFPanel = new StackPanelEx
+                StackPanel IsGIFPanel = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
                     VerticalAlignment = VerticalAlignment.Top,
                     HorizontalAlignment = HorizontalAlignment.Left
                 };
 
-                StackPanelEx PicSizePanel = new StackPanelEx
+                StackPanel PicSizePanel = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
                     VerticalAlignment = VerticalAlignment.Top,

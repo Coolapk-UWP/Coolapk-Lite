@@ -12,7 +12,7 @@ namespace CoolapkLite.Controls.Writers
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             Span span = new Span();
-            BindingOperations.SetBinding(span, TextElement.FontFamilyProperty, CreateBinding(textBlockEx, nameof(textBlockEx.CodeFontFamily)));
+            BindingOperations.SetBinding(span, TextElement.FontFamilyProperty, CreateBinding(textBlockEx, nameof(textBlockEx.InlineCodeFontFamily)));
             return span;
         }
     }

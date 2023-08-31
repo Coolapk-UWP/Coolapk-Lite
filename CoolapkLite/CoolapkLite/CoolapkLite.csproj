@@ -220,7 +220,6 @@
       <DependentUpon>ShyHeaderPivotListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\StackPanelEx.cs" />
-    <Compile Include="Controls\TextBlockEx\Containers\ContentControlDocumentContainer.cs" />
     <Compile Include="Controls\TextBlockEx\Containers\DocumentContainer.cs" />
     <Compile Include="Controls\TextBlockEx\Containers\StackPanelDocumentContainer.cs" />
     <Compile Include="Controls\TextBlockEx\Containers\ParagraphDocumentContainer.cs" />
@@ -234,25 +233,17 @@
     </Compile>
     <Compile Include="Controls\TextBlockEx\Writers\AcronymWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\AnchorWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\BdiWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\BdoWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\BlockQuoteWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\BrWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\ButtonWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\CodeWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\ContainerWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\DelWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\EmWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\HeaderWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\HtmlWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\HtmlWriterFactory.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\ImageWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\InputWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\InsWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\KeyboardWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\ParagraphWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\PreWriter.cs" />
-    <Compile Include="Controls\TextBlockEx\Writers\ProgressWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\QWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\SpanWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\StrongWriter.cs" />
@@ -1376,7 +1367,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.51</Version>
+      <Version>1.11.52</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>

@@ -9,12 +9,12 @@ namespace CoolapkLite.Controls.Writers
 {
     public class ContainerWriter : HtmlWriter
     {
-        public override string[] TargetTags => new string[] { "div", "ul", "ol", "dl", "section", "article", "header", "footer", "main", "figure", "details", "summary", "tbody" };
+        public override string[] TargetTags => new string[] { "div" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
             HtmlNode node = fragment;
-            if (node.Name.ToLowerInvariant() == "div" && node.GetAttributeValue("class", string.Empty) == "author-border")
+            if (node.GetAttributeValue("class", string.Empty) == "author-border")
             {
                 ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("Feed");
                 InlineUIContainer container = new InlineUIContainer();

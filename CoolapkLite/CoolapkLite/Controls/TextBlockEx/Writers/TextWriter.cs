@@ -83,7 +83,7 @@ namespace CoolapkLite.Controls.Writers
 
         private Inline GetEmoji(string item)
         {
-            if (SettingsHelper.Get<bool>("IsUseOldEmojiMode") && EmojiHelper.OldEmojis.Contains(item))
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode) && EmojiHelper.OldEmojis.Contains(item))
             {
                 InlineUIContainer container = new InlineUIContainer();
                 Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
