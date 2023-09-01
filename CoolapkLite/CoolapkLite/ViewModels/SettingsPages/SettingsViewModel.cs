@@ -18,9 +18,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
 
         public bool IsLogin
         {
@@ -160,18 +160,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName;
                 string ver = Package.Current.Id.Version.ToFormattedString(3);
-                _ = GetAboutTextBlockText();
+                _ = GetAboutTextBlockTextAsync();
                 return $"{name} v{ver}";
             }
         }
 
-        public SettingsViewModel()
+        public SettingsViewModel(CoreDispatcher dispatcher)
         {
-            Caches[Dispatcher] = this;
+            Dispatcher = dispatcher;
+            Caches[dispatcher] = this;
             SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
         }
 
-        private async Task GetAboutTextBlockText()
+        private async Task GetAboutTextBlockTextAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             string langCode = LanguageHelper.GetPrimaryLanguage();
@@ -184,28 +185,37 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public async void CleanCache()
+        public async Task CleanCacheAsync()
         {
             IsCleanCacheButtonEnabled = false;
-            await ImageCacheHelper.CleanCacheAsync();
-            IsCleanCacheButtonEnabled = true;
+            try
+            {
+                await ImageCacheHelper.CleanCacheAsync().ContinueWith((x) => IsCleanCacheButtonEnabled = true);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
+                IsCleanCacheButtonEnabled = true;
+            }
         }
 
-        public async void CheckUpdate()
+        public async Task CheckUpdateAsync()
         {
             IsCheckUpdateButtonEnabled = false;
             try
             {
-                ResourceLoader _loader = ResourceLoader.GetForCurrentView("SettingsPage");
-                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
-                if (results == null) { return; }
-                if (results.IsExistNewVersion)
+                ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("SettingsPage");
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite").ConfigureAwait(false);
+                if (results != null)
                 {
-                    Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
-                }
-                else
-                {
-                    Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
+                    if (results.IsExistNewVersion)
+                    {
+                        Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
+                    }
+                    else
+                    {
+                        Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
+                    }
                 }
             }
             catch (Exception ex)
@@ -213,10 +223,10 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
                 Dispatcher.ShowMessage(ex.Message);
             }
-            IsCleanCacheButtonEnabled = true;
+            IsCheckUpdateButtonEnabled = true;
         }
 
-        public Task Refresh(bool reset) => GetAboutTextBlockText();
+        public Task Refresh(bool reset) => GetAboutTextBlockTextAsync();
 
         bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);
 

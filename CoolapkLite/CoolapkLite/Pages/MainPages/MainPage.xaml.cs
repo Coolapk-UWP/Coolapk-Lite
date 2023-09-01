@@ -281,15 +281,15 @@ namespace CoolapkLite.Pages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = HamburgerMenuFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}"));
+                _ = HamburgerMenuFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {
-                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
+                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
             }
             else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
-                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
+                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
             }
             else
             {
@@ -467,7 +467,6 @@ namespace CoolapkLite.Pages
                     if (results.UID != UID) { return; }
                     Name = results.UserName;
                     PageType = typeof(ProfilePage);
-                    ViewModels = new ProfileViewModel();
                     if (Dispatcher?.HasThreadAccess == false)
                     {
                         await Dispatcher.ResumeForegroundAsync();
@@ -480,20 +479,20 @@ namespace CoolapkLite.Pages
                 Name = loader.GetString("User");
                 Image = null;
                 PageType = typeof(BrowserPage);
-                ViewModels = new BrowserViewModel(UriHelper.LoginUri);
+                ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);
             }
         }
 
-        private static readonly ResourceLoader loader = ResourceLoader.GetForCurrentView("MainPage");
+        private static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
 
         public static ObservableCollection<MenuItem> GetMainItems(CoreDispatcher dispatcher)
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), ViewModels = new IndexViewModel(), Index = 0},
-                new MenuItem(dispatcher) { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1},
-                new MenuItem(dispatcher) { Icon = "\uE734", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), ViewModels = new BookmarkViewModel(), Index = 2 },
-                new MenuItem(dispatcher) { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), ViewModels = new HistoryViewModel(), Index = 3},
+                new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), Index = 0 },
+                new MenuItem(dispatcher) { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1 },
+                new MenuItem(dispatcher) { Icon = "\uE734", Name = loader.GetString("Bookmark"), PageType = typeof(BookmarkPage), Index = 2 },
+                new MenuItem(dispatcher) { Icon = "\uE787", Name = loader.GetString("History"), PageType = typeof(HistoryPage), Index = 3 }
             };
             return items;
         }
@@ -502,8 +501,8 @@ namespace CoolapkLite.Pages
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri), Index = 0 },
-                 new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1}
+                 new MenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
+                 new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
             };
             return items;
         }

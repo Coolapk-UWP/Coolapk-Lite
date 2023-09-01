@@ -45,14 +45,13 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is IndexViewModel ViewModel
-                && Provider == null)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                Provider.LoadMoreStarted += OnLoadMoreStarted;
-                Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+                Provider = new IndexViewModel(Dispatcher);
                 await Refresh(true);
             }
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

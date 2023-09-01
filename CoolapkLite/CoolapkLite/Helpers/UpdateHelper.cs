@@ -34,36 +34,38 @@ namespace CoolapkLite.Helpers
 
             try
             {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Add("User-Agent", username);
-                string url = string.Format(GITHUB_API, username, repository);
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-                string responseBody = await response.Content.ReadAsStringAsync();
-                UpdateInfo result = JsonConvert.DeserializeObject<UpdateInfo>(responseBody);
-
-                if (result != null)
+                using (HttpClient client = new HttpClient())
                 {
-                    SystemVersionInfo newVersionInfo = GetAsVersionInfo(result.TagName);
-                    int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
-                    int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
-                    int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
-                    int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
+                    client.DefaultRequestHeaders.Add("User-Agent", username);
+                    string url = string.Format(GITHUB_API, username, repository);
+                    HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    UpdateInfo result = JsonConvert.DeserializeObject<UpdateInfo>(responseBody);
 
-                    SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
-
-                    return new UpdateInfo
+                    if (result != null)
                     {
-                        Changelog = result?.Changelog,
-                        CreatedAt = Convert.ToDateTime(result?.CreatedAt),
-                        Assets = result.Assets,
-                        IsPreRelease = result.IsPreRelease,
-                        PublishedAt = Convert.ToDateTime(result?.PublishedAt),
-                        TagName = result.TagName,
-                        ApiUrl = result?.ApiUrl,
-                        ReleaseUrl = result?.ReleaseUrl,
-                        IsExistNewVersion = newVersionInfo > currentVersionInfo
-                    };
+                        SystemVersionInfo newVersionInfo = GetAsVersionInfo(result.TagName);
+                        int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
+                        int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
+                        int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
+                        int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
+
+                        SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
+
+                        return new UpdateInfo
+                        {
+                            Changelog = result?.Changelog,
+                            CreatedAt = Convert.ToDateTime(result?.CreatedAt),
+                            Assets = result.Assets,
+                            IsPreRelease = result.IsPreRelease,
+                            PublishedAt = Convert.ToDateTime(result?.PublishedAt),
+                            TagName = result.TagName,
+                            ApiUrl = result?.ApiUrl,
+                            ReleaseUrl = result?.ReleaseUrl,
+                            IsExistNewVersion = newVersionInfo > currentVersionInfo
+                        };
+                    }
                 }
             }
             catch (HttpRequestException e)
@@ -78,7 +80,6 @@ namespace CoolapkLite.Helpers
         private static SystemVersionInfo GetAsVersionInfo(string version)
         {
             List<int> numbs = GetVersionNumbers(version).Split('.').Select(int.Parse).ToList();
-
             return numbs.Count <= 1
                 ? new SystemVersionInfo(numbs[0], 0, 0, 0)
                 : numbs.Count <= 2

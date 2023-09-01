@@ -50,7 +50,10 @@ namespace CoolapkLite.Pages.FeedPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            NotificationsModel = NotificationsModel ?? (NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel());
+            if (NotificationsModel == null)
+            {
+                NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+            }
             _ = NotificationsModel.Update();
         }
 
@@ -87,7 +90,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new SimpleNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "AtMe":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -100,7 +103,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new FeedModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "AtCommentMe":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -113,7 +116,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new AtCommentMeNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "FeedLike":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -126,7 +129,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new LikeNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "Follow":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -139,7 +142,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new SimpleNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "Message":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -151,7 +154,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new MessageNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     default:
                         break;

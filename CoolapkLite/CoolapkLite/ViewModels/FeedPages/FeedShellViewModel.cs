@@ -22,7 +22,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         protected string ID { get; set; }
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         private string title = string.Empty;
         public string Title
@@ -68,9 +68,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected FeedShellViewModel(string id)
+        protected FeedShellViewModel(string id, CoreDispatcher dispatcher)
         {
             if (string.IsNullOrEmpty(id)) { throw new ArgumentException(nameof(id)); }
+            Dispatcher = dispatcher;
             ID = id;
         }
 
@@ -99,7 +100,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public LikeItemSource LikeItemSource { get; private set; }
         public ShareItemSource ShareItemSource { get; private set; }
 
-        internal FeedDetailViewModel(string id) : base(id) { }
+        public FeedDetailViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -154,7 +155,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public QuestionItemSource LikeItemSource { get; private set; }
         public QuestionItemSource DatelineItemSource { get; private set; }
 
-        internal QuestionViewModel(string id) : base(id) { }
+        public QuestionViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -205,7 +206,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class VoteViewModel : FeedShellViewModel
     {
-        internal VoteViewModel(string id) : base(id) { }
+        public VoteViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {

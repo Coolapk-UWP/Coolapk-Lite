@@ -15,7 +15,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         private readonly Uri uri;
         private readonly Action<UISettingChangedType> UISettingChanged;
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
@@ -69,8 +69,9 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public HTMLViewModel(string url)
+        public HTMLViewModel(string url, CoreDispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
             uri = url.TryGetUri();
             UISettingChanged = (mode) =>
             {

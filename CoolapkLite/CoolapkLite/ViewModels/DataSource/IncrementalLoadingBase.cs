@@ -51,7 +51,7 @@ namespace CoolapkLite.ViewModels.DataSource
 
         #endregion
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; protected set; }
 
         private bool any = false;
         public bool Any

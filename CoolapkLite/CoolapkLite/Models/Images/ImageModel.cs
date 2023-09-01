@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -11,6 +10,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
@@ -23,7 +24,7 @@ namespace CoolapkLite.Models.Images
 
         private readonly Action<UISettingChangedType> UISettingChanged;
 
-        public CoreDispatcher Dispatcher { get; }
+        public CoreDispatcher Dispatcher { get; private set; }
 
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
@@ -132,22 +133,6 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        public BitmapImage RealPic
-        {
-            get
-            {
-                if (pic != null && pic.TryGetTarget(out BitmapImage image))
-                {
-                    return image;
-                }
-                else
-                {
-                    GetImage().Wait();
-                    return Pic;
-                }
-            }
-        }
-
         private bool isLoading = true;
         public bool IsLoading
         {
@@ -235,6 +220,19 @@ namespace CoolapkLite.Models.Images
                 await semaphoreSlim.WaitAsync();
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher); }
                 BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
+                if (bitmapImage.Dispatcher != Dispatcher)
+                {
+                    StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+                    using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                    {
+                        bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
+                        {
+                            BitmapImage image = new BitmapImage();
+                            await image.SetSourceAsync(stream);
+                            return image;
+                        });
+                    }
+                }
                 if (bitmapImage != null)
                 {
                     Pic = bitmapImage;
@@ -294,6 +292,19 @@ namespace CoolapkLite.Models.Images
                 };
                 return image;
             }
+        }
+
+        public void ChangeDispatcher(CoreDispatcher dispatcher)
+        {
+            if (Dispatcher != dispatcher)
+            {
+                Dispatcher = dispatcher;
+                IsLongPic = false;
+                IsWidePic = false;
+                pic = null;
+                RaisePropertyChangedEvent(nameof(Pic));
+            }
+            ContextArray.ForEach((x) => x.ChangeDispatcher(dispatcher));
         }
 
         public async Task Refresh() => await GetImage();

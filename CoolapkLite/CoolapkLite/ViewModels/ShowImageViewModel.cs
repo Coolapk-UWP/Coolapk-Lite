@@ -22,7 +22,7 @@ namespace CoolapkLite.ViewModels
     {
         private string ImageName = string.Empty;
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         private string title = string.Empty;
         public string Title
@@ -92,8 +92,13 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public ShowImageViewModel(ImageModel image)
+        public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
+            if (image.Dispatcher != dispatcher)
+            {
+                image = image.Clone(dispatcher);
+            }
             if (image.ContextArray.Any())
             {
                 Images = image.ContextArray;
@@ -101,7 +106,7 @@ namespace CoolapkLite.ViewModels
             }
             else
             {
-                Images = new List<ImageModel> { image };
+                Images = new ImageModel[] { image };
                 Index = 0;
             }
             if (SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture))

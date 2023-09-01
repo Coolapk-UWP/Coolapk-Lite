@@ -8,6 +8,7 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -68,7 +69,7 @@ namespace CoolapkLite.Controls
                 }
                 UpdateThemeRadio();
             };
-            Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel());
+            Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher));
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
             UpdateThemeRadio();
         }
@@ -114,19 +115,19 @@ namespace CoolapkLite.Controls
                     }
                     break;
                 case "MyDevice":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice", Dispatcher));
                     break;
                 case "LogFolder":
                     _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
-                    Provider?.CleanCache();
+                    _ = (Provider?.CleanCacheAsync());
                     break;
                 case "CheckUpdate":
-                    Provider?.CheckUpdate();
+                    _ = (Provider?.CheckUpdateAsync());
                     break;
                 case "AccountSetting":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();

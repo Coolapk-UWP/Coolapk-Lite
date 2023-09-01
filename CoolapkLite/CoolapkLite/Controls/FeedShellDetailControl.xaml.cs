@@ -36,7 +36,7 @@ namespace CoolapkLite.Controls
                     _ = PinSecondaryTile(element.Tag as FeedDetailModel);
                     break;
                 case "ReportButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
                 case "FollowButton":
                     _ = (element.Tag as ICanFollow)?.ChangeFollow();
@@ -59,7 +59,7 @@ namespace CoolapkLite.Controls
 
             if (token.TryGetValue("id", out JToken id))
             {
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString());
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString(), sender.Dispatcher);
 
                 if (provider != null)
                 {

@@ -138,7 +138,7 @@ namespace CoolapkLite.Common
         {
             if (!string.IsNullOrEmpty(args.QueryText))
             {
-                _ = element.FindDescendant<Page>().NavigateAsync(typeof(SearchingPage), new SearchingViewModel(args.QueryText));
+                _ = element.FindDescendant<Page>().NavigateAsync(typeof(SearchingPage), new SearchingViewModel(args.QueryText, element.Dispatcher));
             }
         }
 

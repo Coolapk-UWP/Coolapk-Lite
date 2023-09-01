@@ -18,7 +18,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Bookmark");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Bookmark");
 
         private ObservableCollection<Bookmark> _bookmarks;
         public ObservableCollection<Bookmark> Bookmarks
@@ -53,7 +53,11 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public BookmarkViewModel() => Caches[Dispatcher] = this;
+        public BookmarkViewModel(CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+            Caches[dispatcher] = this;
+        }
 
         public async Task Refresh(bool reset)
         {

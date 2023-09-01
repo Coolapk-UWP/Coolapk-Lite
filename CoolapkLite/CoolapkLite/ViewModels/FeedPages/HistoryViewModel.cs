@@ -5,14 +5,15 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
     public class HistoryViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("History");
 
-        public HistoryViewModel()
+        public HistoryViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserHistory, p, firstItem, lastItem),

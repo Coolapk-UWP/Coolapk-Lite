@@ -6,14 +6,15 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
     public class IndexViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Home");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Home");
 
-        public IndexViewModel()
+        public IndexViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
             Provider = new CoolapkListProvider(
                 (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, "/main/indexV8", "?", p),

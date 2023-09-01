@@ -148,7 +148,7 @@ namespace CoolapkLite.Pages
                         ? "/main/indexV8"
                         : MenuItem.Tag.ToString().Contains("V")
                             ? $"/page?url={MenuItem.Tag}"
-                            : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                            : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
                 Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
@@ -215,17 +215,17 @@ namespace CoolapkLite.Pages
             {
                 case "User":
                     _ = await SettingsHelper.CheckLoginAsync()
-                        ? PivotContentFrame.Navigate(typeof(ProfilePage), new ProfileViewModel())
-                        : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                        ? PivotContentFrame.Navigate(typeof(ProfilePage))
+                        : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));
                     break;
                 case "Bookmark":
-                    _ = PivotContentFrame.Navigate(typeof(BookmarkPage), new BookmarkViewModel());
+                    _ = PivotContentFrame.Navigate(typeof(BookmarkPage));
                     break;
                 case "Setting":
                     _ = PivotContentFrame.Navigate(typeof(SettingsPage));
                     break;
                 case "SearchButton":
-                    _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(string.Empty));
+                    _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(string.Empty, Dispatcher));
                     break;
             }
         }
@@ -280,15 +280,15 @@ namespace CoolapkLite.Pages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}"));
+                _ = PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {
-                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString()));
+                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
             }
             else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
-                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text));
+                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
             }
         }
 
@@ -381,7 +381,7 @@ namespace CoolapkLite.Pages
 
         public static ObservableCollection<PivotItem> GetMainItems()
         {
-            ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("CirclePage");
             ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },

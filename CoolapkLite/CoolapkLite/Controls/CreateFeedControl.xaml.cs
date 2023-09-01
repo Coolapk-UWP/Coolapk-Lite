@@ -110,7 +110,7 @@ namespace CoolapkLite.Controls
         public CreateFeedControl()
         {
             InitializeComponent();
-            Provider = new CreateFeedViewModel();
+            Provider = new CreateFeedViewModel(Dispatcher);
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             {
                 CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Collapsed;

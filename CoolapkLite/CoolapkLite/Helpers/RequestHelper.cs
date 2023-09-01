@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
@@ -121,7 +122,7 @@ namespace CoolapkLite.Helpers
         }
 
 #pragma warning disable 0612
-        public static async Task<BitmapImage> GetImageAsync(string uri, bool isBackground = false)
+        public static async Task<BitmapImage> GetImageAsync(string uri, CoreDispatcher dispatcher, bool isBackground = false)
         {
             StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha).ConfigureAwait(false);
             StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
@@ -132,9 +133,9 @@ namespace CoolapkLite.Helpers
                 await stream.CopyToAsync(fileStream).ConfigureAwait(false);
             }
 
-            if (ImageCacheHelper.Dispatcher?.HasThreadAccess == false)
+            if (dispatcher?.HasThreadAccess == false)
             {
-                await ImageCacheHelper.Dispatcher.ResumeForegroundAsync();
+                await dispatcher.ResumeForegroundAsync();
             }
 
             return new BitmapImage(new Uri(file.Path));

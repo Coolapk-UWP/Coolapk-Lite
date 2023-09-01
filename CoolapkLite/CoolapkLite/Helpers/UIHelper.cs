@@ -12,13 +12,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Data.Xml.Dom;
+using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Core;
@@ -338,8 +341,26 @@ namespace CoolapkLite.Helpers
                 return Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher;
             }
         }
+
+        public static async Task<T> GetValueAsync<T>(this DependencyObject element, DependencyProperty dp)
+        {
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            return (T)element.GetValue(dp);
+        }
+
+        public static async Task SetValueAsync<T>(this DependencyObject element, DependencyProperty dp, T value)
+        {
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            element.SetValue(dp, value);
+        }
     }
-    
+
     public static partial class UIHelper
     {
         public static async Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
@@ -363,6 +384,16 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(UIHelper)).Error(e.ExceptionToMessage(), e);
                 return false;
             }
+        }
+
+        public static Task<bool> LaunchUriAsync(this DependencyObject element, Uri uri) =>
+            element.Dispatcher.LaunchUriAsync(uri);
+
+        public static async Task<bool> LaunchUriAsync(this CoreDispatcher dispatcher, Uri uri)
+        {
+            if (!dispatcher.HasThreadAccess)
+            { await dispatcher.ResumeForegroundAsync(); }
+            return await Launcher.LaunchUriAsync(uri);
         }
 
         public static async Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image) =>
@@ -419,6 +450,8 @@ namespace CoolapkLite.Helpers
         {
             if (string.IsNullOrWhiteSpace(link)) { return false; }
 
+            await ThreadSwitcher.ResumeBackgroundAsync();
+
             string origin = link;
 
             if (link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
@@ -426,7 +459,7 @@ namespace CoolapkLite.Helpers
                 link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
                 if (link.StartsWith("image.coolapk.com"))
                 {
-                    return await frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage));
+                    return await frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
                 }
                 else
                 {
@@ -437,7 +470,7 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin));
+                        return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
                     }
                 }
             }
@@ -457,22 +490,22 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(6);
-                return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url));
+                return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
             }
             else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(3, "?");
                 string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -483,7 +516,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
                 else
                 {
@@ -495,7 +528,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
@@ -503,7 +536,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/vote/", StringComparison.OrdinalIgnoreCase))
@@ -511,13 +544,13 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
             {
                 string tag = link.Substring(3, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -526,7 +559,7 @@ namespace CoolapkLite.Helpers
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
             {
                 string tag = link.Substring(5, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -536,12 +569,12 @@ namespace CoolapkLite.Helpers
             {
                 if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link));
+                    return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
                 }
                 else
                 {
                     string tag = link.Substring(9, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag);
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
                     if (provider != null)
                     {
                         return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -551,7 +584,7 @@ namespace CoolapkLite.Helpers
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
                 string id = link.Substring(12, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -559,17 +592,15 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin));
+                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
             }
             else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {
-                return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin));
+                return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
             }
             else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                if (!frame.Dispatcher.HasThreadAccess)
-                { await frame.Dispatcher.ResumeForegroundAsync(); }
-                return await Launcher.LaunchUriAsync(uri);
+                return await frame.LaunchUriAsync(uri);
             }
 
             return false;
@@ -580,6 +611,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> OpenActivatedEventArgs(this Frame frame, IActivatedEventArgs args)
         {
+            await ThreadSwitcher.ResumeBackgroundAsync();
             switch (args.Kind)
             {
                 case ActivationKind.Launch:
@@ -589,21 +621,21 @@ namespace CoolapkLite.Helpers
                         switch (LaunchActivatedEventArgs.Arguments)
                         {
                             case "me":
-                                return await frame.NavigateAsync(typeof(ProfilePage), new ProfileViewModel());
+                                return await frame.NavigateAsync(typeof(ProfilePage));
                             case "home":
-                                return await frame.NavigateAsync(typeof(IndexPage), new IndexViewModel());
+                                return await frame.NavigateAsync(typeof(IndexPage));
                             case "flags":
                                 return await frame.NavigateAsync(typeof(TestPage));
                             case "circle":
                                 return await frame.NavigateAsync(typeof(CirclePage));
                             case "search":
-                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty));
+                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty, frame.Dispatcher));
                             case "history":
-                                return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel());
+                                return await frame.NavigateAsync(typeof(HistoryPage));
                             case "settings":
                                 return await frame.NavigateAsync(typeof(SettingsPage));
                             case "favorites":
-                                return await frame.NavigateAsync(typeof(BookmarkPage), new BookmarkViewModel());
+                                return await frame.NavigateAsync(typeof(BookmarkPage));
                             case "extensions":
                                 return await frame.NavigateAsync(typeof(ExtensionPage));
                             case "notifications":
@@ -642,21 +674,21 @@ namespace CoolapkLite.Helpers
                         case "https":
                             return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
                         case "me":
-                            return await frame.NavigateAsync(typeof(ProfilePage), new ProfileViewModel());
+                            return await frame.NavigateAsync(typeof(ProfilePage));
                         case "home":
-                            return await frame.NavigateAsync(typeof(IndexPage), new IndexViewModel());
+                            return await frame.NavigateAsync(typeof(IndexPage));
                         case "flags":
                             return await frame.NavigateAsync(typeof(TestPage));
                         case "circle":
                             return await frame.NavigateAsync(typeof(CirclePage));
                         case "search":
-                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty));
+                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher));
                         case "history":
-                            return await frame.NavigateAsync(typeof(HistoryPage), new HistoryViewModel());
+                            return await frame.NavigateAsync(typeof(HistoryPage));
                         case "settings":
                             return await frame.NavigateAsync(typeof(SettingsPage));
                         case "favorites":
-                            return await frame.NavigateAsync(typeof(BookmarkPage), new BookmarkViewModel());
+                            return await frame.NavigateAsync(typeof(BookmarkPage));
                         case "extensions":
                             return await frame.NavigateAsync(typeof(ExtensionPage));
                         case "notifications":

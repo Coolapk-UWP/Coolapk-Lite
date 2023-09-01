@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -36,7 +37,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             private set => SetProperty(ref _notificationsModel, value);
         }
 
-        public ProfileViewModel()
+        public ProfileViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
             Provider = new CoolapkListProvider(
                 (_, __, ___) => UriHelper.GetUri(UriType.GetMyPageCard),
@@ -49,7 +50,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             IsLogin = await SettingsHelper.CheckLoginAsync();
             if (IsLogin)
             {
-                NotificationsModel = NotificationsModel ?? (NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel());
+                if (NotificationsModel == null)
+                {
+                    NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                }
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 ProfileDetail = await GetFeedDetailAsync(UID);
                 await NotificationsModel.Update();

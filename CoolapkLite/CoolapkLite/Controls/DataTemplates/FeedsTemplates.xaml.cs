@@ -65,7 +65,7 @@ namespace CoolapkLite.Controls.DataTemplates
             switch (element.Name)
             {
                 case "SeeAllButton":
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
+                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), element.Dispatcher, (FeedReplyModel)element.Tag));
                     break;
                 default:
                     _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());
@@ -126,7 +126,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "ReportButton":
                     DisabledCopy();
-                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
+                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), element.Dispatcher));
                     break;
 
                 case "ShareButton":
@@ -157,7 +157,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (token.TryGetValue("id", out JToken id))
             {
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString());
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString(), sender.Dispatcher);
 
                 if (provider != null)
                 {

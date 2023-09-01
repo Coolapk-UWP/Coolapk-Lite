@@ -45,7 +45,7 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
-                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}"));
+                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
                 Refresh = (reset) => _ = (Frame.Content as AdaptivePage).Refresh(reset);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
@@ -58,7 +58,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         public static ObservableCollection<PivotItem> GetMainItems()
         {
-            ResourceLoader loader = ResourceLoader.GetForCurrentView("CirclePage");
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("CirclePage");
             ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
             {
                 new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },

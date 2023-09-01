@@ -64,38 +64,38 @@ namespace CoolapkLite.Controls.DataTemplates
             }
             else if (url == "Login")
             {
-                _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, element.Dispatcher));
             }
             else if (url.IndexOf("/page", StringComparison.Ordinal) == 0)
             {
                 url = $"{url.Replace("/page", "/page/dataList")}&title={(tag as IHasTitle)?.Title ?? string.Empty}";
-                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url));
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, element.Dispatcher));
             }
             else if (url.IndexOf('#') == 0)
             {
-                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel($"{url}&title={(tag as IHasTitle)?.Title ?? string.Empty}"));
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel($"{url}&title={(tag as IHasTitle)?.Title ?? string.Empty}", element.Dispatcher));
             }
             else if (url.Contains("我的常去"))
             {
-                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("我的常去"));
+                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("我的常去", element.Dispatcher));
             }
             else if (url.Contains("浏览历史"))
             {
-                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("浏览历史"));
+                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("浏览历史", element.Dispatcher));
             }
             else if (url.Contains("我关注的话题"))
             {
-                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel("#/topic/userFollowTagList"));
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel("#/topic/userFollowTagList", element.Dispatcher));
             }
             else if (url.Contains("我的收藏单"))
             {
                 string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid)); }
+                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
             }
             else if (url.Contains("我的问答"))
             {
                 string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer")); }
+                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer", element.Dispatcher)); }
             }
             else
             {

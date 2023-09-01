@@ -134,7 +134,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case "ReportButton":
                     DisabledCopy();
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString(), Dispatcher));
                     break;
 
                 case "ShareButton":

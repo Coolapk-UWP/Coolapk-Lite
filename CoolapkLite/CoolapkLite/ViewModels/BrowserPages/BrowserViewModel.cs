@@ -59,8 +59,9 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public BrowserViewModel(string url)
+        public BrowserViewModel(string url, CoreDispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
             if (!url.Contains("://")) { url = $"https://{url}"; }
             Uri = url.TryGetUri();
             IsLoginPage = url == UriHelper.LoginUri;

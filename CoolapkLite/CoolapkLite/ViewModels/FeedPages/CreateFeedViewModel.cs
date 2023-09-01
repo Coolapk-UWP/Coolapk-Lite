@@ -34,7 +34,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public readonly ObservableCollection<WriteableBitmap> Pictures = new ObservableCollection<WriteableBitmap>();
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         private string title = string.Empty;
         public string Title
@@ -65,6 +65,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 RaisePropertyChangedEvent(name);
             }
         }
+
+        public CreateFeedViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         public async Task Refresh(bool reset)
         {

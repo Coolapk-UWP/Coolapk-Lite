@@ -160,7 +160,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}"));
+                _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {

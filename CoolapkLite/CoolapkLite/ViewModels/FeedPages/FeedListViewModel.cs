@@ -37,7 +37,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         private FeedListType ListType { get; }
         public DataTemplateSelector DataTemplateSelector;
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
@@ -103,24 +103,25 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected FeedListViewModel(string id, FeedListType type)
+        protected FeedListViewModel(string id, FeedListType type, CoreDispatcher dispatcher)
         {
+            Dispatcher = dispatcher;
             ID = string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
                 : id;
             ListType = type;
         }
 
-        public static FeedListViewModel GetProvider(FeedListType type, string id)
+        public static FeedListViewModel GetProvider(FeedListType type, string id, CoreDispatcher dispatcher)
         {
             if (string.IsNullOrEmpty(id) || id == "0") { return null; }
             switch (type)
             {
-                case FeedListType.UserPageList: return new UserViewModel(id);
-                case FeedListType.TagPageList: return new TagViewModel(id);
-                case FeedListType.DyhPageList: return new DyhViewModel(id);
-                case FeedListType.ProductPageList: return new ProductViewModel(id);
-                case FeedListType.CollectionPageList: return new CollectionViewModel(id);
+                case FeedListType.UserPageList: return new UserViewModel(id, dispatcher);
+                case FeedListType.TagPageList: return new TagViewModel(id, dispatcher);
+                case FeedListType.DyhPageList: return new DyhViewModel(id, dispatcher);
+                case FeedListType.ProductPageList: return new ProductViewModel(id, dispatcher);
+                case FeedListType.CollectionPageList: return new CollectionViewModel(id, dispatcher);
                 default: return null;
             }
         }
@@ -281,7 +282,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource QAItemSource { get; private set; }
         public FeedListItemSource CollectionItemSource { get; private set; }
 
-        public UserViewModel(string uid) : base(uid, FeedListType.UserPageList) { }
+        public UserViewModel(string uid, CoreDispatcher dispatcher) : base(uid, FeedListType.UserPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -401,7 +402,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource DatelineItemSource { get; private set; }
         public FeedListItemSource PopularItemSource { get; private set; }
 
-        public TagViewModel(string id) : base(id, FeedListType.TagPageList) { }
+        public TagViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.TagPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -507,7 +508,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource AllItemSource { get; private set; }
         public FeedListItemSource SquareItemSource { get; private set; }
 
-        public DyhViewModel(string id) : base(id, FeedListType.DyhPageList) { }
+        public DyhViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.DyhPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -603,7 +604,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public FeedListItemSource VideoItemSource { get; private set; }
         public FeedListItemSource TradeItemSource { get; private set; }
 
-        public ProductViewModel(string id) : base(id, FeedListType.ProductPageList) { }
+        public ProductViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.ProductPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -706,7 +707,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class CollectionViewModel : FeedListViewModel
     {
-        public CollectionViewModel(string id) : base(id, FeedListType.CollectionPageList) { }
+        public CollectionViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.CollectionPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {

@@ -41,15 +41,18 @@ namespace CoolapkLite.Pages.SettingsPages
 
         #endregion
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Extension");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Extension");
 
         public ExtensionPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? new ExtensionManager(ExtensionManager.OSSUploader);
-            await Refresh(true);
+            if (Provider == null)
+            {
+                Provider = new ExtensionManager(ExtensionManager.OSSUploader);
+                await Refresh(true);
+            }
         }
 
         public async Task Refresh(bool reset = false)

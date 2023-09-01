@@ -20,9 +20,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public static Dictionary<CoreDispatcher, TestViewModel> Caches { get; } = new Dictionary<CoreDispatcher, TestViewModel>();
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
 
         public List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
 
@@ -209,7 +209,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public TestViewModel() => Caches[Dispatcher] = this;
+        public TestViewModel(CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+            Caches[dispatcher] = this;
+        }
 
         public Task Refresh(bool reset) => Task.Run(() => UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
 

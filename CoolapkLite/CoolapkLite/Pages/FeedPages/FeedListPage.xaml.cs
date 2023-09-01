@@ -194,10 +194,10 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = (element.Tag as ICanLike)?.ChangeLike();
                     break;
                 case "FansButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title, Dispatcher));
                     break;
                 case "ReportButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
                 case "FollowButton":
                     _ = (element.Tag as ICanFollow)?.ChangeFollow();
@@ -206,7 +206,7 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = Provider.PinSecondaryTile(element.Tag as Entity);
                     break;
                 case "FollowsButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title, Dispatcher));
                     break;
                 case "AnalyzeButton":
                     _ = this.NavigateAsync(typeof(FansAnalyzePage), new FansAnalyzeViewModel(element.Tag?.ToString(), Dispatcher));

@@ -93,13 +93,12 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is ProfileViewModel ViewModel && Provider == null)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                Provider.LoadMoreStarted += OnLoadMoreStarted;
-                Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+                Provider = new ProfileViewModel(Dispatcher);
             }
-
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
             if (!Provider.IsLogin || dateTime == default || DateTime.UtcNow - dateTime == TimeSpan.FromMinutes(1))
             {
                 await Refresh(true);
@@ -130,16 +129,16 @@ namespace CoolapkLite.Pages.FeedPages
             switch (element.Tag?.ToString())
             {
                 case "FeedsButton":
-                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
                     break;
                 case "FollowsButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", Dispatcher));
                     break;
                 case "FansButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", Dispatcher));
                     break;
                 case "LoginButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));
                     break;
                 case "CreateFeedButton":
                     new CreateFeedControl
@@ -152,7 +151,7 @@ namespace CoolapkLite.Pages.FeedPages
                     }.Show(this);
                     break;
                 case "NotificationButton":
-                    _ = this.NavigateAsync(typeof(NotificationsPage));
+                    _ = this.NavigateAsync(typeof(NotificationsPage), Dispatcher);
                     break;
                 default:
                     break;
@@ -166,7 +165,7 @@ namespace CoolapkLite.Pages.FeedPages
             switch (element.Tag?.ToString())
             {
                 case "FeedsButton":
-                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
                     break;
                 default:
                     _ = this.OpenLinkAsync(element.Tag?.ToString());

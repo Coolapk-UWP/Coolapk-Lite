@@ -61,7 +61,10 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? (TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel());
+            if (Provider == null)
+            {
+                Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
+            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -166,7 +169,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     this.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text));
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
                     break;
                 case "MinimizeApp":
                     if (ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo"))

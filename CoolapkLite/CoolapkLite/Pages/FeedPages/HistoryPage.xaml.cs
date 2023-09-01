@@ -44,14 +44,13 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is HistoryViewModel ViewModel
-                && Provider?.IsEqual(ViewModel) != true)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                Provider.LoadMoreStarted += OnLoadMoreStarted;
-                Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+                Provider = new HistoryViewModel(Dispatcher);
                 await Refresh(true);
             }
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

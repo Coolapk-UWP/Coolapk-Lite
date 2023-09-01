@@ -3,6 +3,7 @@ using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
+using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;
@@ -49,10 +50,9 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is BookmarkViewModel ViewModel
-                && Provider == null)
+            if (Provider == null)
             {
-                Provider = ViewModel;
+                Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
                 await Refresh(true);
             }
         }

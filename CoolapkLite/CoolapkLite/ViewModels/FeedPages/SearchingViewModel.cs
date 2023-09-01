@@ -71,8 +71,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public SearchingViewModel(string keyword, int index = -1)
+        public SearchingViewModel(string keyword, CoreDispatcher dispatcher, int index = -1)
         {
+            Dispatcher = dispatcher;
             Title = keyword;
             PivotIndex = index;
         }

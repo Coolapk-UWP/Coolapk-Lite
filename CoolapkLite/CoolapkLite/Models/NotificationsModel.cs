@@ -20,7 +20,7 @@ namespace CoolapkLite.Models
         private static readonly DispatcherTimer timer;
         private static int badgeNum, followNum, messageNum, atMeNum, atCommentMeNum, commentMeNum, feedLikeNum, cloudInstall, notification;
 
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
         /// <summary>
         /// 新的消息总数。
@@ -199,7 +199,11 @@ namespace CoolapkLite.Models
             timer.Start();
         }
 
-        public NotificationsModel() => Caches[Dispatcher] = this;
+        public NotificationsModel(CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+            Caches[dispatcher] = this;
+        }
 
         /// <summary>
         /// 将数字归零。

@@ -14,9 +14,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public class CachesViewModel : IViewModel
     {
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+        public CoreDispatcher Dispatcher { get; }
 
-        public string Title { get; } = ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
 
         private ObservableCollection<StorageFile> images = new ObservableCollection<StorageFile>();
         public ObservableCollection<StorageFile> Images
@@ -54,6 +54,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 RaisePropertyChangedEvent(name);
             }
         }
+
+        public CachesViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         public async Task Refresh(bool reset)
         {

@@ -88,7 +88,7 @@ namespace CoolapkLite.Pages
             base.OnNavigatedTo(e);
             if (e.Parameter is ImageModel Model)
             {
-                Provider = new ShowImageViewModel(Model.Dispatcher == Dispatcher ? Model : Model.Clone(Dispatcher));
+                Provider = new ShowImageViewModel(Model, Dispatcher);
             }
             else if (e.Parameter is ShowImageViewModel ViewModel)
             {

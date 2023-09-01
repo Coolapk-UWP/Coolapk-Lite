@@ -41,8 +41,6 @@ namespace CoolapkLite.Helpers
         private static Dictionary<CoreDispatcher, BitmapImage> DarkNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
         private static Dictionary<CoreDispatcher, BitmapImage> WhiteNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
 
-        public static CoreDispatcher Dispatcher { get; } = CoreApplication.MainView.Dispatcher;
-
         static ImageCacheHelper() => ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
 
         public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
@@ -66,27 +64,23 @@ namespace CoolapkLite.Helpers
                     uri = url.TryGetUri();
                 }
 
-                if (await dispatcher.AwaitableRunAsync(() => Dispatcher.HasThreadAccess))
+                if (ImageCache.Instance.Dispatcher != dispatcher)
+                {
+                    ImageCache.Instance.Dispatcher = dispatcher;
+                }
+
+                try
+                {
+                    BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                    return image;
+                }
+                catch (FileNotFoundException)
                 {
                     try
                     {
+                        await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
                         BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                         return image;
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        try
-                        {
-                            await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
-                            BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
-                            return image;
-                        }
-                        catch (Exception)
-                        {
-                            string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                            dispatcher.ShowMessage(str);
-                            return await GetNoPicAsync(dispatcher);
-                        }
                     }
                     catch (Exception)
                     {
@@ -95,46 +89,11 @@ namespace CoolapkLite.Helpers
                         return await GetNoPicAsync(dispatcher);
                     }
                 }
-                else
+                catch (Exception)
                 {
-                    StorageFile file = null;
-                    try
-                    {
-                        file = await ImageCache.Instance.GetFileFromCacheAsync(uri);
-                        if (file == null)
-                        {
-                            _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
-                            file = await ImageCache.Instance.GetFileFromCacheAsync(uri);
-                        }
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        try
-                        {
-                            await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
-                            _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
-                            file = await ImageCache.Instance.GetFileFromCacheAsync(uri);
-                        }
-                        catch (Exception)
-                        {
-                            string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                            dispatcher.ShowMessage(str);
-                            return null;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                        dispatcher.ShowMessage(str);
-                        return null;
-                    }
-                    using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
-                    {
-                        await dispatcher.ResumeForegroundAsync();
-                        BitmapImage image = new BitmapImage();
-                        await image.SetSourceAsync(stream);
-                        return image;
-                    }
+                    string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                    dispatcher.ShowMessage(str);
+                    return await GetNoPicAsync(dispatcher);
                 }
             }
         }
