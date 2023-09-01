@@ -1,15 +1,12 @@
 ﻿using CoolapkLite.Common;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 

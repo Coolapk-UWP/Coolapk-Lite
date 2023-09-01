@@ -1,9 +1,7 @@
-﻿using CoolapkLite.Helpers;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Writers
 {

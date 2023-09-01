@@ -4,7 +4,6 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.Providers;
-using CoolapkLite.ViewModels.SettingsPages;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseWindowsDesktopSdk>true</UseWindowsDesktopSdk>
-    <TargetFrameworks>uap10.0</TargetFrameworks>
+    <TargetFramework>uap10.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
   </PropertyGroup>
 

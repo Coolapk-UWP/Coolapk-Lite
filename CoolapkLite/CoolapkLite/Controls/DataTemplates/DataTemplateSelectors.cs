@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using static CoolapkLite.Models.Feeds.FeedModel;
 
 namespace CoolapkLite.Controls.DataTemplates
 {

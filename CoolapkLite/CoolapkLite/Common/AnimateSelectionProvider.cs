@@ -100,7 +100,7 @@ namespace CoolapkLite.Common
                     selector.SelectionChanged -= ItemsControl_SelectionChanged;
                     selector.SelectionChanged += ItemsControl_SelectionChanged;
                 }
-                else if(itemsControl is Pivot pivot)
+                else if (itemsControl is Pivot pivot)
                 {
                     pivot.SelectionChanged -= ItemsControl_SelectionChanged;
                     pivot.SelectionChanged += ItemsControl_SelectionChanged;
@@ -218,7 +218,7 @@ namespace CoolapkLite.Common
                             bool isNextBelow = prevPosPoint.Y < nextPosPoint.Y;
                             if (prevIndicator.RenderSize.Height > prevIndicator.RenderSize.Width)
                             {
-                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, isNextBelow ? false : true);
+                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, !isNextBelow);
                             }
                             else
                             {
@@ -227,7 +227,7 @@ namespace CoolapkLite.Common
 
                             if (nextIndicator.RenderSize.Height > nextIndicator.RenderSize.Width)
                             {
-                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow ? true : false);
+                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow);
                             }
                             else
                             {
@@ -269,7 +269,7 @@ namespace CoolapkLite.Common
                             bool isNextBelow = prevPosPoint.Y < nextPosPoint.Y;
                             if (prevIndicator.RenderSize.Height > prevIndicator.RenderSize.Width)
                             {
-                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, isNextBelow ? false : true, storyboard.Children);
+                                PlayIndicatorNonSameLevelAnimations(prevIndicator, true, !isNextBelow, storyboard.Children);
                             }
                             else
                             {
@@ -278,7 +278,7 @@ namespace CoolapkLite.Common
 
                             if (nextIndicator.RenderSize.Height > nextIndicator.RenderSize.Width)
                             {
-                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow ? true : false, storyboard.Children);
+                                PlayIndicatorNonSameLevelAnimations(nextIndicator, false, isNextBelow, storyboard.Children);
                             }
                             else
                             {
@@ -411,7 +411,7 @@ namespace CoolapkLite.Common
 
             ScalarKeyFrameAnimation scaleAnim = comp.CreateScalarKeyFrameAnimation();
             scaleAnim.InsertKeyFrame(0.0f, (float)beginScale);
-            scaleAnim.InsertKeyFrame(0.333f, (float)(Math.Abs(to - from) / dimension + (from < to ? endScale : beginScale)), comp.CreateCubicBezierEasingFunction(c_frame1point1, c_frame1point2));
+            scaleAnim.InsertKeyFrame(0.333f, (float)((Math.Abs(to - from) / dimension) + (from < to ? endScale : beginScale)), comp.CreateCubicBezierEasingFunction(c_frame1point1, c_frame1point2));
             scaleAnim.InsertKeyFrame(1.0f, (float)endScale, comp.CreateCubicBezierEasingFunction(c_frame2point1, c_frame2point2));
             scaleAnim.Duration = TimeSpan.FromMilliseconds(600);
 
@@ -597,7 +597,7 @@ namespace CoolapkLite.Common
                     new SplineDoubleKeyFrame
                     {
                         KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(200)),
-                        Value = Math.Abs(to - from) / dimension + (from < to ? endScale : beginScale),
+                        Value = (Math.Abs(to - from) / dimension) + (from < to ? endScale : beginScale),
                         KeySpline = new KeySpline
                         {
                             ControlPoint1 = new Point
@@ -804,8 +804,7 @@ namespace CoolapkLite.Common
         private const string s_scaleYPath = "(UIElement.RenderTransform).(CompositeTransform.ScaleY)";
         private const string s_translateXPath = "(UIElement.RenderTransform).(CompositeTransform.TranslateX)";
         private const string s_translateYPath = "(UIElement.RenderTransform).(CompositeTransform.TranslateY)";
-
-        readonly BitmapCache m_bitmapCache = new BitmapCache();
+        private readonly BitmapCache m_bitmapCache = new BitmapCache();
 
         private bool IsTopNavigationView => Orientation == Orientation.Horizontal;
     }

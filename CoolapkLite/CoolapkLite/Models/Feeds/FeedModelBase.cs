@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI;
-using Windows.UI.Core;
 
 namespace CoolapkLite.Models.Feeds
 {

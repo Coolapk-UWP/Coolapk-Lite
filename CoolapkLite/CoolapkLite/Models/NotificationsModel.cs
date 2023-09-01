@@ -159,7 +159,7 @@ namespace CoolapkLite.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async static void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {

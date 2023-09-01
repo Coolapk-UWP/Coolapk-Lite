@@ -1,6 +1,4 @@
 ﻿using HtmlAgilityPack;
-using System.Xml.Linq;
-using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;

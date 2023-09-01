@@ -3,7 +3,6 @@ using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
-using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;

@@ -175,7 +175,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 const string Value = "&title=";
                 Title = uri.Substring(uri.LastIndexOf(Value, StringComparison.Ordinal) + Value.Length);
             }
-            
+
             if (uri.StartsWith("url="))
             {
                 uri = uri.Substring(4);

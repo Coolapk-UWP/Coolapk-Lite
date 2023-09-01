@@ -347,7 +347,7 @@ namespace CoolapkLite.Controls
                 nameof(InlineCodeMargin),
                 typeof(Thickness),
                 typeof(TextBlockEx),
-                new PropertyMetadata(new Thickness(2,0,2,-4)));
+                new PropertyMetadata(new Thickness(2, 0, 2, -4)));
 
         /// <summary>
         /// Gets or sets the margin for inline code.
@@ -370,7 +370,7 @@ namespace CoolapkLite.Controls
                 nameof(InlineCodePadding),
                 typeof(Thickness),
                 typeof(TextBlockEx),
-                new PropertyMetadata(new Thickness(4,2,4,2)));
+                new PropertyMetadata(new Thickness(4, 2, 4, 2)));
 
         /// <summary>
         /// Gets or sets the space between the code border and the text.

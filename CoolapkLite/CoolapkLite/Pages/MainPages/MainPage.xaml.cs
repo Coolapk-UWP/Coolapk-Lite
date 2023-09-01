@@ -3,7 +3,6 @@ using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;

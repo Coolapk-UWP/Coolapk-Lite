@@ -2,15 +2,11 @@
 using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
-using Windows.System;
-using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
@@ -96,7 +92,7 @@ namespace CoolapkLite.Helpers
         public static AppWindow GetWindowForElement(this UIElement element) =>
             IsAppWindowSupported
             && element?.XamlRoot?.Content != null
-            && ActiveAppWindows.TryGetValue(element.Dispatcher, out var windows)
+            && ActiveAppWindows.TryGetValue(element.Dispatcher, out Dictionary<UIElement, AppWindow> windows)
             && windows.TryGetValue(element.XamlRoot.Content, out AppWindow window)
                 ? window : null;
 

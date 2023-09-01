@@ -8,7 +8,6 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Xaml;

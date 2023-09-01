@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -80,7 +79,7 @@ namespace CoolapkLite.ViewModels.DataSource
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
-        
+
         protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))

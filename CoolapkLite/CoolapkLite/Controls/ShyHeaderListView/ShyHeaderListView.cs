@@ -1,12 +1,9 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Converters;
 using System;
 using Windows.Foundation.Metadata;
-using Windows.UI.Composition;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235

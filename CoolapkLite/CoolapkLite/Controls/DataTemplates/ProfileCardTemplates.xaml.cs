@@ -5,8 +5,6 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
-using System.Reflection;
-using System.Xml.Linq;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;

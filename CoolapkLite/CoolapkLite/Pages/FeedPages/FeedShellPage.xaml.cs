@@ -11,7 +11,6 @@ using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;

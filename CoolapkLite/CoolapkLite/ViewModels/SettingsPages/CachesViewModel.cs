@@ -80,7 +80,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         bool IViewModel.IsEqual(IViewModel other) => other is CachesViewModel model && IsEqual(model);
 
         public bool IsEqual(CachesViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
-        
+
         public async Task RemoveImageAsync(StorageFile file)
         {
             await file.DeleteAsync();
