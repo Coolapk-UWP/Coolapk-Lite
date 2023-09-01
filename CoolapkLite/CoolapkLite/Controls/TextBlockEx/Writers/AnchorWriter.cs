@@ -21,7 +21,7 @@ namespace CoolapkLite.Controls.Writers
                 string content = node.InnerText;
                 if (content == "查看图片")
                 {
-                    hyperlink.Inlines.Add(CreateSymbolRun("\uE158", textBlockEx));
+                    hyperlink.Inlines.Add(CreateSymbolRun("\uEB9F", textBlockEx));
                 }
                 else if (!content.StartsWith("@") && !content.StartsWith("#") && !(node.GetAttributeValue("type", null) == "user-detail"))
                 {

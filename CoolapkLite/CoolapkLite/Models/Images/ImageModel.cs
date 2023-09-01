@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
@@ -23,6 +24,8 @@ namespace CoolapkLite.Models.Images
         private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
 
         private readonly Action<UISettingChangedType> UISettingChanged;
+
+        public static bool IsAutoPlaySupported => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Imaging.BitmapImage", "AutoPlay");
 
         public CoreDispatcher Dispatcher { get; private set; }
 
@@ -69,6 +72,13 @@ namespace CoolapkLite.Models.Images
             private set => SetProperty(ref isWidePic, value);
         }
 
+        private bool isGif = false;
+        public bool IsGif
+        {
+            get => isGif;
+            private set => SetProperty(ref isGif, value);
+        }
+
         protected ImmutableArray<ImageModel> contextArray = ImmutableArray<ImageModel>.Empty;
         public ImmutableArray<ImageModel> ContextArray
         {
@@ -82,8 +92,6 @@ namespace CoolapkLite.Models.Images
                 }
             }
         }
-
-        public bool IsGif => Uri.Substring(Uri.LastIndexOf('.')).ToUpperInvariant().Contains("GIF");
 
         private string uri;
         public string Uri
@@ -238,12 +246,14 @@ namespace CoolapkLite.Models.Images
                                 && PixelHeight > PixelWidth * 1.5;
                     IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
                                 && PixelWidth > PixelHeight * 1.5;
+                    IsGif = IsAutoPlaySupported && !Type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
                 else
                 {
                     Pic = null;
                     IsLongPic = false;
                     IsWidePic = false;
+                    IsGif = Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
             }
             finally
