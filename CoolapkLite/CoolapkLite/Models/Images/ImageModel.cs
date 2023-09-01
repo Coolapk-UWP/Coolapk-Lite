@@ -37,7 +37,7 @@ namespace CoolapkLite.Models.Images
                 }
                 else
                 {
-                    _ = GetImage();
+                    _ = GetImageAsync();
                     return ImageCacheHelper.GetNoPic(Dispatcher);
                 }
             }
@@ -59,28 +59,14 @@ namespace CoolapkLite.Models.Images
         public bool IsLongPic
         {
             get => isLongPic;
-            private set
-            {
-                if (isLongPic != value)
-                {
-                    isLongPic = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref isLongPic, value);
         }
 
         private bool isWidePic = false;
         public bool IsWidePic
         {
             get => isWidePic;
-            private set
-            {
-                if (isWidePic != value)
-                {
-                    isWidePic = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref isWidePic, value);
         }
 
         protected ImmutableArray<ImageModel> contextArray = ImmutableArray<ImageModel>.Empty;
@@ -108,9 +94,10 @@ namespace CoolapkLite.Models.Images
                 if (uri != value)
                 {
                     uri = value;
+                    RaisePropertyChangedEvent(nameof(IsGif));
                     if (pic != null && pic.TryGetTarget(out BitmapImage _))
                     {
-                        _ = GetImage();
+                        _ = GetImageAsync();
                     }
                 }
             }
@@ -127,7 +114,7 @@ namespace CoolapkLite.Models.Images
                     type = value;
                     if (pic != null && pic.TryGetTarget(out BitmapImage _))
                     {
-                        _ = GetImage();
+                        _ = GetImageAsync();
                     }
                 }
             }
@@ -137,13 +124,29 @@ namespace CoolapkLite.Models.Images
         public bool IsLoading
         {
             get => isLoading;
-            private set
+            private set => SetProperty(ref isLoading, value);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        {
+            if (name != null)
             {
-                if (isLoading != value)
+                if (Dispatcher?.HasThreadAccess == false)
                 {
-                    isLoading = value;
-                    RaisePropertyChangedEvent();
+                    await Dispatcher.ResumeForegroundAsync();
                 }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 
@@ -174,7 +177,7 @@ namespace CoolapkLite.Models.Images
                     case UISettingChangedType.NoPicChanged:
                         if (pic != null && pic.TryGetTarget(out BitmapImage _))
                         {
-                            _ = GetImage();
+                            _ = GetImageAsync();
                         }
                         break;
                 }
@@ -190,27 +193,13 @@ namespace CoolapkLite.Models.Images
         public event TypedEventHandler<ImageModel, object> LoadStarted;
         public event TypedEventHandler<ImageModel, object> LoadCompleted;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
         public static void SetSemaphoreSlim(int initialCount)
         {
             semaphoreSlim.Dispose();
             semaphoreSlim = new SemaphoreSlim(initialCount);
         }
 
-        private async Task GetImage()
+        private async Task GetImageAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             try
@@ -307,7 +296,7 @@ namespace CoolapkLite.Models.Images
             ContextArray.ForEach((x) => x.ChangeDispatcher(dispatcher));
         }
 
-        public async Task Refresh() => await GetImage();
+        public async Task Refresh() => await GetImageAsync();
 
         public override string ToString() => Uri;
     }

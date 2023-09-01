@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI;
+using Windows.UI.Core;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -325,25 +326,25 @@ namespace CoolapkLite.Models.Feeds
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            title: location.ToString(),
-                            icon: "\uE707"));
+                            location.ToString(),
+                            "\uE707"));
                 }
 
                 if (ttitle != null && !string.IsNullOrEmpty(ttitle.ToString()))
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            url: token.Value<string>("turl"),
-                            title: ttitle.ToString(),
-                            logo: token.Value<string>("tpic")));
+                            ttitle.ToString(),
+                            new ImageModel(token.Value<string>("tpic"), ImageType.Icon),
+                            token.Value<string>("turl")));
                 }
 
                 if (EntityType != "article" && dyh_name != null && !string.IsNullOrEmpty(dyh_name.ToString()))
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            url: $"/dyh/{token["dyh_id"]}",
-                            title: dyh_name.ToString()));
+                            dyh_name.ToString(),
+                            $"/dyh/{token["dyh_id"]}"));
                 }
 
                 if (relationRows != null)
@@ -353,9 +354,9 @@ namespace CoolapkLite.Models.Feeds
                         JObject item = i as JObject;
                         buider.Add(
                             new RelationRowsItem(
-                                url: item.Value<string>("url"),
-                                title: item.Value<string>("title"),
-                                logo: item.Value<string>("logo")));
+                                item.Value<string>("title"),
+                                new ImageModel(item.Value<string>("logo"), ImageType.Icon),
+                                item.Value<string>("url")));
                     }
                 }
 
@@ -363,25 +364,25 @@ namespace CoolapkLite.Models.Feeds
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            url: $"/feed/changeHistoryList?id={ID}",
-                            title: $"已编辑{change_count.ToObject<int>()}次",
-                            icon: "\uE70F"));
+                            $"已编辑{change_count.ToObject<int>()}次",
+                            "\uE70F",
+                            $"/feed/changeHistoryList?id={ID}"));
                 }
 
                 if (status != null && status.ToObject<int>() == -1)
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            title: "仅自己可见",
-                            icon: "\uE727"));
+                            "仅自己可见",
+                            "\uE727"));
                 }
 
                 if (block_status != null && block_status.ToObject<int>() != 0)
                 {
                     buider.Add(
                         new RelationRowsItem(
-                            title: "已折叠",
-                            icon: "\uE7BA"));
+                            "已折叠",
+                            "\uE7BA"));
                 }
 
                 ShowRelationRows = buider.Any();
@@ -499,15 +500,24 @@ namespace CoolapkLite.Models.Feeds
         public bool IsShowLogo => Logo != null;
         public bool IsShowIcon => Logo != null || !string.IsNullOrWhiteSpace(Icon);
 
-        public RelationRowsItem(string url = null, string title = null, string icon = null, string logo = null)
+        public RelationRowsItem(string title, string url = null)
+        {
+            Url = url;
+            Title = title;
+        }
+
+        public RelationRowsItem(string title, string icon, string url = null)
         {
             Url = url;
             Title = title;
             Icon = icon;
-            if (logo != null)
-            {
-                Logo = new ImageModel(logo, ImageType.Icon);
-            }
+        }
+
+        public RelationRowsItem(string title, ImageModel logo, string url = null)
+        {
+            Url = url;
+            Title = title;
+            Logo = logo;
         }
     }
 }

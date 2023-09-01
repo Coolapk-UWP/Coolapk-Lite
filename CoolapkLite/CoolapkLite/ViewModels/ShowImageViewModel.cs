@@ -15,6 +15,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using NetworkHelper = Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper;
 
 namespace CoolapkLite.ViewModels
 {
@@ -39,6 +40,7 @@ namespace CoolapkLite.ViewModels
             {
                 if (index != value)
                 {
+                    IsLoading = false;
                     if (index != -1) { RegisterImage(Images[index], Images[value]); }
                     index = value;
                     RaisePropertyChangedEvent();
@@ -109,7 +111,7 @@ namespace CoolapkLite.ViewModels
                 Images = new ImageModel[] { image };
                 Index = 0;
             }
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture))
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetOnMeteredConnection)
             {
                 foreach (ImageModel Image in Images)
                 {

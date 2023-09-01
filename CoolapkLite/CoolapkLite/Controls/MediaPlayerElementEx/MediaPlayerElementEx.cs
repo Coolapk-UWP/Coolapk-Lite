@@ -230,7 +230,7 @@ namespace CoolapkLite.Controls
 
             if (json.TryGetValue("cover", out JToken cover))
             {
-                templateSettings.PosterSource = new ImageModel(cover.ToString(), ImageType.OriginImage);
+                templateSettings.PosterSource = new ImageModel(cover.ToString(), ImageType.OriginImage, Dispatcher);
             }
 
             if (json.TryGetValue("requestParams", out JToken v))
