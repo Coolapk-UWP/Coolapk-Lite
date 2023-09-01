@@ -179,13 +179,14 @@ namespace CoolapkLite.Controls
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Name)
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Name)
             {
-                case "PastePic":
-                    _ = Provider.DropFile(Clipboard.GetContent());
+                case nameof(PastePic):
+                    _ = Provider.DropFileAsync(Clipboard.GetContent());
                     break;
                 case "DeletePic":
-                    Provider.Pictures.Remove((sender as FrameworkElement).Tag as WriteableBitmap);
+                    Provider.Pictures.Remove(element.Tag as WriteableBitmap);
                     break;
                 default:
                     break;
@@ -207,7 +208,7 @@ namespace CoolapkLite.Controls
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
             {
-                pics = await Provider.UploadPic();
+                pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
                     this.ShowMessage("图片上传失败");
@@ -226,7 +227,7 @@ namespace CoolapkLite.Controls
                     content.Add(type, "type");
                     content.Add(is_html_article, "is_html_article");
                     content.Add(pic, "pic");
-                    await SendContent(content);
+                    await SendContentAsync(content);
                 }
             }
         }
@@ -236,7 +237,7 @@ namespace CoolapkLite.Controls
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
             {
-                pics = await Provider.UploadPic();
+                pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
                     this.ShowMessage("图片上传失败");
@@ -251,12 +252,12 @@ namespace CoolapkLite.Controls
                 {
                     content.Add(message, "message");
                     content.Add(pic, "pic");
-                    await SendContent(content);
+                    await SendContentAsync(content);
                 }
             }
         }
 
-        private async Task SendContent(HttpContent content)
+        private async Task SendContentAsync(HttpContent content)
         {
             UriType type = (UriType)(-1);
             switch (FeedType)
@@ -472,7 +473,7 @@ namespace CoolapkLite.Controls
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
-            _ = Provider.DropFile(e.DataView);
+            _ = Provider.DropFileAsync(e.DataView);
             e.Handled = true;
         }
 
@@ -488,7 +489,7 @@ namespace CoolapkLite.Controls
                         case VirtualKey.V:
                             if (PastePic.IsEnabled)
                             {
-                                _ = Provider.DropFile(Clipboard.GetContent());
+                                _ = Provider.DropFileAsync(Clipboard.GetContent());
                                 args.Handled = true;
                             }
                             break;
@@ -497,7 +498,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckData(Clipboard.GetContent()));
+        private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckDataAsync(Clipboard.GetContent()));
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
 

@@ -51,7 +51,7 @@ namespace CoolapkLite.Pages
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             _ = NotificationsModel.Update();
-            _ = LiveTileTask.Instance?.UpdateTile();
+            _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -105,7 +105,7 @@ namespace CoolapkLite.Pages
 
         private void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            _ = PivotContentFrame.OpenActivatedEventArgs(args);
+            _ = PivotContentFrame.OpenActivatedEventArgsAsync(args);
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)

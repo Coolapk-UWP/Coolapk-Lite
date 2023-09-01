@@ -24,18 +24,18 @@ namespace CoolapkLite.BackgroundTasks
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            await UpdateTile();
+            await UpdateTileAsync();
             deferral.Complete();
         }
 
-        public async Task UpdateTile()
+        public async Task UpdateTileAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
                 Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
                 try
                 {
-                    await GetData(uri);
+                    await GetDataAsync(uri);
                 }
                 catch (Exception ex)
                 {
@@ -44,7 +44,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private async Task GetData(Uri uri)
+        private async Task GetDataAsync(Uri uri)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
             if (isSucceed)
@@ -79,7 +79,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        public static async Task<bool> PinSecondaryTile(string tileId, string displayName, string arguments)
+        public static async Task<bool> PinSecondaryTileAsync(string tileId, string displayName, string arguments)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
             bool isPinned = SecondaryTile.Exists(tileId);
@@ -89,7 +89,7 @@ namespace CoolapkLite.BackgroundTasks
             }
             else
             {
-                // Initialize the tile with required arguments
+                // InitializeAsync the tile with required arguments
                 SecondaryTile tile = new SecondaryTile(
                     tileId,
                     displayName,

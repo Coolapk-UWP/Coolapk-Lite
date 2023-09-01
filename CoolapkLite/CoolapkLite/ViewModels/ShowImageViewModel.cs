@@ -143,13 +143,13 @@ namespace CoolapkLite.ViewModels
 
         public async void CopyPic()
         {
-            DataPackage dataPackage = await GetImageDataPackage("复制图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync("复制图片");
             Clipboard.SetContentWithOptions(dataPackage, null);
         }
 
         public async void SharePic()
         {
-            DataPackage dataPackage = await GetImageDataPackage("分享图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync("分享图片");
             if (dataPackage != null)
             {
                 DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -158,7 +158,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public async Task<DataPackage> GetImageDataPackage(string title)
+        public async Task<DataPackage> GetImageDataPackageAsync(string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
             if (file == null)
@@ -177,7 +177,7 @@ namespace CoolapkLite.ViewModels
             return dataPackage;
         }
 
-        public async Task GetImageDataPackage(DataPackage dataPackage, string title)
+        public async Task GetImageDataPackageAsync(DataPackage dataPackage, string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
             if (file == null)

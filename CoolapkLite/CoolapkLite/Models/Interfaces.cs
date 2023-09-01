@@ -40,7 +40,7 @@ namespace CoolapkLite.Models
     {
         int ID { get; }
         bool Liked { get; set; }
-        Task ChangeLike();
+        Task ChangeLikeAsync();
     }
 
     public interface ICanStar
@@ -60,7 +60,7 @@ namespace CoolapkLite.Models
     {
         int ID { get; }
         bool Followed { get; set; }
-        Task ChangeFollow();
+        Task ChangeFollowAsync();
     }
 
     public interface IUserModel : ISourceUserModel

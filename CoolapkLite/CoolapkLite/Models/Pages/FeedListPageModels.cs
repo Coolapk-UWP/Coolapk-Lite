@@ -249,7 +249,7 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
 
@@ -396,7 +396,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostTopicUnfollow : UriType.PostTopicFollow;
 
@@ -541,7 +541,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostDyhUnfollow : UriType.PostDyhFollow;
 
@@ -822,7 +822,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
@@ -1023,7 +1023,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeLike()
+        public async Task ChangeLikeAsync()
         {
             UriType type = Liked ? UriType.PostCollectionUnlike : UriType.PostCollectionLike;
 
@@ -1041,7 +1041,7 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostCollectionUnfollow : UriType.PostCollectionFollow;
 

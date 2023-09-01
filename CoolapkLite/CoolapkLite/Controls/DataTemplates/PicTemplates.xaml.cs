@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.ViewModels;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -15,7 +16,7 @@ using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class PicTemplates : ResourceDictionary
+    public partial class PicTemplates : ResourceDictionary, ISharePic
     {
         public PicTemplates() => InitializeComponent();
 
@@ -70,18 +71,18 @@ namespace CoolapkLite.Controls.DataTemplates
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await GetImageDataPackage(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
+            await GetImageDataPackageAsync(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
         }
 
         public async void CopyPic(ImageModel image)
         {
-            DataPackage dataPackage = await GetImageDataPackage(image, "复制图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(image, "复制图片");
             Clipboard.SetContentWithOptions(dataPackage, null);
         }
 
         public async void SharePic(ImageModel image)
         {
-            DataPackage dataPackage = await GetImageDataPackage(image, "分享图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(image, "分享图片");
             if (dataPackage != null)
             {
                 DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -101,7 +102,7 @@ namespace CoolapkLite.Controls.DataTemplates
                 return;
             }
 
-            string fileName = GetTitle(url);
+            string fileName = GetPicTitle(url);
             FileSavePicker fileSavePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
@@ -129,7 +130,7 @@ namespace CoolapkLite.Controls.DataTemplates
             }
         }
 
-        public async Task<DataPackage> GetImageDataPackage(ImageModel image, string title)
+        public async Task<DataPackage> GetImageDataPackageAsync(ImageModel image, string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, image.Uri);
             if (file == null) { return null; }
@@ -138,12 +139,12 @@ namespace CoolapkLite.Controls.DataTemplates
             DataPackage dataPackage = new DataPackage();
             dataPackage.SetBitmap(bitmap);
             dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = GetTitle(image.Uri);
+            dataPackage.Properties.Description = GetPicTitle(image.Uri);
 
             return dataPackage;
         }
 
-        public async Task GetImageDataPackage(DataPackage dataPackage, ImageModel image, string title)
+        public async Task GetImageDataPackageAsync(DataPackage dataPackage, ImageModel image, string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, image.Uri);
             if (file == null)
@@ -156,11 +157,11 @@ namespace CoolapkLite.Controls.DataTemplates
 
             dataPackage.SetBitmap(bitmap);
             dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = GetTitle(image.Uri);
+            dataPackage.Properties.Description = GetPicTitle(image.Uri);
             dataPackage.SetStorageItems(new IStorageItem[] { file });
         }
 
-        private string GetTitle(string url)
+        private string GetPicTitle(string url)
         {
             Match match = Regex.Match(url, @"[^/]+(?!.*/)");
             return match.Success ? match.Value : "图片";

@@ -11,6 +11,7 @@ using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
@@ -111,7 +112,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "ReplyButton":
+                case nameof(ReplyButton):
                     DisabledCopy();
                     if (element.Tag is FeedModelBase feed)
                     {
@@ -127,9 +128,9 @@ namespace CoolapkLite.Pages.FeedPages
                     }
                     break;
 
-                case "LikeButton":
+                case nameof(LikeButton):
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLike();
+                    await (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":
@@ -137,11 +138,11 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString(), Dispatcher));
                     break;
 
-                case "ShareButton":
+                case nameof(ShareButton):
                     DisabledCopy();
                     break;
 
-                case "StarButton":
+                case nameof(StarButton):
                     DisabledCopy();
                     break;
 

@@ -175,20 +175,25 @@ namespace CoolapkLite.ViewModels.FeedPages
                 const string Value = "&title=";
                 Title = uri.Substring(uri.LastIndexOf(Value, StringComparison.Ordinal) + Value.Length);
             }
-
+            
             if (uri.StartsWith("url="))
             {
-                uri = uri.Replace("url=", string.Empty);
+                uri = uri.Substring(4);
             }
 
-            if (uri.IndexOf("/page", StringComparison.Ordinal) == -1 && (uri.StartsWith("#", StringComparison.Ordinal) || (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))))
-            {
-                uri = "/page/dataList?url=" + uri;
-            }
-            else if (uri.IndexOf("/page", StringComparison.Ordinal) == 0 && !uri.Contains("/page/dataList"))
+            if (uri.StartsWith("/page", StringComparison.Ordinal) && !uri.Contains("/page/dataList"))
             {
                 uri = uri.Replace("/page", "/page/dataList");
             }
+            else if (uri.Contains("/page", StringComparison.Ordinal) && uri.StartsWith("#", StringComparison.Ordinal))
+            {
+                uri = $"/page/dataList?url={uri}";
+            }
+            else if (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))
+            {
+                uri = $"/page/dataList?url={uri}";
+            }
+
             return uri.Replace("#", "%23");
         }
 

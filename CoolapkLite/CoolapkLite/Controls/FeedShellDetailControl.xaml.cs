@@ -32,14 +32,14 @@ namespace CoolapkLite.Controls
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "PinTileButton":
-                    _ = PinSecondaryTile(element.Tag as FeedDetailModel);
+                case nameof(PinTileButton):
+                    _ = PinSecondaryTileAsync(element.Tag as FeedDetailModel);
                     break;
-                case "ReportButton":
+                case nameof(ReportButton):
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
-                case "FollowButton":
-                    _ = (element.Tag as ICanFollow)?.ChangeFollow();
+                case nameof(FollowButton):
+                    _ = (element.Tag as ICanFollow)?.ChangeFollowAsync();
                     break;
                 default:
                     _ = this.OpenLinkAsync(element.Tag?.ToString());
@@ -68,14 +68,14 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private async Task<bool> PinSecondaryTile(FeedDetailModel feed)
+        private async Task<bool> PinSecondaryTileAsync(FeedDetailModel feed)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
 
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, feed.Title, feed.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, feed.Title, feed.Url);
             if (isPinned)
             {
                 try

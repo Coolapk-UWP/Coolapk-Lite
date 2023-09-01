@@ -191,7 +191,7 @@ namespace CoolapkLite.Pages.FeedPages
             switch (element.Name)
             {
                 case "LikeButton":
-                    _ = (element.Tag as ICanLike)?.ChangeLike();
+                    _ = (element.Tag as ICanLike)?.ChangeLikeAsync();
                     break;
                 case "FansButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title, Dispatcher));
@@ -200,10 +200,10 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
                 case "FollowButton":
-                    _ = (element.Tag as ICanFollow)?.ChangeFollow();
+                    _ = (element.Tag as ICanFollow)?.ChangeFollowAsync();
                     break;
                 case "PinTileButton":
-                    _ = Provider.PinSecondaryTile(element.Tag as Entity);
+                    _ = Provider.PinSecondaryTileAsync(element.Tag as Entity);
                     break;
                 case "FollowsButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title, Dispatcher));
@@ -230,7 +230,7 @@ namespace CoolapkLite.Pages.FeedPages
                 case "ShareButton":
                     Provider.SharePic(image);
                     break;
-                case "RefreshButton":
+                case nameof(RefreshButton):
                     _ = image.Refresh();
                     break;
                 case "ShowImageButton":
@@ -262,7 +262,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await Provider.GetImageDataPackage(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
+            await Provider.GetImageDataPackageAsync(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
         }
 
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
@@ -300,7 +300,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
-                _ = Provider.SearchQuerySubmitted(sender.Text);
+                _ = Provider.SearchQuerySubmittedAsync(sender.Text);
             }
         }
 

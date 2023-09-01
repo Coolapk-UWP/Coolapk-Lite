@@ -149,7 +149,7 @@ namespace CoolapkLite
             }
             else if (rootFrame.Content is IHaveTitleBar page)
             {
-                _ = page.OpenActivatedEventArgs(e);
+                _ = page.OpenActivatedEventArgsAsync(e);
             }
 
             // 确保当前窗口处于活动状态

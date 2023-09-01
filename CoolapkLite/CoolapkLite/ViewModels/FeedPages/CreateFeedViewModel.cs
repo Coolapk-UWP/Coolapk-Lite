@@ -76,15 +76,15 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         bool IViewModel.IsEqual(IViewModel other) => other is CreateFeedViewModel model && Equals(model);
 
-        public async Task ReadFile(IStorageFile file)
+        public async Task ReadFileAsync(IStorageFile file)
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
-                await ReadStream(stream);
+                await ReadStreamAsync(stream);
             }
         }
 
-        public async Task ReadStream(IRandomAccessStream stream)
+        public async Task ReadStreamAsync(IRandomAccessStream stream)
         {
             BitmapDecoder ImageDecoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap SoftwareImage = await ImageDecoder.GetSoftwareBitmapAsync();
@@ -116,7 +116,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public async Task<bool> CheckData(DataPackageView data)
+        public async Task<bool> CheckDataAsync(DataPackageView data)
         {
             if (data.Contains(StandardDataFormats.Bitmap))
             {
@@ -152,26 +152,26 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             foreach (StorageFile file in await FileOpen.PickMultipleFilesAsync())
             {
-                if (file != null) { await ReadFile(file); }
+                if (file != null) { await ReadFileAsync(file); }
             }
         }
 
-        public async Task<IList<string>> UploadPic()
+        public async Task<IList<string>> UploadPicAsync()
         {
             IList<string> results = new List<string>();
             if (!Pictures.Any()) { return results; }
             Dispatcher.ShowMessage("上传图片");
             if (ExtensionManager.IsSupported)
             {
-                await ExtensionManager.Instance.Initialize(Dispatcher);
+                await ExtensionManager.Instance.InitializeAsync(Dispatcher);
                 if (ExtensionManager.Instance.Extensions.Any())
                 {
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>();
                     foreach (WriteableBitmap pic in Pictures)
                     {
-                        fragments.Add(await UploadFileFragment.FromWriteableBitmap(pic));
+                        fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
                     }
-                    results = await RequestHelper.UploadImages(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
+                    results = await RequestHelper.UploadImagesAsync(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
                     Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
                     return results;
                 }
@@ -197,7 +197,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     await encoder.FlushAsync();
 
                     byte[] bytes = stream.GetBytes();
-                    (bool isSucceed, string result) = await RequestHelper.UploadImage(bytes, "pic");
+                    (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
                     if (isSucceed) { results.Add(result); }
                 }
                 Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
@@ -205,14 +205,14 @@ namespace CoolapkLite.ViewModels.FeedPages
             return results;
         }
 
-        public async Task DropFile(DataPackageView data)
+        public async Task DropFileAsync(DataPackageView data)
         {
             if (data.Contains(StandardDataFormats.Bitmap))
             {
                 RandomAccessStreamReference bitmap = await data.GetBitmapAsync();
                 using (IRandomAccessStreamWithContentType random = await bitmap.OpenReadAsync())
                 {
-                    await ReadStream(random);
+                    await ReadStreamAsync(random);
                 }
             }
             else if (data.Contains(StandardDataFormats.StorageItems))
@@ -229,7 +229,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     }
                     return false;
                 });
-                if (images.Any()) { await ReadFile(images.FirstOrDefault() as StorageFile); }
+                if (images.Any()) { await ReadFileAsync(images.FirstOrDefault() as StorageFile); }
             }
         }
     }

@@ -62,7 +62,7 @@ namespace CoolapkLite.Pages.FeedPages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "AddBookmark":
+                case nameof(AddBookmark):
                     BookmarkDialog dialog = new BookmarkDialog();
                     ContentDialogResult result = await dialog.ShowAsync();
                     if (result == ContentDialogResult.Primary)

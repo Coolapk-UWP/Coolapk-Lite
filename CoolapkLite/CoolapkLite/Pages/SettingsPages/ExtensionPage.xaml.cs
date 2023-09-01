@@ -60,11 +60,11 @@ namespace CoolapkLite.Pages.SettingsPages
             this.ShowProgressBar();
             if (reset)
             {
-                await Provider.Initialize(Dispatcher);
+                await Provider.InitializeAsync(Dispatcher);
             }
             else
             {
-                await Provider.FindAndLoadExtensions();
+                await Provider.FindAndLoadExtensionsAsync();
             }
             this.HideProgressBar();
         }

@@ -29,7 +29,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedListViewModel : IViewModel
+    public abstract class FeedListViewModel : IViewModel, ISharePic
     {
         protected const string idName = "id";
 
@@ -150,13 +150,13 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async void CopyPic(ImageModel image)
         {
-            DataPackage dataPackage = await GetImageDataPackage(image, "复制图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(image, "复制图片");
             Clipboard.SetContentWithOptions(dataPackage, null);
         }
 
         public async void SharePic(ImageModel image)
         {
-            DataPackage dataPackage = await GetImageDataPackage(image, "分享图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(image, "分享图片");
             if (dataPackage != null)
             {
                 DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -176,7 +176,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 return;
             }
 
-            string fileName = GetTitle(url);
+            string fileName = GetPicTitle(url);
             FileSavePicker fileSavePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
@@ -204,7 +204,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public async Task<DataPackage> GetImageDataPackage(ImageModel image, string title)
+        public async Task<DataPackage> GetImageDataPackageAsync(ImageModel image, string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, image.Uri);
             if (file == null) { return null; }
@@ -213,12 +213,12 @@ namespace CoolapkLite.ViewModels.FeedPages
             DataPackage dataPackage = new DataPackage();
             dataPackage.SetBitmap(bitmap);
             dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = GetTitle(image.Uri);
+            dataPackage.Properties.Description = GetPicTitle(image.Uri);
 
             return dataPackage;
         }
 
-        public async Task GetImageDataPackage(DataPackage dataPackage, ImageModel image, string title)
+        public async Task GetImageDataPackageAsync(DataPackage dataPackage, ImageModel image, string title)
         {
             StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, image.Uri);
             if (file == null)
@@ -231,17 +231,17 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             dataPackage.SetBitmap(bitmap);
             dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = GetTitle(image.Uri);
+            dataPackage.Properties.Description = GetPicTitle(image.Uri);
             dataPackage.SetStorageItems(new IStorageItem[] { file });
         }
 
-        private string GetTitle(string url)
+        private string GetPicTitle(string url)
         {
             Regex regex = new Regex(@"[^/]+(?!.*/)");
             return regex.IsMatch(url) ? regex.Match(url).Value : "图片";
         }
 
-        public virtual async Task SearchQuerySubmitted(string keyword)
+        public virtual async Task SearchQuerySubmittedAsync(string keyword)
         {
             if (SearchItemSource == null)
             {
@@ -262,9 +262,9 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public virtual Task SearchRefresh(bool reset = false) => SearchItemSource?.Refresh(reset);
 
-        public abstract Task<bool> PinSecondaryTile(Entity entity);
+        public abstract Task<bool> PinSecondaryTileAsync(Entity entity);
 
-        public abstract Task<FeedListDetailBase> GetDetail();
+        public abstract Task<FeedListDetailBase> GetDetailAsync();
 
         public abstract Task Refresh(bool reset = false);
 
@@ -288,7 +288,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Detail == null || reset)
             {
-                Detail = await GetDetail();
+                Detail = await GetDetailAsync();
             }
             if (ItemSource == null)
             {
@@ -351,7 +351,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as UserDetail)?.UserName;
 
-        public override async Task<FeedListDetailBase> GetDetail()
+        public override async Task<FeedListDetailBase> GetDetailAsync()
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserSpace, ID), true);
             if (!isSucceed) { return null; }
@@ -367,7 +367,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override async Task<bool> PinSecondaryTile(Entity entity)
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
         {
             IUserModel user = (IUserModel)entity;
 
@@ -376,7 +376,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = user.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, user.UserName, user.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, user.UserName, user.Url);
             if (isPinned)
             {
                 try
@@ -408,7 +408,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Detail == null || reset)
             {
-                Detail = await GetDetail();
+                Detail = await GetDetailAsync();
             }
             if (ItemSource == null)
             {
@@ -458,7 +458,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as TopicDetail)?.Title;
 
-        public override async Task<FeedListDetailBase> GetDetail()
+        public override async Task<FeedListDetailBase> GetDetailAsync()
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetTagDetail, ID), true);
             if (!isSucceed) { return null; }
@@ -474,7 +474,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override async Task<bool> PinSecondaryTile(Entity entity)
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
         {
             IHasSubtitle detail = (IHasSubtitle)entity;
 
@@ -483,7 +483,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
             if (isPinned)
             {
                 try
@@ -514,7 +514,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Detail == null || reset)
             {
-                Detail = await GetDetail();
+                Detail = await GetDetailAsync();
             }
             if (ItemSource == null)
             {
@@ -551,7 +551,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as DyhDetail)?.Title;
 
-        public override async Task<FeedListDetailBase> GetDetail()
+        public override async Task<FeedListDetailBase> GetDetailAsync()
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetDyhDetail, ID), true);
             if (!isSucceed) { return null; }
@@ -567,7 +567,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override async Task<bool> PinSecondaryTile(Entity entity)
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
         {
             IHasDescription detail = (IHasDescription)entity;
 
@@ -576,7 +576,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
             if (isPinned)
             {
                 try
@@ -610,7 +610,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Detail == null || reset)
             {
-                Detail = await GetDetail();
+                Detail = await GetDetailAsync();
             }
             if (ItemSource == null)
             {
@@ -686,7 +686,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as ProductDetail)?.Title;
 
-        public override async Task<FeedListDetailBase> GetDetail()
+        public override async Task<FeedListDetailBase> GetDetailAsync()
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetail, ID), true);
             if (!isSucceed) { return null; }
@@ -702,7 +702,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override Task<bool> PinSecondaryTile(Entity entity) => Task.Run(() => false);
+        public override Task<bool> PinSecondaryTileAsync(Entity entity) => Task.Run(() => false);
     }
 
     public class CollectionViewModel : FeedListViewModel
@@ -713,7 +713,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Detail == null || reset)
             {
-                Detail = await GetDetail();
+                Detail = await GetDetailAsync();
             }
             if (ItemSource == null)
             {
@@ -772,7 +772,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as CollectionDetail)?.Title;
 
-        public override async Task<FeedListDetailBase> GetDetail()
+        public override async Task<FeedListDetailBase> GetDetailAsync()
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionDetail, ID), true);
             if (!isSucceed) { return null; }
@@ -788,7 +788,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override Task<bool> PinSecondaryTile(Entity entity) => Task.Run(() => false);
+        public override Task<bool> PinSecondaryTileAsync(Entity entity) => Task.Run(() => false);
     }
 
     public class FeedListItemSource : EntityItemSource

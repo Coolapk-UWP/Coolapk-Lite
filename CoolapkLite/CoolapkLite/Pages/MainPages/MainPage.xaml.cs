@@ -55,7 +55,7 @@ namespace CoolapkLite.Pages
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarLayout(false); }
             _ = NotificationsModel.Update();
-            _ = LiveTileTask.Instance?.UpdateTile();
+            _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -117,7 +117,7 @@ namespace CoolapkLite.Pages
 
         private async void OpenActivatedEventArgs(IActivatedEventArgs args)
         {
-            if (!await HamburgerMenuFrame.OpenActivatedEventArgs(args))
+            if (!await HamburgerMenuFrame.OpenActivatedEventArgsAsync(args))
             {
                 HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
             }

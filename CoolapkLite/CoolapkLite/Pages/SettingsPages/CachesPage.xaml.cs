@@ -65,7 +65,7 @@ namespace CoolapkLite.Pages.SettingsPages
             switch (element.Name)
             {
                 case "Delete":
-                    Provider?.RemoveImage(element.Tag as StorageFile);
+                    Provider?.RemoveImageAsync(element.Tag as StorageFile);
                     break;
                 default:
                     break;

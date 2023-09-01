@@ -96,7 +96,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "NewWindow":
                     bool IsExtendsTitleBar = Provider.IsExtendsTitleBar;
-                    await WindowHelper.CreateWindow((window) =>
+                    await WindowHelper.CreateWindowAsync((window) =>
                     {
                         if (IsExtendsTitleBar)
                         {
@@ -113,7 +113,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "NewAppWindow":
                     if (WindowHelper.IsAppWindowSupported)
                     {
-                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
                         if (Provider.IsExtendsTitleBar)
                         {
                             window.TitleBar.ExtendsContentIntoTitleBar = true;

@@ -66,12 +66,12 @@ namespace CoolapkLite.Controls.DataTemplates
             {
                 _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, element.Dispatcher));
             }
-            else if (url.IndexOf("/page", StringComparison.Ordinal) == 0)
+            else if (url.StartsWith("/page", StringComparison.Ordinal))
             {
                 url = $"{url.Replace("/page", "/page/dataList")}&title={(tag as IHasTitle)?.Title ?? string.Empty}";
                 _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, element.Dispatcher));
             }
-            else if (url.IndexOf('#') == 0)
+            else if (url.StartsWith("#"))
             {
                 _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel($"{url}&title={(tag as IHasTitle)?.Title ?? string.Empty}", element.Dispatcher));
             }

@@ -258,7 +258,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class ReplyItemSource : EntityItemSource, INotifyPropertyChanged, ICanComboBoxChangeSelectedIndex, ICanToggleChangeSelectedIndex
+    public class ReplyItemSource : EntityItemSource, INotifyPropertyChanged, IComboBoxChangeSelectedIndex, IToggleChangeSelectedIndex
     {
         public string ID;
         public List<string> ItemSource { get; private set; }

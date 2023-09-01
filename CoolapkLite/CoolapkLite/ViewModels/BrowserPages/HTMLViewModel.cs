@@ -99,14 +99,14 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             if (uri != null)
             {
-                await Load_HTML(uri);
+                await LoadHtmlAsync(uri);
             }
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is HTMLViewModel model && IsEqual(model);
         public bool IsEqual(HTMLViewModel other) => uri == other.uri;
 
-        private async Task Load_HTML(Uri uri)
+        private async Task LoadHtmlAsync(Uri uri)
         {
             Dispatcher.ShowProgressBar();
             (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest");

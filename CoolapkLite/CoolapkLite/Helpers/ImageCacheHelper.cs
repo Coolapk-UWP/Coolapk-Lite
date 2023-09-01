@@ -47,7 +47,7 @@ namespace CoolapkLite.Helpers
         {
             if (!url.TryGetUri(out Uri uri)) { return await GetNoPicAsync(dispatcher); }
 
-            if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0 || uri.IsFile)
+            if (url.StartsWith("ms-appx", StringComparison.Ordinal) || uri.IsFile)
             {
                 if (!dispatcher.HasThreadAccess) { await dispatcher.ResumeForegroundAsync(); }
                 return new BitmapImage(uri);
@@ -102,7 +102,7 @@ namespace CoolapkLite.Helpers
         {
             if (!url.TryGetUri(out Uri uri)) { return null; }
 
-            if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
+            if (url.StartsWith("ms-appx", StringComparison.Ordinal))
             {
                 return await StorageFile.GetFileFromApplicationUriAsync(uri);
             }
@@ -223,7 +223,7 @@ namespace CoolapkLite.Helpers
             Uri uri = url.TryGetUri();
             if (uri == null) { return await GetNoPicAsync(dispatcher); }
 
-            if (url.IndexOf("ms-appx", StringComparison.Ordinal) == 0)
+            if (url.StartsWith("ms-appx", StringComparison.Ordinal))
             {
                 return new BitmapImage(uri);
             }

@@ -140,13 +140,13 @@ namespace CoolapkLite.Pages.SettingsPages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "Dark":
+                case nameof(Dark):
                     ThemeHelper.RootTheme = ElementTheme.Dark;
                     break;
-                case "Light":
+                case nameof(Light):
                     ThemeHelper.RootTheme = ElementTheme.Light;
                     break;
-                case "Default":
+                case nameof(Default):
                     ThemeHelper.RootTheme = ElementTheme.Default;
                     break;
                 default:

@@ -97,27 +97,27 @@ namespace CoolapkLite.ViewModels.ToolsPages
             {
                 OrderedPointList.Clear();
                 Title = (await NetworkHelper.GetUserInfoByNameAsync(ID)).UserName + "的粉丝分析";
-                await GetContactModels();
-                await GetOrderedPointList();
+                await GetContactModelsAsync();
+                await GetOrderedPointListAsync();
             }
             FilteredContactModel = new ObservableCollection<ContactModel>(ContactModels);
             Dispatcher.HideProgressBar();
         }
 
-        private async Task GetContactModels()
+        private async Task GetContactModelsAsync()
         {
             int page = 1;
             ContactModels.Clear();
             while (true)
             {
                 int temp = ContactModels.Count;
-                await Provider.GetEntity(ContactModels, Dispatcher, page);
+                await Provider.GetEntityAsync(ContactModels, Dispatcher, page);
                 if (ContactModels.Count <= 0 || ContactModels.Count <= temp) { break; }
                 page++;
             }
         }
 
-        private async Task GetOrderedPointList()
+        private async Task GetOrderedPointListAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             OrderedPointList.Clear();
@@ -135,7 +135,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
             OrderedPointList.Add(new Point { X = temp, Y = num });
         }
 
-        public async Task SortData(string sortBy, bool ascending)
+        public async Task SortDataAsync(string sortBy, bool ascending)
         {
             try
             {

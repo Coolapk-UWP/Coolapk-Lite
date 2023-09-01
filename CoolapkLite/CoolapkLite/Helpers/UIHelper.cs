@@ -310,25 +310,6 @@ namespace CoolapkLite.Helpers
             return taskResult;
         }
 
-        public static bool IsTypePresent(string AssemblyName, string TypeName)
-        {
-            try
-            {
-                Assembly assembly = Assembly.Load(new AssemblyName(AssemblyName));
-                Type supType = assembly.GetType($"{AssemblyName}.{TypeName}");
-                if (supType != null)
-                {
-                    try { Activator.CreateInstance(supType); }
-                    catch (MissingMethodException) { }
-                }
-                return supType != null;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public static CoreDispatcher TryGetForCurrentCoreDispatcher()
         {
             try
@@ -407,7 +388,7 @@ namespace CoolapkLite.Helpers
             {
                 if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
                 {
-                    (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
+                    (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
                     if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                     {
                         window.TitleBar.ExtendsContentIntoTitleBar = true;
@@ -418,7 +399,7 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    return await WindowHelper.CreateWindow((window) =>
+                    return await WindowHelper.CreateWindowAsync((window) =>
                     {
                         if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                         {
@@ -606,10 +587,10 @@ namespace CoolapkLite.Helpers
             return false;
         }
 
-        public static Task<bool> OpenActivatedEventArgs(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>
-            mainPage.MainFrame.OpenActivatedEventArgs(args);
+        public static Task<bool> OpenActivatedEventArgsAsync(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>
+            mainPage.MainFrame.OpenActivatedEventArgsAsync(args);
 
-        public static async Task<bool> OpenActivatedEventArgs(this Frame frame, IActivatedEventArgs args)
+        public static async Task<bool> OpenActivatedEventArgsAsync(this Frame frame, IActivatedEventArgs args)
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             switch (args.Kind)

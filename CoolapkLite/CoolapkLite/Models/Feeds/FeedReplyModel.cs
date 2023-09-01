@@ -129,7 +129,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public async Task ChangeLike()
+        public async Task ChangeLikeAsync()
         {
             UriType type = Liked ? UriType.PostFeedUnlike : UriType.PostFeedLike;
             (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetOldUri(type, "Reply", ID), null, true);

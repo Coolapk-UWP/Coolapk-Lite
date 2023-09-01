@@ -116,12 +116,12 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "PinTileButton":
                     DisabledCopy();
-                    _ = PinSecondaryTile(element.Tag as FeedModelBase);
+                    _ = PinSecondaryTileAsync(element.Tag as FeedModelBase);
                     break;
 
                 case "LikeButton":
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLike();
+                    await (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":
@@ -166,14 +166,14 @@ namespace CoolapkLite.Controls.DataTemplates
             }
         }
 
-        private async Task<bool> PinSecondaryTile(FeedModelBase feed)
+        private async Task<bool> PinSecondaryTileAsync(FeedModelBase feed)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
 
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTile(tileId, $"{feed.UserInfo.UserName}的{feed.Info}", feed.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, $"{feed.UserInfo.UserName}的{feed.Info}", feed.Url);
             if (isPinned)
             {
                 try

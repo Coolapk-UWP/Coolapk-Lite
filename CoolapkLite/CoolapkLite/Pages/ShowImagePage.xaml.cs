@@ -206,10 +206,10 @@ namespace CoolapkLite.Pages
         {
             switch ((sender as FrameworkElement).Name)
             {
-                case "ZoomUp":
+                case nameof(ZoomUp):
                     _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor + 0.1f);
                     break;
-                case "ZoomDown":
+                case nameof(ZoomDown):
                     _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor - 0.1f);
                     break;
             }
@@ -265,7 +265,7 @@ namespace CoolapkLite.Pages
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await Provider.GetImageDataPackage(args.Data, "拖拽图片");
+            await Provider.GetImageDataPackageAsync(args.Data, "拖拽图片");
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)

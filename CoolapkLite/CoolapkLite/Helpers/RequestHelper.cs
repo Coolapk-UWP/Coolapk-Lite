@@ -142,7 +142,7 @@ namespace CoolapkLite.Helpers
         }
 #pragma warning restore 0612
 
-        public static async Task<string[]> UploadImages(IEnumerable<UploadFileFragment> fragments, Extension extension)
+        public static async Task<string[]> UploadImagesAsync(IEnumerable<UploadFileFragment> fragments, Extension extension)
         {
             ValueSet message = new ValueSet
             {
@@ -154,10 +154,10 @@ namespace CoolapkLite.Helpers
                 ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() })
             };
-            return await extension.Invoke(message) as string[];
+            return await extension.InvokeAsync(message) as string[];
         }
 
-        public static async Task<(bool isSucceed, string result)> UploadImage(byte[] image, string name)
+        public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
@@ -181,7 +181,7 @@ namespace CoolapkLite.Helpers
             return (false, null);
         }
 
-        public static async Task<bool> CheckLogin()
+        public static async Task<bool> CheckLoginAsync()
         {
             (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
             return isSucceed;

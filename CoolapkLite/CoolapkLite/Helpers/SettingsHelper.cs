@@ -183,7 +183,7 @@ namespace CoolapkLite.Helpers
 
         public static void InvokeLoginChanged(string sender, bool args) => LoginChanged?.Invoke(sender, args);
 
-        public static async Task<bool> Login()
+        public static async Task<bool> LoginAsync()
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
@@ -206,7 +206,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
+                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLoginAsync())
                 {
                     Logout();
                     return false;
@@ -222,7 +222,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<bool> Login(string Uid, string UserName, string Token)
+        public static async Task<bool> LoginAsync(string Uid, string UserName, string Token)
         {
             if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
             {
@@ -239,7 +239,7 @@ namespace CoolapkLite.Helpers
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
                 }
-                if (await RequestHelper.CheckLogin())
+                if (await RequestHelper.CheckLoginAsync())
                 {
                     Set(SettingsHelper.Uid, Uid);
                     Set(SettingsHelper.Token, Token);
@@ -279,7 +279,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLogin();
+                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync();
             }
         }
 

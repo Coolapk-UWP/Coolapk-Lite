@@ -15,11 +15,11 @@ namespace CoolapkLite.BackgroundTasks
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            await UpdateNotifications();
+            await UpdateNotificationsAsync();
             deferral.Complete();
         }
 
-        private async Task UpdateNotifications()
+        private async Task UpdateNotificationsAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {

@@ -76,17 +76,17 @@ namespace CoolapkLite.Pages.ToolsPages
             {
                 if (e.Column.SortDirection == null)
                 {
-                    _ = Provider.SortData(e.Column.Tag.ToString(), true);
+                    _ = Provider.SortDataAsync(e.Column.Tag.ToString(), true);
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
                 }
                 else if (e.Column.SortDirection == DataGridSortDirection.Ascending)
                 {
-                    _ = Provider.SortData(e.Column.Tag.ToString(), false);
+                    _ = Provider.SortDataAsync(e.Column.Tag.ToString(), false);
                     e.Column.SortDirection = DataGridSortDirection.Descending;
                 }
                 else
                 {
-                    _ = Provider.SortData(e.Column.Tag.ToString(), true);
+                    _ = Provider.SortDataAsync(e.Column.Tag.ToString(), true);
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
                 }
             }

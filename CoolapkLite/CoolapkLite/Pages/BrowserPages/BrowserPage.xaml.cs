@@ -91,7 +91,7 @@ namespace CoolapkLite.Pages.BrowserPages
         {
             if (Provider.IsLoginPage && args.Uri.AbsoluteUri == "https://www.coolapk.com/")
             {
-                await CheckLogin();
+                await CheckLoginAsync();
             }
             else if (args.Uri.AbsoluteUri == UriHelper.LoginUri)
             {
@@ -110,11 +110,11 @@ namespace CoolapkLite.Pages.BrowserPages
             }
         }
 
-        private async Task CheckLogin()
+        private async Task CheckLoginAsync()
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
             this.ShowMessage(loader.GetString("Logging"));
-            if (await SettingsHelper.Login())
+            if (await SettingsHelper.LoginAsync())
             {
                 if (Frame.CanGoBack)
                 {
@@ -137,7 +137,7 @@ namespace CoolapkLite.Pages.BrowserPages
             ContentDialogResult result = await Dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                _ = CheckLogin();
+                _ = CheckLoginAsync();
             }
             else
             {
@@ -147,7 +147,7 @@ namespace CoolapkLite.Pages.BrowserPages
 
         private void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(WebView.Source);
 
-        private void TryLoginButton_Click(object sender, RoutedEventArgs e) => _ = CheckLogin();
+        private void TryLoginButton_Click(object sender, RoutedEventArgs e) => _ = CheckLoginAsync();
 
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => WebView.Refresh();
     }
