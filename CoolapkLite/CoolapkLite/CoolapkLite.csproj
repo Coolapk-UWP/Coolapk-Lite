@@ -31,7 +31,8 @@
     <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == ''">False</IsUseNetCore463>
+    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == ''">True</IsUseNetCore463>
+    <IsUpdateCIManifest Condition="'$(IsUpdateCIManifest)' == ''">False</IsUpdateCIManifest>
     <TargetPlatformMinRevision Condition="'$(IsUseNetCore463)' == 'True'">16299</TargetPlatformMinRevision>
     <TargetPlatformMinRevision Condition="'$(TargetPlatformMinRevision)' == ''">10240</TargetPlatformMinRevision>
   </PropertyGroup>
@@ -40,7 +41,7 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -52,7 +53,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -65,7 +66,7 @@
     <OutputPath>bin\ARM\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -77,7 +78,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -90,7 +91,7 @@
     <OutputPath>bin\ARM64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -103,7 +104,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -116,7 +117,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -128,7 +129,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -141,8 +142,9 @@
     <IsNetCore463 Condition="'$(TargetPlatformMinVersion)' == '10.0.16299.0'">True</IsNetCore463>
     <IsNetCore463 Condition="'$(IsNetCore463)' == ''">False</IsNetCore463>
     <AppxManifestName Condition="'$(IsNetCore463)' == 'True'">Package.Feature.appxmanifest</AppxManifestName>
-	<AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
+    <AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
     <DefineConstants Condition="'$(IsNetCore463)' == 'True'">$(DefineConstants);NETCORE463</DefineConstants>
+    <NoWarn Condition="'$(IsNetCore463)' == 'True'">$(NoWarn);WMC0151</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -1526,6 +1528,7 @@
   </PropertyGroup>
   <Import Project="FeatureAddon.targets" Condition="'$(IsNetCore463)' == 'True' and Exists('FeatureAddon.targets')" />
   <Import Project="UpdateMinVersion.targets" Condition="'$(IsUseNetCore463)' == 'True' and Exists('UpdateMinVersion.targets')" />
+  <Import Project="UpdateCIManifest.targets" Condition="'$(IsUpdateCIManifest)' == 'True' and Exists('UpdateCIManifest.targets')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

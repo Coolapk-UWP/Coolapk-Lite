@@ -14,53 +14,53 @@
       <Using Namespace="System.Xml.Linq" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[
-if (string.IsNullOrEmpty(TargetPlatformMinVersion))
-{
-    return true;
-}
+            if (string.IsNullOrEmpty(TargetPlatformMinVersion))
+            {
+                return _Success;
+            }
 
-try
-{
-    var xdoc = XDocument.Load(AppxManifestPath);
-    var ns = xdoc.Root.Name.Namespace;
-    var targetDeviceFamily = xdoc.Root.Descendants(ns + "TargetDeviceFamily");
-    if (targetDeviceFamily != null)
-    {
-	    foreach (var node in targetDeviceFamily)
-		{
-            var name = node.Attribute("Name");
-			if (name != null && name.Value == "Windows.Universal")
-			{
-                var xattr = node.Attribute("MinVersion");
-                if (xattr != null)
+            try
+            {
+                var xdoc = XDocument.Load(AppxManifestPath);
+                var ns = xdoc.Root.Name.Namespace;
+                var targetDeviceFamily = xdoc.Root.Descendants(ns + "TargetDeviceFamily");
+                if (targetDeviceFamily != null)
                 {
-                    xattr.SetValue(TargetPlatformMinVersion);
+                    foreach (var node in targetDeviceFamily)
+                    {
+                        var name = node.Attribute("Name");
+                        if (name != null && name.Value == "Windows.Universal")
+                        {
+                            var xattr = node.Attribute("MinVersion");
+                            if (xattr != null)
+                            {
+                                xattr.SetValue(TargetPlatformMinVersion);
+                            }
+                            else
+                            {
+                                Log.LogWarning("No min version found in target device family node.");
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    Log.LogWarning("No min version found in target device family node.");
+                    Log.LogWarning("No target device family node found in Appx Manifest.");
                 }
-			}
-		}
-    }
-    else
-    {
-        Log.LogWarning("No target device family node found in Appx Manifest.");
-    }
-    xdoc.Save(AppxManifestPath);
-}
-catch (Exception)
-{
-    Log.LogError("Failed to load Appx Manifest.");
-    return false;
-}
+                xdoc.Save(AppxManifestPath);
+            }
+            catch (Exception)
+            {
+                Log.LogError("Failed to load Appx Manifest.");
+                _Success = false;
+            }
         ]]>
       </Code>
     </Task>
   </UsingTask>
 
   <Target
-    Name="_TargetPlatformMinVersionOverride"
+    Name="TargetPlatformMinVersionOverride"
     AfterTargets="AfterGenerateAppxManifest"
     Condition="'$(TargetPlatformMinVersionOverride)' != ''">
     <Message Importance="high" Text="TargetPlatformMinVersionOverride" />

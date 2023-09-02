@@ -52,6 +52,8 @@ steps:
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
     msbuildArgs: '/p:IsUseNetCore463=True
+                  /p:IsUpdateCIManifest=True
+                  /p:CIBuildID="$(Build.BuildId)"
                   /p:AppxBundlePlatforms="$(buildPlatform)"
                   /p:AppxPackageDir="$(appxPackageDir)"
                   /p:AppxBundle=Always
