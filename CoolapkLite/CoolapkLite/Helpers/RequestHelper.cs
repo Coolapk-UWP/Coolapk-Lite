@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Models.Update;
 using CoolapkLite.Models.Upload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,14 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
+
+#if NETCORE463
+using System.Linq;
+#else
+using System.Net.Http.Headers;
+using CoolapkLite.Models.Update;
+using Windows.Foundation.Collections;
+#endif
 
 namespace CoolapkLite.Helpers
 {
@@ -142,6 +147,60 @@ namespace CoolapkLite.Helpers
         }
 #pragma warning restore 0612
 
+#if NETCORE463
+        public static async Task<List<string>> UploadImages(IEnumerable<UploadFileFragment> images)
+        {
+            List<string> responses = new List<string>();
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                string json = JsonConvert.SerializeObject(images, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                using (StringContent uploadBucket = new StringContent("image"))
+                using (StringContent uploadDir = new StringContent("feed"))
+                using (StringContent is_anonymous = new StringContent("0"))
+                using (StringContent uploadFileList = new StringContent(json))
+                {
+                    content.Add(uploadBucket, "uploadBucket");
+                    content.Add(uploadDir, "uploadDir");
+                    content.Add(is_anonymous, "is_anonymous");
+                    content.Add(uploadFileList, "uploadFileList");
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content);
+                    if (isSucceed)
+                    {
+                        UploadPicturePrepareResult data = result.ToObject<UploadPicturePrepareResult>();
+                        foreach (UploadFileInfo info in data.FileInfo)
+                        {
+                            UploadFileFragment image = images.FirstOrDefault((x) => x.MD5 == info.MD5);
+                            if (image == null) { continue; }
+                            using (Stream stream = image.Bytes.GetStream())
+                            {
+                                string response = await Task.Run(() => OSSUploadHelper.OssUpload(data.UploadPrepareInfo, info, stream, "image/png"));
+                                if (!string.IsNullOrEmpty(response))
+                                {
+                                    try
+                                    {
+                                        JObject token = JObject.Parse(response);
+                                        if (token.TryGetValue("data", out JToken value)
+                                            && ((JObject)value).TryGetValue("url", out JToken url)
+                                            && !string.IsNullOrEmpty(url.ToString()))
+                                        {
+                                            responses.Add(url.ToString());
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
+                                        UIHelper.ShowMessage("上传失败");
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return responses;
+        }
+#else
         public static async Task<string[]> UploadImagesAsync(IEnumerable<UploadFileFragment> fragments, Extension extension)
         {
             ValueSet message = new ValueSet
@@ -181,12 +240,6 @@ namespace CoolapkLite.Helpers
             return (false, null);
         }
 
-        public static async Task<bool> CheckLoginAsync()
-        {
-            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
-            return isSucceed;
-        }
-
         private class IgnoreIgnoredContractResolver : DefaultContractResolver
         {
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
@@ -204,6 +257,13 @@ namespace CoolapkLite.Helpers
                 }
                 return list;
             }
+        }
+#endif
+
+        public static async Task<bool> CheckLoginAsync()
+        {
+            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
+            return isSucceed;
         }
     }
 }

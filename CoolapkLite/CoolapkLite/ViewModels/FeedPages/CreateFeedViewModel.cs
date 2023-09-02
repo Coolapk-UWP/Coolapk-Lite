@@ -10,10 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
@@ -22,6 +20,11 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+
+#if !NETCORE463
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+#endif
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -161,6 +164,15 @@ namespace CoolapkLite.ViewModels.FeedPages
             IList<string> results = new List<string>();
             if (!Pictures.Any()) { return results; }
             Dispatcher.ShowMessage("上传图片");
+#if NETCORE463
+            List<UploadFileFragment> fragments = new List<UploadFileFragment>();
+            foreach (WriteableBitmap pic in Pictures)
+            {
+                fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
+            }
+            results = await RequestHelper.UploadImages(fragments);
+            UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+#else
             if (ExtensionManager.IsSupported)
             {
                 await ExtensionManager.Instance.InitializeAsync(Dispatcher);
@@ -202,6 +214,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
                 Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
             }
+#endif
             return results;
         }
 

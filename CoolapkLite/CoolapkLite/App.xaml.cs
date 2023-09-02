@@ -280,7 +280,10 @@ namespace CoolapkLite
                 if (time < 15) { return; }
 
                 const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
-#if ARM64
+#if NETCORE463
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
+
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
                 { return; }
@@ -303,7 +306,10 @@ namespace CoolapkLite
             void RegisterNotificationsTask()
             {
                 const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
-#if ARM64
+#if NETCORE463
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
+
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
                 { return; }

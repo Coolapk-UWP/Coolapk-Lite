@@ -42,10 +42,12 @@ namespace CoolapkLite.Helpers
             return new string(charArray);
         }
 
+#if !NETCORE463
         public static bool Contains(this string text, string value, StringComparison comparisonType)
         {
             return text.IndexOf(value, comparisonType) != -1;
         }
+#endif
 
         public static string GetSizeString(this double size)
         {
@@ -240,6 +242,12 @@ namespace CoolapkLite.Helpers
                 Array.Copy(buffer, ret, read);
                 return ret;
             }
+        }
+
+        public static Stream GetStream(this byte[] bytes)
+        {
+            Stream stream = new MemoryStream(bytes);
+            return stream;
         }
     }
 }
