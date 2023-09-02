@@ -59,10 +59,12 @@ namespace CoolapkLite
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             EnsureWindow(e);
+#if !CANARY
             if (SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching))
             {
                 CheckUpdate();
             }
+#endif
         }
 
         protected override void OnActivated(IActivatedEventArgs e)

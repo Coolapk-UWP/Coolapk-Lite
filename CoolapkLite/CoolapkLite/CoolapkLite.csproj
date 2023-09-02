@@ -31,7 +31,7 @@
     <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == ''">True</IsUseNetCore463>
+    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == ''">False</IsUseNetCore463>
     <IsUpdateCIManifest Condition="'$(IsUpdateCIManifest)' == ''">False</IsUpdateCIManifest>
     <TargetPlatformMinRevision Condition="'$(IsUseNetCore463)' == 'True'">16299</TargetPlatformMinRevision>
     <TargetPlatformMinRevision Condition="'$(TargetPlatformMinRevision)' == ''">10240</TargetPlatformMinRevision>
@@ -144,6 +144,7 @@
     <AppxManifestName Condition="'$(IsNetCore463)' == 'True'">Package.Feature.appxmanifest</AppxManifestName>
     <AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
     <DefineConstants Condition="'$(IsNetCore463)' == 'True'">$(DefineConstants);NETCORE463</DefineConstants>
+    <DefineConstants Condition="'$(IsUpdateCIManifest)' == 'True'">$(DefineConstants);CANARY</DefineConstants>
     <NoWarn Condition="'$(IsNetCore463)' == 'True'">$(NoWarn);WMC0151</NoWarn>
   </PropertyGroup>
   <ItemGroup>

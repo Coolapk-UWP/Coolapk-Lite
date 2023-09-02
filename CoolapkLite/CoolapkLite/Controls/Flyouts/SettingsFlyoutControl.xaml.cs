@@ -123,7 +123,12 @@ namespace CoolapkLite.Controls
                     _ = (Provider?.CleanCacheAsync());
                     break;
                 case "CheckUpdate":
+#if CANARY
+                    this.ShowMessage("Canary 版暂不支持检查更新，即将跳转到自动编译列表");
+                    _ = Launcher.LaunchUriAsync(new Uri("https://dev.azure.com/wherewhere/Coolapk-UWP/_build?definitionId=5"));
+#else
                     _ = (Provider?.CheckUpdateAsync());
+#endif
                     break;
                 case "AccountSetting":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));
