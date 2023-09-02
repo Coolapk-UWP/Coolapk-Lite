@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.System.Profile;
 using Windows.UI.Core;
 
@@ -23,6 +24,22 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public CoreDispatcher Dispatcher { get; }
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
+
+        public bool IsAppWindowSupported { get; } = WindowHelper.IsAppWindowSupported;
+
+        public bool IsSearchPaneSupported { get; } = SettingsPaneRegister.IsSearchPaneSupported;
+
+        public bool IsSettingsPaneSupported { get; } = SettingsPaneRegister.IsSettingsPaneSupported;
+
+        public bool IsAppExtensionSupported { get; } = ExtensionManager.IsSupported;
+
+        public bool IsCompactOverlaySupported { get; } = ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported");
+        
+        public bool IsGetElementVisualSupported { get; } = ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
+
+        public bool IsAppDiagnosticInfoSupported { get; } = ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo");
+
+        public bool IsXamlCompositionBrushSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase");
 
         public List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
 

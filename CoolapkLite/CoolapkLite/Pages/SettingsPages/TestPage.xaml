@@ -141,10 +141,12 @@
                         <Button
                             Click="Button_Click"
                             Content="进入画中画模式"
+                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
                             Tag="EnterPIP" />
                         <Button
                             Click="Button_Click"
                             Content="退出"
+                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
                             Tag="OutPIP" />
                     </control:StackPanelEx>
                     <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind Provider.IsUseLiteHome, Mode=TwoWay}" />
@@ -152,13 +154,18 @@
                         <Button
                             Click="Button_Click"
                             Content="打开 Charm 设置"
+                            IsEnabled="{x:Bind Provider.IsSettingsPaneSupported}"
                             Tag="OpenCharmSettings" />
                         <Button
                             Click="Button_Click"
                             Content="打开 Charm 搜索"
+                            IsEnabled="{x:Bind Provider.IsSearchPaneSupported}"
                             Tag="OpenCharmSearch" />
                     </control:StackPanelEx>
-                    <ToggleSwitch Header="是否使用 AppWindow" IsOn="{x:Bind Provider.IsUseAppWindow, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        Header="是否使用 AppWindow"
+                        IsEnabled="{x:Bind Provider.IsAppWindowSupported}"
+                        IsOn="{x:Bind Provider.IsUseAppWindow, Mode=TwoWay}" />
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
@@ -167,11 +174,18 @@
                         <Button
                             Click="Button_Click"
                             Content="新建 AppWindow"
+                            IsEnabled="{x:Bind Provider.IsAppWindowSupported}"
                             Tag="NewAppWindow"
                             ToolTipService.ToolTip="仅支持 1903 及以上" />
                     </control:StackPanelEx>
-                    <ToggleSwitch Header="是否使用模糊笔刷" IsOn="{x:Bind Provider.IsUseBlurBrush, Mode=TwoWay}" />
-                    <ToggleSwitch Header="是否使用合成动画" IsOn="{x:Bind Provider.IsUseCompositor, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        Header="是否使用模糊笔刷"
+                        IsEnabled="{x:Bind Provider.IsXamlCompositionBrushSupported}"
+                        IsOn="{x:Bind Provider.IsUseBlurBrush, Mode=TwoWay}" />
+                    <ToggleSwitch
+                        Header="是否使用合成动画"
+                        IsEnabled="{x:Bind Provider.IsGetElementVisualSupported}"
+                        IsOn="{x:Bind Provider.IsUseCompositor, Mode=TwoWay}" />
                     <ComboBox
                         Header="切换语言 (需要重启)"
                         ItemsSource="{x:Bind Provider.SupportCultures}"
@@ -190,6 +204,7 @@
                         <Button
                             Click="Button_Click"
                             Content="管理插件"
+                            IsEnabled="{x:Bind Provider.IsAppExtensionSupported}"
                             Tag="GoToExtensionPage" />
                         <Button
                             Click="Button_Click"
@@ -210,6 +225,7 @@
                         <Button
                             Click="Button_Click"
                             Content="最小化应用"
+                            IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
                             Tag="MinimizeApp" />
                     </control:StackPanelEx>
                     <Button

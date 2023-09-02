@@ -26,11 +26,23 @@ namespace CoolapkLite.Common
         private UIElement element;
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
+        public static bool IsSearchPaneSupported { get; } = ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane");
+        public static bool IsSettingsPaneSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane");
+
         public SettingsPaneRegister(Window window)
         {
             element = window.Content;
 
-            if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+            if (IsSearchPaneSupported)
+            {
+                SearchPane searchPane = SearchPane.GetForCurrentView();
+                searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
+                searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
+                searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
+                searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+            }
+
+            if (IsSettingsPaneSupported)
             {
                 SettingsPane searchPane = SettingsPane.GetForCurrentView();
                 searchPane.CommandsRequested -= OnCommandsRequested;
@@ -38,35 +50,26 @@ namespace CoolapkLite.Common
                 window.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
                 window.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
             }
-
-            if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
-            {
-                SearchPane searchPane = SearchPane.GetForCurrentView();
-                searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
-                searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
-                searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
-                searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
-            }
         }
 
         public SettingsPaneRegister(UIElement element)
         {
             this.element = element;
 
-            if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
-            {
-                SettingsPane searchPane = SettingsPane.GetForCurrentView();
-                searchPane.CommandsRequested -= OnCommandsRequested;
-                searchPane.CommandsRequested += OnCommandsRequested;
-            }
-
-            if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
+            if (IsSearchPaneSupported)
             {
                 SearchPane searchPane = SearchPane.GetForCurrentView();
                 searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
                 searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
                 searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
                 searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+            }
+
+            if (IsSettingsPaneSupported)
+            {
+                SettingsPane searchPane = SettingsPane.GetForCurrentView();
+                searchPane.CommandsRequested -= OnCommandsRequested;
+                searchPane.CommandsRequested += OnCommandsRequested;
             }
         }
 
@@ -76,17 +79,17 @@ namespace CoolapkLite.Common
 
         public void Unregister()
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
-            {
-                SettingsPane.GetForCurrentView().CommandsRequested -= OnCommandsRequested;
-                element.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
-            }
-
-            if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
+            if (IsSearchPaneSupported)
             {
                 SearchPane searchPane = SearchPane.GetForCurrentView();
                 searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
                 searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
+            }
+
+            if (IsSettingsPaneSupported)
+            {
+                SettingsPane.GetForCurrentView().CommandsRequested -= OnCommandsRequested;
+                element.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
             }
 
             element = null;
@@ -185,12 +188,18 @@ namespace CoolapkLite.Common
                         switch (args.VirtualKey)
                         {
                             case VirtualKey.X:
-                                SettingsPane.Show();
-                                args.Handled = true;
+                                if (IsSettingsPaneSupported)
+                                {
+                                    SettingsPane.Show();
+                                    args.Handled = true;
+                                }
                                 break;
                             case VirtualKey.Q:
-                                SearchPane.GetForCurrentView().Show();
-                                args.Handled = true;
+                                if (IsSearchPaneSupported)
+                                {
+                                    SearchPane.GetForCurrentView().Show();
+                                    args.Handled = true;
+                                }
                                 break;
                         }
                     }

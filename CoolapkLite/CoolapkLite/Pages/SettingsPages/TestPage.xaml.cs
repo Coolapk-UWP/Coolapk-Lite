@@ -74,7 +74,8 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OutPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
-                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
+                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                        && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
                     break;
                 case "CloseApp":
@@ -83,7 +84,8 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "EnterPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
-                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                        && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
                 case "CustomUA":
@@ -173,9 +175,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "MinimizeApp":
                     if (ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo"))
-                    {
-                        _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync();
-                    }
+                    { _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync(); }
                     break;
                 case "OutFullWindow":
                     if (this.IsAppWindow())
@@ -202,17 +202,15 @@ namespace CoolapkLite.Pages.SettingsPages
                     this.ErrorProgressBar();
                     break;
                 case "OpenCharmSearch":
-                    if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
+                    if (SettingsPaneRegister.IsSearchPaneSupported)
                     { SearchPane.GetForCurrentView().Show(); }
                     break;
                 case "GoToExtensionPage":
                     if (ExtensionManager.IsSupported)
-                    {
-                        _ = Frame.Navigate(typeof(ExtensionPage));
-                    }
+                    { _ = Frame.Navigate(typeof(ExtensionPage)); }
                     break;
                 case "OpenCharmSettings":
-                    if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+                    if (SettingsPaneRegister.IsSettingsPaneSupported)
                     { SettingsPane.Show(); }
                     break;
                 case "PausedProgressBar":
@@ -220,13 +218,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "ProgressRingState":
                     if (UIHelper.IsShowingProgressBar)
-                    {
-                        this.HideProgressBar();
-                    }
+                    { this.HideProgressBar(); }
                     else
-                    {
-                        this.ShowProgressBar();
-                    }
+                    { this.ShowProgressBar(); }
                     break;
                 case "GoToFansAnalyzePage":
                     _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("1122745", Dispatcher));
@@ -239,35 +233,25 @@ namespace CoolapkLite.Pages.SettingsPages
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             ComboBox ComboBox = sender as ComboBox;
-            switch (ComboBox.Tag.ToString())
-            {
-                case "Language":
-                    string lang = SettingsHelper.Get<string>(SettingsHelper.CurrentLanguage);
-                    lang = lang == LanguageHelper.AutoLanguageCode ? LanguageHelper.GetCurrentLanguage() : lang;
-                    CultureInfo culture = new CultureInfo(lang);
-                    ComboBox.SelectedItem = culture;
-                    break;
-            }
+            string lang = SettingsHelper.Get<string>(SettingsHelper.CurrentLanguage);
+            lang = lang == LanguageHelper.AutoLanguageCode ? LanguageHelper.GetCurrentLanguage() : lang;
+            CultureInfo culture = new CultureInfo(lang);
+            ComboBox.SelectedItem = culture;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox ComboBox = sender as ComboBox;
-            switch (ComboBox.Tag.ToString())
+            CultureInfo culture = ComboBox.SelectedItem as CultureInfo;
+            if (culture.Name != LanguageHelper.GetCurrentLanguage())
             {
-                case "Language":
-                    CultureInfo culture = ComboBox.SelectedItem as CultureInfo;
-                    if (culture.Name != LanguageHelper.GetCurrentLanguage())
-                    {
-                        ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
-                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
-                    }
-                    else
-                    {
-                        ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
-                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
-                    }
-                    break;
+                ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
+                SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
+            }
+            else
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
             }
         }
 

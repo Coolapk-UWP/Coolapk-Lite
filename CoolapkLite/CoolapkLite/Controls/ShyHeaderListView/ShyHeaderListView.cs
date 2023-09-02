@@ -28,7 +28,7 @@ namespace CoolapkLite.Controls
         private double _topHeight;
         private bool? _isThreshold;
         private ScrollProgressProvider _progressProvider;
-        private readonly bool IsGetElementVisualSupported = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
+        private readonly bool IsUseCompositor = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         public static readonly DependencyProperty TopHeaderProperty =
             DependencyProperty.Register(
@@ -111,7 +111,7 @@ namespace CoolapkLite.Controls
         public ShyHeaderListView()
         {
             DefaultStyleKey = typeof(ShyHeaderListView);
-            if (IsGetElementVisualSupported)
+            if (IsUseCompositor)
             {
                 _progressProvider = new ScrollProgressProvider();
                 _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
@@ -203,7 +203,7 @@ namespace CoolapkLite.Controls
         {
             Grid TopHeader = sender as Grid;
             _topHeight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            if (IsGetElementVisualSupported)
+            if (IsUseCompositor)
             {
                 if (_progressProvider == null)
                 {
@@ -221,7 +221,7 @@ namespace CoolapkLite.Controls
             Grid ListViewHeader = sender as Grid;
             Canvas.SetZIndex(ItemsPanelRoot, -1);
 
-            if (IsGetElementVisualSupported)
+            if (IsUseCompositor)
             {
                 if (_progressProvider == null)
                 {
