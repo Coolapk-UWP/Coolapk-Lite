@@ -216,23 +216,23 @@ namespace CoolapkLite.Pages
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!(FlipView.SelectedItem is ImageModel image)) { return; }
             switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Copy":
-                    Provider.CopyPic();
+                    image.CopyPic();
                     break;
                 case "Save":
-                    Provider.SavePic();
+                    image.SavePic();
                     break;
                 case "Share":
-                    Provider.SharePic();
+                    image.SharePic();
                     break;
                 case "Refresh":
-                    _ = Provider.Refresh();
+                    _ = image.Refresh();
                     break;
                 case "Origin":
-                    Provider.Images[Provider.Index].Type &= (ImageType)0xFE;
-                    Provider.ShowOrigin = false;
+                    image.Type &= (ImageType)0xFE;
                     break;
             }
         }
@@ -264,7 +264,7 @@ namespace CoolapkLite.Pages
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await Provider.GetImageDataPackageAsync(args.Data, "拖拽图片");
+            await (FlipView.SelectedItem as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)

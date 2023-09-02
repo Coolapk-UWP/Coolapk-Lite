@@ -57,7 +57,7 @@ namespace CoolapkLite.Helpers
             {
                 if (type.HasFlag(ImageType.Small))
                 {
-                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
+                    if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
                 }
 
@@ -111,7 +111,7 @@ namespace CoolapkLite.Helpers
             {
                 if (type.HasFlag(ImageType.Small))
                 {
-                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
+                    if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
                 }
 

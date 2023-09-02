@@ -47,6 +47,29 @@ namespace CoolapkLite.Controls
             }
         }
 
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element && element.Tag is ImageModel image)) { return; }
+            switch (element.Name)
+            {
+                case "CopyButton":
+                    image.CopyPic();
+                    break;
+                case "SaveButton":
+                    image.SavePic();
+                    break;
+                case "ShareButton":
+                    image.SharePic();
+                    break;
+                case nameof(RefreshButton):
+                    _ = image.Refresh();
+                    break;
+                case "OriginButton":
+                    image.Type &= (ImageType)0xFE;
+                    break;
+            }
+        }
+
         private async void DeviceHyperlink_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
             this.ShowProgressBar();

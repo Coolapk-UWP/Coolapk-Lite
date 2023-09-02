@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 
@@ -84,6 +85,13 @@ namespace CoolapkLite.Controls.Writers
             Run run = new Run { Text = text };
             BindingOperations.SetBinding(run, TextElement.FontFamilyProperty, CreateBinding(textBlockEx, nameof(textBlockEx.SymbolFontFamily)));
             return run;
+        }
+
+        protected static FontIcon CreateFontIcon(string glyph, TextBlockEx textBlockEx)
+        {
+            FontIcon fontIcon = new FontIcon { Glyph = glyph };
+            fontIcon.SetBinding(FontIcon.FontFamilyProperty, CreateBinding(textBlockEx, nameof(textBlockEx.SymbolFontFamily)));
+            return fontIcon;
         }
     }
 }

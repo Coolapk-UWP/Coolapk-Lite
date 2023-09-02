@@ -4,14 +4,19 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -28,6 +33,76 @@ namespace CoolapkLite.Models.Images
         public static bool IsAutoPlaySupported => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Imaging.BitmapImage", "AutoPlay");
 
         public CoreDispatcher Dispatcher { get; private set; }
+
+        public string Title => GetTitle();
+
+        public bool IsSmallImage => Type.HasFlag(ImageType.Small);
+
+        private bool isLongPic = false;
+        public bool IsLongPic
+        {
+            get => isLongPic;
+            private set => SetProperty(ref isLongPic, value);
+        }
+
+        private bool isWidePic = false;
+        public bool IsWidePic
+        {
+            get => isWidePic;
+            private set => SetProperty(ref isWidePic, value);
+        }
+
+        private bool isGif = false;
+        public bool IsGif
+        {
+            get => isGif;
+            private set => SetProperty(ref isGif, value);
+        }
+
+        private bool isLoading = true;
+        public bool IsLoading
+        {
+            get => isLoading;
+            private set => SetProperty(ref isLoading, value);
+        }
+
+        private string uri;
+        public string Uri
+        {
+            get => uri;
+            set
+            {
+                if (uri != value)
+                {
+                    uri = value;
+                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    {
+                        _ = GetImageAsync();
+                    }
+                    RaisePropertyChangedEvent();
+                    RaisePropertyChangedEvent(nameof(Title));
+                }
+            }
+        }
+
+        private ImageType type;
+        public ImageType Type
+        {
+            get => type;
+            set
+            {
+                if (type != value)
+                {
+                    type = value;
+                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    {
+                        _ = GetImageAsync();
+                    }
+                    RaisePropertyChangedEvent();
+                    RaisePropertyChangedEvent(nameof(IsSmallImage));
+                }
+            }
+        }
 
         protected WeakReference<BitmapImage> pic;
         public BitmapImage Pic
@@ -58,27 +133,6 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        private bool isLongPic = false;
-        public bool IsLongPic
-        {
-            get => isLongPic;
-            private set => SetProperty(ref isLongPic, value);
-        }
-
-        private bool isWidePic = false;
-        public bool IsWidePic
-        {
-            get => isWidePic;
-            private set => SetProperty(ref isWidePic, value);
-        }
-
-        private bool isGif = false;
-        public bool IsGif
-        {
-            get => isGif;
-            private set => SetProperty(ref isGif, value);
-        }
-
         protected ImmutableArray<ImageModel> contextArray = ImmutableArray<ImageModel>.Empty;
         public ImmutableArray<ImageModel> ContextArray
         {
@@ -91,48 +145,6 @@ namespace CoolapkLite.Models.Images
                     RaisePropertyChangedEvent();
                 }
             }
-        }
-
-        private string uri;
-        public string Uri
-        {
-            get => uri;
-            set
-            {
-                if (uri != value)
-                {
-                    uri = value;
-                    RaisePropertyChangedEvent(nameof(IsGif));
-                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
-                    {
-                        _ = GetImageAsync();
-                    }
-                }
-            }
-        }
-
-        private ImageType type;
-        public ImageType Type
-        {
-            get => type;
-            set
-            {
-                if (type != value)
-                {
-                    type = value;
-                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
-                    {
-                        _ = GetImageAsync();
-                    }
-                }
-            }
-        }
-
-        private bool isLoading = true;
-        public bool IsLoading
-        {
-            get => isLoading;
-            private set => SetProperty(ref isLoading, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -264,6 +276,93 @@ namespace CoolapkLite.Models.Images
             }
         }
 
+        public async void CopyPic()
+        {
+            DataPackage dataPackage = await GetImageDataPackageAsync("复制图片");
+            Clipboard.SetContentWithOptions(dataPackage, null);
+        }
+
+        public async void SharePic()
+        {
+            DataPackage dataPackage = await GetImageDataPackageAsync("分享图片");
+            if (dataPackage != null)
+            {
+                DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
+                dataTransferManager.DataRequested += (sender, args) => { args.Request.Data = dataPackage; };
+                DataTransferManager.ShowShareUI();
+            }
+        }
+
+        public async void SavePic()
+        {
+            string url = Uri;
+            StorageFile image = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, url);
+            if (image == null)
+            {
+                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                Dispatcher.ShowMessage(str);
+                return;
+            }
+
+            string fileName = Title;
+            FileSavePicker fileSavePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
+                SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
+            };
+
+            string fileEx = fileName.Substring(fileName.LastIndexOf('.') + 1);
+            int index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+            fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
+            fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { "." + fileEx });
+
+            StorageFile file = await fileSavePicker.PickSaveFileAsync();
+            if (file != null)
+            {
+                using (Stream FolderStream = await file.OpenStreamForWriteAsync())
+                {
+                    using (IRandomAccessStreamWithContentType RandomAccessStream = await image.OpenReadAsync())
+                    {
+                        using (Stream ImageStream = RandomAccessStream.AsStreamForRead())
+                        {
+                            await ImageStream.CopyToAsync(FolderStream);
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task<DataPackage> GetImageDataPackageAsync(string title)
+        {
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Uri);
+            if (file == null) { return null; }
+            RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
+
+            DataPackage dataPackage = new DataPackage();
+            dataPackage.SetBitmap(bitmap);
+            dataPackage.Properties.Title = title;
+            dataPackage.Properties.Description = Title;
+
+            return dataPackage;
+        }
+
+        public async Task GetImageDataPackageAsync(DataPackage dataPackage, string title)
+        {
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Uri);
+            if (file == null)
+            {
+                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
+                Dispatcher.ShowMessage(str);
+                return;
+            }
+            RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
+
+            dataPackage.SetBitmap(bitmap);
+            dataPackage.Properties.Title = title;
+            dataPackage.Properties.Description = Title;
+            dataPackage.SetStorageItems(new IStorageItem[] { file });
+        }
+
         public ImageModel Clone(CoreDispatcher dispatcher)
         {
             if (contextArray.Any())
@@ -304,6 +403,12 @@ namespace CoolapkLite.Models.Images
                 RaisePropertyChangedEvent(nameof(Pic));
             }
             ContextArray.ForEach((x) => x.ChangeDispatcher(dispatcher));
+        }
+
+        public string GetTitle()
+        {
+            Match match = Regex.Match(Uri, @"[^/]+(?!.*/)");
+            return match.Success ? match.Value : $"CoolapkLite_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
         }
 
         public async Task Refresh() => await GetImageAsync();

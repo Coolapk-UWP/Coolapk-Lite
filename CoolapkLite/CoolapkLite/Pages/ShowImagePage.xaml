@@ -15,6 +15,7 @@
     Loaded="Page_Loaded"
     mc:Ignorable="d">
     <Page.Resources>
+        <cwuh:BindableValueHolder x:Key="FlipViewSelectedItemProxy" Value="{x:Bind FlipView.SelectedItem, Mode=OneWay}" />
         <converters:ZoomToolTipValueConverter x:Key="ZoomToolTipValueConverter" />
         <MenuFlyout x:Key="FlipViewContextFlyout">
             <MenuFlyoutItem
@@ -53,7 +54,7 @@
                 x:Uid="/ShowImagePage/OriginMenuItem"
                 Click="AppBarButton_Click"
                 Tag="Origin"
-                Visibility="{x:Bind Provider.ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                Visibility="{Binding Value.IsSmallImage, Source={StaticResource FlipViewSelectedItemProxy}, Converter={StaticResource BoolToVisibilityConverter}}">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                 </helpers:FlyoutBaseHelper.Icon>
@@ -200,8 +201,8 @@
                     Height="60"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    IsActive="{x:Bind Provider.IsLoading, Mode=OneWay}"
-                    Visibility="{x:Bind Provider.IsLoading, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible', Mode=OneWay}" />
+                    IsActive="{Binding Value.IsLoading, Source={StaticResource FlipViewSelectedItemProxy}}"
+                    Visibility="{Binding Value.IsLoading, Source={StaticResource FlipViewSelectedItemProxy}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible'}" />
             </Grid>
         </Grid>
         <CommandBar
@@ -242,7 +243,7 @@
                     x:Uid="/ShowImagePage/OriginButton"
                     Click="AppBarButton_Click"
                     Tag="Origin"
-                    Visibility="{Binding ShowOrigin, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{Binding Value.IsSmallImage, Source={StaticResource FlipViewSelectedItemProxy}, Converter={StaticResource BoolToVisibilityConverter}}">
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                     </AppBarButton.Icon>

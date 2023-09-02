@@ -11,7 +11,8 @@
             DragStarting="Border_DragStarting"
             KeyDown="Image_KeyDown"
             Tag="{Binding}"
-            Tapped="Image_Tapped">
+            Tapped="Image_Tapped"
+            ToolTipService.ToolTip="{Binding Title}">
             <Border.Background>
                 <ImageBrush ImageSource="{Binding Pic, Mode=OneWay}" Stretch="UniformToFill" />
             </Border.Background>
@@ -51,6 +52,16 @@
                         Tag="{Binding}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                        </helpers:FlyoutBaseHelper.Icon>
+                    </MenuFlyoutItem>
+                    <MenuFlyoutItem
+                        x:Name="OriginButton"
+                        x:Uid="/ShowImagePage/OriginMenuItem"
+                        Click="AppBarButton_Click"
+                        Tag="{Binding}"
+                        Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <helpers:FlyoutBaseHelper.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                         </helpers:FlyoutBaseHelper.Icon>
                     </MenuFlyoutItem>
                 </MenuFlyout>

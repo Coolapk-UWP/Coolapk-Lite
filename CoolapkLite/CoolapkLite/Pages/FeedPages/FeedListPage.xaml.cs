@@ -222,13 +222,13 @@ namespace CoolapkLite.Pages.FeedPages
             switch (element.Name)
             {
                 case "CopyButton":
-                    Provider.CopyPic(image);
+                    image.CopyPic();
                     break;
                 case "SaveButton":
-                    Provider.SavePic(image);
+                    image.SavePic();
                     break;
                 case "ShareButton":
-                    Provider.SharePic(image);
+                    image.SharePic();
                     break;
                 case nameof(RefreshButton):
                     _ = image.Refresh();
@@ -237,7 +237,7 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.ShowImageAsync(image);
                     break;
                 case "OriginButton":
-                    image.Type = ImageType.OriginImage;
+                    image.Type &= (ImageType)0xFE;
                     break;
             }
         }
@@ -262,7 +262,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await Provider.GetImageDataPackageAsync(args.Data, (sender as FrameworkElement).Tag as ImageModel, "拖拽图片");
+            await ((sender as FrameworkElement)?.Tag as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
         }
 
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)

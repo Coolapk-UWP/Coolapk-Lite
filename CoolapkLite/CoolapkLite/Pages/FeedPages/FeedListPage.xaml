@@ -93,6 +93,16 @@
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OriginButton"
+                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding Cover}"
+                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyoutSubItem>
                             <MenuFlyoutItem
                                 x:Name="AnalyzeButton"
@@ -192,6 +202,8 @@
                                         Width="160"
                                         Margin="0,4"
                                         Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Tag="/feed/18221454"
+                                        Tapped="FrameworkElement_Tapped"
                                         Value="{Binding NextLevelPercentage}" />
                                 </Grid>
                                 <TextBlock
@@ -567,6 +579,16 @@
                                                     Tag="{Binding}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="OriginButton"
+                                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{Binding}"
+                                                    Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
                                                 </MenuFlyoutItem>
                                             </MenuFlyout>
@@ -1062,6 +1084,16 @@
                                     Tag="{Binding Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OriginButton"
+                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding Cover}"
+                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyoutSubItem>

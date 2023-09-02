@@ -76,6 +76,8 @@ namespace CoolapkLite.Controls.Writers
 
                 Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
 
+                UIElementHelper.SetContextFlyout(Grid, CreateMenuFlyout(imageModel, textBlockEx));
+
                 StackPanel IsGIFPanel = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
@@ -194,6 +196,37 @@ namespace CoolapkLite.Controls.Writers
                 }
             }
             return null;
+        }
+
+        private static MenuFlyout CreateMenuFlyout(ImageModel image, TextBlockEx textBlockEx)
+        {
+            MenuFlyout menuFlyout = new MenuFlyout();
+            MenuFlyoutItem RefreshButton = new MenuFlyoutItem { Text = "刷新" };
+            FlyoutBaseHelper.SetIcon(RefreshButton, CreateFontIcon("\uE72C", textBlockEx));
+            RefreshButton.Click += (sender, args) => _ = image.Refresh();
+            menuFlyout.Items.Add(RefreshButton);
+            
+            MenuFlyoutItem CopyButton = new MenuFlyoutItem { Text = "复制" };
+            FlyoutBaseHelper.SetIcon(CopyButton, CreateFontIcon("\uE8C8", textBlockEx));
+            CopyButton.Click += (sender, args) => image.CopyPic();
+            menuFlyout.Items.Add(CopyButton);
+
+            MenuFlyoutItem ShareButton = new MenuFlyoutItem { Text = "分享" };
+            FlyoutBaseHelper.SetIcon(ShareButton, CreateFontIcon("\uE72D", textBlockEx));
+            ShareButton.Click += (sender, args) => image.SharePic();
+            menuFlyout.Items.Add(ShareButton);
+
+            MenuFlyoutItem SaveButton = new MenuFlyoutItem { Text = "保存" };
+            FlyoutBaseHelper.SetIcon(SaveButton, CreateFontIcon("\uE74E", textBlockEx));
+            SaveButton.Click += (sender, args) => image.SavePic();
+            menuFlyout.Items.Add(SaveButton);
+
+            MenuFlyoutItem OriginButton = new MenuFlyoutItem { Text = "查看原图" };
+            FlyoutBaseHelper.SetIcon(OriginButton, CreateFontIcon("\uEB9F", textBlockEx));
+            OriginButton.Click += (sender, args) => image.Type &= (ImageType)0xFE;
+            menuFlyout.Items.Add(OriginButton);
+
+            return menuFlyout;
         }
     }
 }
