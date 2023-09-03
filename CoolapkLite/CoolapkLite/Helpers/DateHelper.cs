@@ -40,6 +40,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
+                time = time.ToUniversalTime();
                 DateTime universalTime = baseTime.Value.ToUniversalTime();
                 TimeSpan temp = universalTime.Subtract(time);
 

@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -205,12 +205,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
             try
             {
                 ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("SettingsPage");
+#if CANARY
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("wherewhere", "Coolapk-UWP", 5).ConfigureAwait(false);
+#else
                 UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite").ConfigureAwait(false);
+#endif
                 if (results != null)
                 {
                     if (results.IsExistNewVersion)
                     {
-                        Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
+                        Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
                     }
                     else
                     {

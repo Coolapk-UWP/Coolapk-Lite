@@ -1,16 +1,95 @@
-﻿using CoolapkLite.Models.Update;
+﻿using CoolapkLite.Models.Network;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+
+#if !CANARY
+using System.Collections.Generic;
+#endif
 
 namespace CoolapkLite.Helpers
 {
     public static class UpdateHelper
     {
+#if CANARY
+        private const string DevOps_API = "https://dev.azure.com/{0}/{1}/_apis/pipelines/{2}/runs";
+
+        public static Task<UpdateInfo> CheckUpdateAsync(string organization, string project, uint pipelineId, bool isBackground = false)
+        {
+            PackageVersion currentVersion = Package.Current.Id.Version;
+            return CheckUpdateAsync(organization, project, pipelineId, currentVersion, isBackground);
+        }
+
+        public static async Task<UpdateInfo> CheckUpdateAsync(string organization, string project, uint pipelineId, PackageVersion currentVersion, bool isBackground = false)
+        {
+            if (string.IsNullOrEmpty(organization))
+            {
+                throw new ArgumentNullException(nameof(organization));
+            }
+
+            if (string.IsNullOrEmpty(project))
+            {
+                throw new ArgumentNullException(nameof(project));
+            }
+
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    string url = string.Format(DevOps_API, organization, project, pipelineId);
+                    HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
+                    response.EnsureSuccessStatusCode();
+                    string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    RunsInfo result = JsonConvert.DeserializeObject<RunsInfo>(responseBody);
+
+                    if (result != null)
+                    {
+                        RunInfo run = result.Value.FirstOrDefault((x) => x.Result == "succeeded");
+
+                        if (run != null)
+                        {
+                            SystemVersionInfo newVersionInfo = GetAsVersionInfo(run.CreatedDate, run.ID);
+                            int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
+                            int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
+                            int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
+                            int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
+
+                            SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
+
+                            return new UpdateInfo
+                            {
+                                CreatedAt = Convert.ToDateTime(run?.CreatedDate),
+                                PublishedAt = Convert.ToDateTime(run?.FinishedDate),
+                                ReleaseUrl = run?.Links?.Web?.Href,
+                                IsExistNewVersion = newVersionInfo > currentVersionInfo,
+                                Version = newVersionInfo
+                            };
+                        }
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(UpdateHelper)).Error(e.ExceptionToMessage(), e);
+                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+            }
+
+            return null;
+        }
+
+        private static SystemVersionInfo GetAsVersionInfo(DateTime dateTime, int id)
+        {
+            int major = int.Parse(dateTime.ToString("yy"));
+            int minor = int.Parse(dateTime.ToString("MMdd"));
+            return new SystemVersionInfo(major, minor, id);
+        }
+#else
         private const string KKPP_API = "https://v2.kkpp.cc/repos/{0}/{1}/releases/latest";
         private const string GITHUB_API = "https://api.github.com/repos/{0}/{1}/releases/latest";
 
@@ -37,6 +116,7 @@ namespace CoolapkLite.Helpers
                 using (HttpClient client = new HttpClient())
                 {
                     client.DefaultRequestHeaders.Add("User-Agent", username);
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     string url = string.Format(GITHUB_API, username, repository);
                     HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
@@ -53,18 +133,10 @@ namespace CoolapkLite.Helpers
 
                         SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
 
-                        return new UpdateInfo
-                        {
-                            Changelog = result?.Changelog,
-                            CreatedAt = Convert.ToDateTime(result?.CreatedAt),
-                            Assets = result.Assets,
-                            IsPreRelease = result.IsPreRelease,
-                            PublishedAt = Convert.ToDateTime(result?.PublishedAt),
-                            TagName = result.TagName,
-                            ApiUrl = result?.ApiUrl,
-                            ReleaseUrl = result?.ReleaseUrl,
-                            IsExistNewVersion = newVersionInfo > currentVersionInfo
-                        };
+                        result.IsExistNewVersion = newVersionInfo > currentVersionInfo;
+                        result.Version = newVersionInfo;
+
+                        return result;
                     }
                 }
             }
@@ -94,5 +166,6 @@ namespace CoolapkLite.Helpers
             string allowedChars = "01234567890.";
             return new string(version.Where(allowedChars.Contains).ToArray());
         }
+#endif
     }
 }

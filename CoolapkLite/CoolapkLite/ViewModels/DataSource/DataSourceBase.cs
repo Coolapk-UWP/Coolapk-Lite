@@ -45,7 +45,7 @@ namespace CoolapkLite.ViewModels.DataSource
 
             IList<T> newItems = await LoadItemsAsync(count);
 
-            // Update page state.
+            // Network page state.
             if (newItems != null)
             {
                 _currentPage++;

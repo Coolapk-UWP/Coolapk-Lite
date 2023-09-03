@@ -1,4 +1,4 @@
-﻿using CoolapkLite.Models.Update;
+﻿using CoolapkLite.Models.Network;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;

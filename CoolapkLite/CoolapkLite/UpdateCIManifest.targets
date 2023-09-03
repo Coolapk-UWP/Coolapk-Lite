@@ -36,9 +36,10 @@
                             var version = node.Attribute("Version");
                             if (version != null)
                             {
-                                var major = version.Value.Split('.').FirstOrDefault();
-                                var minor = DateTime.Now.ToString("yyMM");
+                                var major = int.Parse(DateTime.Now.ToString("yy"));
+                                var minor = int.Parse(DateTime.Now.ToString("MMdd"));
                                 version.SetValue(string.Join(".", major, minor, CIBuildID, 0));
+                                break;
                             }
                         }
                     }

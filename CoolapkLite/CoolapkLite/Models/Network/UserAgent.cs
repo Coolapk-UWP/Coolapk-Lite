@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace CoolapkLite.Models.Update
+namespace CoolapkLite.Models.Network
 {
     public class UserAgent
     {

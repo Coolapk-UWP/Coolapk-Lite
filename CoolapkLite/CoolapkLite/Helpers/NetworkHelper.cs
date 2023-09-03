@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models.Exceptions;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;

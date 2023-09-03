@@ -168,10 +168,10 @@ namespace CoolapkLite.Controls
                 }
             }
 
-            // Update row/column sizes (this may need to happen even if the mode doesn't change)
+            // Network row/column sizes (this may need to happen even if the mode doesn't change)
             UpdateRowsColumns(newMode, info, rcControl);
 
-            // Update mode if necessary
+            // Network mode if necessary
             if (newMode != m_currentMode)
             {
                 m_currentMode = newMode;

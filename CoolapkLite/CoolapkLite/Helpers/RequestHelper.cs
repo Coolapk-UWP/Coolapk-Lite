@@ -18,7 +18,7 @@ using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 using System.Linq;
 #else
 using System.Net.Http.Headers;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Windows.Foundation.Collections;
 #endif
 

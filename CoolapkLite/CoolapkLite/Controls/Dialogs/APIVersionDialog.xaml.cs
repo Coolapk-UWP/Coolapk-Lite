@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Newtonsoft.Json.Linq;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;

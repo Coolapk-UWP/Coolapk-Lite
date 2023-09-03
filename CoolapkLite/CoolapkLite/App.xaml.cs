@@ -2,7 +2,7 @@
 using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Exceptions;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
@@ -59,12 +59,10 @@ namespace CoolapkLite
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             EnsureWindow(e);
-#if !CANARY
             if (SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching))
             {
                 CheckUpdate();
             }
-#endif
         }
 
         protected override void OnActivated(IActivatedEventArgs e)
@@ -152,7 +150,11 @@ namespace CoolapkLite
             await ThreadSwitcher.ResumeBackgroundAsync();
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite", true);
+#if CANARY
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("wherewhere", "Coolapk-UWP", 5).ConfigureAwait(false);
+#else
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite").ConfigureAwait(false);
+#endif
                 if (results != null && results.IsExistNewVersion)
                 {
                     ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
@@ -165,7 +167,7 @@ namespace CoolapkLite
                         .AddArgument("action", "hasUpdate")
                         .AddArgument("url", results?.ReleaseUrl)
                         .AddText(_loader.GetString("HasUpdateTitle"))
-                        .AddText($"{name} v{ver} -> {results?.TagName}")
+                        .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
                         .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeToReadable()))
                         .AddButton(new ToastButton()
                             .SetContent(_loader.GetString("GoToGithub"))

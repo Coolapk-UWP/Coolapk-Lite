@@ -310,10 +310,10 @@
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
-    <Compile Include="Models\Update\APIVersion.cs" />
-    <Compile Include="Models\Update\SystemVersionInfo.cs" />
-    <Compile Include="Models\Update\UpdateInfo.cs" />
-    <Compile Include="Models\Update\UserAgent.cs" />
+    <Compile Include="Models\Network\APIVersion.cs" />
+    <Compile Include="Models\Network\SystemVersionInfo.cs" />
+    <Compile Include="Models\Network\UpdateInfo.cs" />
+    <Compile Include="Models\Network\UserAgent.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
     <Compile Include="Models\Users\LinkUserModel.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
