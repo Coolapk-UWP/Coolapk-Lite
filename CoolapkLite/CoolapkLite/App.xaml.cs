@@ -170,7 +170,11 @@ namespace CoolapkLite
                         .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
                         .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeToReadable()))
                         .AddButton(new ToastButton()
+#if CANARY
+                            .SetContent(_loader.GetString("GoToDevOps"))
+#else
                             .SetContent(_loader.GetString("GoToGithub"))
+#endif
                             .SetBackgroundActivation())
                         .AddButton(new ToastButton()
                             .SetDismissActivation())

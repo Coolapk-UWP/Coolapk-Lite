@@ -123,7 +123,7 @@ namespace CoolapkLite.Controls
                     _ = (Provider?.CleanCacheAsync());
                     break;
                 case "CheckUpdate":
-                    _ = (Provider?.CheckUpdateAsync());
+                    _ = (Provider?.CheckUpdateAsync(this));
                     break;
                 case "AccountSetting":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));

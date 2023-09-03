@@ -305,16 +305,28 @@ namespace CoolapkLite.Models.Images
             }
 
             string fileName = Title;
+            int index = fileName.LastIndexOf('.');
             FileSavePicker fileSavePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
+                SuggestedFileName = index != -1 ? fileName.Substring(0, index++) : fileName,
             };
 
-            string fileEx = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            int index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
-            fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
-            fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { "." + fileEx });
+            if (index != -1)
+            {
+                string fileEx = fileName.Substring(index);
+                if (!string.IsNullOrEmpty(fileEx))
+                {
+                    index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+                    fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
+                    fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { $".{fileEx}" });
+                }
+            }
+
+            if (fileSavePicker.FileTypeChoices.Count < 1)
+            {
+                fileSavePicker.FileTypeChoices.Add("png 文件", new string[] { ".png" });
+            }
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
             if (file != null)
@@ -405,7 +417,7 @@ namespace CoolapkLite.Models.Images
             ContextArray.ForEach((x) => x.ChangeDispatcher(dispatcher));
         }
 
-        public string GetTitle()
+        private string GetTitle()
         {
             Match match = Regex.Match(Uri, @"[^/]+(?!.*/)");
             return match.Success ? match.Value : $"CoolapkLite_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";

@@ -138,6 +138,9 @@
   <data name="ExceptionThrown" xml:space="preserve">
     <value>程序出现了错误……</value>
   </data>
+  <data name="GoToDevOps" xml:space="preserve">
+    <value>前往 DevOps</value>
+  </data>
   <data name="GoToGithub" xml:space="preserve">
     <value>前往 Github</value>
   </data>

@@ -9,8 +9,22 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
+using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+
+#if CANARY
+using System.Text;
+#else
+using CoolapkLite.Models.Images;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
+#endif
+
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
@@ -199,7 +213,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public async Task CheckUpdateAsync()
+        public async Task<UpdateInfo> CheckUpdateAsync()
         {
             IsCheckUpdateButtonEnabled = false;
             try
@@ -220,6 +234,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     {
                         Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
                     }
+                    IsCheckUpdateButtonEnabled = true;
+                    return results;
                 }
             }
             catch (Exception ex)
@@ -228,6 +244,70 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 Dispatcher.ShowMessage(ex.Message);
             }
             IsCheckUpdateButtonEnabled = true;
+            return null;
+        }
+
+        public async Task CheckUpdateAsync(UIElement element)
+        {
+            UpdateInfo info = await CheckUpdateAsync();
+            if (info?.IsExistNewVersion == true)
+            {
+                ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
+#if CANARY
+                StringBuilder builder = new StringBuilder();
+                _ = builder.AppendLine($"Build 版本号：{info.Version.Build}")
+                           .AppendLine($"编译开始时间：{info.CreatedAt}")
+                           .AppendLine($"编译完成时间：{info.PublishedAt}");
+                TextBlock textBlock = new TextBlock { Text = builder.ToString() };
+#else
+                MarkdownTextBlock textBlock = new MarkdownTextBlock
+                {
+                    Text = info.Changelog,
+                    Background = new SolidColorBrush(Colors.Transparent)
+                };
+                textBlock.LinkClicked += (sender, args) => _ = Launcher.LaunchUriAsync(args.Link.TryGetUri());
+                textBlock.ImageClicked += (sender, args) => _ = element.ShowImageAsync(new ImageModel(args.Link, ImageType.OriginImage, Dispatcher));
+#endif
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = $"{_loader.GetString("HasUpdateTitle")} v{info.Version.ToString(3)}",
+#if CANARY
+                    PrimaryButtonText = _loader.GetString("GoToDevOps"),
+#else
+                    PrimaryButtonText = _loader.GetString("GoToGithub"),
+#endif
+                    Content = new ScrollViewer
+                    {
+                        VerticalScrollMode = ScrollMode.Auto,
+                        HorizontalScrollMode = ScrollMode.Disabled,
+                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                        HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                        Content = textBlock
+                    }
+                };
+
+                dialog.SetXAMLRoot(element);
+
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
+                {
+                    dialog.DefaultButton = ContentDialogButton.Primary;
+                }
+
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
+                {
+                    dialog.CloseButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
+                }
+                else
+                {
+                    dialog.SecondaryButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
+                }
+
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    _ = Launcher.LaunchUriAsync(info.ReleaseUrl.TryGetUri());
+                }
+            }
         }
 
         public Task Refresh(bool reset) => GetAboutTextBlockTextAsync();

@@ -23,22 +23,6 @@
             <Thickness x:Key="ScrollViewerPadding">0,-80,0,0</Thickness>
             <Thickness x:Key="PivotTitleMargin">0,32,0,0</Thickness>
 
-            <CornerRadius x:Key="ControlCornerRadius">4</CornerRadius>
-            <CornerRadius x:Key="OverlayCornerRadius">8</CornerRadius>
-
-            <FontFamily x:Key="CodeThemeFontFamily">Cascadia Code PL,Consolas</FontFamily>
-            <FontFamily x:Key="SymbolThemeFontFamily">Segoe Fluent Icons,Segoe MDL2 Assets,Segoe UI Symbol</FontFamily>
-
-            <Style TargetType="Frame">
-                <Setter Property="ContentTransitions">
-                    <Setter.Value>
-                        <TransitionCollection>
-                            <NavigationThemeTransition />
-                        </TransitionCollection>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
             <converters:StringFormatConverter x:Key="StringFormatConverter" />
             <converters:BoolNegationConverter x:Key="BoolNegationConverter" />
             <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
