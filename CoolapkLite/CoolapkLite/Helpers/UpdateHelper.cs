@@ -6,6 +6,11 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using HttpClient = System.Net.Http.HttpClient;
+using HttpResponseMessage = System.Net.Http.HttpResponseMessage;
+using HttpStatusCode = System.Net.HttpStatusCode;
 
 #if !CANARY
 using System.Collections.Generic;
@@ -17,6 +22,7 @@ namespace CoolapkLite.Helpers
     {
 #if CANARY
         private const string DevOps_API = "https://dev.azure.com/{0}/{1}/_apis/pipelines/{2}/runs";
+        private const string DevOps_Artifact_API = "https://dev.azure.com/{0}/{1}/_apis/pipelines/{2}/runs/{3}/artifacts?artifactName={4}&$expand=signedContent";
 
         public static Task<UpdateInfo> CheckUpdateAsync(string organization, string project, uint pipelineId, bool isBackground = false)
         {
@@ -38,13 +44,25 @@ namespace CoolapkLite.Helpers
 
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (HttpClientHandler clientHandler = new HttpClientHandler())
+                using (HttpClient client = new HttpClient(clientHandler))
                 {
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                    {
+                        Uri host = new Uri("https://dev.azure.com");
+                        HttpCookieManager cookieManager = filter.CookieManager;
+                        foreach (HttpCookie item in cookieManager.GetCookies(host))
+                        {
+                            clientHandler.CookieContainer.SetCookies(host, item.ToString());
+                        }
+                    }
 
                     string url = string.Format(DevOps_API, organization, project, pipelineId);
                     HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
+                    if (response.StatusCode != HttpStatusCode.OK) { return null; }
                     string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     RunsInfo result = JsonConvert.DeserializeObject<RunsInfo>(responseBody);
 
@@ -62,7 +80,7 @@ namespace CoolapkLite.Helpers
 
                             SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
 
-                            return new UpdateInfo
+                            UpdateInfo updateInfo = new UpdateInfo
                             {
                                 CreatedAt = Convert.ToDateTime(run?.CreatedDate),
                                 PublishedAt = Convert.ToDateTime(run?.FinishedDate),
@@ -70,6 +88,24 @@ namespace CoolapkLite.Helpers
                                 IsExistNewVersion = newVersionInfo > currentVersionInfo,
                                 Version = newVersionInfo
                             };
+
+                            try
+                            {
+                                url = string.Format(DevOps_Artifact_API, organization, project, pipelineId, run.ID, "MSIX%20Package");
+                                response = await client.GetAsync(url).ConfigureAwait(false);
+                                if (response.StatusCode == HttpStatusCode.OK)
+                                {
+                                    responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                                    Asset asset = JsonConvert.DeserializeObject<Asset>(responseBody);
+                                    updateInfo.Assets = new Asset[] { asset };
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                SettingsHelper.LogManager.GetLogger(nameof(UpdateHelper)).Warn(e.ExceptionToMessage(), e);
+                            }
+
+                            return updateInfo;
                         }
                     }
                 }
@@ -113,13 +149,25 @@ namespace CoolapkLite.Helpers
 
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (HttpClientHandler clientHandler = new HttpClientHandler())
+                using (HttpClient client = new HttpClient(clientHandler))
                 {
+                    using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                    {
+                        Uri host = new Uri("https://api.github.com");
+                        HttpCookieManager cookieManager = filter.CookieManager;
+                        foreach (HttpCookie item in cookieManager.GetCookies(host))
+                        {
+                            clientHandler.CookieContainer.SetCookies(host, item.ToString());
+                        }
+                    }
+
                     client.DefaultRequestHeaders.Add("User-Agent", username);
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     string url = string.Format(GITHUB_API, username, repository);
                     HttpResponseMessage response = await client.GetAsync(url).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
+                    if (response.StatusCode != HttpStatusCode.OK) { return null; }
                     string responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     UpdateInfo result = JsonConvert.DeserializeObject<UpdateInfo>(responseBody);
 

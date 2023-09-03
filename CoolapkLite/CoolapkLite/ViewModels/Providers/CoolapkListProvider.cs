@@ -84,13 +84,7 @@ namespace CoolapkLite.ViewModels.Providers
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
 
-                    foreach (Entity entity in entities)
-                    {
-                        if (entity is T model)
-                        {
-                            Models.Concat(new T[] { model });
-                        }
-                    }
+                    Models = Models.Concat(entities.OfType<T>());
                 }
             }
         }

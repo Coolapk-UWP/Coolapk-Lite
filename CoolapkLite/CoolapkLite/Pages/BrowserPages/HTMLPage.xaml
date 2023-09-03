@@ -16,9 +16,13 @@
             Margin="{StaticResource ScrollViewerMargin}"
             Padding="{StaticResource ScrollViewerPadding}"
             VerticalScrollBarVisibility="Auto">
-            <Border Margin="{StaticResource StackPanelMargin}" Padding="12,0">
+            <Border
+                Margin="{StaticResource StackPanelMargin}"
+                Padding="12,0"
+                VerticalAlignment="Top">
                 <WebView
                     x:Name="WebView"
+                    VerticalAlignment="Top"
                     helpers:WebViewHelper.HTML="{Binding HTML}"
                     helpers:WebViewHelper.IsEnable="True"
                     helpers:WebViewHelper.IsVerticalStretch="True"

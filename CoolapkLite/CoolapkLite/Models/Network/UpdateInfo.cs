@@ -66,11 +66,32 @@ namespace CoolapkLite.Models.Network
         public string Folder { get; set; }
     }
 
+    public class Asset
+    {
+        [JsonProperty("name")]
+        public string Name { get; set; }
+        [JsonProperty("url")]
+        public string Url { get; set; }
+        [JsonProperty("signedContent")]
+        public SignedContent SignedContent { get; set; }
+        [JsonIgnore]
+        public string DownloadUrl => SignedContent?.Url;
+    }
+
+    public class SignedContent
+    {
+        [JsonProperty("url")]
+        public string Url { get; set; }
+        [JsonProperty("signatureExpires")]
+        public DateTime SignatureExpires { get; set; }
+    }
+
     public class UpdateInfo
     {
         public string ReleaseUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime PublishedAt { get; set; }
+        public Asset[] Assets { get; set; }
         public bool IsExistNewVersion { get; set; }
         public SystemVersionInfo Version { get; set; }
     }
@@ -83,6 +104,8 @@ namespace CoolapkLite.Models.Network
         public string ReleaseUrl { get; set; }
         [JsonProperty("tag_name")]
         public string TagName { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
         [JsonProperty("prerelease")]
         public bool IsPreRelease { get; set; }
         [JsonProperty("created_at")]
@@ -91,8 +114,14 @@ namespace CoolapkLite.Models.Network
         public DateTime PublishedAt { get; set; }
         [JsonProperty("assets")]
         public Asset[] Assets { get; set; }
+        [JsonProperty("tarball_url")]
+        public string TarUrl { get; set; }
+        [JsonProperty("zipball_url")]
+        public string ZipUrl { get; set; }
         [JsonProperty("body")]
         public string Changelog { get; set; }
+        [JsonProperty("discussion_url")]
+        public string DiscussionUrl { get; set; }
         [JsonIgnore]
         public bool IsExistNewVersion { get; set; }
         [JsonIgnore]
@@ -101,10 +130,20 @@ namespace CoolapkLite.Models.Network
 
     public class Asset
     {
+        [JsonProperty("url")]
+        public string Url { get; set; }
+        [JsonProperty("name")]
+        public string Name { get; set; }
         [JsonProperty("size")]
         public int Size { get; set; }
+        [JsonProperty("download_count")]
+        public int DownloadCount { get; set; }
+        [JsonProperty("created_at")]
+        public DateTime CreatedAt { get; set; }
+        [JsonProperty("updated_at")]
+        public DateTime UpdatedAt { get; set; }
         [JsonProperty("browser_download_url")]
-        public string Url { get; set; }
+        public string DownloadUrl { get; set; }
     }
 #endif
 }

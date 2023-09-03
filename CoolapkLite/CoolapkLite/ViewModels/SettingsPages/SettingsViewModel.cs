@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -15,6 +16,7 @@ using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 #if CANARY
 using System.Text;
@@ -22,9 +24,7 @@ using System.Text;
 using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 #endif
-
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
@@ -270,7 +270,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 #endif
                 ContentDialog dialog = new ContentDialog
                 {
-                    Title = $"{_loader.GetString("HasUpdateTitle")} v{info.Version.ToString(3)}",
+                    Title = _loader.GetString("HasUpdateTitle"),
 #if CANARY
                     PrimaryButtonText = _loader.GetString("GoToDevOps"),
 #else
@@ -285,6 +285,22 @@ namespace CoolapkLite.ViewModels.SettingsPages
                         Content = textBlock
                     }
                 };
+
+                if (info.Assets?.Any() == true)
+                {
+                    MenuFlyout menuFlyout = new MenuFlyout();
+                    MenuFlyoutSubItem menuFlyoutSubItem = new MenuFlyoutSubItem { Text = "下载安装包" };
+                    FlyoutBaseHelper.SetIcon(menuFlyoutSubItem, new FontIcon { Glyph = "\uE896", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] });
+                    foreach (Asset asset in info.Assets)
+                    {
+                        MenuFlyoutItem menuFlyoutItem = new MenuFlyoutItem { Text = asset.Name };
+                        ToolTipService.SetToolTip(menuFlyoutItem, asset.DownloadUrl);
+                        menuFlyoutItem.Click += (sender, args) => _ = Launcher.LaunchUriAsync(asset.DownloadUrl.TryGetUri());
+                        menuFlyoutSubItem.Items.Add(menuFlyoutItem);
+                    }
+                    menuFlyout.Items.Add(menuFlyoutSubItem);
+                    UIElementHelper.SetContextFlyout(dialog, menuFlyout);
+                }
 
                 dialog.SetXAMLRoot(element);
 
