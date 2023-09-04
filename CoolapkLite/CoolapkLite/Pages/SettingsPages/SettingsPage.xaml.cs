@@ -1,7 +1,5 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
-using CoolapkLite.Models.Network;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
@@ -9,16 +7,10 @@ using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板

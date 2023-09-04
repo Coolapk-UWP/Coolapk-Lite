@@ -381,7 +381,7 @@ namespace CoolapkLite.Models.Pages
                 FollowUsers = recent_follow_list.Select(
                     x => ((JObject)x).TryGetValue("userInfo", out JToken userInfo)
                         ? new UserModel((JObject)userInfo) : null)
-                    .Where(x => x != null)
+                    .OfType<UserModel>()
                     .ToImmutableArray();
             }
 
@@ -795,7 +795,7 @@ namespace CoolapkLite.Models.Pages
                 FollowUsers = recent_follow_list.Select(
                     x => ((JObject)x).TryGetValue("userInfo", out JToken userInfo)
                         ? new UserModel((JObject)userInfo) : null)
-                    .Where(x => x != null)
+                    .OfType<UserModel>()
                     .ToImmutableArray();
             }
 

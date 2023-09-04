@@ -53,7 +53,7 @@ namespace CoolapkLite.Common
         /// <summary>
         /// new jtw
         /// </summary>
-        public Extension GetExtension(string id) => Extensions.Where(e => e.UniqueId == id).FirstOrDefault();
+        public Extension GetExtension(string id) => Extensions.FirstOrDefault(e => e.UniqueId == id);
 
         /// <summary>
         /// The name that extensions must specify to be considered an extension this host can load
@@ -225,7 +225,7 @@ namespace CoolapkLite.Common
             }
 
             // if we already have an extension by this name then then this load is really an update to the extension
-            Extension existingExt = Extensions.Where(e => e.UniqueId == identifier).FirstOrDefault();
+            Extension existingExt = Extensions.FirstOrDefault(e => e.UniqueId == identifier);
 
             // New extension?
             if (existingExt == null)
@@ -273,7 +273,7 @@ namespace CoolapkLite.Common
             {
                 await _dispatcher.ResumeForegroundAsync();
             }
-            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ToList().ForEach(e => e.MarkAsLoaded());
+            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => e.MarkAsLoaded());
         }
 
         /// <summary>
@@ -288,7 +288,7 @@ namespace CoolapkLite.Common
             {
                 await _dispatcher.ResumeForegroundAsync();
             }
-            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ToList().ForEach(e => { e.Unload(); });
+            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => { e.Unload(); });
         }
 
         /// <summary>
@@ -303,7 +303,7 @@ namespace CoolapkLite.Common
             {
                 await _dispatcher.ResumeForegroundAsync();
             }
-            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ToList().ForEach(e => { e.Unload(); Extensions.Remove(e); });
+            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => { e.Unload(); Extensions.Remove(e); });
         }
 
         /// <summary>

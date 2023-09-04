@@ -34,7 +34,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public bool IsAppExtensionSupported { get; } = ExtensionManager.IsSupported;
 
         public bool IsCompactOverlaySupported { get; } = ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported");
-        
+
         public bool IsGetElementVisualSupported { get; } = ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual");
 
         public bool IsAppDiagnosticInfoSupported { get; } = ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo");

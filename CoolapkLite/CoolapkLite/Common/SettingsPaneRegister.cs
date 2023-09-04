@@ -184,13 +184,13 @@ namespace CoolapkLite.Common
                                     args.Handled = true;
                                 }
                                 break;
-                            //case VirtualKey.Q:
-                            //    if (IsSearchPaneSupported)
-                            //    {
-                            //        SearchPane.GetForCurrentView().Show();
-                            //        args.Handled = true;
-                            //    }
-                            //    break;
+                                //case VirtualKey.Q:
+                                //    if (IsSearchPaneSupported)
+                                //    {
+                                //        SearchPane.GetForCurrentView().Show();
+                                //        args.Handled = true;
+                                //    }
+                                //    break;
                         }
                     }
                 }

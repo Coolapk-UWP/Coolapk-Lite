@@ -63,7 +63,6 @@ namespace CoolapkLite.Pages.BrowserPages
         {
             base.OnNavigatedFrom(e);
             Frame.Navigating -= OnFrameNavigating;
-            Provider = null;
         }
 
         private void LoadUri(Uri uri)

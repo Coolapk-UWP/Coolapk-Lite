@@ -205,7 +205,7 @@ namespace CoolapkLite.Controls.Writers
             FlyoutBaseHelper.SetIcon(RefreshButton, CreateFontIcon("\uE72C", textBlockEx));
             RefreshButton.Click += (sender, args) => _ = image.Refresh();
             menuFlyout.Items.Add(RefreshButton);
-            
+
             MenuFlyoutItem CopyButton = new MenuFlyoutItem { Text = "复制" };
             FlyoutBaseHelper.SetIcon(CopyButton, CreateFontIcon("\uE8C8", textBlockEx));
             CopyButton.Click += (sender, args) => image.CopyPic();
