@@ -207,4 +207,13 @@
   <data name="TileUpdateTimeSlider.Header" xml:space="preserve">
     <value>Tile update interval minutes (Stop updating when less than 15 minutes)</value>
   </data>
+  <data name="ViewCacheItem.Text" xml:space="preserve">
+    <value>View cache images</value>
+  </data>
+  <data name="OpenLogFileItem.Text" xml:space="preserve">
+    <value>Open Recent Log</value>
+  </data>
+  <data name="OpenCacheFolder.Text" xml:space="preserve">
+    <value>Open cache directory</value>
+  </data>
 </root>
