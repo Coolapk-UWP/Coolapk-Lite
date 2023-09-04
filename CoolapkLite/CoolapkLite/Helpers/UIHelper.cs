@@ -48,7 +48,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
         {
-            if (!window.Dispatcher.HasThreadAccess)
+            if (window.Dispatcher?.HasThreadAccess == false)
             {
                 await window.Dispatcher.ResumeForegroundAsync();
             }
@@ -60,7 +60,7 @@ namespace CoolapkLite.Helpers
         {
             if (WindowHelper.ActiveWindows.TryGetValue(dispatcher, out Window window))
             {
-                if (!window.Dispatcher.HasThreadAccess)
+                if (window.Dispatcher?.HasThreadAccess == false)
                 {
                     await window.Dispatcher.ResumeForegroundAsync();
                 }

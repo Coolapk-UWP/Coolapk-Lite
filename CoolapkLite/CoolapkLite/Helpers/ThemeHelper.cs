@@ -37,18 +37,18 @@ namespace CoolapkLite.Helpers
         public static ElementTheme GetActualTheme(Window window) =>
             window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                : window.Dispatcher.HasThreadAccess
-                    ? window.Content is FrameworkElement rootElement
-                        && rootElement.RequestedTheme != ElementTheme.Default
-                            ? rootElement.RequestedTheme
-                            : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                    : UIHelper.AwaitByTaskCompleteSource(() =>
-                        window.Dispatcher.AwaitableRunAsync(() =>
+                : window.Dispatcher?.HasThreadAccess == false
+                    ? UIHelper.AwaitByTaskCompleteSource(() =>
+                        window.Dispatcher?.AwaitableRunAsync(() =>
                             window.Content is FrameworkElement _rootElement
                                 && _rootElement.RequestedTheme != ElementTheme.Default
                                     ? _rootElement.RequestedTheme
                                     : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
-                            CoreDispatcherPriority.High));
+                            CoreDispatcherPriority.High))
+                    : window.Content is FrameworkElement rootElement
+                        && rootElement.RequestedTheme != ElementTheme.Default
+                            ? rootElement.RequestedTheme
+                            : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme);
 
         public static Task<ElementTheme> GetActualThemeAsync() =>
             GetActualThemeAsync(Window.Current ?? CurrentApplicationWindow);
@@ -56,17 +56,17 @@ namespace CoolapkLite.Helpers
         public static async Task<ElementTheme> GetActualThemeAsync(Window window) =>
             window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                : window.Dispatcher.HasThreadAccess
-                    ? window.Content is FrameworkElement rootElement
-                        && rootElement.RequestedTheme != ElementTheme.Default
-                            ? rootElement.RequestedTheme
-                            : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
-                    : await window.Dispatcher.AwaitableRunAsync(() =>
+                : window.Dispatcher?.HasThreadAccess == false
+                    ? await window.Dispatcher?.AwaitableRunAsync(() =>
                         window.Content is FrameworkElement _rootElement
                             && _rootElement.RequestedTheme != ElementTheme.Default
                                 ? _rootElement.RequestedTheme
                                 : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
-                            CoreDispatcherPriority.High);
+                            CoreDispatcherPriority.High)
+                    : window.Content is FrameworkElement rootElement
+                        && rootElement.RequestedTheme != ElementTheme.Default
+                            ? rootElement.RequestedTheme
+                            : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme);
 
         #endregion
 
@@ -246,7 +246,7 @@ namespace CoolapkLite.Helpers
         {
             WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
             {
-                if (!window.Dispatcher.HasThreadAccess)
+                if (window.Dispatcher?.HasThreadAccess == false)
                 {
                     await window.Dispatcher.ResumeForegroundAsync();
                 }
@@ -273,7 +273,7 @@ namespace CoolapkLite.Helpers
 
             WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
             {
-                if (!window.Dispatcher.HasThreadAccess)
+                if (window.Dispatcher?.HasThreadAccess == false)
                 {
                     await window.Dispatcher.ResumeForegroundAsync();
                 }
@@ -310,7 +310,7 @@ namespace CoolapkLite.Helpers
 
         public static async void UpdateSystemCaptionButtonColors(Window window)
         {
-            if (!window.Dispatcher.HasThreadAccess)
+            if (window.Dispatcher?.HasThreadAccess == false)
             {
                 await window.Dispatcher.ResumeForegroundAsync();
             }
@@ -340,7 +340,7 @@ namespace CoolapkLite.Helpers
 
         public static async void UpdateSystemCaptionButtonColors(AppWindow window)
         {
-            if (!(ThreadSwitcher.IsHasThreadAccessPropertyAvailable && window.DispatcherQueue.HasThreadAccess))
+            if (!(ThreadSwitcher.IsHasThreadAccessPropertyAvailable && window.DispatcherQueue?.HasThreadAccess == false))
             {
                 await window.DispatcherQueue.ResumeForegroundAsync();
             }
