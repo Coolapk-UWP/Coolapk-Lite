@@ -148,7 +148,7 @@
     <value>Long Pic</value>
   </data>
   <data name="MediaShare" xml:space="preserve">
-    <value>视频分享</value>
+    <value>Video Sharing</value>
   </data>
   <data name="MoreButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
