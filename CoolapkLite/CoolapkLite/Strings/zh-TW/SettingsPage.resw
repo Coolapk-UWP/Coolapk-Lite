@@ -214,6 +214,6 @@
     <value>打開最近的日誌</value>
   </data>
   <data name="OpenCacheFolder.Text" xml:space="preserve">
-    <value>打开缓存目录</value>
+    <value>打開快取目錄</value>
   </data>
 </root>
