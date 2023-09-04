@@ -5,6 +5,7 @@ using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -105,6 +106,8 @@ namespace CoolapkLite.Models.Feeds
 
         private static string GetUserLink(string url, string name) => $"<a href=\"{url}\" type=\"user-detail\">{name}</a>";
 
-        public override string ToString() => Message;
+        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的评论")
+                                                                .Append(Message.HtmlToString())
+                                                                .ToString();
     }
 }

@@ -144,5 +144,10 @@ namespace CoolapkLite.Models.Feeds
                 }
             }
         }
+
+        public override string ToString() => new StringBuilder().AppendLine(Title)
+                                                                .AppendLine(Message.HtmlToString())
+                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复 {ShareNum}分享 {StarNum}收藏")
+                                                                .ToString();
     }
 }

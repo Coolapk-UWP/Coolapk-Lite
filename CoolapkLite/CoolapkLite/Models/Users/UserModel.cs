@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System.Text;
 using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Users
@@ -112,6 +113,10 @@ namespace CoolapkLite.Models.Users
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"用户：{UserName}")
+                                                                .AppendLine(LoginText)
+                                                                .AppendLine(string.Join(" ", $"{FollowNum}关注 {FansNum}粉丝", BlockStatus))
+                                                                .Append(Bio)
+                                                                .ToString();
     }
 }

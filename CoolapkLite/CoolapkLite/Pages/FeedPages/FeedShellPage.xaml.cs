@@ -87,7 +87,7 @@ namespace CoolapkLite.Pages.FeedPages
             // Populate required properties
             userActivity.VisualElements.DisplayText = Provider.Title;
             userActivity.VisualElements.AttributionDisplayText = Provider.Title;
-            userActivity.VisualElements.Description = Provider.FeedDetail.Message.CSStoString();
+            userActivity.VisualElements.Description = Provider.FeedDetail.Message.HtmlToString();
             userActivity.ActivationUri = new Uri($"coolapk://{(Provider.FeedDetail.Url[0] == '/' ? Provider.FeedDetail.Url.Substring(1) : Provider.FeedDetail.Url)}");
 
             //Save

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
@@ -164,6 +165,8 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public override string ToString() => Message;
+        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的动态")
+                                                                .Append(Message.HtmlToString())
+                                                                .ToString();
     }
 }

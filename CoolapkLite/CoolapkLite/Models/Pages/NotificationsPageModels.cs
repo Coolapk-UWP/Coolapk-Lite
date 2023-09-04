@@ -4,6 +4,7 @@ using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Text;
 using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Pages
@@ -22,7 +23,7 @@ namespace CoolapkLite.Models.Pages
 
         protected NotificationModel(JObject token) : base(token) { }
 
-        public override string ToString() => $"{UserName} - {Dateline}";
+        public override string ToString() => string.Join(" - ", UserName, Dateline);
     }
 
     public class SimpleNotificationModel : NotificationModel
@@ -87,7 +88,9 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => Note;
+        public override string ToString() => new StringBuilder().AppendLine(UserName)
+                                                                .Append(Note.HtmlToString())
+                                                                .ToString();
     }
 
     public class AtCommentMeNotificationModel : NotificationModel
@@ -155,7 +158,10 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => Message;
+        public override string ToString() => new StringBuilder().AppendLine($"{UserName}提及")
+                                                                .AppendLine(Dateline)
+                                                                .Append(Message.HtmlToString())
+                                                                .ToString();
     }
 
     public class LikeNotificationModel : NotificationModel
@@ -228,7 +234,11 @@ namespace CoolapkLite.Models.Pages
             FeedDetail = new SourceFeedModel(token);
         }
 
-        public override string ToString() => Title;
+        public override string ToString() => new StringBuilder().AppendLine($"{UserName}{Title}")
+                                                                .AppendLine(Dateline)
+                                                                .AppendLine("点赞动态：")
+                                                                .Append(FeedDetail)
+                                                                .ToString();
     }
 
     public class MessageNotificationModel : NotificationModel
@@ -289,5 +299,10 @@ namespace CoolapkLite.Models.Pages
                 Dateline += " " + "[置顶]";
             }
         }
+
+        public override string ToString() => new StringBuilder().AppendLine($"{UserName}私信")
+                                                                .AppendLine(Dateline)
+                                                                .Append(FeedMessage.HtmlToString())
+                                                                .ToString();
     }
 }

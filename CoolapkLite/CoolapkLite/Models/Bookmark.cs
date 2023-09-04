@@ -21,5 +21,7 @@
                 new Bookmark("/dyh/1480", "铺路根据地")
             };
         }
+
+        public override string ToString() => string.Join(" - ", Title, Url);
     }
 }

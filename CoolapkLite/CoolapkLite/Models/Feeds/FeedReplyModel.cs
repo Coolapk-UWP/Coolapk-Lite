@@ -6,6 +6,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Models.Feeds
@@ -140,5 +141,10 @@ namespace CoolapkLite.Models.Feeds
                 LikeNum = likenum;
             }
         }
+
+        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的回复")
+                                                                .AppendLine(Message.HtmlToString())
+                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复")
+                                                                .ToString();
     }
 }

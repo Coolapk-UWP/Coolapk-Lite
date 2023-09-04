@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 
@@ -258,7 +259,12 @@ namespace CoolapkLite.Models.Pages
             Followed = !Followed;
         }
 
-        public override string ToString() => $"{UserName} - {Bio}";
+        public override string ToString() => new StringBuilder().AppendLine($"用户：{UserName}")
+                                                                .AppendLine(LoginText)
+                                                                .AppendLine($"{LikeNum}点赞 {FollowNum}关注 {FansNum}粉丝")
+                                                                .AppendLine(Bio)
+                                                                .Append(string.Join(" ", Gender, City, Astro, BlockStatus))
+                                                                .ToString();
     }
 
     public class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
@@ -405,7 +411,11 @@ namespace CoolapkLite.Models.Pages
             Followed = !Followed;
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"话题：{Title}")
+                                                                .AppendLine($"{HotNum} {CommentNum} {FollowNum}")
+                                                                .AppendLine(Description)
+                                                                .Append(SubTitle)
+                                                                .ToString();
     }
 
     public class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
@@ -555,7 +565,10 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"看看号：{Title}")
+                                                                .AppendLine($"作者：{UserName} {FollowNum}")
+                                                                .Append(Description)
+                                                                .ToString();
     }
 
     public class ProductDetail : FeedListDetailBase, ICanFollow
@@ -837,7 +850,10 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"数码：{Title}")
+                                                                .AppendLine($"{HotNum} {CommentNum} {FollowNum}")
+                                                                .Append(Description)
+                                                                .ToString();
     }
 
     public class CollectionDetail : FeedListDetailBase, ICanLike, ICanFollow
@@ -1059,6 +1075,9 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"收藏单：{Title}")
+                                                                .AppendLine($"{LikeNum} {FollowNum}")
+                                                                .Append(Description)
+                                                                .ToString();
     }
 }

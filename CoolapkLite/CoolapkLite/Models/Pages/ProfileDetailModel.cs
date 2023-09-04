@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace CoolapkLite.Models.Pages
 {
@@ -72,5 +73,10 @@ namespace CoolapkLite.Models.Pages
 
             NextLevelNowExperience = $"{NextLevelPercentage / 100 * NextLevelExperience:F0}/{NextLevelExperience}";
         }
+
+        public override string ToString() => new StringBuilder().AppendLine(UserName)
+                                                                .AppendLine($"Lv.{LevelNum} {NextLevelNowExperience}")
+                                                                .AppendLine($"{FollowNum}关注 {FansNum}粉丝")
+                                                                .ToString();
     }
 }

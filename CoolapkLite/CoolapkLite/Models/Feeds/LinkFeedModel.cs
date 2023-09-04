@@ -357,5 +357,9 @@ namespace CoolapkLite.Models.Feeds
                 }
             }
         }
+
+        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的动态")
+                                                                .Append(Message.HtmlToString())
+                                                                .ToString();
     }
 }

@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI;
@@ -427,6 +428,11 @@ namespace CoolapkLite.Models.Feeds
 
             Followed = !Followed;
         }
+
+        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的{Info}")
+                                                                .AppendLine(Message.HtmlToString())
+                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复 {ShareNum}分享")
+                                                                .ToString();
     }
 
     public class VoteItem

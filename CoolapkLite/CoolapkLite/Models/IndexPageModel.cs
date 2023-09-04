@@ -5,6 +5,7 @@ using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
+using System.Text;
 using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models
@@ -145,7 +146,10 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine(Title)
+                                                                .AppendLine(SubTitle)
+                                                                .Append(Description)
+                                                                .ToString();
     }
 
     public class IndexPageMessageCardModel : Entity
@@ -232,7 +236,9 @@ namespace CoolapkLite.Models
             else { ShowEntities = false; }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine(Title)
+                                                                .Append(Description)
+                                                                .ToString();
     }
 
     public enum EntityType
@@ -360,7 +366,9 @@ namespace CoolapkLite.Models
             ShowTitle = !(string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Url));
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine(Title)
+                                                                .Append(Description)
+                                                                .ToString();
     }
 
     public enum OperationType

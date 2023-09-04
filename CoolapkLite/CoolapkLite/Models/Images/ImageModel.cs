@@ -425,6 +425,6 @@ namespace CoolapkLite.Models.Images
 
         public async Task Refresh() => await GetImageAsync();
 
-        public override string ToString() => Uri;
+        public override string ToString() => string.Join(" - ", Title, Uri);
     }
 }

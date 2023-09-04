@@ -7,7 +7,7 @@ namespace CoolapkLite.Helpers.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            string result = value.ToString().CSStoString();
+            string result = value.ToString().HtmlToString();
             return ConverterTools.Convert(result, targetType);
         }
 

@@ -144,7 +144,7 @@ namespace CoolapkLite.BackgroundTasks
 
         public static TileContent GetFeedTile(FeedModelBase FeedDetail)
         {
-            string Message = FeedDetail.Message.CSStoString();
+            string Message = FeedDetail.Message.HtmlToString();
             return new TileContent
             {
                 Visual = new TileVisual

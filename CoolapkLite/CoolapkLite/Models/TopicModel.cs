@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace CoolapkLite.Models
 {
@@ -82,6 +83,9 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => $"{Title} - {Description}";
+        public override string ToString() => new StringBuilder().AppendLine($"话题：{Title}")
+                                                                .AppendLine($"{CommentNum}评论 {FollowNum}关注")
+                                                                .AppendLine(Description)
+                                                                .ToString();
     }
 }

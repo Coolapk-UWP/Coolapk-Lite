@@ -127,7 +127,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static string CSStoString(this string str)
+        public static string HtmlToString(this string str)
         {
             try
             {

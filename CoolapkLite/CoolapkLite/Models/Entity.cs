@@ -21,11 +21,11 @@ namespace CoolapkLite.Models
                 try
                 {
                     EntityID = entityId.ToObject<int>();
+                    EntityIDText = entityId.ToString();
                 }
                 catch (Exception ex)
                 {
                     SettingsHelper.LogManager.GetLogger(nameof(Entity)).Warn(ex.ExceptionToMessage(), ex);
-                    EntityIDText = entityId.ToString();
                 }
             }
 
@@ -45,7 +45,7 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => $"{EntityType} - {EntityID}";
+        public override string ToString() => $"{GetType().Name}: {string.Join(" - ", EntityType, EntityIDText)}";
     }
 
     public class NullEntity : Entity
