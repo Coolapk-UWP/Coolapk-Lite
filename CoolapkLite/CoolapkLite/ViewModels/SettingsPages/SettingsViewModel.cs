@@ -256,8 +256,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
 #if CANARY
                 StringBuilder builder = new StringBuilder();
                 _ = builder.AppendLine($"Build 版本号：{info.Version.Build}")
-                           .AppendLine($"编译开始时间：{info.CreatedAt}")
-                           .AppendLine($"编译完成时间：{info.PublishedAt}");
+                           .AppendLine($"编译开始时间：{info.CreatedAt.ToLocalTime()}")
+                           .AppendLine($"编译完成时间：{info.PublishedAt.ToLocalTime()}");
                 TextBlock textBlock = new TextBlock { Text = builder.ToString() };
 #else
                 MarkdownTextBlock textBlock = new MarkdownTextBlock

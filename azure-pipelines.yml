@@ -25,8 +25,9 @@ pool:
 variables:
   solution: '*.sln'
   # Build ARM64 when IsUseNetCore463 is true.
-  # buildPlatform: 'x86|x64|ARM|ARM64'
-  buildPlatform: 'x86|x64|ARM'
+  buildPlatform: 'x86|x64|ARM|ARM64'
+  # Otherwise do not build ARM64.
+  # buildPlatform: 'x86|x64|ARM'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
@@ -43,7 +44,7 @@ steps:
     platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore'
+    msbuildArgs: '/t:restore /p:IsUseNetCore463=True'
     msbuildArchitecture: 'x64'
     maximumCpuCount: true
 
@@ -53,7 +54,8 @@ steps:
     platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:IsUpdateCIManifest=True
+    msbuildArgs: '/p:IsUseNetCore463=True
+                  /p:IsUpdateCIManifest=True
                   /p:CIBuildID="$(Build.BuildId)"
                   /p:AppxBundlePlatforms="$(buildPlatform)"
                   /p:AppxPackageDir="$(appxPackageDir)"
