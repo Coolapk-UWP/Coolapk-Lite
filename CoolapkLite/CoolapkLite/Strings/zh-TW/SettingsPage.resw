@@ -208,7 +208,7 @@
     <value>磁貼更新間隔分鐘 (小於 15 分鐘停止更新)</value>
   </data>
   <data name="ViewCacheItem.Text" xml:space="preserve">
-    <value>查看缓存图片</value>
+    <value>查看快取圖片</value>
   </data>
   <data name="OpenLogFileItem.Text" xml:space="preserve">
     <value>打開最近的日誌</value>
