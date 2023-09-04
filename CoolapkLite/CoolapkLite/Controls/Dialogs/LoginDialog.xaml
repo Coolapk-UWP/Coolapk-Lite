@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Closing="OnClosing"
     mc:Ignorable="d">
-    <controls:StackPanel Spacing="4">
+    <controls:StackPanelEx Spacing="4">
         <TextBox
             Header="UID"
             PlaceholderText="UID"
@@ -22,5 +22,5 @@
             Header="Token"
             Password="{x:Bind Token, Mode=TwoWay}"
             PlaceholderText="Token" />
-    </controls:StackPanel>
+    </controls:StackPanelEx>
 </ContentDialog>

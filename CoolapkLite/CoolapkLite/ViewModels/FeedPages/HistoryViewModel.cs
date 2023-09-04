@@ -3,38 +3,20 @@ using CoolapkLite.Models;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    internal class HistoryViewModel : DataSourceBase<Entity>, IViewModel
+    public class HistoryViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; }
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("History");
 
-        private readonly CoolapkListProvider Provider;
-        private readonly UriType _type = UriType.CheckLoginInfo;
-
-        internal HistoryViewModel(string title)
+        public HistoryViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
-            Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
-            if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
-            Title = title;
-            switch (title)
-            {
-                case "我的常去":
-                    _type = UriType.GetUserRecentHistory;
-                    break;
-                case "浏览历史":
-                    _type = UriType.GetUserHistory;
-                    break;
-                default: throw new ArgumentException(nameof(title));
-            }
-
             Provider = new CoolapkListProvider(
-                (p, firstItem, lastItem) => UriHelper.GetUri(_type, p, firstItem, lastItem),
+                (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserHistory, p, firstItem, lastItem),
                 GetEntities,
                 "id");
         }
@@ -44,44 +26,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             yield return jo.Value<string>("entityType") == "history" ? new HistoryModel(jo) : null;
         }
 
-        public async Task Refresh(bool reset = false)
-        {
-            if (reset)
-            {
-                await Reset();
-            }
-            else
-            {
-                _ = await LoadMoreItemsAsync(20);
-            }
-        }
-
         bool IViewModel.IsEqual(IViewModel other) => other is HistoryViewModel model && IsEqual(model);
         public bool IsEqual(HistoryViewModel other) => Title == other.Title;
-
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-        {
-            List<Entity> Models = new List<Entity>();
-            while (Models.Count < count)
-            {
-                int temp = Models.Count;
-                if (Models.Count > 0) { _currentPage++; }
-                await Provider.GetEntity(Models, _currentPage);
-                if (Models.Count <= 0 || Models.Count <= temp) { break; }
-            }
-            return Models;
-        }
-
-        protected override async Task AddItemsAsync(IList<Entity> items)
-        {
-            if (items != null)
-            {
-                foreach (Entity item in items)
-                {
-                    if (item is NullEntity) { continue; }
-                    await AddAsync(item);
-                }
-            }
-        }
     }
 }

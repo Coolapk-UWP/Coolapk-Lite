@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite.BackgroundTasks
 {
@@ -8,28 +10,28 @@ namespace CoolapkLite.BackgroundTasks
     {
         public static NotificationsTask Instance = new NotificationsTask();
 
-        public NotificationsTask()
-        {
-            Instance = Instance ?? this;
-        }
-
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public NotificationsTask() => Instance = Instance ?? this;
+        
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            UpdateNotifications();
+            await UpdateNotificationsAsync();
             deferral.Complete();
         }
 
-        private async void UpdateNotifications()
+        private async Task UpdateNotificationsAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
-            if (!isSucceed) { return; }
-            JObject token = (JObject)result;
-            if (token != null)
+            if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                if (token.TryGetValue("badge", out JToken badge) && badge != null)
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
+                if (!isSucceed) { return; }
+                JObject token = (JObject)result;
+                if (token != null)
                 {
-                    UIHelper.SetBadgeNumber(badge.ToString());
+                    if (token.TryGetValue("badge", out JToken badge) && badge != null)
+                    {
+                        UIHelper.SetBadgeNumber(badge.ToString());
+                    }
                 }
             }
         }

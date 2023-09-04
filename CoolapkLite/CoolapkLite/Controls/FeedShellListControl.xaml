@@ -14,7 +14,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
@@ -24,8 +24,8 @@
                 User="{StaticResource UserTemplate}" />
         </ResourceDictionary>
     </UserControl.Resources>
-    <local:ShyHeaderListView
-        x:Name="ShyHeaderListView"
+    <local:ShyHeaderPivotListView
+        x:Name="ShyHeaderPivotListView"
         Padding="{x:Bind Padding, Mode=TwoWay}"
         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
@@ -34,16 +34,21 @@
         Loaded="ListView_Loaded"
         ShowsScrollingPlaceholders="False"
         ShyHeaderItemSource="{x:Bind ItemSource, Mode=TwoWay}"
-        ShyHeaderSelectionChanged="ShyHeaderListView_ShyHeaderSelectionChanged"
-        SizeChanged="ShyHeaderListView_SizeChanged">
-        <local:ShyHeaderListView.TopHeader>
+        ShyHeaderSelectionChanged="ShyHeaderPivotListView_ShyHeaderSelectionChanged"
+        SizeChanged="ShyHeaderPivotListView_SizeChanged">
+        <local:ShyHeaderPivotListView.TopHeader>
             <ContentPresenter Content="{x:Bind Header, Mode=TwoWay}" />
-        </local:ShyHeaderListView.TopHeader>
-        <local:ShyHeaderListView.LeftHeader>
+        </local:ShyHeaderPivotListView.TopHeader>
+        <local:ShyHeaderPivotListView.LeftHeader>
             <Border x:Name="Block" Height="48" />
-        </local:ShyHeaderListView.LeftHeader>
-        <local:ShyHeaderListView.RightHeader>
+        </local:ShyHeaderPivotListView.LeftHeader>
+        <local:ShyHeaderPivotListView.RightHeader>
             <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                <StackPanel.ChildrenTransitions>
+                    <TransitionCollection>
+                        <ReorderThemeTransition />
+                    </TransitionCollection>
+                </StackPanel.ChildrenTransitions>
                 <Border
                     x:Name="ToggleSwitchBorder"
                     Margin="4,0"
@@ -83,6 +88,6 @@
                     Style="{StaticResource TitleBarIconButtonStyle}"
                     Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}" />
             </StackPanel>
-        </local:ShyHeaderListView.RightHeader>
-    </local:ShyHeaderListView>
+        </local:ShyHeaderPivotListView.RightHeader>
+    </local:ShyHeaderPivotListView>
 </UserControl>

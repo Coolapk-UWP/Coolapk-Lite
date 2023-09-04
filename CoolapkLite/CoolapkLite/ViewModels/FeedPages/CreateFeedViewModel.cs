@@ -10,10 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
@@ -23,36 +21,34 @@ using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 
+#if !NETCORE463
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+#endif
+
 namespace CoolapkLite.ViewModels.FeedPages
 {
     public class CreateFeedViewModel : IViewModel
     {
         public static string[] ImageTypes = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 
-        private string title = string.Empty;
-        public string Title
-        {
-            get => title;
-            set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        public CoreDispatcher Dispatcher { get; }
-
         public readonly CreateUserItemSource CreateUserItemSource = new CreateUserItemSource();
         public readonly CreateTopicItemSource CreateTopicItemSource = new CreateTopicItemSource();
 
         public readonly ObservableCollection<WriteableBitmap> Pictures = new ObservableCollection<WriteableBitmap>();
 
+        public CoreDispatcher Dispatcher { get; }
+
+        private string title = string.Empty;
+        public string Title
+        {
+            get => title;
+            set => SetProperty(ref title, value);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -61,6 +57,15 @@ namespace CoolapkLite.ViewModels.FeedPages
                     await Dispatcher.ResumeForegroundAsync();
                 }
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 
@@ -74,15 +79,15 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         bool IViewModel.IsEqual(IViewModel other) => other is CreateFeedViewModel model && Equals(model);
 
-        public async Task ReadFile(IStorageFile file)
+        public async Task ReadFileAsync(IStorageFile file)
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
-                await ReadStream(stream);
+                await ReadStreamAsync(stream);
             }
         }
 
-        public async Task ReadStream(IRandomAccessStream stream)
+        public async Task ReadStreamAsync(IRandomAccessStream stream)
         {
             BitmapDecoder ImageDecoder = await BitmapDecoder.CreateAsync(stream);
             SoftwareBitmap SoftwareImage = await ImageDecoder.GetSoftwareBitmapAsync();
@@ -114,7 +119,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        public async Task<bool> CheckData(DataPackageView data)
+        public async Task<bool> CheckDataAsync(DataPackageView data)
         {
             if (data.Contains(StandardDataFormats.Bitmap))
             {
@@ -150,27 +155,36 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             foreach (StorageFile file in await FileOpen.PickMultipleFilesAsync())
             {
-                if (file != null) { await ReadFile(file); }
+                if (file != null) { await ReadFileAsync(file); }
             }
         }
 
-        public async Task<IList<string>> UploadPic()
+        public async Task<IList<string>> UploadPicAsync()
         {
             IList<string> results = new List<string>();
             if (!Pictures.Any()) { return results; }
-            UIHelper.ShowMessage("上传图片");
+            Dispatcher.ShowMessage("上传图片");
+#if NETCORE463
+            List<UploadFileFragment> fragments = new List<UploadFileFragment>();
+            foreach (WriteableBitmap pic in Pictures)
+            {
+                fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
+            }
+            results = await RequestHelper.UploadImages(fragments);
+            UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+#else
             if (ExtensionManager.IsSupported)
             {
-                await ExtensionManager.Instance.Initialize(Dispatcher);
+                await ExtensionManager.Instance.InitializeAsync(Dispatcher);
                 if (ExtensionManager.Instance.Extensions.Any())
                 {
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>();
                     foreach (WriteableBitmap pic in Pictures)
                     {
-                        fragments.Add(await UploadFileFragment.FromWriteableBitmap(pic));
+                        fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
                     }
-                    results = await RequestHelper.UploadImages(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
-                    UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+                    results = await RequestHelper.UploadImagesAsync(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
+                    Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
                     return results;
                 }
             }
@@ -195,22 +209,23 @@ namespace CoolapkLite.ViewModels.FeedPages
                     await encoder.FlushAsync();
 
                     byte[] bytes = stream.GetBytes();
-                    (bool isSucceed, string result) = await RequestHelper.UploadImage(bytes, "pic");
+                    (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
                     if (isSucceed) { results.Add(result); }
                 }
-                UIHelper.ShowMessage($"已上传 ({i}/{Pictures.Count})");
+                Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
             }
+#endif
             return results;
         }
 
-        public async Task DropFile(DataPackageView data)
+        public async Task DropFileAsync(DataPackageView data)
         {
             if (data.Contains(StandardDataFormats.Bitmap))
             {
                 RandomAccessStreamReference bitmap = await data.GetBitmapAsync();
                 using (IRandomAccessStreamWithContentType random = await bitmap.OpenReadAsync())
                 {
-                    await ReadStream(random);
+                    await ReadStreamAsync(random);
                 }
             }
             else if (data.Contains(StandardDataFormats.StorageItems))
@@ -227,7 +242,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     }
                     return false;
                 });
-                if (images.Any()) { await ReadFile(images.FirstOrDefault() as StorageFile); }
+                if (images.Any()) { await ReadFileAsync(images.FirstOrDefault() as StorageFile); }
             }
         }
     }

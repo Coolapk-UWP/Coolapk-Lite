@@ -21,7 +21,7 @@
     <!--  一级卡片  -->
 
     <DataTemplate x:Key="TextLinkListCardTemplate">
-        <controls:StackPanel Spacing="12">
+        <controls:StackPanelEx Spacing="12">
             <Grid
                 x:Name="TitleGrid"
                 HorizontalAlignment="Stretch"
@@ -51,6 +51,7 @@
                     Click="Button_Click"
                     FontSize="12"
                     Tag="{Binding}"
+                    Tapped="Button_Tapped"
                     Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="{Binding Entities, Converter={StaticResource CollectionVisibilityConverter}}">
@@ -65,11 +66,11 @@
                 FontSize="14"
                 Text="{Binding Description}"
                 Visibility="{Binding Description, Converter={StaticResource BoolToVisibilityConverter}}" />
-        </controls:StackPanel>
+        </controls:StackPanelEx>
     </DataTemplate>
 
     <DataTemplate x:Key="ImageTextScrollCardTemplate">
-        <controls:StackPanel Spacing="12">
+        <controls:StackPanelEx Spacing="12">
             <Grid
                 x:Name="TitleGrid"
                 HorizontalAlignment="Stretch"
@@ -98,6 +99,7 @@
                     Click="Button_Click"
                     FontSize="12"
                     Tag="{Binding}"
+                    Tapped="Button_Tapped"
                     Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <ListView
@@ -109,11 +111,11 @@
                 Style="{StaticResource VerticalListViewStyle}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <controls:StackPanel Orientation="Horizontal" Spacing="6" />
+                        <controls:StackPanelEx Orientation="Horizontal" Spacing="6" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>
-        </controls:StackPanel>
+        </controls:StackPanelEx>
     </DataTemplate>
 
     <DataTemplate x:Key="TitleCardTemplate">
@@ -146,6 +148,7 @@
                 Click="Button_Click"
                 FontSize="12"
                 Tag="{Binding}"
+                Tapped="Button_Tapped"
                 Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
@@ -159,7 +162,8 @@
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="56" />
@@ -207,7 +211,8 @@
             Padding="4"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <StackPanel>
                 <Border
                     Width="36"
@@ -242,7 +247,8 @@
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

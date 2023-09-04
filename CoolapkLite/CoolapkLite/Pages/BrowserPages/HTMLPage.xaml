@@ -8,6 +8,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=browserpages:HTMLViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
@@ -15,9 +16,13 @@
             Margin="{StaticResource ScrollViewerMargin}"
             Padding="{StaticResource ScrollViewerPadding}"
             VerticalScrollBarVisibility="Auto">
-            <Border Margin="{StaticResource StackPanelMargin}" Padding="12,0">
+            <Border
+                Margin="{StaticResource StackPanelMargin}"
+                Padding="12,0"
+                VerticalAlignment="Top">
                 <WebView
                     x:Name="WebView"
+                    VerticalAlignment="Top"
                     helpers:WebViewHelper.HTML="{Binding HTML}"
                     helpers:WebViewHelper.IsEnable="True"
                     helpers:WebViewHelper.IsVerticalStretch="True"
@@ -27,7 +32,7 @@
         </ScrollViewer>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsBackButtonVisible="False"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"

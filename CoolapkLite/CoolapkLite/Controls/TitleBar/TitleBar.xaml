@@ -20,6 +20,12 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
 
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <ReorderThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+
                         <Grid
                             x:Name="TitleRoot"
                             Grid.Row="1"
@@ -29,6 +35,12 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.RightPaddingColumnGridLength}" />
                             </Grid.ColumnDefinitions>
+
+                            <Grid.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </Grid.ChildrenTransitions>
 
                             <Grid Grid.Column="1">
                                 <Grid.ColumnDefinitions>
@@ -40,13 +52,20 @@
                                     <!--  3: custom content  -->
                                 </Grid.ColumnDefinitions>
 
+                                <Grid.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </Grid.ChildrenTransitions>
+
                                 <Button
                                     x:Name="BackButton"
                                     x:Uid="/TitleBar/BackButton"
                                     Grid.Column="0"
                                     Content="&#xE72B;"
                                     IsEnabled="{TemplateBinding IsBackEnabled}"
-                                    Style="{ThemeResource TitleBarIconButtonStyle}" />
+                                    Style="{ThemeResource TitleBarIconButtonStyle}"
+                                    Visibility="Collapsed" />
 
                                 <TextBlock
                                     x:Name="TitleText"
@@ -70,6 +89,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
+                                    <Grid.ChildrenTransitions>
+                                        <TransitionCollection>
+                                            <ReorderThemeTransition />
+                                        </TransitionCollection>
+                                    </Grid.ChildrenTransitions>
                                     <ContentPresenter
                                         x:Name="CustomContentPresenter"
                                         Grid.Column="0"
@@ -91,7 +115,8 @@
                                         helpers:FocusVisualHelper.FocusVisualMargin="0"
                                         Content="&#xE72C;"
                                         IsEnabled="{TemplateBinding IsRefreshEnabled}"
-                                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                                        Style="{StaticResource TitleBarIconButtonStyle}"
+                                        Visibility="Collapsed" />
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -103,7 +128,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="BackButtonVisibilityGroup">
-                                <VisualState x:Name="BackButtonVisible" />
+                                <VisualState x:Name="BackButtonVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="BackButton.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="BackButtonCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="BackButton.Visibility" Value="Collapsed" />
@@ -113,7 +142,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="RefreshButtonVisibilityGroup">
-                                <VisualState x:Name="RefreshButtonVisible" />
+                                <VisualState x:Name="RefreshButtonVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="RefreshButton.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="RefreshButtonCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="RefreshButton.Visibility" Value="Collapsed" />
@@ -128,7 +161,11 @@
                                         <Setter Target="ProgressRing.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
-                                <VisualState x:Name="ProgressCollapsed" />
+                                <VisualState x:Name="ProgressCollapsed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ProgressRing.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="IconVisibilityGroup">
@@ -137,7 +174,11 @@
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="TitleTextVisibilityGroup">
-                                <VisualState x:Name="TitleTextVisible" />
+                                <VisualState x:Name="TitleTextVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="TitleText.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
                                 <VisualState x:Name="TitleTextCollapsed">
                                     <VisualState.Setters>
                                         <Setter Target="TitleText.Visibility" Value="Collapsed" />

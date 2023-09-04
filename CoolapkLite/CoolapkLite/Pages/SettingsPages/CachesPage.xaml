@@ -8,13 +8,15 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
+    xmlns:storage="using:Windows.Storage"
     d:DataContext="{d:DesignInstance Type=settingspages:CachesViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     mc:Ignorable="d">
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{Binding Images}"
+            ItemsSource="{x:Bind Provider.Images, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
@@ -24,14 +26,14 @@
                 </ItemsPanelTemplate>
             </control:PullToRefreshListView.ItemsPanel>
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate>
-                    <Image Source="{Binding Path}">
+                <DataTemplate x:DataType="storage:StorageFile">
+                    <Image Source="{x:Bind Path}">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem
                                     x:Name="Delete"
                                     Click="MenuFlyoutItem_Click"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Text="删除">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
@@ -45,7 +47,7 @@
         </control:PullToRefreshListView>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent" />

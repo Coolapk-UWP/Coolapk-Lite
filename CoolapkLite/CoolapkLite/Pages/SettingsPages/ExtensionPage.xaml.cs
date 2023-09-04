@@ -18,37 +18,60 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class ExtensionPage : Page
     {
-        internal ExtensionManager Provider;
+        #region Provider
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Extension");
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(ExtensionManager),
+                typeof(ExtensionPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public ExtensionManager Provider
+        {
+            get => (ExtensionManager)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
+
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Extension");
 
         public ExtensionPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? new ExtensionManager(ExtensionManager.OSSUploader);
-            DataContext = Provider;
-            await Refresh(true);
+            if (Provider == null)
+            {
+                Provider = new ExtensionManager(ExtensionManager.OSSUploader);
+                await Refresh(true);
+            }
         }
 
         public async Task Refresh(bool reset = false)
         {
-            UIHelper.ShowProgressBar();
+            this.ShowProgressBar();
             if (reset)
             {
-                await Provider.Initialize(Dispatcher);
+                await Provider.InitializeAsync(Dispatcher);
             }
             else
             {
-                await Provider.FindAndLoadExtensions();
+                await Provider.FindAndLoadExtensionsAsync();
             }
-            UIHelper.HideProgressBar();
+            this.HideProgressBar();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "Uninstall":

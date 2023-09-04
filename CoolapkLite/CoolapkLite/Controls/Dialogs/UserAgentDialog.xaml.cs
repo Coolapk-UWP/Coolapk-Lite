@@ -1,5 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml.Controls;

@@ -6,7 +6,6 @@ using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using static CoolapkLite.Models.Feeds.FeedModel;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
@@ -23,6 +22,7 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate AtCommentMe { get; set; }
         public DataTemplate SubtitleList { get; set; }
         public DataTemplate MessageNotify { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
             if (item is FeedModel) { return Feed; }
@@ -36,15 +36,21 @@ namespace CoolapkLite.Controls.DataTemplates
                     default: return Others;
                 }
             }
-            else if (item is LikeNotificationModel) { return LikeNotify; }
-            else if (item is SimpleNotificationModel) { return CommentMe; }
             else
             {
-                return item is MessageNotificationModel
-                ? MessageNotify
-                : item is AtCommentMeNotificationModel
-                ? AtCommentMe
-                : item is IHasDescription ? List : item is IHasSubtitle ? SubtitleList : Others;
+                return item is LikeNotificationModel
+                    ? LikeNotify
+                    : item is SimpleNotificationModel
+                        ? CommentMe
+                        : item is MessageNotificationModel
+                            ? MessageNotify
+                            : item is AtCommentMeNotificationModel
+                                ? AtCommentMe
+                                : item is IHasDescription
+                                    ? List
+                                    : item is IHasSubtitle
+                                        ? SubtitleList
+                                        : Others;
             }
         }
     }

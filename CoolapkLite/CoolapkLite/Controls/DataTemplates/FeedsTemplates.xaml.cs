@@ -6,7 +6,6 @@ using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,15 +13,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
-using Windows.UI.Notifications;
-using Windows.UI.StartScreen;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
-using TileSize = Windows.UI.StartScreen.TileSize;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -32,38 +28,47 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public FeedsTemplates() => InitializeComponent();
 
-        private void OnRootTapped(object sender, TappedRoutedEventArgs e)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
 
-            if ((element.DataContext as ICanCopy)?.IsCopyEnabled ?? false) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
 
-            if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
+            if ((element.DataContext as ICanCopy)?.IsCopyEnabled == true) { return; }
 
             if (e != null) { e.Handled = true; }
 
-            _ = element.OpenLinkAsync(element.Tag.ToString());
+            _ = element.OpenLinkAsync(element.Tag?.ToString());
         }
 
-        private void OnTopTapped(object sender, TappedRoutedEventArgs e)
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
+            {
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    FrameworkElement_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
+            }
+        }
 
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
             if (e != null) { e.Handled = true; }
-
-            _ = element.OpenLinkAsync(element.Tag.ToString());
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "SeeAllButton":
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), (FeedReplyModel)element.Tag));
+                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), element.Dispatcher, (FeedReplyModel)element.Tag));
                     break;
                 default:
-                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());
                     break;
             }
         }
@@ -78,7 +83,7 @@ namespace CoolapkLite.Controls.DataTemplates
                 }
             }
 
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "ReplyButton":
@@ -91,10 +96,7 @@ namespace CoolapkLite.Controls.DataTemplates
                             FeedType = CreateFeedType.Reply,
                             PopupTransitions = new TransitionCollection
                             {
-                                new EdgeUIThemeTransition
-                                {
-                                    Edge = EdgeTransitionLocation.Bottom
-                                }
+                                new PopupThemeTransition()
                             }
                         }.Show(element);
                     }
@@ -106,10 +108,7 @@ namespace CoolapkLite.Controls.DataTemplates
                             FeedType = CreateFeedType.ReplyReply,
                             PopupTransitions = new TransitionCollection
                             {
-                                new EdgeUIThemeTransition
-                                {
-                                    Edge = EdgeTransitionLocation.Bottom
-                                }
+                                new PopupThemeTransition()
                             }
                         }.Show(element);
                     }
@@ -117,17 +116,17 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "PinTileButton":
                     DisabledCopy();
-                    _ = PinSecondaryTile(element.Tag as FeedModelBase);
+                    _ = PinSecondaryTileAsync(element.Tag as FeedModelBase);
                     break;
 
                 case "LikeButton":
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLike();
+                    await (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":
                     DisabledCopy();
-                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), element.Dispatcher));
                     break;
 
                 case "ShareButton":
@@ -141,24 +140,24 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 default:
                     DisabledCopy();
-                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
+                    _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());
                     break;
             }
         }
 
         private async void DeviceHyperlink_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            UIHelper.ShowProgressBar();
+            sender.ShowProgressBar();
             string device = (sender.Inlines.FirstOrDefault().ElementStart.VisualParent.DataContext as FeedModelBase).DeviceTitle;
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true);
-            UIHelper.HideProgressBar();
+            sender.HideProgressBar();
             if (!isSucceed) { return; }
 
             JObject token = (JObject)result;
 
             if (token.TryGetValue("id", out JToken id))
             {
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString());
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, id.ToString(), sender.Dispatcher);
 
                 if (provider != null)
                 {
@@ -167,66 +166,19 @@ namespace CoolapkLite.Controls.DataTemplates
             }
         }
 
-        private async Task<bool> PinSecondaryTile(FeedModelBase feed)
+        private async Task<bool> PinSecondaryTileAsync(FeedModelBase feed)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
 
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = SecondaryTile.Exists(tileId);
-            if (isPinned)
-            {
-                UIHelper.ShowMessage(loader.GetString("AlreadyPinnedTile"));
-            }
-            else
-            {
-                // Use a display name you like
-                string displayName = $"{feed.UserInfo.UserName}的{feed.Info}";
-
-                // Provide all the required info in arguments so that when user
-                // clicks your tile, you can navigate them to the correct content
-                string arguments = feed.Url;
-
-                // Initialize the tile with required arguments
-                SecondaryTile tile = new SecondaryTile(
-                    tileId,
-                    displayName,
-                    arguments,
-                    new Uri("ms-appx:///Assets/Square150x150Logo.png"),
-                    TileSize.Default);
-
-                // Enable wide and large tile sizes
-                tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.png");
-                tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTile.png");
-
-                // Add a small size logo for better looking small tile
-                tile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/SmallTile.png");
-
-                // Add a unique corner logo for the secondary tile
-                tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.png");
-
-                // Show the display name on all sizes
-                tile.VisualElements.ShowNameOnSquare150x150Logo = true;
-                tile.VisualElements.ShowNameOnWide310x150Logo = true;
-                tile.VisualElements.ShowNameOnSquare310x310Logo = true;
-
-                // Pin the tile
-                isPinned = await tile.RequestCreateAsync();
-
-                if (isPinned) { UIHelper.ShowMessage(loader.GetString("PinnedTileSucceeded")); }
-            }
-
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, $"{feed.UserInfo.UserName}的{feed.Info}", feed.Url);
             if (isPinned)
             {
                 try
                 {
-                    TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
-                    tileUpdater.Clear();
-                    tileUpdater.EnableNotificationQueue(true);
-                    TileContent tileContent = LiveTileTask.GetFeedTitle(feed);
-                    TileNotification tileNotification = new TileNotification(tileContent.GetXml());
-                    tileUpdater.Update(tileNotification);
+                    LiveTileTask.UpdateTile(tileId, LiveTileTask.GetFeedTile(feed));
                 }
                 catch (Exception ex)
                 {
@@ -236,15 +188,15 @@ namespace CoolapkLite.Controls.DataTemplates
                 return isPinned;
             }
 
-            UIHelper.ShowMessage(loader.GetString("PinnedTileFailed"));
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
             return isPinned;
         }
 
         private void CopyMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             DataPackage dp = new DataPackage();
-            dp.SetText(element.Tag.ToString());
+            dp.SetText(element.Tag?.ToString());
             Clipboard.SetContent(dp);
         }
 

@@ -1,13 +1,24 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -21,17 +32,40 @@ namespace CoolapkLite.Pages.SettingsPages
     {
         private Action<UISettingChangedType> UISettingChanged;
 
-        internal SettingsViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(SettingsViewModel),
+                typeof(SettingsPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public SettingsViewModel Provider
+        {
+            get => (SettingsViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public SettingsPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+            if (Provider == null)
+            {
+                Provider = SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
+            }
             UISettingChanged = (mode) => UpdateThemeRadio();
-            Provider = SettingsViewModel.Caches ?? new SettingsViewModel(Dispatcher);
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
-            DataContext = Provider;
             UpdateThemeRadio();
         }
 
@@ -41,9 +75,16 @@ namespace CoolapkLite.Pages.SettingsPages
             ThemeHelper.UISettingChanged.Remove(UISettingChanged);
         }
 
-        private void UpdateThemeRadio()
+        private async void UpdateThemeRadio()
         {
-            switch (ThemeHelper.ActualTheme)
+            ElementTheme theme = await ThemeHelper.GetActualThemeAsync().ConfigureAwait(false);
+
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            switch (theme)
             {
                 case ElementTheme.Light:
                     Light.IsChecked = true;
@@ -72,25 +113,22 @@ namespace CoolapkLite.Pages.SettingsPages
                     Frame.GoBack();
                     break;
                 case "MyDevice":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice"));
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice", Dispatcher));
                     break;
                 case "TestPage":
                     _ = Frame.Navigate(typeof(TestPage));
                     break;
                 case "LogFolder":
-                    _ = await Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
-                    break;
-                case "ViewCache":
-                    _ = Frame.Navigate(typeof(CachesPage));
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
-                    Provider?.CleanCache();
+                    _ = (Provider?.CleanCacheAsync());
                     break;
                 case "CheckUpdate":
-                    Provider?.CheckUpdate();
+                    _ = (Provider?.CheckUpdateAsync(this));
                     break;
                 case "AccountSetting":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings"));
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();
@@ -107,17 +145,38 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void Button_Checked(object sender, RoutedEventArgs _)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "Dark":
+                case nameof(Dark):
                     ThemeHelper.RootTheme = ElementTheme.Dark;
                     break;
-                case "Light":
+                case nameof(Light):
                     ThemeHelper.RootTheme = ElementTheme.Light;
                     break;
-                case "Default":
+                case nameof(Default):
                     ThemeHelper.RootTheme = ElementTheme.Default;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            switch ((sender as FrameworkElement).Tag.ToString())
+            {
+                case "ViewCache":
+                    _ = Frame.Navigate(typeof(CachesPage));
+                    break;
+                case "OpenCache":
+                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists));
+                    break;
+                case "OpenLogFile":
+                    StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+                    IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+                    StorageFile file = files.FirstOrDefault();
+                    if (file != null) { _ = Launcher.LaunchFileAsync(file); }
                     break;
                 default:
                     break;

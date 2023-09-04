@@ -17,7 +17,28 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class AdaptivePage : Page
     {
-        private AdaptiveViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(AdaptiveViewModel),
+                typeof(AdaptivePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public AdaptiveViewModel Provider
+        {
+            get => (AdaptiveViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public AdaptivePage() => InitializeComponent();
 
@@ -28,9 +49,8 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
-                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider.LoadMoreStarted += OnLoadMoreStarted;
+                Provider.LoadMoreCompleted += OnLoadMoreCompleted;
                 await Refresh(true);
             }
         }
@@ -38,9 +58,13 @@ namespace CoolapkLite.Pages.FeedPages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Provider.LoadMoreStarted -= UIHelper.ShowProgressBar;
-            Provider.LoadMoreCompleted -= UIHelper.HideProgressBar;
+            Provider.LoadMoreStarted -= OnLoadMoreStarted;
+            Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
         }
+
+        private void OnLoadMoreStarted() => this.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => this.HideProgressBar();
 
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 

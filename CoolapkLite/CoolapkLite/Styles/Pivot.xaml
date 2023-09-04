@@ -15,30 +15,43 @@
                 <ControlTemplate TargetType="PivotHeaderItem">
                     <Grid
                         x:Name="Grid"
-                        Padding="{TemplateBinding Padding}"
-                        Background="{TemplateBinding Background}">
+                        Background="{TemplateBinding Background}"
+                        Control.IsTemplateFocusTarget="True">
                         <Grid.RenderTransform>
                             <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
                         </Grid.RenderTransform>
+                        <Rectangle
+                            x:Name="PointerRectangle"
+                            Fill="Transparent"
+                            Visibility="Collapsed" />
+                        <Border
+                            x:Name="RevealBorder"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}" />
                         <ContentPresenter
                             x:Name="ContentPresenter"
+                            Margin="{ThemeResource TopHamburgerMenuItemContentOnlyContentPresenterMargin}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            AutomationProperties.AccessibilityView="Raw"
                             Content="{TemplateBinding Content}"
                             ContentTemplate="{TemplateBinding ContentTemplate}"
-                            FontFamily="{TemplateBinding FontFamily}"
-                            FontSize="{TemplateBinding FontSize}"
-                            FontWeight="{TemplateBinding FontWeight}"
-                            OpticalMarginAlignment="TrimSideBearings" />
-                        <Rectangle
-                            x:Name="SelectedPipe"
-                            Height="2"
-                            Margin="0,0,0,2"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Bottom"
-                            Fill="{ThemeResource SystemControlForegroundAccentBrush}"
-                            RadiusX="1"
-                            RadiusY="1" />
+                            ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}"
+                            ContentTransitions="{TemplateBinding ContentTransitions}"
+                            Foreground="{TemplateBinding Foreground}"
+                            TextWrapping="NoWrap" />
+                        <Grid
+                            x:Name="SelectionIndicatorGrid"
+                            Margin="16,0,16,4"
+                            VerticalAlignment="Bottom">
+                            <Rectangle
+                                x:Name="SelectionIndicator"
+                                Height="2"
+                                Fill="{ThemeResource HamburgerMenuSelectionIndicatorForeground}"
+                                Opacity="0"
+                                RadiusX="1"
+                                RadiusY="1" />
+                        </Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SelectionStates">
                                 <VisualStateGroup.Transitions>
@@ -50,41 +63,15 @@
                                         GeneratedDuration="0:0:0.33"
                                         From="UnselectedLocked"
                                         To="Unselected" />
-                                    <VisualTransition
-                                        GeneratedDuration="0:0:0.001"
-                                        From="Selected"
-                                        To="Unselected">
-                                        <VisualTransition.Storyboard>
-                                            <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedPipe" Storyboard.TargetProperty="(UIElement.Opacity)">
-                                                    <DiscreteObjectKeyFrame KeyTime="0:0:0.001" Value="0.0" />
-                                                </ObjectAnimationUsingKeyFrames>
-                                            </Storyboard>
-                                        </VisualTransition.Storyboard>
-                                    </VisualTransition>
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Disabled">
                                     <VisualState.Setters>
-                                        <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                    </VisualState.Setters>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlDisabledBaseMediumLowBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Unselected">
-                                    <VisualState.Setters>
-                                        <Setter Target="SelectedPipe.Opacity" Value="0.0" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundDisabled}" />
+                                        <Setter Target="RevealBorder.BorderBrush" Value="{ThemeResource HamburgerMenuItemBorderBrushCheckedDisabled}" />
                                     </VisualState.Setters>
                                 </VisualState>
+                                <VisualState x:Name="Unselected" />
                                 <VisualState x:Name="UnselectedLocked">
-                                    <VisualState.Setters>
-                                        <Setter Target="SelectedPipe.Opacity" Value="0.0" />
-                                    </VisualState.Setters>
                                     <Storyboard>
                                         <DoubleAnimation
                                             Storyboard.TargetName="ContentPresenterTranslateTransform"
@@ -99,60 +86,42 @@
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundSelected}" />
+                                        <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelected}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundSelected}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="SelectedPipe.Opacity" Value="0.0" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPointerOver}" />
+                                        <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPointerOver}" />
                                     </VisualState.Setters>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="SelectedPointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundSelectedPointerOver}" />
+                                        <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPointerOver}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundSelectedPointerOver}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="UnselectedPressed">
                                     <VisualState.Setters>
-                                        <Setter Target="SelectedPipe.Opacity" Value="0.0" />
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundPressed}" />
+                                        <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundPressed}" />
                                     </VisualState.Setters>
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="SelectedPressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightAltBaseMediumHighBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Grid" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SystemControlHighlightTransparentBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="Grid.Background" Value="{ThemeResource TopHamburgerMenuItemBackgroundSelectedPressed}" />
+                                        <Setter Target="PointerRectangle.Fill" Value="{ThemeResource HamburgerMenuItemBackgroundSelectedPressed}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TopHamburgerMenuItemForegroundSelectedPressed}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>

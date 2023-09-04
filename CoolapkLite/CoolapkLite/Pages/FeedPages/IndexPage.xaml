@@ -9,6 +9,7 @@
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:IndexViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -16,7 +17,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
@@ -36,13 +37,13 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-            ItemsSource="{Binding}"
+            ItemsSource="{x:Bind Provider}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent" />

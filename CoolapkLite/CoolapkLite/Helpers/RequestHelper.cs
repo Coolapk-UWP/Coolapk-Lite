@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Models.Update;
 using CoolapkLite.Models.Upload;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -8,13 +7,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
+
+#if NETCORE463
+using System.Linq;
+#else
+using System.Net.Http.Headers;
+using CoolapkLite.Models.Network;
+using Windows.Foundation.Collections;
+#endif
 
 namespace CoolapkLite.Helpers
 {
@@ -25,7 +31,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground = false)
         {
-            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
             JObject token;
             try { token = JObject.Parse(results); }
@@ -45,7 +51,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, string request = "com.coolapk.market", bool isBackground = false)
         {
-            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(results))
             {
                 UIHelper.ShowMessage("加载失败");
@@ -56,7 +62,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
+            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json)) { return (false, null); }
             JObject token;
             try { token = JObject.Parse(json); }
@@ -75,14 +81,14 @@ namespace CoolapkLite.Helpers
             else
             {
                 return data != null && !string.IsNullOrWhiteSpace(data.ToString())
-                ? ((bool isSucceed, JToken result))(true, data)
-                : ((bool isSucceed, JToken result))(token != null && !string.IsNullOrEmpty(token.ToString()), token);
+                    ? (true, data)
+                    : (token != null && !string.IsNullOrEmpty(token.ToString()), token);
             }
         }
 
         public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
-            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground);
+            string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json))
             {
                 UIHelper.ShowMessage("加载失败");
@@ -93,12 +99,13 @@ namespace CoolapkLite.Helpers
 
         private static (int page, Uri uri) GetPage(this Uri uri)
         {
-            Regex pageregex = new Regex(@"([&|?])page=(\d+)(\??)");
-            if (pageregex.IsMatch(uri.ToString()))
+            Regex pageRegex = new Regex(@"([&?])page=(\\d+)(\\??)");
+            Match match = pageRegex.Match(uri.ToString());
+            if (match.Success)
             {
-                int pagenum = Convert.ToInt32(pageregex.Match(uri.ToString()).Groups[2].Value);
-                Uri baseuri = new Uri(pageregex.Match(uri.ToString()).Groups[3].Value == "?" ? pageregex.Replace(uri.ToString(), pageregex.Match(uri.ToString()).Groups[1].Value) : pageregex.Replace(uri.ToString(), string.Empty));
-                return (pagenum, baseuri);
+                int pageNum = Convert.ToInt32(match.Groups[2].Value);
+                Uri baseUri = new Uri(match.Groups[3].Value == "?" ? pageRegex.Replace(uri.ToString(), match.Groups[1].Value) : pageRegex.Replace(uri.ToString(), string.Empty));
+                return (pageNum, baseUri);
             }
             else
             {
@@ -120,23 +127,81 @@ namespace CoolapkLite.Helpers
         }
 
 #pragma warning disable 0612
-        public static async Task<BitmapImage> GetImageAsync(string uri, bool isBackground = false)
+        public static async Task<BitmapImage> GetImageAsync(string uri, CoreDispatcher dispatcher, bool isBackground = false)
         {
-            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha);
+            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha).ConfigureAwait(false);
             StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
 
-            Stream s = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground);
-
-            using (Stream ss = await file.OpenStreamForWriteAsync())
+            using (Stream stream = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground).ConfigureAwait(false))
+            using (Stream fileStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
             {
-                await s.CopyToAsync(ss);
+                await stream.CopyToAsync(fileStream).ConfigureAwait(false);
+            }
+
+            if (dispatcher?.HasThreadAccess == false)
+            {
+                await dispatcher.ResumeForegroundAsync();
             }
 
             return new BitmapImage(new Uri(file.Path));
         }
 #pragma warning restore 0612
 
-        public static async Task<string[]> UploadImages(IEnumerable<UploadFileFragment> fragments, Extension extension)
+#if NETCORE463
+        public static async Task<List<string>> UploadImages(IEnumerable<UploadFileFragment> images)
+        {
+            List<string> responses = new List<string>();
+            using (MultipartFormDataContent content = new MultipartFormDataContent())
+            {
+                string json = JsonConvert.SerializeObject(images, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                using (StringContent uploadBucket = new StringContent("image"))
+                using (StringContent uploadDir = new StringContent("feed"))
+                using (StringContent is_anonymous = new StringContent("0"))
+                using (StringContent uploadFileList = new StringContent(json))
+                {
+                    content.Add(uploadBucket, "uploadBucket");
+                    content.Add(uploadDir, "uploadDir");
+                    content.Add(is_anonymous, "is_anonymous");
+                    content.Add(uploadFileList, "uploadFileList");
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content);
+                    if (isSucceed)
+                    {
+                        UploadPicturePrepareResult data = result.ToObject<UploadPicturePrepareResult>();
+                        foreach (UploadFileInfo info in data.FileInfo)
+                        {
+                            UploadFileFragment image = images.FirstOrDefault((x) => x.MD5 == info.MD5);
+                            if (image == null) { continue; }
+                            using (Stream stream = image.Bytes.GetStream())
+                            {
+                                string response = await Task.Run(() => OSSUploadHelper.OssUpload(data.UploadPrepareInfo, info, stream, "image/png"));
+                                if (!string.IsNullOrEmpty(response))
+                                {
+                                    try
+                                    {
+                                        JObject token = JObject.Parse(response);
+                                        if (token.TryGetValue("data", out JToken value)
+                                            && ((JObject)value).TryGetValue("url", out JToken url)
+                                            && !string.IsNullOrEmpty(url.ToString()))
+                                        {
+                                            responses.Add(url.ToString());
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
+                                        UIHelper.ShowMessage("上传失败");
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return responses;
+        }
+#else
+        public static async Task<string[]> UploadImagesAsync(IEnumerable<UploadFileFragment> fragments, Extension extension)
         {
             ValueSet message = new ValueSet
             {
@@ -148,10 +213,10 @@ namespace CoolapkLite.Helpers
                 ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() })
             };
-            return await extension.Invoke(message) as string[];
+            return await extension.InvokeAsync(message) as string[];
         }
 
-        public static async Task<(bool isSucceed, string result)> UploadImage(byte[] image, string name)
+        public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
@@ -167,18 +232,12 @@ namespace CoolapkLite.Helpers
 
                     content.Add(picFile);
 
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content);
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content).ConfigureAwait(false);
 
                     if (isSucceed) { return (isSucceed, result.ToString()); }
                 }
             }
             return (false, null);
-        }
-
-        public static async Task<bool> CheckLogin()
-        {
-            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true);
-            return isSucceed;
         }
 
         private class IgnoreIgnoredContractResolver : DefaultContractResolver
@@ -198,6 +257,13 @@ namespace CoolapkLite.Helpers
                 }
                 return list;
             }
+        }
+#endif
+
+        public static async Task<bool> CheckLoginAsync()
+        {
+            (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
+            return isSucceed;
         }
     }
 }

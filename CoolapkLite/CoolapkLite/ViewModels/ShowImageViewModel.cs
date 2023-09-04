@@ -1,42 +1,37 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.ApplicationModel.Resources;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
 using Windows.UI.Core;
+using NetworkHelper = Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper;
 
 namespace CoolapkLite.ViewModels
 {
     public class ShowImageViewModel : IViewModel
     {
-        private string ImageName = string.Empty;
-        public double[] VerticalOffsets { get; set; } = new double[1];
+        private string ImageName => index == -1 || Images?.Any() != true ? string.Empty : Images[Index].Title;
 
         public CoreDispatcher Dispatcher { get; }
 
-        private string title;
         public string Title
         {
-            get => title;
-            protected set
+            get
             {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
+                if (index == -1 || Images?.Any() != true) { return "查看图片"; }
+                string name = ImageName;
+                return $"{(string.IsNullOrWhiteSpace(name) ? "查看图片" : name)} ({Index + 1}/{Images.Count})";
             }
+        }
+
+        private IList<ImageModel> images;
+        public IList<ImageModel> Images
+        {
+            get => images;
+            private set => SetProperty(ref images, value);
         }
 
         private int index = -1;
@@ -47,74 +42,16 @@ namespace CoolapkLite.ViewModels
             {
                 if (index != value)
                 {
-                    if (index != -1) { ResigerImage(Images[index], Images[value]); }
                     index = value;
                     RaisePropertyChangedEvent();
-                    Title = GetTitle(Images[value].Uri);
-                    ShowOrigin = Images[value].Type.HasFlag(ImageType.Small);
-                }
-            }
-        }
-
-        private bool isLoading;
-        public bool IsLoading
-        {
-            get => isLoading;
-            protected set
-            {
-                if (isLoading != value)
-                {
-                    isLoading = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        private bool isShowHub = true;
-        public bool IsShowHub
-        {
-            get => isShowHub;
-            set
-            {
-                if (isShowHub != value)
-                {
-                    isShowHub = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        private IList<ImageModel> images;
-        public IList<ImageModel> Images
-        {
-            get => images;
-            private set
-            {
-                if (images != value)
-                {
-                    images = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        private bool showOrigin = false;
-        public bool ShowOrigin
-        {
-            get => showOrigin;
-            set
-            {
-                if (showOrigin != value)
-                {
-                    showOrigin = value;
-                    RaisePropertyChangedEvent();
+                    RaisePropertyChangedEvent(nameof(Title));
                 }
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -126,9 +63,22 @@ namespace CoolapkLite.ViewModels
             }
         }
 
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
         public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
+            if (image.Dispatcher != dispatcher)
+            {
+                image = image.Clone(dispatcher);
+            }
             if (image.ContextArray.Any())
             {
                 Images = image.ContextArray;
@@ -136,10 +86,10 @@ namespace CoolapkLite.ViewModels
             }
             else
             {
-                Images = new List<ImageModel> { image };
+                Images = new ImageModel[] { image };
                 Index = 0;
             }
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture))
+            if (!NetworkHelper.Instance.ConnectionInformation.IsInternetOnMeteredConnection)
             {
                 foreach (ImageModel Image in Images)
                 {
@@ -148,129 +98,9 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        ~ShowImageViewModel()
-        {
-            foreach (ImageModel image in images)
-            {
-                image.LoadStarted -= OnLoadStarted;
-                image.LoadCompleted -= OnLoadCompleted;
-            }
-        }
-
         public async Task Refresh(bool reset = false) => await Images[Index].Refresh();
 
         bool IViewModel.IsEqual(IViewModel other) => other is ShowImageViewModel model && IsEqual(model);
         public bool IsEqual(ShowImageViewModel other) => Images == other.Images;
-
-        private string GetTitle(string url)
-        {
-            Regex regex = new Regex(@"[^/]+(?!.*/)");
-            ImageName = regex.IsMatch(url) ? regex.Match(url).Value : "查看图片";
-            return $"{ImageName} ({Index + 1}/{Images.Count})";
-        }
-
-        public async void CopyPic()
-        {
-            DataPackage dataPackage = await GetImageDataPackage("复制图片");
-            Clipboard.SetContentWithOptions(dataPackage, null);
-        }
-
-        public async void SharePic()
-        {
-            DataPackage dataPackage = await GetImageDataPackage("分享图片");
-            if (dataPackage != null)
-            {
-                DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
-                dataTransferManager.DataRequested += (sender, args) => { args.Request.Data = dataPackage; };
-                DataTransferManager.ShowShareUI();
-            }
-        }
-
-        public async Task<DataPackage> GetImageDataPackage(string title)
-        {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
-            if (file == null)
-            {
-                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
-                return null;
-            }
-            RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
-
-            DataPackage dataPackage = new DataPackage();
-            dataPackage.SetBitmap(bitmap);
-            dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = ImageName;
-
-            return dataPackage;
-        }
-
-        public async Task GetImageDataPackage(DataPackage dataPackage, string title)
-        {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Images[Index].Uri);
-            if (file == null)
-            {
-                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
-                return;
-            }
-            RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
-
-            dataPackage.SetBitmap(bitmap);
-            dataPackage.Properties.Title = title;
-            dataPackage.Properties.Description = ImageName;
-            dataPackage.SetStorageItems(new IStorageItem[] { file });
-        }
-
-        public async void SavePic()
-        {
-            string url = Images[Index].Uri;
-            StorageFile image = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, url);
-            if (image == null)
-            {
-                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                UIHelper.ShowMessage(str);
-                return;
-            }
-
-            string fileName = ImageName;
-            FileSavePicker fileSavePicker = new FileSavePicker
-            {
-                SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                SuggestedFileName = fileName.Replace(fileName.Substring(fileName.LastIndexOf('.')), string.Empty)
-            };
-
-            string fileex = fileName.Substring(fileName.LastIndexOf('.') + 1);
-            int index = fileex.IndexOfAny(new char[] { '?', '%', '&' });
-            fileex = fileex.Substring(0, index == -1 ? fileex.Length : index);
-            fileSavePicker.FileTypeChoices.Add($"{fileex}文件", new string[] { "." + fileex });
-
-            StorageFile file = await fileSavePicker.PickSaveFileAsync();
-            if (file != null)
-            {
-                using (Stream FolderStream = await file.OpenStreamForWriteAsync())
-                {
-                    using (IRandomAccessStreamWithContentType RandomAccessStream = await image.OpenReadAsync())
-                    {
-                        using (Stream ImageStream = RandomAccessStream.AsStreamForRead())
-                        {
-                            await ImageStream.CopyToAsync(FolderStream);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void ResigerImage(ImageModel oldvalue, ImageModel newvalue)
-        {
-            oldvalue.LoadStarted -= OnLoadStarted;
-            oldvalue.LoadCompleted -= OnLoadCompleted;
-            newvalue.LoadStarted += OnLoadStarted;
-            newvalue.LoadCompleted += OnLoadCompleted;
-        }
-
-        private void OnLoadStarted(ImageModel sender, object args) => IsLoading = true;
-
-        private void OnLoadCompleted(ImageModel sender, object args) => IsLoading = false;
     }
 }

@@ -27,7 +27,29 @@ namespace CoolapkLite.Pages.FeedPages
     {
         private Func<bool, Task> Refresh;
         private static int PivotIndex = 0;
-        private SearchingViewModel Provider;
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(SearchingViewModel),
+                typeof(SearchingPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public SearchingViewModel Provider
+        {
+            get => (SearchingViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public SearchingPage() => InitializeComponent();
 
@@ -38,7 +60,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 if (Provider.PivotIndex != -1)
                 { PivotIndex = Provider.PivotIndex; }
                 await Provider.Refresh(true);
@@ -66,7 +87,7 @@ namespace CoolapkLite.Pages.FeedPages
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
@@ -91,13 +112,13 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemsStackPanel StackPanel = (sender as FrameworkElement).FindDescendant<ItemsStackPanel>();
+            ItemsStackPanel StackPanel = (sender as DependencyObject).FindDescendant<ItemsStackPanel>();
             if (StackPanel != null) { StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch; }
         }
 
         #region 搜索框
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
@@ -139,14 +160,14 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}"));
+                _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {
                 Provider.Title = word.ToString();
                 await Provider.Refresh(true);
             }
-            else if (args.ChosenSuggestion is null)
+            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
                 Provider.Title = sender.Text;
                 await Provider.Refresh(true);

@@ -20,7 +20,28 @@ namespace CoolapkLite.Pages.BrowserPages
     /// </summary>
     public sealed partial class BrowserPage : Page
     {
-        private BrowserViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(BrowserViewModel),
+                typeof(BrowserPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public BrowserViewModel Provider
+        {
+            get => (BrowserViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public BrowserPage() => InitializeComponent();
 
@@ -31,7 +52,6 @@ namespace CoolapkLite.Pages.BrowserPages
             if (e.Parameter is BrowserViewModel ViewModel)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 if (Provider.Uri != null)
                 {
                     WebView.Navigate(Provider.Uri);
@@ -43,6 +63,7 @@ namespace CoolapkLite.Pages.BrowserPages
         {
             base.OnNavigatedFrom(e);
             Frame.Navigating -= OnFrameNavigating;
+            Provider = null;
         }
 
         private void LoadUri(Uri uri)
@@ -57,7 +78,7 @@ namespace CoolapkLite.Pages.BrowserPages
 
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            UIHelper.ShowProgressBar();
+            this.ShowProgressBar();
             if (args.Uri.Host.Contains("coolapk"))
             {
                 WebView.NavigationStarting -= WebView_NavigationStarting;
@@ -70,14 +91,14 @@ namespace CoolapkLite.Pages.BrowserPages
         {
             if (Provider.IsLoginPage && args.Uri.AbsoluteUri == "https://www.coolapk.com/")
             {
-                await CheckLogin();
+                await CheckLoginAsync();
             }
             else if (args.Uri.AbsoluteUri == UriHelper.LoginUri)
             {
                 Provider.IsLoginPage = true;
             }
             Provider.Title = sender.DocumentTitle;
-            UIHelper.HideProgressBar();
+            this.HideProgressBar();
         }
 
         private void OnFrameNavigating(object sender, NavigatingCancelEventArgs args)
@@ -89,44 +110,44 @@ namespace CoolapkLite.Pages.BrowserPages
             }
         }
 
-        private async Task CheckLogin()
+        private async Task CheckLoginAsync()
         {
-            ResourceLoader loader = ResourceLoader.GetForCurrentView("BrowserPage");
-            UIHelper.ShowMessage(loader.GetString("Logging"));
-            if (await SettingsHelper.Login())
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
+            this.ShowMessage(loader.GetString("Logging"));
+            if (await SettingsHelper.LoginAsync())
             {
                 if (Frame.CanGoBack)
                 {
                     Frame.Navigating -= OnFrameNavigating;
                     Frame.GoBack();
                 }
-                UIHelper.ShowMessage(loader.GetString("LoginSuccessfully"));
+                this.ShowMessage(loader.GetString("LoginSuccessfully"));
             }
             else
             {
                 WebView.Navigate(new Uri(UriHelper.LoginUri));
-                UIHelper.ShowMessage(loader.GetString("CannotGetToken"));
+                this.ShowMessage(loader.GetString("CannotGetToken"));
             }
         }
 
         private async void ManualLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            UIHelper.ShowProgressBar();
+            this.ShowProgressBar();
             LoginDialog Dialog = new LoginDialog();
             ContentDialogResult result = await Dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                _ = CheckLogin();
+                _ = CheckLoginAsync();
             }
             else
             {
-                UIHelper.HideProgressBar();
+                this.HideProgressBar();
             }
         }
 
         private void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(WebView.Source);
 
-        private void TryLoginButton_Click(object sender, RoutedEventArgs e) => _ = CheckLogin();
+        private void TryLoginButton_Click(object sender, RoutedEventArgs e) => _ = CheckLoginAsync();
 
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => WebView.Refresh();
     }

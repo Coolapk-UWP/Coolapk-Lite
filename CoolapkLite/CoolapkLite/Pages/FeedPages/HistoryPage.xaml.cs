@@ -3,7 +3,6 @@ using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -17,34 +16,53 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class HistoryPage : Page
     {
-        private HistoryViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(HistoryViewModel),
+                typeof(HistoryPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public HistoryViewModel Provider
+        {
+            get => (HistoryViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public HistoryPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is HistoryViewModel ViewModel
-                && Provider?.IsEqual(ViewModel) != true)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                DataContext = Provider;
-                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider = new HistoryViewModel(Dispatcher);
                 await Refresh(true);
             }
-            else
-            {
-                TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("History");
-            }
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            Provider.LoadMoreStarted -= UIHelper.ShowProgressBar;
-            Provider.LoadMoreCompleted -= UIHelper.HideProgressBar;
+            Provider.LoadMoreStarted -= OnLoadMoreStarted;
+            Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
         }
+
+        private void OnLoadMoreStarted() => this.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => this.HideProgressBar();
 
         private async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 

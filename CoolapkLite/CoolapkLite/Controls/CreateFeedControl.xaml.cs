@@ -45,7 +45,30 @@ namespace CoolapkLite.Controls
         private readonly string[] TraditionEmojis = EmojiHelper.Tradition;
         private readonly string[] ClassicEmojis = EmojiHelper.Classic;
 
-        public CreateFeedViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(CreateFeedViewModel),
+                typeof(CreateFeedControl),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Picker"/>.
+        /// </summary>
+        public CreateFeedViewModel Provider
+        {
+            get => (CreateFeedViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
+
+        #region FeedType
 
         public static readonly DependencyProperty FeedTypeProperty =
             DependencyProperty.Register(
@@ -60,6 +83,10 @@ namespace CoolapkLite.Controls
             set => SetValue(FeedTypeProperty, value);
         }
 
+        #endregion
+
+        #region ReplyID
+
         public static readonly DependencyProperty ReplyIDProperty =
             DependencyProperty.Register(
                 nameof(ReplyID),
@@ -72,6 +99,8 @@ namespace CoolapkLite.Controls
             get => (int)GetValue(ReplyIDProperty);
             set => SetValue(ReplyIDProperty, value);
         }
+
+        #endregion
 
         private static void OnFeedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -150,13 +179,14 @@ namespace CoolapkLite.Controls
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Name)
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Name)
             {
-                case "PastePic":
-                    _ = Provider.DropFile(Clipboard.GetContent());
+                case nameof(PastePic):
+                    _ = Provider.DropFileAsync(Clipboard.GetContent());
                     break;
                 case "DeletePic":
-                    Provider.Pictures.Remove((sender as FrameworkElement).Tag as WriteableBitmap);
+                    Provider.Pictures.Remove(element.Tag as WriteableBitmap);
                     break;
                 default:
                     break;
@@ -165,7 +195,7 @@ namespace CoolapkLite.Controls
 
         private void CreateDataContent()
         {
-            UIHelper.ShowProgressBar();
+            this.ShowProgressBar();
             InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
             contentText = contentText.Replace("\r", "\r\n");
             if (string.IsNullOrWhiteSpace(contentText)) { return; }
@@ -178,11 +208,11 @@ namespace CoolapkLite.Controls
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
             {
-                pics = await Provider.UploadPic();
+                pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    UIHelper.ShowMessage("图片上传失败");
-                    UIHelper.HideProgressBar();
+                    this.ShowMessage("图片上传失败");
+                    this.HideProgressBar();
                     return;
                 }
             }
@@ -197,7 +227,7 @@ namespace CoolapkLite.Controls
                     content.Add(type, "type");
                     content.Add(is_html_article, "is_html_article");
                     content.Add(pic, "pic");
-                    await SendContent(content);
+                    await SendContentAsync(content);
                 }
             }
         }
@@ -207,11 +237,11 @@ namespace CoolapkLite.Controls
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
             {
-                pics = await Provider.UploadPic();
+                pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    UIHelper.ShowMessage("图片上传失败");
-                    UIHelper.HideProgressBar();
+                    this.ShowMessage("图片上传失败");
+                    this.HideProgressBar();
                     return;
                 }
             }
@@ -222,12 +252,12 @@ namespace CoolapkLite.Controls
                 {
                     content.Add(message, "message");
                     content.Add(pic, "pic");
-                    await SendContent(content);
+                    await SendContentAsync(content);
                 }
             }
         }
 
-        private async Task SendContent(HttpContent content)
+        private async Task SendContentAsync(HttpContent content)
         {
             UriType type = (UriType)(-1);
             switch (FeedType)
@@ -258,19 +288,19 @@ namespace CoolapkLite.Controls
             }
             catch (CoolapkMessageException cex)
             {
-                UIHelper.ShowMessage(cex.Message);
+                this.ShowMessage(cex.Message);
                 if (cex.MessageStatus == CoolapkMessageException.RequestCaptcha)
                 {
                     //CaptchaDialog dialog = new CaptchaDialog();
                     //_ = await dialog.ShowAsync();
                 }
             }
-            UIHelper.HideProgressBar();
+            this.HideProgressBar();
         }
 
         private void SendSuccessful()
         {
-            UIHelper.ShowMessage(ResourceLoader.GetForViewIndependentUse("CreateFeedControl").GetString("SendSuccessed"));
+            this.ShowMessage(ResourceLoader.GetForViewIndependentUse("CreateFeedControl").GetString("SendSuccessed"));
             InputBox.Document.SetText(TextSetOptions.None, string.Empty);
             Provider.Pictures.Clear();
             Hide();
@@ -278,7 +308,7 @@ namespace CoolapkLite.Controls
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.CommandBarFlyout"))
             {
                 InputBox.ContextFlyout.Opening += Menu_Opening;
                 InputBox.ContextFlyout.Closing += Menu_Closing;
@@ -443,7 +473,7 @@ namespace CoolapkLite.Controls
 
         private void Grid_Drop(object sender, DragEventArgs e)
         {
-            _ = Provider.DropFile(e.DataView);
+            _ = Provider.DropFileAsync(e.DataView);
             e.Handled = true;
         }
 
@@ -459,7 +489,7 @@ namespace CoolapkLite.Controls
                         case VirtualKey.V:
                             if (PastePic.IsEnabled)
                             {
-                                _ = Provider.DropFile(Clipboard.GetContent());
+                                _ = Provider.DropFileAsync(Clipboard.GetContent());
                                 args.Handled = true;
                             }
                             break;
@@ -468,7 +498,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckData(Clipboard.GetContent()));
+        private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckDataAsync(Clipboard.GetContent()));
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
 
@@ -508,12 +538,13 @@ namespace CoolapkLite.Controls
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            object result = ImageCacheHelper.NoPic;
+            object result = null;
             string item = value.ToString();
             if (EmojiHelper.Emojis.Contains(item))
             {
                 result = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png"));
             }
+            result = result ?? ImageCacheHelper.GetNoPic(UIHelper.TryGetForCurrentCoreDispatcher());
             return ConverterTools.Convert(result, targetType);
         }
 

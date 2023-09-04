@@ -1,40 +1,31 @@
 ﻿using CoolapkLite.BackgroundTasks;
 using CoolapkLite.Common;
-using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages;
-using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Newtonsoft.Json.Linq;
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
-using Windows.ApplicationModel.Search;
-using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
-using Windows.Storage;
 using Windows.System;
 using Windows.System.Profile;
-using Windows.UI.ApplicationSettings;
-using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite
 {
@@ -68,6 +59,10 @@ namespace CoolapkLite
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             EnsureWindow(e);
+            if (SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching))
+            {
+                CheckUpdate();
+            }
         }
 
         protected override void OnActivated(IActivatedEventArgs e)
@@ -78,46 +73,35 @@ namespace CoolapkLite
 
         private async void EnsureWindow(IActivatedEventArgs e)
         {
-            if (MainWindow == null)
+            if (!isLoaded)
             {
                 RequestWIFIAccess();
                 RegisterBackgroundTask();
                 RegisterExceptionHandlingSynchronizationContext();
-
-                MainWindow = Window.Current;
 
                 if (ApiInformation.IsTypePresent("Windows.UI.StartScreen.JumpList") && JumpList.IsSupported())
                 {
                     JumpList JumpList = await JumpList.LoadCurrentAsync();
                     JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
                 }
+
+                isLoaded = true;
             }
+
+            Window window = Window.Current;
+            WindowHelper.TrackWindow(window);
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
-            if (!(MainWindow.Content is Frame rootFrame))
+            if (!(window.Content is Frame rootFrame))
             {
-                if (SystemInformation.Instance.OperatingSystemVersion.Build >= 10586)
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                 {
                     CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
                 }
 
                 // 创建要充当导航上下文的框架，并导航到第一页
                 rootFrame = new Frame();
-
-                if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
-                {
-                    SettingsPane.GetForCurrentView().CommandsRequested += OnCommandsRequested;
-                    rootFrame.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
-                    Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri("ms-appx:///Styles/SettingsFlyout.xaml") });
-                }
-
-                if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
-                {
-                    SearchPane searchPane = SearchPane.GetForCurrentView();
-                    searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
-                    searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
-                }
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
@@ -127,7 +111,7 @@ namespace CoolapkLite
                 }
 
                 // 将框架放在当前窗口中
-                Window.Current.Content = rootFrame;
+                window.Content = rootFrame;
 
                 ThemeHelper.Initialize();
             }
@@ -154,62 +138,48 @@ namespace CoolapkLite
             }
             else if (rootFrame.Content is IHaveTitleBar page)
             {
-                _ = page.OpenActivatedEventArgs(e);
+                _ = page.OpenActivatedEventArgsAsync(e);
             }
 
             // 确保当前窗口处于活动状态
-            MainWindow.Activate();
+            window.Activate();
         }
 
-        private static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
-
-        private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
+        private async void CheckUpdate()
         {
-            string keyWord = args.QueryText;
-            List<string> results = new List<string>();
-            SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
-            await Task.Run(async () =>
+            await ThreadSwitcher.ResumeBackgroundAsync();
+            if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                await semaphoreSlim.WaitAsync();
-                try
+#if CANARY
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("wherewhere", "Coolapk-UWP", 5).ConfigureAwait(false);
+#else
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite").ConfigureAwait(false);
+#endif
+                if (results != null && results.IsExistNewVersion)
                 {
-                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
-                    if (isSucceed && result != null && result is JArray array && array.Count > 0)
-                    {
-                        foreach (JToken token in array)
-                        {
-                            string key = string.Empty;
-                            switch (token.Value<string>("entityType"))
-                            {
-                                case "apk":
-                                    key = new AppModel(token as JObject).Title;
-                                    break;
-                                case "searchWord":
-                                default:
-                                    key = new SearchWord(token as JObject).ToString();
-                                    break;
-                            }
-                            if (!string.IsNullOrEmpty(key) && !results.Contains(key))
-                            {
-                                results.Add(key);
-                            }
-                        }
-                    }
-                }
-                finally
-                {
-                    semaphoreSlim.Release();
-                }
-            });
-            args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results);
-            deferral.Complete();
-        }
+                    ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
 
-        private void SearchPane_QuerySubmitted(SearchPane sender, SearchPaneQuerySubmittedEventArgs args)
-        {
-            if (!string.IsNullOrEmpty(args.QueryText))
-            {
-                _ = UIHelper.AppTitle.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(args.QueryText));
+                    string name = _loader?.GetString("AppName") ?? Package.Current.DisplayName;
+                    string ver = Package.Current.Id.Version.ToFormattedString(3);
+
+                    new ToastContentBuilder()
+                        .SetToastScenario(ToastScenario.Default)
+                        .AddArgument("action", "hasUpdate")
+                        .AddArgument("url", results?.ReleaseUrl)
+                        .AddText(_loader.GetString("HasUpdateTitle"))
+                        .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
+                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeToReadable()))
+                        .AddButton(new ToastButton()
+#if CANARY
+                            .SetContent(_loader.GetString("GoToDevOps"))
+#else
+                            .SetContent(_loader.GetString("GoToGithub"))
+#endif
+                            .SetBackgroundActivation())
+                        .AddButton(new ToastButton()
+                            .SetDismissActivation())
+                        .Show();
+                }
             }
         }
 
@@ -235,62 +205,6 @@ namespace CoolapkLite
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
-        }
-
-        private void OnCommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
-        {
-            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("SettingsPane");
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Settings",
-                    loader.GetString("Settings"),
-                    (handler) => new SettingsFlyoutControl { RequestedTheme = ThemeHelper.ActualTheme }.Show()));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Feedback",
-                    loader.GetString("Feedback"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite/issues"))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "LogFolder",
-                    loader.GetString("LogFolder"),
-                    async (handler) => _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Translate",
-                    loader.GetString("Translate"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://crowdin.com/project/CoolapkLite"))));
-            args.Request.ApplicationCommands.Add(
-                new SettingsCommand(
-                    "Repository",
-                    loader.GetString("Repository"),
-                    (handler) => _ = Launcher.LaunchUriAsync(new Uri("https://github.com/Coolapk-UWP/Coolapk-Lite"))));
-        }
-
-        private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
-        {
-            if (args.EventType.ToString().Contains("Down"))
-            {
-                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-                if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
-                {
-                    CoreVirtualKeyStates shift = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift);
-                    if (shift.HasFlag(CoreVirtualKeyStates.Down))
-                    {
-                        switch (args.VirtualKey)
-                        {
-                            case VirtualKey.X:
-                                SettingsPane.Show();
-                                args.Handled = true;
-                                break;
-                            case VirtualKey.Q:
-                                SearchPane.GetForCurrentView().Show();
-                                args.Handled = true;
-                                break;
-                        }
-                    }
-                }
-            }
         }
 
         private async void RequestWIFIAccess()
@@ -372,8 +286,11 @@ namespace CoolapkLite
             {
                 uint time = SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
                 if (time < 15) { return; }
-#if ARM64
-                const string LiveTileTask = "LiveTileTask";
+
+                const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+#if NETCORE463
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
 
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
@@ -382,7 +299,7 @@ namespace CoolapkLite
                 // Register (Single Process)
                 BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
 #else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(LiveTileTask)))
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(LiveTileTask))
                 {
                     // Register (Multi Process)
                     BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(time, false), true);
@@ -396,8 +313,10 @@ namespace CoolapkLite
 
             void RegisterNotificationsTask()
             {
-#if ARM64
-                const string NotificationsTask = "NotificationsTask";
+                const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
+#if NETCORE463
+                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+                { return; }
 
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
@@ -406,7 +325,7 @@ namespace CoolapkLite
                 // Register (Single Process)
                 BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
 #else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(nameof(NotificationsTask)))
+                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(NotificationsTask))
                 {
                     // Register (Multi Process)
                     BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
@@ -443,7 +362,7 @@ namespace CoolapkLite
             #endregion
         }
 
-        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             base.OnBackgroundActivated(args);
 
@@ -451,32 +370,42 @@ namespace CoolapkLite
 
             switch (args.TaskInstance.Task.Name)
             {
-                case "LiveTileTask":
+                case nameof(LiveTileTask):
                     LiveTileTask.Instance?.Run(args.TaskInstance);
                     break;
 
-                case "NotificationsTask":
+                case nameof(NotificationsTask):
                     NotificationsTask.Instance?.Run(args.TaskInstance);
                     break;
 
                 case "ToastBackgroundTask":
                     if (args.TaskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
                     {
-                        //ToastArguments arguments = ToastArguments.Parse(details.Argument);
-                        ValueSet userInput = details.UserInput;
-
-                        // Perform tasks
+                        ToastArguments arguments = ToastArguments.Parse(details.Argument);
+                        if (arguments.TryGetValue("action", out string action))
+                        {
+                            switch (action)
+                            {
+                                case "hasUpdate":
+                                    if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                    {
+                                        _ = await Launcher.LaunchUriAsync(uri);
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
+                    deferral.Complete();
                     break;
 
                 default:
                     deferral.Complete();
                     break;
             }
-
-            deferral.Complete();
         }
 
-        public static Window MainWindow { get; private set; }
+        private bool isLoaded;
     }
 }

@@ -28,6 +28,12 @@
                             <RowDefinition x:Name="PART_RowBottom" Height="0" />
                         </Grid.RowDefinitions>
 
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <ReorderThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+
                         <Border
                             x:Name="PART_Pane1"
                             Grid.Column="0"
@@ -39,6 +45,16 @@
                             Child="{TemplateBinding Pane2}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="ModeStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="ViewMode_TwoOnly" To="ViewMode_OneOnly">
+                                        <VisualTransition.Storyboard>
+                                            <Storyboard>
+                                                <DrillInThemeAnimation EntranceTargetName="PART_Pane1" ExitTargetName="PART_Pane2" />
+                                            </Storyboard>
+                                        </VisualTransition.Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+
                                 <VisualState x:Name="ViewMode_LeftRight" />
 
                                 <VisualState x:Name="ViewMode_RightLeft">

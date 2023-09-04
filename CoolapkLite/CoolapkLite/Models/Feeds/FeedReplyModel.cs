@@ -2,6 +2,7 @@
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
@@ -71,6 +72,7 @@ namespace CoolapkLite.Models.Feeds
 
         public string Dateline { get; private set; }
 
+        public DateTime DateTime { get; private set; }
         public ImageModel Pic { get; private set; }
 
         public ImmutableArray<SourceFeedReplyModel> ReplyRows { get; private set; } = ImmutableArray<SourceFeedReplyModel>.Empty;
@@ -86,7 +88,9 @@ namespace CoolapkLite.Models.Feeds
         {
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                DateTime dateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime();
+                Dateline = dateTime.ConvertDateTimeToReadable();
+                DateTime = dateTime.ToLocalTime();
             }
 
             if (token.TryGetValue("message", out JToken message))
@@ -125,7 +129,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public async Task ChangeLike()
+        public async Task ChangeLikeAsync()
         {
             UriType type = Liked ? UriType.PostFeedUnlike : UriType.PostFeedLike;
             (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetOldUri(type, "Reply", ID), null, true);

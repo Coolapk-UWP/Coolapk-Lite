@@ -16,6 +16,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public CoreDispatcher Dispatcher { get; }
 
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
+
         private ObservableCollection<StorageFile> images = new ObservableCollection<StorageFile>();
         public ObservableCollection<StorageFile> Images
         {
@@ -30,11 +32,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
-
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -46,15 +46,24 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
         public CachesViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         public async Task Refresh(bool reset)
         {
-            UIHelper.ShowProgressBar();
+            Dispatcher.ShowProgressBar();
             await ThreadSwitcher.ResumeBackgroundAsync();
             try
             {
-                StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.GetFolderAsync("ImageCache");
+                StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists);
                 if (ImageCache != null)
                 {
                     IReadOnlyList<StorageFile> images = await ImageCache.GetFilesAsync();
@@ -63,17 +72,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             catch (Exception ex)
             {
-                UIHelper.ShowMessage(ex.ExceptionToMessage());
+                Dispatcher.ShowMessage(ex.ExceptionToMessage());
             }
-            UIHelper.HideProgressBar();
+            Dispatcher.HideProgressBar();
         }
 
-        public async Task RemoveImage(StorageFile file)
+        bool IViewModel.IsEqual(IViewModel other) => other is CachesViewModel model && IsEqual(model);
+
+        public bool IsEqual(CachesViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
+
+        public async Task RemoveImageAsync(StorageFile file)
         {
             await file.DeleteAsync();
             Images.Remove(file);
         }
-
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
     }
 }

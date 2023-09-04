@@ -1,7 +1,10 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI;
+using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -10,6 +13,7 @@ using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
 using Windows.UI.Input;
+using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -25,8 +29,51 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class ShowImagePage : Page
     {
+        private bool isShowHub = true;
         private Point _clickPoint = new Point(0, 0);
-        private ShowImageViewModel Provider;
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(ShowImageViewModel),
+                typeof(ShowImagePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public ShowImageViewModel Provider
+        {
+            get => (ShowImageViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
+
+        #region ScrollViewer
+
+        /// <summary>
+        /// Identifies the <see cref="ScrollViewer"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ScrollViewerProperty =
+            DependencyProperty.Register(
+                nameof(ScrollViewer),
+                typeof(ScrollViewer),
+                typeof(ShowImagePage),
+                null);
+
+        public ScrollViewer ScrollViewer
+        {
+            get => (ScrollViewer)GetValue(ScrollViewerProperty);
+            private set => SetValue(ScrollViewerProperty, value);
+        }
+
+        #endregion
 
         public ShowImagePage()
         {
@@ -41,15 +88,14 @@ namespace CoolapkLite.Pages
             if (e.Parameter is ImageModel Model)
             {
                 Provider = new ShowImageViewModel(Model, Dispatcher);
-                DataContext = Provider;
             }
             else if (e.Parameter is ShowImageViewModel ViewModel)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
             }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed += System_BackPressed; }
+            Provider.PropertyChanged += Provider_PropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -57,7 +103,9 @@ namespace CoolapkLite.Pages
             base.OnNavigatedFrom(e);
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed -= AppWindow_Changed;
+                AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Changed -= AppWindow_Changed;
+                appWindow.Title = string.Empty;
             }
             else
             {
@@ -70,13 +118,28 @@ namespace CoolapkLite.Pages
             }
             if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
             { HardwareButtons.BackPressed -= System_BackPressed; }
+            Provider.PropertyChanged -= Provider_PropertyChanged;
+        }
+
+        private void Provider_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Provider.Title):
+                    UpdateTitle(Provider.Title);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed += AppWindow_Changed;
+                AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Changed += AppWindow_Changed;
+                appWindow.Title = Provider.Title;
             }
             else
             {
@@ -88,10 +151,12 @@ namespace CoolapkLite.Pages
                 { UpdateContentLayout(false); }
                 TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
                 SystemNavigationManager.BackRequested += System_BackRequested;
+                ApplicationView.GetForCurrentView().Title = Provider.Title;
                 TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
                 Frame.Navigated += On_Navigated;
                 UpdateTitleBarLayout(TitleBar);
             }
+            UpdateScrollViewer(FlipView);
         }
 
         private void On_Navigated(object sender, NavigationEventArgs e)
@@ -138,52 +203,54 @@ namespace CoolapkLite.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
-            ScrollViewer scrollViewer = element.Tag as ScrollViewer;
-            switch (element.Name)
+            switch ((sender as FrameworkElement).Name)
             {
-                case "ZoomUp":
-                    _ = scrollViewer.ChangeView(null, null, scrollViewer.ZoomFactor + 0.1f);
+                case nameof(ZoomUp):
+                    _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor + 0.1f);
                     break;
-                case "ZoomDown":
-                    _ = scrollViewer.ChangeView(null, null, scrollViewer.ZoomFactor - 0.1f);
+                case nameof(ZoomDown):
+                    _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor - 0.1f);
                     break;
             }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
+            if (!(FlipView.SelectedItem is ImageModel image)) { return; }
             switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "Copy":
-                    Provider.CopyPic();
+                    image.CopyPic();
                     break;
                 case "Save":
-                    Provider.SavePic();
+                    image.SavePic();
                     break;
                 case "Share":
-                    Provider.SharePic();
+                    image.SharePic();
                     break;
                 case "Refresh":
-                    _ = Provider.Refresh();
+                    _ = image.Refresh();
                     break;
                 case "Origin":
-                    Provider.Images[Provider.Index].Type &= (ImageType)0xFE;
-                    Provider.ShowOrigin = false;
+                    image.Type &= (ImageType)0xFE;
                     break;
             }
         }
 
         private void ScrollViewer_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            Provider.IsShowHub = !Provider.IsShowHub;
+            if (e?.Handled == true) { return; }
+            UpdateHubVisibilityStates();
+            if (e != null) { e.Handled = true; }
         }
 
         private void ScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             ScrollViewer scrollViewer = sender as ScrollViewer;
             scrollViewer.ChangeView(0, 0, 1);
-            Provider.IsShowHub = !Provider.IsShowHub;
+            UpdateHubVisibilityStates();
+            if (e != null) { e.Handled = true; }
         }
 
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -197,21 +264,24 @@ namespace CoolapkLite.Pages
         {
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await Provider.GetImageDataPackage(args.Data, "拖拽图片");
+            await (FlipView.SelectedItem as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             FrameworkElement element = sender as FrameworkElement;
             PointerPoint pointerPoint = e.GetCurrentPoint(element);
             if (pointerPoint.Properties.IsLeftButtonPressed)
             {
                 _clickPoint = e.GetCurrentPoint(element).Position;
             }
+            if (e != null) { e.Handled = true; }
         }
 
         private void Image_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (e?.Handled == true) { return; }
             FrameworkElement element = sender as FrameworkElement;
             ScrollViewer scrollViewer = element.Parent as ScrollViewer;
             PointerPoint pointerPoint = e.GetCurrentPoint(element);
@@ -223,7 +293,42 @@ namespace CoolapkLite.Pages
                 y = _clickPoint.Y - point.Y;
                 _ = scrollViewer.ChangeView(scrollViewer.HorizontalOffset + x, scrollViewer.VerticalOffset + y, null);
             }
+            if (e != null) { e.Handled = true; }
         }
+
+        public async void UpdateTitle(string title = null)
+        {
+            if (!Dispatcher.HasThreadAccess)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+
+            if (this.IsAppWindow())
+            {
+                this.GetWindowForElement().Title = title ?? string.Empty;
+            }
+            else
+            {
+                ApplicationView.GetForCurrentView().Title = title ?? string.Empty;
+            }
+        }
+
+        public void UpdateScrollViewer(FlipView flipView)
+        {
+            if (flipView != null && flipView.SelectedItem != null)
+            {
+                ScrollViewer = flipView.ContainerFromItem(flipView.SelectedItem)?.FindDescendant<ScrollViewer>();
+            }
+        }
+
+        private void UpdateHubVisibilityStates()
+        {
+            isShowHub = !isShowHub;
+            _ = isShowHub ? VisualStateManager.GoToState(this, "HubVisible", true)
+                : VisualStateManager.GoToState(this, "HubCollapsed", true);
+        }
+
+        private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateScrollViewer(sender as FlipView);
 
         private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateContentLayout(sender.TitleBar.IsVisible);
 

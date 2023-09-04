@@ -12,7 +12,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Pages
 {
-    public abstract class FeedListDetailBase : Entity, INotifyPropertyChanged
+    public abstract class FeedListDetailBase : Entity, ICanCopy, INotifyPropertyChanged
     {
         private bool isCopyEnabled;
         public bool IsCopyEnabled
@@ -41,7 +41,7 @@ namespace CoolapkLite.Models.Pages
         }
     }
 
-    internal class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
+    public class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -103,7 +103,7 @@ namespace CoolapkLite.Models.Pages
         public string Astro { get; private set; }
         public string Gender { get; private set; }
         public string UserName { get; private set; }
-        public string LoginTime { get; private set; }
+        public string LoginText { get; private set; }
         public string BlockStatus { get; private set; }
         public string VerifyTitle { get; private set; }
 
@@ -116,7 +116,7 @@ namespace CoolapkLite.Models.Pages
 
         public string Url => $"/u/{UID}";
 
-        internal UserDetail(JObject token) : base(token)
+        public UserDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -194,7 +194,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("logintime", out JToken logintime))
             {
-                LoginTime = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
+                LoginText = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
             }
 
             if (token.TryGetValue("block_status", out JToken block_status))
@@ -248,7 +248,7 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
 
@@ -261,7 +261,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{UserName} - {Bio}";
     }
 
-    internal class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
+    public class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -322,7 +322,7 @@ namespace CoolapkLite.Models.Pages
 
         public ImageModel Pic => Logo;
 
-        internal TopicDetail(JObject token) : base(token)
+        public TopicDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -365,7 +365,7 @@ namespace CoolapkLite.Models.Pages
             {
                 Description = description.ToString();
             }
-            
+
             if (token.TryGetValue("intro", out JToken intro) && Description != intro.ToString())
             {
                 SubTitle = intro.ToString();
@@ -395,7 +395,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostTopicUnfollow : UriType.PostTopicFollow;
 
@@ -408,7 +408,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
+    public class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -481,7 +481,7 @@ namespace CoolapkLite.Models.Pages
 
         public string Url => $"/dyh/{ID}";
 
-        internal DyhDetail(JObject token) : base(token)
+        public DyhDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -540,7 +540,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostDyhUnfollow : UriType.PostDyhFollow;
 
@@ -558,7 +558,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class ProductDetail : FeedListDetailBase, ICanFollow
+    public class ProductDetail : FeedListDetailBase, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -644,7 +644,7 @@ namespace CoolapkLite.Models.Pages
 
         public ImmutableArray<ImageModel> CoverArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
-        internal ProductDetail(JObject token) : base(token)
+        public ProductDetail(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
@@ -801,10 +801,8 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("coverArr", out JToken coverArr) && (coverArr as JArray).Count > 0)
             {
-                CoverArr = coverArr.Select(
-                    x => !string.IsNullOrEmpty(x.ToString())
-                        ? new ImageModel(x.ToString(), ImageType.OriginImage) : null)
-                    .Where(x => x != null)
+                CoverArr = coverArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
+                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
                     .ToImmutableArray();
 
                 foreach (ImageModel item in CoverArr)
@@ -823,7 +821,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
@@ -842,7 +840,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{Title} - {Description}";
     }
 
-    internal class CollectionDetail : FeedListDetailBase, ICanLike, ICanFollow
+    public class CollectionDetail : FeedListDetailBase, ICanLike, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -1024,7 +1022,7 @@ namespace CoolapkLite.Models.Pages
             FollowGlyph = Followed ? "\uE8FB" : "\uE710";
         }
 
-        public async Task ChangeLike()
+        public async Task ChangeLikeAsync()
         {
             UriType type = Liked ? UriType.PostCollectionUnlike : UriType.PostCollectionLike;
 
@@ -1042,7 +1040,7 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public async Task ChangeFollow()
+        public async Task ChangeFollowAsync()
         {
             UriType type = Followed ? UriType.PostCollectionUnfollow : UriType.PostCollectionFollow;
 

@@ -24,7 +24,7 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty ItemSourceProperty =
             DependencyProperty.Register(
                 nameof(ItemSource),
-                typeof(IList<ShyHeaderItem>),
+                typeof(IEnumerable<ShyHeaderItem>),
                 typeof(FeedShellListControl),
                 null);
 
@@ -67,9 +67,9 @@ namespace CoolapkLite.Controls
             set => SetValue(HeaderHeightProperty, value);
         }
 
-        public IList<ShyHeaderItem> ItemSource
+        public IEnumerable<ShyHeaderItem> ItemSource
         {
-            get => (IList<ShyHeaderItem>)GetValue(ItemSourceProperty);
+            get => (IEnumerable<ShyHeaderItem>)GetValue(ItemSourceProperty);
             set => SetValue(ItemSourceProperty, value);
         }
 
@@ -89,9 +89,9 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ShyHeaderListView_ShyHeaderSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ShyHeaderPivotListView_ShyHeaderSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ShyHeaderListView.ItemsSource is ICanToggleChangeSelectedIndex ToggleItemsSource)
+            if (ShyHeaderPivotListView.ItemsSource is IToggleChangeSelectedIndex ToggleItemsSource)
             {
                 CheckBox.Visibility = Visibility.Visible;
                 CheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding()
@@ -113,7 +113,7 @@ namespace CoolapkLite.Controls
                 ToggleSwitch.Visibility = CheckBox.Visibility = Visibility.Collapsed;
             }
 
-            if (ShyHeaderListView.ItemsSource is ICanComboBoxChangeSelectedIndex ComboBoxItemsSource)
+            if (ShyHeaderPivotListView.ItemsSource is IComboBoxChangeSelectedIndex ComboBoxItemsSource)
             {
                 ComboBox.Visibility = Visibility.Visible;
                 ComboBox.ItemsSource = ComboBoxItemsSource.ItemSource;
@@ -130,9 +130,9 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ShyHeaderListView_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void ShyHeaderPivotListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if ((sender as ShyHeaderListView).ActualWidth < 424 + RefreshButton.ActualWidth)
+            if ((sender as ShyHeaderPivotListView).ActualWidth < 424 + RefreshButton.ActualWidth)
             {
                 ToggleSwitchBorder.Visibility = Visibility.Collapsed;
                 CheckBoxBorder.Visibility = Visibility.Visible;
@@ -149,7 +149,7 @@ namespace CoolapkLite.Controls
             Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
             Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
 
-            ScrollViewer ScrollViewer = ShyHeaderListView.FindDescendant<ScrollViewer>();
+            ScrollViewer ScrollViewer = ShyHeaderPivotListView.FindDescendant<ScrollViewer>();
 
             if (ScrollViewer != null)
             {
@@ -160,7 +160,7 @@ namespace CoolapkLite.Controls
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            if (ShyHeaderListView.ItemsSource is EntityItemSource entities)
+            if (ShyHeaderPivotListView.ItemsSource is EntityItemSource entities)
             {
                 _ = entities.Refresh(true);
             }

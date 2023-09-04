@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default" />
+        <ResourceDictionary x:Key="Light">
+            <SolidColorBrush x:Key="TextBlockExBorderBrush" Color="#FFBEBEBE" />
+            <SolidColorBrush x:Key="TextBlockExBackgroundBrush" Color="#FFF6F8FA" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeBackgroundBrush" Color="#FFDDDFE1" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeForegroundBrush" Color="#FF6E6F70" />
+            <SolidColorBrush x:Key="TextBlockExQuoteForeground" Color="#FF6E747C" />
+            <SolidColorBrush x:Key="TextBlockExRichTextBlockBackground" Color="#FFF6F8FA" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Dark">
+            <SolidColorBrush x:Key="TextBlockExBorderBrush" Color="#FF424242" />
+            <SolidColorBrush x:Key="TextBlockExBackgroundBrush" Color="#FF202020" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeBackgroundBrush" Color="#FF363636" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeForegroundBrush" Color="#FFB7B4B4" />
+            <SolidColorBrush x:Key="TextBlockExQuoteForeground" Color="#FFBEC1C5" />
+            <SolidColorBrush x:Key="TextBlockExRichTextBlockBackground" Color="#FF202020" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="TextBlockExBorderBrush" Color="#FF424242" />
+            <SolidColorBrush x:Key="TextBlockExBackgroundBrush" Color="#FF202020" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeBackgroundBrush" Color="#FF363636" />
+            <SolidColorBrush x:Key="TextBlockExInlineCodeForegroundBrush" Color="#FFB7B4B4" />
+            <SolidColorBrush x:Key="TextBlockExQuoteForeground" Color="#FFBEC1C5" />
+            <SolidColorBrush x:Key="TextBlockExRichTextBlockBackground" Color="{ThemeResource SystemColorWindowColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

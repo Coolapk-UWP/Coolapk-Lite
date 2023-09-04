@@ -9,12 +9,13 @@
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:HistoryViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Page.Resources>
@@ -25,13 +26,13 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplate="{StaticResource ListDefaultTemplate}"
-            ItemsSource="{Binding}"
+            ItemsSource="{x:Bind Provider, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent" />

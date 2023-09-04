@@ -5,6 +5,7 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 
@@ -16,103 +17,87 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public ProfileCardTemplates() => InitializeComponent();
 
-        private void Grid_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space)
+            if (e?.Handled == true) { return; }
+
+            if (!(sender is FrameworkElement element)) { return; }
+
+            if (e != null) { e.Handled = true; }
+
+            OnTapped(element, element.Tag);
+        }
+
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
             {
-                FrameworkElement element = sender as FrameworkElement;
-                OnTapped(element, element.Tag);
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    if (!(sender is FrameworkElement element)) { return; }
+                    OnTapped(element, element.Tag);
+                    e.Handled = true;
+                    break;
             }
         }
 
-        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
-            FrameworkElement element = sender as FrameworkElement;
-            OnTapped(element, element.Tag);
+            if (e != null) { e.Handled = true; }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             OnTapped(element, element.Tag);
         }
 
         private void OnTapped(FrameworkElement element, object tag)
         {
-            if (tag is string str)
+            string url = tag is string str ? str : tag is IHasTitle model ? model.Url : null;
+            if (string.IsNullOrEmpty(url) || url == "/topic/quickList?quickType=list")
             {
-                if (str.Contains("我的常去"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("我的常去"));
-                }
-                else if (str.Contains("浏览历史"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("浏览历史"));
-                }
-                else if (str.Contains("我关注的话题"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel("#/topic/userFollowTagList"));
-                }
-                else if (str.Contains("我的收藏单"))
-                {
-                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid)); }
-                }
-                else if (str.Contains("我的问答"))
-                {
-                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer")); }
-                }
-                else
-                {
-                    _ = element.OpenLinkAsync(str);
-                }
+                return;
             }
-            else if (tag is IHasTitle model)
+            else if (url == "Login")
             {
-                if (string.IsNullOrEmpty(model.Url) || model.Url == "/topic/quickList?quickType=list") { return; }
-                string url = model.Url;
-                if (url == "Login")
-                {
-                    _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
-                }
-                else if (url.IndexOf("/page", StringComparison.Ordinal) == 0)
-                {
-                    url = url.Replace("/page", "/page/dataList");
-                    url += $"&title={model.Title}";
-                    _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url));
-                }
-                else if (url.IndexOf('#') == 0)
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel($"{url}&title={model.Title}"));
-                }
-                else if (url.Contains("我的常去"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("我的常去"));
-                }
-                else if (url.Contains("浏览历史"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("浏览历史"));
-                }
-                else if (url.Contains("我关注的话题"))
-                {
-                    _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel("#/topic/userFollowTagList"));
-                }
-                else if (url.Contains("我的收藏单"))
-                {
-                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid)); }
-                }
-                else if (url.Contains("我的问答"))
-                {
-                    string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                    if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer")); }
-                }
-                else
-                {
-                    _ = element.OpenLinkAsync(url);
-                }
+                _ = element.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, element.Dispatcher));
+            }
+            else if (url.StartsWith("/page", StringComparison.Ordinal))
+            {
+                url = $"{url.Replace("/page", "/page/dataList")}&title={(tag as IHasTitle)?.Title ?? string.Empty}";
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, element.Dispatcher));
+            }
+            else if (url.StartsWith("#"))
+            {
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel($"{url}&title={(tag as IHasTitle)?.Title ?? string.Empty}", element.Dispatcher));
+            }
+            else if (url.Contains("我的常去"))
+            {
+                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("我的常去", element.Dispatcher));
+            }
+            else if (url.Contains("浏览历史"))
+            {
+                _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetHistoryProvider("浏览历史", element.Dispatcher));
+            }
+            else if (url.Contains("我关注的话题"))
+            {
+                _ = element.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel("#/topic/userFollowTagList", element.Dispatcher));
+            }
+            else if (url.Contains("我的收藏单"))
+            {
+                string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
+            }
+            else if (url.Contains("我的问答"))
+            {
+                string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer", element.Dispatcher)); }
+            }
+            else
+            {
+                _ = element.OpenLinkAsync(url);
             }
         }
     }

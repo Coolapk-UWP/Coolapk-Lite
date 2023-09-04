@@ -1,6 +1,6 @@
 <img alt="Coolapk LOGO" src="./logo.png" width="200px" />
 
-# Coolapk UWP
+# Coolapk Lite
 一个基于UWP平台的酷安客户端精简版
 
 [![Build Status](https://dev.azure.com/wherewhere/Coolapk-UWP/_apis/build/status/Coolapk-UWP.Coolapk-Lite?branchName=master)](https://dev.azure.com/wherewhere/Coolapk-UWP/_build/latest?definitionId=5&branchName=master "Build Status")
@@ -13,7 +13,7 @@
 [![GitHub All Releases](https://img.shields.io/github/downloads/Coolapk-UWP/Coolapk-Lite/total.svg?label=DOWNLOAD&logo=github&style=for-the-badge)](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest "GitHub All Releases")
 
 ## 目录
-- [Coolapk UWP](#coolapk-uwp)
+- [Coolapk Lite](#coolapk-lite)
   - [目录](#目录)
   - [如何安装应用](#如何安装应用)
     - [最低需求](#最低需求)
@@ -28,18 +28,18 @@
 ## 如何安装应用
 ### 最低需求
 - Windows 10 Build 10240及以上
-- 设备需支持ARM/x86/x64
-- 至少100MB的空余储存空间(用于储存安装包与安装应用)
+- 设备需支持ARM/ARM64/x86/x64
+- 至少200MB的空余储存空间(用于储存安装包与安装应用)
 
 ### 使用应用安装脚本安装应用
-- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_Debug_Test.rar)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
+- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_Test.rar)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
 - 如果没有应用安装脚本，下载[`Install.ps1`](Install.ps1)到目标目录
 ![Install.ps1](Images/Guides/Snipaste_2019-10-12_22-49-11.png)
 - 右击`Install.ps1`，选择“使用PowerShell运行”
 - 应用安装脚本将会引导您完成此过程的剩余部分
 
 ### 使用应用安装程序安装应用
-- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_Debug_Test.rar)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
+- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_Test.rar)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
 - [开启旁加载模式](https://www.windowscentral.com/how-enable-windows-10-sideload-apps-outside-store)
   - 如果您想开发UWP应用，您可以开启[开发人员模式](https://docs.microsoft.com/zh-cn/windows/uwp/get-started/enable-your-device-for-development)，**对于大多数不需要做UWP开发的用户来说，开发人员模式是没有必要的**
 - 安装`Dependencies`文件夹下的适用于您的设备的所有依赖包
@@ -53,15 +53,16 @@
 ![安装](Images/Guides/Snipaste_2019-10-13_12-42-40.png)
 
 ### 更新应用
-- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_x86_x64_arm_Debug.appxbundle)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
+- 下载并解压最新的[安装包`(CoolapkLite_x.x.x.0_x86_x64_arm.appxbundle)`](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest)
 - 双击`*.appxbundle`，单击安装，坐和放宽
 ![安装](Images/Guides/Snipaste_2019-10-13_16-01-09.png)
 
 ## 使用到的模块
-- [QRCoder](https://github.com/codebude/QRCoder)
-- [MetroLog](https://github.com/mbrit/MetroLog)
-- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net)
-- [UWP Community Toolkit](https://github.com/Microsoft/UWPCommunityToolkit/)
+- [QRCoder](https://github.com/codebude/QRCoder "QRCoder")
+- [MetroLog](https://github.com/novotnyllc/MetroLog "MetroLog")
+- [Bcrypt.Net](https://github.com/BcryptNet/bcrypt.net "Bcrypt.Net")
+- [Newtonsoft Json](https://www.newtonsoft.com/json "Newtonsoft Json")
+- [Windows Community Toolkit](https://github.com/CommunityToolkit/WindowsCommunityToolkit "Windows Community Toolkit")
 
 ## 衍生项目
 - [Coolapk-API-Collect](https://github.com/Coolapk-UWP/Coolapk-API-Collect "Coolapk-API-Collect")
@@ -70,10 +71,10 @@
 [![Contributors](https://contrib.rocks/image?repo=Coolapk-UWP/Coolapk-Lite)](https://github.com/Coolapk-UWP/Coolapk-Lite/graphs/contributors "Contributors")
 
 ## 鸣谢
-- 酷安UWP原作者[@一块小板子](http://www.coolapk.com/u/695942)([Github](https://github.com/oboard))
-- OpenCoolapk作者[@roykio](http://www.coolapk.com/u/703542)([Github](https://github.com/roykio))
-- CoolapkTokenCrack作者[@ZCKun](http://www.coolapk.com/u/654147)([Github](https://github.com/ZCKun))
-- Coolapk-kotlin作者[@bjzhou](http://www.coolapk.com/u/528097)([Github](https://github.com/bjzhou))
+- 酷安UWP原作者[@一块小板子](http://www.coolapk.com/u/695942 "一块小板子")([Github](https://github.com/oboard "oboard"))
+- OpenCoolapk作者[@roykio](http://www.coolapk.com/u/703542 "roykio")([Github](https://github.com/roykio "roykio"))
+- CoolapkTokenCrack作者[@ZCKun](http://www.coolapk.com/u/654147 "ZCKun")([Github](https://github.com/ZCKun "0x2h"))
+- Coolapk-kotlin作者[@bjzhou](http://www.coolapk.com/u/528097 "bjzhou")([Github](https://github.com/bjzhou "hinnka"))
 - 以及所有为酷安UWP项目做出贡献的同志们
 - **铺路尚未成功，同志仍需努力！**
 

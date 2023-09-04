@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
@@ -40,6 +41,13 @@ namespace CoolapkLite.Helpers
             Array.Reverse(charArray);
             return new string(charArray);
         }
+
+#if !NETCORE463
+        public static bool Contains(this string text, string value, StringComparison comparisonType)
+        {
+            return text.IndexOf(value, comparisonType) != -1;
+        }
+#endif
 
         public static string GetSizeString(this double size)
         {
@@ -100,6 +108,25 @@ namespace CoolapkLite.Helpers
             return $"{num:N2}{str}";
         }
 
+        public static bool IsTypePresent(string AssemblyName, string TypeName)
+        {
+            try
+            {
+                Assembly assembly = Assembly.Load(new AssemblyName(AssemblyName));
+                Type supType = assembly.GetType($"{AssemblyName}.{TypeName}");
+                if (supType != null)
+                {
+                    try { Activator.CreateInstance(supType); }
+                    catch (MissingMethodException) { }
+                }
+                return supType != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static string CSStoString(this string str)
         {
             try
@@ -123,7 +150,7 @@ namespace CoolapkLite.Helpers
 
         public static string ConvertJsonString(this string str)
         {
-            //格式化json字符串
+            //格式化 json 字符串
             JsonSerializer serializer = new JsonSerializer();
             TextReader tr = new StringReader(str);
             JsonTextReader jtr = new JsonTextReader(tr);
@@ -215,6 +242,12 @@ namespace CoolapkLite.Helpers
                 Array.Copy(buffer, ret, read);
                 return ret;
             }
+        }
+
+        public static Stream GetStream(this byte[] bytes)
+        {
+            Stream stream = new MemoryStream(bytes);
+            return stream;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
+﻿using Microsoft.Toolkit.Uwp;
+using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.Foundation.Metadata;
@@ -71,10 +72,8 @@ namespace CoolapkLite.Controls
 
                         if (rects.Count == 2)
                         {
-                            Rect GetRect(Size size, Point offset) => new Rect(offset.X, offset.Y, offset.X + size.Width, offset.Y + size.Height);
-
-                            info.Regions[0] = GetRect(rects[0].WorkAreaSize, rects[0].WorkAreaOffset);
-                            info.Regions[1] = GetRect(rects[1].WorkAreaSize, rects[1].WorkAreaOffset);
+                            info.Regions[0] = rects[0].WorkAreaSize.ToRect(rects[0].WorkAreaOffset);
+                            info.Regions[1] = rects[1].WorkAreaSize.ToRect(rects[1].WorkAreaOffset);
 
                             // Determine orientation. If neither of these are true, default to doing nothing.
                             if (info.Regions[0].X < info.Regions[1].X && info.Regions[0].Y == info.Regions[1].Y)
@@ -110,7 +109,7 @@ namespace CoolapkLite.Controls
                     window = fe.FindDescendant("SimulatedWindow");
                 }
 
-                return window;
+                return window ?? Window.Current.Content;
             }
             else
             {

@@ -11,7 +11,6 @@ using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Foundation.Metadata;
-using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -66,7 +65,7 @@ namespace CoolapkLite.Common
         /// Be sure to call this from the UI thread.
         /// </summary>
         /// <param name="dispatcher"></param>
-        public async Task Initialize(CoreDispatcher dispatcher)
+        public async Task InitializeAsync(CoreDispatcher dispatcher)
         {
             #region Error Checking & Dispatcher Setup
 
@@ -87,14 +86,14 @@ namespace CoolapkLite.Common
             _catalog.PackageUpdating += Catalog_PackageUpdating;
             _catalog.PackageStatusChanged += Catalog_PackageStatusChanged; // raised when a package changes with respect to integrity, licensing state, or availability (package is installed on a SD card that is then unplugged; you wouldn't get an uninstalling event)
 
-            await FindAndLoadExtensions();
+            await FindAndLoadExtensionsAsync();
         }
 
         /// <summary>
         /// Find all of the extensions currently installed on the machine that have the same name specified by this host
         /// in its package.appxmanifest file and load them
         /// </summary>
-        public async Task FindAndLoadExtensions()
+        public async Task FindAndLoadExtensionsAsync()
         {
             Extensions.Clear();
 
@@ -111,7 +110,7 @@ namespace CoolapkLite.Common
             IReadOnlyList<AppExtension> extensions = await _catalog.FindAllAsync();
             foreach (AppExtension ext in extensions)
             {
-                await LoadExtension(ext);
+                await LoadExtensionAsync(ext);
             }
         }
 
@@ -129,7 +128,7 @@ namespace CoolapkLite.Common
             }
             foreach (AppExtension ext in args.Extensions)
             {
-                await LoadExtension(ext);
+                await LoadExtensionAsync(ext);
             }
         }
 
@@ -147,7 +146,7 @@ namespace CoolapkLite.Common
             }
             foreach (AppExtension ext in args.Extensions)
             {
-                await LoadExtension(ext);
+                await LoadExtensionAsync(ext);
             }
         }
 
@@ -158,7 +157,7 @@ namespace CoolapkLite.Common
         /// <param name="args">Contains the package that is updating</param>
         private async void Catalog_PackageUpdating(AppExtensionCatalog sender, AppExtensionPackageUpdatingEventArgs args)
         {
-            await UnloadExtensions(args.Package);
+            await UnloadExtensionsAsync(args.Package);
         }
 
         /// <summary>
@@ -168,7 +167,7 @@ namespace CoolapkLite.Common
         /// <param name="args">Contains the package that is uninstalling</param>
         private async void Catalog_PackageUninstalling(AppExtensionCatalog sender, AppExtensionPackageUninstallingEventArgs args)
         {
-            await RemoveExtensions(args.Package);
+            await RemoveExtensionsAsync(args.Package);
         }
 
         /// <summary>
@@ -184,7 +183,7 @@ namespace CoolapkLite.Common
                 // if it's offline, unload its extensions
                 if (args.Package.Status.PackageOffline)
                 {
-                    await UnloadExtensions(args.Package);
+                    await UnloadExtensionsAsync(args.Package);
                 }
                 else if (args.Package.Status.Servicing || args.Package.Status.DeploymentInProgress)
                 {
@@ -194,12 +193,12 @@ namespace CoolapkLite.Common
                 {
                     // Deal with an invalid or tampered with package, or other issue, by removing the extensions
                     // Adding a UI glyph to the affected extensions could be a good user experience if you wish
-                    await RemoveExtensions(args.Package);
+                    await RemoveExtensionsAsync(args.Package);
                 }
             }
             else // The package is now OK--attempt to load its extensions
             {
-                await LoadExtensions(args.Package);
+                await LoadExtensionsAsync(args.Package);
             }
         }
 
@@ -208,7 +207,7 @@ namespace CoolapkLite.Common
         /// </summary>
         /// <param name="ext">Represents the extension to load</param>
         /// <returns></returns>
-        public async Task LoadExtension(AppExtension ext)
+        public async Task LoadExtensionAsync(AppExtension ext)
         {
             // Build a unique identifier for this extension
             string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
@@ -267,7 +266,7 @@ namespace CoolapkLite.Common
         /// </summary>
         /// <param name="package">Package containing the extensions to load</param>
         /// <returns></returns>
-        public async Task LoadExtensions(Package package)
+        public async Task LoadExtensionsAsync(Package package)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
             if (_dispatcher?.HasThreadAccess == false)
@@ -282,7 +281,7 @@ namespace CoolapkLite.Common
         /// </summary>
         /// <param name="package">Package containing the extensions to unload</param>
         /// <returns></returns>
-        public async Task UnloadExtensions(Package package)
+        public async Task UnloadExtensionsAsync(Package package)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
             if (_dispatcher?.HasThreadAccess == false)
@@ -298,7 +297,7 @@ namespace CoolapkLite.Common
         /// </summary>
         /// <param name="package">The package containing the extensions to remove</param>
         /// <returns></returns>
-        public async Task RemoveExtensions(Package package)
+        public async Task RemoveExtensionsAsync(Package package)
         {
             if (_dispatcher?.HasThreadAccess == false)
             {
@@ -402,7 +401,7 @@ namespace CoolapkLite.Common
         /// Invoke the extension's app service
         /// </summary>
         /// <param name="message">The parameters for the app service call</param>
-        public async Task<object> Invoke(ValueSet message)
+        public async Task<object> InvokeAsync(ValueSet message)
         {
             if (Loaded)
             {

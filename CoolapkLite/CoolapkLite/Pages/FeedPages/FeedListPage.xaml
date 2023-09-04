@@ -11,14 +11,16 @@
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feeds:FeedListViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
+    SizeChanged="Page_SizeChanged"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="UserDetailCard">
                 <Border>
@@ -91,7 +93,26 @@
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OriginButton"
+                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding Cover}"
+                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyoutSubItem>
+                            <MenuFlyoutItem
+                                x:Name="AnalyzeButton"
+                                Click="Button_Click"
+                                Tag="{Binding UID}"
+                                Text="查看粉丝分析">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
                     <Grid
@@ -101,7 +122,9 @@
                         BorderThickness="1"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
-                        Tag="{Binding Cover}">
+                        KeyDown="FrameworkElement_KeyDown"
+                        Tag="{Binding Cover}"
+                        Tapped="FrameworkElement_Tapped">
                         <Border>
                             <Border.Background>
                                 <ImageBrush ImageSource="{Binding Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
@@ -111,7 +134,7 @@
                             Padding="10"
                             helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                             Background="{ThemeResource TextOnAccentFillColorSecondaryBrush}">
-                            <control:StackPanel Spacing="8">
+                            <control:StackPanelEx Spacing="8">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -133,6 +156,7 @@
                                         Click="Button_Click"
                                         Style="{StaticResource TransparentButtonStyle}"
                                         Tag="{Binding}"
+                                        Tapped="Button_Tapped"
                                         ToolTipService.ToolTip="{Binding FollowStatus}"
                                         Visibility="{Binding FollowStatus, Converter={StaticResource StringVisibilityConverter}}">
                                         <StackPanel Orientation="Horizontal">
@@ -178,6 +202,8 @@
                                         Width="160"
                                         Margin="0,4"
                                         Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                        Tag="/feed/18221454"
+                                        Tapped="FrameworkElement_Tapped"
                                         Value="{Binding NextLevelPercentage}" />
                                 </Grid>
                                 <TextBlock
@@ -194,7 +220,7 @@
                                     Text="{Binding Bio}"
                                     TextWrapping="WrapWholeWords"
                                     Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
-                                <control:StackPanel Orientation="Horizontal" Spacing="6">
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="6">
                                     <TextBlock VerticalAlignment="Center" FontSize="16">
                                         <Run FontWeight="Bold" Text="{Binding LikeNum}" />
                                         <Run x:Uid="/FeedListPage/LikeNum" FontWeight="Thin" />
@@ -204,7 +230,8 @@
                                         Padding="0"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
-                                        FontSize="16">
+                                        FontSize="16"
+                                        Tapped="Button_Tapped">
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{Binding FollowNum}" />
                                             <Run x:Uid="/FeedListPage/FollowNum" FontWeight="Thin" />
@@ -215,7 +242,8 @@
                                         Padding="0"
                                         Background="{StaticResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
-                                        FontSize="16">
+                                        FontSize="16"
+                                        Tapped="Button_Tapped">
                                         <TextBlock>
                                             <Run FontWeight="Bold" Text="{Binding FansNum}" />
                                             <Run x:Uid="/FeedListPage/FansNum" FontWeight="Thin" />
@@ -225,8 +253,8 @@
                                         <Run FontWeight="Bold" Text="{Binding FeedNum}" />
                                         <Run x:Uid="/FeedListPage/FeedsNum" FontWeight="Thin" />
                                     </TextBlock>
-                                </control:StackPanel>
-                                <control:StackPanel Orientation="Horizontal" Spacing="4">
+                                </control:StackPanelEx>
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
@@ -267,8 +295,8 @@
                                             FontSize="12"
                                             Text="{Binding BlockStatus}" />
                                     </Border>
-                                </control:StackPanel>
-                            </control:StackPanel>
+                                </control:StackPanelEx>
+                            </control:StackPanelEx>
                         </Grid>
                     </Grid>
                 </Border>
@@ -293,7 +321,7 @@
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
-                    <control:StackPanel
+                    <control:StackPanelEx
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Spacing="8">
@@ -311,7 +339,7 @@
                                     <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                            <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -328,7 +356,7 @@
                                     <ItemsControl ItemsSource="{Binding FollowUsers}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                                <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
@@ -336,8 +364,9 @@
                                                 <Ellipse
                                                     Width="16"
                                                     Height="16"
+                                                    KeyDown="FrameworkElement_KeyDown"
                                                     Tag="{Binding Url}"
-                                                    Tapped="On_Tapped"
+                                                    Tapped="FrameworkElement_Tapped"
                                                     ToolTipService.ToolTip="{Binding UserName}">
                                                     <Ellipse.Fill>
                                                         <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
@@ -352,7 +381,7 @@
                                         FontSize="12"
                                         Text="{Binding FollowNum}" />
                                 </Grid>
-                            </control:StackPanel>
+                            </control:StackPanelEx>
                             <Button
                                 x:Name="FollowButton"
                                 Grid.Column="2"
@@ -361,6 +390,7 @@
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
@@ -384,7 +414,7 @@
                             Text="{Binding SubTitle}"
                             TextWrapping="WrapWholeWords"
                             Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="DyhDetailCard">
@@ -407,7 +437,7 @@
                             </MenuFlyoutItem>
                         </MenuFlyout>
                     </Border.Resources>
-                    <control:StackPanel
+                    <control:StackPanelEx
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Spacing="8">
@@ -425,7 +455,7 @@
                                     <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <control:StackPanel Grid.Column="1" Margin="8,0">
+                            <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -436,8 +466,9 @@
                                     Text="{Binding FollowNum}" />
                                 <Grid
                                     Background="{ThemeResource SystemControlTransparentBrush}"
+                                    KeyDown="FrameworkElement_KeyDown"
                                     Tag="{Binding Uurl}"
-                                    Tapped="On_Tapped">
+                                    Tapped="FrameworkElement_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
@@ -453,7 +484,7 @@
                                         FontSize="12"
                                         Text="{Binding UserName}" />
                                 </Grid>
-                            </control:StackPanel>
+                            </control:StackPanelEx>
                             <Button
                                 x:Name="FollowButton"
                                 Grid.Column="2"
@@ -462,6 +493,7 @@
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
@@ -481,11 +513,11 @@
                             Text="{Binding Description}"
                             TextWrapping="WrapWholeWords"
                             Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                    </control:StackPanel>
+                    </control:StackPanelEx>
                 </Border>
             </DataTemplate>
             <DataTemplate x:Key="ProductDetailCard">
-                <control:StackPanel Spacing="2">
+                <control:StackPanelEx Spacing="2">
                     <Grid
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -506,10 +538,11 @@
                                         VerticalAlignment="Center"
                                         CanDrag="True"
                                         DragStarting="Image_DragStarting"
+                                        KeyDown="FrameworkElement_KeyDown"
                                         Source="{Binding Pic, Mode=OneWay}"
                                         Stretch="UniformToFill"
                                         Tag="{Binding}"
-                                        Tapped="On_Tapped">
+                                        Tapped="FrameworkElement_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>
                                             <MenuFlyout>
                                                 <MenuFlyoutItem
@@ -548,6 +581,16 @@
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
                                                 </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="OriginButton"
+                                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{Binding}"
+                                                    Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
                                             </MenuFlyout>
                                         </helpers:UIElementHelper.ContextFlyout>
                                     </Image>
@@ -561,7 +604,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1">
-                        <control:StackPanel Spacing="8">
+                        <control:StackPanelEx Spacing="8">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -576,7 +619,7 @@
                                         <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                     </Border.Background>
                                 </Border>
-                                <control:StackPanel Grid.Column="1" Margin="8,0">
+                                <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
                                         FontWeight="SemiBold"
@@ -593,7 +636,7 @@
                                         <ItemsControl ItemsSource="{Binding FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <control:StackPanel Orientation="Horizontal" Spacing="-6" />
+                                                    <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
@@ -601,8 +644,9 @@
                                                     <Ellipse
                                                         Width="16"
                                                         Height="16"
+                                                        KeyDown="FrameworkElement_KeyDown"
                                                         Tag="{Binding Url}"
-                                                        Tapped="On_Tapped"
+                                                        Tapped="FrameworkElement_Tapped"
                                                         ToolTipService.ToolTip="{Binding UserName}">
                                                         <Ellipse.Fill>
                                                             <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
@@ -617,7 +661,7 @@
                                             FontSize="12"
                                             Text="{Binding FollowNum}" />
                                     </Grid>
-                                </control:StackPanel>
+                                </control:StackPanelEx>
                                 <Button
                                     x:Name="FollowButton"
                                     Grid.Column="2"
@@ -626,6 +670,7 @@
                                     Background="{ThemeResource SystemControlTransparentBrush}"
                                     Click="Button_Click"
                                     Tag="{Binding}"
+                                    Tapped="Button_Tapped"
                                     ToolTipService.ToolTip="{Binding FollowStatus}">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon
@@ -645,7 +690,7 @@
                                 Text="{Binding Description}"
                                 TextWrapping="WrapWholeWords"
                                 Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                     </Grid>
                     <ListView
                         HorizontalAlignment="Stretch"
@@ -658,7 +703,7 @@
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <control:StackPanel Orientation="Horizontal" Spacing="2" />
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="2" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
@@ -682,7 +727,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1">
-                        <control:StackPanel>
+                        <control:StackPanelEx>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -971,9 +1016,9 @@
                                         Text="{Binding Star1Count}" />
                                 </Grid>
                             </Grid>
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                     </Grid>
-                </control:StackPanel>
+                </control:StackPanelEx>
             </DataTemplate>
             <DataTemplate x:Key="CollectionDetailCard">
                 <Grid
@@ -1041,6 +1086,16 @@
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OriginButton"
+                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding Cover}"
+                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyoutSubItem>
                         </MenuFlyout>
                     </Grid.Resources>
@@ -1050,9 +1105,11 @@
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
+                        KeyDown="FrameworkElement_KeyDown"
                         Source="{Binding Cover.Pic, Mode=OneWay}"
                         Stretch="UniformToFill"
-                        Tag="{Binding Cover}" />
+                        Tag="{Binding Cover}"
+                        Tapped="FrameworkElement_Tapped" />
                     <Grid
                         Padding="8"
                         VerticalAlignment="Bottom"
@@ -1065,7 +1122,7 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <control:StackPanel Spacing="8">
+                        <control:StackPanelEx Spacing="8">
                             <TextBlock
                                 FontSize="20"
                                 Text="{Binding Title}"
@@ -1096,7 +1153,7 @@
                                     <Run Text="{Binding FollowNum}" />
                                 </TextBlock>
                             </Grid>
-                        </control:StackPanel>
+                        </control:StackPanelEx>
                         <StackPanel
                             Grid.Column="1"
                             HorizontalAlignment="Right"
@@ -1107,7 +1164,8 @@
                                 x:Uid="/Feed/LikeButton"
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding}">
+                                Tag="{Binding}"
+                                Tapped="Button_Tapped">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -1126,6 +1184,7 @@
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
                                 Tag="{Binding}"
+                                Tapped="Button_Tapped"
                                 ToolTipService.ToolTip="{Binding FollowStatus}"
                                 Visibility="{Binding FollowStatus, Converter={StaticResource StringVisibilityConverter}}">
                                 <StackPanel Orientation="Horizontal">
@@ -1180,36 +1239,139 @@
         TallModeConfiguration="SinglePane">
         <control:TwoPaneView.Pane1>
             <Grid x:Name="LeftGrid">
-                <ScrollViewer
-                    x:Name="DetailScrollViewer"
-                    Margin="{StaticResource ScrollViewerMargin}"
-                    Padding="{StaticResource ScrollViewerPadding}"
+                <control:ShyHeaderListView
+                    x:Name="DetailListView"
+                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+                    HeaderHeight="40"
+                    HeaderMargin="{StaticResource PageTitleHeight}"
+                    ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
+                    ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsSource="{x:Bind Provider.SearchItemSource, Mode=OneWay}"
+                    Loaded="ListView_Loaded"
+                    ShowsScrollingPlaceholders="False">
+                    <control:ShyHeaderListView.TopHeader>
+                        <Grid x:Name="Pane1Grid">
+                            <ContentControl
+                                x:Name="DetailControl"
+                                Grid.ColumnSpan="2"
+                                Margin="1,0.5"
+                                Padding="{StaticResource StackPanelMargin}"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Stretch"
+                                Content="{x:Bind Provider.Detail, Mode=OneWay}"
+                                ContentTemplate="{x:Bind Provider.DetailDataTemplate, Mode=OneWay}" />
+                        </Grid>
+                    </control:ShyHeaderListView.TopHeader>
+                    <control:ShyHeaderListView.FlyoutHeader>
+                        <Grid x:Name="DetailFlyoutHeader">
+                            <Grid
+                                x:Name="SearchBox"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Padding="4"
+                                VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="4" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="4" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </Grid.ChildrenTransitions>
+                                <AutoSuggestBox
+                                    x:Name="AutoSuggestBox"
+                                    VerticalAlignment="Center"
+                                    IsTabStop="True"
+                                    PlaceholderText="{x:Bind Provider.Title, Converter={StaticResource StringFormatConverter}, ConverterParameter='搜索来自{0}的内容', Mode=OneWay}"
+                                    QuerySubmitted="AutoSuggestBox_QuerySubmitted">
+                                    <AutoSuggestBox.QueryIcon>
+                                        <FontIcon
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="12"
+                                            Glyph="&#xE721;" />
+                                    </AutoSuggestBox.QueryIcon>
+                                </AutoSuggestBox>
+                                <ComboBox
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    SelectedIndex="{x:Bind Provider.SearchItemSource.SearchFeedTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
+                                    <x:String>全部</x:String>
+                                    <x:String>动态</x:String>
+                                    <x:String>图文</x:String>
+                                    <x:String>点评</x:String>
+                                    <x:String>酷图</x:String>
+                                    <x:String>提问</x:String>
+                                    <x:String>回答</x:String>
+                                    <x:String>视频</x:String>
+                                    <x:String>二手</x:String>
+                                    <x:String>投票</x:String>
+                                </ComboBox>
+                                <ComboBox
+                                    Grid.Column="4"
+                                    VerticalAlignment="Center"
+                                    SelectedIndex="{x:Bind Provider.SearchItemSource.SearchFeedSortTypeComboBoxSelectedIndex, FallbackValue=0, Mode=TwoWay}">
+                                    <x:String>实时</x:String>
+                                    <x:String>热度</x:String>
+                                    <x:String>评论数</x:String>
+                                </ComboBox>
+                            </Grid>
+                        </Grid>
+                    </control:ShyHeaderListView.FlyoutHeader>
+                </control:ShyHeaderListView>
+                <Grid
+                    x:Name="SearchBoxGrid"
                     VerticalAlignment="Top"
-                    HorizontalContentAlignment="Stretch"
-                    HorizontalScrollBarVisibility="Disabled"
-                    VerticalScrollBarVisibility="Auto">
-                    <Grid x:Name="Pane1Grid">
-                        <ContentControl
-                            x:Name="DetailControl"
-                            Margin="1,0.5"
-                            Padding="{StaticResource StackPanelMargin}"
-                            HorizontalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            Content="{Binding Detail}"
-                            ContentTemplate="{Binding DetailDataTemplate}" />
-                    </Grid>
-                </ScrollViewer>
+                    Background="{ThemeResource TitleBarBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="32" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </Grid.ChildrenTransitions>
+                    <Border
+                        x:Name="Block"
+                        Grid.Row="1"
+                        Height="48" />
+                    <Button
+                        x:Name="SearchRefreshButton"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        Click="SearchRefreshButton_Click"
+                        Content="&#xE72C;"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                </Grid>
                 <control:TitleBar
                     x:Name="TitleBar"
-                    Title="{Binding Title}"
+                    Title="{x:Bind Provider.Title, Mode=OneWay}"
                     IsRefreshEnabled="True"
-                    RefreshRequested="TitleBar_RefreshEvent" />
+                    RefreshRequested="TitleBar_RefreshEvent">
+                    <Button
+                        x:Name="SearchButton"
+                        Click="SearchButton_Click"
+                        Content="&#xE721;"
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                </control:TitleBar>
             </Grid>
         </control:TwoPaneView.Pane1>
         <control:TwoPaneView.Pane2>
             <Grid x:Name="RightGrid">
-                <control:ShyHeaderListView
-                    x:Name="ListView"
+                <control:ShyHeaderPivotListView
+                    x:Name="FeedsListView"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                     HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
@@ -1217,11 +1379,11 @@
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     Loaded="ListView_Loaded"
                     ShowsScrollingPlaceholders="False"
-                    ShyHeaderItemSource="{Binding ItemSource}">
-                    <control:ShyHeaderListView.TopHeader>
+                    ShyHeaderItemSource="{x:Bind Provider.ItemSource, Mode=OneWay}">
+                    <control:ShyHeaderPivotListView.TopHeader>
                         <Grid x:Name="Pane2Grid" />
-                    </control:ShyHeaderListView.TopHeader>
-                    <control:ShyHeaderListView.RightHeader>
+                    </control:ShyHeaderPivotListView.TopHeader>
+                    <control:ShyHeaderPivotListView.RightHeader>
                         <Button
                             x:Name="RefreshButton"
                             VerticalAlignment="Center"
@@ -1229,8 +1391,8 @@
                             Content="&#xE72C;"
                             FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Style="{StaticResource TitleBarIconButtonStyle}" />
-                    </control:ShyHeaderListView.RightHeader>
-                </control:ShyHeaderListView>
+                    </control:ShyHeaderPivotListView.RightHeader>
+                </control:ShyHeaderPivotListView>
             </Grid>
         </control:TwoPaneView.Pane2>
     </control:TwoPaneView>

@@ -7,8 +7,11 @@
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:BookmarkViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
+    NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
         <control:PullToRefreshListView
@@ -16,16 +19,16 @@
             x:Uid="/MainPage/ListView"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{Binding Bookmarks}"
+            ItemsSource="{x:Bind Provider.Bookmarks, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:Bookmark">
                     <Grid
                         Background="{ThemeResource SystemControlTransparentBrush}"
-                        Tag="{Binding Url}"
-                        Tapped="Grid_Tapped">
+                        Tag="{x:Bind Url}"
+                        Tapped="FrameworkElement_Tapped">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -44,17 +47,17 @@
                             Margin="0,0,0,2"
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="{Binding Title}"
+                            Text="{x:Bind Title}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding Title}" />
+                            ToolTipService.ToolTip="{x:Bind Title}" />
                         <TextBlock
                             Grid.Column="3"
                             Margin="0,0,0,2"
                             VerticalAlignment="Center"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            Text="{Binding Url}"
+                            Text="{x:Bind Url}"
                             TextTrimming="CharacterEllipsis"
-                            ToolTipService.ToolTip="{Binding Url}" />
+                            ToolTipService.ToolTip="{x:Bind Url}" />
                         <Button
                             x:Name="RemoveBookmark"
                             Grid.Column="4"
@@ -66,14 +69,15 @@
                             Click="Button_Click"
                             Content="&#xE711;"
                             Style="{StaticResource TitleBarIconButtonStyle}"
-                            Tag="{Binding}" />
+                            Tag="{x:Bind}"
+                            Tapped="Button_Tapped" />
                     </Grid>
                 </DataTemplate>
             </control:PullToRefreshListView.ItemTemplate>
         </control:PullToRefreshListView>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">

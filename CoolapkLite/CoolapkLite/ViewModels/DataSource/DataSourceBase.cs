@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 
 namespace CoolapkLite.ViewModels.DataSource
 {
@@ -14,10 +11,6 @@ namespace CoolapkLite.ViewModels.DataSource
     /// </summary>
     public abstract class DataSourceBase<T> : IncrementalLoadingBase<T>
     {
-        public DataSourceBase() : base(Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher) { }
-
-        public DataSourceBase(CoreDispatcher dispatcher) : base(dispatcher) { }
-
         /// <summary>
         /// The refresh will clear current items, and re-fetch from beginning, so that we will keep a correct page number.
         /// </summary>
@@ -52,7 +45,7 @@ namespace CoolapkLite.ViewModels.DataSource
 
             IList<T> newItems = await LoadItemsAsync(count);
 
-            // Update page state.
+            // Network page state.
             if (newItems != null)
             {
                 _currentPage++;

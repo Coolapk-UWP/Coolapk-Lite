@@ -5,18 +5,18 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
-    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:AdaptiveViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
                 <templates:NotificationTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
@@ -40,16 +40,16 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-            ItemsSource="{Binding}"
+            ItemsSource="{x:Bind Provider}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{Binding Title}"
+            Title="{x:Bind Provider.Title, Mode=OneWay}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent"
-            Visibility="{Binding IsShowTitle, Converter={StaticResource BoolToVisibilityConverter}}" />
+            Visibility="{x:Bind Provider.IsShowTitle, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
     </Grid>
 </Page>

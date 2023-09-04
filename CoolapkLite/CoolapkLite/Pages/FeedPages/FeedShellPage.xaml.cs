@@ -11,7 +11,6 @@ using Windows.ApplicationModel.UserActivities;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
@@ -26,8 +25,30 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class FeedShellPage : Page
     {
-        private FeedShellViewModel Provider;
         private static UserActivitySession _currentActivity;
+
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(FeedShellViewModel),
+                typeof(FeedShellPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public FeedShellViewModel Provider
+        {
+            get => (FeedShellViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public FeedShellPage() => InitializeComponent();
 
@@ -38,7 +59,6 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                DataContext = Provider;
                 await Provider.Refresh(true);
                 if (Provider.FeedDetail != null)
                 {
@@ -88,10 +108,10 @@ namespace CoolapkLite.Pages.FeedPages
                 }
             }
 
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "ReplyButton":
+                case nameof(ReplyButton):
                     DisabledCopy();
                     if (element.Tag is FeedModelBase feed)
                     {
@@ -101,26 +121,27 @@ namespace CoolapkLite.Pages.FeedPages
                             FeedType = CreateFeedType.Reply,
                             PopupTransitions = new TransitionCollection
                             {
-                                new EdgeUIThemeTransition
-                                {
-                                    Edge = EdgeTransitionLocation.Bottom
-                                }
+                                new PopupThemeTransition()
                             }
                         }.Show(this);
                     }
                     break;
 
-                case "LikeButton":
+                case nameof(LikeButton):
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLike();
+                    await (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":
                     DisabledCopy();
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString()));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag.ToString(), Dispatcher));
                     break;
 
-                case "ShareButton":
+                case nameof(ShareButton):
+                    DisabledCopy();
+                    break;
+
+                case nameof(StarButton):
                     DisabledCopy();
                     break;
 
@@ -137,6 +158,13 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            if ((DetailControl.MediaPlayerElementEx.MediaElement is MediaElement mediaElement
+                && mediaElement.IsFullWindow)
+                    || (MediaPlayerElementEx.IsMediaPlayerElementSupported
+                    && DetailControl.MediaPlayerElementEx.MediaElement is MediaPlayerElement mediaPlayerElement
+                    && mediaPlayerElement.IsFullWindow))
+            { return; }
+
             double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
 
             // Remove details content from it's parent panel.
@@ -173,7 +201,7 @@ namespace CoolapkLite.Pages.FeedPages
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
-                ListControl.HeaderHeight = double.NaN;
+                ListControl.HeaderHeight = 40;
                 ListControl.HeaderMargin = PageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = true;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;

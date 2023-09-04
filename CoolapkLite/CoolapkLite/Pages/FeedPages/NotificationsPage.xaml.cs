@@ -1,13 +1,10 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.Providers;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -20,42 +17,44 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class NotificationsPage : Page, INotifyPropertyChanged
+    public sealed partial class NotificationsPage : Page
     {
         private static int PivotIndex = 0;
 
         private bool isLoaded;
         private Func<bool, Task> RefreshTask;
 
-        private NotificationsModel _notificationsModel = NotificationsModel.Instance;
+        #region NotificationsModel
+
+        /// <summary>
+        /// Identifies the <see cref="NotificationsModel"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty NotificationsModelProperty =
+            DependencyProperty.Register(
+                nameof(NotificationsModel),
+                typeof(NotificationsModel),
+                typeof(NotificationsPage),
+                null);
+
         public NotificationsModel NotificationsModel
         {
-            get => _notificationsModel;
-            set
-            {
-                if (_notificationsModel != value)
-                {
-                    _notificationsModel = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            get => (NotificationsModel)GetValue(NotificationsModelProperty);
+            private set => SetValue(NotificationsModelProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
+        #endregion
 
         public NotificationsPage() => InitializeComponent();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (NotificationsModel == null)
+            {
+                NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+            }
+            _ = NotificationsModel.Update();
+        }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -70,7 +69,6 @@ namespace CoolapkLite.Pages.FeedPages
                 Pivot.SelectedIndex = PivotIndex;
                 isLoaded = true;
             }
-            _ = NotificationsModel?.Update();
         }
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -91,7 +89,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new SimpleNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "AtMe":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -104,7 +102,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new FeedModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "AtCommentMe":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -117,7 +115,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new AtCommentMeNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "FeedLike":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -130,7 +128,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new LikeNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "Follow":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -143,7 +141,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new SimpleNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     case "Message":
                         _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
@@ -155,14 +153,14 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new MessageNotificationModel(o) },
-                                    "id")));
+                                    "id"), Dispatcher));
                         break;
                     default:
                         break;
                 }
                 RefreshTask = (reset) => (Frame.Content as AdaptivePage).Refresh(reset);
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame __ && __.Content is AdaptivePage AdaptivePage)
+            else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {
                 RefreshTask = (reset) => AdaptivePage.Refresh(reset);
             }
@@ -170,11 +168,11 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async Task Refresh(bool reset = false)
         {
-            await NotificationsModel?.Update();
+            await NotificationsModel.Update();
             await RefreshTask(reset);
         }
 
-        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = Window.Current.Bounds.Width > 640 ? 0 : 48;
+        private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh(true);
     }

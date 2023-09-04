@@ -12,37 +12,23 @@ namespace CoolapkLite.ViewModels.BrowserPages
 {
     public class HTMLViewModel : IViewModel
     {
-        public CoreDispatcher Dispatcher { get; }
-
         private readonly Uri uri;
-        private Action<UISettingChangedType> UISettingChanged;
+        private readonly Action<UISettingChangedType> UISettingChanged;
+
+        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
         {
             get => title;
-            private set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref title, value);
         }
 
         private string html;
         public string HTML
         {
             get => html;
-            private set
-            {
-                if (html != value)
-                {
-                    html = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref html, value);
         }
 
         private string rawHTML;
@@ -54,15 +40,15 @@ namespace CoolapkLite.ViewModels.BrowserPages
                 if (rawHTML != value)
                 {
                     rawHTML = value;
+                    _ = GetHtmlAsync(value);
                     RaisePropertyChangedEvent();
-                    _ = GetHtmlAsync(value, ThemeHelper.IsDarkTheme() ? "Dark" : "Light");
                 }
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -74,10 +60,19 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
         public HTMLViewModel(string url, CoreDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
-            uri = url.ValidateAndGetUri();
+            uri = url.TryGetUri();
             UISettingChanged = (mode) =>
             {
                 switch (mode)
@@ -104,16 +99,16 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             if (uri != null)
             {
-                await Load_HTML(uri);
+                await LoadHtmlAsync(uri);
             }
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is HTMLViewModel model && IsEqual(model);
         public bool IsEqual(HTMLViewModel other) => uri == other.uri;
 
-        private async Task Load_HTML(Uri uri)
+        private async Task LoadHtmlAsync(Uri uri)
         {
-            UIHelper.ShowProgressBar();
+            Dispatcher.ShowProgressBar();
             (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest");
             if (isSucceed)
             {
@@ -129,8 +124,10 @@ namespace CoolapkLite.ViewModels.BrowserPages
                     Title = title.ToString();
                 }
             }
-            UIHelper.HideProgressBar();
+            Dispatcher.HideProgressBar();
         }
+
+        public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light");
 
         public async Task GetHtmlAsync(string html, string theme)
         {

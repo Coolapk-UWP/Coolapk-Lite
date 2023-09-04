@@ -14,10 +14,11 @@
     <LangVersion>7.3</LangVersion>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
+    <TargetPlatformMinVersionOverride>10.0.10240.0</TargetPlatformMinVersionOverride>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <WindowsXamlEnableOverview>True</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile />
     <GenerateTemporaryStoreCertificate>True</GenerateTemporaryStoreCertificate>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
@@ -29,12 +30,18 @@
     <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
     <AppxPackageSigningTimestampServerUrl>http://timestamp.digicert.com</AppxPackageSigningTimestampServerUrl>
   </PropertyGroup>
+  <PropertyGroup>
+    <IsUseNetCore463 Condition="'$(IsUseNetCore463)' == ''">False</IsUseNetCore463>
+    <IsUpdateCIManifest Condition="'$(IsUpdateCIManifest)' == ''">False</IsUpdateCIManifest>
+    <TargetPlatformMinRevision Condition="'$(IsUseNetCore463)' == 'True'">16299</TargetPlatformMinRevision>
+    <TargetPlatformMinRevision Condition="'$(TargetPlatformMinRevision)' == ''">10240</TargetPlatformMinRevision>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -44,9 +51,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -58,8 +65,8 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -69,9 +76,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
     <OutputPath>bin\ARM\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -84,7 +91,7 @@
     <OutputPath>bin\ARM64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -97,7 +104,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM64</DefineConstants>
     <TargetPlatformMinVersion>10.0.16299.0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -109,8 +116,8 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
-    <NoWarn>;2008</NoWarn>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -120,9 +127,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
-    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008</NoWarn>
+    <NoWarn>;2008;CS0618</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -132,6 +139,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <IsNetCore463 Condition="'$(TargetPlatformMinVersion)' == '10.0.16299.0'">True</IsNetCore463>
+    <IsNetCore463 Condition="'$(IsNetCore463)' == ''">False</IsNetCore463>
+    <AppxManifestName Condition="'$(IsNetCore463)' == 'True'">Package.Feature.appxmanifest</AppxManifestName>
+    <AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
+    <DefineConstants Condition="'$(IsNetCore463)' == 'True'">$(DefineConstants);NETCORE463</DefineConstants>
+    <DefineConstants Condition="'$(IsUpdateCIManifest)' == 'True'">$(DefineConstants);CANARY</DefineConstants>
+    <NoWarn Condition="'$(IsNetCore463)' == 'True'">$(NoWarn);WMC0151</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -140,9 +154,14 @@
     <Compile Include="BackgroundTasks\LiveTileTask.cs" />
     <Compile Include="BackgroundTasks\NotificationsTask.cs" />
     <Compile Include="Common\AccentColorResource.cs" />
+    <Compile Include="Common\AnimateSelectionProvider.cs" />
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
+    <Compile Include="Common\Enumerable.cs" />
     <Compile Include="Common\ExtensionManager.cs" />
+    <Compile Include="Common\HttpRandomAccessStream.cs" />
+    <Compile Include="Common\LanguageCodeResource.cs" />
+    <Compile Include="Common\SettingsPaneRegister.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
@@ -174,12 +193,25 @@
     <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
       <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\InfoBadge\InfoBadge.cs" />
+    <Compile Include="Controls\InfoBadge\InfoBadge.cs">
+      <DependentUpon>InfoBadge.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\InfoBadge\InfoBadgeTemplateSettings.cs" />
+    <Compile Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.cs">
+      <DependentUpon>MediaPlayerElementEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MediaPlayerElementEx\MediaPlayerElementExTemplateSettings.cs" />
     <Compile Include="Controls\Picker\Picker.cs">
       <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PivotHeader\IShyHeader.cs" />
+    <Compile Include="Controls\PolylineView\PolylineView.cs">
+      <DependentUpon>PolylineView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PolylineView\PolylineView.Properties.cs">
+      <DependentUpon>PolylineView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PolylineView\PolylineViewTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\QRCode.cs">
       <DependentUpon>QRCode.xaml</DependentUpon>
     </Compile>
@@ -198,7 +230,38 @@
     <Compile Include="Controls\ShyHeaderListView\ShyHeaderListView.cs">
       <DependentUpon>ShyHeaderListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\StackPanel.cs" />
+    <Compile Include="Controls\ShyHeaderPivotListView\ShyHeaderPivotListView.cs">
+      <DependentUpon>ShyHeaderPivotListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\StackPanelEx.cs" />
+    <Compile Include="Controls\TextBlockEx\Containers\DocumentContainer.cs" />
+    <Compile Include="Controls\TextBlockEx\Containers\StackPanelDocumentContainer.cs" />
+    <Compile Include="Controls\TextBlockEx\Containers\ParagraphDocumentContainer.cs" />
+    <Compile Include="Controls\TextBlockEx\Containers\RichTextBlockDocumentContainer.cs" />
+    <Compile Include="Controls\TextBlockEx\Containers\SpanDocumentContainer.cs" />
+    <Compile Include="Controls\TextBlockEx\TextBlockEx.cs">
+      <DependentUpon>TextBlockEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBlockEx\TextBlockEx.Properties.cs">
+      <DependentUpon>TextBlockEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TextBlockEx\Writers\AcronymWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\AnchorWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\BrWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\CodeWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\ContainerWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\DelWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\EmWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\HtmlWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\HtmlWriterFactory.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\ImageWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\InsWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\KeyboardWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\ParagraphWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\QWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\SpanWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\StrongWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\TextWriter.cs" />
     <Compile Include="Controls\TitleBar\TitleBar.cs">
       <DependentUpon>TitleBar.xaml</DependentUpon>
     </Compile>
@@ -212,8 +275,11 @@
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\Controls\WebViewHelper.cs" />
     <Compile Include="Helpers\Converters\ConverterTools.cs" />
+    <Compile Include="Helpers\Converters\DateLineToReadableConverter.cs" />
     <Compile Include="Helpers\Converters\NumMultConverter.cs" />
+    <Compile Include="Helpers\Converters\NumAddConverter.cs" />
     <Compile Include="Helpers\Converters\StringToBoolConverter.cs" />
+    <Compile Include="Helpers\Converters\ZoomToolTipValueConverter.cs" />
     <Compile Include="Helpers\DateHelper.cs" />
     <Compile Include="Helpers\Controls\FocusVisualHelper.cs" />
     <Compile Include="Common\HtmlToText.cs" />
@@ -238,16 +304,18 @@
     <Compile Include="Common\ExceptionHandling.cs" />
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
+    <Compile Include="Models\Feeds\LinkFeedModel.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
-    <Compile Include="Models\Update\APIVersion.cs" />
-    <Compile Include="Models\Update\SystemVersionInfo.cs" />
-    <Compile Include="Models\Update\UpdateInfo.cs" />
-    <Compile Include="Models\Update\UserAgent.cs" />
+    <Compile Include="Models\Network\APIVersion.cs" />
+    <Compile Include="Models\Network\SystemVersionInfo.cs" />
+    <Compile Include="Models\Network\UpdateInfo.cs" />
+    <Compile Include="Models\Network\UserAgent.cs" />
     <Compile Include="Models\Upload\UploadFileFragment.cs" />
+    <Compile Include="Models\Users\LinkUserModel.cs" />
     <Compile Include="Models\Users\UserAction.cs" />
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
       <DependentUpon>HTMLPage.xaml</DependentUpon>
@@ -319,9 +387,6 @@
     <Compile Include="Controls\ShowQRCodeControl.xaml.cs">
       <DependentUpon>ShowQRCodeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TextBlockEx.xaml.cs">
-      <DependentUpon>TextBlockEx.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TwoPaneView\TwoPaneView.cs">
       <DependentUpon>TwoPaneView.xaml</DependentUpon>
     </Compile>
@@ -335,9 +400,8 @@
     <Compile Include="Helpers\ImageCacheHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\StateTrigger\IsTypePresentTrigger.cs" />
-    <Compile Include="Helpers\TipsRectangleHelper.cs" />
+    <Compile Include="Helpers\Controls\TipsRectangleHelper.cs" />
     <Compile Include="Helpers\UIHelper.cs" />
-    <Compile Include="Helpers\Converters\FontSizeToHeightConverter.cs" />
     <Compile Include="Helpers\Converters\HTMLToTextConverter.cs" />
     <Compile Include="Models\Feeds\FeedDetailModel.cs" />
     <Compile Include="Models\Feeds\FeedModel.cs" />
@@ -355,7 +419,7 @@
       <DependentUpon>FeedShellPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\Interfaces.cs" />
-    <Compile Include="Pages\MainPage\PivotPage.xaml.cs">
+    <Compile Include="Pages\MainPages\PivotPage.xaml.cs">
       <DependentUpon>PivotPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\BrowserPages\BrowserPage.xaml.cs">
@@ -376,7 +440,7 @@
     <Compile Include="Pages\FeedPages\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\MainPage\MainPage.xaml.cs">
+    <Compile Include="Pages\MainPages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SettingsPages\SettingsPage.xaml.cs">
@@ -387,6 +451,9 @@
     </Compile>
     <Compile Include="Pages\ShowImagePage.xaml.cs">
       <DependentUpon>ShowImagePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ToolsPages\FansAnalyzePage.xaml.cs">
+      <DependentUpon>FansAnalyzePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\BrowserPages\BrowserViewModel.cs" />
@@ -407,10 +474,12 @@
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\SettingsPages\TestViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
+    <Compile Include="ViewModels\ToolsPages\FansAnalyzeViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="Package.appxmanifest">
+    <AppxManifest Include="$(AppxManifestName)">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
@@ -1053,6 +1122,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.ThemeResources.TH1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.ThemeResources.RS1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Picker\Picker.ThemeResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1060,6 +1141,10 @@
     <Page Include="Controls\Picker\Picker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\PolylineView\PolylineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\QRCode\QRCode.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -1070,6 +1155,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ShyHeaderListView\ShyHeaderListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ShyHeaderPivotListView\ShyHeaderPivotListView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\TextBlockEx\TextBlockEx.Themeresources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1165,7 +1258,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TextBlockEx.xaml">
+    <Page Include="Controls\TextBlockEx\TextBlockEx.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1173,7 +1266,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPage\PivotPage.xaml">
+    <Page Include="Pages\MainPages\PivotPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1201,7 +1294,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\MainPage\MainPage.xaml">
+    <Page Include="Pages\MainPages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -1214,6 +1307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ShowImagePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ToolsPages\FansAnalyzePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1284,7 +1381,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.50</Version>
+      <Version>1.11.52</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
@@ -1340,6 +1437,10 @@
       <Project>{7e63fd82-2598-46e3-b38f-57613ef74b51}</Project>
       <Name>Microsoft.Toolkit.Uwp.UI.Controls.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid.csproj">
+      <Project>{f73e00d5-9b4c-42b5-8c1d-2699c108352d}</Project>
+      <Name>Microsoft.Toolkit.Uwp.UI.Controls.DataGrid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Markdown\Microsoft.Toolkit.Uwp.UI.Controls.Markdown.csproj">
       <Project>{3a5c5c2d-2493-415c-bdeb-2b6d97ffcbee}</Project>
       <Name>Microsoft.Toolkit.Uwp.UI.Controls.Markdown</Name>
@@ -1393,23 +1494,15 @@
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
     <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
-    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\CreateFeedControl.resw" />
     <PRIResource Include="Strings\zh-CN\Feed.resw" />
     <PRIResource Include="Strings\zh-CN\FeedListPage.resw" />
     <PRIResource Include="Strings\zh-CN\FeedShellPage.resw" />
     <PRIResource Include="Strings\zh-CN\MainPage.resw" />
-    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\NotificationsPage.resw" />
     <PRIResource Include="Strings\zh-CN\ProfilePage.resw" />
-    <PRIResource Include="Strings\zh-CN\Resources.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
-    <PRIResource Include="Strings\zh-CN\SettingsPage.resw">
-      <SubType>Designer</SubType>
-    </PRIResource>
+    <PRIResource Include="Strings\zh-CN\Resources.resw" />
+    <PRIResource Include="Strings\zh-CN\SettingsPage.resw" />
     <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
@@ -1431,10 +1524,12 @@
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
     <PRIResource Include="Strings\zh-TW\UserAgentDialog.resw" />
   </ItemGroup>
-  <ItemGroup />
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0'">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
+  <Import Project="FeatureAddon.targets" Condition="'$(IsNetCore463)' == 'True' and Exists('FeatureAddon.targets')" />
+  <Import Project="UpdateMinVersion.targets" Condition="'$(IsUseNetCore463)' == 'True' and Exists('UpdateMinVersion.targets')" />
+  <Import Project="UpdateCIManifest.targets" Condition="'$(IsUpdateCIManifest)' == 'True' and Exists('UpdateCIManifest.targets')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

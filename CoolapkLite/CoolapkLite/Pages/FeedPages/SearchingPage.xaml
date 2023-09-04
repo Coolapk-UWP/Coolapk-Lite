@@ -10,6 +10,7 @@
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:SearchingViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -18,7 +19,7 @@
                 <templates:FeedsTemplates />
                 <templates:SearchWord />
                 <templates:IndexCardTemplates />
-                <templates:OtherDatatemplates />
+                <templates:OtherDataTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
@@ -42,6 +43,11 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <ReorderThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
             <Border
                 x:Name="Block"
                 Grid.Column="0"
@@ -54,10 +60,16 @@
                 VerticalAlignment="Center"
                 IsTabStop="True"
                 ItemTemplateSelector="{StaticResource SearchWordSelector}"
-                QueryIcon="Find"
                 QuerySubmitted="AutoSuggestBox_QuerySubmitted"
-                Text="{Binding Title, Mode=OneWay}"
-                TextChanged="AutoSuggestBox_TextChanged" />
+                Text="{x:Bind Provider.Title, Mode=OneWay}"
+                TextChanged="AutoSuggestBox_TextChanged">
+                <AutoSuggestBox.QueryIcon>
+                    <FontIcon
+                        FontFamily="{StaticResource SymbolThemeFontFamily}"
+                        FontSize="12"
+                        Glyph="&#xE721;" />
+                </AutoSuggestBox.QueryIcon>
+            </AutoSuggestBox>
             <Button
                 x:Name="RefreshButton"
                 Grid.Column="2"
@@ -71,16 +83,23 @@
             x:Name="Pivot"
             Grid.Row="1"
             Margin="0,-9,0,0"
-            helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+            helpers:TipsRectangleHelper.IndicatorName="SelectionIndicator"
+            helpers:TipsRectangleHelper.IsEnable="True"
+            helpers:TipsRectangleHelper.Orientation="Horizontal"
             Loaded="Pivot_Loaded"
             SelectionChanged="Pivot_SelectionChanged"
             SizeChanged="Pivot_SizeChanged">
             <Pivot.RightHeader>
                 <StackPanel x:Name="RightHeader" Orientation="Horizontal">
+                    <StackPanel.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </StackPanel.ChildrenTransitions>
                     <ComboBox
                         Margin="8,6,4,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SearchFeedItemSource.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{x:Bind Provider.SearchFeedItemSource.SearchFeedTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>全部</x:String>
                         <x:String>动态</x:String>
                         <x:String>图文</x:String>
@@ -95,7 +114,7 @@
                     <ComboBox
                         Margin="4,6,8,6"
                         VerticalAlignment="Bottom"
-                        SelectedIndex="{Binding SearchFeedItemSource.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{x:Bind Provider.SearchFeedItemSource.SearchFeedSortTypeComboBoxSelectedIndex, Mode=TwoWay}">
                         <x:String>实时</x:String>
                         <x:String>热度</x:String>
                         <x:String>评论数</x:String>
@@ -107,7 +126,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchFeedItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchFeedItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -117,7 +136,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchUserItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchUserItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -127,7 +146,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
-                    ItemsSource="{Binding SearchTopicItemSource}"
+                    ItemsSource="{x:Bind Provider.SearchTopicItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />

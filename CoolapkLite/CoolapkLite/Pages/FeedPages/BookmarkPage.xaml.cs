@@ -6,6 +6,7 @@ using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Threading.Tasks;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -20,28 +21,47 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class BookmarkPage : Page
     {
-        private BookmarkViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(BookmarkViewModel),
+                typeof(BookmarkPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public BookmarkViewModel Provider
+        {
+            get => (BookmarkViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public BookmarkPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is BookmarkViewModel ViewModel
-                && Provider == null)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                DataContext = Provider;
+                Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
                 await Refresh(true);
             }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "AddBookmark":
+                case nameof(AddBookmark):
                     BookmarkDialog dialog = new BookmarkDialog();
                     ContentDialogResult result = await dialog.ShowAsync();
                     if (result == ContentDialogResult.Primary)
@@ -57,15 +77,33 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (e?.Handled == true) { return; }
 
-            if (e != null && !UIHelper.IsOriginSource(sender, e.OriginalSource)) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
 
             if (e != null) { e.Handled = true; }
 
-            _ = this.OpenLinkAsync(element.Tag.ToString());
+            _ = element.OpenLinkAsync(element.Tag?.ToString());
+        }
+
+        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            switch (e.Key)
+            {
+                case VirtualKey.Enter:
+                case VirtualKey.Space:
+                    FrameworkElement_Tapped(sender, null);
+                    e.Handled = true;
+                    break;
+            }
+        }
+
+        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e != null) { e.Handled = true; }
         }
 
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);

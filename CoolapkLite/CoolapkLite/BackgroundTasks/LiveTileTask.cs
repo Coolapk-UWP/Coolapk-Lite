@@ -5,10 +5,13 @@ using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite.BackgroundTasks
 {
@@ -16,55 +19,52 @@ namespace CoolapkLite.BackgroundTasks
     {
         public static LiveTileTask Instance = new LiveTileTask();
 
-        public LiveTileTask()
-        {
-            Instance = Instance ?? this;
-        }
+        public LiveTileTask() => Instance = Instance ?? this;
 
-        public void Run(IBackgroundTaskInstance taskInstance)
+        public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            UpdateTile();
+            await UpdateTileAsync();
             deferral.Complete();
         }
 
-        public async void UpdateTile()
+        public async Task UpdateTileAsync()
         {
-            Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
-            try
+            if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                await GetData(uri);
-            }
-            catch (Exception ex)
-            {
-                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+                Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
+                try
+                {
+                    await GetDataAsync(uri);
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+                }
             }
         }
 
-        private async Task GetData(Uri uri)
+        private async Task GetDataAsync(Uri uri)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
             if (isSucceed)
             {
                 JArray array = (JArray)result;
                 if (array.Count < 1) { return; }
-                int i = 0;
-                foreach (JToken item in array)
+                foreach (JToken item in array.Take(5))
                 {
-                    if (i >= 5) { break; }
                     if (((JObject)item).TryGetValue("entityType", out JToken entityType))
                     {
                         if (entityType.ToString() == "feed" || entityType.ToString() == "discovery")
                         {
-                            i++;
-                            UpdateTitle(GetFeedTitle((JObject)item));
+                            UpdateTile(GetFeedTile((JObject)item));
                         }
                     }
                 }
             }
         }
 
-        private void UpdateTitle(TileContent tileContent)
+        private void UpdateTile(TileContent tileContent)
         {
             try
             {
@@ -79,13 +79,70 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        public static TileContent GetFeedTitle(JObject token)
+        public static async Task<bool> PinSecondaryTileAsync(string tileId, string displayName, string arguments)
         {
-            FeedModel FeedDetail = new FeedModel(token);
-            return GetFeedTitle(FeedDetail);
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+            bool isPinned = SecondaryTile.Exists(tileId);
+            if (isPinned)
+            {
+                UIHelper.ShowMessage(loader.GetString("AlreadyPinnedTile"));
+            }
+            else
+            {
+                // InitializeAsync the tile with required arguments
+                SecondaryTile tile = new SecondaryTile(
+                    tileId,
+                    displayName,
+                    arguments,
+                    new Uri("ms-appx:///Assets/Square150x150Logo.png"),
+                    Windows.UI.StartScreen.TileSize.Default);
+
+                // Enable wide and large tile sizes
+                tile.VisualElements.Wide310x150Logo = new Uri("ms-appx:///Assets/Wide310x150Logo.png");
+                tile.VisualElements.Square310x310Logo = new Uri("ms-appx:///Assets/LargeTile.png");
+
+                // Add a small size logo for better looking small tile
+                tile.VisualElements.Square71x71Logo = new Uri("ms-appx:///Assets/SmallTile.png");
+
+                // Add a unique corner logo for the secondary tile
+                tile.VisualElements.Square44x44Logo = new Uri("ms-appx:///Assets/Square44x44Logo.png");
+
+                // Show the display name on all sizes
+                tile.VisualElements.ShowNameOnSquare150x150Logo = true;
+                tile.VisualElements.ShowNameOnWide310x150Logo = true;
+                tile.VisualElements.ShowNameOnSquare310x310Logo = true;
+
+                // Pin the tile
+                isPinned = await tile.RequestCreateAsync();
+
+                if (isPinned) { UIHelper.ShowMessage(loader.GetString("PinnedTileSucceeded")); }
+            }
+            return isPinned;
         }
 
-        public static TileContent GetFeedTitle(FeedModelBase FeedDetail)
+        public static void UpdateTile(string tileId, TileContent tileContent)
+        {
+            try
+            {
+                TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
+                tileUpdater.Clear();
+                tileUpdater.EnableNotificationQueue(true);
+                TileNotification tileNotification = new TileNotification(tileContent.GetXml());
+                tileUpdater.Update(tileNotification);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+            }
+        }
+
+        public static TileContent GetFeedTile(JObject token)
+        {
+            FeedModel FeedDetail = new FeedModel(token);
+            return GetFeedTile(FeedDetail);
+        }
+
+        public static TileContent GetFeedTile(FeedModelBase FeedDetail)
         {
             string Message = FeedDetail.Message.CSStoString();
             return new TileContent
@@ -230,13 +287,13 @@ namespace CoolapkLite.BackgroundTasks
             };
         }
 
-        public static TileContent GetUserTitle(JObject token)
+        public static TileContent GetUserTile(JObject token)
         {
             UserModel UserDetail = new UserModel(token);
-            return GetUserTitle(UserDetail);
+            return GetUserTile(UserDetail);
         }
 
-        public static TileContent GetUserTitle(IUserModel UserDetail)
+        public static TileContent GetUserTile(IUserModel UserDetail)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
             return new TileContent
@@ -299,7 +356,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                 new AdaptiveText
                                 {
-                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                 },
 
@@ -360,7 +417,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                                 new AdaptiveText
                                                 {
-                                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                                 },
 
@@ -426,7 +483,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                 new AdaptiveText
                                 {
-                                    Text = $"{UserDetail.LoginTime}{loader.GetString("Active")}",
+                                    Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                 },
 
@@ -443,7 +500,7 @@ namespace CoolapkLite.BackgroundTasks
             };
         }
 
-        public static TileContent GetListTitle(IHasDescription ListDetail)
+        public static TileContent GetListTile(IHasDescription ListDetail)
         {
             return new TileContent
             {
@@ -582,7 +639,7 @@ namespace CoolapkLite.BackgroundTasks
                 }
             };
         }
-        public static TileContent GetListTitle(IHasSubtitle ListDetail)
+        public static TileContent GetListTile(IHasSubtitle ListDetail)
         {
             return new TileContent
             {

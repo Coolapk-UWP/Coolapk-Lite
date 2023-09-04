@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -27,114 +26,191 @@ using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Helpers
 {
-    internal static partial class UIHelper
+    public static partial class UIHelper
     {
         public const int Duration = 3000;
         public static bool IsShowingProgressBar, IsShowingMessage;
-        public static CoreDispatcher ShellDispatcher { get; set; }
         public static List<string> MessageList { get; } = new List<string>();
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
-    }
 
-    internal static partial class UIHelper
-    {
-        public static IHaveTitleBar AppTitle;
+        public static IHaveTitleBar AppTitle { get; internal set; }
 
-        public static async void ShowProgressBar()
+        public static async Task<IHaveTitleBar> GetAppTitleAsync()
+        {
+            return Window.Current is Window window ? await window.GetAppTitleAsync() : AppTitle;
+        }
+
+        public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
+        {
+            if (!window.Dispatcher.HasThreadAccess)
+            {
+                await window.Dispatcher.ResumeForegroundAsync();
+            }
+            Page page = window.Content.FindDescendant<Page>();
+            return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
+        }
+
+        public static async Task<IHaveTitleBar> GetAppTitleAsync(this CoreDispatcher dispatcher)
+        {
+            if (WindowHelper.ActiveWindows.TryGetValue(dispatcher, out Window window))
+            {
+                if (!window.Dispatcher.HasThreadAccess)
+                {
+                    await window.Dispatcher.ResumeForegroundAsync();
+                }
+                Page page = window.Content.FindDescendant<Page>();
+                return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
+            }
+            else
+            {
+                return AppTitle;
+            }
+        }
+
+        public static async Task<IHaveTitleBar> GetAppTitleAsync(this DependencyObject element)
+        {
+            if (element is IHaveTitleBar mainPage)
+            {
+                return mainPage;
+            }
+
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+
+            if (WindowHelper.IsXamlRootSupported
+                && element is UIElement uiElement
+                && uiElement.XamlRoot != null)
+            {
+                Page page = uiElement.XamlRoot.Content.FindDescendant<Page>();
+                return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
+            }
+
+            return element.FindAscendant<Page>((x) => x is IHaveTitleBar) as IHaveTitleBar
+                ?? await element.Dispatcher.GetAppTitleAsync();
+        }
+
+        public static async void ShowProgressBar(this CoreDispatcher dispatcher) => ShowProgressBar(await dispatcher.GetAppTitleAsync());
+
+        public static async void ShowProgressBar(this DependencyObject element) => ShowProgressBar(await element.GetAppTitleAsync());
+
+        public static async void ShowProgressBar(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (!AppTitle.Dispatcher.HasThreadAccess)
+            if (mainPage.Dispatcher?.HasThreadAccess == false)
             {
-                await AppTitle.Dispatcher.ResumeForegroundAsync();
+                await mainPage.Dispatcher.ResumeForegroundAsync();
             }
             if (HasStatusBar)
             {
-                AppTitle?.HideProgressBar();
+                mainPage?.HideProgressBar();
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                AppTitle?.ShowProgressBar();
+                mainPage?.ShowProgressBar();
             }
         }
 
-        public static async void ShowProgressBar(double value)
+        public static async void ShowProgressBar(this CoreDispatcher dispatcher, double value) => ShowProgressBar(await dispatcher.GetAppTitleAsync(), value);
+
+        public static async void ShowProgressBar(this DependencyObject element, double value) => ShowProgressBar(await element.GetAppTitleAsync(), value);
+
+        public static async void ShowProgressBar(IHaveTitleBar mainPage, double value)
         {
             IsShowingProgressBar = true;
-            if (!AppTitle.Dispatcher.HasThreadAccess)
+            if (mainPage.Dispatcher?.HasThreadAccess == false)
             {
-                await AppTitle.Dispatcher.ResumeForegroundAsync();
+                await mainPage.Dispatcher.ResumeForegroundAsync();
             }
             if (HasStatusBar)
             {
-                AppTitle?.HideProgressBar();
+                mainPage?.HideProgressBar();
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                AppTitle?.ShowProgressBar(value);
+                mainPage?.ShowProgressBar(value);
             }
         }
 
-        public static async void PausedProgressBar()
+        public static async void PausedProgressBar(this CoreDispatcher dispatcher) => PausedProgressBar(await dispatcher.GetAppTitleAsync());
+
+        public static async void PausedProgressBar(this DependencyObject element) => PausedProgressBar(await element.GetAppTitleAsync());
+
+        public static async void PausedProgressBar(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (!AppTitle.Dispatcher.HasThreadAccess)
+            if (mainPage.Dispatcher?.HasThreadAccess == false)
             {
-                await AppTitle.Dispatcher.ResumeForegroundAsync();
+                await mainPage.Dispatcher.ResumeForegroundAsync();
             }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.PausedProgressBar();
+            mainPage?.PausedProgressBar();
         }
 
-        public static async void ErrorProgressBar()
+        public static async void ErrorProgressBar(this CoreDispatcher dispatcher) => ErrorProgressBar(await dispatcher.GetAppTitleAsync());
+
+        public static async void ErrorProgressBar(this DependencyObject element) => ErrorProgressBar(await element.GetAppTitleAsync());
+
+        public static async void ErrorProgressBar(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (!AppTitle.Dispatcher.HasThreadAccess)
+            if (mainPage.Dispatcher?.HasThreadAccess == false)
             {
-                await AppTitle.Dispatcher.ResumeForegroundAsync();
+                await mainPage.Dispatcher.ResumeForegroundAsync();
             }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.ErrorProgressBar();
+            mainPage?.ErrorProgressBar();
         }
 
-        public static async void HideProgressBar()
+        public static async void HideProgressBar(this CoreDispatcher dispatcher) => HideProgressBar(await dispatcher.GetAppTitleAsync());
+
+        public static async void HideProgressBar(this DependencyObject element) => HideProgressBar(await element.GetAppTitleAsync());
+
+        public static async void HideProgressBar(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = false;
-            if (!AppTitle.Dispatcher.HasThreadAccess)
+            if (mainPage.Dispatcher?.HasThreadAccess == false)
             {
-                await AppTitle.Dispatcher.ResumeForegroundAsync();
+                await mainPage.Dispatcher.ResumeForegroundAsync();
             }
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            AppTitle?.HideProgressBar();
+            mainPage?.HideProgressBar();
         }
 
-        public static async void ShowMessage(string message)
+        public static async void ShowMessage(string message) => ShowMessage(await GetAppTitleAsync(), message);
+
+        public static async void ShowMessage(this CoreDispatcher dispatcher, string message) => ShowMessage(await dispatcher.GetAppTitleAsync(), message);
+
+        public static async void ShowMessage(this DependencyObject element, string message) => ShowMessage(await element.GetAppTitleAsync(), message);
+
+        public static async void ShowMessage(IHaveTitleBar mainPage, string message)
         {
             MessageList.Add(message);
             if (!IsShowingMessage)
             {
                 IsShowingMessage = true;
-                if (!AppTitle.Dispatcher.HasThreadAccess)
+                if (mainPage.Dispatcher?.HasThreadAccess == false)
                 {
-                    await AppTitle.Dispatcher.ResumeForegroundAsync();
+                    await mainPage.Dispatcher.ResumeForegroundAsync();
                 }
                 while (MessageList.Count > 0)
                 {
@@ -154,18 +230,18 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        if (AppTitle != null)
+                        if (mainPage != null)
                         {
                             if (!string.IsNullOrEmpty(MessageList[0]))
                             {
                                 string messages = $"[{MessageList.Count}] {MessageList[0].Replace("\n", " ")}";
-                                AppTitle.ShowMessage(messages);
+                                mainPage.ShowMessage(messages);
                                 await Task.Delay(3000);
                             }
                             MessageList.RemoveAt(0);
                             if (MessageList.Count == 0)
                             {
-                                AppTitle.ShowMessage();
+                                mainPage.ShowMessage();
                             }
                         }
                     }
@@ -180,23 +256,6 @@ namespace CoolapkLite.Helpers
             { ShowMessage($"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}"); }
             else if (e.Message == "An error occurred while sending the request.") { ShowMessage("无法连接网络。"); }
             else { ShowMessage($"请检查网络连接。 {e.Message}"); }
-        }
-
-        public static bool IsOriginSource(object source, object originalSource)
-        {
-            if (source == originalSource) { return true; }
-
-            bool result = false;
-            FrameworkElement DependencyObject = originalSource as FrameworkElement;
-            if (DependencyObject.FindAscendant<ButtonBase>() == null && !(originalSource is ButtonBase) && !(originalSource is RichEditBox))
-            {
-                if (source is FrameworkElement FrameworkElement)
-                {
-                    result = source == DependencyObject.FindAscendant(FrameworkElement.Name);
-                }
-            }
-
-            return DependencyObject.Tag == null && result;
         }
 
         public static void SetBadgeNumber(string badgeGlyphValue)
@@ -247,41 +306,42 @@ namespace CoolapkLite.Helpers
             return taskResult;
         }
 
-        public static bool IsTypePresent(string AssemblyName, string TypeName)
+        public static CoreDispatcher TryGetForCurrentCoreDispatcher()
         {
             try
             {
-                Assembly asmb = Assembly.Load(new AssemblyName(AssemblyName));
-                Type supType = asmb.GetType($"{AssemblyName}.{TypeName}");
-                if (supType != null)
-                {
-                    try { Activator.CreateInstance(supType); }
-                    catch (MissingMethodException) { }
-                }
-                return supType != null;
+                return CoreApplication.GetCurrentView().Dispatcher;
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                SettingsHelper.LogManager.GetLogger(nameof(UIHelper)).Warn(ex.ExceptionToMessage(), ex);
+                return Window.Current?.Dispatcher ?? CoreApplication.MainView.Dispatcher;
             }
         }
-    }
 
-    public enum NavigationThemeTransition
-    {
-        Default,
-        Entrance,
-        DrillIn,
-        Suppress
-    }
-
-    internal static partial class UIHelper
-    {
-        public static Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null)
+        public static async Task<T> GetValueAsync<T>(this DependencyObject element, DependencyProperty dp)
         {
-            IHaveTitleBar mainPage = element is IHaveTitleBar page ? page : element.FindAscendant<MainPage>() ?? element.FindAscendant<PivotPage>() ?? AppTitle;
-            return mainPage.MainFrame.NavigateAsync(pageType, parameter, infoOverride);
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            return (T)element.GetValue(dp);
         }
+
+        public static async Task SetValueAsync<T>(this DependencyObject element, DependencyProperty dp, T value)
+        {
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            element.SetValue(dp, value);
+        }
+    }
+
+    public static partial class UIHelper
+    {
+        public static async Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
+            await NavigateAsync(await element.GetAppTitleAsync(), pageType, parameter, infoOverride);
 
         public static Task<bool> NavigateAsync(this IHaveTitleBar mainPage, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
             mainPage.MainFrame.NavigateAsync(pageType, parameter, infoOverride);
@@ -303,23 +363,50 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image)
+        public static Task<bool> LaunchUriAsync(this DependencyObject element, Uri uri) =>
+            element.Dispatcher.LaunchUriAsync(uri);
+
+        public static async Task<bool> LaunchUriAsync(this CoreDispatcher dispatcher, Uri uri)
         {
-            IHaveTitleBar mainPage = element is IHaveTitleBar page ? page : element.FindAscendant<MainPage>() ?? element.FindAscendant<PivotPage>() ?? AppTitle;
-            return mainPage.ShowImageAsync(image);
+            if (!dispatcher.HasThreadAccess)
+            { await dispatcher.ResumeForegroundAsync(); }
+            return await Launcher.LaunchUriAsync(uri);
         }
+
+        public static async Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image) =>
+            await ShowImageAsync(await element.GetAppTitleAsync(), image);
 
         public static async Task<bool> ShowImageAsync(this IHaveTitleBar mainPage, ImageModel image)
         {
             if (!mainPage.Dispatcher.HasThreadAccess)
             { await mainPage.Dispatcher.ResumeForegroundAsync(); }
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow) && WindowHelper.IsSupported)
+            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow))
             {
-                (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                window.TitleBar.ExtendsContentIntoTitleBar = true;
-                ThemeHelper.Initialize();
-                frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
-                return await window.TryShowAsync();
+                if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
+                {
+                    (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                    {
+                        window.TitleBar.ExtendsContentIntoTitleBar = true;
+                    }
+                    ThemeHelper.Initialize(window);
+                    frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
+                    return await window.TryShowAsync();
+                }
+                else
+                {
+                    return await WindowHelper.CreateWindowAsync((window) =>
+                    {
+                        if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
+                        Frame frame = new Frame();
+                        window.Content = frame;
+                        ThemeHelper.Initialize(window);
+                        frame.Navigate(typeof(ShowImagePage), image.Clone(window.Dispatcher), new DrillInNavigationTransitionInfo());
+                    });
+                }
             }
             else
             {
@@ -328,22 +415,19 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    internal static partial class UIHelper
+    public static partial class UIHelper
     {
-        public static Task<bool> OpenLinkAsync(this DependencyObject element, string link)
-        {
-            IHaveTitleBar mainPage = element is IHaveTitleBar page ? page : element.FindAscendant<MainPage>() ?? element.FindAscendant<PivotPage>() ?? AppTitle;
-            return mainPage.MainFrame.OpenLinkAsync(link);
-        }
+        public static async Task<bool> OpenLinkAsync(this DependencyObject element, string link) =>
+            await OpenLinkAsync(await element.GetAppTitleAsync(), link);
 
         public static Task<bool> OpenLinkAsync(this IHaveTitleBar mainPage, string link) =>
             mainPage.MainFrame.OpenLinkAsync(link);
 
         public static async Task<bool> OpenLinkAsync(this Frame frame, string link)
         {
-            await ThreadSwitcher.ResumeBackgroundAsync();
-
             if (string.IsNullOrWhiteSpace(link)) { return false; }
+
+            await ThreadSwitcher.ResumeBackgroundAsync();
 
             string origin = link;
 
@@ -352,7 +436,7 @@ namespace CoolapkLite.Helpers
                 link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
                 if (link.StartsWith("image.coolapk.com"))
                 {
-                    return await frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage));
+                    return await frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
                 }
                 else
                 {
@@ -363,7 +447,7 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin));
+                        return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
                     }
                 }
             }
@@ -383,22 +467,22 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(6);
-                return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url));
+                return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
             }
             else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(3, "?");
                 string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -409,7 +493,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
                 else
                 {
@@ -421,7 +505,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
@@ -429,7 +513,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/vote/", StringComparison.OrdinalIgnoreCase))
@@ -437,13 +521,13 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id));
+                    return await frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
             {
                 string tag = link.Substring(3, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -452,7 +536,7 @@ namespace CoolapkLite.Helpers
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
             {
                 string tag = link.Substring(5, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -462,12 +546,12 @@ namespace CoolapkLite.Helpers
             {
                 if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link));
+                    return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
                 }
                 else
                 {
                     string tag = link.Substring(9, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag);
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
                     if (provider != null)
                     {
                         return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -477,7 +561,7 @@ namespace CoolapkLite.Helpers
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
                 string id = link.Substring(12, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id);
+                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
                 if (provider != null)
                 {
                     return await frame.NavigateAsync(typeof(FeedListPage), provider);
@@ -485,24 +569,24 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, ShellDispatcher));
+                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
             }
             else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {
-                return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin));
+                return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
             }
-            else
+            else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                return origin.Contains("://") && await Launcher.LaunchUriAsync(origin.ValidateAndGetUri());
+                return await frame.LaunchUriAsync(uri);
             }
 
-            return true;
+            return false;
         }
 
-        public static Task<bool> OpenActivatedEventArgs(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>
-            mainPage.MainFrame.OpenActivatedEventArgs(args);
+        public static Task<bool> OpenActivatedEventArgsAsync(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>
+            mainPage.MainFrame.OpenActivatedEventArgsAsync(args);
 
-        public static async Task<bool> OpenActivatedEventArgs(this Frame frame, IActivatedEventArgs args)
+        public static async Task<bool> OpenActivatedEventArgsAsync(this Frame frame, IActivatedEventArgs args)
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             switch (args.Kind)
@@ -513,10 +597,26 @@ namespace CoolapkLite.Helpers
                     {
                         switch (LaunchActivatedEventArgs.Arguments)
                         {
-                            case "settings":
-                                return await frame.NavigateAsync(typeof(SettingsPage));
+                            case "me":
+                                return await frame.NavigateAsync(typeof(ProfilePage));
+                            case "home":
+                                return await frame.NavigateAsync(typeof(IndexPage));
                             case "flags":
                                 return await frame.NavigateAsync(typeof(TestPage));
+                            case "circle":
+                                return await frame.NavigateAsync(typeof(CirclePage));
+                            case "search":
+                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty, frame.Dispatcher));
+                            case "history":
+                                return await frame.NavigateAsync(typeof(HistoryPage));
+                            case "settings":
+                                return await frame.NavigateAsync(typeof(SettingsPage));
+                            case "favorites":
+                                return await frame.NavigateAsync(typeof(BookmarkPage));
+                            case "extensions":
+                                return await frame.NavigateAsync(typeof(ExtensionPage));
+                            case "notifications":
+                                return await frame.NavigateAsync(typeof(NotificationsPage));
                             default:
                                 return await frame.OpenLinkAsync(LaunchActivatedEventArgs.Arguments);
                         }
@@ -550,20 +650,32 @@ namespace CoolapkLite.Helpers
                         case "http":
                         case "https":
                             return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
-                        case "settings":
-                            await frame.NavigateAsync(typeof(SettingsPage));
-                            break;
+                        case "me":
+                            return await frame.NavigateAsync(typeof(ProfilePage));
+                        case "home":
+                            return await frame.NavigateAsync(typeof(IndexPage));
                         case "flags":
-                            await frame.NavigateAsync(typeof(TestPage));
-                            break;
+                            return await frame.NavigateAsync(typeof(TestPage));
+                        case "circle":
+                            return await frame.NavigateAsync(typeof(CirclePage));
+                        case "search":
+                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher));
+                        case "history":
+                            return await frame.NavigateAsync(typeof(HistoryPage));
+                        case "settings":
+                            return await frame.NavigateAsync(typeof(SettingsPage));
+                        case "favorites":
+                            return await frame.NavigateAsync(typeof(BookmarkPage));
+                        case "extensions":
+                            return await frame.NavigateAsync(typeof(ExtensionPage));
+                        case "notifications":
+                            return await frame.NavigateAsync(typeof(NotificationsPage));
                         default:
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
                     }
-                    break;
                 default:
                     return false;
             }
-            return true;
         }
 
         private static string Substring(this string str, int startIndex, string endString)

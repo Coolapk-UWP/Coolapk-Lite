@@ -85,7 +85,7 @@ namespace CoolapkLite.Common
                 }
                 else if (newSv.VerticalOffset < Threshold || lastOffset < Threshold) //前后状态不同时 先设置滚动条位置再绑定动画
                 {
-                    await SyncScrollView(newSv);
+                    await SyncScrollViewAsync(newSv);
                     StartScrollProgressAnimation(newSv, true);
                 }
                 newSv.ViewChanged += ScrollViewer_ViewChanged;
@@ -133,7 +133,7 @@ namespace CoolapkLite.Common
                     {
                         if (sender.innerProgress != (double)a.NewValue)
                         {
-                            _ = sender.SyncScrollView(sender.ScrollViewer);
+                            _ = sender.SyncScrollViewAsync(sender.ScrollViewer);
                         }
                         sender.OnProgressChanged();
                     }
@@ -219,7 +219,7 @@ namespace CoolapkLite.Common
         /// 同步ScrollOffset
         /// </summary>
         /// <param name="sv"></param>
-        private async Task SyncScrollView(ScrollViewer sv)
+        private async Task SyncScrollViewAsync(ScrollViewer sv)
         {
             if (sv == null)
             {

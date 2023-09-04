@@ -10,7 +10,9 @@
     <Pivot
         x:Name="Pivot"
         Margin="{StaticResource PivotTitleMargin}"
-        helpers:TipsRectangleHelper.TipTargetName="SelectedPipe"
+        helpers:TipsRectangleHelper.IndicatorName="SelectionIndicator"
+        helpers:TipsRectangleHelper.IsEnable="True"
+        helpers:TipsRectangleHelper.Orientation="Horizontal"
         Loaded="Pivot_Loaded"
         SelectionChanged="Pivot_SelectionChanged"
         SizeChanged="Pivot_SizeChanged">

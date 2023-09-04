@@ -1,18 +1,13 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Controls;
+﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
-using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
@@ -26,60 +21,84 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ProfilePage : Page, INotifyPropertyChanged
+    public sealed partial class ProfilePage : Page
     {
-        private ProfileViewModel Provider;
         private DateTime dateTime = default;
 
-        private double headerMargin;
-        internal double HeaderMargin
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(ProfileViewModel),
+                typeof(ProfilePage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public ProfileViewModel Provider
         {
-            get => headerMargin;
-            private set
-            {
-                headerMargin = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (ProfileViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
         }
 
-        private double headerHeight;
-        internal double HeaderHeight
+        #endregion
+
+        #region HeaderMargin
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderMargin"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(ProfilePage),
+                new PropertyMetadata((double)Application.Current.Resources["PageTitleHeight"]));
+
+        public double HeaderMargin
         {
-            get => headerHeight;
-            private set
-            {
-                headerHeight = value;
-                RaisePropertyChangedEvent();
-            }
+            get => (double)GetValue(HeaderMarginProperty);
+            private set => SetValue(HeaderMarginProperty, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #endregion
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        #region HeaderHeight
+
+        /// <summary>
+        /// Identifies the <see cref="HeaderHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(ProfilePage),
+                new PropertyMetadata(double.NaN));
+
+        public double HeaderHeight
         {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            get => (double)GetValue(HeaderHeightProperty);
+            private set => SetValue(HeaderHeightProperty, value);
         }
+
+        #endregion
 
         public ProfilePage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is ProfileViewModel ViewModel && Provider == null)
+            if (Provider == null)
             {
-                Provider = ViewModel;
-                DataContext = Provider;
-                Provider.LoadMoreStarted += UIHelper.ShowProgressBar;
-                Provider.LoadMoreCompleted += UIHelper.HideProgressBar;
+                Provider = new ProfileViewModel(Dispatcher);
             }
-
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
             if (!Provider.IsLogin || dateTime == default || DateTime.UtcNow - dateTime == TimeSpan.FromMinutes(1))
             {
                 await Refresh(true);
@@ -87,31 +106,39 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.LoadMoreStarted -= OnLoadMoreStarted;
+            Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
+        }
+
+        private void OnLoadMoreStarted() => this.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => this.HideProgressBar();
+
         private async Task Refresh(bool reset = false)
         {
             await Provider.Refresh(reset);
-            if (ListView.ItemsSource is EntityItemSource entities)
-            {
-                _ = entities.Refresh(true);
-            }
             dateTime = DateTime.UtcNow;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag?.ToString())
             {
                 case "FeedsButton":
-                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString()));
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
                     break;
                 case "FollowsButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", Dispatcher));
                     break;
                 case "FansButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我"));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", Dispatcher));
                     break;
                 case "LoginButton":
-                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri));
+                    _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));
                     break;
                 case "CreateFeedButton":
                     new CreateFeedControl
@@ -119,19 +146,32 @@ namespace CoolapkLite.Pages.FeedPages
                         FeedType = CreateFeedType.Feed,
                         PopupTransitions = new TransitionCollection
                         {
-                            new EdgeUIThemeTransition
-                            {
-                                Edge = EdgeTransitionLocation.Bottom
-                            }
+                            new PopupThemeTransition()
                         }
                     }.Show(this);
                     break;
                 case "NotificationButton":
-                    _ = this.NavigateAsync(typeof(NotificationsPage));
+                    _ = this.NavigateAsync(typeof(NotificationsPage), Dispatcher);
                     break;
                 default:
                     break;
             }
+        }
+
+        private void Grid_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag?.ToString())
+            {
+                case "FeedsButton":
+                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
+                    break;
+                default:
+                    _ = this.OpenLinkAsync(element.Tag?.ToString());
+                    break;
+            }
+            if (e != null) { e.Handled = true; }
         }
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
@@ -148,7 +188,12 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => _ = Provider.Refresh(true);
+        private void Grid_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            _ = Provider.Refresh(true);
+            if (e != null) { e.Handled = true; }
+        }
 
         #region 界面模式切换
 

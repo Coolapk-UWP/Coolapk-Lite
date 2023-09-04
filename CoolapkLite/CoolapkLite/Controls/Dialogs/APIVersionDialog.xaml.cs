@@ -1,10 +1,7 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Newtonsoft.Json.Linq;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
@@ -14,23 +11,27 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls.Dialogs
 {
-    public sealed partial class APIVersionDialog : ContentDialog, INotifyPropertyChanged
+    public sealed partial class APIVersionDialog : ContentDialog
     {
-        internal APIVersion APIVersion { get; set; }
+        #region APIVersion
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// Identifies the <see cref="APIVersion"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty APIVersionProperty =
+            DependencyProperty.Register(
+                nameof(APIVersion),
+                typeof(APIVersion),
+                typeof(APIVersionDialog),
+                null);
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public APIVersion APIVersion
         {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
+            get => (APIVersion)GetValue(APIVersionProperty);
+            private set => SetValue(APIVersionProperty, value);
         }
+
+        #endregion
 
         public APIVersionDialog(string line)
         {
@@ -61,7 +62,7 @@ namespace CoolapkLite.Controls.Dialogs
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            UIHelper.ShowProgressBar();
+            this.ShowProgressBar();
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, "com.coolapk.market"));
             if (isSucceed)
             {
@@ -69,10 +70,9 @@ namespace CoolapkLite.Controls.Dialogs
                 if (!string.IsNullOrEmpty(model.VersionCode) && !string.IsNullOrEmpty(model.VersionName))
                 {
                     APIVersion = new APIVersion(model.VersionName, model.VersionCode);
-                    RaisePropertyChangedEvent(nameof(APIVersion));
                 }
             }
-            UIHelper.HideProgressBar();
+            this.HideProgressBar();
         }
     }
 }

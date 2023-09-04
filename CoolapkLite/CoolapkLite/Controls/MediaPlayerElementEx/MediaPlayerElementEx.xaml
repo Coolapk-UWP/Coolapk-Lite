@@ -1,0 +1,9 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:common="using:CoolapkLite.Common"
+    xmlns:controls="using:CoolapkLite.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <common:CustomControlResource />
+    </ResourceDictionary.MergedDictionaries>
+    <Style BasedOn="{StaticResource DefaultMediaPlayerElementExStyle}" TargetType="controls:MediaPlayerElementEx" />
+</ResourceDictionary>

@@ -3,8 +3,11 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Reflection;
 using Windows.UI.Xaml.Markup;
+
+#if !NETCORE463
+using System.Reflection;
+#endif
 
 namespace CoolapkLite.Helpers.Converters
 {

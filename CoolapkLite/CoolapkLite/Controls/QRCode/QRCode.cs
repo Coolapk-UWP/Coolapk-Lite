@@ -11,7 +11,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace CoolapkLite.Controls
 {
-    [ContentProperty(Name = "Content")]
+    [ContentProperty(Name = nameof(Content))]
     [TemplatePart(Name = QRCodePathName, Type = typeof(Path))]
     public partial class QRCode : Control
     {

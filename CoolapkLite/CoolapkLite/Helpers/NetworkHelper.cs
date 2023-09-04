@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Core.Exceptions;
 using CoolapkLite.Models.Exceptions;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -71,7 +70,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static void SetRequestHeaders()
+        public static async void SetRequestHeaders()
         {
             string Culture = LanguageHelper.GetPrimaryLanguage();
             EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
@@ -86,7 +85,7 @@ namespace CoolapkLite.Helpers
             Client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
             Client.DefaultRequestHeaders.Add("X-App-Id", "com.coolapk.market");
             Client.DefaultRequestHeaders.Add("X-App-Device", TokenCreator.DeviceCode);
-            Client.DefaultRequestHeaders.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
+            Client.DefaultRequestHeaders.Add("X-Dark-Mode", await ThemeHelper.IsDarkThemeAsync() ? "1" : "0");
 
             if (SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
             {
@@ -148,10 +147,10 @@ namespace CoolapkLite.Helpers
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 case APIVersions.V13:
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3-2307071-universal");
-                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.3");
-                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2307071");
-                    Client.DefaultRequestHeaders.Add("X-App-Code", "2307071");
+                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.3-2308241-universal");
+                    Client.DefaultRequestHeaders.Add("X-App-Version", "13.3.3");
+                    Client.DefaultRequestHeaders.Add("X-Api-Supported", "2308241");
+                    Client.DefaultRequestHeaders.Add("X-App-Code", "2308241");
                     Client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
                 case APIVersions.Custom:
@@ -172,11 +171,21 @@ namespace CoolapkLite.Helpers
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
+                if (uri.Host.Contains("coolapk"))
                 {
-                    if (item.Name == "uid" ||
-                        item.Name == "username" ||
-                        item.Name == "token")
+                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
+                    {
+                        if (item.Name == "uid" ||
+                            item.Name == "username" ||
+                            item.Name == "token")
+                        {
+                            yield return (item.Name, item.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
                     {
                         yield return (item.Name, item.Value);
                     }
@@ -230,15 +239,15 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync();
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
-                response = await Client.PostAsync(uri, content);
-                return await response.Content.ReadAsStringAsync();
+                response = await Client.PostAsync(uri, content).ConfigureAwait(false);
+                return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
-                SettingsHelper.LogManager.GetLogger(nameof(ImageCacheHelper)).Error(e.ExceptionToMessage(), e);
+                SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
                 if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
                 return null;
             }
@@ -249,7 +258,7 @@ namespace CoolapkLite.Helpers
             }
             finally
             {
-                semaphoreSlim.Release();
+                //semaphoreSlim.Release();
             }
         }
 
@@ -257,9 +266,9 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
-                return await Client.GetStreamAsync(uri);
+                return await Client.GetStreamAsync(uri).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
@@ -274,7 +283,7 @@ namespace CoolapkLite.Helpers
             }
             finally
             {
-                semaphoreSlim.Release();
+                //semaphoreSlim.Release();
             }
         }
 
@@ -282,9 +291,9 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync();
                 BeforeGetOrPost(coolapkCookies, uri, request);
-                return await Client.GetStringAsync(uri);
+                return await Client.GetStringAsync(uri).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
             {
@@ -299,7 +308,7 @@ namespace CoolapkLite.Helpers
             }
             finally
             {
-                semaphoreSlim.Release();
+                //semaphoreSlim.Release();
             }
         }
     }
@@ -324,7 +333,7 @@ namespace CoolapkLite.Helpers
             string str = string.Empty;
             try
             {
-                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}"));
+                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}")).ConfigureAwait(false);
 
                 JObject token = JObject.Parse(str);
                 if (token.TryGetValue("dataRow", out JToken v1))
@@ -371,33 +380,62 @@ namespace CoolapkLite.Helpers
 
         public static string ExpandShortUrl(this Uri ShortUrl)
         {
-            string NativeUrl = null;
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ShortUrl);
             try { _ = req.HaveResponse; }
             catch (WebException ex)
             {
                 HttpWebResponse res = ex.Response as HttpWebResponse;
                 if (res.StatusCode == HttpStatusCode.Found)
-                { NativeUrl = res.Headers["Location"]; }
+                { return res.Headers["Location"] ?? ShortUrl.ToString(); }
             }
-            return NativeUrl ?? ShortUrl.ToString();
+            return ShortUrl.ToString();
         }
 
-        public static Uri ValidateAndGetUri(this string url)
+        public static async Task<Uri> ExpandShortUrlAsync(this Uri ShortUrl)
         {
-            if (string.IsNullOrWhiteSpace(url)) { return null; }
-            Uri uri = null;
+            if (ShortUrl.Host == "s.click.taobao.com")
+            {
+                using (HttpClient request = new HttpClient())
+                {
+                    HttpResponseMessage response = await request.GetAsync(ShortUrl).ConfigureAwait(false);
+                    string urlA = response.RequestMessage.RequestUri.ToString();
+                    string urlB = WebUtility.UrlDecode(urlA);
+                    string urlC = urlB.Remove(0, 35);
+                    request.DefaultRequestHeaders.Add("referer", urlB);
+                    response = await request.GetAsync(urlC).ConfigureAwait(false);
+                    return response.RequestMessage.RequestUri;
+                }
+            }
+            else
+            {
+                HttpResponseMessage res = await Client.GetAsync(ShortUrl).ConfigureAwait(false);
+                return res.RequestMessage.RequestUri ?? ShortUrl;
+            }
+        }
+
+        public static Uri TryGetUri(this string url)
+        {
+            url.TryGetUri(out Uri uri);
+            return uri;
+        }
+
+        public static bool TryGetUri(this string url, out Uri uri)
+        {
+            uri = default;
+            if (string.IsNullOrWhiteSpace(url)) { return false; }
             try
             {
-                uri = url.Contains("://") ? new Uri(url)
-                    : url[0] == '/' ? new Uri(UriHelper.CoolapkUri, url)
-                    : new Uri($"https://{url}");
+                return url.Contains(":")
+                    ? Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri)
+                    : url[0] == '/'
+                        ? Uri.TryCreate(UriHelper.CoolapkUri, url, out uri)
+                        : Uri.TryCreate($"https://{url}", UriKind.RelativeOrAbsolute, out uri);
             }
             catch (FormatException ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Warn(ex.ExceptionToMessage(), ex);
             }
-            return uri;
+            return false;
         }
     }
 }

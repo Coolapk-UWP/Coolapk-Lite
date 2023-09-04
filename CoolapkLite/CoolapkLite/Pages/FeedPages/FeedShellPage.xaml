@@ -8,6 +8,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=feedpages:FeedShellViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -21,7 +22,7 @@
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                 </Style>
             </Flyout.FlyoutPresenterStyle>
-            <controls:ShowQRCodeControl QRCodeText="{Binding FeedDetail.ShareUrl}" />
+            <controls:ShowQRCodeControl QRCodeText="{x:Bind Provider.FeedDetail.ShareUrl}" />
         </Flyout>
     </Page.Resources>
     <Grid>
@@ -35,6 +36,11 @@
             TallModeConfiguration="SinglePane">
             <controls:TwoPaneView.Pane1>
                 <Grid x:Name="LeftGrid">
+                    <Grid.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </Grid.ChildrenTransitions>
                     <ScrollViewer
                         x:Name="DetailScrollViewer"
                         Margin="{StaticResource ScrollViewerMargin}"
@@ -44,7 +50,7 @@
                             <controls:FeedShellDetailControl
                                 x:Name="DetailControl"
                                 Padding="{StaticResource StackPanelMargin}"
-                                DataContext="{Binding FeedDetail}" />
+                                DataContext="{x:Bind Provider.FeedDetail, Mode=OneWay}" />
                         </Grid>
                     </ScrollViewer>
                     <Grid
@@ -61,13 +67,13 @@
                                 x:Uid="/Feed/ReplyButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}">
+                                Tag="{x:Bind Provider.FeedDetail, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.ReplyNum, FallbackValue='0'}" />
+                                        Text="{x:Bind Provider.FeedDetail.ReplyNum, FallbackValue='0', Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -75,21 +81,21 @@
                                 x:Uid="/Feed/LikeButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}">
+                                Tag="{x:Bind Provider.FeedDetail, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
                                         Glyph="&#xE8E1;"
-                                        Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}" />
+                                        Visibility="{x:Bind Provider.FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Glyph="&#xE8E1;"
-                                        Visibility="{Binding FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                        Visibility="{x:Bind Provider.FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.LikeNum, FallbackValue='0'}" />
+                                        Text="{x:Bind Provider.FeedDetail.LikeNum, FallbackValue='0', Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -97,21 +103,21 @@
                                 x:Uid="/Feed/StarButton"
                                 Click="FeedButton_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail}">
+                                Tag="{x:Bind Provider.FeedDetail, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                        Glyph="&#xE734;"
-                                        Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}" />
+                                        Glyph="&#xE113;"
+                                        Visibility="{x:Bind Provider.FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Glyph="&#xE734;"
-                                        Visibility="{Binding FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                        Visibility="{x:Bind Provider.FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.StarNum, FallbackValue='0'}" />
+                                        Text="{x:Bind Provider.FeedDetail.StarNum, FallbackValue='0', Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                             <Button
@@ -120,30 +126,35 @@
                                 Click="FeedButton_Click"
                                 Flyout="{StaticResource QRCodeFlyout}"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding FeedDetail.ShareUrl}">
+                                Tag="{x:Bind Provider.FeedDetail.ShareUrl}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FeedDetail.ShareNum, FallbackValue='0'}" />
+                                        Text="{x:Bind Provider.FeedDetail.ShareNum, FallbackValue='0'}" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
                     </Grid>
                     <controls:TitleBar
                         x:Name="TitleBar"
-                        Title="{Binding Title}"
+                        Title="{x:Bind Provider.Title, Mode=OneWay}"
                         IsRefreshEnabled="True"
                         RefreshRequested="TitleBar_RefreshRequested" />
                 </Grid>
             </controls:TwoPaneView.Pane1>
             <controls:TwoPaneView.Pane2>
                 <Grid x:Name="RightGrid">
+                    <Grid.ChildrenTransitions>
+                        <TransitionCollection>
+                            <ReorderThemeTransition />
+                        </TransitionCollection>
+                    </Grid.ChildrenTransitions>
                     <controls:FeedShellListControl
                         x:Name="ListControl"
                         Padding="0,0,0,40"
-                        ItemSource="{Binding ItemSource, Mode=TwoWay}">
+                        ItemSource="{x:Bind Provider.ItemSource, Mode=OneWay}">
                         <controls:FeedShellListControl.Header>
                             <Grid x:Name="Pane2Grid" />
                         </controls:FeedShellListControl.Header>

@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
@@ -7,7 +8,9 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -15,62 +18,69 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public int PivotIndex = -1;
 
+        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
+
         private string title = string.Empty;
         public string Title
         {
             get => title;
-            set
-            {
-                title = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref title, value);
         }
 
         private SearchFeedItemSource searchFeedItemSource;
         public SearchFeedItemSource SearchFeedItemSource
         {
             get => searchFeedItemSource;
-            private set
-            {
-                searchFeedItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchFeedItemSource, value);
         }
 
         private SearchUserItemSource searchUserItemSource;
         public SearchUserItemSource SearchUserItemSource
         {
             get => searchUserItemSource;
-            private set
-            {
-                searchUserItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchUserItemSource, value);
         }
 
         private SearchTopicItemSource searchTopicItemSource;
         public SearchTopicItemSource SearchTopicItemSource
         {
             get => searchTopicItemSource;
-            private set
-            {
-                searchTopicItemSource = value;
-                RaisePropertyChangedEvent();
-            }
+            private set => SetProperty(ref searchTopicItemSource, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
-        public SearchingViewModel(string keyword, int index = -1)
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
+        public SearchingViewModel(string keyword, CoreDispatcher dispatcher, int index = -1)
+        {
+            Dispatcher = dispatcher;
             Title = keyword;
             PivotIndex = index;
         }
+
+        private void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
 
         public async Task Refresh(bool reset = false)
         {
@@ -79,8 +89,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchFeedItemSource == null)
                 {
                     SearchFeedItemSource = new SearchFeedItemSource(Title);
-                    SearchFeedItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchFeedItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchFeedItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchFeedItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchFeedItemSource.Keyword != Title)
                 {
@@ -89,8 +99,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchUserItemSource == null)
                 {
                     SearchUserItemSource = new SearchUserItemSource(Title);
-                    SearchUserItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchUserItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchUserItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchUserItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchUserItemSource.Keyword != Title)
                 {
@@ -99,8 +109,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SearchTopicItemSource == null)
                 {
                     SearchTopicItemSource = new SearchTopicItemSource(Title);
-                    SearchTopicItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    SearchTopicItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    SearchTopicItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    SearchTopicItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 else if (SearchTopicItemSource.Keyword != Title)
                 {
@@ -235,7 +245,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
-                    UriType.SearchUsers,
+                    UriType.Search,
+                    "user",
                     keyword,
                     p,
                     p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
@@ -259,7 +270,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
-                    UriType.SearchTags,
+                    UriType.Search,
+                    "feedTopic",
                     keyword,
                     p,
                     p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),

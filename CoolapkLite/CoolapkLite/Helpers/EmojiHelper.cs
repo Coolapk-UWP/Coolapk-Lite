@@ -1,6 +1,6 @@
 ﻿namespace CoolapkLite.Helpers
 {
-    internal static class EmojiHelper
+    public static class EmojiHelper
     {
         #region 旧表情
         public static string[] OldEmojis = new string[]

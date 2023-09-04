@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
@@ -10,67 +11,67 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedShellViewModel : IViewModel, INotifyPropertyChanged
+    public abstract class FeedShellViewModel : IViewModel
     {
         protected string ID { get; set; }
+
+        public CoreDispatcher Dispatcher { get; }
 
         private string title = string.Empty;
         public string Title
         {
             get => title;
-            protected set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref title, value);
         }
 
         private FeedDetailModel feedDetail;
         public FeedDetailModel FeedDetail
         {
             get => feedDetail;
-            protected set
-            {
-                if (feedDetail != value)
-                {
-                    feedDetail = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref feedDetail, value);
         }
 
         private List<ShyHeaderItem> itemSource;
         public List<ShyHeaderItem> ItemSource
         {
             get => itemSource;
-            protected set
-            {
-                if (itemSource != value)
-                {
-                    itemSource = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref itemSource, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+            if (name != null)
+            {
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
         }
 
-        protected FeedShellViewModel(string id)
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
+        }
+
+        protected FeedShellViewModel(string id, CoreDispatcher dispatcher)
         {
             if (string.IsNullOrEmpty(id)) { throw new ArgumentException(nameof(id)); }
+            Dispatcher = dispatcher;
             ID = id;
         }
 
@@ -82,6 +83,10 @@ namespace CoolapkLite.ViewModels.FeedPages
             JObject detail = (JObject)result;
             return detail != null ? new FeedDetailModel(detail) : null;
         }
+
+        protected void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+
+        protected void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
 
         public abstract Task Refresh(bool reset = false);
 
@@ -95,7 +100,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public LikeItemSource LikeItemSource { get; private set; }
         public ShareItemSource ShareItemSource { get; private set; }
 
-        internal FeedDetailViewModel(string id) : base(id) { }
+        public FeedDetailViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -108,8 +113,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new ReplyItemSource(ID);
-                    ReplyItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ReplyItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ReplyItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ReplyItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -119,8 +124,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (LikeItemSource == null || LikeItemSource.ID != ID)
                 {
                     LikeItemSource = new LikeItemSource(ID);
-                    LikeItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    LikeItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    LikeItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    LikeItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -130,8 +135,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ShareItemSource == null || ShareItemSource.ID != ID)
                 {
                     ShareItemSource = new ShareItemSource(ID, FeedDetail.FeedType);
-                    ShareItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ShareItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ShareItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ShareItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -150,7 +155,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public QuestionItemSource LikeItemSource { get; private set; }
         public QuestionItemSource DatelineItemSource { get; private set; }
 
-        internal QuestionViewModel(string id) : base(id) { }
+        public QuestionViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -163,8 +168,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new QuestionItemSource(ID, "reply");
-                    ReplyItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    ReplyItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    ReplyItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    ReplyItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -174,8 +179,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (LikeItemSource == null || LikeItemSource.ID != ID)
                 {
                     LikeItemSource = new QuestionItemSource(ID, "like");
-                    LikeItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    LikeItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    LikeItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    LikeItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -185,8 +190,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (DatelineItemSource == null || DatelineItemSource.ID != ID)
                 {
                     DatelineItemSource = new QuestionItemSource(ID, "dateline");
-                    DatelineItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    DatelineItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    DatelineItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    DatelineItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                 }
                 ItemSource.Add(new ShyHeaderItem
                 {
@@ -201,7 +206,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class VoteViewModel : FeedShellViewModel
     {
-        internal VoteViewModel(string id) : base(id) { }
+        public VoteViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
         {
@@ -216,8 +221,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     foreach (VoteItem vote in FeedDetail.VoteRows)
                     {
                         VoteItemSource VoteItemSource = new VoteItemSource(vote.ID.ToString(), vote.VoteID.ToString());
-                        VoteItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                        VoteItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                        VoteItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                        VoteItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                         ItemSource.Add(new ShyHeaderItem
                         {
                             Header = vote.Title,
@@ -228,18 +233,18 @@ namespace CoolapkLite.ViewModels.FeedPages
                 else
                 {
                     VoteItemSource VoteItemSource = new VoteItemSource(string.Empty, FeedDetail.ID.ToString());
-                    VoteItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                    VoteItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                    VoteItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                    VoteItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                     ItemSource.Add(new ShyHeaderItem
                     {
                         Header = "观点",
                         ItemSource = VoteItemSource
                     });
-                    if(!string.IsNullOrEmpty(FeedDetail.VoteTag))
+                    if (!string.IsNullOrEmpty(FeedDetail.VoteTag))
                     {
                         TagItemSource TagItemSource = new TagItemSource(FeedDetail.VoteTag);
-                        TagItemSource.LoadMoreStarted += UIHelper.ShowProgressBar;
-                        TagItemSource.LoadMoreCompleted += UIHelper.HideProgressBar;
+                        TagItemSource.LoadMoreStarted += OnLoadMoreStarted;
+                        TagItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
                         ItemSource.Add(new ShyHeaderItem
                         {
                             Header = "话题",
@@ -253,7 +258,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class ReplyItemSource : EntityItemSource, INotifyPropertyChanged, ICanComboBoxChangeSelectedIndex, ICanToggleChangeSelectedIndex
+    public class ReplyItemSource : EntityItemSource, INotifyPropertyChanged, IComboBoxChangeSelectedIndex, IToggleChangeSelectedIndex
     {
         public string ID;
         public List<string> ItemSource { get; private set; }

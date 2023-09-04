@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.UI;
 using System;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
@@ -14,8 +13,7 @@ namespace CoolapkLite.Controls
                 nameof(QRCodeText),
                 typeof(string),
                 typeof(ShowQRCodeControl),
-                new PropertyMetadata("https://www.coolapk.com", new PropertyChangedCallback(OnQRCodeTextChanged))
-        );
+                new PropertyMetadata("https://www.coolapk.com", OnQRCodeTextChanged));
 
         public string QRCodeText
         {
@@ -25,26 +23,16 @@ namespace CoolapkLite.Controls
 
         private static void OnQRCodeTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as ShowQRCodeControl).QRCodeText = e.NewValue as string ?? "https://www.coolapk.com"; ;
+            (d as ShowQRCodeControl).QRCodeText = e.NewValue as string ?? "https://www.coolapk.com";
         }
 
         public ShowQRCodeControl() => InitializeComponent();
-
-        private void Button_Loaded(object sender, RoutedEventArgs e)
-        {
-            FrameworkElement element = sender as FrameworkElement;
-            ContentPresenter content = element.FindDescendant<ContentPresenter>();
-            if (content != null)
-            {
-                content.CornerRadius = new CornerRadius(8);
-            }
-        }
 
         private void ShowUIButton_Click(object sender, RoutedEventArgs e)
         {
             DataPackage dataPackage = new DataPackage();
 
-            Uri shareLinkString = QRCodeText.ValidateAndGetUri();
+            Uri shareLinkString = QRCodeText.TryGetUri();
             if (shareLinkString != null)
             {
                 dataPackage.SetWebLink(shareLinkString);

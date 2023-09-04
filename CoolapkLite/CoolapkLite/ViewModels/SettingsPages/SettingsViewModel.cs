@@ -1,31 +1,40 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Update;
+using CoolapkLite.Models.Network;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Net.Http;
-using System.Reflection;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
-using Windows.System.Profile;
+using Windows.System;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+
+#if CANARY
+using System.Text;
+#else
+using CoolapkLite.Models.Images;
+using Microsoft.Toolkit.Uwp.UI.Controls;
+using Windows.UI;
+#endif
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
     public class SettingsViewModel : IViewModel
     {
-        public static SettingsViewModel Caches { get; set; }
+        public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
 
         public CoreDispatcher Dispatcher { get; }
 
-        public string Title => ResourceLoader.GetForCurrentView("MainPage").GetString("Setting");
-
-        public static string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
-
-        public static string ToolkitVersion => Assembly.Load(new AssemblyName("Microsoft.Toolkit.Uwp")).GetName().Version.ToString();
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
 
         public bool IsLogin
         {
@@ -112,59 +121,50 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        private bool isCleanCacheButtonEnabled = true;
+        private static bool isCleanCacheButtonEnabled = true;
         public bool IsCleanCacheButtonEnabled
         {
             get => isCleanCacheButtonEnabled;
-            set
-            {
-                if (isCleanCacheButtonEnabled != value)
-                {
-                    isCleanCacheButtonEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCleanCacheButtonEnabled, value);
         }
 
-        private bool isCheckUpdateButtonEnabled = true;
+        private static bool isCheckUpdateButtonEnabled = true;
         public bool IsCheckUpdateButtonEnabled
         {
             get => isCheckUpdateButtonEnabled;
-            set
-            {
-                if (isCheckUpdateButtonEnabled != value)
-                {
-                    isCheckUpdateButtonEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCheckUpdateButtonEnabled, value);
         }
 
-        private string _aboutTextBlockText;
+        private static string _aboutTextBlockText;
         public string AboutTextBlockText
         {
             get => _aboutTextBlockText;
-            set
-            {
-                if (_aboutTextBlockText != value)
-                {
-                    _aboutTextBlockText = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref _aboutTextBlockText, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
-                if (Dispatcher?.HasThreadAccess == false)
+                foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
                 {
-                    await Dispatcher.ResumeForegroundAsync();
+                    if (cache.Key?.HasThreadAccess == false)
+                    {
+                        await cache.Key.ResumeForegroundAsync();
+                    }
+                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
                 }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 
@@ -172,26 +172,25 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             get
             {
-                string ver = $"{Package.Current.Id.Version.Major}.{Package.Current.Id.Version.Minor}.{Package.Current.Id.Version.Build}";
-                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
-                string name = loader?.GetString("AppName") ?? "酷安 Lite";
-                _ = GetAboutTextBlockText();
+                string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName;
+                string ver = Package.Current.Id.Version.ToFormattedString(3);
+                _ = GetAboutTextBlockTextAsync();
                 return $"{name} v{ver}";
             }
         }
 
         public SettingsViewModel(CoreDispatcher dispatcher)
         {
-            Caches = this;
             Dispatcher = dispatcher;
+            Caches[dispatcher] = this;
             SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
         }
 
-        private async Task GetAboutTextBlockText()
+        private async Task GetAboutTextBlockTextAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
-            string langcode = LanguageHelper.GetPrimaryLanguage();
-            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langcode}.md");
+            string langCode = LanguageHelper.GetPrimaryLanguage();
+            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langCode}.md");
             StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
             if (file != null)
             {
@@ -200,42 +199,137 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public async void CleanCache()
+        public async Task CleanCacheAsync()
         {
-            IsCleanCacheButtonEnabled = true;
-            await ImageCacheHelper.CleanCacheAsync();
             IsCleanCacheButtonEnabled = false;
+            try
+            {
+                await ImageCacheHelper.CleanCacheAsync().ContinueWith((x) => IsCleanCacheButtonEnabled = true);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
+                IsCleanCacheButtonEnabled = true;
+            }
         }
 
-        public async void CheckUpdate()
+        public async Task<UpdateInfo> CheckUpdateAsync()
         {
             IsCheckUpdateButtonEnabled = false;
             try
             {
-                ResourceLoader _loader = ResourceLoader.GetForCurrentView("SettingsPage");
-                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite");
-                if (results != null && results.IsExistNewVersion)
+                ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("SettingsPage");
+#if CANARY
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("wherewhere", "Coolapk-UWP", 5).ConfigureAwait(false);
+#else
+                UpdateInfo results = await UpdateHelper.CheckUpdateAsync("Coolapk-UWP", "Coolapk-Lite").ConfigureAwait(false);
+#endif
+                if (results != null)
                 {
-                    UIHelper.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.TagName}");
+                    if (results.IsExistNewVersion)
+                    {
+                        Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
+                    }
+                    else
+                    {
+                        Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
+                    }
+                    IsCheckUpdateButtonEnabled = true;
+                    return results;
                 }
-                else
-                {
-                    UIHelper.ShowMessage(_loader.GetString("UpToDate"));
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                UIHelper.ShowHttpExceptionMessage(ex);
             }
             catch (Exception ex)
             {
-                UIHelper.ShowMessage(ex.Message);
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
+                Dispatcher.ShowMessage(ex.Message);
             }
             IsCheckUpdateButtonEnabled = true;
+            return null;
         }
 
-        public Task Refresh(bool reset) => GetAboutTextBlockText();
+        public async Task CheckUpdateAsync(UIElement element)
+        {
+            UpdateInfo info = await CheckUpdateAsync();
+            if (info?.IsExistNewVersion == true)
+            {
+                ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
+#if CANARY
+                StringBuilder builder = new StringBuilder();
+                _ = builder.AppendLine($"Build 版本号：{info.Version.Build}")
+                           .AppendLine($"编译开始时间：{info.CreatedAt}")
+                           .AppendLine($"编译完成时间：{info.PublishedAt}");
+                TextBlock textBlock = new TextBlock { Text = builder.ToString() };
+#else
+                MarkdownTextBlock textBlock = new MarkdownTextBlock
+                {
+                    Text = info.Changelog,
+                    Background = new SolidColorBrush(Colors.Transparent)
+                };
+                textBlock.LinkClicked += (sender, args) => _ = Launcher.LaunchUriAsync(args.Link.TryGetUri());
+                textBlock.ImageClicked += (sender, args) => _ = element.ShowImageAsync(new ImageModel(args.Link, ImageType.OriginImage, Dispatcher));
+#endif
+                ContentDialog dialog = new ContentDialog
+                {
+                    Title = _loader.GetString("HasUpdateTitle"),
+#if CANARY
+                    PrimaryButtonText = _loader.GetString("GoToDevOps"),
+#else
+                    PrimaryButtonText = _loader.GetString("GoToGithub"),
+#endif
+                    Content = new ScrollViewer
+                    {
+                        VerticalScrollMode = ScrollMode.Auto,
+                        HorizontalScrollMode = ScrollMode.Disabled,
+                        VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                        HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
+                        Content = textBlock
+                    }
+                };
 
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
+                if (info.Assets?.Any() == true)
+                {
+                    MenuFlyout menuFlyout = new MenuFlyout();
+                    MenuFlyoutSubItem menuFlyoutSubItem = new MenuFlyoutSubItem { Text = "下载安装包" };
+                    FlyoutBaseHelper.SetIcon(menuFlyoutSubItem, new FontIcon { Glyph = "\uE896", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] });
+                    foreach (Asset asset in info.Assets)
+                    {
+                        MenuFlyoutItem menuFlyoutItem = new MenuFlyoutItem { Text = asset.Name };
+                        ToolTipService.SetToolTip(menuFlyoutItem, asset.DownloadUrl);
+                        menuFlyoutItem.Click += (sender, args) => _ = Launcher.LaunchUriAsync(asset.DownloadUrl.TryGetUri());
+                        menuFlyoutSubItem.Items.Add(menuFlyoutItem);
+                    }
+                    menuFlyout.Items.Add(menuFlyoutSubItem);
+                    UIElementHelper.SetContextFlyout(dialog, menuFlyout);
+                }
+
+                dialog.SetXAMLRoot(element);
+
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
+                {
+                    dialog.DefaultButton = ContentDialogButton.Primary;
+                }
+
+                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
+                {
+                    dialog.CloseButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
+                }
+                else
+                {
+                    dialog.SecondaryButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
+                }
+
+                ContentDialogResult result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    _ = Launcher.LaunchUriAsync(info.ReleaseUrl.TryGetUri());
+                }
+            }
+        }
+
+        public Task Refresh(bool reset) => GetAboutTextBlockTextAsync();
+
+        bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);
+
+        public bool IsEqual(SettingsViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
     }
 }

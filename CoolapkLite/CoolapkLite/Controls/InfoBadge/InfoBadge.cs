@@ -85,15 +85,13 @@ namespace CoolapkLite.Controls
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            var defaultDesiredSize = base.MeasureOverride(availableSize);
-            if (defaultDesiredSize.Width < defaultDesiredSize.Height)
-            {
-                return new Size(defaultDesiredSize.Height, defaultDesiredSize.Height);
-            }
-            return defaultDesiredSize;
+            Size defaultDesiredSize = base.MeasureOverride(availableSize);
+            return defaultDesiredSize.Width < defaultDesiredSize.Height
+                ? new Size(defaultDesiredSize.Height, defaultDesiredSize.Height)
+                : defaultDesiredSize;
         }
 
-        void OnDisplayKindPropertiesChanged()
+        private void OnDisplayKindPropertiesChanged()
         {
             Control thisAsControl = this;
             if (Value >= 0)
@@ -122,23 +120,16 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             CornerRadius value()
             {
-                var cornerRadiusValue = ActualHeight / 2;
-                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Control", "CornerRadiusProperty"))
-                {
-                    if (ReadLocalValue(CornerRadiusProperty) == DependencyProperty.UnsetValue)
-                    {
-                        return new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue);
-                    }
-                    else
-                    {
-                        return CornerRadius;
-                    }
-                }
-                return new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue);
+                double cornerRadiusValue = ActualHeight / 2;
+                return ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Control", "CornerRadiusProperty")
+                    ? ReadLocalValue(CornerRadiusProperty) == DependencyProperty.UnsetValue
+                        ? new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue)
+                        : CornerRadius
+                    : new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue);
             };
 
             TemplateSettings.InfoBadgeCornerRadius = value();

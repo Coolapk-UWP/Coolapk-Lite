@@ -37,7 +37,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ShyHeaderListView">
-                    <Border
+                    <Grid
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}">
@@ -63,61 +63,73 @@
                                 FooterTransitions="{TemplateBinding FooterTransitions}"
                                 HeaderTransitions="{TemplateBinding HeaderTransitions}">
                                 <ItemsPresenter.Header>
-                                    <Grid x:Name="ListViewHeader" Background="{TemplateBinding HeaderBackground}">
+                                    <Grid x:Name="ListViewHeader" Background="{TemplateBinding TopHeaderBackground}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
+                                        <Grid.ChildrenTransitions>
+                                            <TransitionCollection>
+                                                <ReorderThemeTransition />
+                                            </TransitionCollection>
+                                        </Grid.ChildrenTransitions>
                                         <Grid x:Name="TopHeader">
                                             <ContentPresenter Content="{TemplateBinding TopHeader}" />
                                         </Grid>
-                                        <Grid Grid.Row="1" Height="{TemplateBinding HeaderHeight}">
-                                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" />
-                                                    <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" />
-                                                </Grid.ColumnDefinitions>
-                                                <ContentPresenter
-                                                    Grid.Column="0"
-                                                    VerticalAlignment="Center"
-                                                    Content="{TemplateBinding LeftHeader}" />
-                                                <local:PivotHeader
-                                                    x:Name="PivotHeader"
-                                                    Grid.Column="1"
-                                                    VerticalAlignment="Center" />
-                                                <ContentPresenter
-                                                    Grid.Column="2"
-                                                    VerticalAlignment="Center"
-                                                    Content="{TemplateBinding RightHeader}" />
-                                            </Grid>
+                                        <Grid
+                                            x:Name="InnerFlyoutHeaderGrid"
+                                            Grid.Row="1"
+                                            Height="{TemplateBinding HeaderHeight}">
+                                            <Grid.ChildrenTransitions>
+                                                <TransitionCollection>
+                                                    <ReorderThemeTransition />
+                                                </TransitionCollection>
+                                            </Grid.ChildrenTransitions>
+                                            <ContentPresenter
+                                                x:Name="FlyoutHeader"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Bottom"
+                                                Content="{TemplateBinding FlyoutHeader}" />
                                         </Grid>
                                     </Grid>
                                 </ItemsPresenter.Header>
                             </ItemsPresenter>
                         </ScrollViewer>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Height="{TemplateBinding HeaderMargin}" />
+                            <Grid
+                                x:Name="OuterFlyoutHeaderGrid"
+                                Grid.Row="1"
+                                Height="{TemplateBinding HeaderHeight}"
+                                VerticalAlignment="Top"
+                                Background="{TemplateBinding HeaderBackground}"
+                                Visibility="Collapsed">
+                                <Grid.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </Grid.ChildrenTransitions>
+                            </Grid>
+                        </Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup>
                                 <VisualState x:Name="OnThreshold">
-                                    <Storyboard>
-                                        <DoubleAnimationUsingKeyFrames Storyboard.TargetName="TopHeader" Storyboard.TargetProperty="Opacity">
-                                            <SplineDoubleKeyFrame
-                                                KeySpline="{StaticResource ControlFastOutSlowInKeySpline}"
-                                                KeyTime="{StaticResource ControlFasterAnimationDuration}"
-                                                Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="OuterFlyoutHeaderGrid.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="BeforeThreshold">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ListViewHeader" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{TemplateBinding TopHeaderBackground}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="OuterFlyoutHeaderGrid.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                    </Border>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

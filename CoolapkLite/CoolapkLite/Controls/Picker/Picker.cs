@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -28,23 +29,48 @@ namespace CoolapkLite.Controls
         public Picker()
         {
             DefaultStyleKey = typeof(Picker);
-            Unloaded += Picker_Unloaded;
-            Window.Current.SizeChanged += Window_SizeChanged;
+            Loaded += (sender, args) =>
+            {
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= XamlRoot_SizeChanged;
+                    XamlRoot.Changed += XamlRoot_SizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= Window_SizeChanged;
+                    window.SizeChanged += Window_SizeChanged;
+                }
+            };
+            Unloaded += (sender, args) =>
+            {
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= XamlRoot_SizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= Window_SizeChanged;
+                }
+            };
         }
 
         private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
             if (_rootGrid != null)
             {
-                _rootGrid.Width = Window.Current.Bounds.Width;
-                _rootGrid.Height = Window.Current.Bounds.Height;
+                _rootGrid.Width = e.Size.Width;
+                _rootGrid.Height = e.Size.Height;
             }
         }
 
-        private void Picker_Unloaded(object sender, RoutedEventArgs e)
+        private void XamlRoot_SizeChanged(XamlRoot sender, XamlRootChangedEventArgs args)
         {
-            Unloaded -= Picker_Unloaded;
-            Window.Current.SizeChanged -= Window_SizeChanged;
+            if (_rootGrid != null)
+            {
+                _rootGrid.Width = sender.Size.Width;
+                _rootGrid.Height = sender.Size.Height;
+            }
         }
 
         public void Show(UIElement element)
@@ -54,10 +80,12 @@ namespace CoolapkLite.Controls
                 grid.Children.Remove(this);
             }
 
+            Size size = this.GetXAMLRootSize();
+
             _rootGrid = new Grid
             {
-                Width = Window.Current.Bounds.Width,
-                Height = Window.Current.Bounds.Height
+                Width = size.Width,
+                Height = size.Height
             };
 
             _popup = new Popup

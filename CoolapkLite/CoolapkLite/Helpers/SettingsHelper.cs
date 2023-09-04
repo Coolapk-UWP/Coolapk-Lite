@@ -1,10 +1,11 @@
-﻿using CoolapkLite.Models.Update;
+﻿using CoolapkLite.Models.Network;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
@@ -13,7 +14,7 @@ using IObjectSerializer = Microsoft.Toolkit.Helpers.IObjectSerializer;
 
 namespace CoolapkLite.Helpers
 {
-    internal static partial class SettingsHelper
+    public static partial class SettingsHelper
     {
         public const string Uid = nameof(Uid);
         public const string Token = nameof(Token);
@@ -23,12 +24,14 @@ namespace CoolapkLite.Helpers
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string CustomAPI = nameof(CustomAPI);
+        public const string IsFullLoad = nameof(IsFullLoad);
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
+        public const string IsUseAppWindow = nameof(IsUseAppWindow);
         public const string IsUseBlurBrush = nameof(IsUseBlurBrush);
         public const string TileUpdateTime = nameof(TileUpdateTime);
         public const string IsUseCompositor = nameof(IsUseCompositor);
@@ -36,6 +39,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
+        public const string IsExtendsTitleBar = nameof(IsExtendsTitleBar);
         public const string ShowOtherException = nameof(ShowOtherException);
         public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
         public const string IsDisplayOriginPicture = nameof(IsDisplayOriginPicture);
@@ -76,6 +80,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
             }
+            if (!LocalObject.KeyExists(IsFullLoad))
+            {
+                LocalObject.Save(IsFullLoad, true);
+            }
             if (!LocalObject.KeyExists(IsFirstRun))
             {
                 LocalObject.Save(IsFirstRun, true);
@@ -100,9 +108,13 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsUseLiteHome, false);
             }
+            if (!LocalObject.KeyExists(IsUseAppWindow))
+            {
+                LocalObject.Save(IsUseAppWindow, WindowHelper.IsAppWindowSupported);
+            }
             if (!LocalObject.KeyExists(IsUseBlurBrush))
             {
-                LocalObject.Save(IsUseBlurBrush, true);
+                LocalObject.Save(IsUseBlurBrush, ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"));
             }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
@@ -110,7 +122,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
-                LocalObject.Save(IsUseCompositor, true);
+                LocalObject.Save(IsUseCompositor, ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual"));
             }
             if (!LocalObject.KeyExists(CurrentLanguage))
             {
@@ -118,7 +130,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseMultiWindow))
             {
-                LocalObject.Save(IsUseMultiWindow, true);
+                LocalObject.Save(IsUseMultiWindow, WindowHelper.IsAppWindowSupported);
             }
             if (!LocalObject.KeyExists(SelectedAppTheme))
             {
@@ -127,6 +139,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {
                 LocalObject.Save(IsUseOldEmojiMode, false);
+            }
+            if (!LocalObject.KeyExists(IsExtendsTitleBar))
+            {
+                LocalObject.Save(IsExtendsTitleBar, SystemInformation.Instance.OperatingSystemVersion.Build >= 10586);
             }
             if (!LocalObject.KeyExists(ShowOtherException))
             {
@@ -142,7 +158,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(CheckUpdateWhenLaunching))
             {
-                LocalObject.Save(CheckUpdateWhenLaunching, true);
+                LocalObject.Save(CheckUpdateWhenLaunching, false);
             }
             SetDefaultFileSettings();
         }
@@ -158,7 +174,7 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    internal static partial class SettingsHelper
+    public static partial class SettingsHelper
     {
         public static event TypedEventHandler<string, bool> LoginChanged;
         public static readonly ILogManager LogManager = LogManagerFactory.CreateLogManager();
@@ -168,7 +184,7 @@ namespace CoolapkLite.Helpers
 
         public static void InvokeLoginChanged(string sender, bool args) => LoginChanged?.Invoke(sender, args);
 
-        public static async Task<bool> Login()
+        public static async Task<bool> LoginAsync()
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
@@ -191,7 +207,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLogin())
+                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLoginAsync())
                 {
                     Logout();
                     return false;
@@ -207,7 +223,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<bool> Login(string Uid, string UserName, string Token)
+        public static async Task<bool> LoginAsync(string Uid, string UserName, string Token)
         {
             if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
             {
@@ -224,7 +240,7 @@ namespace CoolapkLite.Helpers
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
                 }
-                if (await RequestHelper.CheckLogin())
+                if (await RequestHelper.CheckLoginAsync())
                 {
                     Set(SettingsHelper.Uid, Uid);
                     Set(SettingsHelper.Token, Token);
@@ -264,7 +280,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLogin();
+                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync();
             }
         }
 

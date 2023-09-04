@@ -1,4 +1,6 @@
-﻿using Windows.Foundation;
+﻿using Microsoft.Toolkit.Uwp.UI;
+using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -8,12 +10,12 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
 {
-    [TemplatePart(Name = "PART_ColumnLeft", Type = typeof(ColumnDefinition))]
-    [TemplatePart(Name = "PART_ColumnMiddle", Type = typeof(ColumnDefinition))]
-    [TemplatePart(Name = "PART_ColumnRight", Type = typeof(ColumnDefinition))]
-    [TemplatePart(Name = "PART_RowTop", Type = typeof(RowDefinition))]
-    [TemplatePart(Name = "PART_RowMiddle", Type = typeof(RowDefinition))]
-    [TemplatePart(Name = "PART_RowBottom", Type = typeof(RowDefinition))]
+    [TemplatePart(Name = c_columnLeftName, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = c_columnMiddleName, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = c_columnRightName, Type = typeof(ColumnDefinition))]
+    [TemplatePart(Name = c_rowTopName, Type = typeof(RowDefinition))]
+    [TemplatePart(Name = c_rowMiddleName, Type = typeof(RowDefinition))]
+    [TemplatePart(Name = c_rowBottomName, Type = typeof(RowDefinition))]
     public partial class TwoPaneView : Control
     {
         private bool m_loaded = false;
@@ -25,13 +27,27 @@ namespace CoolapkLite.Controls
         private RowDefinition m_rowMiddle = new RowDefinition();
         private RowDefinition m_rowBottom = new RowDefinition();
 
+        private const string c_pane1ScrollViewerName = "PART_Pane1ScrollViewer";
+        private const string c_pane2ScrollViewerName = "PART_Pane2ScrollViewer";
+
+        private const string c_columnLeftName = "PART_ColumnLeft";
+        private const string c_columnMiddleName = "PART_ColumnMiddle";
+        private const string c_columnRightName = "PART_ColumnRight";
+        private const string c_rowTopName = "PART_RowTop";
+        private const string c_rowMiddleName = "PART_RowMiddle";
+        private const string c_rowBottomName = "PART_RowBottom";
+
         public TwoPaneView()
         {
             DefaultStyleKey = typeof(TwoPaneView);
             SizeChanged -= OnSizeChanged;
             SizeChanged += OnSizeChanged;
-            Window.Current.SizeChanged -= OnWindowSizeChanged;
-            Window.Current.SizeChanged += OnWindowSizeChanged;
+            Loaded += (sender, args) =>
+            {
+                Window.Current.SizeChanged -= OnWindowSizeChanged;
+                Window.Current.SizeChanged += OnWindowSizeChanged;
+            };
+            Unloaded += (sender, args) => Window.Current.SizeChanged -= OnWindowSizeChanged;
         }
 
         /// <summary>
@@ -41,19 +57,43 @@ namespace CoolapkLite.Controls
         {
             m_loaded = true;
 
-            m_columnLeft = (ColumnDefinition)GetTemplateChild("PART_ColumnLeft");
-            m_columnMiddle = (ColumnDefinition)GetTemplateChild("PART_ColumnMiddle");
-            m_columnRight = (ColumnDefinition)GetTemplateChild("PART_ColumnRight");
-            m_rowTop = (RowDefinition)GetTemplateChild("PART_RowTop");
-            m_rowMiddle = (RowDefinition)GetTemplateChild("PART_RowMiddle");
-            m_rowBottom = (RowDefinition)GetTemplateChild("PART_RowBottom");
+            SetScrollViewerProperties(c_pane1ScrollViewerName);
+            SetScrollViewerProperties(c_pane2ScrollViewerName);
+
+            m_columnLeft = (ColumnDefinition)GetTemplateChild(c_columnLeftName);
+            m_columnMiddle = (ColumnDefinition)GetTemplateChild(c_columnMiddleName);
+            m_columnRight = (ColumnDefinition)GetTemplateChild(c_columnRightName);
+            m_rowTop = (RowDefinition)GetTemplateChild(c_rowTopName);
+            m_rowMiddle = (RowDefinition)GetTemplateChild(c_rowMiddleName);
+            m_rowBottom = (RowDefinition)GetTemplateChild(c_rowBottomName);
 
             base.OnApplyTemplate();
         }
 
-        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        private void SetScrollViewerProperties(string scrollViewerName)
         {
-            UpdateMode();
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollContentPresenter", "SizesContentToTemplatedParent"))
+            {
+                if (GetTemplateChild(scrollViewerName) is ScrollViewer scrollViewer)
+                {
+                    scrollViewer.Loaded += OnScrollViewerLoaded;
+                }
+            }
+        }
+
+        private void OnScrollViewerLoaded(object sender, RoutedEventArgs args)
+        {
+            if (sender is FrameworkElement scrollViewer)
+            {
+                FrameworkElement scrollContentPresenterFE = scrollViewer.FindDescendant("ScrollContentPresenter");
+                if (scrollContentPresenterFE != null)
+                {
+                    if (scrollContentPresenterFE is ScrollContentPresenter scrollContentPresenter)
+                    {
+                        scrollContentPresenter.SizesContentToTemplatedParent = true;
+                    }
+                }
+            }
         }
 
         private void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
@@ -61,13 +101,15 @@ namespace CoolapkLite.Controls
             UpdateMode();
         }
 
+        private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateMode();
+        }
+
         private void UpdateMode()
         {
             // Don't bother running this logic until after we hit OnApplyTemplate.
-            if (!m_loaded)
-            {
-                return;
-            }
+            if (!m_loaded) { return; }
 
             double controlWidth = ActualWidth;
             double controlHeight = ActualHeight;
@@ -126,10 +168,10 @@ namespace CoolapkLite.Controls
                 }
             }
 
-            // Update row/column sizes (this may need to happen even if the mode doesn't change)
+            // Network row/column sizes (this may need to happen even if the mode doesn't change)
             UpdateRowsColumns(newMode, info, rcControl);
 
-            // Update mode if necessary
+            // Network mode if necessary
             if (newMode != m_currentMode)
             {
                 m_currentMode = newMode;
@@ -172,54 +214,57 @@ namespace CoolapkLite.Controls
 
         private void UpdateRowsColumns(ViewMode newMode, DisplayRegionHelperInfo info, Rect rcControl)
         {
-            // Reset split lengths
-            m_columnMiddle.Width = new GridLength(0, GridUnitType.Pixel);
-            m_rowMiddle.Height = new GridLength(0, GridUnitType.Pixel);
+            if (m_columnLeft != null && m_columnMiddle != null && m_columnRight != null && m_rowTop != null && m_rowMiddle != null && m_rowBottom != null)
+            {
+                // Reset split lengths
+                m_columnMiddle.Width = new GridLength(0, GridUnitType.Pixel);
+                m_rowMiddle.Height = new GridLength(0, GridUnitType.Pixel);
 
-            // Set columns lengths
-            if (newMode == ViewMode.LeftRight || newMode == ViewMode.RightLeft)
-            {
-                m_columnLeft.Width = (newMode == ViewMode.LeftRight) ? Pane1Length : Pane2Length;
-                m_columnRight.Width = (newMode == ViewMode.LeftRight) ? Pane2Length : Pane1Length;
-            }
-            else
-            {
-                m_columnLeft.Width = new GridLength(1, GridUnitType.Star);
-                m_columnRight.Width = new GridLength(0, GridUnitType.Pixel);
-            }
-
-            // Set row lengths
-            if (newMode == ViewMode.TopBottom || newMode == ViewMode.BottomTop)
-            {
-                m_rowTop.Height = (newMode == ViewMode.TopBottom) ? Pane1Length : Pane2Length;
-                m_rowBottom.Height = (newMode == ViewMode.TopBottom) ? Pane2Length : Pane1Length;
-            }
-            else
-            {
-                m_rowTop.Height = new GridLength(1, GridUnitType.Star);
-                m_rowBottom.Height = new GridLength(0, GridUnitType.Pixel);
-            }
-
-            // Handle regions
-            if (IsInMultipleRegions(info, rcControl) && newMode != ViewMode.Pane1Only && newMode != ViewMode.Pane2Only)
-            {
-                Rect rc1 = info.Regions[0];
-                Rect rc2 = info.Regions[1];
-                Rect rcWindow = DisplayRegionHelper.WindowRect();
-
-                if (info.Mode == TwoPaneViewMode.Wide)
+                // Set columns lengths
+                if (newMode == ViewMode.LeftRight || newMode == ViewMode.RightLeft)
                 {
-                    m_columnMiddle.Width = new GridLength(rc2.X - rc1.Width, GridUnitType.Pixel);
-
-                    m_columnLeft.Width = new GridLength(rc1.Width - rcControl.X, GridUnitType.Pixel);
-                    m_columnRight.Width = new GridLength(rc2.Width - (rcWindow.Width - rcControl.Width - rcControl.X), GridUnitType.Pixel);
+                    m_columnLeft.Width = (newMode == ViewMode.LeftRight) ? Pane1Length : Pane2Length;
+                    m_columnRight.Width = (newMode == ViewMode.LeftRight) ? Pane2Length : Pane1Length;
                 }
                 else
                 {
-                    m_rowMiddle.Height = new GridLength(rc2.Y - rc1.Height, GridUnitType.Pixel);
+                    m_columnLeft.Width = new GridLength(1, GridUnitType.Star);
+                    m_columnRight.Width = new GridLength(0, GridUnitType.Pixel);
+                }
 
-                    m_rowTop.Height = new GridLength(rc1.Height - rcControl.Y, GridUnitType.Pixel);
-                    m_rowBottom.Height = new GridLength(rc2.Height - (rcWindow.Height - rcControl.Height - rcControl.Y), GridUnitType.Pixel);
+                // Set row lengths
+                if (newMode == ViewMode.TopBottom || newMode == ViewMode.BottomTop)
+                {
+                    m_rowTop.Height = (newMode == ViewMode.TopBottom) ? Pane1Length : Pane2Length;
+                    m_rowBottom.Height = (newMode == ViewMode.TopBottom) ? Pane2Length : Pane1Length;
+                }
+                else
+                {
+                    m_rowTop.Height = new GridLength(1, GridUnitType.Star);
+                    m_rowBottom.Height = new GridLength(0, GridUnitType.Pixel);
+                }
+
+                // Handle regions
+                if (IsInMultipleRegions(info, rcControl) && newMode != ViewMode.Pane1Only && newMode != ViewMode.Pane2Only)
+                {
+                    Rect rc1 = info.Regions[0];
+                    Rect rc2 = info.Regions[1];
+                    Rect rcWindow = DisplayRegionHelper.WindowRect();
+
+                    if (info.Mode == TwoPaneViewMode.Wide)
+                    {
+                        m_columnMiddle.Width = new GridLength(rc2.X - rc1.Width, GridUnitType.Pixel);
+
+                        m_columnLeft.Width = new GridLength(rc1.Width - rcControl.X, GridUnitType.Pixel);
+                        m_columnRight.Width = new GridLength(rc2.Width - (rcWindow.Width - rcControl.Width - rcControl.X), GridUnitType.Pixel);
+                    }
+                    else
+                    {
+                        m_rowMiddle.Height = new GridLength(rc2.Y - rc1.Height, GridUnitType.Pixel);
+
+                        m_rowTop.Height = new GridLength(rc1.Height - rcControl.Y, GridUnitType.Pixel);
+                        m_rowBottom.Height = new GridLength(rc2.Height - (rcWindow.Height - rcControl.Height - rcControl.Y), GridUnitType.Pixel);
+                    }
                 }
             }
         }

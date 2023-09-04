@@ -26,7 +26,7 @@ namespace CoolapkLite.Models.Upload
         [JsonIgnore]
         public byte[] Bytes { get; set; }
 
-        public static async Task<UploadFileFragment> FromWriteableBitmap(WriteableBitmap bitmap)
+        public static async Task<UploadFileFragment> FromWriteableBitmapAsync(WriteableBitmap bitmap)
         {
             using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
             {

@@ -18,16 +18,39 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class CachesPage : Page
     {
-        internal CachesViewModel Provider;
+        #region Provider
+
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(CachesViewModel),
+                typeof(CachesPage),
+                null);
+
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public CachesViewModel Provider
+        {
+            get => (CachesViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
 
         public CachesPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            Provider = Provider ?? new CachesViewModel(Dispatcher);
-            DataContext = Provider;
-            await Refresh(true);
+            if (Provider == null)
+            {
+                Provider = new CachesViewModel(Dispatcher);
+                await Refresh(true);
+            }
         }
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
@@ -38,11 +61,11 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            FrameworkElement element = sender as FrameworkElement;
+            if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
                 case "Delete":
-                    Provider?.RemoveImage(element.Tag as StorageFile);
+                    Provider?.RemoveImageAsync(element.Tag as StorageFile);
                     break;
                 default:
                     break;

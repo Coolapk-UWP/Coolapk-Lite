@@ -2,6 +2,7 @@
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
@@ -9,7 +10,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class SourceFeedModel : Entity, INotifyPropertyChanged
+    public class SourceFeedModel : Entity, ISourceFeedModel, INotifyPropertyChanged
     {
         private bool showUser = true;
         public bool ShowUser
@@ -54,10 +55,13 @@ namespace CoolapkLite.Models.Feeds
         public string FeedType { get; private set; } = "feed";
 
         public ImageModel Pic { get; private set; }
+        public DateTime DateTime { get; private set; }
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
 
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
+
+        ISourceUserModel ISourceFeedModel.UserInfo => UserInfo;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -137,15 +141,15 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                DateTime dateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime();
+                Dateline = dateTime.ConvertDateTimeToReadable();
+                DateTime = dateTime.ToLocalTime();
             }
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)
             {
-                PicArr = picArr.Select(
-                    x => !string.IsNullOrEmpty(x.ToString())
-                        ? new ImageModel(x.ToString(), ImageType.SmallImage) : null)
-                    .Where(x => x != null)
+                PicArr = picArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
+                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
                     .ToImmutableArray();
 
                 foreach (ImageModel item in PicArr)

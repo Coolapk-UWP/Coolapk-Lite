@@ -25,7 +25,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => $"{UserName} - {Dateline}";
     }
 
-    internal class SimpleNotificationModel : NotificationModel
+    public class SimpleNotificationModel : NotificationModel
     {
         public string Note { get; private set; }
 
@@ -90,7 +90,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => Note;
     }
 
-    internal class AtCommentMeNotificationModel : NotificationModel
+    public class AtCommentMeNotificationModel : NotificationModel
     {
         public string Message { get; private set; }
         public string FeedMessage { get; private set; }
@@ -158,7 +158,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => Message;
     }
 
-    internal class LikeNotificationModel : NotificationModel
+    public class LikeNotificationModel : NotificationModel
     {
         public string Title { get; private set; }
 
@@ -231,7 +231,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => Title;
     }
 
-    internal class MessageNotificationModel : NotificationModel
+    public class MessageNotificationModel : NotificationModel
     {
         public string FeedMessage { get; private set; }
 

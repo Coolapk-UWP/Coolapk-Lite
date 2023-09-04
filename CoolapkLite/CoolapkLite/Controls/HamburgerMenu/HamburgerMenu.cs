@@ -2,12 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using System;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Controls
 {
@@ -27,6 +25,7 @@ namespace CoolapkLite.Controls
         private ListViewBase _optionsListView;
         private ListViewItem _paneAutoSuggestItem;
         private VisualStateGroup _windowsSizeGroup;
+        private AnimateSelectionProvider _selectionProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HamburgerMenu"/> class.
@@ -100,6 +99,17 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped += PaneAutoSuggestButton_Tapped;
             }
 
+            _selectionProvider = new AnimateSelectionProvider
+            {
+                IndicatorName = "SelectionIndicator",
+                Orientation = Orientation.Vertical,
+                ItemsControls = new ItemsControl[]
+                {
+                    _buttonsListView,
+                    _optionsListView
+                }
+            };
+
             UpdateTitleBarPadding();
 
             base.OnApplyTemplate();
@@ -107,12 +117,13 @@ namespace CoolapkLite.Controls
 
         private void UpdateSize()
         {
-            if (Window.Current.Bounds.Width >= ExpandedModeThresholdWidth)
+            double width = this.GetXAMLRootSize().Width;
+            if (width >= ExpandedModeThresholdWidth)
             {
                 IsPaneOpen = true;
                 DisplayMode = SplitViewDisplayMode.CompactInline;
             }
-            else if (Window.Current.Bounds.Width >= CompactModeThresholdWidth)
+            else if (width >= CompactModeThresholdWidth)
             {
                 IsPaneOpen = false;
                 DisplayMode = SplitViewDisplayMode.CompactOverlay;
@@ -158,20 +169,5 @@ namespace CoolapkLite.Controls
         {
             VisualStateManager.GoToState(this, AutoSuggestBox == null ? "AutoSuggestBoxCollapsed" : "AutoSuggestBoxVisible", true);
         }
-    }
-
-    public class DisplayModeToBool : IValueConverter
-    {
-        private static readonly bool HasConnectedAnimation = ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation");
-        private static readonly bool HasConnectedAnimationConfiguration = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Animation.ConnectedAnimation", "Configuration");
-
-        public object Convert(object value, Type targetType, object parameter, string language)
-        {
-            return !HasConnectedAnimationConfiguration && value is SplitViewDisplayMode split && parameter is string mode
-                ? !(split.ToString() == mode) && HasConnectedAnimation
-                : (object)HasConnectedAnimation;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, string language) => null;
     }
 }

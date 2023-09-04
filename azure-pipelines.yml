@@ -24,7 +24,7 @@ pool:
 
 variables:
   solution: '*.sln'
-  buildPlatform: 'x86|x64|ARM'
+  buildPlatform: 'x86|x64|ARM|ARM64'
   buildConfiguration: 'Release'
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
@@ -41,7 +41,7 @@ steps:
     platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/t:restore'
+    msbuildArgs: '/t:restore /p:IsUseNetCore463=True'
     msbuildArchitecture: 'x64'
     maximumCpuCount: true
 
@@ -51,11 +51,14 @@ steps:
     platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)"
+    msbuildArgs: '/p:IsUseNetCore463=True
+                  /p:IsUpdateCIManifest=True
+                  /p:CIBuildID="$(Build.BuildId)"
+                  /p:AppxBundlePlatforms="$(buildPlatform)"
                   /p:AppxPackageDir="$(appxPackageDir)"
                   /p:AppxBundle=Always
                   /p:UapAppxPackageBuildMode=SideloadOnly
-                  /p:AppxPackageSigningEnabled=true
+                  /p:AppxPackageSigningEnabled=True
                   /p:PackageCertificateThumbprint="0CDF4A03E9BE9DD789894BB3C7AD3DEDECD9AB25"
                   /p:PackageCertificateKeyFile="$(signingCert.secureFilePath)"
                   /p:PackageCertificatePassword="$(Password)"'

@@ -10,8 +10,8 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     Title="{Binding Title}"
     d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
+    DataContext="{x:Bind Provider, Mode=OneWay}"
     Loaded="SettingsFlyout_Loaded"
-    Style="{StaticResource DefaultSettingsFlyoutStyle}"
     Unloaded="SettingsFlyout_Unloaded"
     mc:Ignorable="d">
     <StackPanel>
@@ -40,17 +40,39 @@
             <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{Binding IsNoPicsMode, Mode=TwoWay}" />
             <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{Binding IsUseMultiWindow, Mode=TwoWay}" />
             <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{Binding IsDisplayOriginPicture, Mode=TwoWay}" />
-            <local:StackPanel Orientation="Horizontal" Spacing="8">
+            <local:StackPanelEx Orientation="Horizontal" Spacing="8">
                 <Button
                     x:Uid="/SettingsPage/CleanCacheButton"
                     Click="Button_Click"
                     IsEnabled="{Binding IsCleanCacheButtonEnabled}"
-                    Tag="CleanCache" />
+                    Tag="CleanCache">
+                    <helpers:UIElementHelper.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                x:Uid="/SettingsPage/ViewCacheItem"
+                                Click="MenuFlyoutItem_Click"
+                                IsEnabled="{Binding IsCleanCacheButtonEnabled}"
+                                Tag="ViewCache">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Uid="/SettingsPage/OpenCacheFolder"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="OpenCache">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE838;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </helpers:UIElementHelper.ContextFlyout>
+                </Button>
                 <ProgressRing
                     HorizontalAlignment="Left"
                     IsActive="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                     Visibility="{Binding IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-            </local:StackPanel>
+            </local:StackPanelEx>
             <Slider
                 x:Uid="/SettingsPage/TileUpdateTimeSlider"
                 Maximum="1440"
@@ -89,7 +111,7 @@
         <local:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
             <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{Binding VersionTextBlockText}" />
             <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{Binding CheckUpdateWhenLaunching, Mode=TwoWay}" />
-            <local:StackPanel Orientation="Horizontal" Spacing="8">
+            <local:StackPanelEx Orientation="Horizontal" Spacing="8">
                 <Button
                     x:Uid="/SettingsPage/CheckUpdate"
                     Click="Button_Click"
@@ -99,7 +121,7 @@
                     HorizontalAlignment="Left"
                     IsActive="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}}"
                     Visibility="{Binding IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-            </local:StackPanel>
+            </local:StackPanelEx>
         </local:SettingsGroup>
         <local:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
             <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{Binding ShowOtherException, Mode=TwoWay}" />
@@ -126,7 +148,20 @@
             <HyperlinkButton
                 x:Uid="/SettingsPage/LogFolderLink"
                 Click="Button_Click"
-                Tag="LogFolder" />
+                Tag="LogFolder">
+                <helpers:UIElementHelper.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            x:Uid="/SettingsPage/OpenLogFileItem"
+                            Click="MenuFlyoutItem_Click"
+                            Tag="OpenLogFile">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </helpers:UIElementHelper.ContextFlyout>
+            </HyperlinkButton>
         </local:SettingsGroup>
         <local:SettingsGroup x:Uid="/SettingsPage/AboutSettingsHeader">
             <cwuc:MarkdownTextBlock

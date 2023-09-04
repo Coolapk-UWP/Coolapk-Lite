@@ -6,59 +6,38 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class ProfileViewModel : DataSourceBase<Entity>, IViewModel
+    public class ProfileViewModel : EntityItemSource, IViewModel
     {
-        private readonly CoolapkListProvider Provider;
-
         public string UID = string.Empty;
-        public string Title => "个人空间";
+        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
 
         private bool isLogin;
         public bool IsLogin
         {
             get => isLogin;
-            private set
-            {
-                if (isLogin != value)
-                {
-                    isLogin = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref isLogin, value);
         }
 
         private ProfileDetailModel profileDetail;
         public ProfileDetailModel ProfileDetail
         {
             get => profileDetail;
-            private set
-            {
-                if (profileDetail != value)
-                {
-                    profileDetail = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref profileDetail, value);
         }
 
         private NotificationsModel _notificationsModel;
         public NotificationsModel NotificationsModel
         {
             get => _notificationsModel;
-            private set
-            {
-                if (_notificationsModel != value)
-                {
-                    _notificationsModel = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            private set => SetProperty(ref _notificationsModel, value);
         }
 
-        public ProfileViewModel()
+        public ProfileViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
             Provider = new CoolapkListProvider(
                 (_, __, ___) => UriHelper.GetUri(UriType.GetMyPageCard),
@@ -66,13 +45,16 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityType");
         }
 
-        public async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset)
         {
             IsLogin = await SettingsHelper.CheckLoginAsync();
             if (IsLogin)
             {
+                if (NotificationsModel == null)
+                {
+                    NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                }
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                NotificationsModel = NotificationsModel.Instance;
                 ProfileDetail = await GetFeedDetailAsync(UID);
                 await NotificationsModel.Update();
                 await Reset();
@@ -84,7 +66,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => Equals(other);
+        bool IViewModel.IsEqual(IViewModel other) => other is ProfileViewModel model && IsEqual(model);
+
+        public bool IsEqual(ProfileViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
 
         private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
         {
@@ -125,28 +109,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                         }
                     }
                     else { return null; }
-            }
-        }
-
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
-        {
-            List<Entity> Models = new List<Entity>();
-            if (_currentPage <= 1)
-            {
-                await Provider.GetEntity(Models, _currentPage++);
-            }
-            return Models;
-        }
-
-        protected override async Task AddItemsAsync(IList<Entity> items)
-        {
-            if (items != null)
-            {
-                foreach (Entity item in items)
-                {
-                    if (item is NullEntity) { continue; }
-                    await AddAsync(item);
-                }
             }
         }
     }

@@ -86,12 +86,63 @@
                 Grid.Row="0"
                 Margin="0,0,0,4"
                 Visibility="{Binding IsFeedArticle, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed'}">
+                <helpers:UIElementHelper.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            x:Name="RefreshButton"
+                            x:Uid="/ShowImagePage/RefreshMenuItem"
+                            Click="AppBarButton_Click"
+                            Tag="{Binding MessageCover}">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="CopyButton"
+                            x:Uid="/ShowImagePage/CopyMenuItem"
+                            Click="AppBarButton_Click"
+                            Tag="{Binding MessageCover}">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="ShareButton"
+                            x:Uid="/ShowImagePage/ShareMenuItem"
+                            Click="AppBarButton_Click"
+                            Tag="{Binding MessageCover}">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="SaveButton"
+                            x:Uid="/ShowImagePage/SaveMenuItem"
+                            Click="AppBarButton_Click"
+                            Tag="{Binding MessageCover}">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            x:Name="OriginButton"
+                            x:Uid="/ShowImagePage/OriginMenuItem"
+                            Click="AppBarButton_Click"
+                            Tag="{Binding MessageCover}"
+                            Visibility="{Binding MessageCover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </helpers:UIElementHelper.ContextFlyout>
                 <Image
                     x:Name="MessageCover"
+                    KeyDown="FrameworkElement_KeyDown"
                     Source="{Binding MessageCover.Pic, Mode=OneWay}"
                     Stretch="UniformToFill"
                     Tag="{Binding MessageCover}"
-                    Tapped="OnTapped"
+                    Tapped="FrameworkElement_Tapped"
                     Visibility="{Binding MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}}" />
                 <Border VerticalAlignment="Bottom" Background="{ThemeResource TitleBarBackgroundBrush}">
                     <TextBlock
@@ -289,7 +340,8 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        TextTrimming="CharacterEllipsis">
+                        TextTrimming="CharacterEllipsis"
+                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
                         <Run Text="{Binding Dateline}" />
                         <Run Text="{Binding Info}" />
                         <Hyperlink
@@ -324,7 +376,7 @@
                     </StackPanel>
                 </Button>
             </Grid>
-            <local:StackPanel
+            <local:StackPanelEx
                 Grid.Row="5"
                 Margin="4"
                 Spacing="4">
@@ -391,7 +443,7 @@
                         Text="{Binding MessageRawOutput}"
                         Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
                 </Grid>
-            </local:StackPanel>
+            </local:StackPanelEx>
             <Grid
                 Grid.Row="6"
                 MinHeight="0"
@@ -475,110 +527,76 @@
             <Grid
                 Grid.Row="9"
                 Margin="0,4"
-                Padding="8"
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
+                KeyDown="FrameworkElement_KeyDown"
                 Tag="{Binding ExtraUrl}"
-                Tapped="OnTapped"
+                Tapped="FrameworkElement_Tapped"
+                ToolTipService.ToolTip="{Binding ExtraUrl}"
                 Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Border
-                    Width="56"
-                    Height="56"
-                    Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                    </Border.Background>
+                <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Border
+                        Width="56"
+                        Height="56"
+                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        </Border.Background>
+                    </Border>
+                    <Border
+                        Width="56"
+                        Height="56"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                        <FontIcon
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                            Glyph="&#xE71B;" />
+                    </Border>
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="8,0"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center">
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            MaxLines="2"
+                            Text="{Binding ExtraTitle}"
+                            TextTrimming="WordEllipsis"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                        <TextBlock
+                            HorizontalAlignment="Left"
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            Text="{Binding ExtraSubtitle}"
+                            TextWrapping="Wrap"
+                            Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    </StackPanel>
+                </Grid>
+                <Border Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding LinkSourceFeed}" />
                 </Border>
-                <Border
-                    Width="56"
-                    Height="56"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
-                    <FontIcon
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xE71B;" />
-                </Border>
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="8,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center">
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        MaxLines="2"
-                        Text="{Binding ExtraTitle}"
-                        TextTrimming="WordEllipsis"
-                        TextWrapping="Wrap"
-                        Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding ExtraSubtitle}"
-                        TextWrapping="Wrap"
-                        Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
-                </StackPanel>
             </Grid>
             <Grid
                 Grid.Row="10"
                 Margin="0,4"
-                Padding="8"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="1"
+                Background="{ThemeResource SystemControlTransparentBrush}"
                 Tag="{Binding MediaUrl}"
-                Tapped="OnTapped"
                 Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Border
-                    Width="56"
-                    Height="56"
-                    Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{Binding MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                    </Border.Background>
-                </Border>
-                <Border
-                    Width="56"
-                    Height="56"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
-                    <FontIcon
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
-                        Glyph="&#xE786;" />
-                </Border>
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="8,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Center">
-                    <TextBlock
-                        HorizontalAlignment="Left"
-                        MaxLines="2"
-                        Text="视频分享"
-                        TextTrimming="WordEllipsis"
-                        TextWrapping="Wrap" />
-                    <TextBlock
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding MediaSubtitle}"
-                        TextWrapping="Wrap"
-                        Visibility="{Binding MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
-                </StackPanel>
+                <local:MediaPlayerElementEx
+                    x:Name="MediaPlayerElementEx"
+                    x:FieldModifier="public"
+                    AreTransportControlsEnabled="True"
+                    AutoPlay="False"
+                    MediaInfo="{Binding MediaInfo}" />
             </Grid>
             <ListView
                 Grid.Row="11"
@@ -594,7 +612,7 @@
                 Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed'}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <local:StackPanel Orientation="Horizontal" Spacing="6" />
+                        <local:StackPanelEx Orientation="Horizontal" Spacing="6" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>

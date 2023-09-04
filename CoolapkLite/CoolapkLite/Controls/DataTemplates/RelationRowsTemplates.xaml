@@ -14,7 +14,8 @@
             VerticalAlignment="Center"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
-            Tag="{Binding Url}">
+            Tag="{Binding Url}"
+            Tapped="Button_Tapped">
             <Grid Padding="4,2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

@@ -1,30 +1,28 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
+using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
-using Microsoft.Toolkit.Uwp.Helpers;
+using CoolapkLite.ViewModels.SettingsPages;
+using CoolapkLite.ViewModels.ToolsPages;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
 using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
-using Windows.System.Profile;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Media.Animation;
+using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -33,143 +31,40 @@ namespace CoolapkLite.Pages.SettingsPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class TestPage : Page, INotifyPropertyChanged
+    public sealed partial class TestPage : Page
     {
-        internal List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+        #region Provider
 
-        internal string FrameworkDescription => RuntimeInformation.FrameworkDescription;
+        /// <summary>
+        /// Identifies the <see cref="Provider"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ProviderProperty =
+            DependencyProperty.Register(
+                nameof(Provider),
+                typeof(TestViewModel),
+                typeof(TestPage),
+                null);
 
-        internal string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
-
-        internal string OperatingSystemVersion => SystemInformation.Instance.OperatingSystemVersion.ToString();
-
-        internal string OSArchitecture => RuntimeInformation.OSArchitecture.ToString();
-
-        internal bool IsExtendsTitleBar
+        /// <summary>
+        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
+        /// </summary>
+        public TestViewModel Provider
         {
-            get => CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-            set
+            get => (TestViewModel)GetValue(ProviderProperty);
+            private set => SetValue(ProviderProperty, value);
+        }
+
+        #endregion
+
+        public TestPage() => InitializeComponent();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            if (Provider == null)
             {
-                if (IsExtendsTitleBar != value)
-                {
-                    CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = value;
-                    ThemeHelper.UpdateSystemCaptionButtonColors();
-                }
+                Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
             }
-        }
-
-        internal bool IsUseAPI2
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
-            set => SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
-        }
-
-        internal bool IsCustomUA
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
-            set
-            {
-                if (IsCustomUA != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.IsCustomUA, value);
-                    NetworkHelper.SetRequestHeaders();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-                }
-            }
-        }
-
-        internal int APIVersion
-        {
-            get => (int)SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion) - 4;
-            set
-            {
-                if (APIVersion != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 4);
-                    NetworkHelper.SetRequestHeaders();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-                }
-            }
-        }
-
-        internal bool IsUseTokenV2
-        {
-            get => SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion) == TokenVersions.TokenV2;
-            set
-            {
-                if (IsUseTokenV2 != value)
-                {
-                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersions.TokenV2 : TokenVersions.TokenV1));
-                    NetworkHelper.SetRequestHeaders();
-                }
-            }
-        }
-
-        internal bool IsUseLiteHome
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome);
-            set => SettingsHelper.Set(SettingsHelper.IsUseLiteHome, value);
-        }
-
-        internal bool IsUseBlurBrush
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush);
-            set => SettingsHelper.Set(SettingsHelper.IsUseBlurBrush, value);
-        }
-
-        internal bool IsUseCompositor
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);
-            set => SettingsHelper.Set(SettingsHelper.IsUseCompositor, value);
-        }
-
-        internal double SemaphoreSlimCount
-        {
-            get => SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount);
-            set
-            {
-                if (SemaphoreSlimCount != value)
-                {
-                    int result = (int)Math.Floor(value);
-                    SettingsHelper.Set(SettingsHelper.SemaphoreSlimCount, result);
-                    NetworkHelper.SetSemaphoreSlim(result);
-                    ImageModel.SetSemaphoreSlim(result);
-                }
-            }
-        }
-
-        private string userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-        internal string UserAgent
-        {
-            get => userAgent;
-            set
-            {
-                if (userAgent != value)
-                {
-                    userAgent = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        public TestPage()
-        {
-            InitializeComponent();
-            TitleBar.Title = ResourceLoader.GetForCurrentView("MainPage").GetString("Test");
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -179,35 +74,63 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OutPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
-                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
+                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                        && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
+                    break;
+                case "CloseApp":
+                    CoreApplication.Exit();
                     break;
                 case "EnterPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
-                    else if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                        && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
                 case "CustomUA":
-                    UserAgentDialog userAgentDialog = new UserAgentDialog(UserAgent);
+                    UserAgentDialog userAgentDialog = new UserAgentDialog(Provider.UserAgent);
                     await userAgentDialog.ShowAsync();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    break;
+                case "GCCollect":
+                    GC.Collect();
                     break;
                 case "NewWindow":
-                    if (WindowHelper.IsSupported)
+                    bool IsExtendsTitleBar = Provider.IsExtendsTitleBar;
+                    await WindowHelper.CreateWindowAsync((window) =>
                     {
+                        if (IsExtendsTitleBar)
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
+                        Frame frame = new Frame();
+                        window.Content = frame;
+                        ThemeHelper.Initialize(window);
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindow();
-                        window.TitleBar.ExtendsContentIntoTitleBar = true;
-                        ThemeHelper.Initialize();
-                        frame.Navigate(page);
+                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                    });
+                    UIHelper.HideProgressBar(UIHelper.AppTitle);
+                    break;
+                case "NewAppWindow":
+                    if (WindowHelper.IsAppWindowSupported)
+                    {
+                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
+                        if (Provider.IsExtendsTitleBar)
+                        {
+                            window.TitleBar.ExtendsContentIntoTitleBar = true;
+                        }
+                        ThemeHelper.Initialize(window);
+                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                         await window.TryShowAsync();
+                        Dispatcher.HideProgressBar();
                     }
                     break;
                 case "CustomAPI":
-                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(UserAgent);
+                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(Provider.UserAgent);
                     await _APIVersionDialog.ShowAsync();
-                    UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
@@ -215,7 +138,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "ShowError":
                     throw new Exception(NotifyMessage.Text);
                 case "GetContent":
-                    Uri uri = WebUrl.Text.ValidateAndGetUri();
+                    Uri uri = WebUrl.Text.TryGetUri();
                     (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, "XMLHttpRequest", false);
                     if (!isSucceed)
                     {
@@ -241,50 +164,66 @@ namespace CoolapkLite.Pages.SettingsPages
                     };
                     _ = await GetJsonDialog.ShowAsync();
                     break;
+                case "RestartApp":
+                    _ = CoreApplication.RequestRestartAsync(string.Empty);
+                    break;
                 case "ShowMessage":
-                    UIHelper.ShowMessage(NotifyMessage.Text);
+                    this.ShowMessage(NotifyMessage.Text);
                     break;
                 case "OpenBrowser":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text));
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
+                    break;
+                case "MinimizeApp":
+                    if (ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo"))
+                    { _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync(); }
+                    break;
+                case "OutFullWindow":
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    else
+                    { ApplicationView.GetForCurrentView().ExitFullScreenMode(); }
                     break;
                 case "ShowAsyncError":
                     await Task.Run(() => throw new Exception(NotifyMessage.Text));
                     break;
                 case "ShowProgressBar":
-                    UIHelper.ShowProgressBar();
+                    this.ShowProgressBar();
                     break;
                 case "HideProgressBar":
-                    UIHelper.HideProgressBar();
+                    this.HideProgressBar();
+                    break;
+                case "EnterFullWindow":
+                    if (this.IsAppWindow())
+                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    else
+                    { _ = ApplicationView.GetForCurrentView().TryEnterFullScreenMode(); }
+                    break;
+                case "ErrorProgressBar":
+                    this.ErrorProgressBar();
+                    break;
+                case "OpenCharmSearch":
+                    if (SettingsPaneRegister.IsSearchPaneSupported)
+                    { SearchPane.GetForCurrentView().Show(); }
                     break;
                 case "GoToExtensionPage":
                     if (ExtensionManager.IsSupported)
-                    {
-                        _ = Frame.Navigate(typeof(ExtensionPage));
-                    }
-                    break;
-                case "ErrorProgressBar":
-                    UIHelper.ErrorProgressBar();
-                    break;
-                case "OpenCharmSearch":
-                    if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane"))
-                    { SearchPane.GetForCurrentView().Show(); }
+                    { _ = Frame.Navigate(typeof(ExtensionPage)); }
                     break;
                 case "OpenCharmSettings":
-                    if (ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane"))
+                    if (SettingsPaneRegister.IsSettingsPaneSupported)
                     { SettingsPane.Show(); }
                     break;
                 case "PausedProgressBar":
-                    UIHelper.PausedProgressBar();
+                    this.PausedProgressBar();
                     break;
-                case "PrograssRingState":
+                case "ProgressRingState":
                     if (UIHelper.IsShowingProgressBar)
-                    {
-                        UIHelper.HideProgressBar();
-                    }
+                    { this.HideProgressBar(); }
                     else
-                    {
-                        UIHelper.ShowProgressBar();
-                    }
+                    { this.ShowProgressBar(); }
+                    break;
+                case "GoToFansAnalyzePage":
+                    _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("1122745", Dispatcher));
                     break;
                 default:
                     break;
@@ -294,38 +233,28 @@ namespace CoolapkLite.Pages.SettingsPages
         private void ComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             ComboBox ComboBox = sender as ComboBox;
-            switch (ComboBox.Tag.ToString())
-            {
-                case "Language":
-                    string lang = SettingsHelper.Get<string>(SettingsHelper.CurrentLanguage);
-                    lang = lang == LanguageHelper.AutoLanguageCode ? LanguageHelper.GetCurrentLanguage() : lang;
-                    CultureInfo culture = new CultureInfo(lang);
-                    ComboBox.SelectedItem = culture;
-                    break;
-            }
+            string lang = SettingsHelper.Get<string>(SettingsHelper.CurrentLanguage);
+            lang = lang == LanguageHelper.AutoLanguageCode ? LanguageHelper.GetCurrentLanguage() : lang;
+            CultureInfo culture = new CultureInfo(lang);
+            ComboBox.SelectedItem = culture;
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ComboBox ComboBox = sender as ComboBox;
-            switch (ComboBox.Tag.ToString())
+            CultureInfo culture = ComboBox.SelectedItem as CultureInfo;
+            if (culture.Name != LanguageHelper.GetCurrentLanguage())
             {
-                case "Language":
-                    CultureInfo culture = ComboBox.SelectedItem as CultureInfo;
-                    if (culture.Name != LanguageHelper.GetCurrentLanguage())
-                    {
-                        ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
-                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
-                    }
-                    else
-                    {
-                        ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
-                        SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
-                    }
-                    break;
+                ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
+                SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
+            }
+            else
+            {
+                ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
             }
         }
 
-        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => UIHelper.ShowProgressBar(e.NewValue);
+        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => this.ShowProgressBar(e.NewValue);
     }
 }

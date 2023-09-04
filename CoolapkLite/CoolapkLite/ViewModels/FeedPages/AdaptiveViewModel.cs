@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -24,31 +25,17 @@ namespace CoolapkLite.ViewModels.FeedPages
         public string Title
         {
             get => title;
-            protected set
-            {
-                if (title != value)
-                {
-                    title = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            protected set => SetProperty(ref title, value);
         }
 
         private bool isShowTitle;
         public bool IsShowTitle
         {
             get => isShowTitle;
-            set
-            {
-                if (isShowTitle != value)
-                {
-                    isShowTitle = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isShowTitle, value);
         }
 
-        internal AdaptiveViewModel(string uri, List<Type> types = null)
+        internal AdaptiveViewModel(string uri, CoreDispatcher dispatcher, List<Type> types = null) : base(dispatcher)
         {
             Uri = GetUri(uri);
             EntityTypes = types;
@@ -58,13 +45,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityId");
         }
 
-        internal AdaptiveViewModel(CoolapkListProvider provider, List<Type> types = null)
+        internal AdaptiveViewModel(CoolapkListProvider provider, CoreDispatcher dispatcher, List<Type> types = null) : base(dispatcher)
         {
             Provider = provider;
             EntityTypes = types;
         }
 
-        public static AdaptiveViewModel GetUserListProvider(string uid, bool isFollowList, string name)
+        public static AdaptiveViewModel GetUserListProvider(string uid, bool isFollowList, string name, CoreDispatcher dispatcher)
         {
             return string.IsNullOrEmpty(uid)
                 ? throw new ArgumentException(nameof(uid))
@@ -79,11 +66,11 @@ namespace CoolapkLite.ViewModels.FeedPages
                             string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                             string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     (o) => new Entity[] { new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])) },
-                    "fuid"))
+                    "fuid"), dispatcher)
                 { Title = $"{name}的{(isFollowList ? "关注" : "粉丝")}" };
         }
 
-        public static AdaptiveViewModel GetReplyListProvider(string id, FeedReplyModel reply = null)
+        public static AdaptiveViewModel GetReplyListProvider(string id, CoreDispatcher dispatcher, FeedReplyModel reply = null)
         {
             return string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
@@ -97,7 +84,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p,
                                 p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
                         (o) => new Entity[] { new FeedReplyModel(o) },
-                        "uid"))
+                        "uid"), dispatcher)
                 { Title = $"热门回复" }
                 : new AdaptiveViewModel(
                     new CoolapkListProvider(
@@ -108,11 +95,11 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p,
                                 p > 1 ? $"&lastItem={lastItem}" : string.Empty),
                         (o) => new Entity[] { new FeedReplyModel(o, false) },
-                        "uid"))
+                        "uid"), dispatcher)
                 { Title = $"回复({reply.ReplyNum})" };
         }
 
-        public static AdaptiveViewModel GetHistoryProvider(string title)
+        public static AdaptiveViewModel GetHistoryProvider(string title, CoreDispatcher dispatcher)
         {
             if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
 
@@ -138,11 +125,11 @@ namespace CoolapkLite.ViewModels.FeedPages
                             string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                             string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     (o) => new Entity[] { new HistoryModel(o) },
-                    "uid"))
+                    "uid"), dispatcher)
             { Title = title };
         }
 
-        public static AdaptiveViewModel GetUserFeedsProvider(string uid, string branch)
+        public static AdaptiveViewModel GetUserFeedsProvider(string uid, string branch, CoreDispatcher dispatcher)
         {
             return string.IsNullOrEmpty(uid)
                 ? throw new ArgumentException(nameof(uid))
@@ -157,10 +144,10 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
                                 branch),
                         EntityTemplateSelector.GetEntities,
-                        "uid"));
+                        "uid"), dispatcher);
         }
 
-        public static AdaptiveViewModel GetUserCollectionListProvider(string uid)
+        public static AdaptiveViewModel GetUserCollectionListProvider(string uid, CoreDispatcher dispatcher)
         {
             return string.IsNullOrEmpty(uid)
                 ? throw new ArgumentException(nameof(uid))
@@ -174,7 +161,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         EntityTemplateSelector.GetEntities,
-                        "uid"));
+                        "uid"), dispatcher);
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is AdaptiveViewModel model && IsEqual(model);
@@ -191,17 +178,22 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             if (uri.StartsWith("url="))
             {
-                uri = uri.Replace("url=", string.Empty);
+                uri = uri.Substring(4);
             }
 
-            if (uri.IndexOf("/page", StringComparison.Ordinal) == -1 && (uri.StartsWith("#", StringComparison.Ordinal) || (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))))
-            {
-                uri = "/page/dataList?url=" + uri;
-            }
-            else if (uri.IndexOf("/page", StringComparison.Ordinal) == 0 && !uri.Contains("/page/dataList"))
+            if (uri.StartsWith("/page", StringComparison.Ordinal) && !uri.Contains("/page/dataList"))
             {
                 uri = uri.Replace("/page", "/page/dataList");
             }
+            else if (uri.Contains("/page", StringComparison.Ordinal) && uri.StartsWith("#", StringComparison.Ordinal))
+            {
+                uri = $"/page/dataList?url={uri}";
+            }
+            else if (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))
+            {
+                uri = $"/page/dataList?url={uri}";
+            }
+
             return uri.Replace("#", "%23");
         }
 

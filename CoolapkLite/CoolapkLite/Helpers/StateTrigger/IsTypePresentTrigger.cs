@@ -22,7 +22,7 @@ namespace CoolapkLite.Helpers.StateTrigger
                     // Call into ApiInformation method to determine if property is present.
                     _isPropertyPresent = string.IsNullOrEmpty(AssemblyName)
                         ? ApiInformation.IsTypePresent(ClassTypeName)
-                        : UIHelper.IsTypePresent(AssemblyName, ClassTypeName);
+                        : DataHelper.IsTypePresent(AssemblyName, ClassTypeName);
                 }
 
                 // If the property presence matches _isPresent then the trigger will be activated;

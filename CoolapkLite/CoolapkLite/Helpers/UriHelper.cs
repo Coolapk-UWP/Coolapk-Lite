@@ -64,9 +64,8 @@ namespace CoolapkLite.Helpers
         RequestValidate,
         UploadImage,
         Search,
+        SearchTarget,
         SearchFeeds,
-        SearchTags,
-        SearchUsers,
         SearchWords,
         SearchCreateTags,
         SearchCreateUsers,
@@ -158,9 +157,8 @@ namespace CoolapkLite.Helpers
                 case UriType.RequestValidate: return "/v6/account/requestValidate";
                 case UriType.UploadImage: return "/v6/feed/uploadImage?fieldName=picFile&uploadDir={0}";
                 case UriType.Search: return "/v6/search?type={0}&searchValue={1}&page={2}{3}&showAnonymous=-1";
+                case UriType.SearchTarget: return "/v6/search?type={0}&feedType={1}&sort={2}&searchValue={3}&pageType={4}&pageParam={5}&page={6}{7}&showAnonymous=-1";
                 case UriType.SearchFeeds: return "/v6/search?type=feed&feedType={0}&sort={1}&searchValue={2}&page={3}{4}&showAnonymous=-1";
-                case UriType.SearchTags: return "/v6/search?type=feedTopic&searchValue={0}&page={1}{2}&showAnonymous=-1";
-                case UriType.SearchUsers: return "/v6/search?type=user&searchValue={0}&page={1}{2}&showAnonymous=-1";
                 case UriType.SearchWords: return "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
                 case UriType.SearchCreateTags: return "/v6/feed/searchTag?q={0}&page={1}{2}";
                 case UriType.SearchCreateUsers: return "/v6/user/search?q={0}&page={1}{2}";

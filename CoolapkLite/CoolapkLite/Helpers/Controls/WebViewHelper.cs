@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -39,12 +40,6 @@ namespace CoolapkLite.Helpers
                 element.SizeChanged -= OnSizeChanged;
                 element.NavigationCompleted -= OnNavigationCompleted;
             }
-        }
-
-        private static void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            bool isVerticalStretch = GetIsVerticalStretch((WebView)sender);
-            UpdateIsVerticalStretch((WebView)sender, isVerticalStretch);
         }
 
         private static void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
@@ -132,19 +127,50 @@ namespace CoolapkLite.Helpers
 
         private static async void UpdateIsVerticalStretch(WebView element, bool isVerticalStretch)
         {
-            try
+            if (isVerticalStretch)
             {
-                if (isVerticalStretch)
+                try
                 {
+                    element.SizeChanged -= OnSizeChanged;
+                    if (!double.IsNaN(element.Height))
+                    {
+                        element.Height = double.NaN;
+                        await Task.Delay(1);
+                    }
                     string heightString = await element.InvokeScriptAsync("eval", new[] { "document.body.scrollHeight.toString()" });
                     if (double.TryParse(heightString.Trim('"'), out double height))
                     {
-                        element.MinHeight = height;
+                        element.SizeChanged += OnSizeChangedReset;
+                        element.Height = height;
+                    }
+                    else
+                    {
+                        element.SizeChanged += OnSizeChanged;
                     }
                 }
-                else { element.MinHeight = 0; }
+                catch
+                {
+                    element.SizeChanged += OnSizeChanged;
+                }
             }
-            catch { }
+        }
+
+        private static void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (!(sender is WebView webView)) { return; }
+            if (!double.IsNaN(webView.Height)) { webView.Height = double.NaN; }
+            else
+            {
+                bool isVerticalStretch = GetIsVerticalStretch(webView);
+                UpdateIsVerticalStretch(webView, isVerticalStretch);
+            }
+        }
+
+        private static void OnSizeChangedReset(object sender, SizeChangedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            element.SizeChanged -= OnSizeChangedReset;
+            element.SizeChanged += OnSizeChanged;
         }
 
         #endregion
@@ -180,24 +206,25 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    element.Loaded += (sender, args) =>
-                    {
-                        string html = GetHTML(element) ?? "<div/>";
-                        element.NavigateToString(html);
-                    };
+                    element.Loaded -= WebView_Loaded;
+                    element.Loaded += WebView_Loaded;
                 }
             }
             else
             {
-                element.Loaded += (sender, args) =>
-                {
-                    string _html = GetHTML(element) ?? "<div/>";
-                    element.NavigateToString(_html);
-                };
+                element.Loaded -= WebView_Loaded;
+                element.Loaded += WebView_Loaded;
 
                 string html = GetHTML(element) ?? "<div/>";
                 element.NavigateToString(html);
             }
+        }
+
+        private static void WebView_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is WebView webView)) { return; }
+            string html = GetHTML(webView) ?? "<div/>";
+            webView.NavigateToString(html);
         }
 
         #endregion
