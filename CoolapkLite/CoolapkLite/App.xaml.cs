@@ -175,7 +175,7 @@ namespace CoolapkLite
 #else
                             .SetContent(_loader.GetString("GoToGithub"))
 #endif
-                            .SetBackgroundActivation())
+                            .SetProtocolActivation(results?.ReleaseUrl?.TryGetUri()))
                         .AddButton(new ToastButton()
                             .SetDismissActivation())
                         .Show();

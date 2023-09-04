@@ -53,34 +53,39 @@ namespace CoolapkLite.Helpers
 
         public static void TrackWindow(this Window window)
         {
-            SettingsPaneRegister register = SettingsPaneRegister.Register(window);
-            window.Closed += (sender, args) =>
+            if (!ActiveWindows.ContainsKey(window.Dispatcher))
             {
-                ActiveWindows.Remove(window.Dispatcher);
-                register.Unregister();
-                window = null;
-            };
-            ActiveWindows.Add(window.Dispatcher, window);
+                SettingsPaneRegister register = SettingsPaneRegister.Register(window);
+                window.Closed += (sender, args) =>
+                {
+                    ActiveWindows.Remove(window.Dispatcher);
+                    register.Unregister();
+                    window = null;
+                };
+                ActiveWindows[window.Dispatcher] = window;
+            }
         }
 
         public static void TrackWindow(this AppWindow window, Frame frame)
         {
-            window.Closed += (sender, args) =>
-            {
-                if (ActiveAppWindows.TryGetValue(frame.Dispatcher, out Dictionary<UIElement, AppWindow> windows))
-                {
-                    windows?.Remove(frame);
-                }
-                frame.Content = null;
-                window = null;
-            };
-
             if (!ActiveAppWindows.ContainsKey(frame.Dispatcher))
             {
                 ActiveAppWindows[frame.Dispatcher] = new Dictionary<UIElement, AppWindow>();
             }
 
-            ActiveAppWindows[frame.Dispatcher][frame] = window;
+            if (!ActiveAppWindows[frame.Dispatcher].ContainsKey(frame))
+            {
+                window.Closed += (sender, args) =>
+                {
+                    if (ActiveAppWindows.TryGetValue(frame.Dispatcher, out Dictionary<UIElement, AppWindow> windows))
+                    {
+                        windows?.Remove(frame);
+                    }
+                    frame.Content = null;
+                    window = null;
+                };
+                ActiveAppWindows[frame.Dispatcher][frame] = window;
+            }
         }
 
         public static bool IsAppWindow(this UIElement element) =>

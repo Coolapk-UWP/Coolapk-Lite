@@ -6,6 +6,7 @@ using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
@@ -577,7 +578,7 @@ namespace CoolapkLite.Helpers
             }
             else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                return await frame.LaunchUriAsync(uri);
+                _ = frame.LaunchUriAsync(uri);
             }
 
             return false;
@@ -673,6 +674,22 @@ namespace CoolapkLite.Helpers
                         default:
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
                     }
+                case ActivationKind.ToastNotification:
+                    IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs = (IToastNotificationActivatedEventArgs)args;
+                    ToastArguments arguments = ToastArguments.Parse(ToastNotificationActivatedEventArgs.Argument);
+                    if (arguments.TryGetValue("action", out string action))
+                    {
+                        switch (action)
+                        {
+                            case "hasUpdate":
+                                if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                {
+                                    _ = frame.LaunchUriAsync(uri);
+                                }
+                                break;
+                        }
+                    }
+                    return false;
                 default:
                     return false;
             }
