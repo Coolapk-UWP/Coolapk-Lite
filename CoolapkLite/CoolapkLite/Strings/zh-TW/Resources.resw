@@ -145,11 +145,11 @@
     <value>前往 Github</value>
   </data>
   <data name="HasUpdate" xml:space="preserve">
-    <value>程序更新了 v({0}.{1}.{2} -&gt; {3})。</value>
+    <value>程式更新了 v({0}.{1}.{2} -&gt; {3})。</value>
     <comment>{0}.{1}.{2} 和 {3} 表示版本号</comment>
   </data>
   <data name="HasUpdateSubTitle" xml:space="preserve">
-    <value>发布时间 {0}</value>
+    <value>發佈時間 {0}</value>
     <comment>{0} 表示发布时间</comment>
   </data>
   <data name="HasUpdateTitle" xml:space="preserve">
