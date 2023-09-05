@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Toolkit.Uwp.UI.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Toolkit.Uwp.UI.Controls.DataGrid", "CoolapkLite\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid\Microsoft.Toolkit.Uwp.UI.Controls.DataGrid.csproj", "{F73E00D5-9B4C-42B5-8C1D-2699C108352D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Toolkit.Uwp.Notifications", "CoolapkLite\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.Notifications\Microsoft.Toolkit.Uwp.Notifications.csproj", "{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -271,6 +273,26 @@ Global
 		{F73E00D5-9B4C-42B5-8C1D-2699C108352D}.Release|x64.Build.0 = Release|Any CPU
 		{F73E00D5-9B4C-42B5-8C1D-2699C108352D}.Release|x86.ActiveCfg = Release|Any CPU
 		{F73E00D5-9B4C-42B5-8C1D-2699C108352D}.Release|x86.Build.0 = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|ARM.Build.0 = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|x64.Build.0 = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Debug|x86.Build.0 = Debug|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|ARM.ActiveCfg = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|ARM.Build.0 = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|ARM64.Build.0 = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|x64.ActiveCfg = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|x64.Build.0 = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|x86.ActiveCfg = Release|Any CPU
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -288,6 +310,7 @@ Global
 		{083A5354-657B-4C9F-8805-467D4B546D3E} = {9CA7715B-7F0E-4947-9D64-C04E3DE39F48}
 		{0CA3F020-2957-4465-83B5-55537C0BCAB9} = {D1A49116-7A2D-468A-9465-70E674DF9D87}
 		{F73E00D5-9B4C-42B5-8C1D-2699C108352D} = {D1A49116-7A2D-468A-9465-70E674DF9D87}
+		{A6995ABF-3BF7-4F8D-A584-63F5831D2A88} = {D1A49116-7A2D-468A-9465-70E674DF9D87}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F5C1C97E-ABB1-4869-9EDC-DCD85B98AEBB}

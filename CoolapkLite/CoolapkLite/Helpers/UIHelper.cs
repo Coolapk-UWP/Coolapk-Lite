@@ -259,16 +259,23 @@ namespace CoolapkLite.Helpers
             else { ShowMessage($"请检查网络连接。 {e.Message}"); }
         }
 
-        public static void SetBadgeNumber(string badgeGlyphValue)
+        public static void SetBadgeNumber(uint number)
         {
-            // Get the blank badge XML payload for a badge number
-            XmlDocument badgeXml =
-                BadgeUpdateManager.GetTemplateContent(BadgeTemplateType.BadgeNumber);
-            // Set the value of the badge in the XML to our number
-            XmlElement badgeElement = badgeXml.SelectSingleNode("/badge") as XmlElement;
-            badgeElement.SetAttribute("value", badgeGlyphValue);
+            BadgeNumericContent content = new BadgeNumericContent(number);
             // Create the badge notification
-            BadgeNotification badge = new BadgeNotification(badgeXml);
+            BadgeNotification badge = new BadgeNotification(content.GetXml());
+            // Create the badge updater for the application
+            BadgeUpdater badgeUpdater =
+                BadgeUpdateManager.CreateBadgeUpdaterForApplication();
+            // And update the badge
+            badgeUpdater.Update(badge);
+        }
+
+        public static void SetBadgeNumber(BadgeGlyphValue glyph)
+        {
+            BadgeGlyphContent content = new BadgeGlyphContent(glyph);
+            // Create the badge notification
+            BadgeNotification badge = new BadgeNotification(content.GetXml());
             // Create the badge updater for the application
             BadgeUpdater badgeUpdater =
                 BadgeUpdateManager.CreateBadgeUpdaterForApplication();

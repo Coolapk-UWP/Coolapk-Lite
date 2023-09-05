@@ -141,7 +141,6 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <IsNetCore463 Condition="'$(TargetPlatformMinVersion)' == '10.0.16299.0'">True</IsNetCore463>
     <IsNetCore463 Condition="'$(IsNetCore463)' == ''">False</IsNetCore463>
-    <AppxManifestName Condition="'$(IsNetCore463)' == 'True'">Package.Feature.appxmanifest</AppxManifestName>
     <AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
     <DefineConstants Condition="'$(IsNetCore463)' == 'True'">$(DefineConstants);NETCORE463</DefineConstants>
     <DefineConstants Condition="'$(IsUpdateCIManifest)' == 'True'">$(DefineConstants);CANARY</DefineConstants>
@@ -1015,7 +1014,6 @@
     <Content Include="Assets\LargeTile.scale-200.png" />
     <Content Include="Assets\LargeTile.scale-400.png" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\NoPic\image_empty.png" />
     <Content Include="Assets\NoPic\img_placeholder.png" />
     <Content Include="Assets\NoPic\img_placeholder_night.png" />
     <Content Include="Assets\SmallTile.scale-100.png" />
@@ -1392,9 +1390,6 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
-      <Version>7.1.3</Version>
-    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
@@ -1432,6 +1427,10 @@
     <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.Connectivity\Microsoft.Toolkit.Uwp.Connectivity.csproj">
       <Project>{fedc09c9-6e92-4676-87e1-bf492644dc40}</Project>
       <Name>Microsoft.Toolkit.Uwp.Connectivity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.Notifications\Microsoft.Toolkit.Uwp.Notifications.csproj">
+      <Project>{a6995abf-3bf7-4f8d-a584-63f5831d2a88}</Project>
+      <Name>Microsoft.Toolkit.Uwp.Notifications</Name>
     </ProjectReference>
     <ProjectReference Include="..\WindowsCommunityToolkit\Microsoft.Toolkit.Uwp.UI.Controls.Core\Microsoft.Toolkit.Uwp.UI.Controls.Core.csproj">
       <Project>{7e63fd82-2598-46e3-b38f-57613ef74b51}</Project>

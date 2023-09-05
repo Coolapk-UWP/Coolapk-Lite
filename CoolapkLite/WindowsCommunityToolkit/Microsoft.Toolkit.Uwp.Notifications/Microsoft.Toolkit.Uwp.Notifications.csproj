@@ -1,0 +1,20 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras">
+
+  <PropertyGroup>
+    <TargetFramework>uap10.0</TargetFramework>
+    <DefineConstants>$(DefineConstants);NETFX_CORE</DefineConstants>
+  </PropertyGroup>
+  <!-- In order to support .NET Native, we need to include an appropriate .rd.xml for UWP (remove from everything else) -->
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'uap10.0'">
+    <ExtrasUwpMetaPackageVersion>6.2.14</ExtrasUwpMetaPackageVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.22621.0</TargetPlatformVersion>
+  </PropertyGroup>
+
+  <!-- Native (C++) doesn't need 'System.ValueTuple' (plus it's incompatible with this package) -->
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>

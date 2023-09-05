@@ -268,6 +268,9 @@ namespace CoolapkLite
 
         private static async void RegisterBackgroundTask()
         {
+            if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+            { return; }
+
             // Check for background access (optional)
             BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
 
@@ -288,9 +291,6 @@ namespace CoolapkLite
                 if (time < 15) { return; }
 
                 const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
-#if NETCORE463
-                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
-                { return; }
 
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
@@ -298,13 +298,6 @@ namespace CoolapkLite
 
                 // Register (Single Process)
                 BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
-#else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(LiveTileTask))
-                {
-                    // Register (Multi Process)
-                    BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(typeof(LiveTileTask), new TimeTrigger(time, false), true);
-                }
-#endif
             }
 
             #endregion
@@ -314,9 +307,6 @@ namespace CoolapkLite
             void RegisterNotificationsTask()
             {
                 const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
-#if NETCORE463
-                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
-                { return; }
 
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
@@ -324,13 +314,6 @@ namespace CoolapkLite
 
                 // Register (Single Process)
                 BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
-#else
-                if (!BackgroundTaskHelper.IsBackgroundTaskRegistered(NotificationsTask))
-                {
-                    // Register (Multi Process)
-                    BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(typeof(NotificationsTask), new TimeTrigger(15, false), true);
-                }
-#endif
             }
 
             #endregion
@@ -339,9 +322,6 @@ namespace CoolapkLite
 
             void RegisterToastBackgroundTask()
             {
-                if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
-                { return; }
-
                 const string ToastBackgroundTask = "ToastBackgroundTask";
 
                 // If background task is already registered, do nothing

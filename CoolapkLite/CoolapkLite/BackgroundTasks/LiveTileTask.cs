@@ -215,12 +215,14 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveText
                                                 {
+                                                    Id = 1,
                                                     Text = FeedDetail.UserInfo.UserName,
                                                     HintStyle = AdaptiveTextStyle.Caption
                                                 },
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 2,
                                                     Text = Message,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                                     HintWrap = true,
@@ -405,6 +407,7 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveText
                                                 {
+                                                    Id = 1,
                                                     Text = UserDetail.UserName,
                                                     HintStyle = AdaptiveTextStyle.Caption
                                                 },
@@ -417,12 +420,14 @@ namespace CoolapkLite.BackgroundTasks
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 2,
                                                     Text = $"{UserDetail.LoginText}{loader.GetString("Active")}",
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle
                                                 },
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 3,
                                                     Text = UserDetail.Bio,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                                     HintWrap = true,
@@ -577,12 +582,14 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveText
                                                 {
+                                                    Id = 1,
                                                     Text = ListDetail.Title,
                                                     HintStyle = AdaptiveTextStyle.Caption
                                                 },
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 2,
                                                     Text = ListDetail.Description,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                                     HintWrap = true
@@ -723,12 +730,14 @@ namespace CoolapkLite.BackgroundTasks
                                             {
                                                 new AdaptiveText
                                                 {
+                                                    Id = 1,
                                                     Text = ListDetail.Title,
                                                     HintStyle = AdaptiveTextStyle.Caption
                                                 },
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 2,
                                                     Text = ListDetail.SubTitle,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                                     HintWrap = true
@@ -736,6 +745,7 @@ namespace CoolapkLite.BackgroundTasks
 
                                                 new AdaptiveText
                                                 {
+                                                    Id = 3,
                                                     Text = ListDetail.Description,
                                                     HintStyle = AdaptiveTextStyle.CaptionSubtle,
                                                     HintWrap = true

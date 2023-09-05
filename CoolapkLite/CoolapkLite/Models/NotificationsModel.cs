@@ -253,7 +253,7 @@ namespace CoolapkLite.Models
                     int value = badge.ToObject<int>();
                     increase = value - badgeNum;
                     SetBadgeNum(value);
-                    UIHelper.SetBadgeNumber(badgeNum.ToString());
+                    UIHelper.SetBadgeNumber((uint)badgeNum);
                 }
 
                 if (token.TryGetValue("contacts_follow", out JToken contacts_follow))

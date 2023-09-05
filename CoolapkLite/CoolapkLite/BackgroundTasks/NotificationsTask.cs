@@ -30,7 +30,7 @@ namespace CoolapkLite.BackgroundTasks
                 {
                     if (token.TryGetValue("badge", out JToken badge) && badge != null)
                     {
-                        UIHelper.SetBadgeNumber(badge.ToString());
+                        UIHelper.SetBadgeNumber(badge.ToObject<uint>());
                     }
                 }
             }
