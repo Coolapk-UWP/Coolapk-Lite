@@ -88,7 +88,7 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(UserName)
+        public override string ToString() => new StringBuilder().TryAppendLine(UserName)
                                                                 .Append(Note.HtmlToString())
                                                                 .ToString();
     }
@@ -158,8 +158,8 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserName}提及")
-                                                                .AppendLine(Dateline)
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}提及", UserName)
+                                                                .TryAppendLine(Dateline)
                                                                 .Append(Message.HtmlToString())
                                                                 .ToString();
     }
@@ -234,8 +234,9 @@ namespace CoolapkLite.Models.Pages
             FeedDetail = new SourceFeedModel(token);
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserName}{Title}")
-                                                                .AppendLine(Dateline)
+        public override string ToString() => new StringBuilder().Append(UserName)
+                                                                .AppendLine(Title)
+                                                                .TryAppendLine(Dateline)
                                                                 .AppendLine("点赞动态：")
                                                                 .Append(FeedDetail)
                                                                 .ToString();
@@ -300,8 +301,8 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserName}私信")
-                                                                .AppendLine(Dateline)
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}私信", UserName)
+                                                                .TryAppendLine(Dateline)
                                                                 .Append(FeedMessage.HtmlToString())
                                                                 .ToString();
     }

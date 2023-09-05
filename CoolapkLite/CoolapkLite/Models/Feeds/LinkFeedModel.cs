@@ -316,7 +316,7 @@ namespace CoolapkLite.Models.Feeds
                     {
                         ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
                         builder.Remove(length, builder.Length - length);
-                        builder.Append("...<a href=\"" + Url + "\">" + loader.GetString("ReadMore") + "</a>");
+                        builder.AppendFormat("...<a href=\"{0}\">{1}</a>", Url, loader.GetString("ReadMore"));
                     }
                     Message = builder.ToString();
                 }
@@ -358,7 +358,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的动态")
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}的动态", UserInfo.UserName)
                                                                 .Append(Message.HtmlToString())
                                                                 .ToString();
     }

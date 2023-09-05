@@ -83,9 +83,9 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"话题：{Title}")
-                                                                .AppendLine($"{CommentNum}评论 {FollowNum}关注")
-                                                                .AppendLine(Description)
+        public override string ToString() => new StringBuilder().AppendLineFormat("话题：{0}", Title)
+                                                                .AppendLineFormat("{0}评论 {1}关注", CommentNum, FollowNum)
+                                                                .Append(Description)
                                                                 .ToString();
     }
 }

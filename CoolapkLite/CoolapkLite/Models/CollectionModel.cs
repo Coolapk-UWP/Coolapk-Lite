@@ -55,8 +55,8 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"收藏单：{Title}")
-                                                                .AppendLine(SubTitle)
+        public override string ToString() => new StringBuilder().AppendFormat("收藏单：{0}", Title)
+                                                                .TryAppendLine(SubTitle)
                                                                 .Append(Description)
                                                                 .ToString();
     }

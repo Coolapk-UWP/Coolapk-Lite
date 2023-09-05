@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
@@ -172,6 +173,47 @@ namespace CoolapkLite.Helpers
             {
                 return str;
             }
+        }
+
+        public static StringBuilder AppendJoin(this StringBuilder builder, string separator, params string[] value)
+        {
+            if (value?.Any() == true)
+            {
+                return builder.Append(string.Join(separator, value.Where((x) => !string.IsNullOrWhiteSpace(x))));
+            }
+            return builder;
+        }
+
+        public static StringBuilder TryAppendLine(this StringBuilder builder, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                return builder.AppendLine(value);
+            }
+            return builder;
+        }
+
+        public static StringBuilder AppendLineJoin(this StringBuilder builder, string separator, params string[] value)
+        {
+            if (value?.Any() == true)
+            {
+                return builder.AppendLine(string.Join(separator, value.Where((x) => !string.IsNullOrWhiteSpace(x))));
+            }
+            return builder;
+        }
+
+        public static StringBuilder AppendLineFormat(this StringBuilder builder, string format, params object[] args)
+        {
+            return builder.AppendFormat(format, args).AppendLine();
+        }
+
+        public static StringBuilder TryAppendLineFormat(this StringBuilder builder, string format, string value)
+        {
+            if (!string.IsNullOrWhiteSpace(format) && !string.IsNullOrWhiteSpace(value))
+            {
+                return builder.AppendLineFormat(format, value);
+            }
+            return builder;
         }
 
         public static IBuffer GetBuffer(this IRandomAccessStream randomStream)

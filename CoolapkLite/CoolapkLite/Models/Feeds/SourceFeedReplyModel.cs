@@ -106,7 +106,7 @@ namespace CoolapkLite.Models.Feeds
 
         private static string GetUserLink(string url, string name) => $"<a href=\"{url}\" type=\"user-detail\">{name}</a>";
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的评论")
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}的评论", UserInfo.UserName)
                                                                 .Append(Message.HtmlToString())
                                                                 .ToString();
     }

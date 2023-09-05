@@ -43,7 +43,7 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(Title)
+        public override string ToString() => new StringBuilder().TryAppendLine(Title)
                                                                 .Append(Description)
                                                                 .ToString();
     }

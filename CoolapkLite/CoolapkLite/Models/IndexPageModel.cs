@@ -5,6 +5,7 @@ using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Text;
 using Windows.ApplicationModel.Resources;
 
@@ -146,10 +147,12 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(Title)
-                                                                .AppendLine(SubTitle)
-                                                                .Append(Description)
-                                                                .ToString();
+        public override string ToString()
+        {
+            string result = string.Join(Environment.NewLine, new string[] { Title, SubTitle, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
+            return result;
+        }
     }
 
     public class IndexPageMessageCardModel : Entity
@@ -236,9 +239,12 @@ namespace CoolapkLite.Models
             else { ShowEntities = false; }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(Title)
-                                                                .Append(Description)
-                                                                .ToString();
+        public override string ToString()
+        {
+            string result = string.Join(Environment.NewLine, new string[] { Title, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
+            return result;
+        }
     }
 
     public enum EntityType
@@ -366,9 +372,12 @@ namespace CoolapkLite.Models
             ShowTitle = !(string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Url));
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(Title)
-                                                                .Append(Description)
-                                                                .ToString();
+        public override string ToString()
+        {
+            string result = string.Join(Environment.NewLine, new string[] { Title, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
+            return result;
+        }
     }
 
     public enum OperationType
@@ -410,6 +419,6 @@ namespace CoolapkLite.Models
             }
         }
 
-        public override string ToString() => Title;
+        public override string ToString() => string.IsNullOrWhiteSpace(Title) ? base.ToString() : Title;
     }
 }

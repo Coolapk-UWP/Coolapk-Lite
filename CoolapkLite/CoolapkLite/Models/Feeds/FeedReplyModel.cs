@@ -142,9 +142,9 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的回复")
-                                                                .AppendLine(Message.HtmlToString())
-                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复")
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}的回复", UserInfo?.UserName)
+                                                                .TryAppendLine(Message.HtmlToString())
+                                                                .AppendFormat("{0}点赞 {1}回复", LikeNum, ReplyNum)
                                                                 .ToString();
     }
 }

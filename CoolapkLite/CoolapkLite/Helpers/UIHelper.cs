@@ -276,16 +276,13 @@ namespace CoolapkLite.Helpers
             badgeUpdater.Update(badge);
         }
 
-        public static string ExceptionToMessage(this Exception ex)
-        {
-            StringBuilder builder = new StringBuilder();
-            _ = builder.Append('\n');
-            if (!string.IsNullOrWhiteSpace(ex.Message)) { _ = builder.AppendLine($"Message: {ex.Message}"); }
-            _ = builder.AppendLine($"HResult: {ex.HResult} (0x{Convert.ToString(ex.HResult, 16).ToUpperInvariant()})");
-            if (!string.IsNullOrWhiteSpace(ex.StackTrace)) { _ = builder.AppendLine(ex.StackTrace); }
-            if (!string.IsNullOrWhiteSpace(ex.HelpLink)) { _ = builder.Append($"HelperLink: {ex.HelpLink}"); }
-            return builder.ToString();
-        }
+        public static string ExceptionToMessage(this Exception ex) =>
+            new StringBuilder().AppendLine()
+                               .TryAppendLineFormat("Message: {0}", ex.Message)
+                               .AppendLineFormat("HResult: {0} (0x{1})", ex.HResult, Convert.ToString(ex.HResult, 16).ToUpperInvariant())
+                               .TryAppendLine(ex.StackTrace)
+                               .TryAppendLineFormat("HelperLink: {0}", ex.HelpLink)
+                               .ToString();
 
         public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function, CancellationToken cancellationToken = default)
         {

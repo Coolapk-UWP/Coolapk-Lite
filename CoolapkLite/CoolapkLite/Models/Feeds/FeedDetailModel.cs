@@ -133,7 +133,7 @@ namespace CoolapkLite.Models.Feeds
                                         if (item.TryGetValue("url", out JToken url) || item.TryGetValue("uri", out url))
                                         {
                                             item.TryGetValue("description", out JToken description);
-                                            _ = builder.Append($"<img src=\"{url}\" alt=\"{description}\"/>");
+                                            _ = builder.AppendFormat("<img src=\"{0}\" alt=\"{1}\"/>", url, description);
                                         }
                                         break;
                                 }
@@ -145,9 +145,9 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(Title)
-                                                                .AppendLine(Message.HtmlToString())
-                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复 {ShareNum}分享 {StarNum}收藏")
+        public override string ToString() => new StringBuilder().TryAppendLine(Title)
+                                                                .TryAppendLine(Message.HtmlToString())
+                                                                .AppendFormat("{0}点赞 {1}回复 {2}分享 {3}收藏", LikeNum, ReplyNum, ShareNum, StarNum)
                                                                 .ToString();
     }
 }

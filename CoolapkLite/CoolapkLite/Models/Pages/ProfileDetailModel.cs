@@ -74,9 +74,9 @@ namespace CoolapkLite.Models.Pages
             NextLevelNowExperience = $"{NextLevelPercentage / 100 * NextLevelExperience:F0}/{NextLevelExperience}";
         }
 
-        public override string ToString() => new StringBuilder().AppendLine(UserName)
-                                                                .AppendLine($"Lv.{LevelNum} {NextLevelNowExperience}")
-                                                                .AppendLine($"{FollowNum}关注 {FansNum}粉丝")
+        public override string ToString() => new StringBuilder().TryAppendLine(UserName)
+                                                                .AppendLineFormat("Lv.{0} {1}", LevelNum, NextLevelNowExperience)
+                                                                .AppendFormat("{0}关注 {1}粉丝", FollowNum, FansNum)
                                                                 .ToString();
     }
 }

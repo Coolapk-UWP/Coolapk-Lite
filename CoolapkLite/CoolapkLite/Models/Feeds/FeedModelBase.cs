@@ -429,9 +429,9 @@ namespace CoolapkLite.Models.Feeds
             Followed = !Followed;
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的{Info}")
-                                                                .AppendLine(Message.HtmlToString())
-                                                                .Append($"{LikeNum}点赞 {ReplyNum}回复 {ShareNum}分享")
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}的{1}", UserInfo?.UserName, Info)
+                                                                .TryAppendLine(Message.HtmlToString())
+                                                                .AppendFormat("{0}点赞 {1}回复 {2}分享", LikeNum, ReplyNum, ShareNum)
                                                                 .ToString();
     }
 

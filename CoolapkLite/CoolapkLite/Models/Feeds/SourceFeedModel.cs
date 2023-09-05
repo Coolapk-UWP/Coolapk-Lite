@@ -165,7 +165,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"{UserInfo.UserName}的动态")
+        public override string ToString() => new StringBuilder().AppendLineFormat("{0}的动态", UserInfo.UserName)
                                                                 .Append(Message.HtmlToString())
                                                                 .ToString();
     }

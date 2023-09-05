@@ -113,9 +113,9 @@ namespace CoolapkLite.Models.Users
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"用户：{UserName}")
-                                                                .AppendLine(LoginText)
-                                                                .AppendLine(string.Join(" ", $"{FollowNum}关注 {FansNum}粉丝", BlockStatus))
+        public override string ToString() => new StringBuilder().AppendLineFormat("用户：{0}", UserName)
+                                                                .TryAppendLine(LoginText)
+                                                                .AppendLineFormat("{0}关注 {1}粉丝 {2}", FollowNum, FansNum, BlockStatus)
                                                                 .Append(Bio)
                                                                 .ToString();
     }

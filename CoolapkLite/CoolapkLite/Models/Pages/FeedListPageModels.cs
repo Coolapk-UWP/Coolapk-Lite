@@ -259,11 +259,11 @@ namespace CoolapkLite.Models.Pages
             Followed = !Followed;
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"用户：{UserName}")
-                                                                .AppendLine(LoginText)
-                                                                .AppendLine($"{LikeNum}点赞 {FollowNum}关注 {FansNum}粉丝")
-                                                                .AppendLine(Bio)
-                                                                .Append(string.Join(" ", Gender, City, Astro, BlockStatus))
+        public override string ToString() => new StringBuilder().AppendLineFormat("用户：{0}", UserName)
+                                                                .TryAppendLine(LoginText)
+                                                                .AppendLineFormat("{0}点赞 {1}关注 {2}粉丝", LikeNum, FollowNum, FansNum)
+                                                                .TryAppendLine(Bio)
+                                                                .AppendJoin(" ", Gender, City, Astro, BlockStatus)
                                                                 .ToString();
     }
 
@@ -411,9 +411,9 @@ namespace CoolapkLite.Models.Pages
             Followed = !Followed;
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"话题：{Title}")
-                                                                .AppendLine($"{HotNum} {CommentNum} {FollowNum}")
-                                                                .AppendLine(Description)
+        public override string ToString() => new StringBuilder().AppendLineFormat("话题：{0}", Title)
+                                                                .AppendLineJoin(" ", HotNum, CommentNum, FollowNum)
+                                                                .TryAppendLine(Description)
                                                                 .Append(SubTitle)
                                                                 .ToString();
     }
@@ -565,8 +565,8 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"看看号：{Title}")
-                                                                .AppendLine($"作者：{UserName} {FollowNum}")
+        public override string ToString() => new StringBuilder().AppendLineFormat($"看看号：{0}", Title)
+                                                                .AppendLineFormat("作者：{0} {1}", UserName, FollowNum)
                                                                 .Append(Description)
                                                                 .ToString();
     }
@@ -850,8 +850,8 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"数码：{Title}")
-                                                                .AppendLine($"{HotNum} {CommentNum} {FollowNum}")
+        public override string ToString() => new StringBuilder().AppendFormat("数码：{0}", Title)
+                                                                .AppendLineJoin(" ", HotNum, CommentNum, FollowNum)
                                                                 .Append(Description)
                                                                 .ToString();
     }
@@ -1075,8 +1075,8 @@ namespace CoolapkLite.Models.Pages
             }
         }
 
-        public override string ToString() => new StringBuilder().AppendLine($"收藏单：{Title}")
-                                                                .AppendLine($"{LikeNum} {FollowNum}")
+        public override string ToString() => new StringBuilder().AppendLineFormat("收藏单：{0}", Title)
+                                                                .AppendLineFormat("{0}点赞 {1}关注", LikeNum, FollowNum)
                                                                 .Append(Description)
                                                                 .ToString();
     }
