@@ -70,6 +70,8 @@ namespace CoolapkLite.Pages
                 HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems(Dispatcher);
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
                 { OpenActivatedEventArgs(ActivatedEventArgs); }
+                else if (e.Parameter is OpenLinkFactory factory)
+                { OpenLinkAsync(factory); }
                 else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo()); }
                 isLoaded = true;
             }
@@ -111,6 +113,14 @@ namespace CoolapkLite.Pages
                 UpdateTitleBarLayout(TitleBar);
                 if (isLoaded)
                 { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false); }
+            }
+        }
+
+        private async void OpenLinkAsync(OpenLinkFactory factory)
+        {
+            if (!await factory(HamburgerMenuFrame))
+            {
+                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
             }
         }
 

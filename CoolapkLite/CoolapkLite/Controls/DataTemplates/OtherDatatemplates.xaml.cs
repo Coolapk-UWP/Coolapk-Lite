@@ -1,4 +1,7 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Feeds;
+using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.FeedPages;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -31,6 +34,20 @@ namespace CoolapkLite.Controls.DataTemplates
                 case VirtualKey.Space:
                     FrameworkElement_Tapped(sender, null);
                     e.Handled = true;
+                    break;
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Name)
+            {
+                case "NewWindow":
+                    _ = element.Dispatcher.OpenLinkOutsideAsync(element.Tag?.ToString());
+                    break;
+                default:
+                    FrameworkElement_Tapped(sender, null);
                     break;
             }
         }

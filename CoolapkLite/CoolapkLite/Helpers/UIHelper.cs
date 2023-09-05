@@ -361,6 +361,56 @@ namespace CoolapkLite.Helpers
             }
         }
 
+        public static async Task<bool> NavigateOutsideAsync(this CoreDispatcher dispatcher, Type pageType, Func<CoreDispatcher, object> parameter = null, NavigationTransitionInfo infoOverride = null)
+        {
+            try
+            {
+                OpenLinkFactory factory = (frame) => frame.NavigateAsync(pageType, parameter(frame.Dispatcher), infoOverride);
+
+                if (!dispatcher?.HasThreadAccess == false)
+                {
+                    await dispatcher.ResumeForegroundAsync();
+                }
+
+                if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
+                {
+                    (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                    {
+                        window.TitleBar.ExtendsContentIntoTitleBar = true;
+                    }
+                    ThemeHelper.Initialize(window);
+                    Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                    _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
+                    bool result = await window.TryShowAsync();
+                    dispatcher.HideProgressBar();
+                    return result;
+                }
+                else
+                {
+                    bool result = await WindowHelper.CreateWindowAsync((window) =>
+                    {
+                        if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                        {
+                            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                        }
+                        Frame frame = new Frame();
+                        window.Content = frame;
+                        ThemeHelper.Initialize(window);
+                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
+                    });
+                    HideProgressBar(AppTitle);
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(UIHelper)).Error(e.ExceptionToMessage(), e);
+                return false;
+            }
+        }
+
         public static Task<bool> LaunchUriAsync(this DependencyObject element, Uri uri) =>
             element.Dispatcher.LaunchUriAsync(uri);
 
@@ -388,7 +438,7 @@ namespace CoolapkLite.Helpers
                         window.TitleBar.ExtendsContentIntoTitleBar = true;
                     }
                     ThemeHelper.Initialize(window);
-                    frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
+                    _ = frame.Navigate(typeof(ShowImagePage), image, new DrillInNavigationTransitionInfo());
                     return await window.TryShowAsync();
                 }
                 else
@@ -402,7 +452,7 @@ namespace CoolapkLite.Helpers
                         Frame frame = new Frame();
                         window.Content = frame;
                         ThemeHelper.Initialize(window);
-                        frame.Navigate(typeof(ShowImagePage), image.Clone(window.Dispatcher), new DrillInNavigationTransitionInfo());
+                        _ = frame.Navigate(typeof(ShowImagePage), image.Clone(window.Dispatcher), new DrillInNavigationTransitionInfo());
                     });
                 }
             }
@@ -413,6 +463,8 @@ namespace CoolapkLite.Helpers
         }
     }
 
+    public delegate Task<bool> OpenLinkFactory(Frame frame);
+
     public static partial class UIHelper
     {
         public static async Task<bool> OpenLinkAsync(this DependencyObject element, string link) =>
@@ -421,9 +473,58 @@ namespace CoolapkLite.Helpers
         public static Task<bool> OpenLinkAsync(this IHaveTitleBar mainPage, string link) =>
             mainPage.MainFrame.OpenLinkAsync(link);
 
-        public static async Task<bool> OpenLinkAsync(this Frame frame, string link)
+        public static async Task<bool> OpenLinkAsync(this Frame frame, string link) =>
+            !string.IsNullOrWhiteSpace(link)
+                && await TryGetOpenLinkFactory(link) is OpenLinkFactory factory
+                && await factory(frame);
+
+        public static async Task<bool> OpenLinkOutsideAsync(this CoreDispatcher dispatcher, string link)
         {
             if (string.IsNullOrWhiteSpace(link)) { return false; }
+
+            if (!(await TryGetOpenLinkFactory(link) is OpenLinkFactory factory)) { return false; }
+
+            if (!dispatcher?.HasThreadAccess == false)
+            {
+                await dispatcher.ResumeForegroundAsync();
+            }
+
+            if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
+            {
+                (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                {
+                    window.TitleBar.ExtendsContentIntoTitleBar = true;
+                }
+                ThemeHelper.Initialize(window);
+                Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
+                bool result = await window.TryShowAsync();
+                dispatcher.HideProgressBar();
+                return result;
+            }
+            else
+            {
+                bool result = await WindowHelper.CreateWindowAsync((window) =>
+                {
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
+                    {
+                        CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+                    }
+                    Frame frame = new Frame();
+                    window.Content = frame;
+                    ThemeHelper.Initialize(window);
+                    Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                    _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
+                });
+                HideProgressBar(AppTitle);
+                return result;
+            }
+        }
+
+        public static async Task<OpenLinkFactory> TryGetOpenLinkFactory(string link)
+        {
+            if (string.IsNullOrWhiteSpace(link)) { return null; }
 
             await ThreadSwitcher.ResumeBackgroundAsync();
 
@@ -434,7 +535,7 @@ namespace CoolapkLite.Helpers
                 link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
                 if (link.StartsWith("image.coolapk.com"))
                 {
-                    return await frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
+                    return (frame) => frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
                 }
                 else
                 {
@@ -445,7 +546,7 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
+                        return (frame) => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
                     }
                 }
             }
@@ -465,33 +566,37 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
+                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return await frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
+                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(6);
-                return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
+                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
             }
             else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
             {
-                string url = link.Substring(3, "?");
-                string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
-                if (provider != null)
+                return async (frame) =>
                 {
-                    return await frame.NavigateAsync(typeof(FeedListPage), provider);
-                }
+                    string url = link.Substring(3, "?");
+                    string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
             }
             else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
             {
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
                 else
                 {
@@ -503,7 +608,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
@@ -511,7 +616,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/vote/", StringComparison.OrdinalIgnoreCase))
@@ -519,66 +624,82 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return await frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
             {
-                string tag = link.Substring(3, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
-                if (provider != null)
+                return async (frame) =>
                 {
-                    return await frame.NavigateAsync(typeof(FeedListPage), provider);
-                }
+                    string tag = link.Substring(3, "?");
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
             }
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
             {
-                string tag = link.Substring(5, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
-                if (provider != null)
+                return async (frame) =>
                 {
-                    return await frame.NavigateAsync(typeof(FeedListPage), provider);
-                }
+                    string tag = link.Substring(5, "?");
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
             }
             else if (link.StartsWith("/product/", StringComparison.OrdinalIgnoreCase))
             {
                 if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return await frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
                 }
                 else
                 {
-                    string tag = link.Substring(9, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
-                    if (provider != null)
+                    return async (frame) =>
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
-                    }
+                        string tag = link.Substring(9, "?");
+                        FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
+                        if (provider != null)
+                        {
+                            return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        }
+                        return false;
+                    };
                 }
             }
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(12, "?");
-                FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
-                if (provider != null)
+                return async (frame) =>
                 {
-                    return await frame.NavigateAsync(typeof(FeedListPage), provider);
-                }
+                    string id = link.Substring(12, "?");
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                return await frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
+                return (frame) => frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
             }
             else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {
-                return await frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
+                return (frame) => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
             }
             else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                _ = frame.LaunchUriAsync(uri);
+                return (frame) => frame.LaunchUriAsync(uri);
             }
 
-            return false;
+            return null;
         }
 
         public static Task<bool> OpenActivatedEventArgsAsync(this IHaveTitleBar mainPage, IActivatedEventArgs args) =>
@@ -627,16 +748,13 @@ namespace CoolapkLite.Helpers
                             string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
                             return !string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments) && await frame.OpenLinkAsync(TileArguments);
                         }
-                        else
-                        {
-                            return false;
-                        }
                     }
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
+                case ActivationKind.Search:
+                    ISearchActivatedEventArgs SearchActivatedEventArgs = (ISearchActivatedEventArgs)args;
+                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher));
                 case ActivationKind.Protocol:
+                case ActivationKind.ProtocolForResults:
                     IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
                     switch (ProtocolActivatedEventArgs.Uri.Host)
                     {
@@ -684,6 +802,40 @@ namespace CoolapkLite.Helpers
                                     _ = frame.LaunchUriAsync(uri);
                                 }
                                 break;
+                        }
+                    }
+                    return false;
+                case (ActivationKind)1021:
+                    if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ICommandLineActivatedEventArgs"))
+                    {
+                        ICommandLineActivatedEventArgs CommandLineActivatedEventArgs = (ICommandLineActivatedEventArgs)args;
+                        if (!string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments))
+                        {
+                            switch (CommandLineActivatedEventArgs.Operation.Arguments)
+                            {
+                                case "me":
+                                    return await frame.NavigateAsync(typeof(ProfilePage));
+                                case "home":
+                                    return await frame.NavigateAsync(typeof(IndexPage));
+                                case "flags":
+                                    return await frame.NavigateAsync(typeof(TestPage));
+                                case "circle":
+                                    return await frame.NavigateAsync(typeof(CirclePage));
+                                case "search":
+                                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty, frame.Dispatcher));
+                                case "history":
+                                    return await frame.NavigateAsync(typeof(HistoryPage));
+                                case "settings":
+                                    return await frame.NavigateAsync(typeof(SettingsPage));
+                                case "favorites":
+                                    return await frame.NavigateAsync(typeof(BookmarkPage));
+                                case "extensions":
+                                    return await frame.NavigateAsync(typeof(ExtensionPage));
+                                case "notifications":
+                                    return await frame.NavigateAsync(typeof(NotificationsPage));
+                                default:
+                                    return await frame.OpenLinkAsync(CommandLineActivatedEventArgs.Operation.Arguments);
+                            }
                         }
                     }
                     return false;

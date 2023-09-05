@@ -153,6 +153,9 @@
   <data name="MoreButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>更多</value>
   </data>
+  <data name="NewWindow.Text" xml:space="preserve">
+    <value>在新窗口打开</value>
+  </data>
   <data name="PinTile.Text" xml:space="preserve">
     <value>固定到开始</value>
   </data>

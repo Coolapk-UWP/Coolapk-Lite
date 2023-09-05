@@ -98,7 +98,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "NewWindow":
                     bool IsExtendsTitleBar = Provider.IsExtendsTitleBar;
-                    await WindowHelper.CreateWindowAsync((window) =>
+                    _ = await WindowHelper.CreateWindowAsync((window) =>
                     {
                         if (IsExtendsTitleBar)
                         {
@@ -108,7 +108,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         window.Content = frame;
                         ThemeHelper.Initialize(window);
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                        _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                     });
                     UIHelper.HideProgressBar(UIHelper.AppTitle);
                     break;
@@ -122,7 +122,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         }
                         ThemeHelper.Initialize(window);
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                        _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                         await window.TryShowAsync();
                         Dispatcher.HideProgressBar();
                     }

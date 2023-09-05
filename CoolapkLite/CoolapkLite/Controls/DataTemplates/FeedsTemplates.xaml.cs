@@ -64,6 +64,10 @@ namespace CoolapkLite.Controls.DataTemplates
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
+                case "NewWindow":
+                    if (!(element.Tag is FeedReplyModel replyModel)) { return; }
+                    _ = element.Dispatcher.NavigateOutsideAsync(typeof(AdaptivePage), (dispatcher) => AdaptiveViewModel.GetReplyListProvider(replyModel.ID.ToString(), dispatcher, replyModel));
+                    break;
                 case "SeeAllButton":
                     _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), element.Dispatcher, (FeedReplyModel)element.Tag));
                     break;
@@ -136,6 +140,11 @@ namespace CoolapkLite.Controls.DataTemplates
                 case "ChangeButton":
                     DisabledCopy();
                     //UIHelper.NavigateInSplitPane(typeof(AdaptivePage), new ViewModels.AdaptivePage.ViewModel((sender as FrameworkElement).Tag as string, ViewModels.AdaptivePage.ListType.FeedInfo, "changeHistory"));
+                    break;
+
+                case "NewWindow":
+                    DisabledCopy();
+                    _ = element.Dispatcher.OpenLinkOutsideAsync(element.Tag?.ToString());
                     break;
 
                 default:

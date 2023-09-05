@@ -43,7 +43,7 @@ namespace CoolapkLite.Pages
         public PivotPage()
         {
             InitializeComponent();
-            PivotContentFrame.Navigate(typeof(Page));
+            _ = PivotContentFrame.Navigate(typeof(Page));
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
             if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
@@ -64,6 +64,8 @@ namespace CoolapkLite.Pages
             Pivot.ItemsSource = GetMainItems();
             if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
             { OpenActivatedEventArgs(ActivatedEventArgs); }
+            else if (e.Parameter is OpenLinkFactory factory)
+            { OpenLinkAsync(factory); }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -101,6 +103,11 @@ namespace CoolapkLite.Pages
                 TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
                 UpdateTitleBarLayout(TitleBar);
             }
+        }
+
+        private void OpenLinkAsync(OpenLinkFactory factory)
+        {
+            _ = factory(PivotContentFrame);
         }
 
         private void OpenActivatedEventArgs(IActivatedEventArgs args)

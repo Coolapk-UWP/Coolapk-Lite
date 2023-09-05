@@ -80,6 +80,15 @@
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F8;" />
                         </helpers:FlyoutBaseHelper.Icon>
                     </MenuFlyoutItem>
+                    <MenuFlyoutItem
+                        x:Name="NewWindow"
+                        x:Uid="/Feed/NewWindow"
+                        Click="FeedButton_Click"
+                        Tag="{Binding Url}">
+                        <helpers:FlyoutBaseHelper.Icon>
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+                        </helpers:FlyoutBaseHelper.Icon>
+                    </MenuFlyoutItem>
                 </MenuFlyout>
             </UserControl.Resources>
             <Grid
@@ -932,6 +941,19 @@
                         Click="Button_Click"
                         Tag="{Binding}"
                         Tapped="Button_Tapped">
+                        <helpers:UIElementHelper.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    x:Name="NewWindow"
+                                    x:Uid="/Feed/NewWindow"
+                                    Click="Button_Click"
+                                    Tag="{Binding}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </helpers:UIElementHelper.ContextFlyout>
                         <TextBlock
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
