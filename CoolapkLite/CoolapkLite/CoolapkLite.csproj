@@ -139,7 +139,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
-    <IsNetCore463 Condition="'$(TargetPlatformMinVersion)' == '10.0.16299.0'">True</IsNetCore463>
+    <IsNetCore463 Condition="'$(TargetPlatformMinVersion)' != '' and '$(TargetPlatformMinVersion)' &gt;= '10.0.15138.0'">True</IsNetCore463>
     <IsNetCore463 Condition="'$(IsNetCore463)' == ''">False</IsNetCore463>
     <AppxManifestName Condition="'$(AppxManifestName)' == ''">Package.appxmanifest</AppxManifestName>
     <DefineConstants Condition="'$(IsNetCore463)' == 'True'">$(DefineConstants);NETCORE463</DefineConstants>
