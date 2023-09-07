@@ -16,6 +16,9 @@ namespace CoolapkLite.Controls
         // TODO: Remove once ApplicationViewMode::Spanning is available in the SDK
         private const int c_ApplicationViewModeSpanning = 2;
 
+        // TODO: Remove once AppWindowPresentationKind::Spanning is available in the SDK
+        private const int c_AppWindowPresentationKindSpanning = 3;
+
         public static DisplayRegionHelper GetDisplayRegionHelperInstance()
         {
             if (Instance == null)
@@ -25,7 +28,7 @@ namespace CoolapkLite.Controls
             return Instance;
         }
 
-        public static DisplayRegionHelperInfo GetRegionInfo()
+        public static DisplayRegionHelperInfo GetRegionInfo(UIElement element)
         {
             DisplayRegionHelper instance = GetDisplayRegionHelperInstance();
 
@@ -52,6 +55,33 @@ namespace CoolapkLite.Controls
                 else
                 {
                     info.Regions[0] = m_simulateWide0;
+                }
+            }
+            else if (element.IsAppWindow())
+            {
+                AppWindow window = element.GetWindowForElement();
+
+                if (window != null && window.Presenter.GetConfiguration().Kind == (AppWindowPresentationKind)c_AppWindowPresentationKindSpanning)
+                {
+                    IReadOnlyList<DisplayRegion> rects = window.GetDisplayRegions();
+
+                    if (rects.Count == 2)
+                    {
+                        info.Regions[0] = rects[0].WorkAreaSize.ToRect(rects[0].WorkAreaOffset);
+                        info.Regions[1] = rects[1].WorkAreaSize.ToRect(rects[1].WorkAreaOffset);
+
+                        // Determine orientation. If neither of these are true, default to doing nothing.
+                        if (info.Regions[0].X < info.Regions[1].X && info.Regions[0].Y == info.Regions[1].Y)
+                        {
+                            // Double portrait
+                            info.Mode = TwoPaneViewMode.Wide;
+                        }
+                        else if (info.Regions[0].X == info.Regions[1].X && info.Regions[0].Y < info.Regions[1].Y)
+                        {
+                            // Double landscape
+                            info.Mode = TwoPaneViewMode.Tall;
+                        }
+                    }
                 }
             }
             else if (ApiInfoHelper.IsApplicationViewViewModeSupported)
@@ -95,7 +125,7 @@ namespace CoolapkLite.Controls
         }
 
         /* static */
-        public static UIElement WindowElement()
+        public static UIElement WindowElement(UIElement element)
         {
             DisplayRegionHelper instance = GetDisplayRegionHelperInstance();
 
@@ -103,33 +133,42 @@ namespace CoolapkLite.Controls
             {
                 // Instead of returning the actual window, find the SimulatedWindow element
                 UIElement window = null;
+                UIElement xamlRoot = element.GetXAMLRoot();
 
-                if (Window.Current.Content is FrameworkElement fe)
+                if (xamlRoot is FrameworkElement fe)
                 {
                     window = fe.FindDescendant("SimulatedWindow");
                 }
 
-                return window ?? Window.Current.Content;
+                return window ?? xamlRoot;
             }
             else
             {
-                return Window.Current.Content;
+                return element.GetXAMLRoot();
             }
         }
 
         /* static */
-        public static Rect WindowRect()
+        public static Rect WindowRect(UIElement element)
         {
             DisplayRegionHelper instance = GetDisplayRegionHelperInstance();
 
             if (instance.m_simulateDisplayRegions)
             {
                 // Return the bounds of the simulated window
-                FrameworkElement window = WindowElement() as FrameworkElement;
+                FrameworkElement window = WindowElement(element) as FrameworkElement;
                 Rect rc = new Rect(
                     0, 0,
                     window.ActualWidth,
                     window.ActualHeight);
+                return rc;
+            }
+            else if (element.IsAppWindow())
+            {
+                Rect rc = new Rect(
+                    0, 0,
+                    element.XamlRoot.Size.Width,
+                    element.XamlRoot.Size.Height);
                 return rc;
             }
             else

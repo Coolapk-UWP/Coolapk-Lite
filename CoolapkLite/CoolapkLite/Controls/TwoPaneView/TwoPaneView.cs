@@ -44,10 +44,28 @@ namespace CoolapkLite.Controls
             SizeChanged += OnSizeChanged;
             Loaded += (sender, args) =>
             {
-                Window.Current.SizeChanged -= OnWindowSizeChanged;
-                Window.Current.SizeChanged += OnWindowSizeChanged;
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= OnXamlRootSizeChanged;
+                    XamlRoot.Changed += OnXamlRootSizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= OnWindowSizeChanged;
+                    window.SizeChanged += OnWindowSizeChanged;
+                }
             };
-            Unloaded += (sender, args) => Window.Current.SizeChanged -= OnWindowSizeChanged;
+            Unloaded += (sender, args) =>
+            {
+                if (WindowHelper.IsXamlRootSupported && XamlRoot != null)
+                {
+                    XamlRoot.Changed -= OnXamlRootSizeChanged;
+                }
+                else if (Window.Current is Window window)
+                {
+                    window.SizeChanged -= OnWindowSizeChanged;
+                }
+            };
         }
 
         /// <summary>
@@ -101,6 +119,11 @@ namespace CoolapkLite.Controls
             UpdateMode();
         }
 
+        private void OnXamlRootSizeChanged(XamlRoot sender, XamlRootChangedEventArgs args)
+        {
+            UpdateMode();
+        }
+
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateMode();
@@ -117,7 +140,7 @@ namespace CoolapkLite.Controls
             ViewMode newMode = (PanePriority == TwoPaneViewPriority.Pane1) ? ViewMode.Pane1Only : ViewMode.Pane2Only;
 
             // Calculate new mode
-            DisplayRegionHelperInfo info = DisplayRegionHelper.GetRegionInfo();
+            DisplayRegionHelperInfo info = DisplayRegionHelper.GetRegionInfo(this);
             Rect rcControl = GetControlRect();
             bool isInMultipleRegions = IsInMultipleRegions(info, rcControl);
 
@@ -249,7 +272,7 @@ namespace CoolapkLite.Controls
                 {
                     Rect rc1 = info.Regions[0];
                     Rect rc2 = info.Regions[1];
-                    Rect rcWindow = DisplayRegionHelper.WindowRect();
+                    Rect rcWindow = DisplayRegionHelper.WindowRect(this);
 
                     if (info.Mode == TwoPaneViewMode.Wide)
                     {
@@ -272,7 +295,7 @@ namespace CoolapkLite.Controls
         private Rect GetControlRect()
         {
             // Find out where this control is in the window
-            GeneralTransform transform = TransformToVisual(DisplayRegionHelper.WindowElement());
+            GeneralTransform transform = TransformToVisual(DisplayRegionHelper.WindowElement(this));
             return transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
         }
 

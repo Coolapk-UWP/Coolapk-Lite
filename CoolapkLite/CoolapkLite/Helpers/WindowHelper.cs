@@ -122,6 +122,12 @@ namespace CoolapkLite.Helpers
                     ? window.Bounds.ToSize()
                     : CoreApplication.MainView.CoreWindow.Bounds.ToSize();
 
+        public static UIElement GetXAMLRoot(this UIElement element) =>
+            IsXamlRootSupported && element.XamlRoot != null
+                ? element.XamlRoot.Content
+                : Window.Current is Window window
+                    ? window.Content : null;
+
         public static void SetXAMLRoot(this UIElement element, UIElement target)
         {
             if (IsXamlRootSupported)
