@@ -1,5 +1,4 @@
-﻿using Windows.Foundation.Metadata;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 
@@ -43,21 +42,21 @@ namespace CoolapkLite.Helpers
         {
             if (d is MenuFlyoutItem item)
             {
-                if (e.NewValue is IconElement IconElement && ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.MenuFlyoutItem", "Icon"))
+                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsMenuFlyoutItemIconSupported)
                 {
                     item.Icon = IconElement;
                 }
             }
             else if (d is MenuFlyoutSubItem subitem)
             {
-                if (e.NewValue is IconElement IconElement && ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.MenuFlyoutSubItem", "Icon"))
+                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsMenuFlyoutSubItemIconSupported)
                 {
                     subitem.Icon = IconElement;
                 }
             }
             else if (d is ToggleMenuFlyoutItem toggle)
             {
-                if (e.NewValue is IconElement IconElement && ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ToggleMenuFlyoutItem", "Icon"))
+                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsToggleMenuFlyoutItemIconSupported)
                 {
                     toggle.Icon = IconElement;
                 }
@@ -102,7 +101,7 @@ namespace CoolapkLite.Helpers
         {
             if (d is FlyoutBase flyout)
             {
-                if (e.NewValue is bool ShouldConstrainToRootBounds && ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Primitives.FlyoutBase", "ShouldConstrainToRootBounds"))
+                if (e.NewValue is bool ShouldConstrainToRootBounds && ApiInfoHelper.IsShouldConstrainToRootBoundsSupported)
                 {
                     flyout.ShouldConstrainToRootBounds = ShouldConstrainToRootBounds;
                 }

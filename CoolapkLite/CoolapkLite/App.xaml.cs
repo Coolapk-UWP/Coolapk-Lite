@@ -15,7 +15,6 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.System;
 using Windows.System.Profile;
@@ -45,7 +44,7 @@ namespace CoolapkLite
             Suspending += OnSuspending;
             UnhandledException += Application_UnhandledException;
 
-            if (ApiInformation.IsEnumNamedValuePresent("Windows.UI.Xaml.FocusVisualKind", "Reveal"))
+            if (ApiInfoHelper.IsRevealFocusVisualKindSupported)
             {
                 FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
             }
@@ -79,7 +78,7 @@ namespace CoolapkLite
                 RegisterBackgroundTask();
                 RegisterExceptionHandlingSynchronizationContext();
 
-                if (ApiInformation.IsTypePresent("Windows.UI.StartScreen.JumpList") && JumpList.IsSupported())
+                if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
                 {
                     JumpList JumpList = await JumpList.LoadCurrentAsync();
                     JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
@@ -120,7 +119,7 @@ namespace CoolapkLite
             {
                 if (!args.PrelaunchActivated)
                 {
-                    if (ApiInformation.IsMethodPresent("Windows.ApplicationModel.Core.CoreApplication", "EnablePrelaunch"))
+                    if (ApiInfoHelper.IsEnablePrelaunchSupported)
                     {
                         CoreApplication.EnablePrelaunch(true);
                     }
@@ -209,7 +208,7 @@ namespace CoolapkLite
 
         private async void RequestWIFIAccess()
         {
-            if (ApiInformation.IsMethodPresent("Windows.Security.Authorization.AppCapabilityAccess.AppCapability", "Create"))
+            if (ApiInfoHelper.IsAppCapabilitySupported)
             {
                 AppCapability WIFIData = AppCapability.Create("wifiData");
                 switch (WIFIData.CheckAccess())
@@ -268,7 +267,7 @@ namespace CoolapkLite
 
         private static async void RegisterBackgroundTask()
         {
-            if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2"))
+            if (!ApiInfoHelper.IsTileActivatedInfoSupported)
             { return; }
 
             // Check for background access (optional)

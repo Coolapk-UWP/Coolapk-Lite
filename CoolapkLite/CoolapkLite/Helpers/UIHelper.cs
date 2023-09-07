@@ -18,7 +18,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -36,7 +35,7 @@ namespace CoolapkLite.Helpers
         public static bool IsShowingProgressBar, IsShowingMessage;
         public static List<string> MessageList { get; } = new List<string>();
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-        public static bool HasStatusBar => ApiInformation.IsTypePresent("Windows.UI.ViewManagement.StatusBar");
+        public static bool HasStatusBar => ApiInfoHelper.IsStatusBarSupported;
 
         public static IHaveTitleBar AppTitle { get; internal set; }
 
@@ -722,8 +721,7 @@ namespace CoolapkLite.Helpers
                     {
                         return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' '));
                     }
-                    else if (ApiInformation.IsPropertyPresent("Windows.ApplicationModel.Activation.LaunchActivatedEventArgs", "TileActivatedInfo")
-                            && LaunchActivatedEventArgs.TileActivatedInfo != null)
+                    else if (ApiInfoHelper.IsTileActivatedInfoSupported && LaunchActivatedEventArgs.TileActivatedInfo != null)
                     {
                         if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
                         {
@@ -790,7 +788,7 @@ namespace CoolapkLite.Helpers
                     }
                     return false;
                 case (ActivationKind)1021:
-                    if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ICommandLineActivatedEventArgs"))
+                    if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported)
                     {
                         ICommandLineActivatedEventArgs CommandLineActivatedEventArgs = (ICommandLineActivatedEventArgs)args;
                         return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)

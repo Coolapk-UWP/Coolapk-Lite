@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
@@ -114,7 +113,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseBlurBrush))
             {
-                LocalObject.Save(IsUseBlurBrush, ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"));
+                LocalObject.Save(IsUseBlurBrush, ApiInfoHelper.IsXamlCompositionBrushBaseSupported);
             }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
@@ -122,7 +121,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
-                LocalObject.Save(IsUseCompositor, ApiInformation.IsMethodPresent("Windows.UI.Xaml.Hosting.ElementCompositionPreview", "GetElementVisual"));
+                LocalObject.Save(IsUseCompositor, ApiInfoHelper.IsGetElementVisualSupported);
             }
             if (!LocalObject.KeyExists(CurrentLanguage))
             {

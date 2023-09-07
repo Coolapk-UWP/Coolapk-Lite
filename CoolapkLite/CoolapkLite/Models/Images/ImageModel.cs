@@ -14,7 +14,6 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -30,7 +29,7 @@ namespace CoolapkLite.Models.Images
 
         private readonly Action<UISettingChangedType> UISettingChanged;
 
-        public static bool IsAutoPlaySupported => ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Media.Imaging.BitmapImage", "AutoPlay");
+        public static bool IsAutoPlaySupported { get; } = ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
         public CoreDispatcher Dispatcher { get; private set; }
 

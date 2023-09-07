@@ -1,5 +1,4 @@
-﻿using Windows.Foundation.Metadata;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers
 {
@@ -42,7 +41,7 @@ namespace CoolapkLite.Helpers
 
         private static void OnFocusVisualMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "FocusVisualMargin"))
+            if (ApiInfoHelper.IsFocusVisualMarginSupported)
             {
                 ((FrameworkElement)d).FocusVisualMargin = GetFocusVisualMargin((FrameworkElement)d);
             }

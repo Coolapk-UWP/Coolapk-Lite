@@ -1,7 +1,7 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Linq;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -72,7 +72,7 @@ namespace CoolapkLite.Controls
                     PivotLayoutElement.RowDefinitions.First().Height = new GridLength(0, GridUnitType.Pixel);
                 }
             }
-            else if (!(ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "IsLoaded") && Pivot.IsLoaded))
+            else if (!(ApiInfoHelper.IsFrameworkElementIsLoadedSupported && Pivot.IsLoaded))
             {
                 Pivot.Loaded += (sender, args) =>
                 {

@@ -2,7 +2,6 @@
 using CoolapkLite.Helpers;
 using System;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
@@ -17,7 +16,7 @@ namespace CoolapkLite.Common
         //private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         public static bool IsSearchPaneSupported { get; } = /*ApiInformation.IsTypePresent("Windows.ApplicationModel.Search.SearchPane")*/false;
-        public static bool IsSettingsPaneSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane");
+        public static bool IsSettingsPaneSupported { get; } = ApiInfoHelper.IsSettingsPaneSupported;
 
         public SettingsPaneRegister(Window window)
         {

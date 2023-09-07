@@ -1,5 +1,5 @@
-﻿using Windows.Foundation;
-using Windows.Foundation.Metadata;
+﻿using CoolapkLite.Helpers;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -125,7 +125,7 @@ namespace CoolapkLite.Controls
             CornerRadius value()
             {
                 double cornerRadiusValue = ActualHeight / 2;
-                return ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Control", "CornerRadiusProperty")
+                return ApiInfoHelper.IsCornerRadiusSupported
                     ? ReadLocalValue(CornerRadiusProperty) == DependencyProperty.UnsetValue
                         ? new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue)
                         : CornerRadius

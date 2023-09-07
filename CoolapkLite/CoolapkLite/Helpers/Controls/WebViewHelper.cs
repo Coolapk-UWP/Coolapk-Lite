@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -74,7 +73,7 @@ namespace CoolapkLite.Helpers
         private static void OnMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             WebView element = (WebView)d;
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "IsLoaded") && element.IsLoaded)
+            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
                 Thickness margin = GetMargin(element);
                 UpdateMargin(element, margin);
@@ -118,7 +117,7 @@ namespace CoolapkLite.Helpers
         private static void OnIsVerticalStretchChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             WebView element = (WebView)d;
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "IsLoaded") && element.IsLoaded)
+            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
                 bool isVerticalStretch = GetIsVerticalStretch(element);
                 UpdateIsVerticalStretch(element, isVerticalStretch);
@@ -197,7 +196,7 @@ namespace CoolapkLite.Helpers
         private static void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             WebView element = (WebView)d;
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "IsLoaded"))
+            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
             {
                 if (element.IsLoaded)
                 {

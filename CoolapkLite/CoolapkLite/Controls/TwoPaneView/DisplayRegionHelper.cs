@@ -1,8 +1,8 @@
-﻿using Microsoft.Toolkit.Uwp;
+﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -54,7 +54,7 @@ namespace CoolapkLite.Controls
                     info.Regions[0] = m_simulateWide0;
                 }
             }
-            else if (ApiInformation.IsTypePresent("Windows.UI.ViewManagement.IApplicationView4"))
+            else if (ApiInfoHelper.IsApplicationViewViewModeSupported)
             {
                 // ApplicationView::GetForCurrentView throws on failure; in that case we just won't do anything.
                 ApplicationView view = null;
@@ -66,7 +66,7 @@ namespace CoolapkLite.Controls
 
                 if (view != null && view.ViewMode == (ApplicationViewMode)c_ApplicationViewModeSpanning)
                 {
-                    if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "GetDisplayRegions"))
+                    if (ApiInfoHelper.IsGetDisplayRegionsSupported)
                     {
                         IReadOnlyList<DisplayRegion> rects = view.GetDisplayRegions();
 

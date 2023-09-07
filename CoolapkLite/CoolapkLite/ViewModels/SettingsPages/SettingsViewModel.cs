@@ -10,7 +10,6 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
@@ -304,12 +303,12 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
                 dialog.SetXAMLRoot(element);
 
-                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
+                if (ApiInfoHelper.IsDefaultButtonSupported)
                 {
                     dialog.DefaultButton = ContentDialogButton.Primary;
                 }
 
-                if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
+                if (ApiInfoHelper.IsCloseButtonTextSupported)
                 {
                     dialog.CloseButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
                 }

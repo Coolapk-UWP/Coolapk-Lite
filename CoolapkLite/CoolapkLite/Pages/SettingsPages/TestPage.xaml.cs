@@ -12,7 +12,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Search;
-using Windows.Foundation.Metadata;
 using Windows.Globalization;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
@@ -74,7 +73,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OutPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
-                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                    else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
                     break;
@@ -84,7 +83,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "EnterPIP":
                     if (this.IsAppWindow())
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
-                    else if (ApiInformation.IsMethodPresent("Windows.UI.ViewManagement.ApplicationView", "IsViewModeSupported")
+                    else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
                     break;
@@ -174,7 +173,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
                     break;
                 case "MinimizeApp":
-                    if (ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo"))
+                    if (ApiInfoHelper.IsAppDiagnosticInfoSupported)
                     { _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync(); }
                     break;
                 case "OutFullWindow":

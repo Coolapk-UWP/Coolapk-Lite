@@ -2,11 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Windows.Input;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -97,7 +97,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Gets a value indicating whether <see cref="RefreshContainer"/> is supported
         /// </summary>
-        public static bool IsRefreshContainerSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.RefreshContainer");
+        public static bool IsRefreshContainerSupported { get; } = ApiInfoHelper.IsRefreshContainerSupported;
 
         private const string PartRoot = "Root";
         private const string PartScroller = "ScrollViewer";

@@ -3,7 +3,6 @@ using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
 using Newtonsoft.Json.Linq;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -37,11 +36,11 @@ namespace CoolapkLite.Controls.Dialogs
         {
             InitializeComponent();
             APIVersion = APIVersion.Parse(line);
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "DefaultButton"))
+            if (ApiInfoHelper.IsDefaultButtonSupported)
             {
                 DefaultButton = ContentDialogButton.Primary;
             }
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ContentDialog", "CloseButtonText"))
+            if (ApiInfoHelper.IsCloseButtonTextSupported)
             {
                 CloseButtonText = ResourceLoader.GetForViewIndependentUse().GetString("Cancel");
             }

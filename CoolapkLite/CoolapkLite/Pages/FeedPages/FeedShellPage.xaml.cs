@@ -8,7 +8,6 @@ using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
@@ -77,7 +76,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async void GenerateActivityAsync()
         {
-            if (!ApiInformation.IsTypePresent("Windows.ApplicationModel.UserActivities.UserActivityChannel"))
+            if (!ApiInfoHelper.IsUserActivityChannelSupported)
             { return; }
 
             // Get the default UserActivityChannel and query it for our UserActivity. If the activity doesn't exist, one is created.

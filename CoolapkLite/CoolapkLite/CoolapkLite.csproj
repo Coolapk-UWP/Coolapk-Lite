@@ -270,6 +270,7 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
+    <Compile Include="Helpers\WinSDKHelper.cs" />
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
     <Compile Include="Helpers\Controls\WebViewHelper.cs" />

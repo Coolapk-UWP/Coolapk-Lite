@@ -1,6 +1,6 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
+﻿using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.UI;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -72,7 +72,7 @@ namespace CoolapkLite.Controls
 
         private void SetScrollViewerProperties(string scrollViewerName)
         {
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollContentPresenter", "SizesContentToTemplatedParent"))
+            if (ApiInfoHelper.IsSizesContentToTemplatedParentSupported)
             {
                 if (GetTemplateChild(scrollViewerName) is ScrollViewer scrollViewer)
                 {

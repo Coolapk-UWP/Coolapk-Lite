@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
@@ -25,8 +24,8 @@ namespace CoolapkLite.Helpers
     /// </summary>
     public static class WindowHelper
     {
-        public static bool IsAppWindowSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
-        public static bool IsXamlRootSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "XamlRoot");
+        public static bool IsAppWindowSupported { get; } = ApiInfoHelper.IsAppWindowSupported;
+        public static bool IsXamlRootSupported { get; } = ApiInfoHelper.IsXamlRootSupported;
 
         public static async Task<bool> CreateWindowAsync(Action<Window> launched)
         {

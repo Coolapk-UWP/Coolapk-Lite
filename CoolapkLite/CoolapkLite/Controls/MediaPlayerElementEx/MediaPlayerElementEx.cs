@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Windows.Foundation.Metadata;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
@@ -22,7 +21,7 @@ namespace CoolapkLite.Controls
     {
         private const string MediaElementName = "PART_MediaElement";
         private const string MediaElementBorderName = "PART_MediaElementBorder";
-        public static bool IsMediaPlayerElementSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.MediaPlayerElement");
+        public static bool IsMediaPlayerElementSupported { get; } = ApiInfoHelper.IsMediaPlayerElementSupported;
 
         private Uri _mediaUri;
         private FrameworkElement MediaElementBorder;

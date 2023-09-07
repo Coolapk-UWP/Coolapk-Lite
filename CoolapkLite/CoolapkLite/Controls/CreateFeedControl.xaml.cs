@@ -15,7 +15,6 @@ using UnicodeStyle;
 using UnicodeStyle.Models;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
@@ -308,13 +307,13 @@ namespace CoolapkLite.Controls
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.CommandBarFlyout"))
+            if (ApiInfoHelper.IsCommandBarFlyoutSupported)
             {
                 InputBox.ContextFlyout.Opening += Menu_Opening;
                 InputBox.ContextFlyout.Closing += Menu_Closing;
             }
 
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.RichEditBox", "SelectionFlyout"))
+            if (ApiInfoHelper.IsSelectionFlyoutSupported)
             {
                 InputBox.SelectionFlyout.Opening += Menu_Opening;
                 InputBox.SelectionFlyout.Closing += Menu_Closing;

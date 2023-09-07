@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using System;
-using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 
 namespace CoolapkLite.Common
@@ -13,17 +12,17 @@ namespace CoolapkLite.Common
         {
             if (SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush))
             {
-                if (ApiInformation.IsMethodPresent("Windows.UI.Composition.Compositor", "TryCreateBlurredWallpaperBackdropBrush"))
+                if (ApiInfoHelper.IsTryCreateBlurredWallpaperBackdropBrushSupported)
                 {
                     AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
                     AddResourceDictionary("ms-appx:///Styles/Brushes/ThemeResources.21H2.xaml");
                 }
-                else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.AcrylicBrush"))
+                else if (ApiInfoHelper.IsAcrylicBrushSupported)
                 {
                     AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
                     AddResourceDictionary("ms-appx:///Styles/Brushes/ThemeResources.RS3.xaml");
                 }
-                else if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Media.XamlCompositionBrushBase"))
+                else if (ApiInfoHelper.IsXamlCompositionBrushBaseSupported)
                 {
                     AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS2.xaml");
                     AddResourceDictionary("ms-appx:///Styles/Brushes/ThemeResources.RS2.xaml");

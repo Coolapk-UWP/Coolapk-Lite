@@ -8,7 +8,6 @@ using System.ComponentModel;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
-using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -93,7 +92,7 @@ namespace CoolapkLite.Pages
             {
                 Provider = ViewModel;
             }
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed += System_BackPressed; }
             Provider.PropertyChanged += Provider_PropertyChanged;
         }
@@ -116,7 +115,7 @@ namespace CoolapkLite.Pages
                 TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
                 Frame.Navigated -= On_Navigated;
             }
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed -= System_BackPressed; }
             Provider.PropertyChanged -= Provider_PropertyChanged;
         }

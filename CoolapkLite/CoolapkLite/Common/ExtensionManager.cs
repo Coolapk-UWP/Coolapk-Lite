@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +11,6 @@ using Windows.ApplicationModel.AppExtensions;
 using Windows.ApplicationModel.AppService;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.Foundation.Metadata;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -26,7 +26,7 @@ namespace CoolapkLite.Common
     {
         public const string OSSUploader = "CoolapkUWP.OSSUploader";
 
-        public static bool IsSupported { get; } = ApiInformation.IsTypePresent("Windows.ApplicationModel.AppExtensions.AppExtension");
+        public static bool IsSupported { get; } = ApiInfoHelper.IsAppExtensionSupported;
         public static ExtensionManager Instance { get; } = IsSupported ? new ExtensionManager(OSSUploader) : null;
 
         private CoreDispatcher _dispatcher; // used to run code on the UI thread for code that may update UI

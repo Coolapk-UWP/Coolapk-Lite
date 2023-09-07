@@ -1,5 +1,5 @@
-﻿using System;
-using Windows.Foundation.Metadata;
+﻿using CoolapkLite.Helpers;
+using System;
 using Windows.UI.Xaml;
 
 namespace CoolapkLite.Common
@@ -10,7 +10,7 @@ namespace CoolapkLite.Common
 
         private void AddResource()
         {
-            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.MediaPlayerElement"))
+            if (ApiInfoHelper.IsMediaPlayerElementSupported)
             {
                 AddResourceDictionary("ms-appx:///Controls/MediaPlayerElementEx/MediaPlayerElementEx.ThemeResources.RS1.xaml");
             }

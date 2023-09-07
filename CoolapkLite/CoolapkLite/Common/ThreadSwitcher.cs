@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CoolapkLite.Helpers;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.Core;
@@ -72,7 +72,7 @@ namespace CoolapkLite.Common
 
     public static class ThreadSwitcher
     {
-        public static bool IsHasThreadAccessPropertyAvailable { get; } = ApiInformation.IsMethodPresent("Windows.System.DispatcherQueue", "HasThreadAccess");
+        public static bool IsHasThreadAccessPropertyAvailable { get; } = ApiInfoHelper.IsHasThreadAccessSupported;
 
         public static DispatcherQueueThreadSwitcher ResumeForegroundAsync(this DispatcherQueue dispatcher) => new DispatcherQueueThreadSwitcher(dispatcher);
 

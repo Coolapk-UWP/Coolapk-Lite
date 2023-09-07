@@ -21,7 +21,6 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation.Metadata;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -60,7 +59,7 @@ namespace CoolapkLite.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed += System_BackPressed; }
             // Add handler for ContentFrame navigation.
             HamburgerMenuFrame.Navigated += On_Navigated;
@@ -92,7 +91,7 @@ namespace CoolapkLite.Pages
                 TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
                 TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             }
-            if (ApiInformation.IsTypePresent("Windows.Phone.UI.Input.HardwareButtons"))
+            if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed -= System_BackPressed; }
             HamburgerMenuFrame.Navigated -= On_Navigated;
         }
