@@ -239,23 +239,13 @@ namespace CoolapkLite.Controls
                 {
                     switch (fromType.ToString())
                     {
-                        case "weiboDirect":
-                            if (request.TryGetValue("0", out JToken url))
-                            {
-                                GetWeiboVideo(url.ToString());
-                            }
+                        case "weiboDirect" when request.TryGetValue("0", out JToken url):
+                            GetWeiboVideo(url.ToString());
                             break;
-                        case "biliBiliNormal2":
-                            if (json.TryGetValue("playHeaders", out JToken playHeaders))
-                            {
-                                if (request.TryGetValue("0", out JToken avid))
-                                {
-                                    if (request.TryGetValue("1", out JToken cid))
-                                    {
-                                        GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
-                                    }
-                                }
-                            }
+                        case "biliBiliNormal2" when json.TryGetValue("playHeaders", out JToken playHeaders)
+                                                 && request.TryGetValue("0", out JToken avid)
+                                                 && request.TryGetValue("1", out JToken cid):
+                            GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
                             break;
                         default:
                             break;

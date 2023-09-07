@@ -39,11 +39,11 @@ namespace CoolapkLite.ViewModels.DataSource
                         if (Models.Count > 0) { _currentPage++; }
                         if (SubProvider == null)
                         {
-                            await Provider.GetEntityAsync(Models, Dispatcher, _currentPage).ConfigureAwait(false);
+                            await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
                         }
                         else
                         {
-                            await SubProvider.GetEntityAsync(Models, Dispatcher, _currentPage).ConfigureAwait(false);
+                            await SubProvider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
                         }
                         if (Models.Count <= 0 || Models.Count <= temp) { break; }
                     }
@@ -52,11 +52,11 @@ namespace CoolapkLite.ViewModels.DataSource
                 {
                     if (SubProvider == null)
                     {
-                        await Provider.GetEntityAsync(Models, Dispatcher, _currentPage).ConfigureAwait(false);
+                        await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
                     }
                     else
                     {
-                        await SubProvider.GetEntityAsync(Models, Dispatcher, _currentPage).ConfigureAwait(false);
+                        await SubProvider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
                     }
                 }
             }

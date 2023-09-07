@@ -172,9 +172,8 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OpenBrowser":
                     _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
                     break;
-                case "MinimizeApp":
-                    if (ApiInfoHelper.IsAppDiagnosticInfoSupported)
-                    { _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync(); }
+                case "MinimizeApp" when ApiInfoHelper.IsAppDiagnosticInfoSupported:
+                    _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync();
                     break;
                 case "OutFullWindow":
                     if (this.IsAppWindow())
@@ -200,17 +199,14 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "ErrorProgressBar":
                     this.ErrorProgressBar();
                     break;
-                case "OpenCharmSearch":
-                    if (SettingsPaneRegister.IsSearchPaneSupported)
-                    { SearchPane.GetForCurrentView().Show(); }
+                case "OpenCharmSearch" when SettingsPaneRegister.IsSearchPaneSupported:
+                    SearchPane.GetForCurrentView().Show();
                     break;
-                case "GoToExtensionPage":
-                    if (ExtensionManager.IsSupported)
-                    { _ = Frame.Navigate(typeof(ExtensionPage)); }
+                case "GoToExtensionPage" when ExtensionManager.IsSupported:
+                    _ = Frame.Navigate(typeof(ExtensionPage));
                     break;
-                case "OpenCharmSettings":
-                    if (SettingsPaneRegister.IsSettingsPaneSupported)
-                    { SettingsPane.Show(); }
+                case "OpenCharmSettings" when SettingsPaneRegister.IsSettingsPaneSupported:
+                    SettingsPane.Show();
                     break;
                 case "PausedProgressBar":
                     this.PausedProgressBar();

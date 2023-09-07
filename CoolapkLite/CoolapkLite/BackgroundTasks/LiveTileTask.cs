@@ -49,15 +49,15 @@ namespace CoolapkLite.BackgroundTasks
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
             if (isSucceed)
             {
-                JArray array = (JArray)result;
+                JArray array = result as JArray;
                 if (array.Count < 1) { return; }
-                foreach (JToken item in array.Take(5))
+                foreach (JObject item in array.Take(5).OfType<JObject>())
                 {
-                    if (((JObject)item).TryGetValue("entityType", out JToken entityType))
+                    if (item.TryGetValue("entityType", out JToken entityType))
                     {
                         if (entityType.ToString() == "feed" || entityType.ToString() == "discovery")
                         {
-                            UpdateTile(GetFeedTile((JObject)item));
+                            UpdateTile(GetFeedTile(item));
                         }
                     }
                 }

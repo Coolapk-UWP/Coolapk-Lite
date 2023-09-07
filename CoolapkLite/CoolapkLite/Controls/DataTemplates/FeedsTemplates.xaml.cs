@@ -64,8 +64,7 @@ namespace CoolapkLite.Controls.DataTemplates
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "NewWindow":
-                    if (!(element.Tag is FeedReplyModel replyModel)) { return; }
+                case "NewWindow" when element.Tag is FeedReplyModel replyModel:
                     _ = element.Dispatcher.NavigateOutsideAsync(typeof(AdaptivePage), (dispatcher) => AdaptiveViewModel.GetReplyListProvider(replyModel.ID.ToString(), dispatcher, replyModel));
                     break;
                 case "SeeAllButton":

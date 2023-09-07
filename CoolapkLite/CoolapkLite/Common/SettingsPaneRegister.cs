@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -110,17 +111,17 @@ namespace CoolapkLite.Common
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
-                        foreach (JToken token in array)
+                        foreach (JObject token in array.OfType<JObject>())
                         {
                             string key = string.Empty;
                             switch (token.Value<string>("entityType"))
                             {
                                 case "apk":
-                                    key = new AppModel(token as JObject).Title;
+                                    key = new AppModel(token).Title;
                                     break;
                                 case "searchWord":
                                 default:
-                                    key = new SearchWord(token as JObject).ToString();
+                                    key = new SearchWord(token).ToString();
                                     break;
                             }
                             if (!string.IsNullOrEmpty(key) && !results.Contains(key))

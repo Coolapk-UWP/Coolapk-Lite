@@ -29,6 +29,19 @@
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Tag="{x:Bind Url}"
                         Tapped="FrameworkElement_Tapped">
+                        <helpers:UIElementHelper.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    x:Name="NewWindow"
+                                    x:Uid="/Feed/NewWindow"
+                                    Click="Button_Click"
+                                    Tag="{x:Bind Url}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </helpers:UIElementHelper.ContextFlyout>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />

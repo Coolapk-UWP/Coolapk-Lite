@@ -207,32 +207,32 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("entities", out JToken entities) && (entities as JArray).Count > 0)
             {
-                ImmutableArray<Entity>.Builder buider = ImmutableArray.CreateBuilder<Entity>();
-                foreach (JObject item in entities as JArray)
+                ImmutableArray<Entity>.Builder builder = ImmutableArray.CreateBuilder<Entity>();
+                foreach (JObject item in entities.OfType<JObject>())
                 {
                     if (item.TryGetValue("entityType", out JToken entityType))
                     {
                         switch (entityType.ToString())
                         {
                             case "feed":
-                                buider.Add(new FeedModel(item));
+                                builder.Add(new FeedModel(item));
                                 break;
 
                             case "user":
-                                buider.Add(new UserModel(item));
+                                builder.Add(new UserModel(item));
                                 break;
 
                             case "collection":
-                                buider.Add(new CollectionModel(item));
+                                builder.Add(new CollectionModel(item));
                                 break;
 
                             default:
-                                buider.Add(new IndexPageModel(item));
+                                builder.Add(new IndexPageModel(item));
                                 break;
                         }
                     }
                 }
-                Entities = buider.ToImmutable();
+                Entities = builder.ToImmutable();
                 ShowEntities = true;
             }
             else { ShowEntities = false; }
@@ -328,8 +328,8 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("entities", out JToken entities) && (entities as JArray).Count > 0)
             {
-                ImmutableArray<Entity>.Builder buider = ImmutableArray.CreateBuilder<Entity>();
-                foreach (JObject item in entities as JArray)
+                ImmutableArray<Entity>.Builder builder = ImmutableArray.CreateBuilder<Entity>();
+                foreach (JObject item in entities.OfType<JObject>())
                 {
                     if (item.TryGetValue("entityType", out JToken entityType))
                     {
@@ -338,25 +338,25 @@ namespace CoolapkLite.Models
                         switch (entityType.ToString())
                         {
                             case "feed":
-                                buider.Add(new FeedModel(item));
+                                builder.Add(new FeedModel(item));
                                 break;
 
                             case "user":
-                                buider.Add(new UserModel(item));
+                                builder.Add(new UserModel(item));
                                 break;
 
                             case "collection":
-                                buider.Add(new CollectionModel(item));
+                                builder.Add(new CollectionModel(item));
                                 break;
 
                             default:
-                                buider.Add(new IndexPageModel(item));
+                                builder.Add(new IndexPageModel(item));
                                 break;
                         }
                     }
                 }
 
-                Entities = buider.ToImmutable();
+                Entities = builder.ToImmutable();
                 ShowEntities = true;
             }
             else { ShowEntities = false; }

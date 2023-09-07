@@ -715,8 +715,7 @@ namespace CoolapkLite.Helpers
             await ThreadSwitcher.ResumeBackgroundAsync();
             switch (args.Kind)
             {
-                case ActivationKind.Launch:
-                    LaunchActivatedEventArgs LaunchActivatedEventArgs = (LaunchActivatedEventArgs)args;
+                case ActivationKind.Launch when args is LaunchActivatedEventArgs LaunchActivatedEventArgs:
                     if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
                     {
                         return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' '));
@@ -730,8 +729,7 @@ namespace CoolapkLite.Helpers
                         }
                     }
                     return false;
-                case ActivationKind.Search:
-                    ISearchActivatedEventArgs SearchActivatedEventArgs = (ISearchActivatedEventArgs)args;
+                case ActivationKind.Search when args is ISearchActivatedEventArgs SearchActivatedEventArgs:
                     return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher));
                 case ActivationKind.Protocol:
                 case ActivationKind.ProtocolForResults:
@@ -769,8 +767,7 @@ namespace CoolapkLite.Helpers
                         default:
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
                     }
-                case ActivationKind.ToastNotification:
-                    IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs = (IToastNotificationActivatedEventArgs)args;
+                case ActivationKind.ToastNotification when args is IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs:
                     ToastArguments arguments = ToastArguments.Parse(ToastNotificationActivatedEventArgs.Argument);
                     if (arguments.TryGetValue("action", out string action))
                     {
@@ -787,10 +784,10 @@ namespace CoolapkLite.Helpers
                         }
                     }
                     return false;
-                case (ActivationKind)1021:
+                case (ActivationKind)1021 when ApiInfoHelper.IsICommandLineActivatedEventArgsSupported
+                                            && args is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs:
                     if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported)
                     {
-                        ICommandLineActivatedEventArgs CommandLineActivatedEventArgs = (ICommandLineActivatedEventArgs)args;
                         return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
                             && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' '));
                     }

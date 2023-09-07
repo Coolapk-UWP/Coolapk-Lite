@@ -108,6 +108,11 @@ namespace CoolapkLite.Models.Images
         {
             get
             {
+                if (Dispatcher == null)
+                {
+                    Dispatcher = UIHelper.TryGetForCurrentCoreDispatcher();
+                }
+
                 if (pic != null && pic.TryGetTarget(out BitmapImage image))
                 {
                     return image;
@@ -169,13 +174,8 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        public ImageModel(string uri, ImageType type) : this(uri, type, UIHelper.TryGetForCurrentCoreDispatcher())
+        public ImageModel(string uri, ImageType type)
         {
-        }
-
-        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
             Uri = uri;
             Type = type;
             UISettingChanged = async (mode) =>
@@ -188,20 +188,23 @@ namespace CoolapkLite.Models.Images
                         {
                             if (pic != null && pic.TryGetTarget(out BitmapImage _))
                             {
+                                if (Dispatcher == null) { return; }
                                 Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
                             }
                         }
                         break;
 
-                    case UISettingChangedType.NoPicChanged:
-                        if (pic != null && pic.TryGetTarget(out BitmapImage _))
-                        {
-                            _ = GetImageAsync();
-                        }
+                    case UISettingChangedType.NoPicChanged when pic != null && pic.TryGetTarget(out BitmapImage _):
+                        _ = GetImageAsync();
                         break;
                 }
             };
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
+        }
+
+        public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher) : this(uri, type)
+        {
+            Dispatcher = dispatcher;
         }
 
         ~ImageModel()
@@ -220,6 +223,7 @@ namespace CoolapkLite.Models.Images
 
         private async Task GetImageAsync()
         {
+            if (Dispatcher == null) { return; }
             await ThreadSwitcher.ResumeBackgroundAsync();
             try
             {

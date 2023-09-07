@@ -27,29 +27,45 @@ namespace CoolapkLite.ViewModels.Providers
 
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
-        public async Task GetEntityAsync<T>(ICollection<T> Models, CoreDispatcher dispatcher, int p = 1) where T : Entity
+        public async Task GetEntityAsync<T>(List<T> Models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
-                JArray array = (JArray)result.result;
+                JArray array = result.result as JArray;
                 if (array.Count < 1) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
                     _firstItem = RequestHelper.GetId(array.First, _idName);
                 }
                 _lastItem = RequestHelper.GetId(array.Last, _idName);
-                foreach (JObject item in array)
+                foreach (JObject item in array.OfType<JObject>())
                 {
-                    if (dispatcher?.HasThreadAccess == false)
-                    {
-                        await dispatcher.ResumeForegroundAsync();
-                    }
-
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
+                    Models.AddRange(entities.OfType<T>());
+                }
+            }
+        }
 
+        public async Task GetEntityAsync<T>(ICollection<T> Models, int p = 1) where T : Entity
+        {
+            if (p == 1) { Clear(); }
+            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
+            if (result.isSucceed)
+            {
+                JArray array = result.result as JArray;
+                if (array.Count < 1) { return; }
+                if (string.IsNullOrEmpty(_firstItem))
+                {
+                    _firstItem = RequestHelper.GetId(array.First, _idName);
+                }
+                _lastItem = RequestHelper.GetId(array.Last, _idName);
+                foreach (JObject item in array.OfType<JObject>())
+                {
+                    IEnumerable<Entity> entities = GetEntities(item);
+                    if (entities == null) { continue; }
                     foreach (Entity entity in entities)
                     {
                         if (entity is T model)
@@ -61,29 +77,23 @@ namespace CoolapkLite.ViewModels.Providers
             }
         }
 
-        public async Task GetEntityAsync<T>(IEnumerable<T> Models, CoreDispatcher dispatcher, int p = 1) where T : Entity
+        public async Task GetEntityAsync<T>(IEnumerable<T> Models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
-                JArray array = (JArray)result.result;
+                JArray array = result.result as JArray;
                 if (array.Count < 1) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
                     _firstItem = RequestHelper.GetId(array.First, _idName);
                 }
                 _lastItem = RequestHelper.GetId(array.Last, _idName);
-                foreach (JObject item in array)
+                foreach (JObject item in array.OfType<JObject>())
                 {
-                    if (dispatcher?.HasThreadAccess == false)
-                    {
-                        await dispatcher.ResumeForegroundAsync();
-                    }
-
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
-
                     Models = Models.Concat(entities.OfType<T>());
                 }
             }

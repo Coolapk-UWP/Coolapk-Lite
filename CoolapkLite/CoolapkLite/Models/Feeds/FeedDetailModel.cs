@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System.Linq;
 using System.Text;
 
 namespace CoolapkLite.Models.Feeds
@@ -116,25 +117,19 @@ namespace CoolapkLite.Models.Feeds
                     StringBuilder builder = new StringBuilder();
                     if (token.TryGetValue("message_raw_output", out JToken message_raw_output))
                     {
-                        foreach (JObject item in JArray.Parse(message_raw_output.ToString()))
+                        foreach (JObject item in JArray.Parse(message_raw_output.ToString()).OfType<JObject>())
                         {
                             if (item.TryGetValue("type", out JToken type))
                             {
                                 switch (type.ToString())
                                 {
-                                    case "text":
-                                        if (item.TryGetValue("message", out JToken message))
-                                        {
-                                            _ = builder.Append(message.ToString());
-                                        }
+                                    case "text" when item.TryGetValue("message", out JToken message):
+                                        _ = builder.Append(message.ToString());
                                         break;
 
-                                    case "image":
-                                        if (item.TryGetValue("url", out JToken url) || item.TryGetValue("uri", out url))
-                                        {
-                                            item.TryGetValue("description", out JToken description);
-                                            _ = builder.AppendFormat("<img src=\"{0}\" alt=\"{1}\"/>", url, description);
-                                        }
+                                    case "image" when item.TryGetValue("url", out JToken url) || item.TryGetValue("uri", out url):
+                                        item.TryGetValue("description", out JToken description);
+                                        _ = builder.AppendFormat("<img src=\"{0}\" alt=\"{1}\"/>", url, description);
                                         break;
                                 }
                             }

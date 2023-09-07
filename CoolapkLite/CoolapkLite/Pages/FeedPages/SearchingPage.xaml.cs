@@ -10,6 +10,7 @@ using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -134,16 +135,16 @@ namespace CoolapkLite.Pages.FeedPages
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
-                        foreach (JToken token in array)
+                        foreach (JObject token in array.OfType<JObject>())
                         {
                             switch (token.Value<string>("entityType"))
                             {
                                 case "apk":
-                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token as JObject)));
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token)));
                                     break;
                                 case "searchWord":
                                 default:
-                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token)));
                                     break;
                             }
                         }

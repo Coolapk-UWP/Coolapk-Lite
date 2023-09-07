@@ -130,7 +130,7 @@ namespace CoolapkLite.Helpers
 
                 if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
                 {
-                    foreach (FrameworkElement element in appWindows.Keys)
+                    foreach (FrameworkElement element in appWindows.Keys.OfType<FrameworkElement>())
                     {
                         element.RequestedTheme = value;
                     }
@@ -158,7 +158,7 @@ namespace CoolapkLite.Helpers
 
                 if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
                 {
-                    foreach (FrameworkElement element in appWindows.Keys)
+                    foreach (FrameworkElement element in appWindows.Keys.OfType<FrameworkElement>())
                     {
                         element.RequestedTheme = value;
                     }

@@ -263,16 +263,16 @@ namespace CoolapkLite.Pages
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
-                        foreach (JToken token in array)
+                        foreach (JObject token in array.OfType<JObject>())
                         {
                             switch (token.Value<string>("entityType"))
                             {
                                 case "apk":
-                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token as JObject)));
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new AppModel(token)));
                                     break;
                                 case "searchWord":
                                 default:
-                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token as JObject)));
+                                    await Dispatcher.AwaitableRunAsync(() => observableCollection.Add(new SearchWord(token)));
                                     break;
                             }
                         }

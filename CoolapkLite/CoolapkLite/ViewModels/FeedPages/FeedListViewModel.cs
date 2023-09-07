@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -620,16 +621,16 @@ namespace CoolapkLite.ViewModels.FeedPages
                 (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionContents, ID, "1", ""), true);
                 if (isSucceed)
                 {
-                    JArray array = (JArray)result;
-                    foreach (JObject item in array)
+                    JArray array = result as JArray;
+                    foreach (JObject item in array.OfType<JObject>())
                     {
                         if (item.TryGetValue("entityTemplate", out JToken entityTemplate) && entityTemplate.ToString() == "selectorLinkCard")
                         {
                             if (item.TryGetValue("entities", out JToken v1))
                             {
-                                JArray entities = (JArray)v1;
+                                JArray entities = v1 as JArray;
                                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
-                                foreach (JObject entity in entities)
+                                foreach (JObject entity in entities.OfType<JObject>())
                                 {
                                     if (entity.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
                                     {

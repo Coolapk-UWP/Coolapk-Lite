@@ -349,9 +349,8 @@ namespace CoolapkLite.Models.Feeds
 
                 if (relationRows != null)
                 {
-                    foreach (JToken i in relationRows)
+                    foreach (JToken item in relationRows.OfType<JObject>())
                     {
-                        JObject item = i as JObject;
                         buider.Add(
                             new RelationRowsItem(
                                 item.Value<string>("title"),
@@ -492,6 +491,8 @@ namespace CoolapkLite.Models.Feeds
                 }
             }
         }
+
+        public override string ToString() => Title;
     }
 
     public class RelationRowsItem
@@ -524,5 +525,7 @@ namespace CoolapkLite.Models.Feeds
             Title = title;
             Logo = logo;
         }
+
+        public override string ToString() => Title;
     }
 }

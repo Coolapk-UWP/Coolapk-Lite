@@ -283,7 +283,7 @@ namespace CoolapkLite.Models.Feeds
                 {
                     bool hasTag = false;
                     StringBuilder builder = new StringBuilder();
-                    foreach (JObject v in contents)
+                    foreach (JObject v in contents.OfType<JObject>())
                     {
                         if (v.TryGetValue("content", out JToken content) && v.TryGetValue("type", out JToken type))
                         {

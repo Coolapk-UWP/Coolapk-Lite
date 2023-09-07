@@ -8,6 +8,7 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
@@ -208,9 +209,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             else if (json.TryGetValue("entityTemplate", out JToken tt) && tt?.ToString() == "fabCard") { yield return null; }
             else if (tt?.ToString() == "feedCoolPictureGridCard")
             {
-                foreach (JToken item in json.Value<JArray>("entities"))
+                foreach (JObject item in json.Value<JArray>("entities").OfType<JObject>())
                 {
-                    Entity entity = EntityTemplateSelector.GetEntity((JObject)item, IsHotFeedPage);
+                    Entity entity = EntityTemplateSelector.GetEntity(item, IsHotFeedPage);
                     if (entity != null)
                     {
                         yield return entity;

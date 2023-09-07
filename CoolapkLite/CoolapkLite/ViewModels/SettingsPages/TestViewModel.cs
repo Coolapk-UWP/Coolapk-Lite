@@ -40,7 +40,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsXamlCompositionBrushSupported { get; } = ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
 
-        public List<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+        public IEnumerable<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
 
         public string FrameworkDescription => RuntimeInformation.FrameworkDescription;
 

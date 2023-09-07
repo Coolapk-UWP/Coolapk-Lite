@@ -74,6 +74,9 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = Provider.Bookmarks.Remove(element.Tag as Bookmark);
                     _ = Refresh();
                     break;
+                case "NewWindow":
+                    _ = Dispatcher.OpenLinkOutsideAsync(element.Tag?.ToString());
+                    break;
             }
         }
 

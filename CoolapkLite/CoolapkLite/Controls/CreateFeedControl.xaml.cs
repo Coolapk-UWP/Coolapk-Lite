@@ -485,12 +485,9 @@ namespace CoolapkLite.Controls
                 {
                     switch (args.VirtualKey)
                     {
-                        case VirtualKey.V:
-                            if (PastePic.IsEnabled)
-                            {
-                                _ = Provider.DropFileAsync(Clipboard.GetContent());
-                                args.Handled = true;
-                            }
+                        case VirtualKey.V when PastePic.IsEnabled:
+                            _ = Provider.DropFileAsync(Clipboard.GetContent());
+                            args.Handled = true;
                             break;
                     }
                 }
