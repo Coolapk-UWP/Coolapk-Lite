@@ -18,7 +18,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
-using Windows.Data.Xml.Dom;
 using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Core;
@@ -721,39 +720,15 @@ namespace CoolapkLite.Helpers
                     LaunchActivatedEventArgs LaunchActivatedEventArgs = (LaunchActivatedEventArgs)args;
                     if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
                     {
-                        switch (LaunchActivatedEventArgs.Arguments)
-                        {
-                            case "me":
-                                return await frame.NavigateAsync(typeof(ProfilePage));
-                            case "home":
-                                return await frame.NavigateAsync(typeof(IndexPage));
-                            case "flags":
-                                return await frame.NavigateAsync(typeof(TestPage));
-                            case "circle":
-                                return await frame.NavigateAsync(typeof(CirclePage));
-                            case "search":
-                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty, frame.Dispatcher));
-                            case "history":
-                                return await frame.NavigateAsync(typeof(HistoryPage));
-                            case "settings":
-                                return await frame.NavigateAsync(typeof(SettingsPage));
-                            case "favorites":
-                                return await frame.NavigateAsync(typeof(BookmarkPage));
-                            case "extensions":
-                                return await frame.NavigateAsync(typeof(ExtensionPage));
-                            case "notifications":
-                                return await frame.NavigateAsync(typeof(NotificationsPage));
-                            default:
-                                return await frame.OpenLinkAsync(LaunchActivatedEventArgs.Arguments);
-                        }
+                        return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' '));
                     }
-                    else if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ILaunchActivatedEventArgs2")
+                    else if (ApiInformation.IsPropertyPresent("Windows.ApplicationModel.Activation.LaunchActivatedEventArgs", "TileActivatedInfo")
                             && LaunchActivatedEventArgs.TileActivatedInfo != null)
                     {
                         if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
                         {
                             string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
-                            return !string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments) && await frame.OpenLinkAsync(TileArguments);
+                            return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' '));
                         }
                     }
                     return false;
@@ -809,6 +784,8 @@ namespace CoolapkLite.Helpers
                                     _ = frame.LaunchUriAsync(uri);
                                 }
                                 break;
+                            case "hasNotification":
+                                return await frame.NavigateAsync(typeof(NotificationsPage));
                         }
                     }
                     return false;
@@ -816,39 +793,46 @@ namespace CoolapkLite.Helpers
                     if (ApiInformation.IsTypePresent("Windows.ApplicationModel.Activation.ICommandLineActivatedEventArgs"))
                     {
                         ICommandLineActivatedEventArgs CommandLineActivatedEventArgs = (ICommandLineActivatedEventArgs)args;
-                        if (!string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments))
-                        {
-                            switch (CommandLineActivatedEventArgs.Operation.Arguments)
-                            {
-                                case "me":
-                                    return await frame.NavigateAsync(typeof(ProfilePage));
-                                case "home":
-                                    return await frame.NavigateAsync(typeof(IndexPage));
-                                case "flags":
-                                    return await frame.NavigateAsync(typeof(TestPage));
-                                case "circle":
-                                    return await frame.NavigateAsync(typeof(CirclePage));
-                                case "search":
-                                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(string.Empty, frame.Dispatcher));
-                                case "history":
-                                    return await frame.NavigateAsync(typeof(HistoryPage));
-                                case "settings":
-                                    return await frame.NavigateAsync(typeof(SettingsPage));
-                                case "favorites":
-                                    return await frame.NavigateAsync(typeof(BookmarkPage));
-                                case "extensions":
-                                    return await frame.NavigateAsync(typeof(ExtensionPage));
-                                case "notifications":
-                                    return await frame.NavigateAsync(typeof(NotificationsPage));
-                                default:
-                                    return await frame.OpenLinkAsync(CommandLineActivatedEventArgs.Operation.Arguments);
-                            }
-                        }
+                        return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
+                            && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' '));
                     }
                     return false;
                 default:
                     return false;
             }
+        }
+
+        private static async Task<bool> ProcessArgumentsAsync(Frame frame, string[] arguments)
+        {
+            if (arguments.Length >= 1)
+            {
+                switch (arguments[0])
+                {
+                    case "me":
+                        return await frame.NavigateAsync(typeof(ProfilePage));
+                    case "home":
+                        return await frame.NavigateAsync(typeof(IndexPage));
+                    case "flags":
+                        return await frame.NavigateAsync(typeof(TestPage));
+                    case "circle":
+                        return await frame.NavigateAsync(typeof(CirclePage));
+                    case "search":
+                        return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(arguments.Length >= 2 ? arguments[1] : string.Empty, frame.Dispatcher));
+                    case "history":
+                        return await frame.NavigateAsync(typeof(HistoryPage));
+                    case "settings":
+                        return await frame.NavigateAsync(typeof(SettingsPage));
+                    case "favorites":
+                        return await frame.NavigateAsync(typeof(BookmarkPage));
+                    case "extensions":
+                        return await frame.NavigateAsync(typeof(ExtensionPage));
+                    case "notifications":
+                        return await frame.NavigateAsync(typeof(NotificationsPage));
+                    default:
+                        return await frame.OpenLinkAsync(arguments[0]);
+                }
+            }
+            return false;
         }
 
         private static string Substring(this string str, int startIndex, string endString)

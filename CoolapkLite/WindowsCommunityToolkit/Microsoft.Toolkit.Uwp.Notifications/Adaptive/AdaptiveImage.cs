@@ -17,6 +17,11 @@ namespace Microsoft.Toolkit.Uwp.Notifications
         IAdaptiveSubgroupChild
     {
         /// <summary>
+        /// Gets or sets the id of this image. Use for lock screen notification.
+        /// </summary>
+        public int? Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the desired cropping of the image.
         /// Supported on Tiles since RTM. Supported on Toast since Anniversary Update.
         /// </summary>
@@ -81,6 +86,7 @@ namespace Microsoft.Toolkit.Uwp.Notifications
         {
             Element_AdaptiveImage image = BaseImageHelper.CreateBaseElement(this);
 
+            image.Id = Id;
             image.Crop = HintCrop;
             image.RemoveMargin = HintRemoveMargin;
             image.Align = HintAlign;
