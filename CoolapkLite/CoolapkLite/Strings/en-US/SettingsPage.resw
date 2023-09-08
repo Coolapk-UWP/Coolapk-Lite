@@ -211,7 +211,7 @@
     <value>View cache images</value>
   </data>
   <data name="OpenLogFileItem.Text" xml:space="preserve">
-    <value>Open Recent Log</value>
+    <value>Open recent log</value>
   </data>
   <data name="OpenCacheFolder.Text" xml:space="preserve">
     <value>Open cache directory</value>
