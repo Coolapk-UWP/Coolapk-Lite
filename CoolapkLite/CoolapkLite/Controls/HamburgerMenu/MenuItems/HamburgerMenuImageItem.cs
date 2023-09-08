@@ -12,25 +12,27 @@ namespace CoolapkLite.Controls
     /// </summary>
     public class HamburgerMenuImageItem : HamburgerMenuItem
     {
+        #region Thumbnail
+
         /// <summary>
         /// Identifies the <see cref="Thumbnail"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty ThumbnailProperty = DependencyProperty.Register(nameof(Thumbnail), typeof(ImageSource), typeof(HamburgerMenuItem), new PropertyMetadata(null));
+        public static readonly DependencyProperty ThumbnailProperty =
+            DependencyProperty.Register(
+                nameof(Thumbnail),
+                typeof(ImageSource),
+                typeof(HamburgerMenuItem),
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Gets or sets a value that specifies a bitmap to display with an Image control.
         /// </summary>
         public ImageSource Thumbnail
         {
-            get
-            {
-                return (ImageSource)GetValue(ThumbnailProperty);
-            }
-
-            set
-            {
-                SetValue(ThumbnailProperty, value);
-            }
+            get => (ImageSource)GetValue(ThumbnailProperty);
+            set => SetValue(ThumbnailProperty, value);
         }
+
+        #endregion
     }
 }

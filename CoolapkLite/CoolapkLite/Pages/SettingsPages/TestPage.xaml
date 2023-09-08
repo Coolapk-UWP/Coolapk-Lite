@@ -127,27 +127,29 @@
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="界面测试">
                     <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind Provider.IsExtendsTitleBar, Mode=TwoWay}" />
-                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                        <Button
-                            Click="Button_Click"
-                            Content="进入全屏模式"
-                            Tag="EnterFullWindow" />
-                        <Button
-                            Click="Button_Click"
-                            Content="退出"
-                            Tag="OutFullWindow" />
-                    </control:StackPanelEx>
-                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                        <Button
-                            Click="Button_Click"
-                            Content="进入画中画模式"
-                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
-                            Tag="EnterPIP" />
-                        <Button
-                            Click="Button_Click"
-                            Content="退出"
-                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
-                            Tag="OutPIP" />
+                    <control:StackPanelEx Spacing="4">
+                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                            <Button
+                                Click="Button_Click"
+                                Content="进入全屏模式"
+                                Tag="EnterFullWindow" />
+                            <Button
+                                Click="Button_Click"
+                                Content="退出"
+                                Tag="OutFullWindow" />
+                        </control:StackPanelEx>
+                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                            <Button
+                                Click="Button_Click"
+                                Content="进入画中画模式"
+                                IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
+                                Tag="EnterPIP" />
+                            <Button
+                                Click="Button_Click"
+                                Content="退出"
+                                IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
+                                Tag="OutPIP" />
+                        </control:StackPanelEx>
                     </control:StackPanelEx>
                     <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind Provider.IsUseLiteHome, Mode=TwoWay}" />
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">
@@ -213,25 +215,27 @@
                     </control:StackPanelEx>
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="应用测试">
-                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                    <control:StackPanelEx Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="关闭应用"
-                            Tag="CloseApp" />
-                        <Button
-                            Click="Button_Click"
-                            Content="重启应用"
-                            Tag="RestartApp" />
-                        <Button
-                            Click="Button_Click"
-                            Content="最小化应用"
-                            IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
-                            Tag="MinimizeApp" />
+                            Content="执行 GC 清理"
+                            Tag="GCCollect" />
+                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                            <Button
+                                Click="Button_Click"
+                                Content="关闭应用"
+                                Tag="CloseApp" />
+                            <Button
+                                Click="Button_Click"
+                                Content="重启应用"
+                                Tag="RestartApp" />
+                            <Button
+                                Click="Button_Click"
+                                Content="最小化应用"
+                                IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
+                                Tag="MinimizeApp" />
+                        </control:StackPanelEx>
                     </control:StackPanelEx>
-                    <Button
-                        Click="Button_Click"
-                        Content="执行 GC 清理"
-                        Tag="GCCollect" />
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="文本测试">
                     <TextBox

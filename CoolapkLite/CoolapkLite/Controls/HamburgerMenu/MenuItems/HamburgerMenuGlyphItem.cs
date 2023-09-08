@@ -11,25 +11,27 @@ namespace CoolapkLite.Controls
     /// </summary>
     public class HamburgerMenuGlyphItem : HamburgerMenuItem
     {
+        #region Glyph
+
         /// <summary>
         /// Identifies the <see cref="Glyph"/> dependency property.
         /// </summary>
-        public static readonly DependencyProperty GlyphProperty = DependencyProperty.Register(nameof(Glyph), typeof(string), typeof(HamburgerMenuItem), new PropertyMetadata(null));
+        public static readonly DependencyProperty GlyphProperty =
+            DependencyProperty.Register(
+                nameof(Glyph),
+                typeof(string),
+                typeof(HamburgerMenuItem),
+                new PropertyMetadata(null));
 
         /// <summary>
         /// Gets or sets a value that specifies the glyph to use from Segoe MDL2 Assets font.
         /// </summary>
         public string Glyph
         {
-            get
-            {
-                return (string)GetValue(GlyphProperty);
-            }
-
-            set
-            {
-                SetValue(GlyphProperty, value);
-            }
+            get => (string)GetValue(GlyphProperty);
+            set => SetValue(GlyphProperty, value);
         }
+
+        #endregion
     }
 }

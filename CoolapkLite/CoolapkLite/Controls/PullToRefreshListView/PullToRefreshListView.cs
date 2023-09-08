@@ -29,72 +29,6 @@ namespace CoolapkLite.Controls
     public class PullToRefreshListView : ListView
     {
         /// <summary>
-        /// Identifies the <see cref="OverscrollLimit"/> property.
-        /// </summary>
-        public static readonly DependencyProperty OverscrollLimitProperty =
-            DependencyProperty.Register(nameof(OverscrollLimit), typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(0.4, OverscrollLimitPropertyChanged));
-
-        /// <summary>
-        /// Identifies the <see cref="PullThreshold"/> property.
-        /// </summary>
-        public static readonly DependencyProperty PullThresholdProperty =
-            DependencyProperty.Register(nameof(PullThreshold), typeof(double), typeof(PullToRefreshListView), new PropertyMetadata(100.0));
-
-        /// <summary>
-        /// Identifies the <see cref="RefreshCommand"/> property.
-        /// </summary>
-        public static readonly DependencyProperty RefreshCommandProperty =
-            DependencyProperty.Register(nameof(RefreshCommand), typeof(ICommand), typeof(PullToRefreshListView), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RefreshIntentCanceledCommand"/> property.
-        /// </summary>
-        public static readonly DependencyProperty RefreshIntentCanceledCommandProperty =
-            DependencyProperty.Register(nameof(RefreshIntentCanceledCommand), typeof(ICommand), typeof(PullToRefreshListView), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="RefreshIndicatorContent"/> property.
-        /// </summary>
-        public static readonly DependencyProperty RefreshIndicatorContentProperty =
-            DependencyProperty.Register(nameof(RefreshIndicatorContent), typeof(object), typeof(PullToRefreshListView), new PropertyMetadata(null));
-
-        /// <summary>
-        /// Identifies the <see cref="PullToRefreshLabel"/> property.
-        /// </summary>
-        public static readonly DependencyProperty PullToRefreshLabelProperty =
-            DependencyProperty.Register(nameof(PullToRefreshLabel), typeof(object), typeof(PullToRefreshListView), new PropertyMetadata("Pull To Refresh", OnPullToRefreshLabelChanged));
-
-        /// <summary>
-        /// Identifies the <see cref="ReleaseToRefreshLabel"/> property.
-        /// </summary>
-        public static readonly DependencyProperty ReleaseToRefreshLabelProperty =
-            DependencyProperty.Register(nameof(ReleaseToRefreshLabel), typeof(object), typeof(PullToRefreshListView), new PropertyMetadata("Release to Refresh", OnReleaseToRefreshLabelChanged));
-
-        /// <summary>
-        /// Identifies the <see cref="PullToRefreshContent"/> property.
-        /// </summary>
-        public static readonly DependencyProperty PullToRefreshContentProperty =
-            DependencyProperty.Register(nameof(PullToRefreshContent), typeof(object), typeof(PullToRefreshListView), new PropertyMetadata("Pull To Refresh"));
-
-        /// <summary>
-        /// Identifies the <see cref="ReleaseToRefreshContent"/> property.
-        /// </summary>
-        public static readonly DependencyProperty ReleaseToRefreshContentProperty =
-            DependencyProperty.Register(nameof(ReleaseToRefreshContent), typeof(object), typeof(PullToRefreshListView), new PropertyMetadata("Release to Refresh"));
-
-        /// <summary>
-        /// IsPullToRefreshWithMouseEnabled Dependency Property
-        /// </summary>
-        public static readonly DependencyProperty IsPullToRefreshWithMouseEnabledProperty =
-            DependencyProperty.Register(nameof(IsPullToRefreshWithMouseEnabled), typeof(bool), typeof(PullToRefreshListView), new PropertyMetadata(false));
-
-        /// <summary>
-        /// Identifies the <see cref="UseRefreshContainerWhenPossible"/> dependency property
-        /// </summary>
-        public static readonly DependencyProperty UseRefreshContainerWhenPossibleProperty =
-            DependencyProperty.Register(nameof(UseRefreshContainerWhenPossible), typeof(bool), typeof(PullToRefreshListView), new PropertyMetadata(false, OnUseRefreshContainerWhenPossibleChanged));
-
-        /// <summary>
         /// Gets a value indicating whether <see cref="RefreshContainer"/> is supported
         /// </summary>
         public static bool IsRefreshContainerSupported { get; } = ApiInfoHelper.IsRefreshContainerSupported;
@@ -133,15 +67,333 @@ namespace CoolapkLite.Controls
 
         private bool UsingRefreshContainer => IsRefreshContainerSupported && UseRefreshContainerWhenPossible;
 
+        #region OverscrollLimit
+
+        /// <summary>
+        /// Identifies the <see cref="OverscrollLimit"/> property.
+        /// </summary>
+        public static readonly DependencyProperty OverscrollLimitProperty =
+            DependencyProperty.Register(
+                nameof(OverscrollLimit),
+                typeof(double),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(0.4, OverscrollLimitPropertyChanged));
+
+        /// <summary>
+        /// Gets or sets the Overscroll Limit. Value between 0 and 1 where 1 is the height of the control. Default is 0.3
+        /// </summary>
+        public double OverscrollLimit
+        {
+            get => (double)GetValue(OverscrollLimitProperty);
+            set => SetValue(OverscrollLimitProperty, value);
+        }
+
+        private static void OverscrollLimitPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            double value = (double)e.NewValue;
+            PullToRefreshListView view = d as PullToRefreshListView;
+
+            view._overscrollMultiplier = value >= 0 && value <= 1
+                ? value * 8
+                : throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
+        }
+
+        #endregion
+
+        #region PullThreshold
+
+        /// <summary>
+        /// Identifies the <see cref="PullThreshold"/> property.
+        /// </summary>
+        public static readonly DependencyProperty PullThresholdProperty =
+            DependencyProperty.Register(
+                nameof(PullThreshold),
+                typeof(double),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(100.0));
+
+        /// <summary>
+        /// Gets or sets the PullThreshold in pixels for when Refresh should be Requested. Default is 100
+        /// </summary>
+        public double PullThreshold
+        {
+            get => (double)GetValue(PullThresholdProperty);
+            set => SetValue(PullThresholdProperty, value);
+        }
+
+        #endregion
+
+        #region RefreshCommand
+
+        /// <summary>
+        /// Identifies the <see cref="RefreshCommand"/> property.
+        /// </summary>
+        public static readonly DependencyProperty RefreshCommandProperty =
+            DependencyProperty.Register(
+                nameof(RefreshCommand),
+                typeof(ICommand),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the Command that will be invoked when Refresh is requested
+        /// </summary>
+        public ICommand RefreshCommand
+        {
+            get => (ICommand)GetValue(RefreshCommandProperty);
+            set => SetValue(RefreshCommandProperty, value);
+        }
+
+        #endregion
+
+        #region RefreshIntentCanceledCommand
+
+        /// <summary>
+        /// Identifies the <see cref="RefreshIntentCanceledCommand"/> property.
+        /// </summary>
+        public static readonly DependencyProperty RefreshIntentCanceledCommandProperty =
+            DependencyProperty.Register(
+                nameof(RefreshIntentCanceledCommand),
+                typeof(ICommand),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the Command that will be invoked when a refresh intent is cancled
+        /// </summary>
+        public ICommand RefreshIntentCanceledCommand
+        {
+            get => (ICommand)GetValue(RefreshIntentCanceledCommandProperty);
+            set => SetValue(RefreshIntentCanceledCommandProperty, value);
+        }
+
+        #endregion
+
+        #region RefreshIndicatorContent
+
+        /// <summary>
+        /// Identifies the <see cref="RefreshIndicatorContent"/> property.
+        /// </summary>
+        public static readonly DependencyProperty RefreshIndicatorContentProperty =
+            DependencyProperty.Register(
+                nameof(RefreshIndicatorContent),
+                typeof(object),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(null));
+
+        /// <summary>
+        /// Gets or sets the Content of the Refresh Indicator
+        /// </summary>
+        public object RefreshIndicatorContent
+        {
+            get => GetValue(RefreshIndicatorContentProperty);
+            set
+            {
+                if (_defaultIndicatorContent != null && _pullAndReleaseIndicatorContent != null)
+                {
+                    _defaultIndicatorContent.Visibility = Visibility.Collapsed;
+                }
+                else if (_defaultIndicatorContent != null)
+                {
+                    _defaultIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                if (_pullAndReleaseIndicatorContent != null)
+                {
+                    _pullAndReleaseIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
+                }
+
+                SetValue(RefreshIndicatorContentProperty, value);
+            }
+        }
+
+        #endregion
+
+        #region PullToRefreshLabel
+
+        /// <summary>
+        /// Identifies the <see cref="PullToRefreshLabel"/> property.
+        /// </summary>
+        public static readonly DependencyProperty PullToRefreshLabelProperty =
+            DependencyProperty.Register(
+                nameof(PullToRefreshLabel),
+                typeof(object),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata("Pull To Refresh", OnPullToRefreshLabelChanged));
+
+        /// <summary>
+        /// Gets or sets the label that will be shown when the user pulls down to refresh.
+        /// Note: This label will only show up if <see cref="RefreshIndicatorContent" /> is null
+        /// </summary>
+        public string PullToRefreshLabel
+        {
+            get => (string)GetValue(PullToRefreshLabelProperty);
+            set => SetValue(PullToRefreshLabelProperty, value);
+        }
+
+        private static void OnPullToRefreshLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            d.SetValue(PullToRefreshContentProperty, e.NewValue);
+        }
+
+        #endregion
+
+        #region ReleaseToRefreshLabel
+
+        /// <summary>
+        /// Identifies the <see cref="ReleaseToRefreshLabel"/> property.
+        /// </summary>
+        public static readonly DependencyProperty ReleaseToRefreshLabelProperty =
+            DependencyProperty.Register(
+                nameof(ReleaseToRefreshLabel),
+                typeof(object),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata("Release to Refresh", OnReleaseToRefreshLabelChanged));
+
+        /// <summary>
+        /// Gets or sets the label that will be shown when the user needs to release to refresh.
+        /// Note: This label will only show up if <see cref="RefreshIndicatorContent" /> is null
+        /// </summary>
+        public string ReleaseToRefreshLabel
+        {
+            get => (string)GetValue(ReleaseToRefreshLabelProperty);
+            set => SetValue(ReleaseToRefreshLabelProperty, value);
+        }
+
+        private static void OnReleaseToRefreshLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            d.SetValue(ReleaseToRefreshLabelProperty, e.NewValue);
+        }
+
+        #endregion
+
+        #region PullToRefreshContent
+
+        /// <summary>
+        /// Identifies the <see cref="PullToRefreshContent"/> property.
+        /// </summary>
+        public static readonly DependencyProperty PullToRefreshContentProperty =
+            DependencyProperty.Register(
+                nameof(PullToRefreshContent),
+                typeof(object),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata("Pull To Refresh"));
+
+        /// <summary>
+        /// Gets or sets the content that will be shown when the user pulls down to refresh.
+        /// </summary>
+        /// <remarks>
+        /// This content will only show up if <see cref="RefreshIndicatorContent" /> is null
+        /// </remarks>
+        public object PullToRefreshContent
+        {
+            get => GetValue(PullToRefreshContentProperty);
+            set => SetValue(PullToRefreshContentProperty, value);
+        }
+
+        #endregion
+
+        #region ReleaseToRefreshContent
+
+        /// <summary>
+        /// Identifies the <see cref="ReleaseToRefreshContent"/> property.
+        /// </summary>
+        public static readonly DependencyProperty ReleaseToRefreshContentProperty =
+            DependencyProperty.Register(
+                nameof(ReleaseToRefreshContent),
+                typeof(object),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata("Release to Refresh"));
+
+        /// <summary>
+        /// Gets or sets the content that will be shown when the user needs to release to refresh.
+        /// </summary>
+        /// <remarks>
+        /// This content will only show up if <see cref="RefreshIndicatorContent" /> is null
+        /// </remarks>
+        public object ReleaseToRefreshContent
+        {
+            get => GetValue(ReleaseToRefreshContentProperty);
+            set => SetValue(ReleaseToRefreshContentProperty, value);
+        }
+
+        #endregion
+
+        #region IsPullToRefreshWithMouseEnabledProperty
+
+        /// <summary>
+        /// IsPullToRefreshWithMouseEnabled Dependency Property
+        /// </summary>
+        public static readonly DependencyProperty IsPullToRefreshWithMouseEnabledProperty =
+            DependencyProperty.Register(
+                nameof(IsPullToRefreshWithMouseEnabled),
+                typeof(bool),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(false));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether PullToRefresh is enabled with a mouse
+        /// </summary>
+        public bool IsPullToRefreshWithMouseEnabled
+        {
+            get => (bool)GetValue(IsPullToRefreshWithMouseEnabledProperty);
+            set
+            {
+                SetValue(IsPullToRefreshWithMouseEnabledProperty, value);
+                SetupMouseMode();
+            }
+        }
+
+        #endregion
+
+        #region UseRefreshContainerWhenPossible
+
+        /// <summary>
+        /// Identifies the <see cref="UseRefreshContainerWhenPossible"/> dependency property
+        /// </summary>
+        public static readonly DependencyProperty UseRefreshContainerWhenPossibleProperty =
+            DependencyProperty.Register(
+                nameof(UseRefreshContainerWhenPossible),
+                typeof(bool),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(false, OnUseRefreshContainerWhenPossibleChanged));
+
         /// <summary>
         /// Gets or sets a value indicating whether the HamburgerMenu should use the NavigationView when possible (Fall Creators Network and above)
         /// When set to true and the device supports NavigationView, the HamburgerMenu will use a template based on NavigationView
         /// </summary>
         public bool UseRefreshContainerWhenPossible
         {
-            get { return (bool)GetValue(UseRefreshContainerWhenPossibleProperty); }
-            set { SetValue(UseRefreshContainerWhenPossibleProperty, value); }
+            get => (bool)GetValue(UseRefreshContainerWhenPossibleProperty);
+            set => SetValue(UseRefreshContainerWhenPossibleProperty, value);
         }
+
+        private static void OnUseRefreshContainerWhenPossibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (!(d is PullToRefreshListView list))
+            {
+                return;
+            }
+
+            if (list.UseRefreshContainerWhenPossible && IsRefreshContainerSupported)
+            {
+                ResourceDictionary dict = new ResourceDictionary
+                {
+                    Source = new System.Uri("ms-appx:///Controls/PullToRefreshListView/PullToRefreshListViewRefreshContainerTemplate.xaml")
+                };
+                list._previousTemplateUsed = list.Template;
+                list.Template = dict["PullToRefreshListViewRefreshContainerTemplate"] as ControlTemplate;
+            }
+            else if (!list.UseRefreshContainerWhenPossible &&
+                     e.OldValue is bool oldValue &&
+                     oldValue &&
+                     list._previousTemplateUsed != null)
+            {
+                list.Template = list._previousTemplateUsed;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Occurs when the user has requested content to be refreshed
@@ -552,10 +804,8 @@ namespace CoolapkLite.Controls
                 }
 
                 _refreshIndicatorTransform.TranslateY = _isManipulatingWithMouse
-                    ? _pullDistance - offset
-                                                        - _refreshIndicatorBorder.ActualHeight
-                    : _pullDistance
-                                                        - _refreshIndicatorBorder.ActualHeight;
+                    ? _pullDistance - offset - _refreshIndicatorBorder.ActualHeight
+                    : _pullDistance - _refreshIndicatorBorder.ActualHeight;
             }
             else
             {
@@ -683,178 +933,6 @@ namespace CoolapkLite.Controls
                 {
                     RefreshCommand.Execute(null);
                 }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the Overscroll Limit. Value between 0 and 1 where 1 is the height of the control. Default is 0.3
-        /// </summary>
-        public double OverscrollLimit
-        {
-            get { return (double)GetValue(OverscrollLimitProperty); }
-            set { SetValue(OverscrollLimitProperty, value); }
-        }
-
-        private static void OverscrollLimitPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            double value = (double)e.NewValue;
-            PullToRefreshListView view = d as PullToRefreshListView;
-
-            view._overscrollMultiplier = value >= 0 && value <= 1
-                ? value * 8
-                : throw new IndexOutOfRangeException("OverscrollCoefficient has to be a double value between 0 and 1 inclusive.");
-        }
-
-        private static void OnPullToRefreshLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            d.SetValue(PullToRefreshContentProperty, e.NewValue);
-        }
-
-        private static void OnReleaseToRefreshLabelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            d.SetValue(ReleaseToRefreshLabelProperty, e.NewValue);
-        }
-
-        private static void OnUseRefreshContainerWhenPossibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (!(d is PullToRefreshListView list))
-            {
-                return;
-            }
-
-            if (list.UseRefreshContainerWhenPossible && IsRefreshContainerSupported)
-            {
-                ResourceDictionary dict = new ResourceDictionary
-                {
-                    Source = new System.Uri("ms-appx:///Controls/PullToRefreshListView/PullToRefreshListViewRefreshContainerTemplate.xaml")
-                };
-                list._previousTemplateUsed = list.Template;
-                list.Template = dict["PullToRefreshListViewRefreshContainerTemplate"] as ControlTemplate;
-            }
-            else if (!list.UseRefreshContainerWhenPossible &&
-                     e.OldValue is bool oldValue &&
-                     oldValue &&
-                     list._previousTemplateUsed != null)
-            {
-                list.Template = list._previousTemplateUsed;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the PullThreshold in pixels for when Refresh should be Requested. Default is 100
-        /// </summary>
-        public double PullThreshold
-        {
-            get { return (double)GetValue(PullThresholdProperty); }
-            set { SetValue(PullThresholdProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Command that will be invoked when Refresh is requested
-        /// </summary>
-        public ICommand RefreshCommand
-        {
-            get { return (ICommand)GetValue(RefreshCommandProperty); }
-            set { SetValue(RefreshCommandProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Command that will be invoked when a refresh intent is cancled
-        /// </summary>
-        public ICommand RefreshIntentCanceledCommand
-        {
-            get { return (ICommand)GetValue(RefreshIntentCanceledCommandProperty); }
-            set { SetValue(RefreshIntentCanceledCommandProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the Content of the Refresh Indicator
-        /// </summary>
-        public object RefreshIndicatorContent
-        {
-            get
-            {
-                return GetValue(RefreshIndicatorContentProperty);
-            }
-
-            set
-            {
-                if (_defaultIndicatorContent != null && _pullAndReleaseIndicatorContent != null)
-                {
-                    _defaultIndicatorContent.Visibility = Visibility.Collapsed;
-                }
-                else if (_defaultIndicatorContent != null)
-                {
-                    _defaultIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
-                }
-
-                if (_pullAndReleaseIndicatorContent != null)
-                {
-                    _pullAndReleaseIndicatorContent.Visibility = value == null ? Visibility.Visible : Visibility.Collapsed;
-                }
-
-                SetValue(RefreshIndicatorContentProperty, value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the label that will be shown when the user pulls down to refresh.
-        /// Note: This label will only show up if <see cref="RefreshIndicatorContent" /> is null
-        /// </summary>
-        public string PullToRefreshLabel
-        {
-            get { return (string)GetValue(PullToRefreshLabelProperty); }
-            set { SetValue(PullToRefreshLabelProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the label that will be shown when the user needs to release to refresh.
-        /// Note: This label will only show up if <see cref="RefreshIndicatorContent" /> is null
-        /// </summary>
-        public string ReleaseToRefreshLabel
-        {
-            get { return (string)GetValue(ReleaseToRefreshLabelProperty); }
-            set { SetValue(ReleaseToRefreshLabelProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the content that will be shown when the user pulls down to refresh.
-        /// </summary>
-        /// <remarks>
-        /// This content will only show up if <see cref="RefreshIndicatorContent" /> is null
-        /// </remarks>
-        public object PullToRefreshContent
-        {
-            get { return GetValue(PullToRefreshContentProperty); }
-            set { SetValue(PullToRefreshContentProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets the content that will be shown when the user needs to release to refresh.
-        /// </summary>
-        /// <remarks>
-        /// This content will only show up if <see cref="RefreshIndicatorContent" /> is null
-        /// </remarks>
-        public object ReleaseToRefreshContent
-        {
-            get { return GetValue(ReleaseToRefreshContentProperty); }
-            set { SetValue(ReleaseToRefreshContentProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether PullToRefresh is enabled with a mouse
-        /// </summary>
-        public bool IsPullToRefreshWithMouseEnabled
-        {
-            get
-            {
-                return (bool)GetValue(IsPullToRefreshWithMouseEnabledProperty);
-            }
-
-            set
-            {
-                SetValue(IsPullToRefreshWithMouseEnabledProperty, value);
-                SetupMouseMode();
             }
         }
 

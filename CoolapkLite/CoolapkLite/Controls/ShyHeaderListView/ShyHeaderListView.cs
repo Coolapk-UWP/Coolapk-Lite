@@ -29,45 +29,12 @@ namespace CoolapkLite.Controls
         private ScrollProgressProvider _progressProvider;
         private readonly bool IsUseCompositor = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInfoHelper.IsGetElementVisualSupported;
 
+        #region TopHeader
+
         public static readonly DependencyProperty TopHeaderProperty =
             DependencyProperty.Register(
                 nameof(TopHeader),
                 typeof(object),
-                typeof(ShyHeaderListView),
-                null);
-
-        public static readonly DependencyProperty FlyoutHeaderProperty =
-            DependencyProperty.Register(
-                nameof(FlyoutHeader),
-                typeof(object),
-                typeof(ShyHeaderListView),
-                null);
-
-        public static readonly DependencyProperty HeaderMarginProperty =
-            DependencyProperty.Register(
-                nameof(HeaderMargin),
-                typeof(double),
-                typeof(ShyHeaderListView),
-                new PropertyMetadata(0d));
-
-        public static readonly DependencyProperty HeaderHeightProperty =
-            DependencyProperty.Register(
-                nameof(HeaderHeight),
-                typeof(double),
-                typeof(ShyHeaderListView),
-                new PropertyMetadata(double.NaN));
-
-        public static readonly DependencyProperty HeaderBackgroundProperty =
-            DependencyProperty.Register(
-                nameof(HeaderBackground),
-                typeof(Brush),
-                typeof(ShyHeaderListView),
-                null);
-
-        public static readonly DependencyProperty TopHeaderBackgroundProperty =
-            DependencyProperty.Register(
-                nameof(TopHeaderBackground),
-                typeof(Brush),
                 typeof(ShyHeaderListView),
                 null);
 
@@ -77,11 +44,33 @@ namespace CoolapkLite.Controls
             set => SetValue(TopHeaderProperty, value);
         }
 
+        #endregion
+
+        #region FlyoutHeader
+
+        public static readonly DependencyProperty FlyoutHeaderProperty =
+            DependencyProperty.Register(
+                nameof(FlyoutHeader),
+                typeof(object),
+                typeof(ShyHeaderListView),
+                null);
+
         public object FlyoutHeader
         {
             get => GetValue(FlyoutHeaderProperty);
             set => SetValue(FlyoutHeaderProperty, value);
         }
+
+        #endregion
+
+        #region HeaderMargin
+
+        public static readonly DependencyProperty HeaderMarginProperty =
+            DependencyProperty.Register(
+                nameof(HeaderMargin),
+                typeof(double),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(0d));
 
         public double HeaderMargin
         {
@@ -89,11 +78,33 @@ namespace CoolapkLite.Controls
             set => SetValue(HeaderMarginProperty, value);
         }
 
+        #endregion
+
+        #region HeaderHeight
+
+        public static readonly DependencyProperty HeaderHeightProperty =
+            DependencyProperty.Register(
+                nameof(HeaderHeight),
+                typeof(double),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(double.NaN));
+
         public double HeaderHeight
         {
             get => (double)GetValue(HeaderHeightProperty);
             set => SetValue(HeaderHeightProperty, value);
         }
+
+        #endregion
+
+        #region HeaderBackground
+
+        public static readonly DependencyProperty HeaderBackgroundProperty =
+            DependencyProperty.Register(
+                nameof(HeaderBackground),
+                typeof(Brush),
+                typeof(ShyHeaderListView),
+                null);
 
         public Brush HeaderBackground
         {
@@ -101,12 +112,28 @@ namespace CoolapkLite.Controls
             set => SetValue(HeaderBackgroundProperty, value);
         }
 
+        #endregion
+
+        #region TopHeaderBackground
+
+        public static readonly DependencyProperty TopHeaderBackgroundProperty =
+            DependencyProperty.Register(
+                nameof(TopHeaderBackground),
+                typeof(Brush),
+                typeof(ShyHeaderListView),
+                null);
+
         public Brush TopHeaderBackground
         {
             get => (Brush)GetValue(TopHeaderBackgroundProperty);
             set => SetValue(TopHeaderBackgroundProperty, value);
         }
 
+        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShyHeaderListView"/> class.
+        /// </summary>
         public ShyHeaderListView()
         {
             DefaultStyleKey = typeof(ShyHeaderListView);

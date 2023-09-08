@@ -15,6 +15,8 @@ namespace CoolapkLite.Controls
     {
         private readonly AnimateSelectionProvider _selectionProvider;
 
+        #region Pivot
+
         public static readonly DependencyProperty PivotProperty =
             DependencyProperty.Register(
                 nameof(Pivot),
@@ -27,6 +29,8 @@ namespace CoolapkLite.Controls
             get => (Pivot)GetValue(PivotProperty);
             set => SetValue(PivotProperty, value);
         }
+
+        #endregion
 
         private static void OnPivotPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,21 +12,7 @@ namespace CoolapkLite.Controls
     /// </summary>
     public class StackPanelEx : Panel
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StackPanelEx"/> class.
-        /// </summary>
-        public StackPanelEx() { }
-
-        /// <summary>
-        /// Gets or sets the distance between the border and its child object.
-        /// </summary>
-        /// <returns>The dimensions of the space between the border and its child as a <see cref="Thickness"/> value.
-        /// <see cref="Thickness"/> is a structure that stores dimension values using pixel measures.</returns>
-        public Thickness Padding
-        {
-            get => (Thickness)GetValue(PaddingProperty);
-            set => SetValue(PaddingProperty, value);
-        }
+        #region Padding
 
         /// <summary>
         /// Identifies the <see cref="Padding"/> dependency property.
@@ -38,15 +25,19 @@ namespace CoolapkLite.Controls
                 new PropertyMetadata(null, OnLayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets a value that indicates the dimension by which child elements are
-        /// stacked.
+        /// Gets or sets the distance between the border and its child object.
         /// </summary>
-        /// <returns>The Orientation of child content.</returns>
-        public Orientation Orientation
+        /// <value>The dimensions of the space between the border and its child as a <see cref="Thickness"/> value.
+        /// <see cref="Thickness"/> is a structure that stores dimension values using pixel measures.</value>
+        public Thickness Padding
         {
-            get => (Orientation)GetValue(OrientationProperty);
-            set => SetValue(OrientationProperty, value);
+            get => (Thickness)GetValue(PaddingProperty);
+            set => SetValue(PaddingProperty, value);
         }
+
+        #endregion
+
+        #region Orientation
 
         /// <summary>
         /// Identifies the <see cref="Orientation"/> dependency property.
@@ -59,15 +50,19 @@ namespace CoolapkLite.Controls
                 new PropertyMetadata(Orientation.Vertical, OnLayoutPropertyChanged));
 
         /// <summary>
-        /// Gets or sets a uniform distance (in pixels) between stacked items. It is applied
-        /// in the direction of the StackPanelEx's Orientation.
+        /// Gets or sets the dimension by which child elements are stacked.
         /// </summary>
-        /// <returns>The uniform distance (in pixels) between stacked items.</returns>
-        public double Spacing
+        /// <value>One of the enumeration values that specifies the orientation
+        /// of child elements. The default is <see cref="Orientation.Vertical"/>.</value>
+        public Orientation Orientation
         {
-            get => (double)GetValue(SpacingProperty);
-            set => SetValue(SpacingProperty, value);
+            get => (Orientation)GetValue(OrientationProperty);
+            set => SetValue(OrientationProperty, value);
         }
+
+        #endregion
+
+        #region Spacing
 
         /// <summary>
         /// Identifies the <see cref="Spacing"/> dependency property.
@@ -79,11 +74,29 @@ namespace CoolapkLite.Controls
                 typeof(StackPanelEx),
                 new PropertyMetadata(0.0, OnLayoutPropertyChanged));
 
+        /// <summary>
+        /// Gets or sets a uniform distance (in pixels) between stacked items.
+        /// It is applied in the direction of the StackPanel's Orientation.
+        /// </summary>
+        /// <value>The uniform distance (in pixels) between stacked items.</value>
+        public double Spacing
+        {
+            get => (double)GetValue(SpacingProperty);
+            set => SetValue(SpacingProperty, value);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackPanelEx"/> class.
+        /// </summary>
+        public StackPanelEx() { }
+
         private static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue != e.OldValue)
             {
-                (d as StackPanelEx).InvalidateArrange();
+                (d as StackPanelEx).InvalidateMeasure();
             }
         }
 
@@ -92,33 +105,37 @@ namespace CoolapkLite.Controls
         /// of arranging them during the StackPanelEx.ArrangeOverride(<see cref="Size"/>)
         /// pass.
         /// </summary>
-        /// <param name="constraint">An upper limit <see cref="Size"/> that should not be exceeded.</param>
+        /// <param name="availableSize">An upper limit <see cref="Size"/> that should not be exceeded.</param>
         /// <returns>The <see cref="Size"/> that represents the desired size of the element.</returns>
-        protected override Size MeasureOverride(Size constraint)
+        protected override Size MeasureOverride(Size availableSize)
         {
-            Size stackDesiredSize = new Size();
-            UIElementCollection children = Children;
-            Size layoutSlotSize = constraint;
+            // We adjust availableSize based on our Padding and BorderThickness:
+            Thickness padding = Padding;
+            double effectiveHorizontalPadding = padding.Left + padding.Right;
+            double effectiveVerticalPadding = padding.Top + padding.Bottom;
+
             bool fHorizontal = Orientation == Orientation.Horizontal;
             double spacing = Spacing;
-            Thickness padding = Padding;
             bool hasVisibleChild = false;
+
+            Size adjustedSize = availableSize;
 
             if (fHorizontal)
             {
-                layoutSlotSize.Width = double.PositiveInfinity;
+                adjustedSize.Width = double.PositiveInfinity;
+                adjustedSize.Height -= effectiveVerticalPadding;
+                adjustedSize.Height = Math.Max(0.0, adjustedSize.Height);
             }
             else
             {
-                layoutSlotSize.Height = double.PositiveInfinity;
+                adjustedSize.Height = double.PositiveInfinity;
+                adjustedSize.Width -= effectiveHorizontalPadding;
+                adjustedSize.Width = Math.Max(0.0, adjustedSize.Width);
             }
 
-            for (int i = 0, count = children.Count; i < count; ++i)
+            Size desiredSizeUnpadded = new Size();
+            foreach (UIElement child in Children.OfType<UIElement>())
             {
-                UIElement child = children[i];
-
-                if (child == null) { continue; }
-
                 bool isVisible = child.Visibility != Visibility.Collapsed;
 
                 if (isVisible && !hasVisibleChild)
@@ -126,72 +143,84 @@ namespace CoolapkLite.Controls
                     hasVisibleChild = true;
                 }
 
-                child.Measure(layoutSlotSize);
+                child.Measure(adjustedSize);
                 Size childDesiredSize = child.DesiredSize;
 
                 if (fHorizontal)
                 {
-                    stackDesiredSize.Width += (isVisible ? spacing : 0) + childDesiredSize.Width;
-                    stackDesiredSize.Height = Math.Max(stackDesiredSize.Height, childDesiredSize.Height);
+                    desiredSizeUnpadded.Width += (isVisible ? spacing : 0) + childDesiredSize.Width;
+                    desiredSizeUnpadded.Height = Math.Max(desiredSizeUnpadded.Height, childDesiredSize.Height);
                 }
                 else
                 {
-                    stackDesiredSize.Width = Math.Max(stackDesiredSize.Width, childDesiredSize.Width);
-                    stackDesiredSize.Height += (isVisible ? spacing : 0) + childDesiredSize.Height;
+                    desiredSizeUnpadded.Width = Math.Max(desiredSizeUnpadded.Width, childDesiredSize.Width);
+                    desiredSizeUnpadded.Height += (isVisible ? spacing : 0) + childDesiredSize.Height;
                 }
             }
 
             if (fHorizontal)
             {
-                stackDesiredSize.Width -= hasVisibleChild ? spacing : 0;
+                desiredSizeUnpadded.Width -= hasVisibleChild ? spacing : 0;
             }
             else
             {
-                stackDesiredSize.Height -= hasVisibleChild ? spacing : 0;
+                desiredSizeUnpadded.Height -= hasVisibleChild ? spacing : 0;
             }
 
-            stackDesiredSize.Width += padding.Left + padding.Right;
-            stackDesiredSize.Height += padding.Top + padding.Bottom;
+            Size desiredSize = desiredSizeUnpadded;
+            desiredSize.Width += effectiveHorizontalPadding;
+            desiredSize.Height += effectiveVerticalPadding;
 
-            return stackDesiredSize;
+            return desiredSize;
         }
 
         /// <summary>
         /// Arranges the content of a <see cref="StackPanelEx"/> element.
         /// </summary>
-        /// <param name="arrangeSize">The <see cref="Size"/> that this element should use to arrange its child elements.</param>
+        /// <param name="finalSize">The <see cref="Size"/> that this element should use to arrange its child elements.</param>
         /// <returns>
         /// The <see cref="Size"/> that represents the arranged size of this <see cref="StackPanelEx"/>
         /// element and its child elements.
         /// </returns>
-        protected override Size ArrangeOverride(Size arrangeSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            UIElementCollection children = Children;
-            bool fHorizontal = Orientation == Orientation.Horizontal;
+            Size result = finalSize;
+
             Thickness padding = Padding;
-            Rect rcChild = new Rect(padding.Left, padding.Top, arrangeSize.Width - padding.Left - padding.Right, arrangeSize.Height - padding.Top - padding.Bottom);
-            double previousChildSize = 0.0;
+
+            double effectiveHorizontalPadding = padding.Left + padding.Right;
+            double effectiveVerticalPadding = padding.Top + padding.Bottom;
+            double leftAdjustment = padding.Left;
+            double topAdjustment = padding.Top;
+
+            Size adjustedSize = finalSize;
+            adjustedSize.Width -= effectiveHorizontalPadding;
+            adjustedSize.Height -= effectiveVerticalPadding;
+
+            adjustedSize.Width = Math.Max(0.0, adjustedSize.Width);
+            adjustedSize.Height = Math.Max(0.0, adjustedSize.Height);
+
+            Rect arrangeRect = new Rect(leftAdjustment, topAdjustment, adjustedSize.Width, adjustedSize.Height);
+
+            bool fHorizontal = Orientation == Orientation.Horizontal;
             double spacing = Spacing;
+            double previousChildSize = 0.0;
 
-            for (int i = 0, count = children.Count; i < count; ++i)
+            foreach (UIElement child in Children.OfType<UIElement>())
             {
-                UIElement child = children[i];
-
-                if (child == null) { continue; }
-
                 if (fHorizontal)
                 {
-                    rcChild.X += previousChildSize;
+                    arrangeRect.X += previousChildSize;
                     previousChildSize = child.DesiredSize.Width;
-                    rcChild.Width = previousChildSize;
-                    rcChild.Height = Math.Max(arrangeSize.Height - padding.Top - padding.Bottom, child.DesiredSize.Height);
+                    arrangeRect.Width = previousChildSize;
+                    arrangeRect.Height = Math.Max(adjustedSize.Height, child.DesiredSize.Height);
                 }
                 else
                 {
-                    rcChild.Y += previousChildSize;
+                    arrangeRect.Y += previousChildSize;
                     previousChildSize = child.DesiredSize.Height;
-                    rcChild.Height = previousChildSize;
-                    rcChild.Width = Math.Max(arrangeSize.Width - padding.Left - padding.Right, child.DesiredSize.Width);
+                    arrangeRect.Height = previousChildSize;
+                    arrangeRect.Width = Math.Max(adjustedSize.Width, child.DesiredSize.Width);
                 }
 
                 if (child.Visibility != Visibility.Collapsed)
@@ -199,9 +228,10 @@ namespace CoolapkLite.Controls
                     previousChildSize += spacing;
                 }
 
-                child.Arrange(rcChild);
+                child.Arrange(arrangeRect);
             }
-            return arrangeSize;
+
+            return result;
         }
     }
 }

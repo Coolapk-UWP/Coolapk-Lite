@@ -13,12 +13,24 @@ namespace CoolapkLite.Controls
     {
         private PivotHeader _pivotHeader;
 
+        #region LeftHeader
+
         public static readonly DependencyProperty LeftHeaderProperty =
             DependencyProperty.Register(
                 nameof(LeftHeader),
                 typeof(object),
                 typeof(ShyHeaderPivotListView),
                 null);
+
+        public object LeftHeader
+        {
+            get => GetValue(LeftHeaderProperty);
+            set => SetValue(LeftHeaderProperty, value);
+        }
+
+        #endregion
+
+        #region RightHeader
 
         public static readonly DependencyProperty RightHeaderProperty =
             DependencyProperty.Register(
@@ -27,12 +39,32 @@ namespace CoolapkLite.Controls
                 typeof(ShyHeaderPivotListView),
                 null);
 
+        public object RightHeader
+        {
+            get => GetValue(RightHeaderProperty);
+            set => SetValue(RightHeaderProperty, value);
+        }
+
+        #endregion
+
+        #region ShyHeaderItemSource
+
         public static readonly DependencyProperty ShyHeaderItemSourceProperty =
             DependencyProperty.Register(
                 nameof(ShyHeaderItemSource),
                 typeof(IEnumerable<ShyHeaderItem>),
                 typeof(ShyHeaderPivotListView),
                 new PropertyMetadata(null, OnShyHeaderItemSourcePropertyChanged));
+
+        public IEnumerable<ShyHeaderItem> ShyHeaderItemSource
+        {
+            get => (IEnumerable<ShyHeaderItem>)GetValue(ShyHeaderItemSourceProperty);
+            set => SetValue(ShyHeaderItemSourceProperty, value);
+        }
+
+        #endregion
+
+        #region ShyHeaderSelectedIndex
 
         public static readonly DependencyProperty ShyHeaderSelectedIndexProperty =
             DependencyProperty.Register(
@@ -41,6 +73,16 @@ namespace CoolapkLite.Controls
                 typeof(ShyHeaderPivotListView),
                 new PropertyMetadata(-1, OnShyHeaderSelectedIndexPropertyChanged));
 
+        public int ShyHeaderSelectedIndex
+        {
+            get => (int)GetValue(ShyHeaderSelectedIndexProperty);
+            set => SetValue(ShyHeaderSelectedIndexProperty, value);
+        }
+
+        #endregion
+
+        #region ShyHeaderSelectedItem
+
         public static readonly DependencyProperty ShyHeaderSelectedItemProperty =
             DependencyProperty.Register(
                 nameof(ShyHeaderSelectedItem),
@@ -48,37 +90,15 @@ namespace CoolapkLite.Controls
                 typeof(ShyHeaderPivotListView),
                 null);
 
-        public event SelectionChangedEventHandler ShyHeaderSelectionChanged;
-
-        public object LeftHeader
-        {
-            get => GetValue(LeftHeaderProperty);
-            set => SetValue(LeftHeaderProperty, value);
-        }
-
-        public object RightHeader
-        {
-            get => GetValue(RightHeaderProperty);
-            set => SetValue(RightHeaderProperty, value);
-        }
-
-        public IEnumerable<ShyHeaderItem> ShyHeaderItemSource
-        {
-            get => (IEnumerable<ShyHeaderItem>)GetValue(ShyHeaderItemSourceProperty);
-            set => SetValue(ShyHeaderItemSourceProperty, value);
-        }
-
-        public int ShyHeaderSelectedIndex
-        {
-            get => (int)GetValue(ShyHeaderSelectedIndexProperty);
-            set => SetValue(ShyHeaderSelectedIndexProperty, value);
-        }
-
         public ShyHeaderItem ShyHeaderSelectedItem
         {
             get => (ShyHeaderItem)GetValue(ShyHeaderSelectedItemProperty);
             set => SetValue(ShyHeaderSelectedItemProperty, value);
         }
+
+        #endregion
+
+        public event SelectionChangedEventHandler ShyHeaderSelectionChanged;
 
         private static void OnShyHeaderItemSourcePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -10,13 +10,6 @@ namespace CoolapkLite.Controls
     /// </summary>
     public class InfoBadge : Control
     {
-        public InfoBadge()
-        {
-            DefaultStyleKey = typeof(InfoBadge);
-            SetValue(TemplateSettingsProperty, new InfoBadgeTemplateSettings());
-            SizeChanged += OnSizeChanged;
-        }
-
         #region IconSource
 
         public UIElement IconSource
@@ -76,6 +69,16 @@ namespace CoolapkLite.Controls
         }
 
         #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoBadge"/> class.
+        /// </summary>
+        public InfoBadge()
+        {
+            DefaultStyleKey = typeof(InfoBadge);
+            SetValue(TemplateSettingsProperty, new InfoBadgeTemplateSettings());
+            SizeChanged += OnSizeChanged;
+        }
 
         protected override void OnApplyTemplate()
         {

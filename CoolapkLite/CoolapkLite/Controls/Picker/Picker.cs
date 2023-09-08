@@ -13,6 +13,8 @@ namespace CoolapkLite.Controls
         private Popup _popup;
         private Grid _rootGrid;
 
+        #region PopupTransitions
+
         public static readonly DependencyProperty PopupTransitionsProperty =
             DependencyProperty.Register(
                 nameof(PopupTransitions),
@@ -25,6 +27,8 @@ namespace CoolapkLite.Controls
             get => (TransitionCollection)GetValue(PopupTransitionsProperty);
             set => SetValue(PopupTransitionsProperty, value);
         }
+
+        #endregion
 
         public Picker()
         {
