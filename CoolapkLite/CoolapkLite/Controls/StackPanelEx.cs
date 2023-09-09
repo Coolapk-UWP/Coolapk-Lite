@@ -22,7 +22,7 @@ namespace CoolapkLite.Controls
                 nameof(Padding),
                 typeof(Thickness),
                 typeof(StackPanelEx),
-                new PropertyMetadata(null, OnLayoutPropertyChanged));
+                new PropertyMetadata(default(Thickness), OnLayoutPropertyChanged));
 
         /// <summary>
         /// Gets or sets the distance between the border and its child object.

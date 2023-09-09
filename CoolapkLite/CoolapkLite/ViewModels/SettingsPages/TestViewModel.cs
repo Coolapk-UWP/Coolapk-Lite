@@ -4,6 +4,7 @@ using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -40,7 +41,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsXamlCompositionBrushSupported { get; } = ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
 
-        public IEnumerable<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+        public ImmutableArray<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
 
         public string FrameworkDescription => RuntimeInformation.FrameworkDescription;
 

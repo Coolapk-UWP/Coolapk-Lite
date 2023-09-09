@@ -263,7 +263,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .TryAppendLine(LoginText)
                                                                 .AppendLineFormat("{0}点赞 {1}关注 {2}粉丝", LikeNum, FollowNum, FansNum)
                                                                 .TryAppendLine(Bio)
-                                                                .AppendJoin(" ", Gender, City, Astro, BlockStatus)
+                                                                .TryAppendJoin(" ", Gender, City, Astro, BlockStatus)
                                                                 .ToString();
     }
 
@@ -412,7 +412,7 @@ namespace CoolapkLite.Models.Pages
         }
 
         public override string ToString() => new StringBuilder().AppendLineFormat("话题：{0}", Title)
-                                                                .AppendLineJoin(" ", HotNum, CommentNum, FollowNum)
+                                                                .TryAppendLineJoin(" ", HotNum, CommentNum, FollowNum)
                                                                 .TryAppendLine(Description)
                                                                 .Append(SubTitle)
                                                                 .ToString();
@@ -851,7 +851,7 @@ namespace CoolapkLite.Models.Pages
         }
 
         public override string ToString() => new StringBuilder().AppendFormat("数码：{0}", Title)
-                                                                .AppendLineJoin(" ", HotNum, CommentNum, FollowNum)
+                                                                .TryAppendLineJoin(" ", HotNum, CommentNum, FollowNum)
                                                                 .Append(Description)
                                                                 .ToString();
     }

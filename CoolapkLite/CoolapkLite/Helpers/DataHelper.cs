@@ -175,7 +175,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static StringBuilder AppendJoin(this StringBuilder builder, string separator, params string[] value)
+        public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] value)
         {
             if (value?.Any() == true)
             {
@@ -193,7 +193,7 @@ namespace CoolapkLite.Helpers
             return builder;
         }
 
-        public static StringBuilder AppendLineJoin(this StringBuilder builder, string separator, params string[] value)
+        public static StringBuilder TryAppendLineJoin(this StringBuilder builder, string separator, params string[] value)
         {
             if (value?.Any() == true)
             {
