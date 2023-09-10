@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
@@ -424,6 +425,13 @@ namespace CoolapkLite.Helpers
             if (!dispatcher.HasThreadAccess)
             { await dispatcher.ResumeForegroundAsync(); }
             return await Launcher.LaunchUriAsync(uri);
+        }
+
+        public static async Task<bool> LaunchFileAsync(this CoreDispatcher dispatcher, IStorageFile file)
+        {
+            if (!dispatcher.HasThreadAccess)
+            { await dispatcher.ResumeForegroundAsync(); }
+            return await Launcher.LaunchFileAsync(file);
         }
 
         public static async Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image) =>

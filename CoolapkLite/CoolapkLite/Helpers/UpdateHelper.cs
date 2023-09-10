@@ -82,9 +82,9 @@ namespace CoolapkLite.Helpers
 
                             UpdateInfo updateInfo = new UpdateInfo
                             {
-                                CreatedAt = Convert.ToDateTime(run?.CreatedDate),
-                                PublishedAt = Convert.ToDateTime(run?.FinishedDate),
-                                ReleaseUrl = run?.Links?.Web?.Href,
+                                CreatedAt = run.CreatedDate,
+                                PublishedAt = run.FinishedDate,
+                                ReleaseUrl = run.Links?.Web?.Href,
                                 IsExistNewVersion = newVersionInfo > currentVersionInfo,
                                 Version = newVersionInfo
                             };
@@ -119,8 +119,9 @@ namespace CoolapkLite.Helpers
             return null;
         }
 
-        private static SystemVersionInfo GetAsVersionInfo(DateTime dateTime, int id)
+        private static SystemVersionInfo GetAsVersionInfo(DateTimeOffset dateTimeOffset, int id)
         {
+            DateTime dateTime = dateTimeOffset.UtcDateTime;
             int major = int.Parse(dateTime.ToString("yy"));
             int minor = int.Parse(dateTime.ToString("MMdd"));
             return new SystemVersionInfo(major, minor, id);

@@ -28,27 +28,13 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static string GetBase64(this string input, bool israw = false)
+        public static string GetBase64(this string input, bool isRaw = false)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input);
             string result = Convert.ToBase64String(bytes);
-            if (israw) { result = result.Replace("=", ""); }
+            if (!isRaw) { result = result.Replace("=", ""); }
             return result;
         }
-
-        public static string Reverse(this string text)
-        {
-            char[] charArray = text.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
-        }
-
-#if !NETCORE463
-        public static bool Contains(this string text, string value, StringComparison comparisonType)
-        {
-            return text.IndexOf(value, comparisonType) != -1;
-        }
-#endif
 
         public static string GetSizeString(this double size)
         {
@@ -153,27 +139,45 @@ namespace CoolapkLite.Helpers
         {
             //格式化 json 字符串
             JsonSerializer serializer = new JsonSerializer();
-            TextReader tr = new StringReader(str);
-            JsonTextReader jtr = new JsonTextReader(tr);
-            object obj = null;
-            try { obj = serializer.Deserialize(jtr); } catch { }
-            if (obj != null)
+            using (TextReader textReader = new StringReader(str))
+            using (JsonTextReader jtr = new JsonTextReader(textReader))
             {
-                StringWriter textWriter = new StringWriter();
-                JsonTextWriter jsonWriter = new JsonTextWriter(textWriter)
+                object obj = null;
+                try { obj = serializer.Deserialize(jtr); } catch { }
+                if (obj != null)
                 {
-                    Formatting = Formatting.Indented,
-                    Indentation = 4,
-                    IndentChar = ' '
-                };
-                serializer.Serialize(jsonWriter, obj);
-                return textWriter.ToString();
-            }
-            else
-            {
-                return str;
+                    using (StringWriter textWriter = new StringWriter())
+                    using (JsonTextWriter jsonWriter = new JsonTextWriter(textWriter)
+                    {
+                        Formatting = Formatting.Indented,
+                        Indentation = 4,
+                        IndentChar = ' '
+                    })
+                    {
+                        serializer.Serialize(jsonWriter, obj);
+                        return textWriter.ToString();
+                    }
+                }
+                else
+                {
+                    return str;
+                }
             }
         }
+
+        public static string Reverse(this string text)
+        {
+            char[] charArray = text.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+#if !NETCORE463
+        public static bool Contains(this string text, string value, StringComparison comparisonType)
+        {
+            return text.IndexOf(value, comparisonType) != -1;
+        }
+#endif
 
         public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] value)
         {

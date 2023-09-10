@@ -162,6 +162,15 @@
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Uid="/SettingsPage/CleanLogsItem"
+                                    Click="MenuFlyoutItem_Click"
+                                    IsEnabled="{x:Bind Provider.IsCleanLogsButtonEnabled, Mode=OneWay}"
+                                    Tag="CleanLogs">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
                             </MenuFlyout>
                         </helpers:UIElementHelper.ContextFlyout>
                     </HyperlinkButton>

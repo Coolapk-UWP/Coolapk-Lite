@@ -127,6 +127,13 @@ namespace CoolapkLite.ViewModels.SettingsPages
             set => SetProperty(ref isCleanCacheButtonEnabled, value);
         }
 
+        private static bool isCleanLogsButtonEnabled = true;
+        public bool IsCleanLogsButtonEnabled
+        {
+            get => isCleanLogsButtonEnabled;
+            set => SetProperty(ref isCleanLogsButtonEnabled, value);
+        }
+
         private static bool isCheckUpdateButtonEnabled = true;
         public bool IsCheckUpdateButtonEnabled
         {
@@ -204,6 +211,23 @@ namespace CoolapkLite.ViewModels.SettingsPages
             try
             {
                 await ImageCacheHelper.CleanCacheAsync().ContinueWith((x) => IsCleanCacheButtonEnabled = true);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
+                IsCleanCacheButtonEnabled = true;
+            }
+        }
+
+        public async Task CleanLogsAsync()
+        {
+            IsCleanLogsButtonEnabled = false;
+            try
+            {
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+                await folder.DeleteAsync();
+                IsCleanLogsButtonEnabled = true;
             }
             catch (Exception ex)
             {
@@ -323,6 +347,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     _ = Launcher.LaunchUriAsync(info.ReleaseUrl.TryGetUri());
                 }
             }
+        }
+
+        public async Task<bool> OpenLogFileAsync()
+        {
+            await ThreadSwitcher.ResumeBackgroundAsync();
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+            IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
+            StorageFile file = files.FirstOrDefault();
+            if (file != null) { return await Dispatcher.LaunchFileAsync(file); }
+            return false;
         }
 
         public Task Refresh(bool reset) => GetAboutTextBlockTextAsync();

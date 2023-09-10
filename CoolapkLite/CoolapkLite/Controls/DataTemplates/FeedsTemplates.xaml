@@ -231,7 +231,11 @@
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-                            <TextBlock Margin="8,0,0,0" Text="{Binding LikeNum}" />
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                Text="{Binding LikeNum}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -247,6 +251,7 @@
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding ReplyNum}" />
                         </StackPanel>
                     </Button>
@@ -264,6 +269,7 @@
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding ShareNum}" />
                         </StackPanel>
                     </Button>
@@ -283,7 +289,7 @@
                     HorizontalAlignment="Left"
                     FontSize="16"
                     FontWeight="Black"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                     Text="{Binding MessageTitle}"
                     TextWrapping="Wrap"
                     Visibility="{Binding MessageTitle, Converter={StaticResource StringVisibilityConverter}}" />
@@ -307,13 +313,16 @@
                             <TextBlock
                                 x:Uid="/Feed/Rating"
                                 FontSize="12"
-                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}" />
+                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
                         </Border>
                         <TextBlock
                             Grid.Column="2"
+                            HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
                             <Run Text="{Binding RatingStar, Converter={StaticResource NumMultConverter}, ConverterParameter='2', Mode=OneWay}" />
                             <Run Text="分" />
                         </TextBlock>
@@ -321,7 +330,7 @@
                     <controls:TextBlockEx
                         x:Name="Message"
                         HorizontalAlignment="Left"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                         Text="{Binding Message}"
                         Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}" />
                 </controls:StackPanelEx>
@@ -366,7 +375,7 @@
                             HorizontalAlignment="Left"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled}">
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
                             <Run FontWeight="Bold" Text="{Binding TotalVoteNum}" />
                             <Run Text="人投票" />
                             <Run Text="•" />
@@ -378,7 +387,7 @@
                             HorizontalAlignment="Right"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled}">
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
                             <Run FontWeight="Bold" Text="{Binding VoteStartTime}" />
                             <Run Text="-" />
                             <Run FontWeight="Bold" Text="{Binding VoteEndTime}" />
@@ -397,6 +406,7 @@
                         x:Uid="/Feed/SourceFeedNotFount"
                         Margin="12,8"
                         HorizontalAlignment="Left"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                         Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <Border Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding SourceFeed}" />
@@ -446,6 +456,7 @@
                             VerticalAlignment="Center">
                             <TextBlock
                                 HorizontalAlignment="Left"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 MaxLines="2"
                                 Text="{Binding ExtraTitle}"
                                 TextTrimming="WordEllipsis"
@@ -454,6 +465,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding ExtraSubtitle}"
                                 TextWrapping="Wrap"
                                 Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
@@ -507,6 +519,7 @@
                         VerticalAlignment="Center">
                         <TextBlock
                             HorizontalAlignment="Left"
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             MaxLines="2"
                             Text="{Binding MediaTitle}"
                             TextTrimming="WordEllipsis"
@@ -514,6 +527,7 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                             Text="{Binding MediaSubtitle}"
                             TextWrapping="Wrap"
                             Visibility="{Binding MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
@@ -557,7 +571,8 @@
                         Margin="4"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
                         <Run x:Uid="/Feed/SeeAll" />
                         <Run Text="(" />
                         <Run Text="{Binding ReplyNum}" />
@@ -573,7 +588,7 @@
                         HorizontalAlignment="Left"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                         Visibility="{Binding IsQuestionFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Run FontWeight="Bold" Text="{Binding QuestionAnswerNum}" />
                         <Run Text="人回答" />
@@ -596,7 +611,7 @@
                         HorizontalAlignment="Left"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                         Visibility="{Binding IPLocation, Converter={StaticResource StringVisibilityConverter}}">
                         <Run x:Uid="/Feed/PublishFrom" />
                         <Run FontWeight="Bold" Text="{Binding IPLocation}" />
@@ -681,6 +696,7 @@
                             <TextBlock
                                 Margin="4,0,0,0"
                                 VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding UserInfo.UserName}" />
                         </StackPanel>
                     </Button>
@@ -698,7 +714,7 @@
                     Grid.Row="1"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                     Text="{Binding Message}" />
                 <GridView
                     Grid.Row="2"
@@ -865,7 +881,11 @@
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-                            <TextBlock Margin="8,0,0,0" Text="{Binding LikeNum}" />
+                            <TextBlock
+                                Margin="8,0,0,0"
+                                VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                Text="{Binding LikeNum}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -880,6 +900,7 @@
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
+                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                                 Text="{Binding ReplyNum}" />
                         </StackPanel>
                     </Button>
@@ -897,7 +918,7 @@
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                     Text="{Binding Message}" />
                 <GridView
                     Grid.Row="4"
@@ -958,7 +979,8 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontSize="12"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
                             <Run x:Uid="/Feed/SeeAll" />
                             <Run Text="(" />
                             <Run Text="{Binding ReplyNum}" />

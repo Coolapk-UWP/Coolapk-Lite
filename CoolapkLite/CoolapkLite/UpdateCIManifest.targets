@@ -36,8 +36,9 @@
                             var version = node.Attribute("Version");
                             if (version != null)
                             {
-                                var major = int.Parse(DateTime.Now.ToString("yy"));
-                                var minor = int.Parse(DateTime.Now.ToString("MMdd"));
+                                var dateTime = DateTime.UtcNow;
+                                var major = int.Parse(dateTime.ToString("yy"));
+                                var minor = int.Parse(dateTime.ToString("MMdd"));
                                 version.SetValue(string.Join(".", major, minor, CIBuildID, 0));
                                 break;
                             }
