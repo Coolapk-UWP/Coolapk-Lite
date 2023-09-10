@@ -216,4 +216,7 @@
   <data name="OpenCacheFolder.Text" xml:space="preserve">
     <value>打开缓存目录</value>
   </data>
+  <data name="CleanLogsItem.Text" xml:space="preserve">
+    <value>清理日志文件</value>
+  </data>
 </root>
