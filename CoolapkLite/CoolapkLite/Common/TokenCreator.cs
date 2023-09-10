@@ -48,7 +48,7 @@ namespace CoolapkLite.Common
         /// </summary>
         private string GetTokenWithDeviceCode(string deviceCode)
         {
-            string timeStamp = DateTime.Now.ConvertDateTimeToUnixTimeStamp().ToString();
+            string timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
 
             string base64TimeStamp = timeStamp.GetBase64(true);
             string md5TimeStamp = timeStamp.GetMD5();
@@ -69,7 +69,7 @@ namespace CoolapkLite.Common
 
         private static string GetCoolapkAppToken()
         {
-            double timeStamp = DateTime.Now.ConvertDateTimeToUnixTimeStamp();
+            long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             string hex_timeStamp = $"0x{Convert.ToString((int)timeStamp, 16)}";
             // 时间戳加密
             string md5_timeStamp = $"{timeStamp}".GetMD5();

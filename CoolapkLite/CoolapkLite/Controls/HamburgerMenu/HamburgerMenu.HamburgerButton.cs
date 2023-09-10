@@ -91,7 +91,7 @@ namespace CoolapkLite.Controls
                 typeof(Visibility),
                 typeof(HamburgerMenu),
                 new PropertyMetadata(Visibility.Visible));
-        
+
         /// <summary>
         /// Gets or sets main button's visibility.
         /// </summary>

@@ -142,9 +142,9 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                DateTime dateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime();
-                Dateline = dateTime.ConvertDateTimeToReadable();
-                DateTime = dateTime.ToLocalTime();
+                DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
+                Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
+                DateTime = dateTimeOffset.LocalDateTime;
             }
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)

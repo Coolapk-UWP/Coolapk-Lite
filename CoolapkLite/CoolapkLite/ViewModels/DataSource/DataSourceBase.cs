@@ -28,8 +28,8 @@ namespace CoolapkLite.ViewModels.DataSource
 
         protected virtual bool IsInTime()
         {
-            TimeSpan delta = DateTime.Now - _lastTime;
-            _lastTime = DateTime.Now;
+            TimeSpan delta = DateTime.UtcNow - _lastTime;
+            _lastTime = DateTime.UtcNow;
             return delta.TotalMilliseconds < 500;
         }
 

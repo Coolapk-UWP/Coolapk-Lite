@@ -23,9 +23,9 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("result")]
         public string Result { get; set; }
         [JsonProperty("createdDate")]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
         [JsonProperty("finishedDate")]
-        public DateTime FinishedDate { get; set; }
+        public DateTimeOffset FinishedDate { get; set; }
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("id")]
@@ -83,14 +83,14 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("signatureExpires")]
-        public DateTime SignatureExpires { get; set; }
+        public DateTimeOffset SignatureExpires { get; set; }
     }
 
     public class UpdateInfo
     {
         public string ReleaseUrl { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime PublishedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset PublishedAt { get; set; }
         public Asset[] Assets { get; set; }
         public bool IsExistNewVersion { get; set; }
         public SystemVersionInfo Version { get; set; }
@@ -109,9 +109,9 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("prerelease")]
         public bool IsPreRelease { get; set; }
         [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
         [JsonProperty("published_at")]
-        public DateTime PublishedAt { get; set; }
+        public DateTimeOffset PublishedAt { get; set; }
         [JsonProperty("assets")]
         public Asset[] Assets { get; set; }
         [JsonProperty("tarball_url")]
@@ -139,9 +139,9 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("download_count")]
         public int DownloadCount { get; set; }
         [JsonProperty("created_at")]
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
         [JsonProperty("updated_at")]
-        public DateTime UpdatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
         [JsonProperty("browser_download_url")]
         public string DownloadUrl { get; set; }
     }

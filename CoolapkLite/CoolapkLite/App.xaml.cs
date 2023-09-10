@@ -167,7 +167,7 @@ namespace CoolapkLite
                         .AddArgument("url", results?.ReleaseUrl)
                         .AddText(_loader.GetString("HasUpdateTitle"))
                         .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
-                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeToReadable()))
+                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeOffsetToReadable()))
                         .AddButton(new ToastButton()
 #if CANARY
                             .SetContent(_loader.GetString("GoToDevOps"))

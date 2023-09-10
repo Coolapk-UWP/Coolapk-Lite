@@ -830,7 +830,7 @@ namespace CoolapkLite.Controls
             double pullProgress;
             if (_pullDistance >= PullThreshold)
             {
-                _lastRefreshActivation = DateTime.Now;
+                _lastRefreshActivation = DateTime.UtcNow;
                 _refreshActivated = true;
                 _refreshIntentCanceled = false;
                 pullProgress = 1.0;
@@ -849,7 +849,7 @@ namespace CoolapkLite.Controls
             }
             else if (_lastRefreshActivation != DateTime.MinValue)
             {
-                TimeSpan timeSinceActivated = DateTime.Now - _lastRefreshActivation;
+                TimeSpan timeSinceActivated = DateTime.UtcNow - _lastRefreshActivation;
 
                 // if more then a second since activation, deactivate
                 if (timeSinceActivated.TotalMilliseconds > 1000)

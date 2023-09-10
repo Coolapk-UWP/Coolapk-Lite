@@ -2,9 +2,9 @@
 
 namespace CoolapkLite.Helpers
 {
-    public static class DateHelper
+    public static class DateTimeHelper
     {
-        public enum TimeIntervalType
+        private enum TimeIntervalType
         {
             YearsAgo,
             MonthsAgo,
@@ -20,15 +20,13 @@ namespace CoolapkLite.Helpers
             YearsLater,
         }
 
-        private static readonly DateTime UnixDateBase = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static string ConvertUnixTimeStampToReadable(this long time) => ConvertUnixTimeStampToReadable(time, DateTimeOffset.UtcNow);
 
-        public static string ConvertUnixTimeStampToReadable(this long time) => ConvertUnixTimeStampToReadable(time, DateTime.Now);
+        public static string ConvertUnixTimeStampToReadable(this long time, DateTimeOffset? baseTime) => ConvertDateTimeOffsetToReadable(time.ConvertUnixTimeStampToDateTimeOffset(), baseTime);
 
-        public static string ConvertUnixTimeStampToReadable(this long time, DateTime? baseTime) => ConvertDateTimeToReadable(time.ConvertUnixTimeStampToDateTime(), baseTime);
+        public static string ConvertDateTimeOffsetToReadable(this DateTimeOffset time) => ConvertDateTimeOffsetToReadable(time, DateTimeOffset.UtcNow);
 
-        public static string ConvertDateTimeToReadable(this DateTime time) => ConvertDateTimeToReadable(time, DateTime.Now);
-
-        public static string ConvertDateTimeToReadable(this DateTime time, DateTime? baseTime)
+        public static string ConvertDateTimeOffsetToReadable(this DateTimeOffset time, DateTimeOffset? baseTime)
         {
             object obj;
             TimeIntervalType type;
@@ -36,20 +34,18 @@ namespace CoolapkLite.Helpers
             if (baseTime == null)
             {
                 type = TimeIntervalType.YearsAgo;
-                obj = time.ToLocalTime();
+                obj = time.LocalDateTime;
             }
             else
             {
-                time = time.ToUniversalTime();
-                DateTime universalTime = baseTime.Value.ToUniversalTime();
-                TimeSpan temp = universalTime.Subtract(time);
+                TimeSpan temp = baseTime.Value.Subtract(time);
 
                 if (temp.Days > 30)
                 {
-                    type = time.Year == universalTime.Year
+                    type = time.Year == baseTime?.Year
                         ? TimeIntervalType.MonthsAgo
                         : TimeIntervalType.YearsAgo;
-                    obj = time.ToLocalTime();
+                    obj = time.LocalDateTime;
                 }
                 else if (temp.TotalDays > 0)
                 {
@@ -75,10 +71,10 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    type = time.Year == universalTime.Year
+                    type = time.Year == baseTime?.Year
                         ? TimeIntervalType.MonthsLater
                         : TimeIntervalType.YearsLater;
-                    obj = time.ToLocalTime();
+                    obj = time.LocalDateTime;
                 }
             }
 
@@ -121,8 +117,16 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static DateTime ConvertUnixTimeStampToDateTime(this long time) => UnixDateBase.Add(new TimeSpan(time * 1000_0000));
+        public static DateTimeOffset ConvertUnixTimeStampToDateTimeOffset(this long time) =>
+            time >= 100000_00000
+                ? DateTimeOffset.FromUnixTimeMilliseconds(time)
+                : DateTimeOffset.FromUnixTimeSeconds(time);
 
-        public static double ConvertDateTimeToUnixTimeStamp(this DateTime time) => Math.Round(time.ToUniversalTime().Subtract(UnixDateBase).TotalSeconds);
+        public static DateTime ConvertDateTimeOffsetToDateTime(this DateTimeOffset dateTime) =>
+            dateTime.Offset.Equals(TimeSpan.Zero)
+                ? dateTime.UtcDateTime
+                : dateTime.Offset.Equals(TimeZoneInfo.Local.GetUtcOffset(dateTime.DateTime))
+                    ? DateTime.SpecifyKind(dateTime.DateTime, DateTimeKind.Local)
+                    : dateTime.DateTime;
     }
 }

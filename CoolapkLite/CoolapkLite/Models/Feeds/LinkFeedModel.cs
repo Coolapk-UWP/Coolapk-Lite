@@ -248,9 +248,9 @@ namespace CoolapkLite.Models.Feeds
                 }
                 if (data.TryGetValue("dateline", out JToken dateline))
                 {
-                    DateTime dateTime = dateline.ToObject<long>().ConvertUnixTimeStampToDateTime();
-                    Dateline = dateTime.ConvertDateTimeToReadable();
-                    DateTime = dateTime.ToLocalTime();
+                    DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
+                    Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
+                    DateTime = dateTimeOffset.LocalDateTime;
                 }
                 if (data.TryGetValue("message_title", out JToken message_title))
                 {
@@ -349,11 +349,10 @@ namespace CoolapkLite.Models.Feeds
                         item.ContextArray = PicArr;
                     }
                 }
-                if (data.TryGetValue("createTime", out JToken createTime))
+                if (data.TryGetValue("createTime", out JToken createTime) && DateTimeOffset.TryParse(createTime.ToString(), out DateTimeOffset dateTimeOffset))
                 {
-                    DateTime dateTime = Convert.ToDateTime(createTime.ToString());
-                    Dateline = dateTime.ConvertDateTimeToReadable();
-                    DateTime = dateTime.ToLocalTime();
+                    Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
+                    DateTime = dateTimeOffset.LocalDateTime;
                 }
             }
         }
