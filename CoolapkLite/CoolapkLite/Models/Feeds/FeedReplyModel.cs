@@ -121,7 +121,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("replyRows", out JToken replyRows))
             {
-                ReplyRows = replyRows.Select(item => new SourceFeedReplyModel((JObject)item)).ToImmutableArray();
+                ReplyRows = replyRows.OfType<JObject>().Select(item => new SourceFeedReplyModel(item)).ToImmutableArray();
             }
 
             if (!string.IsNullOrEmpty(PicUri))

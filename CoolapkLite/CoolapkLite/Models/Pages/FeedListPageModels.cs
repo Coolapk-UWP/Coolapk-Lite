@@ -384,8 +384,9 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("recent_follow_list", out JToken recent_follow_list) && (recent_follow_list as JArray).Count > 0)
             {
-                FollowUsers = recent_follow_list.Select(
-                    x => ((JObject)x).TryGetValue("userInfo", out JToken userInfo)
+                FollowUsers = recent_follow_list
+                    .OfType<JObject>()
+                    .Select(x => x.TryGetValue("userInfo", out JToken userInfo)
                         ? new UserModel((JObject)userInfo) : null)
                     .OfType<UserModel>()
                     .ToImmutableArray();
@@ -805,8 +806,9 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("recent_follow_list", out JToken recent_follow_list) && (recent_follow_list as JArray).Count > 0)
             {
-                FollowUsers = recent_follow_list.Select(
-                    x => ((JObject)x).TryGetValue("userInfo", out JToken userInfo)
+                FollowUsers = recent_follow_list
+                    .OfType<JObject>()
+                    .Select(x => x.TryGetValue("userInfo", out JToken userInfo)
                         ? new UserModel((JObject)userInfo) : null)
                     .OfType<UserModel>()
                     .ToImmutableArray();
@@ -815,8 +817,8 @@ namespace CoolapkLite.Models.Pages
             if (token.TryGetValue("coverArr", out JToken coverArr) && (coverArr as JArray).Count > 0)
             {
                 CoverArr = coverArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
-                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
-                    .ToImmutableArray();
+                                   .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
+                                   .ToImmutableArray();
 
                 foreach (ImageModel item in CoverArr)
                 {

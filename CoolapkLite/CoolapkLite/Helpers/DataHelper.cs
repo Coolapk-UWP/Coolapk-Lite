@@ -21,9 +21,7 @@ namespace CoolapkLite.Helpers
             {
                 // Convert the input string to a byte array and compute the hash.
                 byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(input));
-
                 string results = BitConverter.ToString(data).ToLowerInvariant();
-
                 return results.Replace("-", "");
             }
         }
@@ -165,29 +163,45 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static string Reverse(this string text)
-        {
-            char[] charArray = text.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
-        }
-
 #if !NETCORE463
+        /// <summary>
+        /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
+        /// </summary>
+        /// <param name="text">A sequence in which to locate a value.</param>
+        /// <param name="value">The string to seek.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+        /// <returns><see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
+        /// or if <paramref name="value"/> is the empty string (""); otherwise, <see langword="false"/>.</returns>
         public static bool Contains(this string text, string value, StringComparison comparisonType)
         {
             return text.IndexOf(value, comparisonType) != -1;
         }
 #endif
 
-        public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] value)
+        /// <summary>
+        /// Try to concatenates the strings of the provided array, using the specified separator between each string,
+        /// then appends the result to the current instance of the string builder.
+        /// </summary>
+        /// <param name="builder">The builder to append.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the joined strings
+        /// only if <paramref name="value"/> has more than one element.</param>
+        /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
+        /// <returns>A reference to this instance after the append operation has completed.</returns>
+        public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] values)
         {
-            if (value?.Any() == true)
+            if (values?.Any() == true)
             {
-                return builder.Append(string.Join(separator, value.Where((x) => !string.IsNullOrWhiteSpace(x))));
+                return builder.Append(string.Join(separator, values.Where((x) => !string.IsNullOrWhiteSpace(x))));
             }
             return builder;
         }
 
+        /// <summary>
+        /// Try to appends a copy of the specified string followed by the default line terminator to the end of the current StringBuilder object.
+        /// </summary>
+        /// <param name="builder">The builder to append.</param>
+        /// <param name="value">The string to append.</param>
+        /// <returns>A reference to this instance after the append operation has completed.</returns>
         public static StringBuilder TryAppendLine(this StringBuilder builder, string value)
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -197,6 +211,15 @@ namespace CoolapkLite.Helpers
             return builder;
         }
 
+        /// <summary>
+        /// Try to concatenates the strings of the provided array, using the specified separator between each string,
+        /// then appends the result followed by the default line terminator to the current instance of the string builder.
+        /// </summary>
+        /// <param name="builder">The builder to append.</param>
+        /// <param name="separator">The string to use as a separator. <paramref name="separator"/> is included in the joined strings
+        /// only if <paramref name="value"/> has more than one element.</param>
+        /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
+        /// <returns>A reference to this instance after the append operation has completed.</returns>
         public static StringBuilder TryAppendLineJoin(this StringBuilder builder, string separator, params string[] value)
         {
             if (value?.Any() == true)
@@ -206,11 +229,29 @@ namespace CoolapkLite.Helpers
             return builder;
         }
 
+        /// <summary>
+        /// Appends the string returned by processing a composite format string followed by the default line terminator, which contains zero or more
+        /// format items, to this instance. Each format item is replaced by the string representation of a corresponding argument in a parameter array.
+        /// </summary>
+        /// <param name="builder">The builder to append.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="args">An array of objects to format.</param>
+        /// <returns>A reference to this instance with <paramref name="format"/> appended. Each format item in <paramref name="format"/>
+        /// is replaced by the string representation of the corresponding object argument.</returns>
         public static StringBuilder AppendLineFormat(this StringBuilder builder, string format, params object[] args)
         {
             return builder.AppendFormat(format, args).AppendLine();
         }
 
+        /// <summary>
+        /// Try to appends the string returned by processing a composite format string followed by the default line terminator, which contains zero or more
+        /// format items, to this instance. Each format item is replaced by the string representation of a corresponding argument in a parameter array.
+        /// </summary>
+        /// <param name="builder">The builder to append.</param>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="value">The string to format.</param>
+        /// <returns>A reference to this instance with <paramref name="format"/> appended. Each format item in <paramref name="format"/>
+        /// is replaced by the string representation of the corresponding object argument.</returns>
         public static StringBuilder TryAppendLineFormat(this StringBuilder builder, string format, string value)
         {
             if (!string.IsNullOrWhiteSpace(format) && !string.IsNullOrWhiteSpace(value))

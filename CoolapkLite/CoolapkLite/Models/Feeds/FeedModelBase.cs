@@ -209,7 +209,7 @@ namespace CoolapkLite.Models.Feeds
 
                     if (vote.TryGetValue("options", out JToken options))
                     {
-                        VoteRows = options.Select(item => new VoteItem((JObject)item)).ToImmutableArray();
+                        VoteRows = options.OfType<JObject>().Select(item => new VoteItem(item)).ToImmutableArray();
                     }
                 }
             }
@@ -307,7 +307,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("replyRows", out JToken replyRows))
             {
-                ReplyRows = replyRows.Select(item => new SourceFeedReplyModel((JObject)item)).ToImmutableArray();
+                ReplyRows = replyRows.OfType<JObject>().Select(item => new SourceFeedReplyModel(item)).ToImmutableArray();
             }
 
             ShowRelationRows =

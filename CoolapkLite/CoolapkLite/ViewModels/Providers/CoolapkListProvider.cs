@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -64,13 +65,7 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
-                    foreach (Entity entity in entities)
-                    {
-                        if (entity is T model)
-                        {
-                            Models.Add(model);
-                        }
-                    }
+                    entities.OfType<T>().ForEach(Models.Add);
                 }
             }
         }

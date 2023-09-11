@@ -259,8 +259,8 @@ namespace CoolapkLite.Models.Feeds
                 if (data.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)
                 {
                     PicArr = picArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
-                        .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
-                        .ToImmutableArray();
+                                   .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
+                                   .ToImmutableArray();
 
                     foreach (ImageModel item in PicArr)
                     {
@@ -341,9 +341,9 @@ namespace CoolapkLite.Models.Feeds
                 if (data.TryGetValue("pictures", out JToken pictures) && (pictures as JArray).Count > 0)
                 {
                     PicArr = pictures.Select(x => (x as JObject).TryGetValue("src", out JToken src) ? src.ToString() : null)
-                        .Where(x => !string.IsNullOrEmpty(x))
-                        .Select(x => new ImageModel(x, ImageType.OriginImage))
-                        .ToImmutableArray();
+                                     .Where(x => !string.IsNullOrEmpty(x))
+                                     .Select(x => new ImageModel(x, ImageType.OriginImage))
+                                     .ToImmutableArray();
                     foreach (ImageModel item in PicArr)
                     {
                         item.ContextArray = PicArr;

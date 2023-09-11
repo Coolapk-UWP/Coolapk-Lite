@@ -118,9 +118,9 @@ namespace CoolapkLite.Helpers
         }
 
         public static DateTimeOffset ConvertUnixTimeStampToDateTimeOffset(this long time) =>
-            time >= 100000_00000
-                ? DateTimeOffset.FromUnixTimeMilliseconds(time)
-                : DateTimeOffset.FromUnixTimeSeconds(time);
+            time < 100000_00000
+                ? DateTimeOffset.FromUnixTimeSeconds(time)
+                : DateTimeOffset.FromUnixTimeMilliseconds(time);
 
         public static DateTime ConvertDateTimeOffsetToDateTime(this DateTimeOffset dateTime) =>
             dateTime.Offset.Equals(TimeSpan.Zero)

@@ -87,26 +87,25 @@ namespace CoolapkLite.Common
                     string tag = ParseTag(out _);
 
                     // Handle special tag cases
-                    if (tag == "body")
+                    switch (tag)
                     {
-                        // Discard content before <body>
-                        _text.Clear();
-                    }
-                    else if (tag == "/body")
-                    {
-                        // Discard content after </body>
-                        _pos = _html.Length;
-                    }
-                    else if (tag == "pre")
-                    {
-                        // Enter preformatted mode
-                        _text.Preformatted = true;
-                        EatWhitespaceToNextLine();
-                    }
-                    else if (tag == "/pre")
-                    {
-                        // Exit preformatted mode
-                        _text.Preformatted = false;
+                        case "body":
+                            // Discard content before <body>
+                            _text.Clear();
+                            break;
+                        case "/body":
+                            // Discard content after </body>
+                            _pos = _html.Length;
+                            break;
+                        case "pre":
+                            // Enter preformatted mode
+                            _text.Preformatted = true;
+                            EatWhitespaceToNextLine();
+                            break;
+                        case "/pre":
+                            // Exit preformatted mode
+                            _text.Preformatted = false;
+                            break;
                     }
 
                     if (_tags.TryGetValue(tag, out string value))
@@ -155,8 +154,8 @@ namespace CoolapkLite.Common
                     MoveAhead();
                 }
 
-                while (!EndOfText && !char.IsWhiteSpace(Peek()) &&
-                    Peek() != '/' && Peek() != '>')
+                while (!(EndOfText || char.IsWhiteSpace(Peek()) ||
+                    Peek() == '/' || Peek() == '>'))
                 {
                     MoveAhead();
                 }
@@ -164,7 +163,7 @@ namespace CoolapkLite.Common
                 tag = _html.Substring(start, _pos - start).ToLower();
 
                 // Parse rest of tag
-                while (!EndOfText && Peek() != '>')
+                while (!(EndOfText || Peek() == '>'))
                 {
                     if (Peek() == '"' || Peek() == '\'')
                     {
@@ -200,7 +199,7 @@ namespace CoolapkLite.Common
                         return;
                     }
                     // Use recursion to consume nested tags
-                    if (!selfClosing && !tag.StartsWith("/"))
+                    if (!(selfClosing || tag.StartsWith("/")))
                     {
                         EatInnerContent(tag);
                     }
@@ -423,5 +422,4 @@ namespace CoolapkLite.Common
             }
         }
     }
-
 }

@@ -72,10 +72,9 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("message", out JToken message))
             {
-                Message =
-                string.IsNullOrEmpty(Rusername)
-                ? $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}：{message}"
-                : $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}@{GetUserLink(Rurl, Rusername)}：{message}";
+                Message = string.IsNullOrEmpty(Rusername)
+                    ? $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}：{message}"
+                    : $"{GetUserLink(UserInfo.Url, UserInfo.UserName) + GetAuthorString(IsFeedAuthor)}@{GetUserLink(Rurl, Rusername)}：{message}";
             }
 
             if (token.TryGetValue("pic", out JToken pic) && !string.IsNullOrEmpty(pic.ToString()))
@@ -87,8 +86,8 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0 && !string.IsNullOrEmpty((picArr as JArray)[0].ToString()))
             {
                 PicArr = picArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
-                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
-                    .ToImmutableArray();
+                               .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
+                               .ToImmutableArray();
 
                 foreach (ImageModel item in PicArr)
                 {

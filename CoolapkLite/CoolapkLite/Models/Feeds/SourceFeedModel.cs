@@ -150,8 +150,8 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)
             {
                 PicArr = picArr.Where(x => !string.IsNullOrEmpty(x?.ToString()))
-                    .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
-                    .ToImmutableArray();
+                               .Select(x => new ImageModel(x.ToString(), ImageType.SmallImage))
+                               .ToImmutableArray();
 
                 foreach (ImageModel item in PicArr)
                 {

@@ -1,4 +1,6 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls.DataTemplates;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
@@ -49,18 +51,11 @@ namespace CoolapkLite.BackgroundTasks
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
             if (isSucceed)
             {
-                JArray array = result as JArray;
-                if (array.Count < 1) { return; }
-                foreach (JObject item in array.Take(5).OfType<JObject>())
-                {
-                    if (item.TryGetValue("entityType", out JToken entityType))
-                    {
-                        if (entityType.ToString() == "feed" || entityType.ToString() == "discovery")
-                        {
-                            UpdateTile(GetFeedTile(item));
-                        }
-                    }
-                }
+                result.OfType<JObject>()
+                      .Select((x) => GetTileContent(EntityTemplateSelector.GetEntity(x)))
+                      .Take(5, (x) => x != null)
+                      .Reverse()
+                      .ForEach((x) => UpdateTile(x));
             }
         }
 
@@ -136,10 +131,32 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        public static TileContent GetFeedTile(JObject token)
+        private TileContent GetTileContent(Entity item)
         {
-            FeedModel FeedDetail = new FeedModel(token);
-            return GetFeedTile(FeedDetail);
+            if (item is FeedModelBase feedModelBase)
+            {
+                return GetFeedTile(feedModelBase);
+            }
+            else if (item is IUserModel userModel)
+            {
+                return GetUserTile(userModel);
+            }
+            else if (item is IHasSubtitle subtitle)
+            {
+                return GetListTile(subtitle);
+            }
+            else if (item is IHasDescription description)
+            {
+                return GetListTile(description);
+            }
+            else if (item is IHasTitle title)
+            {
+                return GetListTile(title);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public static TileContent GetFeedTile(FeedModelBase FeedDetail)
@@ -505,6 +522,64 @@ namespace CoolapkLite.BackgroundTasks
             };
         }
 
+        public static TileContent GetListTile(IHasTitle ListDetail)
+        {
+            return new TileContent
+            {
+                Visual = new TileVisual
+                {
+                    Branding = TileBranding.NameAndLogo,
+                    DisplayName = ListDetail.Title,
+
+                    TileMedium = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            Children =
+                            {
+                                new AdaptiveText
+                                {
+                                    Text = ListDetail.Title,
+                                    HintStyle = AdaptiveTextStyle.Caption
+                                }
+                            }
+                        }
+                    },
+
+                    TileWide = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            Children =
+                            {
+                                new AdaptiveText
+                                {
+                                    Id = 1,
+                                    Text = ListDetail.Title,
+                                    HintStyle = AdaptiveTextStyle.Caption
+                                }
+                            }
+                        }
+                    },
+
+                    TileLarge = new TileBinding
+                    {
+                        Content = new TileBindingContentAdaptive
+                        {
+                            Children =
+                            {
+                                new AdaptiveText
+                                {
+                                    Text = ListDetail.Title,
+                                    HintStyle = AdaptiveTextStyle.Caption
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
         public static TileContent GetListTile(IHasDescription ListDetail)
         {
             return new TileContent
@@ -646,6 +721,7 @@ namespace CoolapkLite.BackgroundTasks
                 }
             };
         }
+
         public static TileContent GetListTile(IHasSubtitle ListDetail)
         {
             return new TileContent
