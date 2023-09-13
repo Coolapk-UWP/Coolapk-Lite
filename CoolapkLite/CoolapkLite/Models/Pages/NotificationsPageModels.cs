@@ -30,9 +30,9 @@ namespace CoolapkLite.Models.Pages
                 ID = id.ToObject<int>();
             }
 
-            if (token.TryGetValue("is_new", out JToken is_new))
+            if (token.TryGetValue("isnew", out JToken isnew))
             {
-                IsNew = is_new.ToObject<int>() == 1;
+                IsNew = isnew.ToObject<int>() == 1;
             }
         }
 
@@ -82,7 +82,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("fromusername", out JToken fromusername))
             {
-                UserName = $"{fromusername} {BlockStatus}";
+                UserName = string.Join(" ", new string[] { fromusername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -153,7 +153,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("username", out JToken username))
             {
-                UserName = $"{username} {BlockStatus}";
+                UserName = string.Join(" ", new string[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -222,7 +222,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("likeUsername", out JToken likeUsername))
             {
-                UserName = $"{likeUsername} {BlockStatus}";
+                UserName = string.Join(" ", new string[] { likeUsername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -248,12 +248,18 @@ namespace CoolapkLite.Models.Pages
 
     public class MessageNotificationModel : NotificationModel
     {
+        public int UnreadNum { get; private set; }
         public string UKey { get; private set; }
         public string FeedMessage { get; private set; }
 
         public MessageNotificationModel(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
+
+            if (token.TryGetValue("unreadNum", out JToken unreadNum))
+            {
+                UnreadNum = unreadNum.ToObject<int>();
+            }
 
             if (token.TryGetValue("ukey", out JToken ukey))
             {
@@ -290,7 +296,7 @@ namespace CoolapkLite.Models.Pages
 
                 if (messageUserInfo.TryGetValue("username", out JToken username))
                 {
-                    UserName = $"{username} {BlockStatus}";
+                    UserName = string.Join(" ", new string[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
                 }
 
             }

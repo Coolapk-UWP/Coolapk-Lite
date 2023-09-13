@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -56,17 +57,82 @@
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{Binding UserName}"
                     ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
-                <Border
-                    Padding="8"
+                <StackPanel
                     HorizontalAlignment="Left"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                    <control:TextBlockEx
+                    <Image
+                        MaxWidth="102"
+                        CanDrag="True"
+                        DragStarting="Border_DragStarting"
+                        KeyDown="Image_KeyDown"
+                        Source="{Binding MessagePic.Pic, Mode=OneWay}"
+                        Tag="{Binding MessagePic}"
+                        Tapped="Image_Tapped"
+                        ToolTipService.ToolTip="{Binding MessagePic.Title}"
+                        Visibility="{Binding MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                        <helpers:UIElementHelper.ContextFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem
+                                    x:Name="RefreshButton"
+                                    x:Uid="/ShowImagePage/RefreshMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding MessagePic}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="CopyButton"
+                                    x:Uid="/ShowImagePage/CopyMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding MessagePic}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="ShareButton"
+                                    x:Uid="/ShowImagePage/ShareMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding MessagePic}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="SaveButton"
+                                    x:Uid="/ShowImagePage/SaveMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding MessagePic}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutItem
+                                    x:Name="OriginButton"
+                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                    Click="AppBarButton_Click"
+                                    Tag="{Binding MessagePic}"
+                                    Visibility="{Binding MessagePic.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </helpers:UIElementHelper.ContextFlyout>
+                    </Image>
+                    <Border
+                        Padding="8"
                         HorizontalAlignment="Left"
-                        IsTextSelectionEnabled="True"
-                        Text="{Binding Message}" />
-                </Border>
+                        Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
+                        <control:TextBlockEx
+                            HorizontalAlignment="Left"
+                            IsTextSelectionEnabled="True"
+                            Text="{Binding Message}" />
+                    </Border>
+                </StackPanel>
             </control:StackPanelEx>
         </Grid>
     </DataTemplate>

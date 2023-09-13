@@ -5,6 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -16,6 +17,15 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:ChatCardTemplates />
             </ResourceDictionary.MergedDictionaries>
+            <control:EmojiNameConverter x:Key="EmojiNameConverter" />
+            <control:StringToEmojiConverter x:Key="StringToEmojiConverter" />
+            <DataTemplate x:Key="EmojiImageTemplate">
+                <Image
+                    Width="36"
+                    Height="36"
+                    Source="{Binding Converter={StaticResource StringToEmojiConverter}}"
+                    ToolTipService.ToolTip="{Binding Converter={StaticResource EmojiNameConverter}}" />
+            </DataTemplate>
             <templates:ChatCardTemplateSelector
                 x:Key="ChatCardTemplateSelector"
                 MessageExtra="{StaticResource MessageExtraTemplate}"
@@ -29,6 +39,11 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <ReorderThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <control:TitleBar
             x:Name="TitleBar"
             Title="{x:Bind Provider.Title, Mode=OneWay}"
@@ -53,19 +68,135 @@
                 </ItemsPanelTemplate>
             </control:PullToRefreshListView.ItemsPanel>
         </control:PullToRefreshListView>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox AcceptsReturn="True" PlaceholderText="暂不支持" />
-            <Button
-                Grid.Column="1"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ToggleButton
+                x:Name="EmojiButton"
                 Height="32"
-                VerticalAlignment="Top"
+                VerticalAlignment="Bottom"
+                Content="&#xE76E;"
+                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                ToolTipService.ToolTip="表情" />
+            <RichEditBox
+                x:Name="InputBox"
+                x:Uid="/CreateFeedControl/EditBox"
+                Grid.Column="1"
+                AcceptsReturn="True"
+                Loaded="InputBox_Loaded" />
+            <Button
+                Grid.Column="2"
+                Height="32"
+                VerticalAlignment="Bottom"
+                Click="Button_Click"
                 Content="&#xE724;"
                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                IsEnabled="False" />
+                Tag="SendButton"
+                ToolTipService.ToolTip="发送" />
+            <Grid
+                Grid.Row="1"
+                Grid.ColumnSpan="3"
+                Height="320"
+                Visibility="{x:Bind EmojiButton.IsChecked, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <AutoSuggestBox
+                    x:Uid="/CreateFeedControl/EmojiSearchBox"
+                    Margin="8,8,8,-8"
+                    IsTabStop="True"
+                    SuggestionChosen="EmojiAutoSuggestBox_SuggestionChosen"
+                    TextChanged="EmojiAutoSuggestBox_TextChanged">
+                    <AutoSuggestBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image
+                                    Width="24"
+                                    Height="24"
+                                    Source="{Binding Converter={StaticResource StringToEmojiConverter}}"
+                                    ToolTipService.ToolTip="{Binding Converter={StaticResource EmojiNameConverter}}" />
+                                <TextBlock
+                                    Grid.Column="1"
+                                    Margin="10,0,0,2"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding Converter={StaticResource EmojiNameConverter}}" />
+                            </Grid>
+                        </DataTemplate>
+                    </AutoSuggestBox.ItemTemplate>
+                </AutoSuggestBox>
+                <Pivot
+                    Grid.Row="1"
+                    helpers:TipsRectangleHelper.IndicatorName="SelectionIndicator"
+                    helpers:TipsRectangleHelper.IsEnable="True"
+                    helpers:TipsRectangleHelper.Orientation="Horizontal">
+                    <PivotItem Header="常规">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind NormalEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                    <PivotItem Header="酷币">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind CoolCoinsEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                    <PivotItem Header="滑稽">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind FunnyEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                    <PivotItem Header="Doge">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind DogeEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                    <PivotItem Header="传统">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind TraditionEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                    <PivotItem Header="经典">
+                        <GridView
+                            Padding="8,0"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind ClassicEmojis}"
+                            SelectionChanged="GridView_SelectionChanged" />
+                    </PivotItem>
+                </Pivot>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

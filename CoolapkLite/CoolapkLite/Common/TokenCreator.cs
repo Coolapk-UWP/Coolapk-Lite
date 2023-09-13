@@ -109,6 +109,8 @@ namespace CoolapkLite.Common
             rand.NextBytes(bytes);
             return BitConverter.ToString(bytes).ToUpperInvariant().Replace("-", "");
         }
+
+        public override string ToString() => GetToken();
     }
 
     public enum TokenVersions

@@ -32,7 +32,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 : id;
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
-                    UriHelper.GetV1Uri(
+                    UriHelper.GetUri(
                         UriType.GetMessageChat,
                         id,
                         p,

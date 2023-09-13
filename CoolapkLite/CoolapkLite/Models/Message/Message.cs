@@ -16,6 +16,7 @@ namespace CoolapkLite.Models.Message
         public string Dateline { get; private set; }
         public DateTime DateTime { get; private set; }
         public ImageModel UserAvatar { get; private set; }
+        public ImageModel MessagePic { get; private set; }
 
         public MessageModel(JObject token) : base(token)
         {
@@ -46,6 +47,14 @@ namespace CoolapkLite.Models.Message
             if (token.TryGetValue("fromUserAvatar", out JToken fromUserAvatar))
             {
                 UserAvatar = new ImageModel(fromUserAvatar.ToString(), ImageType.BigAvatar);
+            }
+
+            if (token.TryGetValue("message_pic", out JToken message_pic) && !string.IsNullOrEmpty(message_pic.ToString()))
+            {
+                if (token.TryGetValue("id", out JToken id))
+                {
+                    MessagePic = new ImageModel(UriHelper.GetUri(UriType.GetMessageImage, id).ToString(), ImageType.SmallMessage);
+                }
             }
         }
 

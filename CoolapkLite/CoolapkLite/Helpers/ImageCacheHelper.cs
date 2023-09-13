@@ -3,9 +3,11 @@ using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
+using Windows.Media.Protection.PlayReady;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
@@ -22,12 +24,15 @@ namespace CoolapkLite.Helpers
         Avatar = 0x04,
         Icon = 0x08,
         Captcha = 0x16,
+        Message = 0x32,
 
         OriginImage = Image | Origin,
         BigAvatar = Avatar | Origin,
+        OriginMessage = Message | Origin,
 
         SmallImage = Image | Small,
         SmallAvatar = Avatar | Small,
+        SmallMessage = Message | Small,
     }
 
     public static partial class ImageCacheHelper
@@ -42,7 +47,11 @@ namespace CoolapkLite.Helpers
 
         public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
-            if (!url.TryGetUri(out Uri uri)) { return await GetNoPicAsync(dispatcher); }
+            Uri uri = type.HasFlag(ImageType.Message)
+                ? await GetMessageImageUriAsync(type, url)
+                : url.TryGetUri();
+
+            if (uri == null) { return await GetNoPicAsync(dispatcher); }
 
             if (url.StartsWith("ms-appx", StringComparison.Ordinal) || uri.IsFile)
             {
@@ -55,7 +64,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                if (type.HasFlag(ImageType.Small))
+                if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
@@ -97,7 +106,11 @@ namespace CoolapkLite.Helpers
 
         public static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
-            if (!url.TryGetUri(out Uri uri)) { return null; }
+            Uri uri = type.HasFlag(ImageType.Message)
+                ? await GetMessageImageUriAsync(type, url)
+                : url.TryGetUri();
+
+            if (uri == null) { return null; }
 
             if (url.StartsWith("ms-appx", StringComparison.Ordinal))
             {
@@ -109,7 +122,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                if (type.HasFlag(ImageType.Small))
+                if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
@@ -184,6 +197,33 @@ namespace CoolapkLite.Helpers
                 ? DarkNoPicMode[dispatcher]
                 : WhiteNoPicMode[dispatcher];
         }
+
+        private static async Task<Uri> GetMessageImageUriAsync(ImageType type, string url)
+        {
+            url += type.HasFlag(ImageType.Small) ? "&type=s" : "&type=n";
+            if (!url.TryGetUri(out Uri uri)) { return null; }
+            using (HttpClientHandler handler = new HttpClientHandler()
+            {
+                AllowAutoRedirect = false
+            })
+            using (HttpClient client = new HttpClient(handler))
+            {
+                TokenCreator token = new TokenCreator(SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion));
+
+                NetworkHelper.SetRequestHeaders(client);
+                client.DefaultRequestHeaders.Add("X-App-Token", token.GetToken());
+                client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+
+                foreach ((string name, string value) in NetworkHelper.GetCoolapkCookies(uri))
+                {
+                    handler.CookieContainer.SetCookies(NetworkHelper.GetHost(uri), $"{name}={value}");
+                }
+
+                HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false);
+
+                return response?.Headers.Location;
+            }
+        }
     }
 
     public static partial class ImageCacheHelper
@@ -217,7 +257,10 @@ namespace CoolapkLite.Helpers
         [Obsolete]
         internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
-            Uri uri = url.TryGetUri();
+            Uri uri = type.HasFlag(ImageType.Message)
+                ? await GetMessageImageUriAsync(type, url)
+                : url.TryGetUri();
+
             if (uri == null) { return await GetNoPicAsync(dispatcher); }
 
             if (url.StartsWith("ms-appx", StringComparison.Ordinal))
@@ -233,7 +276,7 @@ namespace CoolapkLite.Helpers
                 string fileName = DataHelper.GetMD5(url);
                 StorageFolder folder = await GetFolderAsync(type);
                 IStorageItem item = await folder.TryGetItemAsync(fileName);
-                if (type.HasFlag(ImageType.Small))
+                if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
                     if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
                 }

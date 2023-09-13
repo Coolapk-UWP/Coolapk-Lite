@@ -224,11 +224,8 @@
             <control:InfoBadge
                 Grid.RowSpan="2"
                 Grid.Column="2"
-                Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}">
-                <control:InfoBadge.IconSource>
-                    <TextBlock x:Uid="/NotificationsPage/New" />
-                </control:InfoBadge.IconSource>
-            </control:InfoBadge>
+                Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}"
+                Value="{Binding UnreadNum}" />
         </Grid>
     </DataTemplate>
 

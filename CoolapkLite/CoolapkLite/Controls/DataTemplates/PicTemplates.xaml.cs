@@ -64,6 +64,5 @@ namespace CoolapkLite.Controls.DataTemplates
             args.Data.RequestedOperation = DataPackageOperation.Copy;
             await ((sender as FrameworkElement)?.Tag as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
         }
-
     }
 }

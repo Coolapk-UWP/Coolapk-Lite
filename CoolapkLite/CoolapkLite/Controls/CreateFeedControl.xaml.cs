@@ -196,7 +196,7 @@ namespace CoolapkLite.Controls
         {
             this.ShowProgressBar();
             InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
-            contentText = contentText.Replace("\r", "\r\n");
+            contentText = contentText.Replace("\r", Environment.NewLine);
             if (string.IsNullOrWhiteSpace(contentText)) { return; }
             if (FeedType == CreateFeedType.Feed) { CreateFeedContent(contentText); }
             else { CreateReplyContent(contentText); }

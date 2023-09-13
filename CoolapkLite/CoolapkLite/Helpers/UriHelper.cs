@@ -33,6 +33,7 @@ namespace CoolapkLite.Helpers
         GetMessageList,
         GetMessageRead,
         GetMessageChat,
+        GetMessageImage,
         GetNotifications,
         GetNotificationNumbers,
         GetReplyReplies,
@@ -61,6 +62,7 @@ namespace CoolapkLite.Helpers
         PostCollectionUnfollow,
         PostFeedUnlike,
         PostCollectionUnlike,
+        SendMessage,
         OperateProductFollow,
         OOSUploadPrepare,
         RequestValidate,
@@ -128,6 +130,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetMessageList: return "/v6/message/list?page={0}{1}{2}";
                 case UriType.GetMessageRead: return "/v6/message/read?ukey={0}";
                 case UriType.GetMessageChat: return "/v6/message/chat?ukey={0}&page={1}{2}{3}";
+                case UriType.GetMessageImage: return "/v6/message/showImage?id={0}";
                 case UriType.GetNotifications: return "/v6/notification/{0}?page={1}{2}{3}";
                 case UriType.GetNotificationNumbers: return "/v6/notification/checkCount";
                 case UriType.GetReplyReplies: return "/v6/feed/replyList?id={0}&listType=&page={1}{2}&discussMode=0&feedType=feed_reply&blockStatus=0&fromFeedAuthor=0";
@@ -156,6 +159,7 @@ namespace CoolapkLite.Helpers
                 case UriType.PostCollectionUnfollow: return "/v6/collection/unFollow";
                 case UriType.PostFeedUnlike: return "/v6/feed/unlike{0}?id={1}";
                 case UriType.PostCollectionUnlike: return "/v6/collection/unLike";
+                case UriType.SendMessage: return "/v6/message/send?uid={0}";
                 case UriType.OperateProductFollow: return "/v6/product/changeFollowStatus";
                 case UriType.OOSUploadPrepare: return "/v6/upload/ossUploadPrepare";
                 case UriType.RequestValidate: return "/v6/account/requestValidate";
