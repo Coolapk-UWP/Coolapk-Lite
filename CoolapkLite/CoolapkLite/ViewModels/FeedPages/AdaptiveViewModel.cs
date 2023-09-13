@@ -71,12 +71,11 @@ namespace CoolapkLite.ViewModels.FeedPages
                 { Title = $"{name}的{(isFollowList ? "关注" : "粉丝")}" };
         }
 
-        public static AdaptiveViewModel GetReplyListProvider(string id, CoreDispatcher dispatcher, FeedReplyModel reply = null)
+        public static AdaptiveViewModel GetHotReplyListProvider(string id, CoreDispatcher dispatcher)
         {
             return string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
-                : reply == null
-                ? new AdaptiveViewModel(
+                : new AdaptiveViewModel(
                     new CoolapkListProvider(
                         (p, firstItem, lastItem) =>
                             UriHelper.GetUri(
@@ -86,7 +85,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
                         (o) => new Entity[] { new FeedReplyModel(o) },
                         "uid"), dispatcher)
-                { Title = $"热门回复" }
+                { Title = $"热门回复" };
+        }
+
+        public static AdaptiveViewModel GetReplyListProvider(string id, string title, CoreDispatcher dispatcher)
+        {
+            return string.IsNullOrEmpty(id)
+                ? throw new ArgumentException(nameof(id))
                 : new AdaptiveViewModel(
                     new CoolapkListProvider(
                         (p, firstItem, lastItem) =>
@@ -94,10 +99,10 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 UriType.GetReplyReplies,
                                 id,
                                 p,
-                                p > 1 ? $"&lastItem={lastItem}" : string.Empty),
-                        (o) => new Entity[] { new FeedReplyModel(o, false) },
+                                p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                        (o) => new Entity[] { new FeedReplyModel(o) },
                         "uid"), dispatcher)
-                { Title = $"回复({reply.ReplyNum})" };
+                { Title = title };
         }
 
         public static AdaptiveViewModel GetHistoryProvider(string title, CoreDispatcher dispatcher)

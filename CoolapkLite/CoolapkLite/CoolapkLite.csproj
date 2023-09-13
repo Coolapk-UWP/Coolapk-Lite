@@ -165,6 +165,9 @@
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DataTemplates\ChatCardTemplates.xaml.cs">
+      <DependentUpon>ChatCardTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataTemplates\NotificationTemplates.xaml.cs">
       <DependentUpon>NotificationTemplates.xaml</DependentUpon>
     </Compile>
@@ -174,8 +177,8 @@
     <Compile Include="Controls\DataTemplates\RelationRowsTemplates.xaml.cs">
       <DependentUpon>RelationRowsTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplates\SearchWord.xaml.cs">
-      <DependentUpon>SearchWord.xaml</DependentUpon>
+    <Compile Include="Controls\DataTemplates\SearchWordTemplates.xaml.cs">
+      <DependentUpon>SearchWordTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Dialogs\APIVersionDialog.xaml.cs">
       <DependentUpon>APIVersionDialog.xaml</DependentUpon>
@@ -305,6 +308,8 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
+    <Compile Include="Models\Message\MessageBase.cs" />
+    <Compile Include="Models\Message\Message.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
@@ -322,6 +327,9 @@
     </Compile>
     <Compile Include="Pages\FeedPages\BookmarkPage.xaml.cs">
       <DependentUpon>BookmarkPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\FeedPages\ChatPage.xaml.cs">
+      <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedPages\NotificationsPage.xaml.cs">
       <DependentUpon>NotificationsPage.xaml</DependentUpon>
@@ -463,6 +471,7 @@
     <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\BookmarkViewModel.cs" />
+    <Compile Include="ViewModels\FeedPages\ChatViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\CreateFeedViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
@@ -1077,6 +1086,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\DataTemplates\ChatCardTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\DataTemplates\NotificationTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1089,7 +1102,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\DataTemplates\SearchWord.xaml">
+    <Page Include="Controls\DataTemplates\SearchWordTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1182,6 +1195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\FeedPages\BookmarkPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\FeedPages\ChatPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

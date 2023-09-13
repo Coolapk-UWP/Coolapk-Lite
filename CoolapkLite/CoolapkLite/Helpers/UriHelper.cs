@@ -22,7 +22,7 @@ namespace CoolapkLite.Helpers
         GetProductFeeds,
         GetFeedDetail,
         GetFeedReplies,
-        GetFeedInfos,
+        GetFeedInfo,
         GetVoteComments,
         GetChangeHistoryList,
         GetHotReplies,
@@ -30,7 +30,9 @@ namespace CoolapkLite.Helpers
         GetIndexPageNames,
         GetLikeList,
         GetMyPageCard,
-        GetChats,
+        GetMessageList,
+        GetMessageRead,
+        GetMessageChat,
         GetNotifications,
         GetNotificationNumbers,
         GetReplyReplies,
@@ -87,7 +89,7 @@ namespace CoolapkLite.Helpers
             return new Uri(IsUseAPI2 ? Base2Uri : BaseUri, u);
         }
 
-        public static Uri GetOldUri(UriType type, params object[] args)
+        public static Uri GetV1Uri(UriType type, params object[] args)
         {
             string u = string.Format(GetTemplate(type), args);
             return new Uri(BaseUri, u);
@@ -115,7 +117,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetProductFeeds: return "/v6/page/dataList?url=/page?url=/product/feedList?type={4}&id={0}&page={1}{2}{3}";
                 case UriType.GetFeedDetail: return "/v6/feed/detail?id={0}";
                 case UriType.GetFeedReplies: return "/v6/feed/replyList?id={0}&listType={1}&page={2}{3}&discussMode=1&feedType=feed&blockStatus=0&fromFeedAuthor={4}";
-                case UriType.GetFeedInfos: return "/v6/feed/{4}List?id={0}&page={1}{2}{3}";
+                case UriType.GetFeedInfo: return "/v6/feed/{4}List?id={0}&page={1}{2}{3}";
                 case UriType.GetVoteComments: return "/v6/vote/commentList?fid={0}{1}&page={2}{3}{4}";
                 case UriType.GetChangeHistoryList: return "/v6/feed/changeHistoryList?id={0}";
                 case UriType.GetHotReplies: return "/v6/feed/hotReplyList?id={0}&page={1}{2}&discussMode=1";
@@ -123,7 +125,9 @@ namespace CoolapkLite.Helpers
                 case UriType.GetIndexPageNames: return "/v6/main/init";
                 case UriType.GetLikeList: return "/v6/feed/likeList?id={0}&listType=lastupdate_desc&page={1}{2}";
                 case UriType.GetMyPageCard: return "/v6/account/loadConfig?key=my_page_card_config";
-                case UriType.GetChats: return "/v6/message/list?page={0}{1}{2}";
+                case UriType.GetMessageList: return "/v6/message/list?page={0}{1}{2}";
+                case UriType.GetMessageRead: return "/v6/message/read?ukey={0}";
+                case UriType.GetMessageChat: return "/v6/message/chat?ukey={0}&page={1}{2}{3}";
                 case UriType.GetNotifications: return "/v6/notification/{0}?page={1}{2}{3}";
                 case UriType.GetNotificationNumbers: return "/v6/notification/checkCount";
                 case UriType.GetReplyReplies: return "/v6/feed/replyList?id={0}&listType=&page={1}{2}&discussMode=0&feedType=feed_reply&blockStatus=0&fromFeedAuthor=0";

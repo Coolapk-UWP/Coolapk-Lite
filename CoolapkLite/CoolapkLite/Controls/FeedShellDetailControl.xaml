@@ -433,6 +433,7 @@
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="True"
+                        LineSpacing="10"
                         Text="{Binding Message}"
                         Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}" />
                     <local:TextBlockEx
@@ -440,6 +441,7 @@
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="True"
+                        LineSpacing="10"
                         Text="{Binding MessageRawOutput}"
                         Visibility="{Binding MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
                 </Grid>

@@ -1,7 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Pages;
-using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels.FeedPages;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -10,9 +7,9 @@ using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public sealed partial class NotificationTemplates : ResourceDictionary
+    public sealed partial class ChatCardTemplates : ResourceDictionary
     {
-        public NotificationTemplates() => InitializeComponent();
+        public ChatCardTemplates() => InitializeComponent();
 
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
@@ -22,14 +19,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (e != null) { e.Handled = true; }
 
-            if (element.Tag is MessageNotificationModel messageNotification)
-            {
-                _ = element.NavigateAsync(typeof(ChatPage), new ChatViewModel(messageNotification.UKey, $"{messageNotification.UserName}的私信", element.Dispatcher));
-            }
-            else
-            {
-                _ = element.OpenLinkAsync(element.Tag?.ToString());
-            }
+            _ = element.OpenLinkAsync(element.Tag?.ToString());
         }
 
         public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -44,12 +34,5 @@ namespace CoolapkLite.Controls.DataTemplates
                     break;
             }
         }
-
-        private void Button_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (e != null) { e.Handled = true; }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e) => FrameworkElement_Tapped(sender, null);
     }
 }

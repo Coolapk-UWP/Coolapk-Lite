@@ -80,11 +80,12 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public virtual async Task Refresh(bool reset = false)
         {
+            if (_busy) { return; }
             if (reset)
             {
                 await Reset().ConfigureAwait(false);
             }
-            else
+            else if (_hasMoreItems)
             {
                 _ = await LoadMoreItemsAsync(20);
             }

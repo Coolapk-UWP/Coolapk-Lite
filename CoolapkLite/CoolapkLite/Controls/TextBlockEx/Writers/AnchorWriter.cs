@@ -1,6 +1,7 @@
 ﻿using HtmlAgilityPack;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
@@ -15,6 +16,8 @@ namespace CoolapkLite.Controls.Writers
             if (node != null)
             {
                 Hyperlink hyperlink = new Hyperlink { UnderlineStyle = UnderlineStyle.None };
+
+                BindingOperations.SetBinding(hyperlink, TextElement.ForegroundProperty, CreateBinding(textBlockEx, nameof(textBlockEx.LinkForeground)));
 
                 string content = node.InnerText;
                 if (content == "查看图片")

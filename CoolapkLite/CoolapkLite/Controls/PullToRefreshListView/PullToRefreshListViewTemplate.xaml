@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls">
 
     <ControlTemplate x:Key="PullToRefreshListViewTemplate" TargetType="local:PullToRefreshListView">

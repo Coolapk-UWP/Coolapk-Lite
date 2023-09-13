@@ -331,6 +331,7 @@
                         x:Name="Message"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                        LineSpacing="10"
                         Text="{Binding Message}"
                         Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}" />
                 </controls:StackPanelEx>
@@ -715,6 +716,7 @@
                     Margin="4"
                     HorizontalAlignment="Left"
                     IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                    LineSpacing="10"
                     Text="{Binding Message}" />
                 <GridView
                     Grid.Row="2"
@@ -919,6 +921,7 @@
                     Margin="4"
                     HorizontalAlignment="Left"
                     IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                    LineSpacing="10"
                     Text="{Binding Message}" />
                 <GridView
                     Grid.Row="4"

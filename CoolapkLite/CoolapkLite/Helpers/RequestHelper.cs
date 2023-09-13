@@ -113,19 +113,6 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static string GetId(JToken token, string _idName)
-        {
-            return token == null
-                ? string.Empty
-                : (token as JObject).TryGetValue(_idName, out JToken jToken)
-                    ? jToken.ToString()
-                    : (token as JObject).TryGetValue("entityId", out JToken v1)
-                        ? v1.ToString()
-                        : (token as JObject).TryGetValue("id", out JToken v2)
-                            ? v2.ToString()
-                            : throw new ArgumentException(nameof(_idName));
-        }
-
 #pragma warning disable 0612
         public static async Task<BitmapImage> GetImageAsync(string uri, CoreDispatcher dispatcher, bool isBackground = false)
         {
@@ -232,7 +219,7 @@ namespace CoolapkLite.Helpers
 
                     content.Add(picFile);
 
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetOldUri(UriType.UploadImage, "feed"), content).ConfigureAwait(false);
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetV1Uri(UriType.UploadImage, "feed"), content).ConfigureAwait(false);
 
                     if (isSucceed) { return (isSucceed, result.ToString()); }
                 }

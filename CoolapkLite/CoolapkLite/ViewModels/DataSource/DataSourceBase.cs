@@ -34,7 +34,7 @@ namespace CoolapkLite.ViewModels.DataSource
         }
 
         /// <summary>
-        /// Special for WFun, as their items are paged.
+        /// Special for Coolapk, as their items are paged.
         /// </summary>
         protected override async Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
         {

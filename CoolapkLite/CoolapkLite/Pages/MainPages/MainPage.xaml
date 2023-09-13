@@ -15,7 +15,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:SearchWord />
+                <templates:SearchWordTemplates />
             </ResourceDictionary.MergedDictionaries>
             <converters:EmptyObjectToVisibilityConverter x:Key="EmptyObjectToVisibilityConverter" />
             <DataTemplate x:Key="DefaultTemplate" x:DataType="local:MenuItem">

@@ -148,7 +148,7 @@ namespace CoolapkLite.Pages.FeedPages
                             new CoolapkListProvider(
                                 (p, firstItem, lastItem) =>
                                     UriHelper.GetUri(
-                                        UriType.GetChats,
+                                        UriType.GetMessageList,
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
@@ -158,7 +158,7 @@ namespace CoolapkLite.Pages.FeedPages
                     default:
                         break;
                 }
-                RefreshTask = (reset) => (Frame.Content as AdaptivePage).Refresh(reset);
+                RefreshTask = (reset) => (Frame.Content as AdaptivePage)?.Refresh(reset);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {

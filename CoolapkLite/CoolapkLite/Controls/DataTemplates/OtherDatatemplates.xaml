@@ -54,7 +54,9 @@
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
-                Text="{Binding UserName}" />
+                MaxLines="1"
+                Text="{Binding UserName}"
+                TextTrimming="CharacterEllipsis" />
             <TextBlock
                 Grid.Row="1"
                 Grid.Column="1"
@@ -71,8 +73,9 @@
                 Grid.Row="2"
                 Grid.Column="1"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                MaxLines="2"
+                MaxLines="10"
                 Text="{Binding Bio}"
+                TextTrimming="CharacterEllipsis"
                 TextWrapping="Wrap"
                 Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
@@ -102,7 +105,12 @@
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <Border
+                Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Center"
@@ -111,29 +119,21 @@
                     <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                 </Border.Background>
             </Border>
-            <Grid
+            <TextBlock
+                Grid.Row="0"
                 Grid.Column="1"
-                Margin="0,0,8,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    VerticalAlignment="Center"
-                    Text="{Binding Title}"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
-                <ctrl:TextBlockEx
-                    Grid.Row="1"
-                    VerticalAlignment="Center"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    MaxLines="10"
-                    Text="{Binding Description}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-            </Grid>
+                MaxLines="1"
+                Text="{Binding Title}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+            <ctrl:TextBlockEx
+                Grid.Row="1"
+                Grid.Column="1"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                MaxLines="10"
+                Text="{Binding Description}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
 
@@ -161,7 +161,13 @@
                 <ColumnDefinition Width="56" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
             <Ellipse
+                Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Center"
@@ -170,35 +176,31 @@
                     <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                 </Ellipse.Fill>
             </Ellipse>
-            <Grid
+            <TextBlock
+                Grid.Row="0"
                 Grid.Column="1"
-                Margin="0,0,8,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <TextBlock
-                    Grid.Row="0"
-                    VerticalAlignment="Center"
-                    Text="{Binding Title}"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock
-                    Grid.Row="1"
-                    VerticalAlignment="Center"
-                    Text="{Binding SubTitle}"
-                    Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                <ctrl:TextBlockEx
-                    Grid.Row="2"
-                    VerticalAlignment="Center"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    MaxLines="10"
-                    Text="{Binding Description}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
-            </Grid>
+                VerticalAlignment="Center"
+                MaxLines="1"
+                Text="{Binding Title}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                MaxLines="1"
+                Text="{Binding SubTitle}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+            <ctrl:TextBlockEx
+                Grid.Row="2"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                MaxLines="10"
+                Text="{Binding Description}"
+                TextTrimming="CharacterEllipsis"
+                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

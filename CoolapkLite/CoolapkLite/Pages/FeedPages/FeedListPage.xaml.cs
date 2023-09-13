@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
@@ -421,17 +422,21 @@ namespace CoolapkLite.Pages.FeedPages
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            return item is Models.Pages.DyhDetail
-                ? DyhDetail
-                : item is Models.Pages.UserDetail
-                    ? UserDetail
-                    : item is Models.Pages.TopicDetail
-                        ? TopicDetail
-                        : item is Models.Pages.ProductDetail
-                            ? ProductDetail
-                            : item is Models.Pages.CollectionDetail
-                                ? CollectionDetail
-                                : Others;
+            switch (item)
+            {
+                case DyhDetail _:
+                    return DyhDetail;
+                case UserDetail _:
+                    return UserDetail;
+                case TopicDetail _:
+                    return TopicDetail;
+                case ProductDetail _:
+                    return ProductDetail;
+                case CollectionDetail _:
+                    return CollectionDetail;
+                default:
+                    return Others;
+            }
         }
     }
 }

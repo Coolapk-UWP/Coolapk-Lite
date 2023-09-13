@@ -65,10 +65,10 @@ namespace CoolapkLite.Controls.DataTemplates
             switch (element.Name)
             {
                 case "NewWindow" when element.Tag is FeedReplyModel replyModel:
-                    _ = element.Dispatcher.NavigateOutsideAsync(typeof(AdaptivePage), (dispatcher) => AdaptiveViewModel.GetReplyListProvider(replyModel.ID.ToString(), dispatcher, replyModel));
+                    _ = element.Dispatcher.NavigateOutsideAsync(typeof(AdaptivePage), (dispatcher) => AdaptiveViewModel.GetReplyListProvider(replyModel.ID.ToString(), $"回复({replyModel.ReplyNum})", dispatcher));
                     break;
-                case "SeeAllButton":
-                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(((FeedReplyModel)element.Tag).ID.ToString(), element.Dispatcher, (FeedReplyModel)element.Tag));
+                case "SeeAllButton" when element.Tag is FeedReplyModel replyModel:
+                    _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetReplyListProvider(replyModel.ID.ToString(), $"回复({replyModel.ReplyNum})", element.Dispatcher));
                     break;
                 default:
                     _ = element.OpenLinkAsync((sender as FrameworkElement).Tag?.ToString());

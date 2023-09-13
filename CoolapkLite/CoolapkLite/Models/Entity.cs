@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Helpers;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 
 namespace CoolapkLite.Models
@@ -18,14 +17,10 @@ namespace CoolapkLite.Models
 
             if (token.TryGetValue("entityId", out JToken entityId))
             {
-                try
+                EntityIDText = entityId.ToString();
+                if (int.TryParse(EntityIDText, out int id))
                 {
-                    EntityID = entityId.ToObject<int>();
-                    EntityIDText = entityId.ToString();
-                }
-                catch (Exception ex)
-                {
-                    SettingsHelper.LogManager.GetLogger(nameof(Entity)).Warn(ex.ExceptionToMessage(), ex);
+                    EntityID = id;
                 }
             }
 

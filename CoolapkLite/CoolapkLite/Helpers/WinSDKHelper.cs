@@ -203,6 +203,11 @@ namespace CoolapkLite.Helpers
         /// </summary>
         public static bool IsRevealFocusVisualKindSupported { get; } = ApiInformation.IsEnumNamedValuePresent("Windows.UI.Xaml.FocusVisualKind", "Reveal");
 
+        /// <summary>
+        /// Is <see cref="Windows.UI.Xaml.Controls.ItemsUpdatingScrollMode.KeepLastItemInView"/> supported.
+        /// </summary>
+        public static bool IsKeepLastItemInViewSupported { get; } = ApiInformation.IsEnumNamedValuePresent("Windows.UI.Xaml.Controls.ItemsUpdatingScrollMode", "KeepLastItemInView");
+
         #endregion
     }
 }

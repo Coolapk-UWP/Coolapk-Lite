@@ -13,6 +13,8 @@ namespace CoolapkLite.Models.Pages
     {
         public int ID { get; protected set; }
 
+        public bool IsNew { get; protected set; }
+
         public string Url { get; protected set; }
         public string UserUrl { get; protected set; }
         public string UserName { get; protected set; }
@@ -21,7 +23,18 @@ namespace CoolapkLite.Models.Pages
 
         public ImageModel UserAvatar { get; protected set; }
 
-        protected NotificationModel(JObject token) : base(token) { }
+        protected NotificationModel(JObject token) : base(token)
+        {
+            if (token.TryGetValue("id", out JToken id))
+            {
+                ID = id.ToObject<int>();
+            }
+
+            if (token.TryGetValue("is_new", out JToken is_new))
+            {
+                IsNew = is_new.ToObject<int>() == 1;
+            }
+        }
 
         public override string ToString() => string.Join(" - ", UserName, Dateline);
     }
@@ -33,11 +46,6 @@ namespace CoolapkLite.Models.Pages
         public SimpleNotificationModel(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
-
-            if (token.TryGetValue("id", out JToken id))
-            {
-                ID = id.ToObject<int>();
-            }
 
             if (token.TryGetValue("url", out JToken url))
             {
@@ -95,6 +103,7 @@ namespace CoolapkLite.Models.Pages
 
     public class AtCommentMeNotificationModel : NotificationModel
     {
+        public string FeedUrl { get; private set; }
         public string Message { get; private set; }
         public string FeedMessage { get; private set; }
 
@@ -102,14 +111,14 @@ namespace CoolapkLite.Models.Pages
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
-            if (token.TryGetValue("id", out JToken id))
-            {
-                ID = id.ToObject<int>();
-            }
-
             if (token.TryGetValue("url", out JToken url))
             {
                 Url = url.ToString();
+            }
+
+            if (token.TryGetValue("extra_url", out JToken extra_url))
+            {
+                FeedUrl = extra_url.ToString();
             }
 
             if (token.TryGetValue("uid", out JToken uid))
@@ -173,11 +182,6 @@ namespace CoolapkLite.Models.Pages
         public LikeNotificationModel(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
-
-            if (token.TryGetValue("id", out JToken id))
-            {
-                ID = id.ToObject<int>();
-            }
 
             if (token.TryGetValue("url", out JToken url))
             {
@@ -244,20 +248,16 @@ namespace CoolapkLite.Models.Pages
 
     public class MessageNotificationModel : NotificationModel
     {
+        public string UKey { get; private set; }
         public string FeedMessage { get; private set; }
 
         public MessageNotificationModel(JObject token) : base(token)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
 
-            if (token.TryGetValue("id", out JToken id))
-            {
-                ID = id.ToObject<int>();
-            }
-
             if (token.TryGetValue("ukey", out JToken ukey))
             {
-                Url = ukey.ToString();
+                UKey = ukey.ToString();
             }
 
             if (token.TryGetValue("uid", out JToken uid))
@@ -297,7 +297,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("is_top", out JToken is_top) && is_top.ToObject<int>() == 1)
             {
-                Dateline += " " + "[置顶]";
+                Dateline += " [置顶]";
             }
         }
 

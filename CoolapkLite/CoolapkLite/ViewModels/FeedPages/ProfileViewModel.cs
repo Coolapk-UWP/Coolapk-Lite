@@ -5,6 +5,7 @@ using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
@@ -69,6 +70,23 @@ namespace CoolapkLite.ViewModels.FeedPages
         bool IViewModel.IsEqual(IViewModel other) => other is ProfileViewModel model && IsEqual(model);
 
         public bool IsEqual(ProfileViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
+
+        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
+        {
+            List<Entity> Models = new List<Entity>();
+            if (Provider != null && _currentPage == 1)
+            {
+                await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
+            }
+            return Models;
+        }
+
+        protected override async Task<IList<Entity>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
+        {
+            IList<Entity> result = await base.LoadMoreItemsOverrideAsync(c, count).ConfigureAwait(false);
+            _hasMoreItems = false;
+            return result;
+        }
 
         private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
         {

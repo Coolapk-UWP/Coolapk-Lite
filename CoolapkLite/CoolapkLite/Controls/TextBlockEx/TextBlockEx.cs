@@ -33,14 +33,21 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Creates a new instance of the <see cref="TextBlockEx"/> class.
         /// </summary>
-        public TextBlockEx() => DefaultStyleKey = typeof(TextBlockEx);
+        public TextBlockEx()
+        {
+            DefaultStyleKey = typeof(TextBlockEx);
+            RegisterPropertyChangedCallback(FontSizeProperty, (sender, args) => UpdateLineHeight());
+        }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             RichTextBlock = GetTemplateChild(RichTextBlockName) as RichTextBlock;
+            UpdateLineHeight();
             RenderTextBlock();
         }
+
+        private void UpdateLineHeight() => LineHeight = LineSpacing == 0 ? 0 : FontSize + LineSpacing;
 
         private void RenderTextBlock()
         {

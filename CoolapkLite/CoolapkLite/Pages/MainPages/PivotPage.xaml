@@ -14,7 +14,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:SearchWord />
+                <templates:SearchWordTemplates />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="controls:TitleBar">
                 <Setter Property="CompactModeThresholdWidth" Value="-1" />

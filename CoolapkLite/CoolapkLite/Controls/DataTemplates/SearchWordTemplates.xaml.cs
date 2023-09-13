@@ -4,8 +4,8 @@
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public sealed partial class SearchWord : ResourceDictionary
+    public sealed partial class SearchWordTemplates : ResourceDictionary
     {
-        public SearchWord() => InitializeComponent();
+        public SearchWordTemplates() => InitializeComponent();
     }
 }

@@ -46,7 +46,7 @@ namespace CoolapkLite.Pages.FeedPages
             if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
             {
                 _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains("V") ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
-                Refresh = (reset) => _ = (Frame.Content as AdaptivePage).Refresh(reset);
+                Refresh = (reset) => _ = (Frame.Content as AdaptivePage)?.Refresh(reset);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {

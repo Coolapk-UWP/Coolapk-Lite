@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Models.Images;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
@@ -51,6 +52,57 @@ namespace CoolapkLite.Controls
         {
             get => (bool)GetValue(IsTextSelectionEnabledProperty);
             set => SetValue(IsTextSelectionEnabledProperty, value);
+        }
+
+        #endregion
+
+        #region LineHeight
+
+        /// <summary>
+        /// Identifies the <see cref="LineHeight"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LineHeightProperty =
+            DependencyProperty.Register(
+                nameof(LineHeight),
+                typeof(double),
+                typeof(TextBlockEx),
+                null);
+
+        /// <summary>
+        /// Gets or sets the height of each line of content.
+        /// </summary>
+        public double LineHeight
+        {
+            get => (double)GetValue(LineHeightProperty);
+            private set => SetValue(LineHeightProperty, value);
+        }
+
+        #endregion
+
+        #region LineSpacing
+
+        /// <summary>
+        /// Identifies the <see cref="LineSpacing"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LineSpacingProperty =
+            DependencyProperty.Register(
+                nameof(LineSpacing),
+                typeof(double),
+                typeof(TextBlockEx),
+                new PropertyMetadata(0d, OnLineSpacingPropertyChanged));
+
+        /// <summary>
+        /// Gets or sets the spacing of each line of content.
+        /// </summary>
+        public double LineSpacing
+        {
+            get => (double)GetValue(LineSpacingProperty);
+            set => SetValue(LineSpacingProperty, value);
+        }
+
+        private static void OnLineSpacingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((TextBlockEx)d).UpdateLineHeight();
         }
 
         #endregion
@@ -402,6 +454,29 @@ namespace CoolapkLite.Controls
         {
             get => (FontFamily)GetValue(InlineCodeFontFamilyProperty);
             set => SetValue(InlineCodeFontFamilyProperty, value);
+        }
+
+        #endregion
+
+        #region LinkForeground
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="LinkForeground"/>.
+        /// </summary>
+        public static readonly DependencyProperty LinkForegroundProperty =
+            DependencyProperty.Register(
+                nameof(LinkForeground),
+                typeof(Brush),
+                typeof(TextBlockEx),
+                null);
+
+        /// <summary>
+        /// Gets or sets the brush used to render links.
+        /// </summary>
+        public Brush LinkForeground
+        {
+            get => (Brush)GetValue(LinkForegroundProperty);
+            set => SetValue(LinkForegroundProperty, value);
         }
 
         #endregion

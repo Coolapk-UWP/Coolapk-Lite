@@ -36,9 +36,9 @@ namespace CoolapkLite.ViewModels.Providers
                 if (array.Count < 1) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
-                    _firstItem = RequestHelper.GetId(array.First, _idName);
+                    _firstItem = GetEntityID(array.First as JObject, _idName);
                 }
-                _lastItem = RequestHelper.GetId(array.Last, _idName);
+                _lastItem = GetEntityID(array.Last as JObject, _idName);
                 foreach (JObject item in array.OfType<JObject>())
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
@@ -58,9 +58,9 @@ namespace CoolapkLite.ViewModels.Providers
                 if (array.Count < 1) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
-                    _firstItem = RequestHelper.GetId(array.First, _idName);
+                    _firstItem = GetEntityID(array.First as JObject, _idName);
                 }
-                _lastItem = RequestHelper.GetId(array.Last, _idName);
+                _lastItem = GetEntityID(array.Last as JObject, _idName);
                 foreach (JObject item in array.OfType<JObject>())
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
@@ -80,9 +80,9 @@ namespace CoolapkLite.ViewModels.Providers
                 if (array.Count < 1) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
-                    _firstItem = RequestHelper.GetId(array.First, _idName);
+                    _firstItem = GetEntityID(array.First as JObject, _idName);
                 }
-                _lastItem = RequestHelper.GetId(array.Last, _idName);
+                _lastItem = GetEntityID(array.Last as JObject, _idName);
                 foreach (JObject item in array.OfType<JObject>())
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
@@ -90,6 +90,19 @@ namespace CoolapkLite.ViewModels.Providers
                     Models = Models.Concat(entities.OfType<T>());
                 }
             }
+        }
+
+        private static string GetEntityID(JObject token, string _idName)
+        {
+            return token == null
+                ? string.Empty
+                : token.TryGetValue(_idName, out JToken idName)
+                    ? idName.ToString()
+                    : token.TryGetValue("entityId", out JToken entityId)
+                        ? entityId.ToString()
+                        : token.TryGetValue("id", out JToken id)
+                            ? id.ToString()
+                            : string.Empty;
         }
     }
 }

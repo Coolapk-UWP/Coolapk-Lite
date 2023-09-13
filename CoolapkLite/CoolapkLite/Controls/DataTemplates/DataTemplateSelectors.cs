@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Message;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
@@ -25,32 +26,34 @@ namespace CoolapkLite.Controls.DataTemplates
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is FeedModel) { return Feed; }
-            else if (item is UserModel) { return User; }
-            else if (item is FeedReplyModel) { return FeedReply; }
-            else if (item is IndexPageHasEntitiesModel IndexPageHasEntitiesModel)
+            switch (item)
             {
-                switch (IndexPageHasEntitiesModel.EntitiesType)
-                {
-                    case EntityType.Image: return Images;
-                    default: return Others;
-                }
-            }
-            else
-            {
-                return item is LikeNotificationModel
-                    ? LikeNotify
-                    : item is SimpleNotificationModel
-                        ? CommentMe
-                        : item is MessageNotificationModel
-                            ? MessageNotify
-                            : item is AtCommentMeNotificationModel
-                                ? AtCommentMe
-                                : item is IHasDescription
-                                    ? List
-                                    : item is IHasSubtitle
-                                        ? SubtitleList
-                                        : Others;
+                case FeedModel _:
+                    return Feed;
+                case UserModel _:
+                    return User;
+                case FeedReplyModel _:
+                    return FeedReply;
+                case IndexPageHasEntitiesModel IndexPageHasEntitiesModel:
+                    switch (IndexPageHasEntitiesModel.EntitiesType)
+                    {
+                        case EntityType.Image: return Images;
+                        default: return Others;
+                    }
+                case LikeNotificationModel _:
+                    return LikeNotify;
+                case SimpleNotificationModel _:
+                    return CommentMe;
+                case MessageNotificationModel _:
+                    return MessageNotify;
+                case AtCommentMeNotificationModel _:
+                    return AtCommentMe;
+                case IHasDescription _ when item is IHasSubtitle:
+                    return SubtitleList;
+                case IHasDescription _:
+                    return List;
+                default:
+                    return Others;
             }
         }
     }
@@ -64,23 +67,25 @@ namespace CoolapkLite.Controls.DataTemplates
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is IndexPageHasEntitiesModel IndexPageHasEntitiesModel)
+            switch (item)
             {
-                switch (IndexPageHasEntitiesModel.EntitiesType)
-                {
-                    case EntityType.TextLinks: return TextLinkList;
-                    default: return ImageTextScrollCard;
-                }
+                case IndexPageHasEntitiesModel IndexPageHasEntitiesModel:
+                    switch (IndexPageHasEntitiesModel.EntitiesType)
+                    {
+                        case EntityType.TextLinks: return TextLinkList;
+                        default: return ImageTextScrollCard;
+                    }
+
+                case IndexPageOperationCardModel IndexPageOperationCardModel:
+                    switch (IndexPageOperationCardModel.OperationType)
+                    {
+                        case OperationType.ShowTitle: return TitleCard;
+                        default: return Others;
+                    }
+
+                default:
+                    return Others;
             }
-            else if (item is IndexPageOperationCardModel IndexPageOperationCardModel)
-            {
-                switch (IndexPageOperationCardModel.OperationType)
-                {
-                    case OperationType.ShowTitle: return TitleCard;
-                    default: return Others;
-                }
-            }
-            else { return Others; }
         }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
@@ -95,20 +100,23 @@ namespace CoolapkLite.Controls.DataTemplates
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            if (item is CollectionModel) { return History; }
-            else if (item is IndexPageModel IndexPageModel)
+            switch (item)
             {
-                switch (IndexPageModel?.EntityType)
-                {
-                    case "topic":
-                    case "recentHistory": return IconLink;
-                    case "textLink": return TextLink;
-                    case "collection":
-                    case "history": return History;
-                    default: return Empty;
-                }
+                case CollectionModel _:
+                    return History;
+                case IndexPageModel IndexPageModel:
+                    switch (IndexPageModel?.EntityType)
+                    {
+                        case "topic":
+                        case "recentHistory": return IconLink;
+                        case "textLink": return TextLink;
+                        case "collection":
+                        case "history": return History;
+                        default: return Empty;
+                    }
+                default:
+                    return Empty;
             }
-            else { return Empty; }
         }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
@@ -119,9 +127,29 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate App { get; set; }
         public DataTemplate SearchWord { get; set; }
 
+        protected override DataTemplate SelectTemplateCore(object item) => item is AppModel ? App : SearchWord;
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
+    }
+
+    public sealed class ChatCardTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate Others { get; set; }
+        public DataTemplate MessageLeft { get; set; }
+        public DataTemplate MessageRight { get; set; }
+        public DataTemplate MessageExtra { get; set; }
+
         protected override DataTemplate SelectTemplateCore(object item)
         {
-            return item is AppModel ? App : SearchWord;
+            switch (item)
+            {
+                case MessageModel messageModel:
+                    return messageModel.IsMe ? MessageRight : MessageLeft;
+                case MessageExtraModel _:
+                    return MessageExtra;
+                default:
+                    return Others;
+            }
         }
 
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);

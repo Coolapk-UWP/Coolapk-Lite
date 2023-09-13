@@ -15,7 +15,7 @@ namespace CoolapkLite.Pages.FeedPages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class AdaptivePage : Page
+    public sealed partial class ChatPage : Page
     {
         #region Provider
 
@@ -25,27 +25,27 @@ namespace CoolapkLite.Pages.FeedPages
         public static readonly DependencyProperty ProviderProperty =
             DependencyProperty.Register(
                 nameof(Provider),
-                typeof(AdaptiveViewModel),
-                typeof(AdaptivePage),
+                typeof(ChatViewModel),
+                typeof(ChatPage),
                 null);
 
         /// <summary>
         /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
         /// </summary>
-        public AdaptiveViewModel Provider
+        public ChatViewModel Provider
         {
-            get => (AdaptiveViewModel)GetValue(ProviderProperty);
+            get => (ChatViewModel)GetValue(ProviderProperty);
             private set => SetValue(ProviderProperty, value);
         }
 
         #endregion
 
-        public AdaptivePage() => InitializeComponent();
+        public ChatPage() => InitializeComponent();
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (e.Parameter is AdaptiveViewModel ViewModel
+            if (e.Parameter is ChatViewModel ViewModel
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
@@ -74,36 +74,26 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            Page page = this.FindAscendant<Page>();
-            Provider.IsShowTitle = page is MainPage;
-
-            Thickness StackPanelMargin;
-            Thickness ScrollViewerMargin;
-            Thickness ScrollViewerPadding;
-
-            if (Provider.IsShowTitle)
-            {
-                StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
-                ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
-                ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
-            }
-            else
-            {
-                StackPanelMargin = ScrollViewerMargin = ScrollViewerPadding = new Thickness(0);
-            }
-
-            ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
             ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
+            ItemsStackPanel ItemsStackPanel = ListView.FindDescendant<ItemsStackPanel>();
 
-            if (StackPanel != null)
+            if (ItemsStackPanel != null && ApiInfoHelper.IsKeepLastItemInViewSupported)
             {
-                StackPanel.Margin = StackPanelMargin;
-                StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                ItemsStackPanel.ItemsUpdatingScrollMode = ItemsUpdatingScrollMode.KeepLastItemInView;
             }
+
             if (ScrollViewer != null)
             {
-                ScrollViewer.Margin = ScrollViewerMargin;
-                ScrollViewer.Padding = ScrollViewerPadding;
+                ScrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            }
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            if (scrollViewer.VerticalOffset == 0)
+            {
+                _ = Refresh();
             }
         }
     }
