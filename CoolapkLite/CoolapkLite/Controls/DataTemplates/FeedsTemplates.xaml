@@ -224,7 +224,7 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <FontIcon
@@ -307,13 +307,13 @@
                             Padding="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                            BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                             BorderThickness="1"
                             CornerRadius="{ThemeResource ControlCornerRadius}">
                             <TextBlock
                                 x:Uid="/Feed/Rating"
                                 FontSize="12"
-                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
                         </Border>
                         <TextBlock
@@ -819,7 +819,7 @@
                             <Border
                                 Margin="6,0"
                                 VerticalAlignment="Center"
-                                BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                                 BorderThickness="1"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Visibility="{Binding IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -828,7 +828,7 @@
                                     Margin="1"
                                     HorizontalAlignment="Left"
                                     FontSize="12"
-                                    Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                     IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
                             </Border>
                         </StackPanel>
@@ -876,7 +876,7 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <FontIcon

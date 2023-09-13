@@ -1169,7 +1169,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                        Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Glyph="&#xE8E1;"
                                         Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
                                     <FontIcon

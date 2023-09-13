@@ -85,7 +85,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                        Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Glyph="&#xE8E1;"
                                         Visibility="{x:Bind Provider.FeedDetail.Liked, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                                     <FontIcon
@@ -107,7 +107,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                        Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Glyph="&#xE113;"
                                         Visibility="{x:Bind Provider.FeedDetail.Stared, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                                     <FontIcon

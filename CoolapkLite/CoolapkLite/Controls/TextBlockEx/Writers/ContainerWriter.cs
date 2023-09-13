@@ -25,7 +25,7 @@ namespace CoolapkLite.Controls.Writers
                     CornerRadius = new CornerRadius(4),
                     BorderThickness = new Thickness(1),
                     VerticalAlignment = VerticalAlignment.Center,
-                    BorderBrush = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
+                    BorderBrush = (SolidColorBrush)Application.Current.Resources["AccentFillColorDefaultBrush"],
                 };
 
                 TextBlock textBlock = new TextBlock
@@ -33,7 +33,7 @@ namespace CoolapkLite.Controls.Writers
                     FontSize = 12,
                     Margin = new Thickness(1),
                     Text = _loader.GetString("FeedAuthorText"),
-                    Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlBackgroundAccentBrush"],
+                    Foreground = (SolidColorBrush)Application.Current.Resources["AccentFillColorDefaultBrush"],
                 };
 
                 textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));

@@ -390,13 +390,13 @@
                         Padding="1"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        BorderBrush="{ThemeResource SystemControlBackgroundAccentBrush}"
+                        BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                         BorderThickness="1"
                         CornerRadius="{ThemeResource ControlCornerRadius}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             FontSize="12"
-                            Foreground="{ThemeResource SystemControlBackgroundAccentBrush}"
+                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                             Text="评分" />
                     </Border>
                     <TextBlock
