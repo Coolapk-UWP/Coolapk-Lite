@@ -22,7 +22,7 @@
                     <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                 </Style>
             </Flyout.FlyoutPresenterStyle>
-            <controls:ShowQRCodeControl QRCodeText="{x:Bind Provider.FeedDetail.ShareUrl}" />
+            <controls:ShowQRCodeControl QRCodeText="{x:Bind Provider.FeedDetail.ShareUrl, Mode=OneWay}" />
         </Flyout>
     </Page.Resources>
     <Grid>
@@ -126,13 +126,13 @@
                                 Click="FeedButton_Click"
                                 Flyout="{StaticResource QRCodeFlyout}"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{x:Bind Provider.FeedDetail.ShareUrl}">
+                                Tag="{x:Bind Provider.FeedDetail.ShareUrl, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{x:Bind Provider.FeedDetail.ShareNum, FallbackValue='0'}" />
+                                        Text="{x:Bind Provider.FeedDetail.ShareNum, FallbackValue='0', Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>

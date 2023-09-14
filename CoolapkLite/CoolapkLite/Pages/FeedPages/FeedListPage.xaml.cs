@@ -11,6 +11,7 @@ using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
@@ -191,8 +192,8 @@ namespace CoolapkLite.Pages.FeedPages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case "LikeButton":
-                    _ = (element.Tag as ICanLike)?.ChangeLikeAsync();
+                case "LikeButton" when element.Tag is ICanLike like:
+                    _ = like.ChangeLikeAsync();
                     break;
                 case "FansButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, false, Provider.Title, Dispatcher));
@@ -200,11 +201,14 @@ namespace CoolapkLite.Pages.FeedPages
                 case "ReportButton":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
-                case "FollowButton":
-                    _ = (element.Tag as ICanFollow)?.ChangeFollowAsync();
+                case "FollowButton" when element.Tag is ICanFollow follow:
+                    _ = follow.ChangeFollowAsync();
                     break;
-                case "PinTileButton":
-                    _ = Provider.PinSecondaryTileAsync(element.Tag as Entity);
+                case "PinTileButton" when element.Tag is Entity entity:
+                    _ = Provider.PinSecondaryTileAsync(entity);
+                    break;
+                case "MessageButton" when SettingsHelper.Get<string>(SettingsHelper.Uid) is string uid && !string.IsNullOrEmpty(uid):
+                    _ = this.NavigateAsync(typeof(ChatPage), new ChatViewModel(string.Join("_", uid, element.Tag), $"{Provider.Title}的私信", Dispatcher));
                     break;
                 case "FollowsButton":
                     _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(Provider.ID, true, Provider.Title, Dispatcher));

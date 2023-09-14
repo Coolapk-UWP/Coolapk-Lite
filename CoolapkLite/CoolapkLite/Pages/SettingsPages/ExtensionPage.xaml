@@ -16,7 +16,7 @@
             x:Name="ListView"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{x:Bind Provider.Extensions}"
+            ItemsSource="{x:Bind Provider.Extensions, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">

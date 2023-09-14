@@ -32,14 +32,14 @@ namespace CoolapkLite.Controls
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
-                case nameof(PinTileButton):
-                    _ = PinSecondaryTileAsync(element.Tag as FeedDetailModel);
+                case nameof(PinTileButton) when element.Tag is FeedDetailModel feedDetail:
+                    _ = PinSecondaryTileAsync(feedDetail);
                     break;
                 case nameof(ReportButton):
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
                     break;
-                case nameof(FollowButton):
-                    _ = (element.Tag as ICanFollow)?.ChangeFollowAsync();
+                case nameof(FollowButton) when element.Tag is ICanFollow follow:
+                    _ = follow?.ChangeFollowAsync();
                     break;
                 default:
                     _ = this.OpenLinkAsync(element.Tag?.ToString());

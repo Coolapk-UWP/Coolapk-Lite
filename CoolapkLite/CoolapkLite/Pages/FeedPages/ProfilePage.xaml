@@ -104,7 +104,7 @@
                                             Grid.Row="2"
                                             MinWidth="160"
                                             Margin="0,4"
-                                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                             Tag="/feed/18221454"
                                             Tapped="Grid_Tapped"
                                             Value="{x:Bind Provider.ProfileDetail.NextLevelPercentage, Mode=OneWay}" />

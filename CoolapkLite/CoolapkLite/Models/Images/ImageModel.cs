@@ -299,7 +299,8 @@ namespace CoolapkLite.Models.Images
         public async void SavePic()
         {
             string url = Uri;
-            StorageFile image = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, url);
+            ImageType type = Type & (ImageType)0xFE;
+            StorageFile image = await ImageCacheHelper.GetImageFileAsync(type, url);
             if (image == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
@@ -349,7 +350,7 @@ namespace CoolapkLite.Models.Images
 
         public async Task<DataPackage> GetImageDataPackageAsync(string title)
         {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Uri);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type & (ImageType)0xFE, Uri);
             if (file == null) { return null; }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
 
@@ -363,7 +364,7 @@ namespace CoolapkLite.Models.Images
 
         public async Task GetImageDataPackageAsync(DataPackage dataPackage, string title)
         {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(ImageType.OriginImage, Uri);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type & (ImageType)0xFE, Uri);
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");

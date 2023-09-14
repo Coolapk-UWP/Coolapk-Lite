@@ -166,6 +166,7 @@
                                     <ProgressBar
                                         VerticalAlignment="Top"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                         IsIndeterminate="{x:Bind Provider.CreateUserItemSource.IsLoading, Mode=OneWay}" />
                                 </Grid>
                             </PivotItem>
@@ -217,6 +218,7 @@
                                     <ProgressBar
                                         VerticalAlignment="Top"
                                         Background="{ThemeResource SystemControlTransparentBrush}"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                                         IsIndeterminate="{x:Bind Provider.CreateTopicItemSource.IsLoading, Mode=OneWay}" />
                                 </Grid>
                             </PivotItem>

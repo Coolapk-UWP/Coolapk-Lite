@@ -201,6 +201,7 @@
                     Height="60"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
                     IsActive="{Binding Value.IsLoading, Source={StaticResource FlipViewSelectedItemProxy}}"
                     Visibility="{Binding Value.IsLoading, Source={StaticResource FlipViewSelectedItemProxy}, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Visible'}" />
             </Grid>

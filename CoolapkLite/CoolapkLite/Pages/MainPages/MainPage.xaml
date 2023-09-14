@@ -120,6 +120,7 @@
             x:Name="ProgressBar"
             VerticalAlignment="Top"
             Background="{ThemeResource SystemControlTransparentBrush}"
+            Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
             IsIndeterminate="False" />
     </Grid>
 </Page>

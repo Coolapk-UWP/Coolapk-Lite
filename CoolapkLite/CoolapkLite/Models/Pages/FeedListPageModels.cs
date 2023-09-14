@@ -96,6 +96,7 @@ namespace CoolapkLite.Models.Pages
         public int LevelNum { get; private set; }
         public int FollowNum { get; private set; }
 
+        public bool IsMe { get; private set; }
         public bool IsFans { get; private set; }
         public bool IsBlackList { get; private set; }
 
@@ -124,6 +125,7 @@ namespace CoolapkLite.Models.Pages
             if (token.TryGetValue("uid", out JToken uid))
             {
                 UID = uid.ToObject<int>();
+                IsMe = uid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
             }
 
             if (token.TryGetValue("feed", out JToken feed))
@@ -237,7 +239,7 @@ namespace CoolapkLite.Models.Pages
 
         private void OnFollowChanged()
         {
-            if (UID.ToString() != SettingsHelper.Get<string>(SettingsHelper.Uid))
+            if (!IsMe)
             {
                 ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
                 FollowStatus = IsBlackList ? loader.GetString("InBlackList")

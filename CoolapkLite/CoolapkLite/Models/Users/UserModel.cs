@@ -104,7 +104,7 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("userAvatar", out JToken userAvatar))
             {
-                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.OriginImage);
+                UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
             }
 
             if (token.TryGetValue("block_status", out JToken block_status))
