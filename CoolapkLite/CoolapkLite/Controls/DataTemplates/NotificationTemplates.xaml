@@ -43,6 +43,7 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
+                HorizontalAlignment="Left"
                 MaxLines="1"
                 TextTrimming="CharacterEllipsis">
                 <Run Text="{Binding UserName}" />
@@ -51,11 +52,13 @@
             <control:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
+                HorizontalAlignment="Left"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{Binding Note}" />
             <control:InfoBadge
                 Grid.RowSpan="2"
                 Grid.Column="2"
+                HorizontalAlignment="Right"
                 Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}">
                 <control:InfoBadge.IconSource>
                     <TextBlock x:Uid="/NotificationsPage/New" />
@@ -75,12 +78,15 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Padding="0,4" Orientation="Horizontal">
+            <StackPanel
+                Padding="0,4"
+                HorizontalAlignment="Left"
+                Orientation="Horizontal">
                 <Button
                     MinHeight="20"
                     Margin="4,0"
                     Padding="0"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
@@ -102,11 +108,13 @@
                     </StackPanel>
                 </Button>
                 <TextBlock
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     Text="{Binding Dateline}" />
                 <control:InfoBadge
                     Margin="6,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
@@ -117,8 +125,11 @@
                 KeyDown="FrameworkElement_KeyDown"
                 Tag="{Binding FeedUrl}"
                 Tapped="FrameworkElement_Tapped">
-                <control:TextBlockEx Text="{Binding Message}" />
-                <control:TextBlockEx Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding FeedMessage}" />
+                <control:TextBlockEx HorizontalAlignment="Left" Text="{Binding Message}" />
+                <control:TextBlockEx
+                    HorizontalAlignment="Left"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding FeedMessage}" />
             </StackPanel>
         </Grid>
     </DataTemplate>
@@ -132,12 +143,12 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                 <Button
                     MinHeight="20"
                     Margin="2,0,4,0"
                     Padding="0"
-                    HorizontalAlignment="Center"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
@@ -159,18 +170,21 @@
                     </StackPanel>
                 </Button>
                 <TextBlock
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     IsTextSelectionEnabled="{Binding FeedDetail.IsCopyEnabled, Mode=OneWay}"
                     Text="{Binding Dateline}" />
                 <control:InfoBadge
                     Margin="6,0"
+                    HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
             <control:StackPanelEx Grid.Row="1" Spacing="4">
                 <TextBlock
                     Margin="4,0"
+                    HorizontalAlignment="Left"
                     FontSize="16"
                     FontWeight="SemiLight"
                     IsTextSelectionEnabled="{Binding FeedDetail.IsCopyEnabled, Mode=OneWay}"
@@ -214,23 +228,50 @@
                     <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
-            <TextBlock
+            <Grid
                 Grid.Row="0"
                 Grid.Column="1"
-                MaxLines="1"
-                TextTrimming="CharacterEllipsis">
-                <Run Text="{Binding UserName}" />
-                <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Dateline}" />
-            </TextBlock>
+                HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    MaxLines="1"
+                    TextTrimming="CharacterEllipsis">
+                    <Run Text="{Binding UserName}" />
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Dateline}" />
+                </TextBlock>
+                <Border
+                    Grid.Column="1"
+                    Margin="6,0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    Visibility="{Binding IsTop, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock
+                        x:Uid="/Feed/StickUp"
+                        Margin="1"
+                        HorizontalAlignment="Left"
+                        FontSize="12"
+                        Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                </Border>
+            </Grid>
             <control:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
+                HorizontalAlignment="Left"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{Binding FeedMessage}" />
             <control:InfoBadge
                 Grid.RowSpan="2"
                 Grid.Column="2"
-                Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}"
+                HorizontalAlignment="Right"
+                Visibility="{Binding UnreadNum, Converter={StaticResource DoubleToVisibilityConverter}}"
                 Value="{Binding UnreadNum}" />
         </Grid>
     </DataTemplate>

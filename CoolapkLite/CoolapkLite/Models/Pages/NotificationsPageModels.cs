@@ -32,7 +32,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("isnew", out JToken isnew))
             {
-                IsNew = isnew.ToObject<int>() == 1;
+                IsNew = isnew.ToObject<bool>();
             }
         }
 
@@ -249,6 +249,7 @@ namespace CoolapkLite.Models.Pages
     public class MessageNotificationModel : NotificationModel
     {
         public int UnreadNum { get; private set; }
+        public bool IsTop { get; private set; }
         public string UKey { get; private set; }
         public string FeedMessage { get; private set; }
 
@@ -266,11 +267,6 @@ namespace CoolapkLite.Models.Pages
                 UKey = ukey.ToString();
             }
 
-            if (token.TryGetValue("uid", out JToken uid))
-            {
-                UserUrl = $"/u/{uid}";
-            }
-
             if (token.TryGetValue("dateline", out JToken dateline))
             {
                 Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
@@ -285,6 +281,11 @@ namespace CoolapkLite.Models.Pages
             {
                 JObject messageUserInfo = (JObject)v1;
 
+                if (messageUserInfo.TryGetValue("uid", out JToken uid))
+                {
+                    UserUrl = $"/u/{uid}";
+                }
+
                 if (messageUserInfo.TryGetValue("userAvatar", out JToken userAvatar))
                 {
                     UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
@@ -298,12 +299,11 @@ namespace CoolapkLite.Models.Pages
                 {
                     UserName = string.Join(" ", new string[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
                 }
-
             }
 
-            if (token.TryGetValue("is_top", out JToken is_top) && is_top.ToObject<int>() == 1)
+            if (token.TryGetValue("is_top", out JToken is_top))
             {
-                Dateline += " [置顶]";
+                IsTop = is_top.ToObject<bool>();
             }
         }
 

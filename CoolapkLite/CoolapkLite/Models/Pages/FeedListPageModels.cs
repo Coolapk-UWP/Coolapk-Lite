@@ -155,17 +155,17 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("isFans", out JToken isFans))
             {
-                IsFans = isFans.ToObject<int>() != 0;
+                IsFans = isFans.ToObject<bool>();
             }
 
             if (token.TryGetValue("isBlackList", out JToken isBlackList))
             {
-                IsBlackList = isBlackList.ToObject<int>() == 1;
+                IsBlackList = isBlackList.ToObject<bool>();
             }
 
             if (token.TryGetValue("isFollow", out JToken isFollow))
             {
-                Followed = isFollow.ToObject<int>() != 0;
+                Followed = isFollow.ToObject<bool>();
             }
 
             if (token.TryGetValue("bio", out JToken bio))
@@ -351,7 +351,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("userAction", out JToken userAction) && ((JObject)userAction).TryGetValue("follow", out JToken follow))
             {
-                Followed = follow.ToObject<int>() == 1;
+                Followed = follow.ToObject<bool>();
             }
 
             if (token.TryGetValue("hot_num_txt", out JToken hot_num_text))
@@ -505,7 +505,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("userAction", out JToken userAction) && ((JObject)userAction).TryGetValue("follow", out JToken follow))
             {
-                Followed = follow.ToObject<int>() == 1;
+                Followed = follow.ToObject<bool>();
             }
 
             if (token.TryGetValue("uid", out JToken uid))
@@ -748,7 +748,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("userAction", out JToken userAction) && ((JObject)userAction).TryGetValue("follow", out JToken follow))
             {
-                Followed = follow.ToObject<int>() == 1;
+                Followed = follow.ToObject<bool>();
             }
 
             if (token.TryGetValue("title", out JToken title))
@@ -973,12 +973,12 @@ namespace CoolapkLite.Models.Pages
             {
                 if (((JObject)userAction).TryGetValue("follow", out JToken follow))
                 {
-                    Followed = follow.ToObject<int>() == 1;
+                    Followed = follow.ToObject<bool>();
                 }
 
                 if (((JObject)userAction).TryGetValue("like", out JToken like))
                 {
-                    Liked = like.ToObject<int>() == 1;
+                    Liked = like.ToObject<bool>();
                 }
             }
 

@@ -10,6 +10,7 @@ namespace CoolapkLite.Models.Message
     {
         public int UID { get; private set; }
         public bool IsMe { get; private set; }
+        public bool IsNew { get; private set; }
         public bool IsCard { get; private set; }
         public string UserUrl { get; private set; }
         public string Message { get; private set; }
@@ -27,6 +28,11 @@ namespace CoolapkLite.Models.Message
                 UID = fromuid.ToObject<int>();
                 UserUrl = $"/u/{fromuid}";
                 IsMe = fromuid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
+            }
+
+            if (token.TryGetValue("isnew", out JToken isnew))
+            {
+                IsNew = isnew.ToObject<bool>();
             }
 
             if (token.TryGetValue("message", out JToken message))

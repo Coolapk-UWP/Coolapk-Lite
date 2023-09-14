@@ -87,7 +87,7 @@
                     Height="50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                     IsActive="{Binding IsLoading}"
                     Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}" />-->
                 <StackPanel

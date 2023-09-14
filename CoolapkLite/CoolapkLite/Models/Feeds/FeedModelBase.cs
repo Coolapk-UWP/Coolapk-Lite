@@ -317,7 +317,7 @@ namespace CoolapkLite.Models.Feeds
                 (token.TryGetValue("relationRows", out JToken relationRows) && relationRows.Any()) |
                 (token.TryGetValue("change_count", out JToken change_count) && change_count.ToObject<int>() > 0) |
                 (token.TryGetValue("status", out JToken status) && status.ToObject<int>() == -1) |
-                (token.TryGetValue("block_status", out JToken block_status) && block_status.ToObject<int>() != 0);
+                (token.TryGetValue("block_status", out JToken block_status) && block_status.ToObject<bool>());
 
             if (ShowRelationRows)
             {
@@ -376,7 +376,7 @@ namespace CoolapkLite.Models.Feeds
                             "\uE727"));
                 }
 
-                if (block_status != null && block_status.ToObject<int>() != 0)
+                if (block_status != null && block_status.ToObject<bool>())
                 {
                     buider.Add(
                         new RelationRowsItem(

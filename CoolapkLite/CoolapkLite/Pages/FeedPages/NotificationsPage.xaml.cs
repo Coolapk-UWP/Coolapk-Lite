@@ -153,7 +153,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                     (o) => new Entity[] { new MessageNotificationModel(o) },
-                                    "id"), Dispatcher));
+                                    "ukey"), Dispatcher));
                         break;
                     default:
                         break;

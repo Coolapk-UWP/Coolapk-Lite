@@ -133,32 +133,32 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("like", out JToken like))
             {
-                Like = like.ToObject<int>() != 0;
+                Like = like.ToObject<bool>();
             }
 
             if (token.TryGetValue("favorite", out JToken favorite))
             {
-                Favorite = favorite.ToObject<int>() != 0;
+                Favorite = favorite.ToObject<bool>();
             }
 
             if (token.TryGetValue("follow", out JToken follow))
             {
-                Follow = follow.ToObject<int>() != 0;
+                Follow = follow.ToObject<bool>();
             }
 
             if (token.TryGetValue("collect", out JToken collect))
             {
-                Collect = collect.ToObject<int>() != 0;
+                Collect = collect.ToObject<bool>();
             }
 
             if (token.TryGetValue("followAuthor", out JToken followAuthor))
             {
-                FollowAuthor = followAuthor.ToObject<int>() != 0;
+                FollowAuthor = followAuthor.ToObject<bool>();
             }
 
             if (token.TryGetValue("authorFollowYou", out JToken authorFollowYou))
             {
-                AuthorFollowYou = authorFollowYou.ToObject<int>() != 0;
+                AuthorFollowYou = authorFollowYou.ToObject<bool>();
             }
 
             OnFollowChanged();

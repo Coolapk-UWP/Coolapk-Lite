@@ -55,7 +55,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("isFeedAuthor", out JToken isFeedAuthor))
             {
-                IsFeedAuthor = isFeedAuthor.ToObject<int>() == 1;
+                IsFeedAuthor = isFeedAuthor.ToObject<bool>();
             }
 
             if (token.TryGetValue("ruid", out JToken ruid))
