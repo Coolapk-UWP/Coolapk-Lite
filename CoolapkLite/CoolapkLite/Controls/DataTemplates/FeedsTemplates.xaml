@@ -689,7 +689,10 @@
                         Tag="{Binding UserInfo.Url}"
                         Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse Width="20" Height="20">
+                            <Ellipse
+                                Width="20"
+                                Height="20"
+                                VerticalAlignment="Center">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                                 </Ellipse.Fill>

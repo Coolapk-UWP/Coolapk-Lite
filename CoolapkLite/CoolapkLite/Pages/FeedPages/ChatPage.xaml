@@ -69,7 +69,11 @@
                 </ItemsPanelTemplate>
             </control:PullToRefreshListView.ItemsPanel>
         </control:PullToRefreshListView>
-        <Grid Grid.Row="2" VerticalAlignment="Bottom">
+        <Grid
+            Grid.Row="2"
+            VerticalAlignment="Bottom"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -81,30 +85,32 @@
             </Grid.RowDefinitions>
             <ToggleButton
                 x:Name="EmojiButton"
-                Height="32"
                 VerticalAlignment="Bottom"
                 Content="&#xE76E;"
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconToggleButtonStyle}"
                 ToolTipService.ToolTip="表情" />
             <RichEditBox
                 x:Name="InputBox"
                 x:Uid="/CreateFeedControl/EditBox"
                 Grid.Column="1"
+                Margin="4,0"
+                VerticalAlignment="Center"
                 AcceptsReturn="True"
                 Loaded="InputBox_Loaded" />
             <Button
                 Grid.Column="2"
-                Height="32"
                 VerticalAlignment="Bottom"
                 Click="Button_Click"
                 Content="&#xE724;"
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                Style="{StaticResource TitleBarIconButtonStyle}"
                 Tag="SendButton"
                 ToolTipService.ToolTip="发送" />
             <Grid
                 Grid.Row="1"
                 Grid.ColumnSpan="3"
                 Height="320"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,1,0,0"
                 Visibility="{x:Bind EmojiButton.IsChecked, Converter={StaticResource BoolToVisibilityConverter}, Mode=TwoWay}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

@@ -59,10 +59,10 @@
                     ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                 <StackPanel
                     HorizontalAlignment="Left"
-                    Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1">
+                    BorderThickness="1"
+                    Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                     <Image
                         MaxWidth="102"
                         HorizontalAlignment="Left"

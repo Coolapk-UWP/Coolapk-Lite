@@ -1372,7 +1372,6 @@
                         VerticalAlignment="Center"
                         Click="SearchRefreshButton_Click"
                         Content="&#xE72C;"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         Style="{StaticResource TitleBarIconButtonStyle}" />
                 </Grid>
                 <control:TitleBar
@@ -1384,7 +1383,6 @@
                         x:Name="SearchButton"
                         Click="SearchButton_Click"
                         Content="&#xE721;"
-                        FontFamily="{StaticResource SymbolThemeFontFamily}"
                         Style="{StaticResource TitleBarIconButtonStyle}" />
                 </control:TitleBar>
             </Grid>
@@ -1410,7 +1408,6 @@
                             VerticalAlignment="Center"
                             Click="RefreshButton_Click"
                             Content="&#xE72C;"
-                            FontFamily="{StaticResource SymbolThemeFontFamily}"
                             Style="{StaticResource TitleBarIconButtonStyle}" />
                     </control:ShyHeaderPivotListView.RightHeader>
                 </control:ShyHeaderPivotListView>

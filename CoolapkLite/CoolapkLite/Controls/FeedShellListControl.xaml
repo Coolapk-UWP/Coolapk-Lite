@@ -84,7 +84,6 @@
                     helpers:FocusVisualHelper.FocusVisualMargin="0"
                     Click="RefreshButton_Click"
                     Content="&#xE72C;"
-                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource TitleBarIconButtonStyle}"
                     Visibility="{x:Bind RefreshButtonVisibility, Mode=OneWay}" />
             </StackPanel>

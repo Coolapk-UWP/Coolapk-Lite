@@ -76,7 +76,6 @@
                 VerticalAlignment="Center"
                 Click="RefreshButton_Click"
                 Content="&#xE72C;"
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
                 Style="{StaticResource TitleBarIconButtonStyle}" />
         </Grid>
         <Pivot

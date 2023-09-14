@@ -43,7 +43,6 @@
                 VerticalAlignment="Center"
                 Click="Button_Click"
                 Content="&#xE10A;"
-                FontFamily="{StaticResource SymbolThemeFontFamily}"
                 Style="{StaticResource TitleBarIconButtonStyle}"
                 Tag="CloseButton" />
         </local:TitleBar>

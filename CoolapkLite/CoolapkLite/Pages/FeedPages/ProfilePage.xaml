@@ -295,7 +295,6 @@
                     VerticalAlignment="Center"
                     Click="Button_Click"
                     Content="&#xE8BD;"
-                    FontFamily="{StaticResource SymbolThemeFontFamily}"
                     Style="{StaticResource TitleBarIconButtonStyle}"
                     Tag="NotificationButton" />
                 <controls:InfoBadge

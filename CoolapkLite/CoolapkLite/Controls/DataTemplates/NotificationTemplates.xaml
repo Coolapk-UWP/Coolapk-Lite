@@ -87,7 +87,10 @@
                     Tag="{Binding UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="20" Height="20">
+                        <Ellipse
+                            Width="20"
+                            Height="20"
+                            VerticalAlignment="Center">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
@@ -141,7 +144,10 @@
                     Tag="{Binding UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse Width="20" Height="20">
+                        <Ellipse
+                            Width="20"
+                            Height="20"
+                            VerticalAlignment="Center">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
