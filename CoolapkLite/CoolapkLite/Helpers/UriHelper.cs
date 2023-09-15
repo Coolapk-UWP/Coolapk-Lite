@@ -12,6 +12,7 @@ namespace CoolapkLite.Helpers
         GetAnswers,
         GetAppDetail,
         GetAppFeeds,
+        GetAppRates,
         GetCollectionContents,
         GetCollectionDetail,
         GetCollectionList,
@@ -52,12 +53,14 @@ namespace CoolapkLite.Helpers
         PostTopicFollow,
         PostDyhFollow,
         PostCollectionFollow,
+        PostAppFollow,
         PostFeedLike,
         PostCollectionLike,
         PostUserUnfollow,
         PostTopicUnfollow,
         PostDyhUnfollow,
         PostCollectionUnfollow,
+        PostAppUnfollow,
         PostFeedUnlike,
         PostCollectionUnlike,
         SendMessage,
@@ -105,14 +108,15 @@ namespace CoolapkLite.Helpers
         {
             switch (type)
             {
-                case UriType.DataList: return "/v6/page/dataList?url={0}{1}";
+                case UriType.DataList: return "/v6/page/dataList?url={0}{1}&page={2}{3}{4}";
                 case UriType.CheckLoginInfo: return "/v6/account/checkLoginInfo";
                 case UriType.CreateFeed: return "/v6/feed/createFeed";
                 case UriType.CreateFeedReply: return "/v6/feed/reply?id={0}&type=feed";
                 case UriType.CreateReplyReply: return "/v6/feed/reply?id={0}&type=reply";
                 case UriType.GetAnswers: return "/v6/question/answerList?id={0}&sort={1}&page={2}{3}{4}";
-                case UriType.GetAppDetail: return "/v6/apk/detail?id={0}&installed=0";
-                case UriType.GetAppFeeds: return "/v6/page/dataList?url=%23/feed/apkCommentList?isIncludeTop=1&id={0}&subTitle=&page={1}{2}{3}";
+                case UriType.GetAppDetail: return "/v6/apk/detail?id={0}";
+                case UriType.GetAppFeeds: return "/v6/page/dataList?url=%23/feed/apkCommentList?isIncludeTop=1&id={0}&sort={1}&page={2}{3}{4}";
+                case UriType.GetAppRates: return "/v6/page/dataList?url=%23/feed/apkCommentList?type=5&id={0}&page={1}{2}{3}";
                 case UriType.GetCollectionContents: return "/v6/collection/itemList?id={0}&page={1}{2}{3}";
                 case UriType.GetCollectionDetail: return "/v6/collection/detail?id={0}";
                 case UriType.GetCollectionList: return "/v6/collection/list?uid={0}&page={1}{2}{3}";
@@ -122,7 +126,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetProductDetailByName: return "/v6/product/detail?name={0}";
                 case UriType.GetProductFeeds: return "/v6/page/dataList?url=/page?url=/product/feedList?type={4}&id={0}&page={1}{2}{3}";
                 case UriType.GetFeedDetail: return "/v6/feed/detail?id={0}";
-                case UriType.GetFeedReplies: return "/v6/feed/replyList?id={0}&listType={1}&page={2}{3}{4}&discussMode=1&feedType=feed&fromFeedAuthor={4}";
+                case UriType.GetFeedReplies: return "/v6/feed/replyList?id={0}&listType={1}&page={2}{3}{4}&discussMode=1&feedType=feed&fromFeedAuthor={5}";
                 case UriType.GetVoteComments: return "/v6/vote/commentList?fid={0}{1}&page={2}{3}{4}";
                 case UriType.GetChangeHistoryList: return "/v6/feed/changeHistoryList?id={0}";
                 case UriType.GetHotReplies: return "/v6/feed/hotReplyList?id={0}&page={1}{2}{3}&discussMode=1";
@@ -153,12 +157,14 @@ namespace CoolapkLite.Helpers
                 case UriType.PostTopicFollow: return "/v6/feed/followTag?tag={0}";
                 case UriType.PostDyhFollow: return "/v6/dyh/follow?dyhId={0}";
                 case UriType.PostCollectionFollow: return "/v6/collection/follow";
+                case UriType.PostAppFollow: return "/v6/apk/follow?id={0}";
                 case UriType.PostFeedLike: return "/v6/feed/like{0}?id={1}";
                 case UriType.PostCollectionLike: return "/v6/collection/like";
                 case UriType.PostUserUnfollow: return "/v6/user/unfollow?uid={0}";
                 case UriType.PostDyhUnfollow: return "/v6/dyh/unFollow?dyhId={0}";
                 case UriType.PostTopicUnfollow: return "/v6/feed/unFollowTag?tag={0}";
                 case UriType.PostCollectionUnfollow: return "/v6/collection/unFollow";
+                case UriType.PostAppUnfollow: return "/v6/apk/unfollow?id={0}";
                 case UriType.PostFeedUnlike: return "/v6/feed/unlike{0}?id={1}";
                 case UriType.PostCollectionUnlike: return "/v6/collection/unLike";
                 case UriType.SendMessage: return "/v6/message/send?uid={0}";

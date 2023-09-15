@@ -287,7 +287,7 @@ namespace CoolapkLite.Pages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
+                _ = PivotContentFrame.OpenLinkAsync(app.Url);
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {

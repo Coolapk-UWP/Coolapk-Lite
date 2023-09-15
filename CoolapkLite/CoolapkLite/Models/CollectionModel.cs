@@ -44,9 +44,20 @@ namespace CoolapkLite.Models
                 Url = url.ToString();
             }
 
-            if (token.TryGetValue("description", out JToken description))
+            if (token.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
             {
-                Description = description.ToString();
+                if (string.IsNullOrEmpty(SubTitle))
+                {
+                    SubTitle = description.ToString();
+                }
+                else
+                {
+                    Description = description.ToString();
+                }
+            }
+            else if (string.IsNullOrEmpty(SubTitle) && token.TryGetValue("lastupdate", out JToken lastupdate))
+            {
+                SubTitle = lastupdate.ToObject<long>().ConvertUnixTimeStampToReadable();
             }
 
             if (token.TryGetValue("cover_pic", out JToken cover_pic))

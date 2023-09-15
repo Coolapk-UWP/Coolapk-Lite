@@ -19,7 +19,7 @@
                 <templates:FeedsTemplates />
                 <templates:SearchWordTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDataTemplates />
+                <templates:OtherCardTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"

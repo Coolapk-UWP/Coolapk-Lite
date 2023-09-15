@@ -1,8 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Pages.BrowserPages;
-using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -161,7 +159,7 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
+                _ = Frame.OpenLinkAsync(app.Url);
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {

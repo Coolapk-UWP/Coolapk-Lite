@@ -16,7 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDataTemplates />
+                <templates:OtherCardTemplates />
                 <templates:NotificationTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector

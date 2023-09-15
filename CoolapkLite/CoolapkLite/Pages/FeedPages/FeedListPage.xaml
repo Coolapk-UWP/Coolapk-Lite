@@ -20,7 +20,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <templates:FeedsTemplates />
                 <templates:IndexCardTemplates />
-                <templates:OtherDataTemplates />
+                <templates:OtherCardTemplates />
             </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="UserDetailCard">
                 <Border>
@@ -466,7 +466,7 @@
                                     <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
-                            <control:StackPanelEx Grid.Column="1" Margin="8,0">
+                            <StackPanel Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
@@ -495,7 +495,7 @@
                                         FontSize="12"
                                         Text="{Binding UserName}" />
                                 </Grid>
-                            </control:StackPanelEx>
+                            </StackPanel>
                             <Button
                                 x:Name="FollowButton"
                                 Grid.Column="2"
@@ -782,6 +782,9 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="1.5*" />
                                 </Grid.ColumnDefinitions>
+                                <Grid.RenderTransform>
+                                    <TranslateTransform X="-10" />
+                                </Grid.RenderTransform>
                                 <StackPanel
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
@@ -1231,6 +1234,401 @@
                     </Grid>
                 </Grid>
             </DataTemplate>
+            <DataTemplate x:Key="AppDetailCard">
+                <control:StackPanelEx Spacing="2">
+                    <Border
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                        <Border.Resources>
+                            <MenuFlyout x:Key="MoreFlyout">
+                                <MenuFlyoutItem
+                                    x:Name="PinTileButton"
+                                    x:Uid="/Feed/PinTile"
+                                    Click="Button_Click"
+                                    Tag="{Binding}">
+                                    <helpers:FlyoutBaseHelper.Icon>
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
+                                    </helpers:FlyoutBaseHelper.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Border.Resources>
+                        <control:StackPanelEx
+                            helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
+                            Background="{ThemeResource SystemControlTransparentBrush}"
+                            Spacing="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Border
+                                    Width="56"
+                                    Height="56"
+                                    HorizontalAlignment="Left">
+                                    <Border.Background>
+                                        <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                    </Border.Background>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="8,0">
+                                    <TextBlock
+                                        FontSize="16"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Title}"
+                                        ToolTipService.ToolTip="{Binding APKName}" />
+                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                        <Run Text="{Binding VersionName}" />
+                                        <Run Text="{Binding VersionCode, Converter={StaticResource StringFormatConverter}, ConverterParameter='({0})'}" />
+                                        <Run Text="{Binding APKSize}" />
+                                    </TextBlock>
+                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                        <Run Text="{Binding DownloadNum}" />
+                                        <Run Text="{Binding HotNum}" />
+                                        <Run Text="{Binding CommentNum}" />
+                                    </TextBlock>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Ellipse
+                                                        Width="16"
+                                                        Height="16"
+                                                        KeyDown="FrameworkElement_KeyDown"
+                                                        Tag="{Binding Url}"
+                                                        Tapped="FrameworkElement_Tapped"
+                                                        ToolTipService.ToolTip="{Binding UserName}">
+                                                        <Ellipse.Fill>
+                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                        </Ellipse.Fill>
+                                                    </Ellipse>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Margin="4,0"
+                                            FontSize="12"
+                                            Text="{Binding FollowNum}" />
+                                    </Grid>
+                                </StackPanel>
+                                <Button
+                                    x:Name="FollowButton"
+                                    Grid.Column="2"
+                                    Height="32"
+                                    HorizontalAlignment="Right"
+                                    Background="{ThemeResource SystemControlTransparentBrush}"
+                                    Click="Button_Click"
+                                    Tag="{Binding}"
+                                    Tapped="Button_Tapped"
+                                    ToolTipService.ToolTip="{Binding FollowStatus}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <FontIcon
+                                            VerticalAlignment="Center"
+                                            FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                            FontSize="15"
+                                            Glyph="{Binding FollowGlyph}" />
+                                        <TextBlock
+                                            x:Name="FollowStatus"
+                                            Margin="8,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding FollowStatus}" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                            <TextBlock
+                                Text="{Binding Description}"
+                                TextWrapping="WrapWholeWords"
+                                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                            <TextBlock
+                                Text="{Binding SubTitle}"
+                                TextWrapping="WrapWholeWords"
+                                Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                        </control:StackPanelEx>
+                    </Border>
+                    <Grid
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1">
+                        <control:StackPanelEx>
+                            <TextBlock
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Text="酷安评分" />
+                            <Grid Height="100">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="1.5*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RenderTransform>
+                                    <TranslateTransform X="-10" />
+                                </Grid.RenderTransform>
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="35"
+                                        FontWeight="Bold"
+                                        Text="{Binding RatingScore}" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="12"
+                                        FontWeight="Thin"
+                                        Text="{Binding VoteNum}" />
+                                </StackPanel>
+                                <Grid Grid.Column="1" VerticalAlignment="Center">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="5星" />
+                                    <ProgressBar
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Value="{Binding Star5Percent}" />
+                                    <TextBlock
+                                        Grid.Row="0"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star5Count}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="4星" />
+                                    <ProgressBar
+                                        Grid.Row="1"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Value="{Binding Star4Percent}" />
+                                    <TextBlock
+                                        Grid.Row="1"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star4Count}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="3星" />
+                                    <ProgressBar
+                                        Grid.Row="2"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Value="{Binding Star3Percent}" />
+                                    <TextBlock
+                                        Grid.Row="2"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star3Count}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="2星" />
+                                    <ProgressBar
+                                        Grid.Row="3"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Value="{Binding Star2Percent}" />
+                                    <TextBlock
+                                        Grid.Row="3"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star2Count}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="0"
+                                        VerticalAlignment="Center"
+                                        FontSize="10"
+                                        Text="1星" />
+                                    <ProgressBar
+                                        Grid.Row="4"
+                                        Grid.Column="1"
+                                        Margin="4,0"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Value="{Binding Star1Percent}" />
+                                    <TextBlock
+                                        Grid.Row="4"
+                                        Grid.Column="2"
+                                        FontSize="10"
+                                        FontWeight="Thin"
+                                        Text="{Binding Star1Count}" />
+                                </Grid>
+                            </Grid>
+                        </control:StackPanelEx>
+                    </Grid>
+                    <ListView
+                        Margin="1,0"
+                        HorizontalAlignment="Stretch"
+                        ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
+                        ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                        ItemsSource="{Binding ScreenshotArr}"
+                        ShowsScrollingPlaceholders="False"
+                        Style="{StaticResource VerticalListViewStyle}"
+                        Visibility="{Binding ScreenshotArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Image
+                                    x:Name="Picture"
+                                    Height="306"
+                                    Margin="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    CanDrag="True"
+                                    DragStarting="Image_DragStarting"
+                                    KeyDown="FrameworkElement_KeyDown"
+                                    Source="{Binding Pic, Mode=OneWay}"
+                                    Stretch="UniformToFill"
+                                    Tag="{Binding}"
+                                    Tapped="FrameworkElement_Tapped">
+                                    <helpers:UIElementHelper.ContextFlyout>
+                                        <MenuFlyout>
+                                            <MenuFlyoutItem
+                                                x:Name="RefreshButton"
+                                                x:Uid="/ShowImagePage/RefreshMenuItem"
+                                                Click="AppBarButton_Click"
+                                                Tag="{Binding}">
+                                                <helpers:FlyoutBaseHelper.Icon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
+                                                </helpers:FlyoutBaseHelper.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem
+                                                x:Name="CopyButton"
+                                                x:Uid="/ShowImagePage/CopyMenuItem"
+                                                Click="AppBarButton_Click"
+                                                Tag="{Binding}">
+                                                <helpers:FlyoutBaseHelper.Icon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
+                                                </helpers:FlyoutBaseHelper.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem
+                                                x:Name="ShareButton"
+                                                x:Uid="/ShowImagePage/ShareMenuItem"
+                                                Click="AppBarButton_Click"
+                                                Tag="{Binding}">
+                                                <helpers:FlyoutBaseHelper.Icon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+                                                </helpers:FlyoutBaseHelper.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem
+                                                x:Name="SaveButton"
+                                                x:Uid="/ShowImagePage/SaveMenuItem"
+                                                Click="AppBarButton_Click"
+                                                Tag="{Binding}">
+                                                <helpers:FlyoutBaseHelper.Icon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                                </helpers:FlyoutBaseHelper.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem
+                                                x:Name="OriginButton"
+                                                x:Uid="/ShowImagePage/OriginMenuItem"
+                                                Click="AppBarButton_Click"
+                                                Tag="{Binding}"
+                                                Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <helpers:FlyoutBaseHelper.Icon>
+                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                                </helpers:FlyoutBaseHelper.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </helpers:UIElementHelper.ContextFlyout>
+                                </Image>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView
+                        HorizontalAlignment="Stretch"
+                        ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
+                        ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+                        ItemsSource="{Binding TagArr}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                        ShowsScrollingPlaceholders="False"
+                        Style="{StaticResource VerticalListViewStyle}"
+                        Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <control:StackPanelEx Orientation="Horizontal" Spacing="2" />
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    VerticalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1">
+                                    <TextBlock
+                                        Margin="4,2"
+                                        FontSize="12"
+                                        Text="{Binding}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackPanel
+                        Padding="10"
+                        HorizontalAlignment="Stretch"
+                        Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Visibility="{Binding Introduce, Converter={StaticResource StringVisibilityConverter}}">
+                        <TextBlock
+                            Margin="0,0,0,6"
+                            FontSize="16"
+                            FontWeight="SemiBold"
+                            Text="应用介绍" />
+                        <control:TextBlockEx LineSpacing="10" Text="{Binding Introduce}" />
+                    </StackPanel>
+                </control:StackPanelEx>
+            </DataTemplate>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"
@@ -1242,6 +1640,7 @@
                 User="{StaticResource UserTemplate}" />
             <local:DetailTemplateSelector
                 x:Name="DetailTemplateSelector"
+                AppDetail="{StaticResource AppDetailCard}"
                 CollectionDetail="{StaticResource CollectionDetailCard}"
                 DyhDetail="{StaticResource DyhDetailCard}"
                 Others="{StaticResource Empty}"
@@ -1290,7 +1689,8 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Padding="4"
-                                VerticalAlignment="Center">
+                                VerticalAlignment="Center"
+                                Visibility="{x:Bind Provider.CanSearch, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="4" />
@@ -1379,11 +1779,13 @@
                     Title="{x:Bind Provider.Title, Mode=OneWay}"
                     IsRefreshEnabled="True"
                     RefreshRequested="TitleBar_RefreshEvent">
-                    <Button
-                        x:Name="SearchButton"
-                        Click="SearchButton_Click"
-                        Content="&#xE721;"
-                        Style="{StaticResource TitleBarIconButtonStyle}" />
+                    <Border Visibility="{x:Bind Provider.CanSearch, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                        <Button
+                            x:Name="SearchButton"
+                            Click="SearchButton_Click"
+                            Content="&#xE721;"
+                            Style="{StaticResource TitleBarIconButtonStyle}" />
+                    </Border>
                 </control:TitleBar>
             </Grid>
         </control:TwoPaneView.Pane1>

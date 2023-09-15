@@ -353,8 +353,8 @@
     <Compile Include="Controls\DataTemplates\IndexCardTemplates.xaml.cs">
       <DependentUpon>IndexCardTemplates.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTemplates\OtherDataTemplates.xaml.cs">
-      <DependentUpon>OtherDataTemplates.xaml</DependentUpon>
+    <Compile Include="Controls\DataTemplates\OtherCardTemplates.xaml.cs">
+      <DependentUpon>OtherCardTemplates.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DataTemplates\PicTemplates.xaml.cs">
       <DependentUpon>PicTemplates.xaml</DependentUpon>
@@ -1230,7 +1230,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\DataTemplates\OtherDataTemplates.xaml">
+    <Page Include="Controls\DataTemplates\OtherCardTemplates.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

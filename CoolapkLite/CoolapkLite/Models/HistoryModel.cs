@@ -24,13 +24,13 @@ namespace CoolapkLite.Models
                 Url = url.ToString();
             }
 
-            if (token.TryGetValue("description", out JToken description))
+            if (token.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
             {
                 Description = description.ToString();
             }
-            else if (token.TryGetValue("target_type_title", out JToken target_type_title) && !string.IsNullOrEmpty(target_type_title.ToString()))
+            else if (token.TryGetValue("typeName", out JToken typeName) && !string.IsNullOrEmpty(typeName.ToString()))
             {
-                Description = target_type_title.ToString();
+                Description = typeName.ToString();
             }
             else if (token.TryGetValue("dateline", out JToken dateline))
             {

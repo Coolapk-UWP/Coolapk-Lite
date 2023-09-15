@@ -7,9 +7,9 @@ using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public sealed partial class OtherDataTemplates : ResourceDictionary
+    public sealed partial class OtherCardTemplates : ResourceDictionary
     {
-        public OtherDataTemplates() => InitializeComponent();
+        public OtherCardTemplates() => InitializeComponent();
 
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {

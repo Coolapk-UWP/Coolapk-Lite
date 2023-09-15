@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -27,9 +28,10 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         protected const string idName = "id";
 
+        public virtual bool CanSearch { get; } = true;
         public string ID { get; }
-        private FeedListType ListType { get; }
-        public DataTemplateSelector DataTemplateSelector;
+        public FeedListType ListType { get; }
+        public DataTemplateSelector DataTemplateSelector { get; set; }
 
         public CoreDispatcher Dispatcher { get; }
 
@@ -116,20 +118,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 case FeedListType.DyhPageList: return new DyhViewModel(id, dispatcher);
                 case FeedListType.ProductPageList: return new ProductViewModel(id, dispatcher);
                 case FeedListType.CollectionPageList: return new CollectionViewModel(id, dispatcher);
-                default: return null;
-            }
-        }
-
-        public static SearchItemSource GetSearchProvider(FeedListType type, string keyword, string id)
-        {
-            if (string.IsNullOrEmpty(id) || id == "0") { return null; }
-            switch (type)
-            {
-                case FeedListType.UserPageList: return new SearchItemSource(keyword, "user", id);
-                case FeedListType.TagPageList: return new SearchItemSource(keyword, "tag", id);
-                case FeedListType.DyhPageList: return new SearchItemSource(keyword, "dyh", id);
-                case FeedListType.ProductPageList: return new SearchItemSource(keyword, "product_phone", id);
-                case FeedListType.CollectionPageList: return new SearchItemSource(keyword, "collection", id);
+                case FeedListType.AppPageList: return new AppViewModel(id, dispatcher);
                 default: return null;
             }
         }
@@ -144,9 +133,10 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public virtual async Task SearchQuerySubmittedAsync(string keyword)
         {
+            if (!CanSearch) { return; }
             if (SearchItemSource == null)
             {
-                SearchItemSource = GetSearchProvider(ListType, keyword, ID);
+                SearchItemSource = GetSearchProvider(keyword);
                 SearchItemSource.LoadMoreStarted += OnLoadMoreStarted;
                 SearchItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
             }
@@ -162,6 +152,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         private void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
 
         public virtual Task SearchRefresh(bool reset = false) => SearchItemSource?.Refresh(reset);
+
+        public abstract SearchItemSource GetSearchProvider(string keyword);
 
         public abstract Task<bool> PinSecondaryTileAsync(Entity entity);
 
@@ -197,7 +189,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (FeedItemSource == null || FeedItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "feed"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetUserFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "feed"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     FeedItemSource = new FeedListItemSource(ID, Provider);
@@ -210,7 +209,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (HtmlFeedItemSource == null || HtmlFeedItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "htmlFeed"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetUserFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "htmlFeed"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     HtmlFeedItemSource = new FeedListItemSource(ID, Provider);
@@ -223,7 +229,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (QAItemSource == null || QAItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetUserFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "questionAndAnswer"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetUserFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "questionAndAnswer"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     QAItemSource = new FeedListItemSource(ID, Provider);
@@ -236,7 +249,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (CollectionItemSource == null || CollectionItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetCollectionList, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetCollectionList,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     CollectionItemSource = new FeedListItemSource(ID, Provider);
@@ -251,6 +270,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as UserDetail)?.UserName;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => new SearchItemSource(keyword, "user", ID);
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
@@ -317,7 +338,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (LastUpdateItemSource == null || LastUpdateItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "lastupdate_desc"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetTagFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "lastupdate_desc"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     LastUpdateItemSource = new FeedListItemSource(ID, Provider);
@@ -330,7 +358,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (DatelineItemSource == null || DatelineItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "dateline_desc"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetTagFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "dateline_desc"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     DatelineItemSource = new FeedListItemSource(ID, Provider);
@@ -343,7 +378,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (PopularItemSource == null || PopularItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "popular"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetTagFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "popular"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     PopularItemSource = new FeedListItemSource(ID, Provider);
@@ -358,6 +400,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as TopicDetail)?.Title;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => new SearchItemSource(keyword, "tag", ID);
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
@@ -406,6 +450,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class DyhViewModel : FeedListViewModel
     {
+        public override bool CanSearch { get; } = false;
+
         public FeedListItemSource AllItemSource { get; private set; }
         public FeedListItemSource SquareItemSource { get; private set; }
 
@@ -423,7 +469,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (AllItemSource == null || AllItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetDyhFeeds, ID, "all", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetDyhFeeds,
+                                ID,
+                                "all",
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     AllItemSource = new FeedListItemSource(ID, Provider);
@@ -436,7 +489,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (SquareItemSource == null || SquareItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetTagFeeds, ID, "square", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetTagFeeds,
+                                ID,
+                                "square",
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     SquareItemSource = new FeedListItemSource(ID, Provider);
@@ -451,6 +511,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as DyhDetail)?.Title;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => null;
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
@@ -519,7 +581,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (FeedItemSource == null || FeedItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetProductFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "feed"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetProductFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "feed"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     FeedItemSource = new FeedListItemSource(ID, Provider);
@@ -532,7 +601,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (AnswerItemSource == null || AnswerItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetProductFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "answer"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetProductFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "answer"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     AnswerItemSource = new FeedListItemSource(ID, Provider);
@@ -545,7 +621,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (ArticleItemSource == null || ArticleItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetProductFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "article"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetProductFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "article"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     ArticleItemSource = new FeedListItemSource(ID, Provider);
@@ -558,7 +641,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (VideoItemSource == null || VideoItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetProductFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "video"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetProductFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "video"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     VideoItemSource = new FeedListItemSource(ID, Provider);
@@ -571,7 +661,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 if (TradeItemSource == null || TradeItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
-                        (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetProductFeeds, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}", "trade"),
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetProductFeeds,
+                                ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
+                                "trade"),
                         EntityTemplateSelector.GetEntities,
                         idName);
                     TradeItemSource = new FeedListItemSource(ID, Provider);
@@ -586,6 +683,8 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
 
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as ProductDetail)?.Title;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => new SearchItemSource(keyword, "product_phone", ID);
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
@@ -603,11 +702,39 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override Task<bool> PinSecondaryTileAsync(Entity entity) => Task.Run(() => false);
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
+        {
+            IHasDescription detail = (IHasDescription)entity;
+
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+
+            // Construct a unique tile ID, which you will need to use later for updating the tile
+            string tileId = detail.Url.GetMD5();
+
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            if (isPinned)
+            {
+                try
+                {
+                    LiveTileTask.UpdateTile(tileId, LiveTileTask.GetListTile(detail));
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(FeedShellDetailControl)).Error(ex.ExceptionToMessage(), ex);
+                }
+
+                return isPinned;
+            }
+
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
+            return isPinned;
+        }
     }
 
     public class CollectionViewModel : FeedListViewModel
     {
+        public override bool CanSearch { get; } = false;
+
         public CollectionViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.CollectionPageList, dispatcher) { }
 
         public override async Task Refresh(bool reset = false)
@@ -635,7 +762,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                                     if (entity.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
                                     {
                                         CoolapkListProvider Provider = new CoolapkListProvider(
-                                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.DataList, url.ToString().Replace("#", "%23").Replace("/", "%2F").Replace("?", "%3F").Replace("=", "%3D").Replace("&", "%26"), $"&page={p}" + (string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}") + (string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}")),
+                                            (p, firstItem, lastItem) =>
+                                                UriHelper.GetUri(
+                                                    UriType.DataList,
+                                                    WebUtility.UrlEncode(url.ToString()),
+                                                    p,
+                                                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                                             EntityTemplateSelector.GetEntities,
                                             "id");
                                         FeedListItemSource FeedListItemSource = new FeedListItemSource(ID, Provider);
@@ -677,7 +810,10 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
             }
         }
+
         protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as CollectionDetail)?.Title;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => null;
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
@@ -695,7 +831,183 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail;
         }
 
-        public override Task<bool> PinSecondaryTileAsync(Entity entity) => Task.Run(() => false);
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
+        {
+            IHasDescription detail = (IHasDescription)entity;
+
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+
+            // Construct a unique tile ID, which you will need to use later for updating the tile
+            string tileId = detail.Url.GetMD5();
+
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            if (isPinned)
+            {
+                try
+                {
+                    LiveTileTask.UpdateTile(tileId, LiveTileTask.GetListTile(detail));
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(FeedShellDetailControl)).Error(ex.ExceptionToMessage(), ex);
+                }
+
+                return isPinned;
+            }
+
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
+            return isPinned;
+        }
+    }
+
+    internal class AppViewModel : FeedListViewModel
+    {
+        public FeedListItemSource LastUpdateItemSource { get; private set; }
+        public FeedListItemSource DatelineItemSource { get; private set; }
+        public FeedListItemSource PopularItemSource { get; private set; }
+        public FeedListItemSource RatesItemSource { get; private set; }
+
+        public AppViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.AppPageList, dispatcher) { }
+
+        public override async Task Refresh(bool reset = false)
+        {
+            if (Detail == null || reset)
+            {
+                Detail = await GetDetailAsync();
+            }
+            if (ItemSource == null && Detail is AppDetail detail)
+            {
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                if (LastUpdateItemSource == null || LastUpdateItemSource.ID != ID)
+                {
+                    CoolapkListProvider Provider = new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetAppFeeds,
+                                detail.ID,
+                                "lastupdate_desc",
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        EntityTemplateSelector.GetEntities,
+                        idName);
+                    LastUpdateItemSource = new FeedListItemSource(ID, Provider);
+                    ItemSource.Add(new ShyHeaderItem
+                    {
+                        Header = "最近回复",
+                        ItemSource = LastUpdateItemSource
+                    });
+                }
+                if (DatelineItemSource == null || DatelineItemSource.ID != ID)
+                {
+                    CoolapkListProvider Provider = new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetAppFeeds,
+                                detail.ID,
+                                "dateline_desc",
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        EntityTemplateSelector.GetEntities,
+                        idName);
+                    DatelineItemSource = new FeedListItemSource(ID, Provider);
+                    ItemSource.Add(new ShyHeaderItem
+                    {
+                        Header = "最近发布",
+                        ItemSource = DatelineItemSource
+                    });
+                }
+                if (PopularItemSource == null || PopularItemSource.ID != ID)
+                {
+                    CoolapkListProvider Provider = new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetAppFeeds,
+                                detail.ID,
+                                "popular",
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        EntityTemplateSelector.GetEntities,
+                        idName);
+                    PopularItemSource = new FeedListItemSource(ID, Provider);
+                    ItemSource.Add(new ShyHeaderItem
+                    {
+                        Header = "热门动态",
+                        ItemSource = PopularItemSource
+                    });
+                }
+                if (RatesItemSource == null || RatesItemSource.ID != ID)
+                {
+                    CoolapkListProvider Provider = new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetAppRates,
+                                detail.ID,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        EntityTemplateSelector.GetEntities,
+                        idName);
+                    RatesItemSource = new FeedListItemSource(ID, Provider);
+                    ItemSource.Add(new ShyHeaderItem
+                    {
+                        Header = "点评",
+                        ItemSource = RatesItemSource
+                    });
+                }
+                base.ItemSource = ItemSource;
+            }
+        }
+
+        public override async Task<FeedListDetailBase> GetDetailAsync()
+        {
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, ID), true);
+            if (!isSucceed) { return null; }
+
+            JObject token = (JObject)result;
+            FeedListDetailBase detail = null;
+
+            if (token != null)
+            {
+                detail = new AppDetail(token);
+            }
+
+            return detail;
+        }
+
+        protected override string GetTitleBarText(FeedListDetailBase detail) => (detail as AppDetail)?.Title;
+
+        public override SearchItemSource GetSearchProvider(string keyword) => Detail is AppDetail detail ? new SearchItemSource(keyword, "apk", detail.ID.ToString()) : null;
+
+        public override async Task<bool> PinSecondaryTileAsync(Entity entity)
+        {
+            IHasSubtitle detail = (IHasSubtitle)entity;
+
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+
+            // Construct a unique tile ID, which you will need to use later for updating the tile
+            string tileId = detail.Url.GetMD5();
+
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            if (isPinned)
+            {
+                try
+                {
+                    LiveTileTask.UpdateTile(tileId, LiveTileTask.GetListTile(detail));
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(FeedShellDetailControl)).Error(ex.ExceptionToMessage(), ex);
+                }
+
+                return isPinned;
+            }
+
+            Dispatcher.ShowMessage(loader.GetString("PinnedTileFailed"));
+            return isPinned;
+        }
     }
 
     public class FeedListItemSource : EntityItemSource

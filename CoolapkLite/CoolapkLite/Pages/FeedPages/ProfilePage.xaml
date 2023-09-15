@@ -21,6 +21,7 @@
                 x:Key="ProfileCardTemplateSelector"
                 ImageTextScrollCard="{StaticResource ImageTextScrollCardTemplate}"
                 Others="{StaticResource Empty}"
+                
                 TextLinkList="{StaticResource TextLinkListCardTemplate}"
                 TitleCard="{StaticResource TitleCardTemplate}" />
         </ResourceDictionary>

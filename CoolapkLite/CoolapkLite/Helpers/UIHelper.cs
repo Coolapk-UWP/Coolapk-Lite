@@ -706,6 +706,32 @@ namespace CoolapkLite.Helpers
                     return false;
                 };
             }
+            else if (link.StartsWith("/apk/", StringComparison.OrdinalIgnoreCase))
+            {
+                return async (frame) =>
+                {
+                    string id = link.Substring(5, "?");
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
+            }
+            else if (link.StartsWith("/appba/", StringComparison.OrdinalIgnoreCase))
+            {
+                return async (frame) =>
+                {
+                    string id = link.Substring(7, "?");
+                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
+                    if (provider != null)
+                    {
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                    }
+                    return false;
+                };
+            }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
                 return (frame) => frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));

@@ -11,7 +11,6 @@ using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.ToolsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
@@ -418,6 +417,7 @@ namespace CoolapkLite.Pages.FeedPages
     public class DetailTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
+        public DataTemplate AppDetail { get; set; }
         public DataTemplate DyhDetail { get; set; }
         public DataTemplate UserDetail { get; set; }
         public DataTemplate TopicDetail { get; set; }
@@ -428,6 +428,8 @@ namespace CoolapkLite.Pages.FeedPages
         {
             switch (item)
             {
+                case AppDetail _:
+                    return AppDetail;
                 case DyhDetail _:
                     return DyhDetail;
                 case UserDetail _:

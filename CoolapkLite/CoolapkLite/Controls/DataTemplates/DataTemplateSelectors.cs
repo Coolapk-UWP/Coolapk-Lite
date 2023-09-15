@@ -97,21 +97,22 @@ namespace CoolapkLite.Controls.DataTemplates
         public DataTemplate History { get; set; }
         public DataTemplate IconLink { get; set; }
         public DataTemplate TextLink { get; set; }
+        public DataTemplate Collection { get; set; }
 
         protected override DataTemplate SelectTemplateCore(object item)
         {
             switch (item)
             {
                 case CollectionModel _:
-                    return History;
+                    return Collection;
                 case IndexPageModel IndexPageModel:
                     switch (IndexPageModel?.EntityType)
                     {
                         case "topic":
                         case "recentHistory": return IconLink;
                         case "textLink": return TextLink;
-                        case "collection":
                         case "history": return History;
+                        case "collection": return Collection;
                         default: return Empty;
                     }
                 default:

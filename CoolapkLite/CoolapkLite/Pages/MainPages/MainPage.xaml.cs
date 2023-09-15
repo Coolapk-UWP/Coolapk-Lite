@@ -289,7 +289,7 @@ namespace CoolapkLite.Pages
         {
             if (args.ChosenSuggestion is AppModel app)
             {
-                _ = HamburgerMenuFrame.Navigate(typeof(BrowserPage), new BrowserViewModel($"https://www.coolapk.com{app.Url}", Dispatcher));
+                _ = HamburgerMenuFrame.OpenLinkAsync(app.Url);
             }
             else if (args.ChosenSuggestion is SearchWord word)
             {
