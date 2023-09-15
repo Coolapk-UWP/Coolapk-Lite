@@ -31,6 +31,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground = false)
         {
+            if (uri == null) { return (false, null); }
             string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
             JObject token;
@@ -51,6 +52,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, string request = "com.coolapk.market", bool isBackground = false)
         {
+            if (uri == null) { return (false, null); }
             string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), request, isBackground).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(results))
             {
@@ -62,6 +64,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
+            if (uri == null) { return (false, null); }
             string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json)) { return (false, null); }
             JObject token;
@@ -88,6 +91,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
+            if (uri == null) { return (false, null); }
             string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json))
             {

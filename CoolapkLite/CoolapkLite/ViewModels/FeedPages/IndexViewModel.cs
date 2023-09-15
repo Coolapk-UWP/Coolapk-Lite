@@ -18,7 +18,14 @@ namespace CoolapkLite.ViewModels.FeedPages
         public IndexViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
             Provider = new CoolapkListProvider(
-                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, "/main/indexV8", "?", p),
+                (p, firstItem, lastItem) =>
+                    UriHelper.GetUri(
+                        UriType.GetIndexPage,
+                        "/main/indexV8",
+                        "?",
+                        p,
+                        string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                        string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "entityId");
         }

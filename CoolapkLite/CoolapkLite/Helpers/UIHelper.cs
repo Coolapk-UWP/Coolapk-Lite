@@ -606,14 +606,21 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(6, "?");
-                if (int.TryParse(id, out _))
+                if (link.StartsWith("/feed/changeHistoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                    return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetSinglePageProvider(link, "动态编辑记录", frame.Dispatcher));
                 }
                 else
                 {
-                    ShowMessage("暂不支持");
+                    string id = link.Substring(6, "?");
+                    if (int.TryParse(id, out _))
+                    {
+                        return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                    }
+                    else
+                    {
+                        ShowMessage("暂不支持");
+                    }
                 }
             }
             else if (link.StartsWith("/picture/", StringComparison.OrdinalIgnoreCase))

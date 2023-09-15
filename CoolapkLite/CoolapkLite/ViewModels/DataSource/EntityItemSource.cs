@@ -109,7 +109,7 @@ namespace CoolapkLite.ViewModels.DataSource
             {
                 string Uri = GetUri((model.Entities.Where((x) => x is IndexPageModel).FirstOrDefault() as IndexPageModel).Url);
                 SubProvider = new CoolapkListProvider(
-                    (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, Uri.Contains("?") ? "&" : "?", p),
+                    (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetIndexPage, Uri, Uri.Contains("?") ? "&" : "?", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     Provider.GetEntities,
                     "entityId");
                 _currentPage = 1;

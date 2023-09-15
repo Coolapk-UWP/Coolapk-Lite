@@ -278,7 +278,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                         UriType.SearchCreateUsers,
                         keyword,
                         p,
-                        p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                        string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                        string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     GetEntities,
                     "uid");
             }
@@ -333,7 +334,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     UriType.SearchCreateTags,
                     keyword,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "id");
         }

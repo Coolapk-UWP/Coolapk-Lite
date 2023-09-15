@@ -17,7 +17,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     public class AdaptiveViewModel : EntityItemSource, IViewModel
     {
         private readonly string Uri;
-        private readonly List<Type> EntityTypes;
+        private readonly Type[] EntityTypes;
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains("?");
         protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
@@ -36,20 +36,67 @@ namespace CoolapkLite.ViewModels.FeedPages
             set => SetProperty(ref isShowTitle, value);
         }
 
-        internal AdaptiveViewModel(string uri, CoreDispatcher dispatcher, List<Type> types = null) : base(dispatcher)
+        public AdaptiveViewModel(string uri, CoreDispatcher dispatcher, params Type[] types) : base(dispatcher)
         {
             Uri = GetUri(uri);
             EntityTypes = types;
             Provider = new CoolapkListProvider(
-                (p, _, __) => UriHelper.GetUri(UriType.GetIndexPage, Uri, IsIndexPage ? "?" : "&", p),
+                (p, firstItem, lastItem) =>
+                    UriHelper.GetUri(
+                        UriType.GetIndexPage,
+                        Uri,
+                        IsIndexPage ? "?" : "&",
+                        p,
+                        string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                        string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "entityId");
         }
 
-        internal AdaptiveViewModel(CoolapkListProvider provider, CoreDispatcher dispatcher, List<Type> types = null) : base(dispatcher)
+        public AdaptiveViewModel(string uri, string title, string idName, CoreDispatcher dispatcher, params Type[] types) : base(dispatcher)
+        {
+            Uri = uri;
+            Title = title;
+            EntityTypes = types;
+            Provider = new CoolapkListProvider(
+                (p, firstItem, lastItem) =>
+                    UriHelper.GetUri(
+                        UriType.GetIndexPage,
+                        Uri,
+                        IsIndexPage ? "?" : "&",
+                        p,
+                        string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                        string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                GetEntities,
+                idName);
+        }
+
+        public AdaptiveViewModel(CoolapkListProvider provider, CoreDispatcher dispatcher, params Type[] types) : base(dispatcher)
         {
             Provider = provider;
             EntityTypes = types;
+            Uri = provider.Uri.ToString();
+        }
+
+        public AdaptiveViewModel(CoolapkListProvider provider, string title, CoreDispatcher dispatcher, params Type[] types) : base(dispatcher)
+        {
+            Title = title;
+            Provider = provider;
+            EntityTypes = types;
+            Uri = provider.Uri.ToString();
+        }
+
+        public static AdaptiveViewModel GetSinglePageProvider(string uri, string title, CoreDispatcher dispatcher)
+        {
+            return string.IsNullOrEmpty(uri)
+                ? throw new ArgumentException(nameof(uri))
+                : new AdaptiveViewModel(
+                    new CoolapkListProvider(
+                        (p, _, __) => p == 1 ? UriHelper.GetUri("/v6{0}", uri) : null,
+                        EntityTemplateSelector.GetEntities,
+                        "entityId"),
+                    title,
+                    dispatcher);
         }
 
         public static AdaptiveViewModel GetUserListProvider(string uid, bool isFollowList, string name, CoreDispatcher dispatcher)
@@ -57,18 +104,19 @@ namespace CoolapkLite.ViewModels.FeedPages
             return string.IsNullOrEmpty(uid)
                 ? throw new ArgumentException(nameof(uid))
                 : new AdaptiveViewModel(
-                new CoolapkListProvider(
-                    (p, firstItem, lastItem) =>
-                        UriHelper.GetUri(
-                            UriType.GetUserList,
-                            isFollowList ? "followList" : "fansList",
-                            uid,
-                            p,
-                            string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
-                            string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                    (o) => new Entity[] { new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])) },
-                    "fuid"), dispatcher)
-                { Title = $"{name}的{(isFollowList ? "关注" : "粉丝")}" };
+                    new CoolapkListProvider(
+                        (p, firstItem, lastItem) =>
+                            UriHelper.GetUri(
+                                UriType.GetUserList,
+                                isFollowList ? "followList" : "fansList",
+                                uid,
+                                p,
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                        (o) => new Entity[] { new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])) },
+                        "fuid"),
+                    $"{name}的{(isFollowList ? "关注" : "粉丝")}",
+                    dispatcher);
         }
 
         public static AdaptiveViewModel GetHotReplyListProvider(string id, CoreDispatcher dispatcher)
@@ -82,10 +130,12 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 UriType.GetHotReplies,
                                 id,
                                 p,
-                                p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         (o) => new Entity[] { new FeedReplyModel(o) },
-                        "uid"), dispatcher)
-                { Title = $"热门回复" };
+                        "uid"),
+                    $"热门回复",
+                    dispatcher);
         }
 
         public static AdaptiveViewModel GetReplyListProvider(string id, string title, CoreDispatcher dispatcher)
@@ -99,10 +149,12 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 UriType.GetReplyReplies,
                                 id,
                                 p,
-                                p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                                string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         (o) => new Entity[] { new FeedReplyModel(o) },
-                        "uid"), dispatcher)
-                { Title = title };
+                        "uid"),
+                    title,
+                    dispatcher);
         }
 
         public static AdaptiveViewModel GetHistoryProvider(string title, CoreDispatcher dispatcher)
@@ -131,8 +183,9 @@ namespace CoolapkLite.ViewModels.FeedPages
                             string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                             string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     (o) => new Entity[] { new HistoryModel(o) },
-                    "uid"), dispatcher)
-            { Title = title };
+                    "uid"),
+                title,
+                dispatcher);
         }
 
         public static AdaptiveViewModel GetUserFeedsProvider(string uid, string branch, CoreDispatcher dispatcher)
@@ -234,10 +287,11 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (items != null)
             {
+                bool notOfType = EntityTypes?.Any() != true;
                 foreach (Entity item in items)
                 {
                     if (item is NullEntity) { continue; }
-                    if (EntityTypes == null || EntityTypes.Contains(item.GetType()))
+                    if (notOfType || EntityTypes.Contains(item.GetType()))
                     {
                         await AddAsync(item);
                         AddSubProvider(item);

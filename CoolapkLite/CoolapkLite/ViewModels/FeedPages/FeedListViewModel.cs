@@ -656,7 +656,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                     {
                         List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
                         CoolapkListProvider Provider = new CoolapkListProvider(
-                            (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetCollectionContents, ID, p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                            (p, firstItem, lastItem) =>
+                                UriHelper.GetUri(
+                                    UriType.GetCollectionContents,
+                                    ID,
+                                    p,
+                                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                             EntityTemplateSelector.GetEntities,
                             "id");
                         FeedListItemSource FeedListItemSource = new FeedListItemSource(ID, Provider);
@@ -784,7 +790,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     pageType,
                     pageParam,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "id");
         }
@@ -828,7 +835,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     PageType,
                     PageParam,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "uid");
         }

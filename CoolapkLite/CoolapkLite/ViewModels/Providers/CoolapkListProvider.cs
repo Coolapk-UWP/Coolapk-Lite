@@ -15,6 +15,7 @@ namespace CoolapkLite.ViewModels.Providers
         private string _firstItem, _lastItem;
         private readonly Func<int, string, string, Uri> _getUri;
 
+        public Uri Uri => _getUri(1, string.Empty, string.Empty);
         public Func<JObject, IEnumerable<Entity>> GetEntities { get; }
 
         public CoolapkListProvider(Func<int, string, string, Uri> getUri, Func<JObject, IEnumerable<Entity>> getEntities, string idName)

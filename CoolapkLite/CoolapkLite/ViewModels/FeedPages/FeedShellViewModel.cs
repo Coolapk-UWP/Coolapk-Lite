@@ -330,7 +330,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     ID,
                     ReplyListType,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty,
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}",
                     toggleIsOn ? 1 : 0),
                 GetEntities,
                 "id");
@@ -375,7 +376,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     UriType.GetLikeList,
                     id,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "uid");
         }
@@ -390,16 +392,18 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public string ID;
 
-        public ShareItemSource(string id, string feedtype = "feed")
+        public ShareItemSource(string id, string feedType = "feed")
         {
             ID = id;
             Provider = new CoolapkListProvider(
-                (p, _, __) =>
+                (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
                     UriType.GetShareList,
                     id,
-                    feedtype,
-                    p),
+                    feedType,
+                    p,
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "id");
         }

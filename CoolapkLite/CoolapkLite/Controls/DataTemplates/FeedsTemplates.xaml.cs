@@ -136,11 +136,6 @@ namespace CoolapkLite.Controls.DataTemplates
                     DisabledCopy();
                     break;
 
-                case "ChangeButton":
-                    DisabledCopy();
-                    //UIHelper.NavigateInSplitPane(typeof(AdaptivePage), new ViewModels.AdaptivePage.ViewModel((sender as FrameworkElement).Tag as string, ViewModels.AdaptivePage.ListType.FeedInfo, "changeHistory"));
-                    break;
-
                 case "NewWindow":
                     DisabledCopy();
                     _ = element.Dispatcher.OpenLinkOutsideAsync(element.Tag?.ToString());

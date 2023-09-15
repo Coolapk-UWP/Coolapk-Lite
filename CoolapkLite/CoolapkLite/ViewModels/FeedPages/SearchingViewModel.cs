@@ -188,7 +188,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     sortType,
                     keyword,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "id");
         }
@@ -229,7 +230,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     sortType,
                     Keyword,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "uid");
         }
@@ -249,7 +251,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     "user",
                     keyword,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "uid");
         }
@@ -274,7 +277,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                     "feedTopic",
                     keyword,
                     p,
-                    p > 1 ? $"&firstItem={firstItem}&lastItem={lastItem}" : string.Empty),
+                    string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
+                    string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                 GetEntities,
                 "id");
         }
