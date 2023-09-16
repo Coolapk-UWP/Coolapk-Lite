@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
+    xmlns:cwuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:helpers="using:CoolapkLite.Helpers"
@@ -51,9 +52,8 @@
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent" />
-        <control:PullToRefreshListView
+        <ListView
             x:Name="ListView"
-            x:Uid="/MainPage/ListView"
             Grid.Row="1"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             IncrementalLoadingTrigger="None"
@@ -61,14 +61,13 @@
             ItemTemplateSelector="{StaticResource ChatCardTemplateSelector}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"
             Loaded="ListView_Loaded"
-            RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
-            <control:PullToRefreshListView.ItemsPanel>
+            <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
                     <ItemsStackPanel VerticalAlignment="Bottom" />
                 </ItemsPanelTemplate>
-            </control:PullToRefreshListView.ItemsPanel>
-        </control:PullToRefreshListView>
+            </ListView.ItemsPanel>
+        </ListView>
         <Grid
             Grid.Row="2"
             VerticalAlignment="Bottom"
@@ -155,7 +154,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind NormalEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                     <PivotItem Header="酷币">
                         <GridView
@@ -164,7 +173,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind CoolCoinsEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                     <PivotItem Header="滑稽">
                         <GridView
@@ -173,7 +192,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind FunnyEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                     <PivotItem Header="Doge">
                         <GridView
@@ -182,7 +211,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind DogeEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                     <PivotItem Header="传统">
                         <GridView
@@ -191,7 +230,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind TraditionEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                     <PivotItem Header="经典">
                         <GridView
@@ -200,7 +249,17 @@
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
                             ItemsSource="{x:Bind ClassicEmojis}"
-                            SelectionChanged="GridView_SelectionChanged" />
+                            SelectionChanged="GridView_SelectionChanged">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
                     </PivotItem>
                 </Pivot>
             </Grid>

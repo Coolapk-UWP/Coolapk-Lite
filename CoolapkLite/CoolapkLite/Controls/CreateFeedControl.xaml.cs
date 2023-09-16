@@ -443,8 +443,8 @@ namespace CoolapkLite.Controls
         {
             string name = data[0] == '(' ? $"#{data}" : data;
             InputBox.Document.Selection.InsertImage(
-                20, 20, 0,
-                VerticalCharacterAlignment.Baseline,
+                24, 24, 0,
+                VerticalCharacterAlignment.Top,
                 name,
                 await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync());
             _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);

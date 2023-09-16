@@ -277,8 +277,8 @@ namespace CoolapkLite.Pages.FeedPages
         {
             string name = data[0] == '(' ? $"#{data}" : data;
             InputBox.Document.Selection.InsertImage(
-                20, 20, 0,
-                VerticalCharacterAlignment.Baseline,
+                24, 24, 0,
+                VerticalCharacterAlignment.Top,
                 name,
                 await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync());
             _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
@@ -309,8 +309,6 @@ namespace CoolapkLite.Pages.FeedPages
         public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
-
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
 
