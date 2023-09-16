@@ -52,7 +52,7 @@
             <StaticResource x:Key="HamburgerMenuItemSeparatorForeground" ResourceKey="SystemControlForegroundBaseLowBrush" />
             <StaticResource x:Key="HamburgerMenuItemHeaderForeground" ResourceKey="TextFillColorPrimaryBrush" />
 
-            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="AccentFillColorDefaultBrush" />
+            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
 
             <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="TextFillColorPrimaryBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />
@@ -115,7 +115,7 @@
             <StaticResource x:Key="HamburgerMenuItemSeparatorForeground" ResourceKey="SystemControlForegroundBaseLowBrush" />
             <StaticResource x:Key="HamburgerMenuItemHeaderForeground" ResourceKey="TextFillColorPrimaryBrush" />
 
-            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="AccentFillColorDefaultBrush" />
+            <StaticResource x:Key="HamburgerMenuSelectionIndicatorForeground" ResourceKey="SystemControlForegroundAccentBrush" />
 
             <StaticResource x:Key="TopHamburgerMenuItemForeground" ResourceKey="TextFillColorPrimaryBrush" />
             <StaticResource x:Key="TopHamburgerMenuItemForegroundPointerOver" ResourceKey="TextFillColorPrimaryBrush" />

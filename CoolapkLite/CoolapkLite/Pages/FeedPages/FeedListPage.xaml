@@ -212,7 +212,6 @@
                                         Grid.Row="1"
                                         Width="160"
                                         Margin="0,4"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Tag="/feed/18221454"
                                         Tapped="FrameworkElement_Tapped"
                                         Value="{Binding NextLevelPercentage}" />
@@ -850,7 +849,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding OwnerStar5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
@@ -869,7 +867,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding OwnerStar4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
@@ -888,7 +885,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding OwnerStar3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
@@ -907,7 +903,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding OwnerStar2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
@@ -926,7 +921,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding OwnerStar1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"
@@ -962,7 +956,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
@@ -981,7 +974,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
@@ -1000,7 +992,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
@@ -1019,7 +1010,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
@@ -1038,7 +1028,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"
@@ -1425,7 +1414,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
@@ -1444,7 +1432,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
@@ -1463,7 +1450,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
@@ -1482,7 +1468,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
@@ -1501,7 +1486,6 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Value="{Binding Star1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"

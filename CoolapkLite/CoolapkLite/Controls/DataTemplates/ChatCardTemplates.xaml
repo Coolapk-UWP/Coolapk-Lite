@@ -202,7 +202,7 @@
                         ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                     <StackPanel
                         HorizontalAlignment="Right"
-                        Background="{ThemeResource AccentFillColorDefaultBrush}"
+                        Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                         BorderBrush="{ThemeResource ControlStrokeColorOnAccentDefault}"
                         BorderThickness="1"
                         Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
@@ -273,9 +273,8 @@
                             Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
                             <control:TextBlockEx
                                 HorizontalAlignment="Left"
-                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
                                 IsTextSelectionEnabled="True"
-                                LinkForeground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                LinkForeground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
                                 Text="{Binding Message}" />
                         </Border>
                     </StackPanel>

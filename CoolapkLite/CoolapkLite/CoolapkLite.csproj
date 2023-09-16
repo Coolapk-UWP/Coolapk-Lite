@@ -222,8 +222,12 @@
     </Compile>
     <Compile Include="Controls\QRCode\QRCodeTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\XamlQRCode.cs" />
-    <Compile Include="Controls\RatingControl\RatingControl.cs" />
-    <Compile Include="Controls\RatingControl\RatingControl.Properties.cs" />
+    <Compile Include="Controls\RatingControl\RatingControl.cs">
+      <DependentUpon>RatingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\RatingControl\RatingControl.Properties.cs">
+      <DependentUpon>RatingControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\RatingControl\RatingControlAutomationPeer.cs" />
     <Compile Include="Controls\RatingControl\RatingItemFontInfo.cs" />
     <Compile Include="Controls\RatingControl\RatingItemImageInfo.cs" />
@@ -1373,10 +1377,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Styles\Button.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Styles\Hyperlink.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

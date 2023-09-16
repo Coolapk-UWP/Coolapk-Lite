@@ -106,7 +106,6 @@
                                         Height="24"
                                         Margin="16,0,4,0"
                                         VerticalAlignment="Center"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         IsActive="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.IsProgressActive}"
                                         Visibility="Collapsed" />
                                     <Button
