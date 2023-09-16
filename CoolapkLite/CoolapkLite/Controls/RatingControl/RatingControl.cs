@@ -1083,7 +1083,7 @@ namespace CoolapkLite.Controls
 
                 if (valueChanged)
                 {
-                    ValueChanged.Invoke(this, null);
+                    ValueChanged?.Invoke(this, null);
                 }
             }
 

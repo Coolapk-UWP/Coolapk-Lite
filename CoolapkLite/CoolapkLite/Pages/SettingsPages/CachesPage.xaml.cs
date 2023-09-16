@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI;
 using Microsoft.Toolkit.Uwp.UI.Controls;
@@ -46,12 +47,31 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
             if (Provider == null)
             {
                 Provider = new CachesViewModel(Dispatcher);
+            }
+
+            Provider.LoadMoreStarted += OnLoadMoreStarted;
+            Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+
+            if (!Provider.Any)
+            {
                 await Refresh(true);
             }
         }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.LoadMoreStarted -= OnLoadMoreStarted;
+            Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
+        }
+
+        private void OnLoadMoreStarted() => this.ShowProgressBar();
+
+        private void OnLoadMoreCompleted() => this.HideProgressBar();
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
@@ -94,6 +114,17 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 ScrollViewer.Margin = ScrollViewerMargin;
                 ScrollViewer.Padding = ScrollViewerPadding;
+                ScrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+            }
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            double bottomOffset = scrollViewer.ExtentHeight - scrollViewer.VerticalOffset - scrollViewer.ViewportHeight;
+            if (scrollViewer.VerticalOffset > 0 && bottomOffset <= 0)
+            {
+                _ = Refresh();
             }
         }
     }

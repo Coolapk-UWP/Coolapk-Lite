@@ -93,12 +93,15 @@ namespace CoolapkLite.Pages.FeedPages
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
+
             if (Provider == null)
             {
                 Provider = new ProfileViewModel(Dispatcher);
             }
+
             Provider.LoadMoreStarted += OnLoadMoreStarted;
             Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+
             if (!Provider.IsLogin || dateTime == default || DateTime.UtcNow - dateTime == TimeSpan.FromMinutes(1))
             {
                 await Refresh(true);

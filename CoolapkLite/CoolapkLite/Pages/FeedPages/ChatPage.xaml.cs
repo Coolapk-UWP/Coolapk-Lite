@@ -72,10 +72,15 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                await Refresh(true);
             }
+
             Provider.LoadMoreStarted += OnLoadMoreStarted;
             Provider.LoadMoreCompleted += OnLoadMoreCompleted;
+
+            if (!Provider.Any)
+            {
+                await Refresh(true);
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

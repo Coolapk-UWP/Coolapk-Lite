@@ -15,8 +15,9 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            IncrementalLoadingTrigger="None"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{x:Bind Provider.Images, Mode=OneWay}"
+            ItemsSource="{x:Bind Provider, Mode=OneWay}"
             Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">

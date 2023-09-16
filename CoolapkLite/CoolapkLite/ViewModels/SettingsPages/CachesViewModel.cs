@@ -1,10 +1,8 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels.DataSource;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
@@ -12,69 +10,58 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class CachesViewModel : IViewModel
+    public class CachesViewModel : DataSourceBase<StorageFile>, IViewModel
     {
-        public CoreDispatcher Dispatcher { get; }
-
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
 
-        private ObservableCollection<StorageFile> images = new ObservableCollection<StorageFile>();
-        public ObservableCollection<StorageFile> Images
-        {
-            get => images;
-            private set
-            {
-                if (images != value)
-                {
-                    images = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
+        private List<StorageFile> Images { get; set; }
 
         public CachesViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
-        public async Task Refresh(bool reset)
+        protected override async Task<IList<StorageFile>> LoadItemsAsync(uint count)
         {
-            Dispatcher.ShowProgressBar();
-            await ThreadSwitcher.ResumeBackgroundAsync();
-            try
+            if (_currentPage == 1)
             {
-                StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists);
-                if (ImageCache != null)
+                try
                 {
-                    IReadOnlyList<StorageFile> images = await ImageCache.GetFilesAsync();
-                    Images = new ObservableCollection<StorageFile>(images);
+                    StorageFolder ImageCache = await ApplicationData.Current.TemporaryFolder.CreateFolderAsync("ImageCache", CreationCollisionOption.OpenIfExists);
+                    if (ImageCache != null)
+                    {
+                        IReadOnlyList<StorageFile> images = await ImageCache.GetFilesAsync();
+                        Images = images.ToList();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.ShowMessage(ex.ExceptionToMessage());
                 }
             }
-            catch (Exception ex)
+
+            if (Images.Count > count)
             {
-                Dispatcher.ShowMessage(ex.ExceptionToMessage());
+                List<StorageFile> result = Images.GetRange(0, (int)count);
+                Images.RemoveRange(0, (int)count);
+                return result;
             }
-            Dispatcher.HideProgressBar();
+            else
+            {
+                List<StorageFile> result = Images;
+                Images.Clear();
+                return result;
+            }
+        }
+
+        public async Task Refresh(bool reset = false)
+        {
+            if (_busy) { return; }
+            if (reset)
+            {
+                await Reset().ConfigureAwait(false);
+            }
+            else if (_hasMoreItems)
+            {
+                _ = await LoadMoreItemsAsync(20);
+            }
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is CachesViewModel model && IsEqual(model);
@@ -84,7 +71,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public async Task RemoveImageAsync(StorageFile file)
         {
             await file.DeleteAsync();
-            Images.Remove(file);
+            Remove(file);
         }
     }
 }

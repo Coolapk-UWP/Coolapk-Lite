@@ -128,7 +128,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             else if (data.Contains(StandardDataFormats.StorageItems))
             {
                 IReadOnlyList<IStorageItem> items = await data.GetStorageItemsAsync();
-                IEnumerable<IStorageItem> images = items.OfType<StorageFile>().Where(i =>
+                IEnumerable<IStorageItem> images = items.OfType<StorageFile>(i =>
                 {
                     foreach (string type in ImageTypes)
                     {
@@ -231,7 +231,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             else if (data.Contains(StandardDataFormats.StorageItems))
             {
                 IReadOnlyList<IStorageItem> items = await data.GetStorageItemsAsync();
-                IEnumerable<IStorageItem> images = items.OfType<StorageFile>().Where(i =>
+                IEnumerable<IStorageItem> images = items.OfType<StorageFile>(i =>
                 {
                     foreach (string type in ImageTypes)
                     {

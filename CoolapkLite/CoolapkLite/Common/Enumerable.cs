@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace CoolapkLite.Common
@@ -106,6 +107,34 @@ namespace CoolapkLite.Common
                 current = nextFunction(current);
                 if (current == null) { break; }
                 yield return current;
+            }
+        }
+
+        /// <summary>
+        /// Filters the elements of an <see cref="IEnumerable"/> based on a specified type.
+        /// </summary>
+        /// <typeparam name="TResult">The type to filter the elements of the sequence on.</typeparam>
+        /// <param name="source">The <see cref="IEnumerable"/> whose elements to filter.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>An <see cref="IEnumerable{TResult}"/> that contains elements from the input sequence of type <typeparamref name="TResult"/>.</returns>
+        public static IEnumerable<TResult> OfType<TResult>(this IEnumerable source, Func<TResult, bool> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (object obj in source)
+            {
+                if (obj is TResult result && predicate(result))
+                {
+                    yield return result;
+                }
             }
         }
 
