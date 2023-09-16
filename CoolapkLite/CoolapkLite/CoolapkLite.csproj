@@ -222,6 +222,12 @@
     </Compile>
     <Compile Include="Controls\QRCode\QRCodeTemplateSettings.cs" />
     <Compile Include="Controls\QRCode\XamlQRCode.cs" />
+    <Compile Include="Controls\RatingControl\RatingControl.cs" />
+    <Compile Include="Controls\RatingControl\RatingControl.Properties.cs" />
+    <Compile Include="Controls\RatingControl\RatingControlAutomationPeer.cs" />
+    <Compile Include="Controls\RatingControl\RatingItemFontInfo.cs" />
+    <Compile Include="Controls\RatingControl\RatingItemImageInfo.cs" />
+    <Compile Include="Controls\RatingControl\RatingItemInfo.cs" />
     <Compile Include="Controls\SettingsGroup\SettingsGroup.cs">
       <DependentUpon>SettingsGroup.xaml</DependentUpon>
     </Compile>
@@ -1162,6 +1168,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Controls\RatingControl\RatingControl.Themeresources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\RatingControl\RatingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SettingsGroup\SettingsGroup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1545,6 +1559,7 @@
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
     <PRIResource Include="Strings\zh-TW\UserAgentDialog.resw" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0'">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

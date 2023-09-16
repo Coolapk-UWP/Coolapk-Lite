@@ -300,7 +300,7 @@
                     <Grid Visibility="{Binding IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Border
@@ -316,6 +316,12 @@
                                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
                         </Border>
+                        <controls:RatingControl
+                            x:Name="RatingStarControl"
+                            Grid.Column="1"
+                            Margin="8,7,8,0"
+                            IsReadOnly="True"
+                            Value="{Binding RatingStar, Mode=OneWay}" />
                         <TextBlock
                             Grid.Column="2"
                             HorizontalAlignment="Left"

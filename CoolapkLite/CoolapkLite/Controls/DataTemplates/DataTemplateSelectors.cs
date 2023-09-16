@@ -111,8 +111,8 @@ namespace CoolapkLite.Controls.DataTemplates
                         case "topic":
                         case "recentHistory": return IconLink;
                         case "textLink": return TextLink;
+                        case "collection":
                         case "history": return History;
-                        case "collection": return Collection;
                         default: return Empty;
                     }
                 default:

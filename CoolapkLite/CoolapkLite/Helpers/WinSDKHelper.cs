@@ -62,6 +62,11 @@ namespace CoolapkLite.Helpers
         public static bool IsAppWindowSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.WindowManagement.AppWindow");
 
         /// <summary>
+        /// Is <see cref="Windows.UI.Xaml.ElementSoundPlayer"/> supported.
+        /// </summary>
+        public static bool IsElementSoundPlayerSupported => ApiInformation.IsTypePresent("Windows.UI.Xaml.ElementSoundPlayer");
+
+        /// <summary>
         /// Is <see cref="Windows.UI.Xaml.Controls.CommandBarFlyout"/> supported.
         /// </summary>
         public static bool IsCommandBarFlyoutSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.Xaml.Controls.CommandBarFlyout");
@@ -158,6 +163,11 @@ namespace CoolapkLite.Helpers
         /// Is <see cref="Windows.UI.Xaml.Controls.Control.CornerRadiusProperty"/> supported.
         /// </summary>
         public static bool IsCornerRadiusSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Control", "CornerRadiusProperty");
+
+        /// <summary>
+        /// Is <see cref="Windows.UI.Xaml.Controls.Control.IsFocusEngaged"/> supported.
+        /// </summary>
+        public static bool IsFocusEngagedSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Control", "IsFocusEngaged");
 
         /// <summary>
         /// Is <see cref="Windows.UI.Xaml.Controls.MenuFlyoutItem.Icon"/> supported.

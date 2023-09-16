@@ -11,6 +11,7 @@
         <ResourceDictionary Source="ms-appx:///Controls/TitleBar/TitleBar.ThemeResources.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/InfoBadge/InfoBadge.ThemeResources.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/TextBlockEx/TextBlockEx.ThemeResources.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/RatingControl/RatingControl.ThemeResources.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenu.ThemeResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
 

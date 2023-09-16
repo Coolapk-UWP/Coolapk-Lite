@@ -8,6 +8,7 @@
         <ResourceDictionary Source="ms-appx:///Controls/TextBlockEx/TextBlockEx.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PivotHeader/PivotHeader.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/PolylineView/PolylineView.xaml" />
+        <ResourceDictionary Source="ms-appx:///Controls/RatingControl/RatingControl.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/SettingsGroup/SettingsGroup.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/HamburgerMenu/HamburgerMenu.xaml" />
         <ResourceDictionary Source="ms-appx:///Controls/ShyHeaderListView/ShyHeaderListView.xaml" />

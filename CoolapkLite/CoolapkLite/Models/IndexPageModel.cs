@@ -163,6 +163,8 @@ namespace CoolapkLite.Models
 
         public IndexPageMessageCardModel(JObject token) : base(token)
         {
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedListPage");
+
             if (token.TryGetValue("title", out JToken title))
             {
                 Title = title.ToString();
@@ -174,7 +176,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("release_time", out JToken release_time) && !string.IsNullOrEmpty(release_time.ToString()))
             {
-                Description = $"发布日期：{release_time}";
+                Description = $"{loader.GetString("ReleaseTime")}{release_time}";
             }
             else if (token.TryGetValue("link_tag", out JToken link_tag) && !string.IsNullOrEmpty(link_tag.ToString()))
             {

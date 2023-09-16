@@ -34,9 +34,13 @@ namespace CoolapkLite.Models
                 Title = title.ToString();
             }
 
-            if (token.TryGetValue("subTitle", out JToken subTitle))
+            if (token.TryGetValue("subTitle", out JToken subTitle) && !string.IsNullOrEmpty(subTitle.ToString()))
             {
                 SubTitle = subTitle.ToString();
+            }
+            else if (token.TryGetValue("lastupdate", out JToken lastupdate))
+            {
+                SubTitle = $"最近更新：{lastupdate.ToObject<long>().ConvertUnixTimeStampToReadable()}";
             }
 
             if (token.TryGetValue("url", out JToken url))
@@ -44,20 +48,9 @@ namespace CoolapkLite.Models
                 Url = url.ToString();
             }
 
-            if (token.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
+            if (token.TryGetValue("description", out JToken description))
             {
-                if (string.IsNullOrEmpty(SubTitle))
-                {
-                    SubTitle = description.ToString();
-                }
-                else
-                {
-                    Description = description.ToString();
-                }
-            }
-            else if (string.IsNullOrEmpty(SubTitle) && token.TryGetValue("lastupdate", out JToken lastupdate))
-            {
-                SubTitle = lastupdate.ToObject<long>().ConvertUnixTimeStampToReadable();
+                Description = description.ToString();
             }
 
             if (token.TryGetValue("cover_pic", out JToken cover_pic))

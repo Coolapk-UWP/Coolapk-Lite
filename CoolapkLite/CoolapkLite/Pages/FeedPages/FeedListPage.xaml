@@ -794,6 +794,10 @@
                                         FontSize="35"
                                         FontWeight="Bold"
                                         Text="{Binding OwnerScore}" />
+                                    <control:RatingControl
+                                        HorizontalAlignment="Center"
+                                        IsReadOnly="True"
+                                        Value="{Binding OwnerScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
@@ -809,6 +813,10 @@
                                         FontSize="35"
                                         FontWeight="Bold"
                                         Text="{Binding RatingScore}" />
+                                    <control:RatingControl
+                                        HorizontalAlignment="Center"
+                                        IsReadOnly="True"
+                                        Value="{Binding RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
@@ -1383,6 +1391,10 @@
                                         FontSize="35"
                                         FontWeight="Bold"
                                         Text="{Binding RatingScore}" />
+                                    <control:RatingControl
+                                        HorizontalAlignment="Center"
+                                        IsReadOnly="True"
+                                        Value="{Binding RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
