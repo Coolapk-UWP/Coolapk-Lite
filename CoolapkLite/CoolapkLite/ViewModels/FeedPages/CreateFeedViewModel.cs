@@ -30,7 +30,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public class CreateFeedViewModel : IViewModel
     {
-        public static string[] ImageTypes = new string[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
+        public static string[] ImageTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 
         public readonly CreateUserItemSource CreateUserItemSource = new CreateUserItemSource();
         public readonly CreateTopicItemSource CreateTopicItemSource = new CreateTopicItemSource();
@@ -295,7 +295,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                             p,
                             string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                             string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                    (o) => new Entity[] { new UserModel((JObject)o["fUserInfo"]) },
+                    (o) => new[] { new UserModel((JObject)o["fUserInfo"]) },
                     "fuid");
             }
         }

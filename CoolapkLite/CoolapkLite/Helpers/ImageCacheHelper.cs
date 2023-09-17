@@ -82,7 +82,7 @@ namespace CoolapkLite.Helpers
                 {
                     try
                     {
-                        await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
+                        await ImageCache.Instance.RemoveAsync(new[] { uri });
                         BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                         return image;
                     }
@@ -140,7 +140,7 @@ namespace CoolapkLite.Helpers
                 {
                     try
                     {
-                        await ImageCache.Instance.RemoveAsync(new Uri[] { uri });
+                        await ImageCache.Instance.RemoveAsync(new[] { uri });
                         _ = await ImageCache.Instance.GetFromCacheAsync(uri, true);
                         StorageFile image = await ImageCache.Instance.GetFileFromCacheAsync(uri);
                         return image;

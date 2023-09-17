@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,7 +10,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class ContainerWriter : HtmlWriter
     {
-        public override string[] TargetTags => new string[] { "div" };
+        public override HashSet<string> TargetTags => new HashSet<string> { "div" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {

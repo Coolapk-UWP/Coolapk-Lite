@@ -6,8 +6,10 @@ using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
+using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -106,10 +108,18 @@ namespace CoolapkLite.Controls
                 case "Reset":
                     SettingsHelper.LocalObject.Clear();
                     SettingsHelper.SetDefaultSettings();
+                    if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
+                    {
+                        JumpList JumpList = await JumpList.LoadCurrentAsync();
+                        JumpList.Items.Clear();
+                        _ = JumpList.SaveAsync();
+                    }
+                    await SettingsHelper.CheckLoginAsync();
                     if (Reset.Flyout is Flyout flyout_reset)
                     {
                         flyout_reset.Hide();
                     }
+                    _ = Refresh(true);
                     break;
                 case "MyDevice":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice", Dispatcher));
@@ -178,6 +188,8 @@ namespace CoolapkLite.Controls
                     break;
             }
         }
+
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void MarkdownTextBlock_LinkClicked(object sender, LinkClickedEventArgs e) => _ = this.OpenLinkAsync(e.Link);
     }

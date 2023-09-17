@@ -13,7 +13,7 @@ namespace CoolapkLite.Helpers
         public const string AutoLanguageCode = "auto";
         public const string FallbackLanguageCode = "zh-CN";
 
-        public static string[] SupportLanguages { get; } = new string[]
+        public static string[] SupportLanguages { get; } = new[]
         {
             "en-US",
             "uk-UA",
@@ -21,7 +21,7 @@ namespace CoolapkLite.Helpers
             "zh-TW"
         };
 
-        private static string[] SupportLanguageCodes { get; } = new string[]
+        private static string[] SupportLanguageCodes { get; } = new[]
         {
             "en, en-au, en-ca, en-gb, en-ie, en-in, en-nz, en-sg, en-us, en-za, en-bz, en-hk, en-id, en-jm, en-kz, en-mt, en-my, en-ph, en-pk, en-tt, en-vn, en-zw, en-053, en-021, en-029, en-011, en-018, en-014",
             "uk, uk-ua",

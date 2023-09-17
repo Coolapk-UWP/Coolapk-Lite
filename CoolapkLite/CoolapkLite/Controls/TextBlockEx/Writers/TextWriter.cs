@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers.Converters;
 using HtmlAgilityPack;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -14,7 +15,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class TextWriter : HtmlWriter
     {
-        public override string[] TargetTags => throw new NotImplementedException();
+        public override HashSet<string> TargetTags => throw new NotImplementedException();
 
         public override bool Match(HtmlNode fragment)
         {

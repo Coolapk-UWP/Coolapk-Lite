@@ -88,7 +88,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new SimpleNotificationModel(o) },
+                                    (o) => new[] { new SimpleNotificationModel(o) },
                                     "id"), Dispatcher));
                         break;
                     case "AtMe":
@@ -101,7 +101,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new FeedModel(o) },
+                                    (o) => new[] { new FeedModel(o) },
                                     "id"), Dispatcher));
                         break;
                     case "AtCommentMe":
@@ -114,7 +114,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new AtCommentMeNotificationModel(o) },
+                                    (o) => new[] { new AtCommentMeNotificationModel(o) },
                                     "id"), Dispatcher));
                         break;
                     case "FeedLike":
@@ -127,7 +127,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new LikeNotificationModel(o) },
+                                    (o) => new[] { new LikeNotificationModel(o) },
                                     "id"), Dispatcher));
                         break;
                     case "Follow":
@@ -140,7 +140,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new SimpleNotificationModel(o) },
+                                    (o) => new[] { new SimpleNotificationModel(o) },
                                     "id"), Dispatcher));
                         break;
                     case "Message":
@@ -152,7 +152,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new Entity[] { new MessageNotificationModel(o) },
+                                    (o) => new[] { new MessageNotificationModel(o) },
                                     "ukey"), Dispatcher));
                         break;
                     default:

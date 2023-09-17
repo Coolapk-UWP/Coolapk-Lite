@@ -47,7 +47,7 @@ namespace CoolapkLite.Controls
             {
                 Orientation = Orientation.Horizontal,
                 IndicatorName = c_selectionIndicatorName,
-                ItemsControls = new ItemsControl[] { this }
+                ItemsControls = new[] { this }
             };
         }
 

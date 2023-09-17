@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -220,6 +221,21 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        protected static async void RaisePropertyChangedEvent(params string[] names)
+        {
+            if (names?.Any() == true)
+            {
+                foreach (KeyValuePair<CoreDispatcher, TestViewModel> cache in Caches)
+                {
+                    if (cache.Key?.HasThreadAccess == false)
+                    {
+                        await cache.Key.ResumeForegroundAsync();
+                    }
+                    names.ForEach((name) => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
+                }
+            }
+        }
+
         protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
@@ -235,7 +251,28 @@ namespace CoolapkLite.ViewModels.SettingsPages
             Caches[dispatcher] = this;
         }
 
-        public Task Refresh(bool reset) => Task.Run(() => UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
+        public static void Refresh(bool reset)
+        {
+            if (reset)
+            {
+                RaisePropertyChangedEvent(
+                    nameof(IsExtendsTitleBar),
+                    nameof(IsUseAPI2),
+                    nameof(IsFullLoad),
+                    nameof(IsCustomUA),
+                    nameof(APIVersion),
+                    nameof(IsUseTokenV2),
+                    nameof(IsUseLiteHome),
+                    nameof(IsUseAppWindow),
+                    nameof(IsUseBlurBrush),
+                    nameof(IsUseCompositor),
+                    nameof(SemaphoreSlimCount));
+            }
+            userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+            RaisePropertyChangedEvent(nameof(UserAgent));
+        }
+
+        Task IViewModel.Refresh(bool reset) => Task.Run(() => UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
 
         bool IViewModel.IsEqual(IViewModel other) => other is TestViewModel model && IsEqual(model);
 

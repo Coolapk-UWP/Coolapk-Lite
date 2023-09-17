@@ -82,7 +82,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("fromusername", out JToken fromusername))
             {
-                UserName = string.Join(" ", new string[] { fromusername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+                UserName = string.Join(" ", new[] { fromusername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -153,7 +153,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("username", out JToken username))
             {
-                UserName = string.Join(" ", new string[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+                UserName = string.Join(" ", new[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -222,7 +222,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("likeUsername", out JToken likeUsername))
             {
-                UserName = string.Join(" ", new string[] { likeUsername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+                UserName = string.Join(" ", new[] { likeUsername.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
             }
 
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
@@ -297,7 +297,7 @@ namespace CoolapkLite.Models.Pages
 
                 if (messageUserInfo.TryGetValue("username", out JToken username))
                 {
-                    UserName = string.Join(" ", new string[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+                    UserName = string.Join(" ", new[] { username.ToString(), BlockStatus }.Where((x) => !string.IsNullOrWhiteSpace(x)));
                 }
             }
 

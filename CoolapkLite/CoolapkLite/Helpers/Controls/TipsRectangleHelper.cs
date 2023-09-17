@@ -34,7 +34,7 @@ namespace CoolapkLite.Helpers
             {
                 AnimateSelectionProvider provider = new AnimateSelectionProvider
                 {
-                    ItemsControls = new ItemsControl[] { itemsControl },
+                    ItemsControls = new[] { itemsControl },
                     IndicatorName = GetIndicatorName(itemsControl),
                     Orientation = GetOrientation(itemsControl)
                 };

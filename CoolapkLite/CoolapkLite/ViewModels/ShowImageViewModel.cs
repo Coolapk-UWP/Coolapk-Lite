@@ -86,7 +86,7 @@ namespace CoolapkLite.ViewModels
             }
             else
             {
-                Images = new ImageModel[] { image };
+                Images = new[] { image };
                 Index = 0;
             }
             if (!NetworkHelper.Instance.ConnectionInformation.IsInternetOnMeteredConnection)

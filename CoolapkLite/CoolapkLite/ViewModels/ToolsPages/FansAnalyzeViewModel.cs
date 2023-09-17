@@ -82,7 +82,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
                     p,
                     string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                     string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                (o) => new Entity[] { new ContactModel(o) },
+                (o) => new[] { new ContactModel(o) },
                 "fuid");
         }
 

@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -10,7 +11,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public abstract class HtmlWriter
     {
-        public abstract string[] TargetTags { get; }
+        public abstract HashSet<string> TargetTags { get; }
 
         public abstract DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx);
 

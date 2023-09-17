@@ -321,15 +321,15 @@ namespace CoolapkLite.Models.Images
                 string fileEx = fileName.Substring(index);
                 if (!string.IsNullOrEmpty(fileEx))
                 {
-                    index = fileEx.IndexOfAny(new char[] { '?', '%', '&' });
+                    index = fileEx.IndexOfAny(new[] { '?', '%', '&' });
                     fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
-                    fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new string[] { $".{fileEx}" });
+                    fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new[] { $".{fileEx}" });
                 }
             }
 
             if (fileSavePicker.FileTypeChoices.Count < 1)
             {
-                fileSavePicker.FileTypeChoices.Add("png 文件", new string[] { ".png" });
+                fileSavePicker.FileTypeChoices.Add("png 文件", new[] { ".png" });
             }
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
@@ -376,7 +376,7 @@ namespace CoolapkLite.Models.Images
             dataPackage.SetBitmap(bitmap);
             dataPackage.Properties.Title = title;
             dataPackage.Properties.Description = Title;
-            dataPackage.SetStorageItems(new IStorageItem[] { file });
+            dataPackage.SetStorageItems(new[] { file });
         }
 
         public ImageModel Clone(CoreDispatcher dispatcher)

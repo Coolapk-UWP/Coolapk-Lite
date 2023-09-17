@@ -103,7 +103,7 @@ namespace CoolapkLite.Controls
             {
                 IndicatorName = "SelectionIndicator",
                 Orientation = Orientation.Vertical,
-                ItemsControls = new ItemsControl[]
+                ItemsControls = new[]
                 {
                     _buttonsListView,
                     _optionsListView

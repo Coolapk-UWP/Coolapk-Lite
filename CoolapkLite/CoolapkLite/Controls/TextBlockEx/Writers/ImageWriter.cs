@@ -4,6 +4,7 @@ using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
 using Microsoft.Toolkit.Uwp.UI.Converters;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using Windows.ApplicationModel.Resources;
@@ -17,7 +18,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class ImageWriter : HtmlWriter
     {
-        public override string[] TargetTags => new string[] { "img" };
+        public override HashSet<string> TargetTags => new HashSet<string> { "img" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {

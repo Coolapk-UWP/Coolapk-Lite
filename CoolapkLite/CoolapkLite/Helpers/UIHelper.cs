@@ -257,7 +257,7 @@ namespace CoolapkLite.Helpers
     {
         public static void ShowHttpExceptionMessage(HttpRequestException e)
         {
-            if (e.Message.IndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
+            if (e.Message.IndexOfAny(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
             { ShowMessage($"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}"); }
             else if (e.Message == "An error occurred while sending the request.") { ShowMessage("无法连接网络。"); }
             else { ShowMessage($"请检查网络连接。 {e.Message}"); }

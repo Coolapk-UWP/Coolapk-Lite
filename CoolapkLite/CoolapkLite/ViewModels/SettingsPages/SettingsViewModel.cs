@@ -165,6 +165,21 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        protected static async void RaisePropertyChangedEvent(params string[] names)
+        {
+            if (names?.Any() == true)
+            {
+                foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
+                {
+                    if (cache.Key?.HasThreadAccess == false)
+                    {
+                        await cache.Key.ResumeForegroundAsync();
+                    }
+                    names.ForEach((name) => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
+                }
+            }
+        }
+
         protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
@@ -215,6 +230,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
                 IsCleanCacheButtonEnabled = true;
             }
         }
@@ -359,7 +377,22 @@ namespace CoolapkLite.ViewModels.SettingsPages
             return false;
         }
 
-        public Task Refresh(bool reset) => GetAboutTextBlockTextAsync();
+        public Task Refresh(bool reset)
+        {
+            if (reset)
+            {
+                RaisePropertyChangedEvent(
+                    nameof(IsLogin),
+                    nameof(IsNoPicsMode),
+                    nameof(ShowOtherException),
+                    nameof(IsDisplayOriginPicture),
+                    nameof(IsUseMultiWindow),
+                    nameof(CheckUpdateWhenLaunching),
+                    nameof(TileUpdateTime));
+            }
+            TestViewModel.Refresh(reset);
+            return GetAboutTextBlockTextAsync();
+        }
 
         bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);
 

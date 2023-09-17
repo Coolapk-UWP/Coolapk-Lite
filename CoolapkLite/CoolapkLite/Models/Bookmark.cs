@@ -13,7 +13,7 @@
 
         public static Bookmark[] GetDefaultBookmarks()
         {
-            return new Bookmark[]
+            return new[]
             {
                 new Bookmark("/page?url=V11_FIND_COOLPIC", "酷图"),
                 new Bookmark("/page?url=V11_HOME_TAB_NEWS", "快讯"),

@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
@@ -7,7 +8,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class CodeWriter : HtmlWriter
     {
-        public override string[] TargetTags => new string[] { "code" };
+        public override HashSet<string> TargetTags => new HashSet<string> { "code" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {

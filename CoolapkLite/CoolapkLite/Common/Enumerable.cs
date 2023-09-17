@@ -16,6 +16,7 @@ namespace CoolapkLite.Common
         /// <param name="collection">The collection whose elements should be added to the end of the <see cref="ICollection{TSource}"/>.
         /// The collection itself cannot be <see langword="null"/>, but it can contain elements that are
         /// <see langword="null"/>, if type <typeparamref name="TSource"/> is a reference type.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="collection"/> is null.</exception>
         public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> collection)
         {
             if (source == null)
@@ -63,10 +64,6 @@ namespace CoolapkLite.Common
             if (source is List<TSource> list)
             {
                 list.ForEach(action);
-            }
-            else if (source is TSource[] array)
-            {
-                array.ForEach(action);
             }
             else if (source is ImmutableList<TSource> immutableList)
             {
@@ -160,6 +157,7 @@ namespace CoolapkLite.Common
         /// <param name="source">The <see cref="IEnumerable"/> whose elements to filter.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>An <see cref="IEnumerable{TResult}"/> that contains elements from the input sequence of type <typeparamref name="TResult"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
         public static IEnumerable<TResult> OfType<TResult>(this IEnumerable source, Func<TResult, bool> predicate)
         {
             if (source == null)
@@ -188,6 +186,7 @@ namespace CoolapkLite.Common
         /// <param name="source">The <see cref="ICollection{TSource}"/> to be removed.</param>
         /// <param name="predicate">The <see cref="Func{T, TResult}"/> delegate that defines the conditions of the elements to remove.</param>
         /// <returns>The number of elements removed from the <see cref="ICollection{TSource}"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
         public static int RemoveAll<TSource>(this ICollection<TSource> source, Func<TSource, bool> predicate)
         {
             if (source == null)
@@ -206,7 +205,7 @@ namespace CoolapkLite.Common
             }
             else if (source is HashSet<TSource> hashSet)
             {
-                return hashSet.RemoveAll((x) => predicate(x));
+                return hashSet.RemoveWhere((x) => predicate(x));
             }
             else
             {
@@ -223,6 +222,7 @@ namespace CoolapkLite.Common
         /// The collection itself cannot be <see langword="null"/>, but it can contain elements that are
         /// <see langword="null"/>, if type <typeparamref name="TSource"/> is a reference type.</param>
         /// <returns>The number of elements removed from the <see cref="ICollection{TSource}"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="collection"/> is null.</exception>
         public static int RemoveRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> collection)
         {
             if (source == null)
@@ -258,6 +258,7 @@ namespace CoolapkLite.Common
         /// <param name="count">The number of elements to return.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <returns>An <see cref="IEnumerable{TSource}"/> that contains the specified number of elements from the start of the input sequence.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
         public static IEnumerable<TSource> Take<TSource>(this IEnumerable<TSource> source, int count, Func<TSource, bool> predicate)
         {
             if (source == null)

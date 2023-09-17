@@ -97,7 +97,7 @@ namespace CoolapkLite.Helpers
                                 {
                                     responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                                     Asset asset = JsonConvert.DeserializeObject<Asset>(responseBody);
-                                    updateInfo.Assets = new Asset[] { asset };
+                                    updateInfo.Assets = new[] { asset };
                                 }
                             }
                             catch (Exception e)

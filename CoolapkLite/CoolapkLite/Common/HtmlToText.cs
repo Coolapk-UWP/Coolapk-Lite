@@ -262,7 +262,7 @@ namespace CoolapkLite.Common
                 // Opening quote
                 MoveAhead();
                 // Find end of value
-                _pos = _html.IndexOfAny(new char[] { c, '\r', '\n' }, _pos);
+                _pos = _html.IndexOfAny(new[] { c, '\r', '\n' }, _pos);
                 if (_pos < 0)
                 {
                     _pos = _html.Length;
