@@ -123,6 +123,9 @@
   <data name="Browser" xml:space="preserve">
     <value>浏览器</value>
   </data>
+  <data name="Caches" xml:space="preserve">
+    <value>缓存</value>
+  </data>
   <data name="Circle" xml:space="preserve">
     <value>圈子</value>
   </data>
