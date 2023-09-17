@@ -26,6 +26,7 @@
                             <Button
                                 Click="Button_Click"
                                 Content="应用内通知"
+                                TabIndex="0"
                                 Tag="ShowMessage" />
                             <Button
                                 Click="Button_Click"

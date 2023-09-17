@@ -34,7 +34,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsSettingsPaneSupported { get; } = SettingsPaneRegister.IsSettingsPaneSupported;
 
-        public bool IsAppExtensionSupported { get; } = ExtensionManager.IsSupported;
+        public bool IsAppExtensionSupported { get; } = ExtensionManager.IsOSSUploaderSupported;
 
         public bool IsCompactOverlaySupported { get; } = ApiInfoHelper.IsApplicationViewViewModeSupported;
 

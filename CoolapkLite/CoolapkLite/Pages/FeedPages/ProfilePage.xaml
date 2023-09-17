@@ -21,7 +21,6 @@
                 x:Key="ProfileCardTemplateSelector"
                 ImageTextScrollCard="{StaticResource ImageTextScrollCardTemplate}"
                 Others="{StaticResource Empty}"
-                
                 TextLinkList="{StaticResource TextLinkListCardTemplate}"
                 TitleCard="{StaticResource TitleCardTemplate}" />
         </ResourceDictionary>
@@ -289,7 +288,7 @@
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="TitleBar_RefreshEvent">
-            <Grid>
+            <Grid Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <Button
                     x:Uid="/ProfilePage/NotificationButton"
                     VerticalAlignment="Center"

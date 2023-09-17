@@ -173,17 +173,18 @@ namespace CoolapkLite.ViewModels.FeedPages
             results = await RequestHelper.UploadImages(fragments);
             UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
 #else
-            if (ExtensionManager.IsSupported)
+            if (ExtensionManager.IsOSSUploaderSupported)
             {
-                await ExtensionManager.Instance.InitializeAsync(Dispatcher);
-                if (ExtensionManager.Instance.Extensions.Any())
+                ExtensionManager manager = new ExtensionManager(ExtensionManager.OSSUploader);
+                await manager.InitializeAsync(Dispatcher);
+                if (manager.Extensions.Any())
                 {
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>();
                     foreach (WriteableBitmap pic in Pictures)
                     {
                         fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
                     }
-                    results = await RequestHelper.UploadImagesAsync(fragments, ExtensionManager.Instance.Extensions.FirstOrDefault());
+                    results = await RequestHelper.UploadImagesAsync(fragments, manager.Extensions.FirstOrDefault());
                     Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
                     return results;
                 }

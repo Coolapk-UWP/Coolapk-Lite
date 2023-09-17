@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.AppExtensions;
 using Windows.ApplicationModel.AppService;
@@ -27,7 +29,7 @@ namespace CoolapkLite.Common
         public const string OSSUploader = "CoolapkUWP.OSSUploader";
 
         public static bool IsSupported { get; } = ApiInfoHelper.IsAppExtensionSupported;
-        public static ExtensionManager Instance { get; } = IsSupported ? new ExtensionManager(OSSUploader) : null;
+        public static bool IsOSSUploaderSupported { get; } = IsSupported && CheckExtension(OSSUploader);
 
         private CoreDispatcher _dispatcher; // used to run code on the UI thread for code that may update UI
         private readonly AppExtensionCatalog _catalog; // the catalog of app extensions available to this host
@@ -43,6 +45,18 @@ namespace CoolapkLite.Common
             // catalog & contract
             ExtensionContractName = extensionContractName;
             _catalog = AppExtensionCatalog.Open(ExtensionContractName);
+        }
+
+        ~ExtensionManager()
+        {
+            if (_catalog != null)
+            {
+                _catalog.PackageInstalled -= Catalog_PackageInstalled;
+                _catalog.PackageUpdated -= Catalog_PackageUpdated;
+                _catalog.PackageUninstalling -= Catalog_PackageUninstalling;
+                _catalog.PackageUpdating -= Catalog_PackageUpdating;
+                _catalog.PackageStatusChanged -= Catalog_PackageStatusChanged;
+            }
         }
 
         /// <summary>
@@ -337,6 +351,31 @@ namespace CoolapkLite.Common
         }
 
         #endregion
+
+        public static bool CheckExtension(string id)
+        {
+            XDocument doc = XDocument.Load(Path.Combine(Package.Current.InstalledLocation.Path, "AppxManifest.xml"));
+            XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
+            IEnumerable<XElement> hosts = doc.Root.Descendants(ns + "AppExtensionHost");
+            if (hosts != null)
+            {
+                foreach (XElement host in hosts)
+                {
+                    IEnumerable<XElement> names = host.Descendants(ns + "Name");
+                    if (names != null)
+                    {
+                        foreach (XElement name in names)
+                        {
+                            if (name.Value == id)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
     }
 
     /// <summary>

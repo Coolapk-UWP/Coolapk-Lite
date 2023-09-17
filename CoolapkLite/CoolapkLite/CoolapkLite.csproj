@@ -1578,6 +1578,7 @@
   </PropertyGroup>
   <Import Project="FeatureAddon.targets" Condition="'$(IsNetCore463)' == 'True' and Exists('FeatureAddon.targets')" />
   <Import Project="UpdateMinVersion.targets" Condition="'$(IsUseNetCore463)' == 'True' and Exists('UpdateMinVersion.targets')" />
+  <Import Project="RemoveExtensions.targets" Condition="'$(IsNetCore463)' == 'True' and Exists('RemoveExtensions.targets')" />
   <Import Project="UpdateCIManifest.targets" Condition="'$(IsUpdateCIManifest)' == 'True' and Exists('UpdateCIManifest.targets')" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

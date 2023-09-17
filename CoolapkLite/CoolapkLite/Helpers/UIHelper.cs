@@ -878,7 +878,7 @@ namespace CoolapkLite.Helpers
                         return await frame.NavigateAsync(typeof(SettingsPage));
                     case "favorites":
                         return await frame.NavigateAsync(typeof(BookmarkPage));
-                    case "extensions" when ExtensionManager.IsSupported:
+                    case "extensions" when ExtensionManager.IsOSSUploaderSupported:
                         return await frame.NavigateAsync(typeof(ExtensionPage));
                     case "notifications":
                         return await frame.NavigateAsync(typeof(NotificationsPage));

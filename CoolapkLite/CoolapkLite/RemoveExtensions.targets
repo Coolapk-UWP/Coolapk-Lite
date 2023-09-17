@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask
+    TaskName="RemoveAppExtensionHost"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
+    <ParameterGroup>
+      <AppxManifestPath ParameterType="System.String" Required="true" />
+      <ExtensionName ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Reference Include="System.Xml" />
+      <Reference Include="System.Xml.Linq" />
+      <Using Namespace="System.Xml.Linq" />
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+            if (string.IsNullOrEmpty(ExtensionName))
+            {
+                return _Success;
+            }
+
+            try
+            {
+                var xdoc = XDocument.Load(AppxManifestPath);
+                var ns = XNamespace.Get("http://schemas.microsoft.com/appx/manifest/uap/windows10/3");
+                var extensions = xdoc.Root.Descendants(ns + "Extension");
+                if (extensions != null)
+                {
+				    var list = new List<XElement>();
+                    foreach (var extension in extensions)
+                    {
+                        var category = extension.Attribute("Category");
+                        if (category != null && category.Value == "windows.appExtensionHost")
+                        {
+                            var names = extension.Descendants(ns + "Name");
+                            if (names != null)
+                            {
+                                foreach (XElement name in names)
+                                {
+                                    if (name.Value == ExtensionName)
+                                    {
+                                        list.Add(extension);
+                                    }
+                                }
+                            }
+                        }
+                    }
+					list.ForEach(x => x.Remove());
+                    xdoc.Save(AppxManifestPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.LogError("Failed to load Appx Manifest.");
+                Log.LogError(ex.Message);
+                _Success = false;
+            }
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target
+    Name="RemoveOSSUploaderExtension"
+    AfterTargets="AfterGenerateAppxManifest">
+    <Message Importance="high" Text="RemoveAppExtensionHost" />
+    <Message Importance="high" Text="ExtensionName: 'CoolapkUWP.OSSUploader'" />
+    <RemoveAppExtensionHost
+      AppxManifestPath="%(FinalAppxManifest.Identity)"
+      ExtensionName="CoolapkUWP.OSSUploader" />
+  </Target>
+</Project>

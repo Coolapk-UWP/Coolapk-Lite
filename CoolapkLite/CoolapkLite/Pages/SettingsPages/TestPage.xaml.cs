@@ -222,7 +222,7 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OpenCharmSearch" when SettingsPaneRegister.IsSearchPaneSupported:
                     SearchPane.GetForCurrentView().Show();
                     break;
-                case "GoToExtensionPage" when ExtensionManager.IsSupported:
+                case "GoToExtensionPage" when ExtensionManager.IsOSSUploaderSupported:
                     _ = Frame.Navigate(typeof(ExtensionPage));
                     break;
                 case "OpenCharmSettings" when SettingsPaneRegister.IsSettingsPaneSupported:
