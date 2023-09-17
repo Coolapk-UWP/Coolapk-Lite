@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
+using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -29,18 +31,15 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
-                foreach (KeyValuePair<CoreDispatcher, BookmarkViewModel> cache in Caches)
+                if (Dispatcher?.HasThreadAccess == false)
                 {
-                    if (cache.Key?.HasThreadAccess == false)
-                    {
-                        await cache.Key.ResumeForegroundAsync();
-                    }
-                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
+                    await Dispatcher.ResumeForegroundAsync();
                 }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
 
@@ -68,6 +67,21 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (reset)
             {
                 Bookmarks = new ObservableCollection<Bookmark>(await SettingsHelper.GetFile<Bookmark[]>(SettingsHelper.Bookmark));
+            }
+            await UpdateJumpListAsync();
+        }
+
+        private async Task UpdateJumpListAsync()
+        {
+            if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
+            {
+                JumpList JumpList = await JumpList.LoadCurrentAsync();
+                JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+
+                _ = JumpList.Items.RemoveAll((x) => x.GroupName == "收藏");
+                JumpList.Items.AddRange(_bookmarks.Take(4).Select((x) => JumpListItem.CreateWithArguments(x.Url, x.Title).AddGroupNameAndLogo("收藏", new Uri("ms-appx:///Assets/Icons/KnowledgeArticle.png"))));
+
+                await JumpList.SaveAsync();
             }
         }
 

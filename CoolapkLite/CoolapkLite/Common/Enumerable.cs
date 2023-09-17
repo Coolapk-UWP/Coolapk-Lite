@@ -1,11 +1,46 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace CoolapkLite.Common
 {
     public static class Enumerable
     {
+        /// <summary>
+        /// Adds the elements of the specified collection to the end of the <see cref="ICollection{TSource}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="ICollection{TSource}"/> to be added.</param>
+        /// <param name="collection">The collection whose elements should be added to the end of the <see cref="ICollection{TSource}"/>.
+        /// The collection itself cannot be <see langword="null"/>, but it can contain elements that are
+        /// <see langword="null"/>, if type <typeparamref name="TSource"/> is a reference type.</param>
+        public static void AddRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> collection)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is List<TSource> list)
+            {
+                list.AddRange(collection);
+            }
+            else
+            {
+                foreach (TSource item in collection)
+                {
+                    source.Add(item);
+                }
+            }
+        }
+
         /// <summary>
         /// Performs the specified action on each element of the <see cref="IEnumerable{T}"/>.
         /// </summary>
@@ -15,7 +50,7 @@ namespace CoolapkLite.Common
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="action"/> is null.</exception>
         public static void ForEach<TSource>(this IEnumerable<TSource> source, Action<TSource> action)
         {
-            if (source is null)
+            if (source == null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -28,6 +63,14 @@ namespace CoolapkLite.Common
             if (source is List<TSource> list)
             {
                 list.ForEach(action);
+            }
+            else if (source is TSource[] array)
+            {
+                array.ForEach(action);
+            }
+            else if (source is ImmutableList<TSource> immutableList)
+            {
+                immutableList.ForEach(action);
             }
             else
             {
@@ -136,6 +179,63 @@ namespace CoolapkLite.Common
                     yield return result;
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes all the elements that match the conditions defined by the specified predicate.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="ICollection{TSource}"/> to be removed.</param>
+        /// <param name="predicate">The <see cref="Func{T, TResult}"/> delegate that defines the conditions of the elements to remove.</param>
+        /// <returns>The number of elements removed from the <see cref="ICollection{TSource}"/>.</returns>
+        public static int RemoveAll<TSource>(this ICollection<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (source is List<TSource> list)
+            {
+                return list.RemoveAll((x) => predicate(x));
+            }
+            else if (source is HashSet<TSource> hashSet)
+            {
+                return hashSet.RemoveAll((x) => predicate(x));
+            }
+            else
+            {
+                return source.RemoveRange(source.Where((x) => predicate(x)).ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Removes the elements of the specified collection of the <see cref="ICollection{TSource}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="ICollection{TSource}"/> to be removed.</param>
+        /// <param name="collection">The collection whose elements should be removed of the <see cref="ICollection{TSource}"/>.
+        /// The collection itself cannot be <see langword="null"/>, but it can contain elements that are
+        /// <see langword="null"/>, if type <typeparamref name="TSource"/> is a reference type.</param>
+        /// <returns>The number of elements removed from the <see cref="ICollection{TSource}"/>.</returns>
+        public static int RemoveRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> collection)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (collection == null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection.Select((x) => source.Remove(x)).Count((x) => x);
         }
 
         /// <summary>

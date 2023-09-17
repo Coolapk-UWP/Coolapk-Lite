@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
@@ -22,6 +23,7 @@ using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
+using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -249,7 +251,10 @@ namespace CoolapkLite.Helpers
                 IsShowingMessage = false;
             }
         }
+    }
 
+    public static partial class UIHelper
+    {
         public static void ShowHttpExceptionMessage(HttpRequestException e)
         {
             if (e.Message.IndexOfAny(new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
@@ -339,6 +344,13 @@ namespace CoolapkLite.Helpers
                 await element.Dispatcher.ResumeForegroundAsync();
             }
             element.SetValue(dp, value);
+        }
+
+        public static JumpListItem AddGroupNameAndLogo(this JumpListItem item, string groupName, Uri uri)
+        {
+            item.GroupName = groupName;
+            item.Logo = uri;
+            return item;
         }
     }
 
@@ -775,7 +787,7 @@ namespace CoolapkLite.Helpers
                 case ActivationKind.Protocol:
                 case ActivationKind.ProtocolForResults:
                     IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
-                    switch (ProtocolActivatedEventArgs.Uri.Host)
+                    switch (ProtocolActivatedEventArgs.Uri.Host.ToLowerInvariant())
                     {
                         case "www.coolapk.com":
                         case "coolapk.com":
@@ -793,6 +805,8 @@ namespace CoolapkLite.Helpers
                             return await frame.NavigateAsync(typeof(TestPage));
                         case "circle":
                             return await frame.NavigateAsync(typeof(CirclePage));
+                        case "create":
+                            return await frame.ShowCreateFeedControlAsync();
                         case "search":
                             return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher));
                         case "history":
@@ -842,7 +856,7 @@ namespace CoolapkLite.Helpers
         {
             if (arguments.Length >= 1)
             {
-                switch (arguments[0])
+                switch (arguments[0].ToLowerInvariant())
                 {
                     case "me":
                         return await frame.NavigateAsync(typeof(ProfilePage));
@@ -850,8 +864,12 @@ namespace CoolapkLite.Helpers
                         return await frame.NavigateAsync(typeof(IndexPage));
                     case "flags":
                         return await frame.NavigateAsync(typeof(TestPage));
+                    case "caches":
+                        return await frame.NavigateAsync(typeof(CachesPage));
                     case "circle":
                         return await frame.NavigateAsync(typeof(CirclePage));
+                    case "create":
+                        return await frame.ShowCreateFeedControlAsync();
                     case "search":
                         return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(arguments.Length >= 2 ? arguments[1] : string.Empty, frame.Dispatcher));
                     case "history":
@@ -860,7 +878,7 @@ namespace CoolapkLite.Helpers
                         return await frame.NavigateAsync(typeof(SettingsPage));
                     case "favorites":
                         return await frame.NavigateAsync(typeof(BookmarkPage));
-                    case "extensions":
+                    case "extensions" when ExtensionManager.IsSupported:
                         return await frame.NavigateAsync(typeof(ExtensionPage));
                     case "notifications":
                         return await frame.NavigateAsync(typeof(NotificationsPage));
@@ -868,6 +886,23 @@ namespace CoolapkLite.Helpers
                         return await frame.OpenLinkAsync(arguments[0]);
                 }
             }
+            return false;
+        }
+
+        private static async Task<bool> ShowCreateFeedControlAsync(this UIElement element)
+        {
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            new CreateFeedControl
+            {
+                FeedType = CreateFeedType.Feed,
+                PopupTransitions = new TransitionCollection
+                            {
+                                new PopupThemeTransition()
+                            }
+            }.Show(element);
             return false;
         }
 

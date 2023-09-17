@@ -14,6 +14,7 @@ using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.System.Profile;
 using Windows.UI.Core;
+using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
@@ -24,6 +25,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public CoreDispatcher Dispatcher { get; }
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
+
+        public bool IsJumpListSupported { get; } = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
 
         public bool IsAppWindowSupported { get; } = WindowHelper.IsAppWindowSupported;
 

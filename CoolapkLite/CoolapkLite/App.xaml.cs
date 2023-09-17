@@ -60,7 +60,7 @@ namespace CoolapkLite
             EnsureWindow(e);
             if (SettingsHelper.Get<bool>(SettingsHelper.CheckUpdateWhenLaunching))
             {
-                CheckUpdate();
+                _ = CheckUpdateAsync();
             }
         }
 
@@ -70,20 +70,14 @@ namespace CoolapkLite
             base.OnActivated(e);
         }
 
-        private async void EnsureWindow(IActivatedEventArgs e)
+        private void EnsureWindow(IActivatedEventArgs e)
         {
             if (!isLoaded)
             {
-                RequestWIFIAccess();
-                RegisterBackgroundTask();
+                _ = CreateJumpListAsync();
+                _ = RequestWIFIAccessAsync();
+                _ = RegisterBackgroundTaskAsync();
                 RegisterExceptionHandlingSynchronizationContext();
-
-                if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
-                {
-                    JumpList JumpList = await JumpList.LoadCurrentAsync();
-                    JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
-                }
-
                 isLoaded = true;
             }
 
@@ -144,7 +138,34 @@ namespace CoolapkLite
             window.Activate();
         }
 
-        private async void CheckUpdate()
+        private async Task CreateJumpListAsync()
+        {
+            if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
+            {
+                JumpList JumpList = await JumpList.LoadCurrentAsync();
+                JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+
+                if (!JumpList.Items.Any((x) => x.GroupName == "导航"))
+                {
+                    ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("home", loader.GetString("Home")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Home.png")));
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("circle", loader.GetString("Circle")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/People.png")));
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("favorites", loader.GetString("Bookmark")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/FavoriteStar.png")));
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("history", loader.GetString("History")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Calendar.png")));
+                }
+
+                if (!JumpList.Items.Any((x) => x.GroupName == "个人"))
+                {
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("me", "个人空间").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Contact.png")));
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("notifications", "通知").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Message.png")));
+                    JumpList.Items.Add(JumpListItem.CreateWithArguments("create", "写动态").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Label.png")));
+                }
+
+                await JumpList.SaveAsync();
+            }
+        }
+
+        private async Task CheckUpdateAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
@@ -206,7 +227,7 @@ namespace CoolapkLite
             deferral.Complete();
         }
 
-        private async void RequestWIFIAccess()
+        private async Task RequestWIFIAccessAsync()
         {
             if (ApiInfoHelper.IsAppCapabilitySupported)
             {
@@ -265,7 +286,7 @@ namespace CoolapkLite
             e.Handled = true;
         }
 
-        private static async void RegisterBackgroundTask()
+        private static async Task RegisterBackgroundTaskAsync()
         {
             if (!ApiInfoHelper.IsTileActivatedInfoSupported)
             { return; }

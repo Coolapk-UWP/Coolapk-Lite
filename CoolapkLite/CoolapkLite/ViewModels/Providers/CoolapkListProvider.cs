@@ -27,28 +27,6 @@ namespace CoolapkLite.ViewModels.Providers
 
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
-        public async Task GetEntityAsync<T>(List<T> Models, int p = 1) where T : Entity
-        {
-            if (p == 1) { Clear(); }
-            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
-            if (result.isSucceed)
-            {
-                JArray array = result.result as JArray;
-                if (array.Count < 1) { return; }
-                if (string.IsNullOrEmpty(_firstItem))
-                {
-                    _firstItem = GetEntityID(array.First as JObject, _idName);
-                }
-                _lastItem = GetEntityID(array.Last as JObject, _idName);
-                foreach (JObject item in array.OfType<JObject>())
-                {
-                    IEnumerable<Entity> entities = GetEntities(item);
-                    if (entities == null) { continue; }
-                    Models.AddRange(entities.OfType<T>());
-                }
-            }
-        }
-
         public async Task GetEntityAsync<T>(ICollection<T> Models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
@@ -66,7 +44,7 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
-                    entities.OfType<T>().ForEach(Models.Add);
+                    Models.AddRange(entities.OfType<T>());
                 }
             }
         }

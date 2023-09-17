@@ -235,6 +235,18 @@
                                 IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
                                 Tag="MinimizeApp" />
                         </control:StackPanelEx>
+                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                            <Button
+                                Click="Button_Click"
+                                Content="清除 JumpList"
+                                IsEnabled="{x:Bind Provider.IsJumpListSupported}"
+                                Tag="CleanJumpList" />
+                            <Button
+                                Click="Button_Click"
+                                Content="添加设置组"
+                                IsEnabled="{x:Bind Provider.IsJumpListSupported}"
+                                Tag="AddJumpList" />
+                        </control:StackPanelEx>
                     </control:StackPanelEx>
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="文本测试">

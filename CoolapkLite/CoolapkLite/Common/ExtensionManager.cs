@@ -303,7 +303,15 @@ namespace CoolapkLite.Common
             {
                 await _dispatcher.ResumeForegroundAsync();
             }
-            Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => { e.Unload(); Extensions.Remove(e); });
+            _ = Extensions.RemoveRange(Extensions.Where(ext =>
+            {
+                bool result = ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName;
+                if (result)
+                {
+                    ext.Unload();
+                }
+                return result;
+            }).ToArray());
         }
 
         /// <summary>

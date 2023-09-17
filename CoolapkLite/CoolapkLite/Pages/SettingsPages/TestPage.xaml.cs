@@ -6,15 +6,18 @@ using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using CoolapkLite.ViewModels.ToolsPages;
+using MetroLog.WinRT;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
 using Windows.Globalization;
 using Windows.System;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
@@ -169,6 +172,18 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "ShowMessage":
                     this.ShowMessage(NotifyMessage.Text);
                     break;
+                case "AddJumpList" when ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported():
+                    JumpList list = await JumpList.LoadCurrentAsync();
+                    if (!list.Items.Any((x) => x.GroupName == "设置"))
+                    {
+                        ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
+                        list.Items.Add(JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));
+                        list.Items.Add(JumpListItem.CreateWithArguments("caches", loader.GetString("Caches")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Package.png")));
+                        list.Items.Add(JumpListItem.CreateWithArguments("flags", loader.GetString("Test")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/DeveloperTools.png")));
+                        list.Items.Add(JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                    }
+                    _ = list.SaveAsync();
+                    break;
                 case "OpenBrowser":
                     _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
                     break;
@@ -180,6 +195,11 @@ namespace CoolapkLite.Pages.SettingsPages
                     { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
                     else
                     { ApplicationView.GetForCurrentView().ExitFullScreenMode(); }
+                    break;
+                case "CleanJumpList" when ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported():
+                    list = await JumpList.LoadCurrentAsync();
+                    list.Items.Clear();
+                    _ = list.SaveAsync();
                     break;
                 case "ShowAsyncError":
                     await Task.Run(() => throw new Exception(NotifyMessage.Text));
