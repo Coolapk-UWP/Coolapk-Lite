@@ -217,6 +217,6 @@
     <value>打開快取目錄</value>
   </data>
   <data name="CleanLogsItem.Text" xml:space="preserve">
-    <value>清理日志文件</value>
+    <value>清理紀錄檔</value>
   </data>
 </root>
