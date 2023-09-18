@@ -33,6 +33,10 @@ namespace CoolapkLite.Common
             {
                 list.AddRange(collection);
             }
+            else if (source is ISet<TSource> set)
+            {
+                set.UnionWith(collection);
+            }
             else
             {
                 foreach (TSource item in collection)
@@ -207,9 +211,25 @@ namespace CoolapkLite.Common
             {
                 return hashSet.RemoveWhere((x) => predicate(x));
             }
+            else if (source is IList<TSource> items)
+            {
+                int result = 0;
+                for (int i = 0; i < items.Count; i++)
+                {
+                    loop:
+                    if (predicate(items[i]))
+                    {
+                        items.RemoveAt(i);
+                        result++;
+                        if (i < items.Count) { goto loop; }
+                        else { break; }
+                    }
+                }
+                return result;
+            }
             else
             {
-                return source.RemoveRange(source.Where((x) => predicate(x)).ToArray());
+                return source.RemoveRange(source.Where(predicate).ToArray());
             }
         }
 
