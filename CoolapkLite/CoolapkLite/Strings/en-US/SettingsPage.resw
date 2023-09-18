@@ -217,6 +217,6 @@
     <value>Open cache directory</value>
   </data>
   <data name="CleanLogsItem.Text" xml:space="preserve">
-    <value>清理日志文件</value>
+    <value>Clean log files</value>
   </data>
 </root>
