@@ -180,7 +180,10 @@ namespace CoolapkLite.Pages.SettingsPages
                         list.Items.Add(JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));
                         list.Items.Add(JumpListItem.CreateWithArguments("caches", loader.GetString("Caches")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Package.png")));
                         list.Items.Add(JumpListItem.CreateWithArguments("flags", loader.GetString("Test")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/DeveloperTools.png")));
-                        list.Items.Add(JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                        if (ExtensionManager.IsOSSUploaderSupported)
+                        {
+                            list.Items.Add(JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                        }
                     }
                     _ = list.SaveAsync();
                     break;
