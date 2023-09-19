@@ -33,6 +33,30 @@ namespace CoolapkLite.Common
             {
                 list.AddRange(collection);
             }
+            else if (source is TSource[] array)
+            {
+                int count = collection.Count();
+                if (count > 0)
+                {
+                    int _size = Array.FindLastIndex(array, (x) => x != null) + 1;
+                    if (array.Length - _size < count)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(array));
+                    }
+
+                    if (collection is ICollection<TSource> c)
+                    {
+                        c.CopyTo(array, _size);
+                    }
+                    else
+                    {
+                        foreach (TSource item in collection)
+                        {
+                            array[_size++] = item;
+                        }
+                    }
+                }
+            }
             else if (source is ISet<TSource> set)
             {
                 set.UnionWith(collection);
@@ -69,6 +93,12 @@ namespace CoolapkLite.Common
             {
                 list.ForEach(action);
             }
+#if NETCORE463
+            else if (source is TSource[] array)
+            {
+                Array.ForEach(array, action);
+            }
+#endif
             else if (source is ImmutableList<TSource> immutableList)
             {
                 immutableList.ForEach(action);
@@ -207,6 +237,33 @@ namespace CoolapkLite.Common
             {
                 return list.RemoveAll((x) => predicate(x));
             }
+            else if (source is TSource[] array)
+            {
+                int freeIndex = 0;   // the first free slot in items array
+                int _size = array.Length;
+
+                // Find the first item which needs to be removed.
+                while (freeIndex < _size && !predicate(array[freeIndex])) freeIndex++;
+                if (freeIndex >= _size) return 0;
+
+                int current = freeIndex + 1;
+                while (current < _size)
+                {
+                    // Find the first item which needs to be kept.
+                    while (current < _size && predicate(array[current])) current++;
+
+                    if (current < _size)
+                    {
+                        // copy item to the free slot.
+                        array[freeIndex++] = array[current++];
+                    }
+                }
+
+                Array.Clear(array, freeIndex, _size - freeIndex); // Clear the elements so that the gc can reclaim the references.
+
+                int result = _size - freeIndex;
+                return result;
+            }
             else if (source is HashSet<TSource> hashSet)
             {
                 return hashSet.RemoveWhere((x) => predicate(x));
@@ -255,7 +312,14 @@ namespace CoolapkLite.Common
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            return collection.Select((x) => source.Remove(x)).Count((x) => x);
+            if (source is TSource[] array)
+            {
+                return array.RemoveAll((x) => collection.Contains(x));
+            }
+            else
+            {
+                return collection.Select(source.Remove).Count((x) => x);
+            }
         }
 
         /// <summary>
