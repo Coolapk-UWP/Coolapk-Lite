@@ -61,13 +61,13 @@
       <Extensions>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="coolmarket">
-            <uap:Logo>Assets\StoreLogo.png</uap:Logo>
+            <uap:Logo>Assets\BadgeLogo.png</uap:Logo>
             <uap:DisplayName>ms-resource:CoolMarketProtocol</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
         <uap:Extension Category="windows.protocol">
           <uap:Protocol Name="coolapk">
-            <uap:Logo>Assets\StoreLogo.png</uap:Logo>
+            <uap:Logo>Assets\BadgeLogo.png</uap:Logo>
             <uap:DisplayName>ms-resource:CoolapkProtocol</uap:DisplayName>
           </uap:Protocol>
         </uap:Extension>
