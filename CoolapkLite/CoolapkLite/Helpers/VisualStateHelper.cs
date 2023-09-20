@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers
@@ -12,7 +13,7 @@ namespace CoolapkLite.Helpers
                 return null;
             }
 
-            System.Collections.Generic.IList<VisualStateGroup> groups = VisualStateManager.GetVisualStateGroups(element);
+            IList<VisualStateGroup> groups = VisualStateManager.GetVisualStateGroups(element);
             foreach (VisualStateGroup result in groups)
             {
                 if (result != null && name.Equals(result?.Name, StringComparison.OrdinalIgnoreCase))

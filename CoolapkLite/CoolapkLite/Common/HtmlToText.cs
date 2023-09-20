@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Collections.Immutable;
 
 namespace CoolapkLite.Common
 {
@@ -11,60 +12,53 @@ namespace CoolapkLite.Common
     public class HtmlToText
     {
         // Static data tables
-        protected static Dictionary<string, string> _tags;
-        protected static HashSet<string> _ignoreTags;
+        protected static Dictionary<string, string> _tags = new Dictionary<string, string>(31)
+        {
+            { "address", "\n" },
+            { "blockquote", "\n" },
+            { "div", "\n" },
+            { "dl", "\n" },
+            { "fieldset", "\n" },
+            { "form", "\n" },
+            { "h1", "\n" },
+            { "/h1", "\n" },
+            { "h2", "\n" },
+            { "/h2", "\n" },
+            { "h3", "\n" },
+            { "/h3", "\n" },
+            { "h4", "\n" },
+            { "/h4", "\n" },
+            { "h5", "\n" },
+            { "/h5", "\n" },
+            { "h6", "\n" },
+            { "/h6", "\n" },
+            { "p", "\n" },
+            { "/p", "\n" },
+            { "table", "\n" },
+            { "/table", "\n" },
+            { "ul", "\n" },
+            { "/ul", "\n" },
+            { "ol", "\n" },
+            { "/ol", "\n" },
+            { "/li", "\n" },
+            { "br", "\n" },
+            { "/td", "\t" },
+            { "/tr", "\n" },
+            { "/pre", "\n" }
+        };
+
+        protected static HashSet<string> _ignoreTags = new HashSet<string>
+        {
+            "script",
+            "noscript",
+            "style",
+            "object"
+        };
 
         // Instance variables
         protected TextBuilder _text;
         protected string _html;
         protected int _pos;
-
-        // Static constructor (one time only)
-        static HtmlToText()
-        {
-            _tags = new Dictionary<string, string>
-            {
-                { "address", "\n" },
-                { "blockquote", "\n" },
-                { "div", "\n" },
-                { "dl", "\n" },
-                { "fieldset", "\n" },
-                { "form", "\n" },
-                { "h1", "\n" },
-                { "/h1", "\n" },
-                { "h2", "\n" },
-                { "/h2", "\n" },
-                { "h3", "\n" },
-                { "/h3", "\n" },
-                { "h4", "\n" },
-                { "/h4", "\n" },
-                { "h5", "\n" },
-                { "/h5", "\n" },
-                { "h6", "\n" },
-                { "/h6", "\n" },
-                { "p", "\n" },
-                { "/p", "\n" },
-                { "table", "\n" },
-                { "/table", "\n" },
-                { "ul", "\n" },
-                { "/ul", "\n" },
-                { "ol", "\n" },
-                { "/ol", "\n" },
-                { "/li", "\n" },
-                { "br", "\n" },
-                { "/td", "\t" },
-                { "/tr", "\n" },
-                { "/pre", "\n" }
-            };
-
-            _ignoreTags = new HashSet<string>
-            {
-                "script",
-                "noscript",
-                "style",
-                "object"
-            };
-        }
 
         /// <summary>
         /// Converts the given HTML to plain text and returns the result.

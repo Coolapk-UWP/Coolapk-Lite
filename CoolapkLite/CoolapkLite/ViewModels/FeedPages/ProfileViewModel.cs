@@ -73,7 +73,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
-            List<Entity> Models = new List<Entity>();
+            List<Entity> Models = new List<Entity>((int)count);
             if (Provider != null && _currentPage == 1)
             {
                 await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);

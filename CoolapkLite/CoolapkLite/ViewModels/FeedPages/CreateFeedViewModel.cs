@@ -161,8 +161,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task<IList<string>> UploadPicAsync()
         {
-            IList<string> results = new List<string>();
-            if (!Pictures.Any()) { return results; }
+            IList<string> results = null;
+            if (!Pictures.Any()) { return Array.Empty<string>(); }
             Dispatcher.ShowMessage("上传图片");
 #if NETCORE463
             List<UploadFileFragment> fragments = new List<UploadFileFragment>();
@@ -189,34 +189,38 @@ namespace CoolapkLite.ViewModels.FeedPages
                     return results;
                 }
             }
-            int i = 0;
-            foreach (WriteableBitmap pic in Pictures)
+            else
             {
-                i++;
-                using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                int i = 0;
+                results = new List<string>(Pictures.Count);
+                foreach (WriteableBitmap pic in Pictures)
                 {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-                    Stream pixelStream = pic.PixelBuffer.AsStream();
-                    byte[] pixels = new byte[pixelStream.Length];
-                    await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                    i++;
+                    using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
+                    {
+                        BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+                        Stream pixelStream = pic.PixelBuffer.AsStream();
+                        byte[] pixels = new byte[pixelStream.Length];
+                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
-                    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
-                        (uint)pic.PixelWidth,
-                        (uint)pic.PixelHeight,
-                        96.0,
-                        96.0,
-                        pixels);
+                        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
+                            (uint)pic.PixelWidth,
+                            (uint)pic.PixelHeight,
+                            96.0,
+                            96.0,
+                            pixels);
 
-                    await encoder.FlushAsync();
+                        await encoder.FlushAsync();
 
-                    byte[] bytes = stream.GetBytes();
-                    (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
-                    if (isSucceed) { results.Add(result); }
+                        byte[] bytes = stream.GetBytes();
+                        (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
+                        if (isSucceed) { results.Add(result); }
+                    }
+                    Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
                 }
-                Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
             }
 #endif
-            return results;
+            return results ?? Array.Empty<string>();
         }
 
         public async Task DropFileAsync(DataPackageView data)

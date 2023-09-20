@@ -295,7 +295,7 @@ namespace CoolapkLite.Models
 
         private static void CreateToast(int increase)
         {
-            List<string> builder = new List<string>();
+            List<string> builder = new List<string>(7);
 
             if (commentMeNum > 0)
             {

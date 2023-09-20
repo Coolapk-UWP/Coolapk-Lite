@@ -101,7 +101,7 @@ namespace CoolapkLite.Common
         private async void SearchPane_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
         {
             string keyWord = args.QueryText;
-            List<string> results = new List<string>();
+            IList<string> results = null;
             SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
             await Task.Run(async () =>
             {
@@ -111,6 +111,7 @@ namespace CoolapkLite.Common
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
+                        results = new List<string>(array.Count);
                         foreach (JObject token in array.OfType<JObject>())
                         {
                             string key = string.Empty;
@@ -136,7 +137,7 @@ namespace CoolapkLite.Common
                     semaphoreSlim.Release();
                 }
             });
-            args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results);
+            args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results ?? Array.Empty<string>());
             deferral.Complete();
         }
 

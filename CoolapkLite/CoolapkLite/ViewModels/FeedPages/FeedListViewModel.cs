@@ -185,7 +185,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null)
             {
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(4);
                 if (FeedItemSource == null || FeedItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
@@ -334,7 +334,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null)
             {
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(3);
                 if (LastUpdateItemSource == null || LastUpdateItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
@@ -465,7 +465,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null)
             {
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(2);
                 if (AllItemSource == null || AllItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
@@ -577,7 +577,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null)
             {
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(5);
                 if (FeedItemSource == null || FeedItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(
@@ -756,7 +756,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                             if (item.TryGetValue("entities", out JToken v1))
                             {
                                 JArray entities = v1 as JArray;
-                                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(entities.Count);
                                 foreach (JObject entity in entities.OfType<JObject>())
                                 {
                                     if (entity.TryGetValue("url", out JToken url) && !string.IsNullOrEmpty(url.ToString()))
@@ -787,7 +787,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     }
                     if (ItemSource == null)
                     {
-                        List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                        List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(1);
                         CoolapkListProvider Provider = new CoolapkListProvider(
                             (p, firstItem, lastItem) =>
                                 UriHelper.GetUri(
@@ -877,7 +877,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null && Detail is AppDetail detail)
             {
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(4);
                 if (LastUpdateItemSource == null || LastUpdateItemSource.ID != ID)
                 {
                     CoolapkListProvider Provider = new CoolapkListProvider(

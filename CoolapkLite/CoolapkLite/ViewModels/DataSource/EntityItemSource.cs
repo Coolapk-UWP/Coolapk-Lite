@@ -28,7 +28,7 @@ namespace CoolapkLite.ViewModels.DataSource
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
-            List<Entity> Models = new List<Entity>();
+            List<Entity> Models = new List<Entity>((int)count);
             if (Provider != null)
             {
                 if (IsFullLoad)

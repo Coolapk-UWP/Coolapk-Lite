@@ -108,7 +108,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
                 if (FeedDetail == null) { return; }
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(3);
                 Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
@@ -163,7 +163,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
                 if (FeedDetail == null) { return; }
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(3);
                 Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
@@ -214,10 +214,11 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 FeedDetail = await GetFeedDetailAsync(ID);
                 if (FeedDetail == null) { return; }
-                List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>();
+                List<ShyHeaderItem> ItemSource;
                 Title = FeedDetail.Title;
                 if (FeedDetail.VoteType == 0)
                 {
+                    ItemSource = new List<ShyHeaderItem>(FeedDetail.VoteRows.Length);
                     foreach (VoteItem vote in FeedDetail.VoteRows)
                     {
                         VoteItemSource VoteItemSource = new VoteItemSource(vote.ID.ToString(), vote.VoteID.ToString());
@@ -232,6 +233,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
                 else
                 {
+                    ItemSource = new List<ShyHeaderItem>(2);
                     VoteItemSource VoteItemSource = new VoteItemSource(string.Empty, FeedDetail.ID.ToString());
                     VoteItemSource.LoadMoreStarted += OnLoadMoreStarted;
                     VoteItemSource.LoadMoreCompleted += OnLoadMoreCompleted;
@@ -312,7 +314,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public ReplyItemSource(string id)
         {
             ID = id;
-            ItemSource = new List<string>()
+            ItemSource = new List<string>(3)
             {
                 loader.GetString("lastupdate_desc"),
                 loader.GetString("dateline_desc"),

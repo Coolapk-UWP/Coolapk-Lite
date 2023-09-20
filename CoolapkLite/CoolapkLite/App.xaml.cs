@@ -43,6 +43,9 @@ namespace CoolapkLite
 
             Suspending += OnSuspending;
             UnhandledException += Application_UnhandledException;
+#if NETCORE463
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+#endif
 
             if (ApiInfoHelper.IsRevealFocusVisualKindSupported)
             {
@@ -245,14 +248,32 @@ namespace CoolapkLite
 
         private void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            if (!(!SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException) || e.Exception is TaskCanceledException || e.Exception is OperationCanceledException))
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+            if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
             {
-                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
+                UIHelper.ShowMessage($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+            }
+            else if (e.Exception is CoolapkMessageException)
+            {
+                UIHelper.ShowMessage(e.Exception.Message);
+            }
+            else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
+            {
                 UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
             }
             SettingsHelper.LogManager.GetLogger("Unhandled Exception - Application").Error(e.Exception.ExceptionToMessage(), e.Exception);
             e.Handled = true;
         }
+
+#if NETCORE463
+        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        {
+            if (e.ExceptionObject is Exception Exception)
+            {
+                SettingsHelper.LogManager.GetLogger("Unhandled Exception - CurrentDomain").Error(Exception.ExceptionToMessage(), Exception);
+            }
+        }
+#endif
 
         /// <summary>
         /// Should be called from OnActivated and OnLaunched
