@@ -35,7 +35,12 @@ namespace CoolapkLite.Common
             }
             else if (source is TSource[] array)
             {
-                int count = collection.Count();
+                int _count = collection.Count();
+                int count = collection is List<TSource> _list
+                        ? _list.FindLastIndex((x) => x != null) + 1
+                        : collection is TSource[] _array
+                            ? Array.FindLastIndex(_array, (x) => x != null) + 1
+                            : _count;
                 if (count > 0)
                 {
                     int _size = Array.FindLastIndex(array, (x) => x != null) + 1;
@@ -44,15 +49,28 @@ namespace CoolapkLite.Common
                         throw new ArgumentOutOfRangeException(nameof(array));
                     }
 
-                    if (collection is ICollection<TSource> c)
+                    if (count == _count)
                     {
-                        c.CopyTo(array, _size);
+                        if (collection is ICollection<TSource> _collection)
+                        {
+                            _collection.CopyTo(array, _size);
+                        }
+                        else
+                        {
+                            foreach (TSource item in collection)
+                            {
+                                array[_size++] = item;
+                            }
+                        }
                     }
                     else
                     {
-                        foreach (TSource item in collection)
+                        using (IEnumerator<TSource> enumerator = collection.GetEnumerator())
                         {
-                            array[_size++] = item;
+                            while (--count >= 0 && enumerator.MoveNext())
+                            {
+                                array[_size++] = enumerator.Current;
+                            }
                         }
                     }
                 }

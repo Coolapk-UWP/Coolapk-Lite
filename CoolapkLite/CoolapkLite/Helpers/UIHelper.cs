@@ -899,9 +899,9 @@ namespace CoolapkLite.Helpers
             {
                 FeedType = CreateFeedType.Feed,
                 PopupTransitions = new TransitionCollection
-                            {
-                                new PopupThemeTransition()
-                            }
+                {
+                    new PopupThemeTransition()
+                }
             }.Show(element);
             return false;
         }
@@ -911,15 +911,5 @@ namespace CoolapkLite.Helpers
             int end = str.IndexOf(endString);
             return end > startIndex ? str.Substring(startIndex, end - startIndex) : str.Substring(startIndex);
         }
-    }
-
-    public enum MessageType
-    {
-        Message,
-        NoMore,
-        NoMoreReply,
-        NoMoreLikeUser,
-        NoMoreShare,
-        NoMoreHotReply,
     }
 }
