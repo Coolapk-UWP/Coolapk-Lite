@@ -14,6 +14,10 @@ namespace CoolapkLite.Controls
     [TemplateVisualState(Name = "Disabled", GroupName = "CommonStates")]
     public partial class SettingsGroup : ItemsControl
     {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsGroup"/> class.
+        /// </summary>
         public SettingsGroup()
         {
             DefaultStyleKey = typeof(SettingsGroup);

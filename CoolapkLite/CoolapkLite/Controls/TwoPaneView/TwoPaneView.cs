@@ -37,6 +37,9 @@ namespace CoolapkLite.Controls
         private const string c_rowMiddleName = "PART_RowMiddle";
         private const string c_rowBottomName = "PART_RowBottom";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TwoPaneView"/> class.
+        /// </summary>
         public TwoPaneView()
         {
             DefaultStyleKey = typeof(TwoPaneView);

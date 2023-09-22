@@ -17,6 +17,9 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = "Icon", Type = typeof(Viewbox))]
     public partial class TitleBar : Control
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TitleBar"/> class.
+        /// </summary>
         public TitleBar()
         {
             DefaultStyleKey = typeof(TitleBar);

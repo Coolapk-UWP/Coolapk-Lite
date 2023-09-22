@@ -13,6 +13,11 @@ namespace CoolapkLite.Controls
     {
         private PivotHeader _pivotHeader;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShyHeaderPivotListView"/> class.
+        /// </summary>
+        public ShyHeaderPivotListView() => DefaultStyleKey = typeof(ShyHeaderPivotListView);
+
         #region LeftHeader
 
         public static readonly DependencyProperty LeftHeaderProperty =
@@ -115,8 +120,6 @@ namespace CoolapkLite.Controls
                 (d as ShyHeaderPivotListView).UpdateShyHeaderSelectedIndex(e.NewValue as int?);
             }
         }
-
-        public ShyHeaderPivotListView() => DefaultStyleKey = typeof(ShyHeaderPivotListView);
 
         protected override void OnApplyTemplate()
         {

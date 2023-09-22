@@ -56,6 +56,15 @@ namespace CoolapkLite.Controls
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="MediaPlayerElementEx"/> class.
+        /// </summary>
+        public MediaPlayerElementEx()
+        {
+            DefaultStyleKey = typeof(MediaPlayerElementEx);
+            SetValue(TemplateSettingsProperty, new MediaPlayerElementExTemplateSettings());
+        }
+
         #region AreTransportControlsEnabled 
 
         /// <summary>
@@ -165,15 +174,6 @@ namespace CoolapkLite.Controls
         }
 
         #endregion
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="MediaPlayerElementEx"/> class.
-        /// </summary>
-        public MediaPlayerElementEx()
-        {
-            DefaultStyleKey = typeof(MediaPlayerElementEx);
-            SetValue(TemplateSettingsProperty, new MediaPlayerElementExTemplateSettings());
-        }
 
         protected override void OnApplyTemplate()
         {

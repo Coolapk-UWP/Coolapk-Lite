@@ -125,13 +125,13 @@ namespace CoolapkLite.Controls
 
         // private methods
 
-        RatingControl GetRatingControl()
+        private RatingControl GetRatingControl()
         {
             UIElement owner = Owner;
             return (RatingControl)owner;
         }
 
-        int DetermineFractionDigits(double value)
+        private int DetermineFractionDigits(double value)
         {
             value *= 100;
             int intValue = (int)value;
@@ -155,7 +155,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        int DetermineSignificantDigits(double value, int fractionDigits)
+        private int DetermineSignificantDigits(double value, int fractionDigits)
         {
             int sigFigsInt = (int)value;
             int length = 0;
@@ -169,7 +169,7 @@ namespace CoolapkLite.Controls
             return length + fractionDigits;
         }
 
-        string GenerateValue_ValueString(string resourceString, double ratingValue)
+        private string GenerateValue_ValueString(string resourceString, double ratingValue)
         {
             DecimalFormatter formatter = new DecimalFormatter();
             SignificantDigitsNumberRounder rounder = new SignificantDigitsNumberRounder();

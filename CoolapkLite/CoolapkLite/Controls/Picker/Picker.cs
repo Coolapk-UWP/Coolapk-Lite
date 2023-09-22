@@ -13,23 +13,9 @@ namespace CoolapkLite.Controls
         private Popup _popup;
         private Grid _rootGrid;
 
-        #region PopupTransitions
-
-        public static readonly DependencyProperty PopupTransitionsProperty =
-            DependencyProperty.Register(
-                nameof(PopupTransitions),
-                typeof(TransitionCollection),
-                typeof(Picker),
-                null);
-
-        public TransitionCollection PopupTransitions
-        {
-            get => (TransitionCollection)GetValue(PopupTransitionsProperty);
-            set => SetValue(PopupTransitionsProperty, value);
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Creates a new instance of the <see cref="Picker"/> class.
+        /// </summary>
         public Picker()
         {
             DefaultStyleKey = typeof(Picker);
@@ -58,6 +44,23 @@ namespace CoolapkLite.Controls
                 }
             };
         }
+
+        #region PopupTransitions
+
+        public static readonly DependencyProperty PopupTransitionsProperty =
+            DependencyProperty.Register(
+                nameof(PopupTransitions),
+                typeof(TransitionCollection),
+                typeof(Picker),
+                null);
+
+        public TransitionCollection PopupTransitions
+        {
+            get => (TransitionCollection)GetValue(PopupTransitionsProperty);
+            set => SetValue(PopupTransitionsProperty, value);
+        }
+
+        #endregion
 
         private void Window_SizeChanged(object sender, WindowSizeChangedEventArgs e)
         {

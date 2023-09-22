@@ -200,12 +200,12 @@ namespace CoolapkLite.Helpers
 
         private static SystemVersionInfo GetAsVersionInfo(string version)
         {
-            List<int> numbs = GetVersionNumbers(version).Split('.').Select(int.Parse).ToList();
-            return numbs.Count <= 1
+            int[] numbs = GetVersionNumbers(version).Split('.').Select(int.Parse).ToArray();
+            return numbs.Length <= 1
                 ? new SystemVersionInfo(numbs[0], 0, 0, 0)
-                : numbs.Count <= 2
+                : numbs.Length <= 2
                     ? new SystemVersionInfo(numbs[0], numbs[1], 0, 0)
-                    : numbs.Count <= 3
+                    : numbs.Length <= 3
                         ? new SystemVersionInfo(numbs[0], numbs[1], numbs[2], 0)
                         : new SystemVersionInfo(numbs[0], numbs[1], numbs[2], numbs[3]);
         }

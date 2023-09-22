@@ -7,6 +7,7 @@ using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Composition;
 using Windows.UI.Core;
+using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Automation.Peers;
@@ -17,7 +18,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
 {
-    enum RatingControlStates
+    internal enum RatingControlStates
     {
         Disabled = 0,
         Set = 1,
@@ -28,7 +29,7 @@ namespace CoolapkLite.Controls
         Null = 6
     }
 
-    enum RatingInfoType
+    internal enum RatingInfoType
     {
         None,
         Font,
@@ -37,23 +38,26 @@ namespace CoolapkLite.Controls
 
     public partial class RatingControl : Control
     {
-        const float c_horizontalScaleAnimationCenterPoint = 0.5f;
-        const float c_verticalScaleAnimationCenterPoint = 0.8f;
-        static readonly Thickness c_focusVisualMargin = new Thickness(-8, -7, -8, 0);
-        const int c_defaultRatingFontSizeForRendering = 32; // (32 = 2 * [default fontsize] -- because of double size rendering), remove when MSFT #10030063 is done
-        const int c_defaultItemSpacing = 8;
+        private const float c_horizontalScaleAnimationCenterPoint = 0.5f;
+        private const float c_verticalScaleAnimationCenterPoint = 0.8f;
+        private static readonly Thickness c_focusVisualMargin = new Thickness(-8, -7, -8, 0);
+        private const int c_defaultRatingFontSizeForRendering = 32; // (32 = 2 * [default fontsize] -- because of double size rendering), remove when MSFT #10030063 is done
+        private const int c_defaultItemSpacing = 8;
 
-        const float c_mouseOverScale = 0.8f;
-        const float c_touchOverScale = 1.0f;
-        const float c_noPointerOverMagicNumber = -100;
+        private const float c_mouseOverScale = 0.8f;
+        private const float c_touchOverScale = 1.0f;
+        private const float c_noPointerOverMagicNumber = -100;
 
         // 22 = 20(compensate for the -20 margin on StackPanel) + 2(magic number makes the text and star center-aligned)
-        const double c_defaultCaptionTopMargin = 22;
+        private const double c_defaultCaptionTopMargin = 22;
 
-        const double c_noValueSetSentinel = -1;
+        private const double c_noValueSetSentinel = -1;
 
         private readonly bool IsUseCompositor = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInfoHelper.IsGetElementVisualSupported;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RatingControl"/> class.
+        /// </summary>
         public RatingControl() => DefaultStyleKey = typeof(RatingControl);
 
         double RenderingRatingFontSize => c_defaultRatingFontSizeForRendering * GetUISettings().TextScaleFactor;
@@ -76,12 +80,12 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void UpdateCaptionMargins()
+        private void UpdateCaptionMargins()
         {
             // We manually set margins to caption text to make it center-aligned with the stars
             // because star vertical center is 0.8 instead of the normal 0.5.
             // When text scale changes we need to update top margin to make the text follow start center.
-            var captionTextBlock = m_captionTextBlock;
+            TextBlock captionTextBlock = m_captionTextBlock;
             if (captionTextBlock != null)
             {
                 Thickness margin = captionTextBlock.Margin;
@@ -154,7 +158,7 @@ namespace CoolapkLite.Controls
             GetUISettings().TextScaleFactorChanged += OnTextScaleFactorChanged;
         }
 
-        double CoerceValueBetweenMinAndMax(double value)
+        private double CoerceValueBetweenMinAndMax(double value)
         {
             if (value < 0.0) // Force all negative values to the sentinel "unset" value.
             {
@@ -180,7 +184,7 @@ namespace CoolapkLite.Controls
         // private methods 
 
         // TODO: call me when font size changes, and stuff like that, glyph, etc
-        void StampOutRatingItems()
+        private void StampOutRatingItems()
         {
             if (m_backgroundStackPanel == null || m_foregroundStackPanel == null)
             {
@@ -217,16 +221,16 @@ namespace CoolapkLite.Controls
             UpdateRatingItemsAppearance();
         }
 
-        void ReRenderCaption()
+        private void ReRenderCaption()
         {
-            var captionTextBlock = m_captionTextBlock;
+            TextBlock captionTextBlock = m_captionTextBlock;
             if (captionTextBlock != null)
             {
                 ResetControlWidth();
             }
         }
 
-        void UpdateRatingItemsAppearance()
+        private void UpdateRatingItemsAppearance()
         {
             if (m_foregroundStackPanel != null)
             {
@@ -310,7 +314,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void ApplyScaleExpressionAnimation(UIElement uiElement, int starIndex)
+        private void ApplyScaleExpressionAnimation(UIElement uiElement, int starIndex)
         {
             if (IsUseCompositor)
             {
@@ -351,10 +355,10 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void PopulateStackPanelWithItems(string templateName, StackPanel stackPanel, RatingControlStates state)
+        private void PopulateStackPanelWithItems(string templateName, StackPanel stackPanel, RatingControlStates state)
         {
             object lookup = Application.Current.Resources[templateName];
-            var dt = lookup as DataTemplate;
+            DataTemplate dt = lookup as DataTemplate;
 
             for (int i = 0; i < MaxRating; i++)
             {
@@ -367,7 +371,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void CustomizeRatingItem(UIElement ui, RatingControlStates type)
+        private void CustomizeRatingItem(UIElement ui, RatingControlStates type)
         {
             if (IsItemInfoPresentAndFontInfo())
             {
@@ -393,7 +397,7 @@ namespace CoolapkLite.Controls
 
         }
 
-        void CustomizeStackPanel(StackPanel stackPanel, RatingControlStates state)
+        private void CustomizeStackPanel(StackPanel stackPanel, RatingControlStates state)
         {
             foreach (UIElement child in stackPanel.Children)
             {
@@ -401,17 +405,17 @@ namespace CoolapkLite.Controls
             }
         }
 
-        bool IsItemInfoPresentAndFontInfo()
+        private bool IsItemInfoPresentAndFontInfo()
         {
             return m_infoType == RatingInfoType.Font;
         }
 
-        bool IsItemInfoPresentAndImageInfo()
+        private bool IsItemInfoPresentAndImageInfo()
         {
             return m_infoType == RatingInfoType.Image;
         }
 
-        string GetAppropriateGlyph(RatingControlStates type)
+        private string GetAppropriateGlyph(RatingControlStates type)
         {
             if (!IsItemInfoPresentAndFontInfo())
             {
@@ -439,7 +443,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        string GetNextGlyphIfNull(string glyph, RatingControlStates fallbackType)
+        private string GetNextGlyphIfNull(string glyph, RatingControlStates fallbackType)
         {
             if (string.IsNullOrEmpty(glyph))
             {
@@ -452,7 +456,7 @@ namespace CoolapkLite.Controls
             return glyph;
         }
 
-        ImageSource GetAppropriateImageSource(RatingControlStates type)
+        private ImageSource GetAppropriateImageSource(RatingControlStates type)
         {
             if (!IsItemInfoPresentAndImageInfo())
             {
@@ -480,7 +484,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        ImageSource GetNextImageIfNull(ImageSource image, RatingControlStates fallbackType)
+        private ImageSource GetNextImageIfNull(ImageSource image, RatingControlStates fallbackType)
         {
             if (image == null)
             {
@@ -493,14 +497,14 @@ namespace CoolapkLite.Controls
             return image;
         }
 
-        void ResetControlWidth()
+        private void ResetControlWidth()
         {
             double newWidth = CalculateTotalRatingControlWidth();
             Control thisAsControl = this;
             thisAsControl.Width = newWidth;
         }
 
-        void ChangeRatingBy(double change, bool originatedFromMouse)
+        private void ChangeRatingBy(double change, bool originatedFromMouse)
         {
             if (change != 0.0)
             {
@@ -535,7 +539,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void SetRatingTo(double newRating, bool originatedFromMouse)
+        private void SetRatingTo(double newRating, bool originatedFromMouse)
         {
             double ratingValue;
             double oldRatingValue = Value;
@@ -577,15 +581,15 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs args)
+        private void PrivateOnPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            var property = args.Property;
+            DependencyProperty property = args.Property;
             // Do coercion first.
             if (property == MaxRatingProperty)
             {
                 // Enforce minimum MaxRating
-                var value = (int)args.NewValue;
-                var coercedValue = Math.Max(1, value);
+                int value = (int)args.NewValue;
+                int coercedValue = Math.Max(1, value);
 
                 if (Value > coercedValue)
                 {
@@ -605,8 +609,8 @@ namespace CoolapkLite.Controls
             }
             else if (property == PlaceholderValueProperty || property == ValueProperty)
             {
-                var value = (double)args.NewValue;
-                var coercedValue = CoerceValueBetweenMinAndMax(value);
+                double value = (double)args.NewValue;
+                double coercedValue = CoerceValueBetweenMinAndMax(value);
                 if (value != coercedValue)
                 {
                     SetValue(property, coercedValue);
@@ -650,12 +654,12 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnCaptionChanged(DependencyPropertyChangedEventArgs args)
+        private void OnCaptionChanged(DependencyPropertyChangedEventArgs args)
         {
             ReRenderCaption();
         }
 
-        void OnFontFamilyChanged(DependencyObject sender, DependencyProperty dp)
+        private void OnFontFamilyChanged(DependencyObject sender, DependencyProperty dp)
         {
             if (m_backgroundStackPanel != null) // We don't want to do this for the initial property set
             {
@@ -677,22 +681,22 @@ namespace CoolapkLite.Controls
             UpdateRatingItemsAppearance();
         }
 
-        void OnInitialSetValueChanged(DependencyPropertyChangedEventArgs args)
+        private void OnInitialSetValueChanged(DependencyPropertyChangedEventArgs args)
         {
 
         }
 
-        void OnIsClearEnabledChanged(DependencyPropertyChangedEventArgs args)
+        private void OnIsClearEnabledChanged(DependencyPropertyChangedEventArgs args)
         {
 
         }
 
-        void OnIsReadOnlyChanged(DependencyPropertyChangedEventArgs args)
+        private void OnIsReadOnlyChanged(DependencyPropertyChangedEventArgs args)
         {
             // TODO: Colour changes - see spec
         }
 
-        void OnItemInfoChanged(DependencyPropertyChangedEventArgs args)
+        private void OnItemInfoChanged(DependencyPropertyChangedEventArgs args)
         {
             bool changedType = false;
 
@@ -733,17 +737,17 @@ namespace CoolapkLite.Controls
             UpdateRatingItemsAppearance();
         }
 
-        void OnMaxRatingChanged(DependencyPropertyChangedEventArgs args)
+        private void OnMaxRatingChanged(DependencyPropertyChangedEventArgs args)
         {
             StampOutRatingItems();
         }
 
-        void OnPlaceholderValueChanged(DependencyPropertyChangedEventArgs args)
+        private void OnPlaceholderValueChanged(DependencyPropertyChangedEventArgs args)
         {
             UpdateRatingItemsAppearance();
         }
 
-        void OnValueChanged(DependencyPropertyChangedEventArgs args)
+        private void OnValueChanged(DependencyPropertyChangedEventArgs args)
         {
             // Fire property change for UIA
             if (FrameworkElementAutomationPeer.FromElement(this) is AutomationPeer peer)
@@ -755,23 +759,23 @@ namespace CoolapkLite.Controls
             UpdateRatingItemsAppearance();
         }
 
-        void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs args)
+        private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs args)
         {
             // MSFT 11521414 TODO: change states (add a state)
             UpdateRatingItemsAppearance();
         }
 
-        void OnCaptionSizeChanged(object sender, SizeChangedEventArgs args)
+        private void OnCaptionSizeChanged(object sender, SizeChangedEventArgs args)
         {
             ResetControlWidth();
         }
 
-        void OnPointerCancelledBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerCancelledBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             PointerExitedImpl(args);
         }
 
-        void OnPointerCaptureLostBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerCaptureLostBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             // We capture the pointer because we want to support the drag off the
             // left side to clear the rating scenario. However, this means that
@@ -780,11 +784,11 @@ namespace CoolapkLite.Controls
             PointerExitedImpl(args, false /* resetScaleAnimation */);
         }
 
-        void OnPointerMovedOverBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerMovedOverBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             if (!IsReadOnly)
             {
-                var point = args.GetCurrentPoint(m_backgroundStackPanel);
+                PointerPoint point = args.GetCurrentPoint(m_backgroundStackPanel);
                 double xPosition = point.Position.X;
                 if (ShouldEnableAnimation && IsUseCompositor)
                 {
@@ -809,7 +813,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnPointerEnteredBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerEnteredBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             if (!IsReadOnly)
             {
@@ -818,14 +822,14 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnPointerExitedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerExitedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             PointerExitedImpl(args);
         }
 
-        void PointerExitedImpl(PointerRoutedEventArgs args, bool resetScaleAnimation = true)
+        private void PointerExitedImpl(PointerRoutedEventArgs args, bool resetScaleAnimation = true)
         {
-            var point = args.GetCurrentPoint(m_backgroundStackPanel);
+            _ = args.GetCurrentPoint(m_backgroundStackPanel);
 
             if (resetScaleAnimation)
             {
@@ -844,7 +848,7 @@ namespace CoolapkLite.Controls
             args.Handled = true;
         }
 
-        void OnPointerPressedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerPressedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             if (!IsReadOnly)
             {
@@ -856,12 +860,12 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnPointerReleasedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
+        private void OnPointerReleasedBackgroundStackPanel(object sender, PointerRoutedEventArgs args)
         {
             if (!IsReadOnly)
             {
-                var point = args.GetCurrentPoint(m_backgroundStackPanel);
-                var xPosition = point.Position.X;
+                PointerPoint point = args.GetCurrentPoint(m_backgroundStackPanel);
+                double xPosition = point.Position.X;
 
                 double mousePercentage = xPosition / CalculateActualRatingWidth();
                 SetRatingTo(Math.Ceiling(mousePercentage * MaxRating), true);
@@ -879,10 +883,10 @@ namespace CoolapkLite.Controls
             }
         }
 
-        double CalculateTotalRatingControlWidth()
+        private double CalculateTotalRatingControlWidth()
         {
             double ratingStarsWidth = CalculateActualRatingWidth();
-            var captionAsWinRT = (string)GetValue(CaptionProperty);
+            string captionAsWinRT = (string)GetValue(CaptionProperty);
             double textSpacing = 0.0;
 
             if (captionAsWinRT.Length > 0)
@@ -900,7 +904,7 @@ namespace CoolapkLite.Controls
             return ratingStarsWidth + textSpacing + captionWidth;
         }
 
-        double CalculateStarCenter(int starIndex)
+        private double CalculateStarCenter(int starIndex)
         {
             // TODO: sub in real API DP values
             // MSFT #10030063
@@ -908,7 +912,7 @@ namespace CoolapkLite.Controls
             return (ActualRatingFontSize * (starIndex + 0.5)) + (starIndex * ItemSpacing);
         }
 
-        double CalculateActualRatingWidth()
+        private double CalculateActualRatingWidth()
         {
             // TODO: replace hardcoding
             // MSFT #10030063
@@ -926,7 +930,7 @@ namespace CoolapkLite.Controls
             if (!IsReadOnly)
             {
                 bool handled = false;
-                var key = eventArgs.Key;
+                VirtualKey key = eventArgs.Key;
 
                 double flowDirectionReverser = 1.0;
 
@@ -935,7 +939,7 @@ namespace CoolapkLite.Controls
                     flowDirectionReverser *= -1.0;
                 }
 
-                var originalKey = eventArgs.Key;
+                VirtualKey originalKey = eventArgs.Key;
 
                 // Up down are right/left in keyboard only
                 if (originalKey == VirtualKey.Up)
@@ -1010,7 +1014,7 @@ namespace CoolapkLite.Controls
 
             if (ApiInfoHelper.IsFocusEngagedSupported && !IsReadOnly && IsFocusEngaged && IsFocusEngagementEnabled)
             {
-                var originalKey = eventArgs.OriginalKey;
+                VirtualKey originalKey = eventArgs.OriginalKey;
                 if (originalKey == VirtualKey.GamepadA)
                 {
                     m_shouldDiscardValue = false;
@@ -1045,7 +1049,7 @@ namespace CoolapkLite.Controls
 
         protected override void OnPreviewKeyUp(KeyRoutedEventArgs eventArgs)
         {
-            var originalKey = eventArgs.OriginalKey;
+            VirtualKey originalKey = eventArgs.OriginalKey;
 
             if (ApiInfoHelper.IsFocusEngagedSupported && IsFocusEngagementEnabled && originalKey == VirtualKey.GamepadA && m_disengagedWithA)
             {
@@ -1055,9 +1059,9 @@ namespace CoolapkLite.Controls
             }
         }
 
-        bool ShouldEnableAnimation => false;
+        private bool ShouldEnableAnimation => false;
 
-        void OnFocusEngaged(Control sender, FocusEngagedEventArgs args)
+        private void OnFocusEngaged(Control sender, FocusEngagedEventArgs args)
         {
             if (!IsReadOnly)
             {
@@ -1065,7 +1069,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void OnFocusDisengaged(Control sender, FocusDisengagedEventArgs args)
+        private void OnFocusDisengaged(Control sender, FocusDisengagedEventArgs args)
         {
             // Revert value:
             // for catching programmatic disengagements, gamepad ones are handled in OnPreviewKeyDown
@@ -1090,7 +1094,7 @@ namespace CoolapkLite.Controls
             ExitGamepadEngagementMode();
         }
 
-        void EnterGamepadEngagementMode()
+        private void EnterGamepadEngagementMode()
         {
             double currentValue = Value;
             m_shouldDiscardValue = true;
@@ -1121,7 +1125,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        void ExitGamepadEngagementMode()
+        private void ExitGamepadEngagementMode()
         {
             if (ApiInfoHelper.IsElementSoundPlayerSupported)
             {
@@ -1132,9 +1136,9 @@ namespace CoolapkLite.Controls
             m_disengagedWithA = false;
         }
 
-        void RecycleEvents()
+        private void RecycleEvents()
         {
-            var backgroundStackPanel = m_backgroundStackPanel;
+            StackPanel backgroundStackPanel = m_backgroundStackPanel;
             if (backgroundStackPanel != null)
             {
                 backgroundStackPanel.PointerCanceled -= OnPointerCancelledBackgroundStackPanel;
@@ -1146,17 +1150,17 @@ namespace CoolapkLite.Controls
                 backgroundStackPanel.PointerReleased -= OnPointerReleasedBackgroundStackPanel;
             }
 
-            var captionTextBlock = m_captionTextBlock;
+            TextBlock captionTextBlock = m_captionTextBlock;
             if (captionTextBlock != null)
             {
                 captionTextBlock.SizeChanged -= OnCaptionSizeChanged;
             }
         }
 
-        void OnTextScaleFactorChanged(UISettings setting, object args)
+        private void OnTextScaleFactorChanged(UISettings setting, object args)
         {
             // OnTextScaleFactorChanged happens in non-UI thread, use dispatcher to call StampOutRatingItems in UI thread.
-            var strongThis = this;
+            RatingControl strongThis = this;
             _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 strongThis.StampOutRatingItems();
@@ -1164,32 +1168,32 @@ namespace CoolapkLite.Controls
             });
         }
 
-        UISettings GetUISettings()
+        private UISettings GetUISettings()
         {
             uiSettings = uiSettings ?? new UISettings();
             return uiSettings;
         }
 
-        UISettings uiSettings;
+        private UISettings uiSettings;
 
         // Private members
-        TextBlock m_captionTextBlock;
+        private TextBlock m_captionTextBlock;
 
-        CompositionPropertySet m_sharedPointerPropertySet;
+        private CompositionPropertySet m_sharedPointerPropertySet;
 
-        StackPanel m_backgroundStackPanel;
-        StackPanel m_foregroundStackPanel;
+        private StackPanel m_backgroundStackPanel;
+        private StackPanel m_foregroundStackPanel;
 
-        bool m_isPointerOver = false;
-        bool m_isPointerDown = false;
-        double m_mousePercentage = 0.0;
+        private bool m_isPointerOver = false;
+        private bool m_isPointerDown = false;
+        private double m_mousePercentage = 0.0;
 
-        RatingInfoType m_infoType = RatingInfoType.Font;
+        private RatingInfoType m_infoType = RatingInfoType.Font;
 
         // Holds the value of the Rating control at the moment of engagement,
         // used to handle cancel-disengagements where we reset the value.
-        double m_preEngagementValue = 0.0;
-        bool m_disengagedWithA = false;
-        bool m_shouldDiscardValue = true;
+        private double m_preEngagementValue = 0.0;
+        private bool m_disengagedWithA = false;
+        private bool m_shouldDiscardValue = true;
     }
 }

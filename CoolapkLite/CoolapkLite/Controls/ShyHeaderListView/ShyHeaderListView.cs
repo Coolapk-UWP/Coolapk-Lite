@@ -29,6 +29,19 @@ namespace CoolapkLite.Controls
         private ScrollProgressProvider _progressProvider;
         private readonly bool IsUseCompositor = SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor) && ApiInfoHelper.IsGetElementVisualSupported;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShyHeaderListView"/> class.
+        /// </summary>
+        public ShyHeaderListView()
+        {
+            DefaultStyleKey = typeof(ShyHeaderListView);
+            if (IsUseCompositor)
+            {
+                _progressProvider = new ScrollProgressProvider();
+                _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+            }
+        }
+
         #region TopHeader
 
         public static readonly DependencyProperty TopHeaderProperty =
@@ -130,19 +143,6 @@ namespace CoolapkLite.Controls
         }
 
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ShyHeaderListView"/> class.
-        /// </summary>
-        public ShyHeaderListView()
-        {
-            DefaultStyleKey = typeof(ShyHeaderListView);
-            if (IsUseCompositor)
-            {
-                _progressProvider = new ScrollProgressProvider();
-                _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
-            }
-        }
 
         protected override void OnApplyTemplate()
         {

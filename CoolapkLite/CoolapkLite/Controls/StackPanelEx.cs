@@ -12,6 +12,11 @@ namespace CoolapkLite.Controls
     /// </summary>
     public class StackPanelEx : Panel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StackPanelEx"/> class.
+        /// </summary>
+        public StackPanelEx() { }
+
         #region Padding
 
         /// <summary>
@@ -86,11 +91,6 @@ namespace CoolapkLite.Controls
         }
 
         #endregion
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StackPanelEx"/> class.
-        /// </summary>
-        public StackPanelEx() { }
 
         private static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

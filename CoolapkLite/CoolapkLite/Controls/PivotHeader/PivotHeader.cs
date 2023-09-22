@@ -15,6 +15,20 @@ namespace CoolapkLite.Controls
     {
         private readonly AnimateSelectionProvider _selectionProvider;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="PivotHeader"/> class.
+        /// </summary>
+        public PivotHeader()
+        {
+            DefaultStyleKey = typeof(PivotHeader);
+            _selectionProvider = new AnimateSelectionProvider
+            {
+                Orientation = Orientation.Horizontal,
+                IndicatorName = c_selectionIndicatorName,
+                ItemsControls = new[] { this }
+            };
+        }
+
         #region Pivot
 
         public static readonly DependencyProperty PivotProperty =
@@ -38,17 +52,6 @@ namespace CoolapkLite.Controls
             {
                 ((PivotHeader)d).SetPivot();
             }
-        }
-
-        public PivotHeader()
-        {
-            DefaultStyleKey = typeof(PivotHeader);
-            _selectionProvider = new AnimateSelectionProvider
-            {
-                Orientation = Orientation.Horizontal,
-                IndicatorName = c_selectionIndicatorName,
-                ItemsControls = new[] { this }
-            };
         }
 
         private void SetPivot()

@@ -65,6 +65,15 @@ namespace CoolapkLite.Controls
         private ControlTemplate _previousTemplateUsed;
         private RefreshContainer _refreshContainer;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PullToRefreshListView"/> class.
+        /// </summary>
+        public PullToRefreshListView()
+        {
+            DefaultStyleKey = typeof(PullToRefreshListView);
+            SizeChanged += RefreshableListView_SizeChanged;
+        }
+
         private bool UsingRefreshContainer => IsRefreshContainerSupported && UseRefreshContainerWhenPossible;
 
         #region OverscrollLimit
@@ -409,15 +418,6 @@ namespace CoolapkLite.Controls
         /// Occurs when listview overscroll distance is changed
         /// </summary>
         public event EventHandler<RefreshProgressEventArgs> PullProgressChanged;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PullToRefreshListView"/> class.
-        /// </summary>
-        public PullToRefreshListView()
-        {
-            DefaultStyleKey = typeof(PullToRefreshListView);
-            SizeChanged += RefreshableListView_SizeChanged;
-        }
 
         /// <summary>
         /// Handler for SizeChanged event, handles clipping
