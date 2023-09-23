@@ -147,7 +147,7 @@ namespace CoolapkLite.Pages
                 CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
                 SystemNavigationManager.AppViewBackButtonVisibility = TryGoBack(false);
                 if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
-                { UpdateContentLayout(false); }
+                { UpdateTitleBarVisible(false); }
                 TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
                 SystemNavigationManager.BackRequested += System_BackRequested;
                 ApplicationView.GetForCurrentView().Title = Provider.Title;
@@ -188,16 +188,16 @@ namespace CoolapkLite.Pages
             return AppViewBackButtonVisibility.Visible;
         }
 
-        private void UpdateContentLayout(bool IsVisible)
-        {
-            CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
-        }
-
         private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
         {
-            CustomTitleBar.Height = TitleBar.Height;
+            CustomTitleBar.Opacity = TitleBar.SystemOverlayLeftInset > 48 ? 0 : 1;
             LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
             RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
+        }
+
+        private void UpdateTitleBarVisible(bool IsVisible)
+        {
+            CustomTitleBar.Visibility = IsVisible ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -329,9 +329,9 @@ namespace CoolapkLite.Pages
 
         private void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e) => UpdateScrollViewer(sender as FlipView);
 
-        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateContentLayout(sender.TitleBar.IsVisible);
+        private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateTitleBarVisible(sender.TitleBar.IsVisible);
 
-        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateContentLayout(sender.IsVisible);
+        private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarVisible(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
     }
