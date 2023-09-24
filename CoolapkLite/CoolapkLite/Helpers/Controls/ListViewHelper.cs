@@ -57,7 +57,7 @@ namespace CoolapkLite.Helpers
             UpdatePadding(element, padding);
         }
 
-        private static void UpdatePadding(ListViewBase element, Thickness padding)
+        public static void UpdatePadding(this ListViewBase element, Thickness padding)
         {
             if (element?.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer
                 && scrollViewer?.FindDescendant<ItemsPresenter>()?.FindDescendant<Panel>() is Panel panel)

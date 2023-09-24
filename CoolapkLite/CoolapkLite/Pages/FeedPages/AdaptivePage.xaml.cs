@@ -79,5 +79,11 @@ namespace CoolapkLite.Pages.FeedPages
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
         private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Provider.IsShowTitle = this.FindAscendant<Pivot>() is null;
+            ListView.UpdatePadding(Provider.IsShowTitle ? (Thickness)Application.Current.Resources["StackPanelMargin"] : default);
+        }
     }
 }

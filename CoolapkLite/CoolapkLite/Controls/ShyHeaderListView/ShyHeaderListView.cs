@@ -24,6 +24,7 @@ namespace CoolapkLite.Controls
         private Panel _innerFlyoutHeaderGrid;
         private Panel _outerFlyoutHeaderGrid;
 
+        private long? token;
         private double _topHeight;
         private bool? _isThreshold;
         private ScrollProgressProvider _progressProvider;
@@ -172,10 +173,6 @@ namespace CoolapkLite.Controls
                 {
                     _progressProvider.ScrollViewer = _scrollViewer;
                 }
-                else
-                {
-                    _scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-                }
             }
             if (_listViewHeader != null)
             {
@@ -215,9 +212,9 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void OnVerticalOffsetPropertyChanged(DependencyObject sender, DependencyProperty dp)
         {
-            UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
+            UpdateVisualState((double)sender.GetValue(dp) >= _topHeight || _topHeight == 0);
         }
 
         private void ProgressProvider_ProgressChanged(object sender, double args)
@@ -228,18 +225,38 @@ namespace CoolapkLite.Controls
         private void TopHeader_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Grid TopHeader = sender as Grid;
-            _topHeight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
-            if (IsUseCompositor)
+            if (TopHeader.ActualHeight == 0)
             {
-                if (_progressProvider == null)
+                if (_progressProvider != null)
                 {
-                    _progressProvider = new ScrollProgressProvider();
-                    _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
-                    _progressProvider.ScrollViewer = _scrollViewer;
+                    _progressProvider.ProgressChanged -= ProgressProvider_ProgressChanged;
+                    _progressProvider = null;
                 }
-                _progressProvider.Threshold = _topHeight;
+                if (token.HasValue)
+                {
+                    _scrollViewer.UnregisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, token.Value);
+                }
+                UpdateVisualState(true);
             }
-            UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
+            else
+            {
+                _topHeight = Math.Max(0, TopHeader.ActualHeight - HeaderMargin);
+                if (IsUseCompositor)
+                {
+                    if (_progressProvider == null)
+                    {
+                        _progressProvider = new ScrollProgressProvider();
+                        _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
+                        _progressProvider.ScrollViewer = _scrollViewer;
+                    }
+                    _progressProvider.Threshold = _topHeight;
+                }
+                else if (!token.HasValue)
+                {
+                    token = _scrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, OnVerticalOffsetPropertyChanged);
+                }
+                UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
+            }
         }
 
         private void ListViewHeader_Loaded(object sender, RoutedEventArgs e)

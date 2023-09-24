@@ -41,6 +41,7 @@
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"
+            Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
