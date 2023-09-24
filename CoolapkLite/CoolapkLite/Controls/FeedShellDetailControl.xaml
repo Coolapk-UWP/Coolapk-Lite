@@ -461,7 +461,11 @@
                     Visibility="{Binding PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ItemsWrapGrid MaximumRowsOrColumns="3" Orientation="Horizontal" />
+                            <ItemsWrapGrid
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                MaximumRowsOrColumns="3"
+                                Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </GridView.ItemsPanel>
                 </GridView>
@@ -614,7 +618,11 @@
                 Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed'}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <local:StackPanelEx Orientation="Horizontal" Spacing="6" />
+                        <local:StackPanelEx
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal"
+                            Spacing="6" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>

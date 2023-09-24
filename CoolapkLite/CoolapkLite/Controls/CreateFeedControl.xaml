@@ -64,7 +64,11 @@
             SelectionChanged="GridView_SelectionChanged">
             <GridView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsWrapGrid MaximumRowsOrColumns="3" Orientation="Horizontal" />
+                    <ItemsWrapGrid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        MaximumRowsOrColumns="3"
+                        Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </GridView.ItemsPanel>
             <GridView.ItemTemplate>
@@ -291,7 +295,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>
@@ -310,7 +317,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>
@@ -329,7 +339,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>
@@ -348,7 +361,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>
@@ -367,7 +383,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>
@@ -386,7 +405,10 @@
                                         SelectionChanged="GridView_SelectionChanged">
                                         <GridView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <cwuc:StaggeredPanel DesiredColumnWidth="48">
+                                                <cwuc:StaggeredPanel
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    DesiredColumnWidth="48">
                                                     <cwuc:StaggeredPanel.RenderTransform>
                                                         <TranslateTransform X="-6" />
                                                     </cwuc:StaggeredPanel.RenderTransform>

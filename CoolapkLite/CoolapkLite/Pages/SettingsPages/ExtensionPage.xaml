@@ -18,6 +18,7 @@
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
+            ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
             ItemsSource="{x:Bind Provider.Extensions, Mode=OneWay}"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">

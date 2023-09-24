@@ -33,6 +33,11 @@
 
             <converter:NumMultConverter x:Key="NumMultConverter" />
             <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
+
+            <common:ItemsPanelSelector
+                x:Key="ItemsPanelSelector"
+                NonVirtualizingTemplate="{StaticResource DefaultStaggeredPanelTemplate}"
+                VirtualizingTemplate="{StaticResource DefaultItemsStackPanelTemplate}" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

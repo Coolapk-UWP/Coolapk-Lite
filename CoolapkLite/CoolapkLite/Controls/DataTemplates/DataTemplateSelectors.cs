@@ -56,6 +56,8 @@ namespace CoolapkLite.Controls.DataTemplates
                     return Others;
             }
         }
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
     public sealed class ProfileCardTemplateSelector : DataTemplateSelector

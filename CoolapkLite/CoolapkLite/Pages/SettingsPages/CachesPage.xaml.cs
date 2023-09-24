@@ -1,8 +1,6 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.SettingsPages;
-using Microsoft.Toolkit.Uwp.UI;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -89,24 +87,6 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 default:
                     break;
-            }
-        }
-
-        private void ListView_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (ListView.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer)
-            {
-                scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
-            }
-        }
-
-        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
-        {
-            if (!(sender is ScrollViewer scrollViewer)) { return; }
-            double bottomOffset = scrollViewer.ExtentHeight - scrollViewer.VerticalOffset - scrollViewer.ViewportHeight;
-            if (scrollViewer.VerticalOffset > 0 && bottomOffset <= 0)
-            {
-                _ = Refresh();
             }
         }
     }

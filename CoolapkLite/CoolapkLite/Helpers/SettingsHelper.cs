@@ -38,6 +38,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
+        public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
         public const string IsExtendsTitleBar = nameof(IsExtendsTitleBar);
         public const string ShowOtherException = nameof(ShowOtherException);
         public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
@@ -138,6 +139,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {
                 LocalObject.Save(IsUseOldEmojiMode, false);
+            }
+            if (!LocalObject.KeyExists(IsUseVirtualizing))
+            {
+                LocalObject.Save(IsUseVirtualizing, true);
             }
             if (!LocalObject.KeyExists(IsExtendsTitleBar))
             {

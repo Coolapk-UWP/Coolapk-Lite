@@ -1,6 +1,8 @@
 ﻿using Microsoft.Toolkit.Uwp.UI;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Helpers
 {
@@ -32,8 +34,7 @@ namespace CoolapkLite.Helpers
             {
                 if (element.IsLoaded)
                 {
-                    Thickness padding = GetPadding(element);
-                    UpdatePadding(element, padding);
+                    UpdatePadding(element, (Thickness)e.NewValue);
                 }
                 else
                 {
@@ -43,10 +44,15 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                element.Loaded -= OnListViewLoaded;
-                element.Loaded += OnListViewLoaded;
-                Thickness padding = GetPadding(element);
-                UpdatePadding(element, padding);
+                if (element.FindDescendant<ScrollViewer>() != null)
+                {
+                    UpdatePadding(element, (Thickness)e.NewValue);
+                }
+                else
+                {
+                    element.Loaded -= OnListViewLoaded;
+                    element.Loaded += OnListViewLoaded;
+                }
             }
         }
 
@@ -69,6 +75,114 @@ namespace CoolapkLite.Helpers
                 scrollViewer.Margin = padding;
                 scrollViewer.Padding = margin;
             }
+        }
+
+        #endregion
+
+        #region EnableIncrementalLoading
+
+        public static readonly DependencyProperty EnableIncrementalLoadingProperty =
+            DependencyProperty.RegisterAttached(
+                "EnableIncrementalLoading",
+                typeof(bool),
+                typeof(ListViewHelper),
+                new PropertyMetadata(false, OnEnableIncrementalLoadingChanged));
+
+        public static bool GetEnableIncrementalLoading(ListViewBase element)
+        {
+            return (bool)element.GetValue(EnableIncrementalLoadingProperty);
+        }
+
+        public static void SetEnableIncrementalLoading(ListViewBase element, bool value)
+        {
+            element.SetValue(EnableIncrementalLoadingProperty, value);
+        }
+
+        private static void OnEnableIncrementalLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ListViewBase element = (ListViewBase)d;
+            if ((bool)e.NewValue)
+            {
+                if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
+                {
+                    if (element.IsLoaded)
+                    {
+                        InstallIncrementalLoadingWorkaround(element, null);
+                    }
+                    else
+                    {
+                        element.Loaded -= InstallIncrementalLoadingWorkaround;
+                        element.Loaded += InstallIncrementalLoadingWorkaround;
+                    }
+                }
+                else
+                {
+                    if (element.FindDescendant<ScrollViewer>() != null)
+                    {
+                        InstallIncrementalLoadingWorkaround(element, null);
+                    }
+                    else
+                    {
+                        element.Loaded -= InstallIncrementalLoadingWorkaround;
+                        element.Loaded += InstallIncrementalLoadingWorkaround;
+                    }
+                }
+            }
+        }
+
+        private static void InstallIncrementalLoadingWorkaround(object sender, RoutedEventArgs args)
+        {
+            ListViewBase element = (ListViewBase)sender;
+            ScrollViewer scrollViewer = element.FindDescendant<ScrollViewer>();
+            double loadingThreshold = 0.5;
+
+            scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+            scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+
+            async void ScrollViewer_ViewChanged(object _sender, ScrollViewerViewChangedEventArgs e)
+            {
+                if (!(element.ItemsSource is ISupportIncrementalLoading source)) { return; }
+                if (element.Items.Count > 0 && !source.HasMoreItems) { return; }
+                if (GetIsIncrementallyLoading(element)) { return; }
+
+                if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= loadingThreshold)
+                {
+                    try
+                    {
+                        SetIsIncrementallyLoading(element, true);
+                        await source.LoadMoreItemsAsync(20);
+                    }
+                    catch (Exception ex)
+                    {
+                        SettingsHelper.LogManager.GetLogger(nameof(ListViewHelper)).Error(ex.ExceptionToMessage(), e);
+                    }
+                    finally
+                    {
+                        SetIsIncrementallyLoading(element, false);
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+        #region IsIncrementallyLoading
+
+        private static readonly DependencyProperty IsIncrementallyLoadingProperty =
+            DependencyProperty.RegisterAttached(
+                "IsIncrementallyLoading",
+                typeof(bool),
+                typeof(ListViewHelper),
+                new PropertyMetadata(false));
+
+        private static bool GetIsIncrementallyLoading(ListViewBase element)
+        {
+            return (bool)element.GetValue(IsIncrementallyLoadingProperty);
+        }
+
+        private static void SetIsIncrementallyLoading(ListViewBase element, bool value)
+        {
+            element.SetValue(IsIncrementallyLoadingProperty, value);
         }
 
         #endregion

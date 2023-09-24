@@ -6,7 +6,6 @@ using CoolapkLite.Pages.ToolsPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using CoolapkLite.ViewModels.ToolsPages;
-using MetroLog.WinRT;
 using System;
 using System.Globalization;
 using System.Linq;

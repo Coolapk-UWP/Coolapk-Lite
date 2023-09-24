@@ -3,20 +3,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls">
     <Style TargetType="controls:SettingsGroup">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="ItemContainerTransitions">
+            <Setter.Value>
+                <TransitionCollection>
+                    <AddDeleteThemeTransition />
+                    <ContentThemeTransition />
+                    <ReorderThemeTransition />
+                    <EntranceThemeTransition IsStaggeringEnabled="False" />
+                </TransitionCollection>
+            </Setter.Value>
+        </Setter>
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <controls:StackPanelEx Orientation="Vertical" Spacing="10">
-                        <controls:StackPanelEx.ChildrenTransitions>
-                            <TransitionCollection>
-                                <ReorderThemeTransition />
-                            </TransitionCollection>
-                        </controls:StackPanelEx.ChildrenTransitions>
-                    </controls:StackPanelEx>
+                    <controls:StackPanelEx
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Orientation="Vertical"
+                        Spacing="10" />
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">

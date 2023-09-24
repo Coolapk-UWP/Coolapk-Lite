@@ -13,7 +13,6 @@ using HttpResponseMessage = System.Net.Http.HttpResponseMessage;
 using HttpStatusCode = System.Net.HttpStatusCode;
 
 #if !CANARY
-using System.Collections.Generic;
 #endif
 
 namespace CoolapkLite.Helpers

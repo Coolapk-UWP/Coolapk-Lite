@@ -13,7 +13,6 @@ using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
-using System.Linq;
 
 
 #if NETCORE463

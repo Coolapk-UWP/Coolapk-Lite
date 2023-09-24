@@ -181,6 +181,7 @@
                             Tag="NewAppWindow"
                             ToolTipService.ToolTip="仅支持 1903 及以上" />
                     </control:StackPanelEx>
+                    <ToggleSwitch Header="是否使用虚拟化容器" IsOn="{x:Bind Provider.IsUseVirtualizing, Mode=TwoWay}" />
                     <ToggleSwitch
                         Header="是否使用模糊笔刷"
                         IsEnabled="{x:Bind Provider.IsXamlCompositionBrushSupported}"

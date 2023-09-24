@@ -28,6 +28,7 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplate="{StaticResource ListDefaultTemplate}"
+            ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />

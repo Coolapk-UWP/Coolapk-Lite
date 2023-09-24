@@ -125,6 +125,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
                     ItemsSource="{x:Bind Provider.SearchFeedItemSource, Mode=OneWay}"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -134,6 +135,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
                     ItemsSource="{x:Bind Provider.SearchUserItemSource, Mode=OneWay}"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
@@ -143,6 +145,7 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
                     ItemsSource="{x:Bind Provider.SearchTopicItemSource, Mode=OneWay}"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />

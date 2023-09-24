@@ -174,6 +174,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        public bool IsUseVirtualizing
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseVirtualizing);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.IsUseVirtualizing, value);
+                ItemsPanelSelector.IsVirtualizing = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
         public double SemaphoreSlimCount
         {
             get => SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount);
@@ -266,6 +277,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsUseAppWindow),
                     nameof(IsUseBlurBrush),
                     nameof(IsUseCompositor),
+                    nameof(IsUseVirtualizing),
                     nameof(SemaphoreSlimCount));
             }
             userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();

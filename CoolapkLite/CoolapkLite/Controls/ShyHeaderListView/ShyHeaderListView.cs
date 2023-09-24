@@ -3,6 +3,7 @@ using CoolapkLite.Helpers;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 // The Templated Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234235
@@ -24,7 +25,8 @@ namespace CoolapkLite.Controls
         private Panel _innerFlyoutHeaderGrid;
         private Panel _outerFlyoutHeaderGrid;
 
-        private long? token;
+        private long? _token;
+        private bool _isLoading;
         private double _topHeight;
         private bool? _isThreshold;
         private ScrollProgressProvider _progressProvider;
@@ -41,6 +43,9 @@ namespace CoolapkLite.Controls
                 _progressProvider = new ScrollProgressProvider();
                 _progressProvider.ProgressChanged += ProgressProvider_ProgressChanged;
             }
+            Loaded += ListView_Loaded;
+            Unloaded += ListView_Unloaded;
+            _ = RegisterPropertyChangedCallback(ItemsPanelProperty, OnItemsPanelPropertyChanged);
         }
 
         #region TopHeader
@@ -145,6 +150,23 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region LoadingThreshold
+
+        public static readonly DependencyProperty LoadingThresholdProperty =
+            DependencyProperty.Register(
+                nameof(LoadingThreshold),
+                typeof(double),
+                typeof(ShyHeaderListView),
+                new PropertyMetadata(0.5));
+
+        public double LoadingThreshold
+        {
+            get => (double)GetValue(LoadingThresholdProperty);
+            set => SetValue(LoadingThresholdProperty, value);
+        }
+
+        #endregion
+
         protected override void OnApplyTemplate()
         {
             if (_topHeader != null)
@@ -153,7 +175,7 @@ namespace CoolapkLite.Controls
             }
             if (_listViewHeader != null)
             {
-                _listViewHeader.Loaded -= ListViewHeader_Loaded;
+                _listViewHeader.Loaded -= ListView_Loaded;
             }
 
             _topHeader = (FrameworkElement)GetTemplateChild("TopHeader");
@@ -174,11 +196,7 @@ namespace CoolapkLite.Controls
                     _progressProvider.ScrollViewer = _scrollViewer;
                 }
             }
-            if (_listViewHeader != null)
-            {
-                _listViewHeader.Loaded += ListViewHeader_Loaded;
-                _listViewHeader.Unloaded += ListViewHeader_Unloaded;
-            }
+
             base.OnApplyTemplate();
         }
 
@@ -212,9 +230,65 @@ namespace CoolapkLite.Controls
             }
         }
 
+        private void UpdateIncrementalLoading()
+        {
+            if (ItemsPanelRoot != null)
+            {
+                if (ItemsPanelRoot is ItemsStackPanel
+                    || ItemsPanelRoot is ItemsWrapGrid
+                    || ItemsPanelRoot is VirtualizingPanel)
+                {
+                    IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
+                    if (_scrollViewer != null)
+                    {
+                        _scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+                    }
+                }
+                else
+                {
+                    IncrementalLoadingTrigger = IncrementalLoadingTrigger.None;
+                    if (_scrollViewer != null)
+                    {
+                        _scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+                        _scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                    }
+                }
+            }
+        }
+
+        private void OnItemsPanelPropertyChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            UpdateIncrementalLoading();
+        }
+
         private void OnVerticalOffsetPropertyChanged(DependencyObject sender, DependencyProperty dp)
         {
             UpdateVisualState((double)sender.GetValue(dp) >= _topHeight || _topHeight == 0);
+        }
+
+        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
+            if (Items.Count > 0 && !source.HasMoreItems) { return; }
+            if (_isLoading) { return; }
+
+            if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= LoadingThreshold)
+            {
+                try
+                {
+                    _isLoading = true;
+                    await source.LoadMoreItemsAsync(20);
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), e);
+                }
+                finally
+                {
+                    _isLoading = false;
+                }
+            }
         }
 
         private void ProgressProvider_ProgressChanged(object sender, double args)
@@ -232,9 +306,9 @@ namespace CoolapkLite.Controls
                     _progressProvider.ProgressChanged -= ProgressProvider_ProgressChanged;
                     _progressProvider = null;
                 }
-                if (token.HasValue)
+                if (_token.HasValue)
                 {
-                    _scrollViewer.UnregisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, token.Value);
+                    _scrollViewer.UnregisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, _token.Value);
                 }
                 UpdateVisualState(true);
             }
@@ -251,19 +325,16 @@ namespace CoolapkLite.Controls
                     }
                     _progressProvider.Threshold = _topHeight;
                 }
-                else if (!token.HasValue)
+                else if (!_token.HasValue)
                 {
-                    token = _scrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, OnVerticalOffsetPropertyChanged);
+                    _token = _scrollViewer.RegisterPropertyChangedCallback(ScrollViewer.VerticalOffsetProperty, OnVerticalOffsetPropertyChanged);
                 }
                 UpdateVisualState(_scrollViewer.VerticalOffset >= _topHeight || _topHeight == 0);
             }
         }
 
-        private void ListViewHeader_Loaded(object sender, RoutedEventArgs e)
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            Grid ListViewHeader = sender as Grid;
-            Canvas.SetZIndex(ItemsPanelRoot, -1);
-
             if (IsUseCompositor)
             {
                 if (_progressProvider == null)
@@ -277,9 +348,10 @@ namespace CoolapkLite.Controls
             {
                 _topHeight = Math.Max(0, _topHeader.ActualHeight - HeaderMargin);
             }
+            UpdateIncrementalLoading();
         }
 
-        private void ListViewHeader_Unloaded(object sender, RoutedEventArgs e)
+        private void ListView_Unloaded(object sender, RoutedEventArgs e)
         {
             if (_progressProvider != null)
             {

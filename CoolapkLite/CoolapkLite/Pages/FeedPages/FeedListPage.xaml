@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
+    xmlns:cwuc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feeds="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:helpers="using:CoolapkLite.Helpers"
@@ -366,7 +367,11 @@
                                     <ItemsControl ItemsSource="{Binding FollowUsers}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
+                                                <control:StackPanelEx
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Stretch"
+                                                    Orientation="Horizontal"
+                                                    Spacing="-6" />
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
@@ -646,7 +651,11 @@
                                         <ItemsControl ItemsSource="{Binding FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
+                                                    <control:StackPanelEx
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        Orientation="Horizontal"
+                                                        Spacing="-6" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
@@ -713,7 +722,11 @@
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <control:StackPanelEx Orientation="Horizontal" Spacing="2" />
+                                <control:StackPanelEx
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Orientation="Horizontal"
+                                    Spacing="2" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
@@ -1294,7 +1307,11 @@
                                         <ItemsControl ItemsSource="{Binding FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <control:StackPanelEx Orientation="Horizontal" Spacing="-6" />
+                                                    <control:StackPanelEx
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Stretch"
+                                                        Orientation="Horizontal"
+                                                        Spacing="-6" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
@@ -1508,7 +1525,10 @@
                         Visibility="{Binding ScreenshotArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <ItemsStackPanel Orientation="Horizontal" />
+                                <ItemsStackPanel
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Orientation="Horizontal" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
@@ -1591,7 +1611,11 @@
                         Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <control:StackPanelEx Orientation="Horizontal" Spacing="2" />
+                                <control:StackPanelEx
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Orientation="Horizontal"
+                                    Spacing="2" />
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
@@ -1662,6 +1686,7 @@
                     HeaderMargin="{StaticResource PageTitleHeight}"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
                     ItemsSource="{x:Bind Provider.SearchItemSource, Mode=OneWay}"
                     Loaded="ListView_Loaded"
                     ShowsScrollingPlaceholders="False">

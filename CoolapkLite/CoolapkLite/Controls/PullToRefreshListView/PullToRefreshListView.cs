@@ -10,6 +10,7 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
@@ -64,6 +65,7 @@ namespace CoolapkLite.Controls
         private double _startingVerticalOffset;
         private ControlTemplate _previousTemplateUsed;
         private RefreshContainer _refreshContainer;
+        private bool _isLoading;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PullToRefreshListView"/> class.
@@ -72,6 +74,8 @@ namespace CoolapkLite.Controls
         {
             DefaultStyleKey = typeof(PullToRefreshListView);
             SizeChanged += RefreshableListView_SizeChanged;
+            Loaded += ListView_Loaded;
+            _ = RegisterPropertyChangedCallback(ItemsPanelProperty, OnItemsPanelPropertyChanged);
         }
 
         private bool UsingRefreshContainer => IsRefreshContainerSupported && UseRefreshContainerWhenPossible;
@@ -404,6 +408,23 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region LoadingThreshold
+
+        public static readonly DependencyProperty LoadingThresholdProperty =
+            DependencyProperty.Register(
+                nameof(LoadingThreshold),
+                typeof(double),
+                typeof(PullToRefreshListView),
+                new PropertyMetadata(0.5));
+
+        public double LoadingThreshold
+        {
+            get => (double)GetValue(LoadingThresholdProperty);
+            set => SetValue(LoadingThresholdProperty, value);
+        }
+
+        #endregion
+
         /// <summary>
         /// Occurs when the user has requested content to be refreshed
         /// </summary>
@@ -526,6 +547,67 @@ namespace CoolapkLite.Controls
             {
                 _refreshContainer.RefreshRequested += RefreshContainer_RefreshRequested;
             }
+        }
+
+        private void UpdateIncrementalLoading()
+        {
+            if (ItemsPanelRoot != null)
+            {
+                if (ItemsPanelRoot is ItemsStackPanel
+                    || ItemsPanelRoot is ItemsWrapGrid
+                    || ItemsPanelRoot is VirtualizingPanel)
+                {
+                    IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
+                    if (_scroller != null)
+                    {
+                        _scroller.ViewChanged -= ScrollViewer_ViewChanged;
+                    }
+                }
+                else
+                {
+                    IncrementalLoadingTrigger = IncrementalLoadingTrigger.None;
+                    if (_scroller != null)
+                    {
+                        _scroller.ViewChanged -= ScrollViewer_ViewChanged;
+                        _scroller.ViewChanged += ScrollViewer_ViewChanged;
+                    }
+                }
+            }
+        }
+
+        private void OnItemsPanelPropertyChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            UpdateIncrementalLoading();
+        }
+
+        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
+            if (Items.Count > 0 && !source.HasMoreItems) { return; }
+            if (_isLoading) { return; }
+
+            if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= LoadingThreshold)
+            {
+                try
+                {
+                    _isLoading = true;
+                    await source.LoadMoreItemsAsync(20);
+                }
+                catch (Exception ex)
+                {
+                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), e);
+                }
+                finally
+                {
+                    _isLoading = false;
+                }
+            }
+        }
+
+        private void ListView_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateIncrementalLoading();
         }
 
         private void Scroller_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)

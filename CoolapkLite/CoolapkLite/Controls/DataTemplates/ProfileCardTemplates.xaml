@@ -112,7 +112,11 @@
                 Style="{StaticResource VerticalListViewStyle}">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <controls:StackPanelEx Orientation="Horizontal" Spacing="6" />
+                        <controls:StackPanelEx
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal"
+                            Spacing="6" />
                     </ItemsPanelTemplate>
                 </ListView.ItemsPanel>
             </ListView>

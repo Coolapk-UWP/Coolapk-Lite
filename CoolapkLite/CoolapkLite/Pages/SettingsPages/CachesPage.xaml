@@ -15,16 +15,19 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            helpers:ListViewHelper.EnableIncrementalLoading="True"
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             IncrementalLoadingTrigger="None"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"
-            Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <cwuc:StaggeredPanel DesiredColumnWidth="200" />
+                    <cwuc:StaggeredPanel
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        DesiredColumnWidth="200" />
                 </ItemsPanelTemplate>
             </control:PullToRefreshListView.ItemsPanel>
             <control:PullToRefreshListView.ItemTemplate>
