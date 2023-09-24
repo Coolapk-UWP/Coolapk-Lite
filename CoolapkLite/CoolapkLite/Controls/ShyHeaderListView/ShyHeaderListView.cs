@@ -241,6 +241,7 @@ namespace CoolapkLite.Controls
                     IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
                     if (_scrollViewer != null)
                     {
+                        _scrollViewer.SizeChanged -= ScrollViewer_SizeChanged;
                         _scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
                     }
                 }
@@ -249,7 +250,9 @@ namespace CoolapkLite.Controls
                     IncrementalLoadingTrigger = IncrementalLoadingTrigger.None;
                     if (_scrollViewer != null)
                     {
+                        _scrollViewer.SizeChanged -= ScrollViewer_SizeChanged;
                         _scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+                        _scrollViewer.SizeChanged += ScrollViewer_SizeChanged;
                         _scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
                     }
                 }
@@ -266,23 +269,35 @@ namespace CoolapkLite.Controls
             UpdateVisualState((double)sender.GetValue(dp) >= _topHeight || _topHeight == 0);
         }
 
-        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (!(sender is ScrollViewer scrollViewer)) { return; }
+            LoadMoreItems(scrollViewer);
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            LoadMoreItems(scrollViewer);
+        }
+
+        public async void LoadMoreItems(ScrollViewer scrollViewer)
+        {
             if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
+            check:
             if (Items.Count > 0 && !source.HasMoreItems) { return; }
             if (_isLoading) { return; }
-
             if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= LoadingThreshold)
             {
                 try
                 {
                     _isLoading = true;
                     await source.LoadMoreItemsAsync(20);
+                    goto check;
                 }
                 catch (Exception ex)
                 {
-                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), e);
+                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), ex);
                 }
                 finally
                 {

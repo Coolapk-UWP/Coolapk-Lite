@@ -1,5 +1,10 @@
-﻿using Microsoft.Toolkit.Uwp.UI;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI;
 using System;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -54,6 +59,29 @@ namespace CoolapkLite.Helpers
                     element.Loaded += OnListViewLoaded;
                 }
             }
+            element.RegisterPropertyChangedCallback(ItemsControl.ItemsPanelProperty, OnItemsPanelChanged);
+        }
+
+        private static async void OnItemsPanelChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            ListViewBase element = (ListViewBase)sender;
+            if (element.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer
+                && scrollViewer?.FindDescendant<ItemsPresenter>() is ItemsPresenter itemsPresenter)
+            {
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                do
+                {
+                    await Task.Delay(100);
+                }
+                while (await itemsPresenter.Dispatcher.AwaitableRunAsync(() => itemsPresenter?.FindDescendant<Panel>() == null));
+                await itemsPresenter.Dispatcher.ResumeForegroundAsync();
+                UpdatePadding(element, GetPadding(element));
+            }
+            else
+            {
+                element.Loaded -= OnListViewLoaded;
+                element.Loaded += OnListViewLoaded;
+            }
         }
 
         private static void OnListViewLoaded(object sender, RoutedEventArgs e)
@@ -61,6 +89,7 @@ namespace CoolapkLite.Helpers
             ListViewBase element = (ListViewBase)sender;
             Thickness padding = GetPadding(element);
             UpdatePadding(element, padding);
+            element.Loaded -= OnListViewLoaded;
         }
 
         public static void UpdatePadding(this ListViewBase element, Thickness padding)
@@ -134,31 +163,44 @@ namespace CoolapkLite.Helpers
         {
             ListViewBase element = (ListViewBase)sender;
             ScrollViewer scrollViewer = element.FindDescendant<ScrollViewer>();
-            double loadingThreshold = 0.5;
 
+            scrollViewer.SizeChanged -= ScrollViewer_SizeChanged;
             scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
+            scrollViewer.SizeChanged += ScrollViewer_SizeChanged;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
 
-            async void ScrollViewer_ViewChanged(object _sender, ScrollViewerViewChangedEventArgs e)
+            void ScrollViewer_SizeChanged(object _sender, SizeChangedEventArgs e)
             {
-                if (!(element.ItemsSource is ISupportIncrementalLoading source)) { return; }
-                if (element.Items.Count > 0 && !source.HasMoreItems) { return; }
-                if (GetIsIncrementallyLoading(element)) { return; }
+                LoadMoreItems(element, scrollViewer);
+            }
 
-                if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= loadingThreshold)
+            void ScrollViewer_ViewChanged(object _sender, ScrollViewerViewChangedEventArgs e)
+            {
+                LoadMoreItems(element, scrollViewer);
+            }
+
+            async void LoadMoreItems(ListViewBase listViewBase, ScrollViewer _scrollViewer)
+            {
+                const double loadingThreshold = 0.5;
+                if (!(listViewBase.ItemsSource is ISupportIncrementalLoading source)) { return; }
+                check:
+                if (listViewBase.Items.Count > 0 && !source.HasMoreItems) { return; }
+                if (GetIsIncrementallyLoading(listViewBase)) { return; }
+                if (((_scrollViewer.ExtentHeight - _scrollViewer.VerticalOffset) / _scrollViewer.ViewportHeight) - 1.0 <= loadingThreshold)
                 {
                     try
                     {
-                        SetIsIncrementallyLoading(element, true);
+                        SetIsIncrementallyLoading(listViewBase, true);
                         await source.LoadMoreItemsAsync(20);
+                        goto check;
                     }
                     catch (Exception ex)
                     {
-                        SettingsHelper.LogManager.GetLogger(nameof(ListViewHelper)).Error(ex.ExceptionToMessage(), e);
+                        SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), ex);
                     }
                     finally
                     {
-                        SetIsIncrementallyLoading(element, false);
+                        SetIsIncrementallyLoading(listViewBase, false);
                     }
                 }
             }

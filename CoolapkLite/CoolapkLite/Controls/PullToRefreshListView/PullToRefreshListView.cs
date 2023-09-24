@@ -2,9 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -560,6 +562,7 @@ namespace CoolapkLite.Controls
                     IncrementalLoadingTrigger = IncrementalLoadingTrigger.Edge;
                     if (_scroller != null)
                     {
+                        _scroller.SizeChanged -= ScrollViewer_SizeChanged;
                         _scroller.ViewChanged -= ScrollViewer_ViewChanged;
                     }
                 }
@@ -568,7 +571,9 @@ namespace CoolapkLite.Controls
                     IncrementalLoadingTrigger = IncrementalLoadingTrigger.None;
                     if (_scroller != null)
                     {
+                        _scroller.SizeChanged -= ScrollViewer_SizeChanged;
                         _scroller.ViewChanged -= ScrollViewer_ViewChanged;
+                        _scroller.SizeChanged += ScrollViewer_SizeChanged;
                         _scroller.ViewChanged += ScrollViewer_ViewChanged;
                     }
                 }
@@ -580,23 +585,34 @@ namespace CoolapkLite.Controls
             UpdateIncrementalLoading();
         }
 
-        private async void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (!(sender is ScrollViewer scrollViewer)) { return; }
+            LoadMoreItems(scrollViewer);
+        }
+
+        private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (!(sender is ScrollViewer scrollViewer)) { return; }
+            LoadMoreItems(scrollViewer);
+        }
+
+        public async void LoadMoreItems(ScrollViewer scrollViewer)
+        {
             if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
             if (Items.Count > 0 && !source.HasMoreItems) { return; }
             if (_isLoading) { return; }
-
             if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= LoadingThreshold)
             {
                 try
                 {
                     _isLoading = true;
-                    await source.LoadMoreItemsAsync(20);
+                    int temp = Items.Count;
+                    LoadMoreItemsResult result = await source.LoadMoreItemsAsync(20);
                 }
                 catch (Exception ex)
                 {
-                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), e);
+                    SettingsHelper.LogManager.GetLogger(nameof(ShyHeaderListView)).Error(ex.ExceptionToMessage(), ex);
                 }
                 finally
                 {
