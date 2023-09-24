@@ -9,6 +9,13 @@ namespace CoolapkLite.Helpers
     {
         #region IsEnable
 
+        public static readonly DependencyProperty IsEnableProperty =
+            DependencyProperty.RegisterAttached(
+                "IsEnable",
+                typeof(bool),
+                typeof(WebViewHelper),
+                new PropertyMetadata(null, OnIsEnableChanged));
+
         public static bool GetIsEnable(WebView element)
         {
             return (bool)element.GetValue(IsEnableProperty);
@@ -18,13 +25,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(IsEnableProperty, value);
         }
-
-        public static readonly DependencyProperty IsEnableProperty =
-            DependencyProperty.RegisterAttached(
-                "IsEnable",
-                typeof(bool),
-                typeof(WebViewHelper),
-                new PropertyMetadata(null, OnIsEnableChanged));
 
         private static void OnIsEnableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -53,6 +53,13 @@ namespace CoolapkLite.Helpers
 
         #region Margin
 
+        public static readonly DependencyProperty MarginProperty =
+            DependencyProperty.RegisterAttached(
+                "Margin",
+                typeof(Thickness),
+                typeof(WebViewHelper),
+                new PropertyMetadata(null, OnMarginChanged));
+
         public static Thickness GetMargin(WebView element)
         {
             return (Thickness)element.GetValue(MarginProperty);
@@ -62,13 +69,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(MarginProperty, value);
         }
-
-        public static readonly DependencyProperty MarginProperty =
-            DependencyProperty.RegisterAttached(
-                "Margin",
-                typeof(Thickness),
-                typeof(WebViewHelper),
-                new PropertyMetadata(null, OnMarginChanged));
 
         private static void OnMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -97,6 +97,13 @@ namespace CoolapkLite.Helpers
 
         #region IsVerticalStretch
 
+        public static readonly DependencyProperty IsVerticalStretchProperty =
+            DependencyProperty.RegisterAttached(
+                "IsVerticalStretch",
+                typeof(bool),
+                typeof(WebViewHelper),
+                new PropertyMetadata(null, OnIsVerticalStretchChanged));
+
         public static bool GetIsVerticalStretch(WebView element)
         {
             return (bool)element.GetValue(IsVerticalStretchProperty);
@@ -106,13 +113,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(IsVerticalStretchProperty, value);
         }
-
-        public static readonly DependencyProperty IsVerticalStretchProperty =
-            DependencyProperty.RegisterAttached(
-                "IsVerticalStretch",
-                typeof(bool),
-                typeof(WebViewHelper),
-                new PropertyMetadata(null, OnIsVerticalStretchChanged));
 
         private static void OnIsVerticalStretchChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -176,6 +176,13 @@ namespace CoolapkLite.Helpers
 
         #region HTML
 
+        public static readonly DependencyProperty HTMLProperty =
+            DependencyProperty.RegisterAttached(
+                "HTML",
+                typeof(string),
+                typeof(WebViewHelper),
+                new PropertyMetadata(null, OnHTMLChanged));
+
         public static string GetHTML(WebView element)
         {
             return (string)element.GetValue(HTMLProperty);
@@ -185,13 +192,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(HTMLProperty, value);
         }
-
-        public static readonly DependencyProperty HTMLProperty =
-            DependencyProperty.RegisterAttached(
-                "HTML",
-                typeof(string),
-                typeof(WebViewHelper),
-                new PropertyMetadata(null, OnHTMLChanged));
 
         private static void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

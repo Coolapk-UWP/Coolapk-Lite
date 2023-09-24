@@ -94,27 +94,9 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            Thickness StackPanelMargin;
-            Thickness ScrollViewerMargin;
-            Thickness ScrollViewerPadding;
-
-            StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
-            ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
-            ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
-
-            StaggeredPanel StackPanel = ListView.FindDescendant<StaggeredPanel>();
-            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
-
-            if (StackPanel != null)
+            if (ListView.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer)
             {
-                StackPanel.Margin = StackPanelMargin;
-                StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-            }
-            if (ScrollViewer != null)
-            {
-                ScrollViewer.Margin = ScrollViewerMargin;
-                ScrollViewer.Padding = ScrollViewerPadding;
-                ScrollViewer.ViewChanged += ScrollViewer_ViewChanged;
+                scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
             }
         }
 

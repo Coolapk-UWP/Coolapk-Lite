@@ -5,6 +5,7 @@
     xmlns:common="using:CoolapkLite.Common"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=common:ExtensionManager}"
@@ -14,10 +15,10 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsSource="{x:Bind Provider.Extensions, Mode=OneWay}"
-            Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>

@@ -18,6 +18,7 @@
             <x:Double x:Key="TitleBarHeight">32</x:Double>
             <x:Double x:Key="PageTitleHeight">80</x:Double>
 
+            <Thickness x:Key="ListViewPadding">0,80,0,0</Thickness>
             <Thickness x:Key="StackPanelMargin">0,80,0,0</Thickness>
             <Thickness x:Key="ScrollViewerMargin">0,80,0,0</Thickness>
             <Thickness x:Key="ScrollViewerPadding">0,-80,0,0</Thickness>

@@ -7,6 +7,16 @@ namespace CoolapkLite.Helpers
         #region FocusVisualMargin
 
         /// <summary>
+        /// Identifies the FocusVisualMargin dependency property.
+        /// </summary>
+        public static readonly DependencyProperty FocusVisualMarginProperty =
+            DependencyProperty.RegisterAttached(
+                "FocusVisualMargin",
+                typeof(Thickness),
+                typeof(FocusVisualHelper),
+                new PropertyMetadata(null, OnFocusVisualMarginChanged));
+
+        /// <summary>
         /// Gets the outer margin of the focus visual for a FrameworkElement.
         /// </summary>
         /// <param name="element">The element from which to read the property value.</param>
@@ -28,16 +38,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(FocusVisualMarginProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the FocusVisualMargin dependency property.
-        /// </summary>
-        public static readonly DependencyProperty FocusVisualMarginProperty =
-            DependencyProperty.RegisterAttached(
-                "FocusVisualMargin",
-                typeof(Thickness),
-                typeof(FocusVisualHelper),
-                new PropertyMetadata(null, OnFocusVisualMarginChanged));
 
         private static void OnFocusVisualMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

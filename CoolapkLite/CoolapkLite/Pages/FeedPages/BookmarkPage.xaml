@@ -17,10 +17,10 @@
         <control:PullToRefreshListView
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsSource="{x:Bind Provider.Bookmarks, Mode=OneWay}"
-            Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>

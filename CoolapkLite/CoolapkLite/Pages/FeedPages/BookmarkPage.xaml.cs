@@ -114,25 +114,5 @@ namespace CoolapkLite.Pages.FeedPages
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
         private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
-
-        private void ListView_Loaded(object sender, RoutedEventArgs e)
-        {
-            Thickness StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
-            Thickness ScrollViewerMargin = (Thickness)Application.Current.Resources["ScrollViewerMargin"];
-            Thickness ScrollViewerPadding = (Thickness)Application.Current.Resources["ScrollViewerPadding"];
-
-            ItemsStackPanel StackPanel = ListView.FindDescendant<ItemsStackPanel>();
-            ScrollViewer ScrollViewer = ListView.FindDescendant<ScrollViewer>();
-
-            if (StackPanel != null)
-            {
-                StackPanel.Margin = StackPanelMargin;
-            }
-            if (ScrollViewer != null)
-            {
-                ScrollViewer.Margin = ScrollViewerMargin;
-                ScrollViewer.Padding = ScrollViewerPadding;
-            }
-        }
     }
 }

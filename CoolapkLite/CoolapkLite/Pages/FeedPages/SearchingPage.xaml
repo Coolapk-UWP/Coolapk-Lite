@@ -126,7 +126,6 @@
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{x:Bind Provider.SearchFeedItemSource, Mode=OneWay}"
-                    Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>
@@ -136,7 +135,6 @@
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{x:Bind Provider.SearchUserItemSource, Mode=OneWay}"
-                    Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>
@@ -146,7 +144,6 @@
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
                     ItemsSource="{x:Bind Provider.SearchTopicItemSource, Mode=OneWay}"
-                    Loaded="ListView_Loaded"
                     RefreshRequested="ListView_RefreshRequested"
                     ShowsScrollingPlaceholders="False" />
             </PivotItem>

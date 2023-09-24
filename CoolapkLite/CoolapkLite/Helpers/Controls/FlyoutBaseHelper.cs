@@ -9,6 +9,16 @@ namespace CoolapkLite.Helpers
         #region Icon
 
         /// <summary>
+        /// Identifies the Icon dependency property.
+        /// </summary>
+        public static readonly DependencyProperty IconProperty =
+            DependencyProperty.RegisterAttached(
+                "Icon",
+                typeof(IconElement),
+                typeof(FlyoutBaseHelper),
+                new PropertyMetadata(null, OnIconChanged));
+
+        /// <summary>
         /// Gets the graphic content of the menu flyout item.
         /// </summary>
         /// <param name="control">The element from which to read the property value.</param>
@@ -27,16 +37,6 @@ namespace CoolapkLite.Helpers
         {
             control.SetValue(IconProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the Icon dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IconProperty =
-            DependencyProperty.RegisterAttached(
-                "Icon",
-                typeof(IconElement),
-                typeof(FlyoutBaseHelper),
-                new PropertyMetadata(null, OnIconChanged));
 
         private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -68,6 +68,16 @@ namespace CoolapkLite.Helpers
         #region ShouldConstrainToRootBounds
 
         /// <summary>
+        /// Identifies the ShouldConstrainToRootBounds dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ShouldConstrainToRootBoundsProperty =
+            DependencyProperty.RegisterAttached(
+                "ShouldConstrainToRootBounds",
+                typeof(bool),
+                typeof(FlyoutBaseHelper),
+                new PropertyMetadata(true, OnShouldConstrainToRootBoundsChanged));
+
+        /// <summary>
         /// Gets a value that indicates whether the flyout should be shown within the bounds of the XAML root.
         /// </summary>
         /// <param name="control">The element from which to read the property value.</param>
@@ -86,16 +96,6 @@ namespace CoolapkLite.Helpers
         {
             control.SetValue(ShouldConstrainToRootBoundsProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the ShouldConstrainToRootBounds dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ShouldConstrainToRootBoundsProperty =
-            DependencyProperty.RegisterAttached(
-                "ShouldConstrainToRootBounds",
-                typeof(bool),
-                typeof(FlyoutBaseHelper),
-                new PropertyMetadata(true, OnShouldConstrainToRootBoundsChanged));
 
         private static void OnShouldConstrainToRootBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

@@ -12,6 +12,16 @@ namespace CoolapkLite.Helpers
         #region ContextFlyout
 
         /// <summary>
+        /// Identifies the ContextFlyout dependency property.
+        /// </summary>
+        public static readonly DependencyProperty ContextFlyoutProperty =
+            DependencyProperty.RegisterAttached(
+                "ContextFlyout",
+                typeof(FlyoutBase),
+                typeof(UIElementHelper),
+                new PropertyMetadata(null, OnContextFlyoutChanged));
+
+        /// <summary>
         /// Gets the flyout associated with this element.
         /// </summary>
         /// <param name="element">The flyout associated with this element.</param>
@@ -32,16 +42,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(ContextFlyoutProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the ContextFlyout dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ContextFlyoutProperty =
-            DependencyProperty.RegisterAttached(
-                "ContextFlyout",
-                typeof(FlyoutBase),
-                typeof(UIElementHelper),
-                new PropertyMetadata(null, OnContextFlyoutChanged));
 
         private static void OnContextFlyoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -112,6 +112,16 @@ namespace CoolapkLite.Helpers
         #region AllowFocusOnInteraction
 
         /// <summary>
+        /// Identifies the AllowFocusOnInteraction dependency property.
+        /// </summary>
+        public static readonly DependencyProperty AllowFocusOnInteractionProperty =
+            DependencyProperty.RegisterAttached(
+                "AllowFocusOnInteraction",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnAllowFocusOnInteractionChanged));
+
+        /// <summary>
         /// Gets a value that indicates whether the element automatically gets focus when the user interacts with it.
         /// </summary>
         /// <param name="element">The element from which the property value is read.</param>
@@ -133,16 +143,6 @@ namespace CoolapkLite.Helpers
             element.SetValue(AllowFocusOnInteractionProperty, value);
         }
 
-        /// <summary>
-        /// Identifies the AllowFocusOnInteraction dependency property.
-        /// </summary>
-        public static readonly DependencyProperty AllowFocusOnInteractionProperty =
-            DependencyProperty.RegisterAttached(
-                "AllowFocusOnInteraction",
-                typeof(bool),
-                typeof(UIElementHelper),
-                new PropertyMetadata(false, OnAllowFocusOnInteractionChanged));
-
         private static void OnAllowFocusOnInteractionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FrameworkElement element = (FrameworkElement)d;
@@ -155,6 +155,16 @@ namespace CoolapkLite.Helpers
         #endregion
 
         #region CanContentRenderOutsideBounds
+
+        /// <summary>
+        /// Identifies the CanContentRenderOutsideBounds dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CanContentRenderOutsideBoundsProperty =
+            DependencyProperty.RegisterAttached(
+                "CanContentRenderOutsideBounds",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnCanContentRenderOutsideBoundsChanged));
 
         /// <summary>
         /// Gets the value of the CanContentRenderOutsideBounds dependency property <see cref="ScrollViewer.CanContentRenderOutsideBounds"/> XAML attached property on a specified element.
@@ -177,16 +187,6 @@ namespace CoolapkLite.Helpers
         {
             element.SetValue(CanContentRenderOutsideBoundsProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the CanContentRenderOutsideBounds dependency property.
-        /// </summary>
-        public static readonly DependencyProperty CanContentRenderOutsideBoundsProperty =
-            DependencyProperty.RegisterAttached(
-                "CanContentRenderOutsideBounds",
-                typeof(bool),
-                typeof(UIElementHelper),
-                new PropertyMetadata(false, OnCanContentRenderOutsideBoundsChanged));
 
         private static void OnCanContentRenderOutsideBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

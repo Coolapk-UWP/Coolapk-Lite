@@ -5,6 +5,7 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feedpages="using:CoolapkLite.ViewModels.FeedPages"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
@@ -23,11 +24,11 @@
         <control:PullToRefreshListView
             x:Name="ListView"
             x:Uid="/MainPage/ListView"
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplate="{StaticResource ListDefaultTemplate}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"
-            Loaded="ListView_Loaded"
             RefreshRequested="ListView_RefreshRequested"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar

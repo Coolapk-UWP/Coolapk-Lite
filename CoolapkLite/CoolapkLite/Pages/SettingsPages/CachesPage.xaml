@@ -15,6 +15,7 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             IncrementalLoadingTrigger="None"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsSource="{x:Bind Provider, Mode=OneWay}"

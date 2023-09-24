@@ -109,12 +109,6 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void ListView_Loaded(object sender, RoutedEventArgs e)
-        {
-            ItemsStackPanel StackPanel = (sender as DependencyObject).FindDescendant<ItemsStackPanel>();
-            if (StackPanel != null) { StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch; }
-        }
-
         #region 搜索框
 
         private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
