@@ -1819,6 +1819,7 @@
                     HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
                     ItemTemplateSelector="{StaticResource CardTemplateSelector}"
+                    ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
                     Loaded="ListView_Loaded"
                     ShowsScrollingPlaceholders="False"
                     ShyHeaderItemSource="{x:Bind Provider.ItemSource, Mode=OneWay}">

@@ -346,10 +346,8 @@ namespace CoolapkLite.Controls
                     uiElement.RenderTransform = transform;
                 }
 
-                double starCenter = CalculateStarCenter(starIndex);
-
-                transform.ScaleX = starCenter;
-                transform.ScaleY = starCenter;
+                transform.ScaleX = 0.5;
+                transform.ScaleY = 0.5;
                 transform.CenterX = c_defaultRatingFontSizeForRendering * c_horizontalScaleAnimationCenterPoint;
                 transform.CenterY = c_defaultRatingFontSizeForRendering * c_verticalScaleAnimationCenterPoint;
             }
