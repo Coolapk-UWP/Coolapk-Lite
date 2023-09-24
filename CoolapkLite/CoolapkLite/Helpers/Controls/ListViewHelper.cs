@@ -169,6 +169,8 @@ namespace CoolapkLite.Helpers
             scrollViewer.SizeChanged += ScrollViewer_SizeChanged;
             scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
 
+            element.Loaded -= InstallIncrementalLoadingWorkaround;
+
             void ScrollViewer_SizeChanged(object _sender, SizeChangedEventArgs e)
             {
                 LoadMoreItems(element, scrollViewer);
