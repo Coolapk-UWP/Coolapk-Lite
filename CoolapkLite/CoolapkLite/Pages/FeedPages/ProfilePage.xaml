@@ -41,7 +41,7 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             ColumnSpacing="12"
-                            DesiredColumnWidth="410"
+                            DesiredColumnWidth="420"
                             RowSpacing="12" />
                     </ItemsPanelTemplate>
                 </common:ItemsPanelSelector.NonVirtualizingTemplate>

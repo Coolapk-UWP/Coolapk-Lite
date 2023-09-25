@@ -634,7 +634,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/picture/", StringComparison.OrdinalIgnoreCase))
             {
-                string id = link.Substring(10, "?");
+                string id = link.Substring(9, "?");
                 if (int.TryParse(id, out _))
                 {
                     return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));

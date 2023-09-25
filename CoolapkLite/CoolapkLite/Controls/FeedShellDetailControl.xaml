@@ -399,6 +399,12 @@
                             Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                             Text="评分" />
                     </Border>
+                    <local:RatingControl
+                        x:Name="RatingStarControl"
+                        Grid.Column="1"
+                        Margin="8,7,8,0"
+                        IsReadOnly="True"
+                        Value="{Binding RatingStar, Mode=OneWay}" />
                     <TextBlock
                         Grid.Column="2"
                         HorizontalAlignment="Left"

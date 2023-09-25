@@ -35,12 +35,13 @@ namespace CoolapkLite.Common
             }
             else if (source is TSource[] array)
             {
-                int _count = collection.Count();
+                int length = collection.Count();
                 int count = collection is List<TSource> _list
-                        ? _list.FindLastIndex((x) => x != null) + 1
-                        : collection is TSource[] _array
-                            ? Array.FindLastIndex(_array, (x) => x != null) + 1
-                            : _count;
+                    ? _list.FindLastIndex((x) => x != null) + 1
+                    : collection is TSource[] _array
+                        ? Array.FindLastIndex(_array, (x) => x != null) + 1
+                        : length;
+
                 if (count > 0)
                 {
                     int _size = Array.FindLastIndex(array, (x) => x != null) + 1;
@@ -49,7 +50,7 @@ namespace CoolapkLite.Common
                         throw new ArgumentOutOfRangeException(nameof(array));
                     }
 
-                    if (count == _count)
+                    if (count == length)
                     {
                         if (collection is ICollection<TSource> _collection)
                         {
@@ -261,14 +262,14 @@ namespace CoolapkLite.Common
                 int _size = array.Length;
 
                 // Find the first item which needs to be removed.
-                while (freeIndex < _size && !predicate(array[freeIndex])) freeIndex++;
-                if (freeIndex >= _size) return 0;
+                while (freeIndex < _size && !predicate(array[freeIndex])) { freeIndex++; }
+                if (freeIndex >= _size) { return 0; }
 
                 int current = freeIndex + 1;
                 while (current < _size)
                 {
                     // Find the first item which needs to be kept.
-                    while (current < _size && predicate(array[current])) current++;
+                    while (current < _size && predicate(array[current])) { current++; }
 
                     if (current < _size)
                     {

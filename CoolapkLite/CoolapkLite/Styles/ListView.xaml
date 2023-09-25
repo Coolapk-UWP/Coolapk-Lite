@@ -173,7 +173,7 @@
         <cwuc:StaggeredPanel
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            DesiredColumnWidth="410" />
+            DesiredColumnWidth="420" />
     </ItemsPanelTemplate>
 
     <ItemsPanelTemplate x:Key="DefaultItemsStackPanelTemplate">

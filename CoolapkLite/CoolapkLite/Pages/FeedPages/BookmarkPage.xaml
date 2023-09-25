@@ -19,6 +19,8 @@
             x:Uid="/MainPage/ListView"
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+            AllowDrop="True"
+            CanReorderItems="True"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsSource="{x:Bind Provider.Bookmarks, Mode=OneWay}"
             RefreshRequested="ListView_RefreshRequested"
