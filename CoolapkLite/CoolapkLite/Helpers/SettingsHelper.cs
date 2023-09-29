@@ -110,7 +110,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseAppWindow))
             {
-                LocalObject.Save(IsUseAppWindow, WindowHelper.IsAppWindowSupported);
+                LocalObject.Save(IsUseAppWindow, false);
             }
             if (!LocalObject.KeyExists(IsUseBlurBrush))
             {
@@ -130,7 +130,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsUseMultiWindow))
             {
-                LocalObject.Save(IsUseMultiWindow, WindowHelper.IsAppWindowSupported);
+                LocalObject.Save(IsUseMultiWindow, true);
             }
             if (!LocalObject.KeyExists(SelectedAppTheme))
             {

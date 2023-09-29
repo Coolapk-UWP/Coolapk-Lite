@@ -1,5 +1,6 @@
 ﻿using Windows.Foundation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls
 {
@@ -207,5 +208,6 @@ namespace CoolapkLite.Controls
 
         public event TypedEventHandler<TitleBar, object> BackRequested;
         public event TypedEventHandler<TitleBar, object> RefreshRequested;
+        public event TypedEventHandler<TitleBar, DoubleTappedRoutedEventArgs> DoubleTappedRequested;
     }
 }

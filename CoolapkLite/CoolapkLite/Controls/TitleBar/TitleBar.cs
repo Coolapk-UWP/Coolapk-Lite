@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Helpers;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -11,6 +13,7 @@ namespace CoolapkLite.Controls
     [ContentProperty(Name = nameof(CustomContent))]
     [TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
     [TemplatePart(Name = "TitleText", Type = typeof(TextBlock))]
+    [TemplatePart(Name = "TapArea", Type = typeof(Border))]
     [TemplatePart(Name = "CustomContentPresenter", Type = typeof(FrameworkElement))]
     [TemplatePart(Name = "DragRegion", Type = typeof(Grid))]
     [TemplatePart(Name = "BackButton", Type = typeof(Button))]
@@ -39,6 +42,12 @@ namespace CoolapkLite.Controls
             if (refreshButton != null)
             {
                 refreshButton.Click += OnRefreshButtonClick;
+            }
+
+            Border tapArea = (Border)GetTemplateChild("TapArea");
+            if (tapArea != null)
+            {
+                tapArea.DoubleTapped += OnDoubleTapped;
             }
 
             UpdateHeight();
@@ -81,12 +90,17 @@ namespace CoolapkLite.Controls
 
         public void OnBackButtonClick(object sender, RoutedEventArgs args)
         {
-            BackRequested?.Invoke(this, null);
+            BackRequested?.Invoke(this, args);
         }
 
         public void OnRefreshButtonClick(object sender, RoutedEventArgs args)
         {
-            RefreshRequested?.Invoke(this, null);
+            RefreshRequested?.Invoke(this, args);
+        }
+
+        private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
+        {
+            DoubleTappedRequested?.Invoke(this, args);
         }
 
         public void OnIconSourcePropertyChanged(DependencyPropertyChangedEventArgs args)

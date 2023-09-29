@@ -60,8 +60,21 @@
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Bottom"
                         Background="{ThemeResource HamburgerMenuDefaultPaneBackground}">
-                        <StackPanel HorizontalAlignment="Left" />
-                        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Border
+                            x:Name="TapArea"
+                            DoubleTapped="TapArea_DoubleTapped"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{ThemeResource SystemControlTransparentBrush}" />
+                        <StackPanel
+                            x:Name="BottonArea"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal">
                             <Button
                                 x:Name="ReplyButton"
                                 x:Uid="/Feed/ReplyButton"
@@ -139,6 +152,7 @@
                     </Grid>
                     <controls:TitleBar
                         x:Name="TitleBar"
+                        DoubleTappedRequested="TitleBar_DoubleTappedRequested"
                         Title="{x:Bind Provider.Title, Mode=OneWay}"
                         IsRefreshEnabled="True"
                         RefreshRequested="TitleBar_RefreshRequested" />

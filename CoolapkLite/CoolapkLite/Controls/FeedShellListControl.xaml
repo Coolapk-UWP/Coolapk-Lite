@@ -26,6 +26,7 @@
     <local:ShyHeaderPivotListView
         x:Name="ShyHeaderPivotListView"
         Padding="{x:Bind Padding, Mode=TwoWay}"
+        x:FieldModifier="public"
         HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
         HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"
         ItemContainerStyle="{StaticResource DefaultCardItemStyle}"

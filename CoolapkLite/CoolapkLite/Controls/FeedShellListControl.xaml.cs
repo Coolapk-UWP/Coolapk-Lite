@@ -13,12 +13,29 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class FeedShellListControl : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedShellListControl"/> class.
+        /// </summary>
+        public FeedShellListControl() => InitializeComponent();
+
+        #region Header
+
         public static readonly DependencyProperty HeaderProperty =
             DependencyProperty.Register(
                 nameof(Header),
                 typeof(object),
                 typeof(FeedShellListControl),
                 null);
+
+        public object Header
+        {
+            get => GetValue(HeaderProperty);
+            set => SetValue(HeaderProperty, value);
+        }
+
+        #endregion
+
+        #region ItemSource
 
         public static readonly DependencyProperty ItemSourceProperty =
             DependencyProperty.Register(
@@ -27,12 +44,32 @@ namespace CoolapkLite.Controls
                 typeof(FeedShellListControl),
                 null);
 
+        public IEnumerable<ShyHeaderItem> ItemSource
+        {
+            get => (IEnumerable<ShyHeaderItem>)GetValue(ItemSourceProperty);
+            set => SetValue(ItemSourceProperty, value);
+        }
+
+        #endregion
+
+        #region HeaderMargin
+
         public static readonly DependencyProperty HeaderMarginProperty =
             DependencyProperty.Register(
                 nameof(HeaderMargin),
                 typeof(double),
                 typeof(FeedShellListControl),
                 null);
+
+        public double HeaderMargin
+        {
+            get => (double)GetValue(HeaderMarginProperty);
+            set => SetValue(HeaderMarginProperty, value);
+        }
+
+        #endregion
+
+        #region HeaderHeight
 
         public static readonly DependencyProperty HeaderHeightProperty =
             DependencyProperty.Register(
@@ -41,6 +78,16 @@ namespace CoolapkLite.Controls
                 typeof(FeedShellListControl),
                 null);
 
+        public double HeaderHeight
+        {
+            get => (double)GetValue(HeaderHeightProperty);
+            set => SetValue(HeaderHeightProperty, value);
+        }
+
+        #endregion
+
+        #region RefreshButtonVisibility
+
         public static readonly DependencyProperty RefreshButtonVisibilityProperty =
             DependencyProperty.Register(
                 nameof(RefreshButtonVisibility),
@@ -48,37 +95,13 @@ namespace CoolapkLite.Controls
                 typeof(FeedShellListControl),
                 new PropertyMetadata(Visibility.Visible));
 
-        public object Header
-        {
-            get => GetValue(HeaderProperty);
-            set => SetValue(HeaderProperty, value);
-        }
-
-        public double HeaderMargin
-        {
-            get => (double)GetValue(HeaderMarginProperty);
-            set => SetValue(HeaderMarginProperty, value);
-        }
-
-        public double HeaderHeight
-        {
-            get => (double)GetValue(HeaderHeightProperty);
-            set => SetValue(HeaderHeightProperty, value);
-        }
-
-        public IEnumerable<ShyHeaderItem> ItemSource
-        {
-            get => (IEnumerable<ShyHeaderItem>)GetValue(ItemSourceProperty);
-            set => SetValue(ItemSourceProperty, value);
-        }
-
         public Visibility RefreshButtonVisibility
         {
             get => (Visibility)GetValue(RefreshButtonVisibilityProperty);
             set => SetValue(RefreshButtonVisibilityProperty, value);
         }
 
-        public FeedShellListControl() => InitializeComponent();
+        #endregion
 
         private void ShyHeaderPivotListView_ShyHeaderSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

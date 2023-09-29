@@ -80,6 +80,13 @@
                                     TextTrimming="CharacterEllipsis"
                                     TextWrapping="NoWrap" />
 
+                                <Border
+                                    x:Name="TapArea"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{ThemeResource SystemControlTransparentBrush}" />
+
                                 <Grid
                                     x:Name="ContentGrid"
                                     Grid.Column="2"

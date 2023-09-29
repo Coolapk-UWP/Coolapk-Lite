@@ -200,6 +200,10 @@ namespace CoolapkLite.Controls
             base.OnApplyTemplate();
         }
 
+        public bool BackToTop() => _scrollViewer?.ChangeView(0, 0, null) == true;
+
+        public bool BringToLists() => _scrollViewer?.ChangeView(0, _topHeight, null) == true;
+
         private void UpdateVisualState(bool isThreshold)
         {
             _ = isThreshold ? VisualStateManager.GoToState(this, "OnThreshold", true)
@@ -281,7 +285,7 @@ namespace CoolapkLite.Controls
             LoadMoreItems(scrollViewer);
         }
 
-        public async void LoadMoreItems(ScrollViewer scrollViewer)
+        private async void LoadMoreItems(ScrollViewer scrollViewer)
         {
             if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
             check:

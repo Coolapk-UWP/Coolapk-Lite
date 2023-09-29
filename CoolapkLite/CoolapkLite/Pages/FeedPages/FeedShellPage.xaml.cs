@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using TwoPaneView = CoolapkLite.Controls.TwoPaneView;
@@ -148,6 +149,23 @@ namespace CoolapkLite.Pages.FeedPages
                     DisabledCopy();
                     _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
                     break;
+            }
+        }
+
+        private void TapArea_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            if (e?.Handled == true) { return; }
+            if (e != null) { e.Handled = ListControl.ShyHeaderPivotListView.BringToLists(); }
+        }
+
+        private void TitleBar_DoubleTappedRequested(TitleBar sender, DoubleTappedRoutedEventArgs args)
+        {
+            if (args?.Handled == true) { return; }
+            if (args != null)
+            {
+                args.Handled = TwoPaneView.Mode == TwoPaneViewMode.SinglePane
+                    ? ListControl.ShyHeaderPivotListView.BackToTop()
+                    : DetailScrollViewer.ChangeView(0, 0, null);
             }
         }
 
