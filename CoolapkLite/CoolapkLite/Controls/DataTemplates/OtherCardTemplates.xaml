@@ -7,15 +7,16 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoolapkLite.Models"
+    xmlns:users="using:CoolapkLite.Models.Users"
     mc:Ignorable="d">
     <DataTemplate x:Key="Empty" />
 
-    <DataTemplate x:Key="UserTemplate" x:DataType="models:IUserModel">
+    <DataTemplate x:Key="UserTemplate" x:DataType="users:UserModel">
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind (models:ISourceUserModel.Url)}"
+            Tag="{x:Bind Url}"
             Tapped="FrameworkElement_Tapped">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
@@ -23,7 +24,7 @@
                         x:Name="NewWindow"
                         x:Uid="/Feed/NewWindow"
                         Click="Button_Click"
-                        Tag="{x:Bind (models:ISourceUserModel.Url)}">
+                        Tag="{x:Bind Url}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -45,10 +46,9 @@
                 Height="36"
                 Margin="0,0,8,0"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                d:DataContext="{d:DesignInstance Type=models:ISourceUserModel}">
+                VerticalAlignment="Center">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                 </Ellipse.Fill>
             </Ellipse>
             <TextBlock
@@ -57,7 +57,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 MaxLines="1"
-                Text="{x:Bind (models:ISourceUserModel.UserName)}"
+                Text="{x:Bind UserName}"
                 TextTrimming="CharacterEllipsis" />
             <TextBlock
                 Grid.Row="1"
@@ -86,9 +86,10 @@
     <DataTemplate x:Key="ListDefaultTemplate" x:DataType="models:IHasDescription">
         <Grid
             Padding="0,8"
+            d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind (models:IHasTitle.Url)}"
+            Tag="{Binding Url}"
             Tapped="FrameworkElement_Tapped">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
@@ -96,7 +97,7 @@
                         x:Name="NewWindow"
                         x:Uid="/Feed/NewWindow"
                         Click="Button_Click"
-                        Tag="{x:Bind (models:IHasTitle.Url)}">
+                        Tag="{Binding Url}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -125,9 +126,9 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 MaxLines="1"
-                Text="{x:Bind (models:IHasTitle.Title)}"
+                Text="{Binding Title}"
                 TextTrimming="CharacterEllipsis"
-                Visibility="{x:Bind (models:IHasTitle.Title), Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
             <ctrl:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
@@ -142,9 +143,10 @@
     <DataTemplate x:Key="SubtitleListDefaultTemplate" x:DataType="models:IHasSubtitle">
         <Grid
             Padding="0,8"
+            d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind (models:IHasTitle.Url)}"
+            Tag="{Binding Url}"
             Tapped="FrameworkElement_Tapped">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
@@ -152,7 +154,7 @@
                         x:Name="NewWindow"
                         x:Uid="/Feed/NewWindow"
                         Click="Button_Click"
-                        Tag="{x:Bind (models:IHasTitle.Url)}">
+                        Tag="{Binding Url}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -184,7 +186,7 @@
                 Grid.Column="1"
                 VerticalAlignment="Center"
                 MaxLines="1"
-                Text="{x:Bind (models:IHasTitle.Title)}"
+                Text="{Binding Title}"
                 TextTrimming="CharacterEllipsis" />
             <TextBlock
                 Grid.Row="1"
@@ -197,12 +199,13 @@
             <ctrl:TextBlockEx
                 Grid.Row="2"
                 Grid.Column="1"
+                d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
                 VerticalAlignment="Center"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
-                Text="{x:Bind (models:IHasDescription.Description)}"
+                Text="{Binding Description}"
                 TextTrimming="CharacterEllipsis"
-                Visibility="{x:Bind (models:IHasDescription.Description), Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>
