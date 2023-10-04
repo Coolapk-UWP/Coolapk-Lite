@@ -5,6 +5,7 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     mc:Ignorable="d">
@@ -21,14 +22,14 @@
 
     <!--  一级卡片  -->
 
-    <DataTemplate x:Key="TextLinkListCardTemplate">
+    <DataTemplate x:Key="TextLinkListCardTemplate" x:DataType="models:IndexPageHasEntitiesModel">
         <controls:StackPanelEx Spacing="12">
             <Grid
                 x:Name="TitleGrid"
                 HorizontalAlignment="Stretch"
                 Background="{ThemeResource SystemControlTransparentBrush}"
-                Tag="{Binding}"
-                Visibility="{Binding ShowTitle, Converter={StaticResource BoolToVisibilityConverter}}">
+                Tag="{x:Bind}"
+                Visibility="{x:Bind ShowTitle, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -39,9 +40,9 @@
                     VerticalAlignment="Center"
                     FontSize="14"
                     FontWeight="SemiBold"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
                 <Button
                     x:Uid="/ProfilePage/ReadMoreButton"
                     Grid.Column="1"
@@ -51,32 +52,32 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     Click="Button_Click"
                     FontSize="12"
-                    Tag="{Binding}"
+                    Tag="{x:Bind}"
                     Tapped="Button_Tapped"
-                    Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="{Binding Entities, Converter={StaticResource CollectionVisibilityConverter}}">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="{x:Bind Entities, Converter={StaticResource CollectionVisibilityConverter}}">
                 <ItemsControl
                     HorizontalAlignment="Stretch"
                     ItemTemplateSelector="{StaticResource ProfileItemTemplateSelector}"
-                    ItemsSource="{Binding Entities}" />
+                    ItemsSource="{x:Bind Entities}" />
             </Border>
             <TextBlock
                 Margin="12,0"
                 VerticalAlignment="Center"
                 FontSize="14"
-                Text="{Binding Description}"
-                Visibility="{Binding Description, Converter={StaticResource BoolToVisibilityConverter}}" />
+                Text="{x:Bind Description}"
+                Visibility="{x:Bind Description, Converter={StaticResource BoolToVisibilityConverter}}" />
         </controls:StackPanelEx>
     </DataTemplate>
 
-    <DataTemplate x:Key="ImageTextScrollCardTemplate">
+    <DataTemplate x:Key="ImageTextScrollCardTemplate" x:DataType="models:IndexPageHasEntitiesModel">
         <controls:StackPanelEx Spacing="12">
             <Grid
                 x:Name="TitleGrid"
                 HorizontalAlignment="Stretch"
                 Background="{ThemeResource SystemControlTransparentBrush}"
-                Tag="{Binding}">
+                Tag="{x:Bind}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -87,9 +88,9 @@
                     VerticalAlignment="Center"
                     FontSize="14"
                     FontWeight="SemiBold"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
                 <Button
                     x:Uid="/ProfilePage/ReadMoreButton"
                     Grid.Column="1"
@@ -99,15 +100,15 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     Click="Button_Click"
                     FontSize="12"
-                    Tag="{Binding}"
+                    Tag="{x:Bind}"
                     Tapped="Button_Tapped"
-                    Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <ListView
                 ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                 ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                 ItemTemplateSelector="{StaticResource ProfileItemTemplateSelector}"
-                ItemsSource="{Binding Entities}"
+                ItemsSource="{x:Bind Entities}"
                 ShowsScrollingPlaceholders="False"
                 Style="{StaticResource VerticalListViewStyle}">
                 <ListView.ItemsPanel>
@@ -123,13 +124,13 @@
         </controls:StackPanelEx>
     </DataTemplate>
 
-    <DataTemplate x:Key="TitleCardTemplate">
+    <DataTemplate x:Key="TitleCardTemplate" x:DataType="models:IndexPageOperationCardModel">
         <Grid
             x:Name="TitleGrid"
             HorizontalAlignment="Stretch"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            Tag="{Binding}"
-            Visibility="{Binding ShowTitle, Converter={StaticResource BoolToVisibilityConverter}}">
+            Tag="{x:Bind}"
+            Visibility="{x:Bind ShowTitle, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -140,9 +141,9 @@
                 VerticalAlignment="Center"
                 FontSize="14"
                 FontWeight="SemiBold"
-                Text="{Binding Title}"
+                Text="{x:Bind Title}"
                 TextTrimming="CharacterEllipsis"
-                Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
             <Button
                 x:Uid="/ProfilePage/ReadMoreButton"
                 Grid.Column="1"
@@ -152,22 +153,22 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 Click="Button_Click"
                 FontSize="12"
-                Tag="{Binding}"
+                Tag="{x:Bind}"
                 Tapped="Button_Tapped"
-                Visibility="{Binding Url, Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{x:Bind Url, Converter={StaticResource StringVisibilityConverter}}" />
         </Grid>
     </DataTemplate>
 
     <!--  二级卡片  -->
 
-    <DataTemplate x:Key="HistoryTemplate">
+    <DataTemplate x:Key="HistoryTemplate" x:DataType="models:IndexPageModel">
         <Button
             Padding="0,8"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -185,36 +186,36 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                     </Border.Background>
                 </Border>
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
                     MaxLines="1"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
                 <controls:TextBlockEx
                     Grid.Row="1"
                     Grid.Column="1"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     MaxLines="10"
-                    Text="{Binding Description}"
+                    Text="{x:Bind Description}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Button>
     </DataTemplate>
 
-    <DataTemplate x:Key="CollectionTemplate">
+    <DataTemplate x:Key="CollectionTemplate" x:DataType="models:CollectionModel">
         <Button
             Padding="0,8"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -233,7 +234,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                     </Border.Background>
                 </Border>
                 <TextBlock
@@ -241,38 +242,38 @@
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     MaxLines="1"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     MaxLines="1"
-                    Text="{Binding SubTitle}"
+                    Text="{x:Bind SubTitle}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
                 <controls:TextBlockEx
                     Grid.Row="2"
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     MaxLines="10"
-                    Text="{Binding Description}"
+                    Text="{x:Bind Description}"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Button>
     </DataTemplate>
 
-    <DataTemplate x:Key="IconLinkTemplate">
+    <DataTemplate x:Key="IconLinkTemplate" x:DataType="models:IndexPageModel">
         <Button
             Width="86"
             Padding="4"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <StackPanel>
                 <Border
@@ -280,12 +281,12 @@
                     Height="36"
                     Margin="4">
                     <Border.Background>
-                        <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                     </Border.Background>
                 </Border>
                 <TextBlock
                     HorizontalAlignment="Stretch"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextAlignment="Center"
                     TextTrimming="CharacterEllipsis" />
                 <TextBlock
@@ -293,22 +294,22 @@
                     HorizontalAlignment="Stretch"
                     FontSize="12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding SubTitle}"
+                    Text="{x:Bind SubTitle}"
                     TextAlignment="Center"
                     TextTrimming="CharacterEllipsis"
-                    Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
             </StackPanel>
         </Button>
     </DataTemplate>
 
-    <DataTemplate x:Key="TextLinkTemplate">
+    <DataTemplate x:Key="TextLinkTemplate" x:DataType="models:IndexPageModel">
         <Button
             Padding="8"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             Click="Button_Click"
             Style="{StaticResource TransparentButtonStyle}"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -320,12 +321,12 @@
                     Width="20"
                     Height="20"
                     VerticalAlignment="Center"
-                    Source="{Binding Pic.Pic, Mode=OneWay}" />
+                    Source="{x:Bind Pic.Pic, Mode=OneWay}" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,2"
                     VerticalAlignment="Center"
-                    Text="{Binding Title}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis" />
             </Grid>
         </Button>

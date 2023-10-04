@@ -50,7 +50,7 @@
                             <controls:FeedShellDetailControl
                                 x:Name="DetailControl"
                                 Padding="{StaticResource StackPanelMargin}"
-                                DataContext="{x:Bind Provider.FeedDetail, Mode=OneWay}" />
+                                FeedDetail="{x:Bind Provider.FeedDetail, Mode=OneWay}" />
                         </Grid>
                     </ScrollViewer>
                     <Grid
@@ -66,10 +66,10 @@
                         </Grid.ColumnDefinitions>
                         <Border
                             x:Name="TapArea"
-                            DoubleTapped="TapArea_DoubleTapped"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Background="{ThemeResource SystemControlTransparentBrush}" />
+                            Background="{ThemeResource SystemControlTransparentBrush}"
+                            DoubleTapped="TapArea_DoubleTapped" />
                         <StackPanel
                             x:Name="BottonArea"
                             HorizontalAlignment="Right"
@@ -152,8 +152,8 @@
                     </Grid>
                     <controls:TitleBar
                         x:Name="TitleBar"
-                        DoubleTappedRequested="TitleBar_DoubleTappedRequested"
                         Title="{x:Bind Provider.Title, Mode=OneWay}"
+                        DoubleTappedRequested="TitleBar_DoubleTappedRequested"
                         IsRefreshEnabled="True"
                         RefreshRequested="TitleBar_RefreshRequested" />
                 </Grid>

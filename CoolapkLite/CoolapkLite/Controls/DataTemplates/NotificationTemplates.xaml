@@ -5,18 +5,19 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="using:CoolapkLite.Models.Pages"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     mc:Ignorable="d">
     <ResourceDictionary.MergedDictionaries>
         <templates:FeedsTemplates />
     </ResourceDictionary.MergedDictionaries>
 
-    <DataTemplate x:Key="SimpleNotificationCardTemplate">
+    <DataTemplate x:Key="SimpleNotificationCardTemplate" x:DataType="pages:SimpleNotificationModel">
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
@@ -34,10 +35,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyDown="FrameworkElement_KeyDown"
-                Tag="{Binding UserUrl}"
+                Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
             <TextBlock
@@ -46,20 +47,20 @@
                 HorizontalAlignment="Left"
                 MaxLines="1"
                 TextTrimming="CharacterEllipsis">
-                <Run Text="{Binding UserName}" />
-                <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Dateline}" />
+                <Run Text="{x:Bind UserName}" />
+                <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline}" />
             </TextBlock>
             <control:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="{Binding Note}" />
+                Text="{x:Bind Note}" />
             <control:InfoBadge
                 Grid.RowSpan="2"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
-                Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}">
+                Visibility="{x:Bind IsNew, Converter={StaticResource BoolToVisibilityConverter}}">
                 <control:InfoBadge.IconSource>
                     <TextBlock x:Uid="/NotificationsPage/New" />
                 </control:InfoBadge.IconSource>
@@ -67,12 +68,12 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="AtCommentMeCardTemplate">
+    <DataTemplate x:Key="AtCommentMeCardTemplate" x:DataType="pages:AtCommentMeNotificationModel">
         <Grid
             Padding="4"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="FrameworkElement_Tapped">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -90,7 +91,7 @@
                     VerticalAlignment="Center"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
-                    Tag="{Binding UserUrl}"
+                    Tag="{x:Bind UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse
@@ -98,47 +99,47 @@
                             Height="20"
                             VerticalAlignment="Center">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <TextBlock
                             Margin="4,0,0,0"
                             VerticalAlignment="Center"
-                            Text="{Binding UserName}" />
+                            Text="{x:Bind UserName}" />
                     </StackPanel>
                 </Button>
                 <TextBlock
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding Dateline}" />
+                    Text="{x:Bind Dateline}" />
                 <control:InfoBadge
                     Margin="6,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    Visibility="{x:Bind IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
             <StackPanel
                 Grid.Row="1"
                 Padding="6,0,6,6"
                 Background="{ThemeResource SystemControlTransparentBrush}"
                 KeyDown="FrameworkElement_KeyDown"
-                Tag="{Binding FeedUrl}"
+                Tag="{x:Bind FeedUrl}"
                 Tapped="FrameworkElement_Tapped">
-                <control:TextBlockEx HorizontalAlignment="Left" Text="{Binding Message}" />
+                <control:TextBlockEx HorizontalAlignment="Left" Text="{x:Bind Message}" />
                 <control:TextBlockEx
                     HorizontalAlignment="Left"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding FeedMessage}" />
+                    Text="{x:Bind FeedMessage}" />
             </StackPanel>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="LikeNotificationCardTemplate">
+    <DataTemplate x:Key="LikeNotificationCardTemplate" x:DataType="pages:LikeNotificationModel">
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            Tag="{Binding Url}">
+            Tag="{x:Bind Url}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -152,7 +153,7 @@
                     VerticalAlignment="Center"
                     Click="Button_Click"
                     Style="{StaticResource TransparentButtonStyle}"
-                    Tag="{Binding UserUrl}"
+                    Tag="{x:Bind UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
                         <Ellipse
@@ -160,26 +161,26 @@
                             Height="20"
                             VerticalAlignment="Center">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
                         </Ellipse>
                         <TextBlock
                             Margin="4,0,0,0"
                             VerticalAlignment="Center"
-                            Text="{Binding UserName}" />
+                            Text="{x:Bind UserName}" />
                     </StackPanel>
                 </Button>
                 <TextBlock
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    IsTextSelectionEnabled="{Binding FeedDetail.IsCopyEnabled, Mode=OneWay}"
-                    Text="{Binding Dateline}" />
+                    IsTextSelectionEnabled="{x:Bind FeedDetail.IsCopyEnabled, Mode=OneWay}"
+                    Text="{x:Bind Dateline}" />
                 <control:InfoBadge
                     Margin="6,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    Visibility="{x:Bind IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
             </StackPanel>
             <control:StackPanelEx Grid.Row="1" Spacing="4">
                 <TextBlock
@@ -187,24 +188,24 @@
                     HorizontalAlignment="Left"
                     FontSize="16"
                     FontWeight="SemiLight"
-                    IsTextSelectionEnabled="{Binding FeedDetail.IsCopyEnabled, Mode=OneWay}"
-                    Text="{Binding Title}" />
+                    IsTextSelectionEnabled="{x:Bind FeedDetail.IsCopyEnabled, Mode=OneWay}"
+                    Text="{x:Bind Title}" />
                 <Border
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1">
-                    <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding FeedDetail}" />
+                    <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{x:Bind FeedDetail}" />
                 </Border>
             </control:StackPanelEx>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="MessageNotificationCardTemplate">
+    <DataTemplate x:Key="MessageNotificationCardTemplate" x:DataType="pages:MessageNotificationModel">
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding}"
+            Tag="{x:Bind}"
             Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
@@ -222,10 +223,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyDown="FrameworkElement_KeyDown"
-                Tag="{Binding UserUrl}"
+                Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
             <Grid
@@ -241,8 +242,8 @@
                     HorizontalAlignment="Left"
                     MaxLines="1"
                     TextTrimming="CharacterEllipsis">
-                    <Run Text="{Binding UserName}" />
-                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding Dateline}" />
+                    <Run Text="{x:Bind UserName}" />
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline}" />
                 </TextBlock>
                 <Border
                     Grid.Column="1"
@@ -252,7 +253,7 @@
                     BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="{ThemeResource ControlCornerRadius}"
-                    Visibility="{Binding IsTop, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind IsTop, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock
                         x:Uid="/Feed/StickUp"
                         Margin="1"
@@ -266,13 +267,13 @@
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="{Binding FeedMessage}" />
+                Text="{x:Bind FeedMessage}" />
             <control:InfoBadge
                 Grid.RowSpan="2"
                 Grid.Column="2"
                 HorizontalAlignment="Right"
-                Visibility="{Binding UnreadNum, Converter={StaticResource DoubleToVisibilityConverter}}"
-                Value="{Binding UnreadNum}" />
+                Visibility="{x:Bind UnreadNum, Converter={StaticResource DoubleToVisibilityConverter}}"
+                Value="{x:Bind UnreadNum}" />
         </Grid>
     </DataTemplate>
 

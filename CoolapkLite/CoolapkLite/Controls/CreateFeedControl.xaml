@@ -7,6 +7,7 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     Padding="10"
     Loaded="Picker_Loaded"
     Unloaded="Picker_Unloaded"
@@ -147,7 +148,7 @@
                                         SelectionChanged="ListView_SelectionChanged"
                                         Tag="UserList">
                                         <ListView.ItemTemplate>
-                                            <DataTemplate>
+                                            <DataTemplate x:DataType="models:ISourceUserModel">
                                                 <Grid Padding="0,4">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
@@ -155,14 +156,14 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Ellipse Width="24" Height="24">
                                                         <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="10,0,0,2"
                                                         VerticalAlignment="Center"
-                                                        Text="{Binding UserName}" />
+                                                        Text="{x:Bind UserName}" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -198,13 +199,16 @@
                                         SelectionChanged="ListView_SelectionChanged"
                                         Tag="TopicList">
                                         <ListView.ItemTemplate>
-                                            <DataTemplate>
+                                            <DataTemplate x:DataType="models:IHasTitle">
                                                 <Grid Padding="0,4">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <Border Width="24" Height="24">
+                                                    <Border
+                                                        Width="24"
+                                                        Height="24"
+                                                        d:DataContext="{d:DesignInstance Type=models:IHasDescription}">
                                                         <Border.Background>
                                                             <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                                         </Border.Background>
@@ -213,7 +217,7 @@
                                                         Grid.Column="1"
                                                         Margin="10,0,0,2"
                                                         VerticalAlignment="Center"
-                                                        Text="{Binding Title}" />
+                                                        Text="{x:Bind Title}" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>

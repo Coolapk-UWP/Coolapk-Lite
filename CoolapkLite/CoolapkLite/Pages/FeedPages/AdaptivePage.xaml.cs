@@ -58,9 +58,6 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 await Refresh(true);
             }
-
-            Provider.IsShowTitle = this.FindAscendant<Page>() is MainPage;
-            ListViewHelper.SetPadding(ListView, Provider.IsShowTitle ? (Thickness)Application.Current.Resources["StackPanelMargin"] : default);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

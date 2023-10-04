@@ -30,7 +30,7 @@ namespace CoolapkLite.Controls.DataTemplates
             {
                 case FeedModel _:
                     return Feed;
-                case UserModel _:
+                case IUserModel _:
                     return User;
                 case FeedReplyModel _:
                     return FeedReply;

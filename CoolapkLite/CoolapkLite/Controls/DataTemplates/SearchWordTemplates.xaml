@@ -5,25 +5,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:CoolapkLite.Controls.DataTemplates"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     mc:Ignorable="d">
     <local:SearchTemplateSelector
         x:Key="SearchWordSelector"
         App="{StaticResource AppsTemplate}"
         SearchWord="{StaticResource SearchWordTemplate}" />
 
-    <DataTemplate x:Key="SearchWordTemplate">
+    <DataTemplate x:Key="SearchWordTemplate" x:DataType="models:SearchWord">
         <Grid HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="10" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{Binding Glyph}" />
-            <TextBlock Grid.Column="2" Text="{Binding Title}" />
+            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Glyph}" />
+            <TextBlock Grid.Column="2" Text="{x:Bind Title}" />
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="AppsTemplate">
+    <DataTemplate x:Key="AppsTemplate" x:DataType="models:AppModel">
         <Grid Padding="0,8" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -42,7 +43,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
             <TextBlock
@@ -51,7 +52,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 MaxLines="1"
-                Text="{Binding Title}"
+                Text="{x:Bind Title}"
                 TextTrimming="CharacterEllipsis" />
             <StackPanel
                 Grid.Row="1"
@@ -62,7 +63,7 @@
                 <TextBlock
                     HorizontalAlignment="Left"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding FollowNum}" />
+                    Text="{x:Bind FollowNum}" />
                 <TextBlock
                     x:Uid="/FeedListPage/FollowNum"
                     Margin="0,0,5,0"
@@ -71,7 +72,7 @@
                 <TextBlock
                     HorizontalAlignment="Left"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding DownloadNum}" />
+                    Text="{x:Bind DownloadNum}" />
                 <TextBlock
                     x:Uid="/FeedListPage/DownloadNum"
                     Margin="0,0,5,0"
@@ -80,7 +81,7 @@
                 <TextBlock
                     HorizontalAlignment="Left"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{Binding LastUpdate}" />
+                    Text="{x:Bind LastUpdate}" />
             </StackPanel>
             <TextBlock
                 Grid.Row="2"
@@ -88,7 +89,7 @@
                 HorizontalAlignment="Left"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="2"
-                Text="{Binding Description}"
+                Text="{x:Bind Description}"
                 TextTrimming="CharacterEllipsis"
                 TextWrapping="Wrap" />
         </Grid>

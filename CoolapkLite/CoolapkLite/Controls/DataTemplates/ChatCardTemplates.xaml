@@ -6,9 +6,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:message="using:CoolapkLite.Models.Message"
     mc:Ignorable="d">
 
-    <DataTemplate x:Name="MessageExtraTemplate">
+    <DataTemplate x:Name="MessageExtraTemplate" x:DataType="message:MessageExtraModel">
         <Border
             Margin="8,2"
             Padding="4"
@@ -16,19 +17,19 @@
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='\{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
+            ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='\{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                Text="{Binding Title}"
+                Text="{x:Bind Title}"
                 TextAlignment="Center"
                 TextWrapping="Wrap" />
         </Border>
     </DataTemplate>
 
-    <DataTemplate x:Name="MessageCardLeftTemplate">
+    <DataTemplate x:Name="MessageCardLeftTemplate" x:DataType="message:MessageModel">
         <Grid Padding="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
@@ -40,10 +41,10 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 KeyDown="FrameworkElement_KeyDown"
-                Tag="{Binding UserUrl}"
+                Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
             <Grid
@@ -62,31 +63,31 @@
                         HorizontalAlignment="Left"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding UserName}"
-                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                        Text="{x:Bind UserName}"
+                        ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                     <StackPanel
                         HorizontalAlignment="Left"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                        Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <Image
                             MaxWidth="102"
                             HorizontalAlignment="Left"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
                             KeyDown="Image_KeyDown"
-                            Source="{Binding MessagePic.Pic, Mode=OneWay}"
-                            Tag="{Binding MessagePic}"
+                            Source="{x:Bind MessagePic.Pic, Mode=OneWay}"
+                            Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{Binding MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
                                         x:Name="RefreshButton"
                                         x:Uid="/ShowImagePage/RefreshMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -95,7 +96,7 @@
                                         x:Name="CopyButton"
                                         x:Uid="/ShowImagePage/CopyMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -104,7 +105,7 @@
                                         x:Name="ShareButton"
                                         x:Uid="/ShowImagePage/ShareMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -113,7 +114,7 @@
                                         x:Name="SaveButton"
                                         x:Uid="/ShowImagePage/SaveMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -122,8 +123,8 @@
                                         x:Name="OriginButton"
                                         x:Uid="/ShowImagePage/OriginMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}"
-                                        Visibility="{Binding MessagePic.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Tag="{x:Bind MessagePic}"
+                                        Visibility="{x:Bind MessagePic.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -134,11 +135,11 @@
                         <Border
                             Padding="8"
                             HorizontalAlignment="Left"
-                            Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
                             <control:TextBlockEx
                                 HorizontalAlignment="Left"
                                 IsTextSelectionEnabled="True"
-                                Text="{Binding Message}" />
+                                Text="{x:Bind Message}" />
                         </Border>
                     </StackPanel>
                     <Border
@@ -147,8 +148,8 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ContentControl ContentTemplate="{StaticResource MessageCardTemplate}" DataContext="{Binding MessageCard}" />
+                        Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ContentControl ContentTemplate="{StaticResource MessageCardTemplate}" DataContext="{x:Bind MessageCard}" />
                     </Border>
                 </control:StackPanelEx>
                 <Border
@@ -160,13 +161,13 @@
                         Margin="4"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
-                        Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        Visibility="{x:Bind IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Border>
             </Grid>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Name="MessageCardRightTemplate">
+    <DataTemplate x:Name="MessageCardRightTemplate" x:DataType="message:MessageModel">
         <Grid Padding="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -188,7 +189,7 @@
                         Margin="4,2"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        Visibility="{Binding IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        Visibility="{x:Bind IsNew, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Border>
                 <control:StackPanelEx
                     Grid.Column="1"
@@ -198,31 +199,31 @@
                         HorizontalAlignment="Right"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        Text="{Binding UserName}"
-                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                        Text="{x:Bind UserName}"
+                        ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                     <StackPanel
                         HorizontalAlignment="Right"
                         Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                         BorderBrush="{ThemeResource ControlStrokeColorOnAccentDefault}"
                         BorderThickness="1"
-                        Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                        Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <Image
                             MaxWidth="102"
                             HorizontalAlignment="Right"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
                             KeyDown="Image_KeyDown"
-                            Source="{Binding MessagePic.Pic, Mode=OneWay}"
-                            Tag="{Binding MessagePic}"
+                            Source="{x:Bind MessagePic.Pic, Mode=OneWay}"
+                            Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{Binding MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
                                         x:Name="RefreshButton"
                                         x:Uid="/ShowImagePage/RefreshMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -231,7 +232,7 @@
                                         x:Name="CopyButton"
                                         x:Uid="/ShowImagePage/CopyMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -240,7 +241,7 @@
                                         x:Name="ShareButton"
                                         x:Uid="/ShowImagePage/ShareMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -249,7 +250,7 @@
                                         x:Name="SaveButton"
                                         x:Uid="/ShowImagePage/SaveMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}">
+                                        Tag="{x:Bind MessagePic}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -258,8 +259,8 @@
                                         x:Name="OriginButton"
                                         x:Uid="/ShowImagePage/OriginMenuItem"
                                         Click="AppBarButton_Click"
-                                        Tag="{Binding MessagePic}"
-                                        Visibility="{Binding MessagePic.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        Tag="{x:Bind MessagePic}"
+                                        Visibility="{x:Bind MessagePic.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                         <helpers:FlyoutBaseHelper.Icon>
                                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                         </helpers:FlyoutBaseHelper.Icon>
@@ -270,12 +271,12 @@
                         <Border
                             Padding="8"
                             HorizontalAlignment="Left"
-                            Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
                             <control:TextBlockEx
                                 HorizontalAlignment="Left"
                                 IsTextSelectionEnabled="True"
                                 LinkForeground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
-                                Text="{Binding Message}" />
+                                Text="{x:Bind Message}" />
                         </Border>
                     </StackPanel>
                     <Border
@@ -284,8 +285,8 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding IsCard, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ContentControl ContentTemplate="{StaticResource MessageCardTemplate}" DataContext="{Binding MessageCard}" />
+                        Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <ContentControl ContentTemplate="{StaticResource MessageCardTemplate}" DataContext="{x:Bind MessageCard}" />
                     </Border>
                 </control:StackPanelEx>
             </Grid>
@@ -296,21 +297,21 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 KeyDown="FrameworkElement_KeyDown"
-                Tag="{Binding UserUrl}"
+                Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped">
                 <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                 </Ellipse.Fill>
             </Ellipse>
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="MessageCardTemplate">
+    <DataTemplate x:Key="MessageCardTemplate" x:DataType="message:MessageCard">
         <Grid
             Padding="8"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="FrameworkElement_Tapped">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
@@ -328,24 +329,24 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top">
                 <Border.Background>
-                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                    <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                 </Border.Background>
             </Border>
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
                 MaxLines="1"
-                Text="{Binding Title}"
+                Text="{x:Bind Title}"
                 TextTrimming="CharacterEllipsis"
-                Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
             <control:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
-                Text="{Binding SubTitle}"
+                Text="{x:Bind SubTitle}"
                 TextTrimming="CharacterEllipsis"
-                Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
             <Grid
                 Grid.Row="2"
                 Grid.ColumnSpan="2"
@@ -362,19 +363,19 @@
                     Height="16"
                     Margin="0,2,6,0"
                     VerticalAlignment="Center"
-                    Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                     <Ellipse.Fill>
-                        <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" />
+                        <ImageBrush ImageSource="{x:Bind ExtraPic.Pic, Mode=OneWay}" />
                     </Ellipse.Fill>
                 </Ellipse>
                 <control:TextBlockEx
                     Grid.Column="1"
                     VerticalAlignment="Center"
                     MaxLines="1"
-                    Text="{Binding ExtraText}"
+                    Text="{x:Bind ExtraText}"
                     TextTrimming="CharacterEllipsis"
                     TextWrapping="NoWrap"
-                    Visibility="{Binding ExtraText, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind ExtraText, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Grid>
     </DataTemplate>

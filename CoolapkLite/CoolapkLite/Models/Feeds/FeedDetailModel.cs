@@ -95,7 +95,7 @@ namespace CoolapkLite.Models.Feeds
                             JObject j = JObject.Parse(extraData.ToString());
                             if (j.TryGetValue("questionUrl", out JToken questionUrl))
                             {
-                                QuestionUrl = questionUrl.ToString();
+                                QuestionUrl = questionUrl.ToString().Replace("/feed/", "/question/");
                             }
                         }
                         GetMessageRawOutput();

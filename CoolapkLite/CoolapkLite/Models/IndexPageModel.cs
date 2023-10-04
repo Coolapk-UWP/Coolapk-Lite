@@ -370,7 +370,7 @@ namespace CoolapkLite.Models
             }
             else { ShowPic = false; }
 
-            ShowTitle = !(string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Url));
+            ShowTitle = !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Url);
         }
 
         public override string ToString()
@@ -392,7 +392,7 @@ namespace CoolapkLite.Models
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
-        public string EntityTemplate { get; private set; }
+        public bool ShowTitle { get; private set; }
         public OperationType OperationType { get; private set; }
 
         public IndexPageOperationCardModel(JObject token, OperationType type) : base(token)
@@ -418,6 +418,8 @@ namespace CoolapkLite.Models
                     Url = "Login";
                     break;
             }
+
+            ShowTitle = !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Url);
         }
 
         public override string ToString() => string.IsNullOrWhiteSpace(Title) ? base.ToString() : Title;

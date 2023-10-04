@@ -6,8 +6,11 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feeds="using:CoolapkLite.ViewModels.FeedPages"
     xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:images="using:CoolapkLite.Models.Images"
     xmlns:local="using:CoolapkLite.Pages.FeedPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
+    xmlns:pages="using:CoolapkLite.Models.Pages"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feeds:FeedListViewModel}"
@@ -22,16 +25,16 @@
                 <templates:IndexCardTemplates />
                 <templates:OtherCardTemplates />
             </ResourceDictionary.MergedDictionaries>
-            <DataTemplate x:Key="UserDetailCard">
+            <DataTemplate x:Key="UserDetailCard" x:DataType="pages:UserDetail">
                 <Border>
                     <Border.Resources>
                         <MenuFlyout x:Key="MoreFlyout">
                             <MenuFlyoutItem
                                 x:Name="MessageButton"
                                 Click="Button_Click"
-                                Tag="{Binding UID}"
+                                Tag="{x:Bind UID}"
                                 Text="私信"
-                                Visibility="{Binding IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE715;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -40,7 +43,7 @@
                                 x:Name="PinTileButton"
                                 x:Uid="/Feed/PinTile"
                                 Click="Button_Click"
-                                Tag="{Binding}">
+                                Tag="{x:Bind}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -49,8 +52,8 @@
                                 x:Name="ReportButton"
                                 x:Uid="/Feed/Report"
                                 Click="Button_Click"
-                                Tag="{Binding UID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=user&amp;m=report&amp;id={0}', Mode=OneWay}"
-                                Visibility="{Binding IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                Tag="{x:Bind UID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=user&amp;m=report&amp;id={0}', Mode=OneWay}"
+                                Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F8;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -63,7 +66,7 @@
                                     x:Name="RefreshButton"
                                     x:Uid="/ShowImagePage/RefreshMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -72,7 +75,7 @@
                                     x:Name="ShowImageButton"
                                     x:Uid="/ShowImagePage/ShowMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -81,7 +84,7 @@
                                     x:Name="CopyButton"
                                     x:Uid="/ShowImagePage/CopyMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -90,7 +93,7 @@
                                     x:Name="ShareButton"
                                     x:Uid="/ShowImagePage/ShareMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -99,7 +102,7 @@
                                     x:Name="SaveButton"
                                     x:Uid="/ShowImagePage/SaveMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -108,8 +111,8 @@
                                     x:Name="OriginButton"
                                     x:Uid="/ShowImagePage/OriginMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    Tag="{x:Bind Cover}"
+                                    Visibility="{x:Bind Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -118,7 +121,7 @@
                             <MenuFlyoutItem
                                 x:Name="AnalyzeButton"
                                 Click="Button_Click"
-                                Tag="{Binding UID}"
+                                Tag="{x:Bind UID}"
                                 Text="查看粉丝分析">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE9D2;" />
@@ -134,11 +137,11 @@
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
                         KeyDown="FrameworkElement_KeyDown"
-                        Tag="{Binding Cover}"
+                        Tag="{x:Bind Cover}"
                         Tapped="FrameworkElement_Tapped">
                         <Border>
                             <Border.Background>
-                                <ImageBrush ImageSource="{Binding Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="{x:Bind Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                             </Border.Background>
                         </Border>
                         <Grid
@@ -157,7 +160,7 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Top">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                         </Ellipse.Fill>
                                     </Ellipse>
                                     <Button
@@ -166,21 +169,21 @@
                                         HorizontalAlignment="Right"
                                         Click="Button_Click"
                                         Style="{StaticResource TransparentButtonStyle}"
-                                        Tag="{Binding}"
+                                        Tag="{x:Bind}"
                                         Tapped="Button_Tapped"
-                                        ToolTipService.ToolTip="{Binding FollowStatus}"
-                                        Visibility="{Binding IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                                        ToolTipService.ToolTip="{x:Bind FollowStatus, Mode=OneWay}"
+                                        Visibility="{x:Bind IsMe, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                                         <StackPanel Orientation="Horizontal">
                                             <FontIcon
                                                 VerticalAlignment="Center"
                                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                 FontSize="15"
-                                                Glyph="{Binding FollowGlyph}" />
+                                                Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                             <TextBlock
                                                 x:Name="FollowStatus"
                                                 Margin="8,0,0,0"
                                                 VerticalAlignment="Center"
-                                                Text="{Binding FollowStatus}" />
+                                                Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                         </StackPanel>
                                     </Button>
                                 </Grid>
@@ -200,12 +203,14 @@
                                             FontSize="12"
                                             FontStyle="Italic"
                                             Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                            Text="{Binding LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
                                         <TextBlock
                                             Grid.Column="1"
                                             HorizontalAlignment="Right"
                                             FontSize="12"
-                                            Text="{Binding NextLevelNowExperience}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind NextLevelNowExperience}" />
                                     </Grid>
                                     <ProgressBar
                                         x:Name="NextLevelPercentage"
@@ -214,25 +219,29 @@
                                         Margin="0,4"
                                         Tag="/feed/18221454"
                                         Tapped="FrameworkElement_Tapped"
-                                        Value="{Binding NextLevelPercentage}" />
+                                        Value="{x:Bind NextLevelPercentage}" />
                                 </Grid>
                                 <TextBlock
-                                    IsTextSelectionEnabled="{Binding IsCopyEnabled}"
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                     TextTrimming="CharacterEllipsis"
-                                    Visibility="{Binding VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
+                                    Visibility="{x:Bind VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
                                     <Run
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource CoolapkLogoForeground}"
                                         Text="&#xE10B;" />
-                                    <Run Text="{Binding VerifyTitle}" />
+                                    <Run Text="{x:Bind VerifyTitle}" />
                                 </TextBlock>
                                 <TextBlock
-                                    Text="{Binding Bio}"
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                    Text="{x:Bind Bio}"
                                     TextWrapping="WrapWholeWords"
-                                    Visibility="{Binding Bio, Converter={StaticResource StringVisibilityConverter}}" />
+                                    Visibility="{x:Bind Bio, Converter={StaticResource StringVisibilityConverter}}" />
                                 <control:StackPanelEx Orientation="Horizontal" Spacing="6">
-                                    <TextBlock VerticalAlignment="Center" FontSize="16">
-                                        <Run FontWeight="Bold" Text="{Binding LikeNum}" />
+                                    <TextBlock
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                        <Run FontWeight="Bold" Text="{x:Bind LikeNum}" />
                                         <Run x:Uid="/FeedListPage/LikeNum" FontWeight="Thin" />
                                     </TextBlock>
                                     <Button
@@ -243,7 +252,7 @@
                                         FontSize="16"
                                         Tapped="Button_Tapped">
                                         <TextBlock>
-                                            <Run FontWeight="Bold" Text="{Binding FollowNum}" />
+                                            <Run FontWeight="Bold" Text="{x:Bind FollowNum}" />
                                             <Run x:Uid="/FeedListPage/FollowNum" FontWeight="Thin" />
                                         </TextBlock>
                                     </Button>
@@ -255,12 +264,12 @@
                                         FontSize="16"
                                         Tapped="Button_Tapped">
                                         <TextBlock>
-                                            <Run FontWeight="Bold" Text="{Binding FansNum}" />
+                                            <Run FontWeight="Bold" Text="{x:Bind FansNum}" />
                                             <Run x:Uid="/FeedListPage/FansNum" FontWeight="Thin" />
                                         </TextBlock>
                                     </Button>
                                     <TextBlock VerticalAlignment="Center" FontSize="16">
-                                        <Run FontWeight="Bold" Text="{Binding FeedNum}" />
+                                        <Run FontWeight="Bold" Text="{x:Bind FeedNum}" />
                                         <Run x:Uid="/FeedListPage/FeedsNum" FontWeight="Thin" />
                                     </TextBlock>
                                 </control:StackPanelEx>
@@ -269,41 +278,45 @@
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Visibility="{Binding Gender, Converter={StaticResource StringVisibilityConverter}}">
+                                        Visibility="{x:Bind Gender, Converter={StaticResource StringVisibilityConverter}}">
                                         <TextBlock
                                             Margin="4,2"
                                             FontSize="12"
-                                            Text="{Binding Gender}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind Gender}" />
                                     </Border>
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Visibility="{Binding City, Converter={StaticResource StringVisibilityConverter}}">
+                                        Visibility="{x:Bind City, Converter={StaticResource StringVisibilityConverter}}">
                                         <TextBlock
                                             Margin="4,2"
                                             FontSize="12"
-                                            Text="{Binding City}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind City}" />
                                     </Border>
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Visibility="{Binding Astro, Converter={StaticResource StringVisibilityConverter}}">
+                                        Visibility="{x:Bind Astro, Converter={StaticResource StringVisibilityConverter}}">
                                         <TextBlock
                                             Margin="4,2"
                                             FontSize="12"
-                                            Text="{Binding Astro}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind Astro}" />
                                     </Border>
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                                         BorderThickness="1"
-                                        Visibility="{Binding BlockStatus, Converter={StaticResource StringVisibilityConverter}}">
+                                        Visibility="{x:Bind BlockStatus, Converter={StaticResource StringVisibilityConverter}}">
                                         <TextBlock
                                             Margin="4,2"
                                             FontSize="12"
-                                            Text="{Binding BlockStatus}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind BlockStatus}" />
                                     </Border>
                                 </control:StackPanelEx>
                             </control:StackPanelEx>
@@ -311,7 +324,7 @@
                     </Grid>
                 </Border>
             </DataTemplate>
-            <DataTemplate x:Key="TopicDetailCard">
+            <DataTemplate x:Key="TopicDetailCard" x:DataType="pages:TopicDetail">
                 <Border
                     Padding="10"
                     HorizontalAlignment="Stretch"
@@ -324,7 +337,7 @@
                                 x:Name="PinTileButton"
                                 x:Uid="/Feed/PinTile"
                                 Click="Button_Click"
-                                Tag="{Binding}">
+                                Tag="{x:Bind}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -346,24 +359,28 @@
                                 Height="56"
                                 HorizontalAlignment="Left">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                    <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
                             <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
-                                    Text="{Binding Title}" />
-                                <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                    <Run Text="{Binding HotNum}" />
-                                    <Run Text="{Binding CommentNum}" />
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                    Text="{x:Bind Title}" />
+                                <TextBlock
+                                    FontSize="12"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                    <Run Text="{x:Bind HotNum}" />
+                                    <Run Text="{x:Bind CommentNum}" />
                                 </TextBlock>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                    <ItemsControl ItemsSource="{x:Bind FollowUsers}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <control:StackPanelEx
@@ -374,16 +391,16 @@
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
+                                            <DataTemplate x:DataType="models:ISourceUserModel">
                                                 <Ellipse
                                                     Width="16"
                                                     Height="16"
                                                     KeyDown="FrameworkElement_KeyDown"
-                                                    Tag="{Binding Url}"
+                                                    Tag="{x:Bind Url}"
                                                     Tapped="FrameworkElement_Tapped"
-                                                    ToolTipService.ToolTip="{Binding UserName}">
+                                                    ToolTipService.ToolTip="{x:Bind UserName}">
                                                     <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                        <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                                     </Ellipse.Fill>
                                                 </Ellipse>
                                             </DataTemplate>
@@ -393,7 +410,8 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         FontSize="12"
-                                        Text="{Binding FollowNum}" />
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind FollowNum}" />
                                 </Grid>
                             </control:StackPanelEx>
                             <Button
@@ -403,35 +421,37 @@
                                 HorizontalAlignment="Right"
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
-                                Tag="{Binding}"
+                                Tag="{x:Bind}"
                                 Tapped="Button_Tapped"
-                                ToolTipService.ToolTip="{Binding FollowStatus}">
+                                ToolTipService.ToolTip="{x:Bind FollowStatus, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         VerticalAlignment="Center"
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         FontSize="15"
-                                        Glyph="{Binding FollowGlyph}" />
+                                        Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
                                         x:Name="FollowStatus"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FollowStatus}" />
+                                        Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                         </Grid>
                         <TextBlock
-                            Text="{Binding Description}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind Description}"
                             TextWrapping="WrapWholeWords"
-                            Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                            Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
                         <TextBlock
-                            Text="{Binding SubTitle}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind SubTitle}"
                             TextWrapping="WrapWholeWords"
-                            Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                            Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
                     </control:StackPanelEx>
                 </Border>
             </DataTemplate>
-            <DataTemplate x:Key="DyhDetailCard">
+            <DataTemplate x:Key="DyhDetailCard" x:DataType="pages:DyhDetail">
                 <Border
                     Padding="10"
                     HorizontalAlignment="Stretch"
@@ -444,7 +464,7 @@
                                 x:Name="PinTileButton"
                                 x:Uid="/Feed/PinTile"
                                 Click="Button_Click"
-                                Tag="{Binding}">
+                                Tag="{x:Bind}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -466,22 +486,24 @@
                                 Height="56"
                                 HorizontalAlignment="Left">
                                 <Border.Background>
-                                    <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                    <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                 </Border.Background>
                             </Border>
                             <StackPanel Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
                                     FontWeight="SemiBold"
-                                    Text="{Binding Title}" />
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                    Text="{x:Bind Title}" />
                                 <TextBlock
                                     FontSize="12"
                                     FontWeight="Thin"
-                                    Text="{Binding FollowNum}" />
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                    Text="{x:Bind FollowNum, Mode=OneWay}" />
                                 <Grid
                                     Background="{ThemeResource SystemControlTransparentBrush}"
                                     KeyDown="FrameworkElement_KeyDown"
-                                    Tag="{Binding Uurl}"
+                                    Tag="{x:Bind Uurl}"
                                     Tapped="FrameworkElement_Tapped">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
@@ -489,14 +511,15 @@
                                     </Grid.ColumnDefinitions>
                                     <Ellipse Width="16" Height="16">
                                         <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                         </Ellipse.Fill>
                                     </Ellipse>
                                     <TextBlock
                                         Grid.Column="1"
                                         Margin="4,0"
                                         FontSize="12"
-                                        Text="{Binding UserName}" />
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind UserName}" />
                                 </Grid>
                             </StackPanel>
                             <Button
@@ -506,46 +529,47 @@
                                 HorizontalAlignment="Right"
                                 Background="{ThemeResource SystemControlTransparentBrush}"
                                 Click="Button_Click"
-                                Tag="{Binding}"
+                                Tag="{x:Bind}"
                                 Tapped="Button_Tapped"
-                                ToolTipService.ToolTip="{Binding FollowStatus}">
+                                ToolTipService.ToolTip="{x:Bind FollowStatus, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         VerticalAlignment="Center"
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         FontSize="15"
-                                        Glyph="{Binding FollowGlyph}" />
+                                        Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
                                         x:Name="FollowStatus"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FollowStatus}" />
+                                        Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                         </Grid>
                         <TextBlock
-                            Text="{Binding Description}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind Description}"
                             TextWrapping="WrapWholeWords"
-                            Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                            Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
                     </control:StackPanelEx>
                 </Border>
             </DataTemplate>
-            <DataTemplate x:Key="ProductDetailCard">
+            <DataTemplate x:Key="ProductDetailCard" x:DataType="pages:ProductDetail">
                 <control:StackPanelEx Spacing="2">
                     <Grid
                         HorizontalAlignment="Stretch"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding CoverArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        Visibility="{x:Bind CoverArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <FlipView
                             x:Name="FlipView"
                             Background="{ThemeResource SystemControlTransparentBrush}"
-                            ItemsSource="{Binding CoverArr}"
+                            ItemsSource="{x:Bind CoverArr}"
                             Loaded="FlipView_Loaded"
                             SizeChanged="FlipView_SizeChanged">
                             <FlipView.ItemTemplate>
-                                <DataTemplate>
+                                <DataTemplate x:DataType="images:ImageModel">
                                     <Image
                                         x:Name="Picture"
                                         HorizontalAlignment="Center"
@@ -553,9 +577,9 @@
                                         CanDrag="True"
                                         DragStarting="Image_DragStarting"
                                         KeyDown="FrameworkElement_KeyDown"
-                                        Source="{Binding Pic, Mode=OneWay}"
+                                        Source="{x:Bind Pic, Mode=OneWay}"
                                         Stretch="UniformToFill"
-                                        Tag="{Binding}"
+                                        Tag="{x:Bind}"
                                         Tapped="FrameworkElement_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>
                                             <MenuFlyout>
@@ -563,7 +587,7 @@
                                                     x:Name="RefreshButton"
                                                     x:Uid="/ShowImagePage/RefreshMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}">
+                                                    Tag="{x:Bind}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -572,7 +596,7 @@
                                                     x:Name="CopyButton"
                                                     x:Uid="/ShowImagePage/CopyMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}">
+                                                    Tag="{x:Bind}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -581,7 +605,7 @@
                                                     x:Name="ShareButton"
                                                     x:Uid="/ShowImagePage/ShareMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}">
+                                                    Tag="{x:Bind}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -590,7 +614,7 @@
                                                     x:Name="SaveButton"
                                                     x:Uid="/ShowImagePage/SaveMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}">
+                                                    Tag="{x:Bind}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -599,8 +623,8 @@
                                                     x:Name="OriginButton"
                                                     x:Uid="/ShowImagePage/OriginMenuItem"
                                                     Click="AppBarButton_Click"
-                                                    Tag="{Binding}"
-                                                    Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    Tag="{x:Bind}"
+                                                    Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                                     <helpers:FlyoutBaseHelper.Icon>
                                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                                     </helpers:FlyoutBaseHelper.Icon>
@@ -630,24 +654,28 @@
                                     Height="56"
                                     HorizontalAlignment="Left">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                        <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                     </Border.Background>
                                 </Border>
                                 <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
                                         FontWeight="SemiBold"
-                                        Text="{Binding Title}" />
-                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                        <Run Text="{Binding HotNum}" />
-                                        <Run Text="{Binding CommentNum}" />
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind Title}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                        <Run Text="{x:Bind HotNum}" />
+                                        <Run Text="{x:Bind CommentNum}" />
                                     </TextBlock>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                        <ItemsControl ItemsSource="{x:Bind FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <control:StackPanelEx
@@ -658,16 +686,16 @@
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
+                                                <DataTemplate x:DataType="models:ISourceUserModel">
                                                     <Ellipse
                                                         Width="16"
                                                         Height="16"
                                                         KeyDown="FrameworkElement_KeyDown"
-                                                        Tag="{Binding Url}"
+                                                        Tag="{x:Bind Url}"
                                                         Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{Binding UserName}">
+                                                        ToolTipService.ToolTip="{x:Bind UserName}">
                                                         <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                 </DataTemplate>
@@ -677,7 +705,8 @@
                                             Grid.Column="1"
                                             Margin="4,0"
                                             FontSize="12"
-                                            Text="{Binding FollowNum}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind FollowNum}" />
                                     </Grid>
                                 </control:StackPanelEx>
                                 <Button
@@ -687,38 +716,39 @@
                                     HorizontalAlignment="Right"
                                     Background="{ThemeResource SystemControlTransparentBrush}"
                                     Click="Button_Click"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Tapped="Button_Tapped"
-                                    ToolTipService.ToolTip="{Binding FollowStatus}">
+                                    ToolTipService.ToolTip="{x:Bind FollowStatus, Mode=OneWay}">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon
                                             VerticalAlignment="Center"
                                             FontFamily="{StaticResource SymbolThemeFontFamily}"
                                             FontSize="15"
-                                            Glyph="{Binding FollowGlyph}" />
+                                            Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                         <TextBlock
                                             x:Name="FollowStatus"
                                             Margin="8,0,0,0"
                                             VerticalAlignment="Center"
-                                            Text="{Binding FollowStatus}" />
+                                            Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                     </StackPanel>
                                 </Button>
                             </Grid>
                             <TextBlock
-                                Text="{Binding Description}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Description}"
                                 TextWrapping="WrapWholeWords"
-                                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
                         </control:StackPanelEx>
                     </Grid>
                     <ListView
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
-                        ItemsSource="{Binding TagArr}"
+                        ItemsSource="{x:Bind TagArr}"
                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                         ShowsScrollingPlaceholders="False"
                         Style="{StaticResource VerticalListViewStyle}"
-                        Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        Visibility="{x:Bind TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <control:StackPanelEx
@@ -729,7 +759,7 @@
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="x:String">
                                 <Grid
                                     VerticalAlignment="Center"
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -738,7 +768,7 @@
                                     <TextBlock
                                         Margin="4,2"
                                         FontSize="12"
-                                        Text="{Binding}" />
+                                        Text="{x:Bind}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -804,16 +834,16 @@
                                         HorizontalAlignment="Center"
                                         FontSize="35"
                                         FontWeight="Bold"
-                                        Text="{Binding OwnerScore}" />
+                                        Text="{x:Bind OwnerScore}" />
                                     <control:RatingControl
                                         HorizontalAlignment="Center"
                                         IsReadOnly="True"
-                                        Value="{Binding OwnerScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
+                                        Value="{x:Bind OwnerScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
                                         FontWeight="Thin"
-                                        Text="{Binding RatingCount}" />
+                                        Text="{x:Bind RatingCount}" />
                                 </StackPanel>
                                 <StackPanel
                                     HorizontalAlignment="Center"
@@ -823,16 +853,16 @@
                                         HorizontalAlignment="Center"
                                         FontSize="35"
                                         FontWeight="Bold"
-                                        Text="{Binding RatingScore}" />
+                                        Text="{x:Bind RatingScore}" />
                                     <control:RatingControl
                                         HorizontalAlignment="Center"
                                         IsReadOnly="True"
-                                        Value="{Binding RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
+                                        Value="{x:Bind RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
                                         FontWeight="Thin"
-                                        Text="{Binding StarCount}" />
+                                        Text="{x:Bind StarCount}" />
                                 </StackPanel>
                                 <Grid
                                     Grid.Column="1"
@@ -861,13 +891,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding OwnerStar5Percent}" />
+                                        Value="{x:Bind OwnerStar5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding OwnerStar5Count}" />
+                                        Text="{x:Bind OwnerStar5Count}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="0"
@@ -879,13 +909,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding OwnerStar4Percent}" />
+                                        Value="{x:Bind OwnerStar4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding OwnerStar4Count}" />
+                                        Text="{x:Bind OwnerStar4Count}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
@@ -897,13 +927,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding OwnerStar3Percent}" />
+                                        Value="{x:Bind OwnerStar3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding OwnerStar3Count}" />
+                                        Text="{x:Bind OwnerStar3Count}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="0"
@@ -915,13 +945,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding OwnerStar2Percent}" />
+                                        Value="{x:Bind OwnerStar2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding OwnerStar2Count}" />
+                                        Text="{x:Bind OwnerStar2Count}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="0"
@@ -933,13 +963,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding OwnerStar1Percent}" />
+                                        Value="{x:Bind OwnerStar1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding OwnerStar1Count}" />
+                                        Text="{x:Bind OwnerStar1Count}" />
                                 </Grid>
                                 <Grid
                                     Grid.Column="1"
@@ -968,13 +998,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star5Percent}" />
+                                        Value="{x:Bind Star5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star5Count}" />
+                                        Text="{x:Bind Star5Count}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="0"
@@ -986,13 +1016,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star4Percent}" />
+                                        Value="{x:Bind Star4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star4Count}" />
+                                        Text="{x:Bind Star4Count}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
@@ -1004,13 +1034,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star3Percent}" />
+                                        Value="{x:Bind Star3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star3Count}" />
+                                        Text="{x:Bind Star3Count}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="0"
@@ -1022,13 +1052,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star2Percent}" />
+                                        Value="{x:Bind Star2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star2Count}" />
+                                        Text="{x:Bind Star2Count}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="0"
@@ -1040,20 +1070,20 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star1Percent}" />
+                                        Value="{x:Bind Star1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star1Count}" />
+                                        Text="{x:Bind Star1Count}" />
                                 </Grid>
                             </Grid>
                         </control:StackPanelEx>
                     </Grid>
                 </control:StackPanelEx>
             </DataTemplate>
-            <DataTemplate x:Key="CollectionDetailCard">
+            <DataTemplate x:Key="CollectionDetailCard" x:DataType="pages:CollectionDetail">
                 <Grid
                     HorizontalAlignment="Stretch"
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -1065,7 +1095,7 @@
                                 x:Name="PinTileButton"
                                 x:Uid="/Feed/PinTile"
                                 Click="Button_Click"
-                                Tag="{Binding}">
+                                Tag="{x:Bind}">
                                 <helpers:FlyoutBaseHelper.Icon>
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1078,7 +1108,7 @@
                                     x:Name="RefreshButton"
                                     x:Uid="/ShowImagePage/RefreshMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1087,7 +1117,7 @@
                                     x:Name="ShowImageButton"
                                     x:Uid="/ShowImagePage/ShowMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1096,7 +1126,7 @@
                                     x:Name="CopyButton"
                                     x:Uid="/ShowImagePage/CopyMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1105,7 +1135,7 @@
                                     x:Name="ShareButton"
                                     x:Uid="/ShowImagePage/ShareMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1114,7 +1144,7 @@
                                     x:Name="SaveButton"
                                     x:Uid="/ShowImagePage/SaveMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}">
+                                    Tag="{x:Bind Cover}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1123,8 +1153,8 @@
                                     x:Name="OriginButton"
                                     x:Uid="/ShowImagePage/OriginMenuItem"
                                     Click="AppBarButton_Click"
-                                    Tag="{Binding Cover}"
-                                    Visibility="{Binding Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    Tag="{x:Bind Cover}"
+                                    Visibility="{x:Bind Cover.IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1139,9 +1169,9 @@
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
                         KeyDown="FrameworkElement_KeyDown"
-                        Source="{Binding Cover.Pic, Mode=OneWay}"
+                        Source="{x:Bind Cover.Pic, Mode=OneWay}"
                         Stretch="UniformToFill"
-                        Tag="{Binding Cover}"
+                        Tag="{x:Bind Cover}"
                         Tapped="FrameworkElement_Tapped" />
                     <Grid
                         Padding="8"
@@ -1158,7 +1188,8 @@
                         <control:StackPanelEx Spacing="8">
                             <TextBlock
                                 FontSize="20"
-                                Text="{Binding Title}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Title}"
                                 TextWrapping="Wrap" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -1172,7 +1203,7 @@
                                     Height="20"
                                     VerticalAlignment="Center">
                                     <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                        <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                     </Ellipse.Fill>
                                 </Ellipse>
                                 <TextBlock
@@ -1180,10 +1211,11 @@
                                     Margin="0,0,0,2"
                                     VerticalAlignment="Center"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                     TextWrapping="Wrap">
-                                    <Run Text="{Binding UserName}" />
-                                    <Run Text="{Binding LastUpdate}" />
-                                    <Run Text="{Binding FollowNum}" />
+                                    <Run Text="{x:Bind UserName}" />
+                                    <Run Text="{x:Bind LastUpdate}" />
+                                    <Run Text="{x:Bind FollowNum, Mode=OneWay}" />
                                 </TextBlock>
                             </Grid>
                         </control:StackPanelEx>
@@ -1197,53 +1229,54 @@
                                 x:Uid="/Feed/LikeButton"
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding}"
+                                Tag="{x:Bind}"
                                 Tapped="Button_Tapped">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                         Glyph="&#xE8E1;"
-                                        Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         Glyph="&#xE8E1;"
-                                        Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
-                                    <TextBlock Margin="8,0,0,0" Text="{Binding LikeNum}" />
+                                        Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                                    <TextBlock Margin="8,0,0,0" Text="{x:Bind LikeNum, Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                             <Button
                                 x:Name="FollowButton"
                                 Click="Button_Click"
                                 Style="{StaticResource TransparentButtonStyle}"
-                                Tag="{Binding}"
+                                Tag="{x:Bind}"
                                 Tapped="Button_Tapped"
-                                ToolTipService.ToolTip="{Binding FollowStatus}"
-                                Visibility="{Binding FollowStatus, Converter={StaticResource StringVisibilityConverter}}">
+                                ToolTipService.ToolTip="{x:Bind FollowStatus}"
+                                Visibility="{x:Bind FollowStatus, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         VerticalAlignment="Center"
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
                                         FontSize="15"
-                                        Glyph="{Binding FollowGlyph}" />
+                                        Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
                                         x:Name="FollowStatus"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
-                                        Text="{Binding FollowStatus}" />
+                                        Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                 </StackPanel>
                             </Button>
                         </StackPanel>
                         <TextBlock
                             Grid.Row="1"
                             Grid.ColumnSpan="2"
-                            Text="{Binding Description}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind Description}"
                             TextWrapping="Wrap"
-                            Visibility="{Binding Description, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            Visibility="{x:Bind Description, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Grid>
                 </Grid>
             </DataTemplate>
-            <DataTemplate x:Key="AppDetailCard">
+            <DataTemplate x:Key="AppDetailCard" x:DataType="pages:AppDetail">
                 <control:StackPanelEx Spacing="2">
                     <Border
                         Padding="10"
@@ -1257,7 +1290,7 @@
                                     x:Name="PinTileButton"
                                     x:Uid="/Feed/PinTile"
                                     Click="Button_Click"
-                                    Tag="{Binding}">
+                                    Tag="{x:Bind}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1279,31 +1312,38 @@
                                     Height="56"
                                     HorizontalAlignment="Left">
                                     <Border.Background>
-                                        <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                        <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                                     </Border.Background>
                                 </Border>
                                 <StackPanel Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
                                         FontWeight="SemiBold"
-                                        Text="{Binding Title}"
-                                        ToolTipService.ToolTip="{Binding APKName}" />
-                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                        <Run Text="{Binding VersionName}" />
-                                        <Run Text="{Binding VersionCode, Converter={StaticResource StringFormatConverter}, ConverterParameter='({0})'}" />
-                                        <Run Text="{Binding APKSize}" />
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind Title}"
+                                        ToolTipService.ToolTip="{x:Bind APKName}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                        <Run Text="{x:Bind VersionName}" />
+                                        <Run Text="{x:Bind VersionCode, Converter={StaticResource StringFormatConverter}, ConverterParameter='({0})'}" />
+                                        <Run Text="{x:Bind APKSize}" />
                                     </TextBlock>
-                                    <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}">
-                                        <Run Text="{Binding DownloadNum}" />
-                                        <Run Text="{Binding HotNum}" />
-                                        <Run Text="{Binding CommentNum}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                        <Run Text="{x:Bind DownloadNum}" />
+                                        <Run Text="{x:Bind HotNum}" />
+                                        <Run Text="{x:Bind CommentNum}" />
                                     </TextBlock>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <ItemsControl ItemsSource="{Binding FollowUsers}">
+                                        <ItemsControl ItemsSource="{x:Bind FollowUsers}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <control:StackPanelEx
@@ -1314,16 +1354,16 @@
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
+                                                <DataTemplate x:DataType="models:ISourceUserModel">
                                                     <Ellipse
                                                         Width="16"
                                                         Height="16"
                                                         KeyDown="FrameworkElement_KeyDown"
-                                                        Tag="{Binding Url}"
+                                                        Tag="{x:Bind Url}"
                                                         Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{Binding UserName}">
+                                                        ToolTipService.ToolTip="{x:Bind UserName}">
                                                         <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{Binding UserAvatar.Pic, Mode=OneWay}" />
+                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
                                                         </Ellipse.Fill>
                                                     </Ellipse>
                                                 </DataTemplate>
@@ -1333,7 +1373,8 @@
                                             Grid.Column="1"
                                             Margin="4,0"
                                             FontSize="12"
-                                            Text="{Binding FollowNum}" />
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind FollowNum, Mode=OneWay}" />
                                     </Grid>
                                 </StackPanel>
                                 <Button
@@ -1343,31 +1384,33 @@
                                     HorizontalAlignment="Right"
                                     Background="{ThemeResource SystemControlTransparentBrush}"
                                     Click="Button_Click"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Tapped="Button_Tapped"
-                                    ToolTipService.ToolTip="{Binding FollowStatus}">
+                                    ToolTipService.ToolTip="{x:Bind FollowStatus, Mode=OneWay}">
                                     <StackPanel Orientation="Horizontal">
                                         <FontIcon
                                             VerticalAlignment="Center"
                                             FontFamily="{StaticResource SymbolThemeFontFamily}"
                                             FontSize="15"
-                                            Glyph="{Binding FollowGlyph}" />
+                                            Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                         <TextBlock
                                             x:Name="FollowStatus"
                                             Margin="8,0,0,0"
                                             VerticalAlignment="Center"
-                                            Text="{Binding FollowStatus}" />
+                                            Text="{x:Bind FollowStatus, Mode=OneWay}" />
                                     </StackPanel>
                                 </Button>
                             </Grid>
                             <TextBlock
-                                Text="{Binding Description}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Description}"
                                 TextWrapping="WrapWholeWords"
-                                Visibility="{Binding Description, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
                             <TextBlock
-                                Text="{Binding SubTitle}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind SubTitle}"
                                 TextWrapping="WrapWholeWords"
-                                Visibility="{Binding SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
                         </control:StackPanelEx>
                     </Border>
                     <Grid
@@ -1395,16 +1438,16 @@
                                         HorizontalAlignment="Center"
                                         FontSize="35"
                                         FontWeight="Bold"
-                                        Text="{Binding RatingScore}" />
+                                        Text="{x:Bind RatingScore}" />
                                     <control:RatingControl
                                         HorizontalAlignment="Center"
                                         IsReadOnly="True"
-                                        Value="{Binding RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
+                                        Value="{x:Bind RatingScore, Converter={StaticResource NumMultConverter}, ConverterParameter='0.5'}" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="12"
                                         FontWeight="Thin"
-                                        Text="{Binding VoteNum}" />
+                                        Text="{x:Bind VoteNum}" />
                                 </StackPanel>
                                 <Grid Grid.Column="1" VerticalAlignment="Center">
                                     <Grid.RowDefinitions>
@@ -1430,13 +1473,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star5Percent}" />
+                                        Value="{x:Bind Star5Percent}" />
                                     <TextBlock
                                         Grid.Row="0"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star5Count}" />
+                                        Text="{x:Bind Star5Count}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="0"
@@ -1448,13 +1491,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star4Percent}" />
+                                        Value="{x:Bind Star4Percent}" />
                                     <TextBlock
                                         Grid.Row="1"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star4Count}" />
+                                        Text="{x:Bind Star4Count}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="0"
@@ -1466,13 +1509,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star3Percent}" />
+                                        Value="{x:Bind Star3Percent}" />
                                     <TextBlock
                                         Grid.Row="2"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star3Count}" />
+                                        Text="{x:Bind Star3Count}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="0"
@@ -1484,13 +1527,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star2Percent}" />
+                                        Value="{x:Bind Star2Percent}" />
                                     <TextBlock
                                         Grid.Row="3"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star2Count}" />
+                                        Text="{x:Bind Star2Count}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="0"
@@ -1502,13 +1545,13 @@
                                         Grid.Column="1"
                                         Margin="4,0"
                                         VerticalAlignment="Center"
-                                        Value="{Binding Star1Percent}" />
+                                        Value="{x:Bind Star1Percent}" />
                                     <TextBlock
                                         Grid.Row="4"
                                         Grid.Column="2"
                                         FontSize="10"
                                         FontWeight="Thin"
-                                        Text="{Binding Star1Count}" />
+                                        Text="{x:Bind Star1Count}" />
                                 </Grid>
                             </Grid>
                         </control:StackPanelEx>
@@ -1518,10 +1561,10 @@
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
-                        ItemsSource="{Binding ScreenshotArr}"
+                        ItemsSource="{x:Bind ScreenshotArr}"
                         ShowsScrollingPlaceholders="False"
                         Style="{StaticResource VerticalListViewStyle}"
-                        Visibility="{Binding ScreenshotArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        Visibility="{x:Bind ScreenshotArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <ItemsStackPanel
@@ -1531,7 +1574,7 @@
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="images:ImageModel">
                                 <Image
                                     x:Name="Picture"
                                     Height="306"
@@ -1541,9 +1584,9 @@
                                     CanDrag="True"
                                     DragStarting="Image_DragStarting"
                                     KeyDown="FrameworkElement_KeyDown"
-                                    Source="{Binding Pic, Mode=OneWay}"
+                                    Source="{x:Bind Pic, Mode=OneWay}"
                                     Stretch="UniformToFill"
-                                    Tag="{Binding}"
+                                    Tag="{x:Bind}"
                                     Tapped="FrameworkElement_Tapped">
                                     <helpers:UIElementHelper.ContextFlyout>
                                         <MenuFlyout>
@@ -1551,7 +1594,7 @@
                                                 x:Name="RefreshButton"
                                                 x:Uid="/ShowImagePage/RefreshMenuItem"
                                                 Click="AppBarButton_Click"
-                                                Tag="{Binding}">
+                                                Tag="{x:Bind}">
                                                 <helpers:FlyoutBaseHelper.Icon>
                                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
                                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1560,7 +1603,7 @@
                                                 x:Name="CopyButton"
                                                 x:Uid="/ShowImagePage/CopyMenuItem"
                                                 Click="AppBarButton_Click"
-                                                Tag="{Binding}">
+                                                Tag="{x:Bind}">
                                                 <helpers:FlyoutBaseHelper.Icon>
                                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
                                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1569,7 +1612,7 @@
                                                 x:Name="ShareButton"
                                                 x:Uid="/ShowImagePage/ShareMenuItem"
                                                 Click="AppBarButton_Click"
-                                                Tag="{Binding}">
+                                                Tag="{x:Bind}">
                                                 <helpers:FlyoutBaseHelper.Icon>
                                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1578,7 +1621,7 @@
                                                 x:Name="SaveButton"
                                                 x:Uid="/ShowImagePage/SaveMenuItem"
                                                 Click="AppBarButton_Click"
-                                                Tag="{Binding}">
+                                                Tag="{x:Bind}">
                                                 <helpers:FlyoutBaseHelper.Icon>
                                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
                                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1587,8 +1630,8 @@
                                                 x:Name="OriginButton"
                                                 x:Uid="/ShowImagePage/OriginMenuItem"
                                                 Click="AppBarButton_Click"
-                                                Tag="{Binding}"
-                                                Visibility="{Binding IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                Tag="{x:Bind}"
+                                                Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                                 <helpers:FlyoutBaseHelper.Icon>
                                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
                                                 </helpers:FlyoutBaseHelper.Icon>
@@ -1603,11 +1646,11 @@
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
-                        ItemsSource="{Binding TagArr}"
+                        ItemsSource="{x:Bind TagArr}"
                         ScrollViewer.HorizontalScrollBarVisibility="Hidden"
                         ShowsScrollingPlaceholders="False"
                         Style="{StaticResource VerticalListViewStyle}"
-                        Visibility="{Binding TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                        Visibility="{x:Bind TagArr, Converter={StaticResource CollectionVisibilityConverter}}">
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <control:StackPanelEx
@@ -1618,7 +1661,7 @@
                             </ItemsPanelTemplate>
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
-                            <DataTemplate>
+                            <DataTemplate x:DataType="x:String">
                                 <Grid
                                     VerticalAlignment="Center"
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -1627,7 +1670,7 @@
                                     <TextBlock
                                         Margin="4,2"
                                         FontSize="12"
-                                        Text="{Binding}" />
+                                        Text="{x:Bind}" />
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
@@ -1638,13 +1681,17 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding Introduce, Converter={StaticResource StringVisibilityConverter}}">
+                        Visibility="{x:Bind Introduce, Converter={StaticResource StringVisibilityConverter}}">
                         <TextBlock
                             Margin="0,0,0,6"
                             FontSize="16"
                             FontWeight="SemiBold"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                             Text="应用介绍" />
-                        <control:TextBlockEx LineSpacing="10" Text="{Binding Introduce}" />
+                        <control:TextBlockEx
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            LineSpacing="10"
+                            Text="{x:Bind Introduce}" />
                     </StackPanel>
                 </control:StackPanelEx>
             </DataTemplate>

@@ -320,8 +320,8 @@
     <Compile Include="Models\Exceptions\UserNameErrorException.cs" />
     <Compile Include="Models\Feeds\FeedReplyModel.cs" />
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
-    <Compile Include="Models\Message\MessageBase.cs" />
-    <Compile Include="Models\Message\Message.cs" />
+    <Compile Include="Models\Message\MessageExtraModel.cs" />
+    <Compile Include="Models\Message\MessageModel.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
@@ -1429,7 +1429,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.53</Version>
+      <Version>1.11.54</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>

@@ -4,17 +4,18 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feeds="using:CoolapkLite.Models.Feeds"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <DataTemplate x:Key="RelationRowsItemTemplate">
+    <DataTemplate x:Key="RelationRowsItemTemplate" x:DataType="feeds:RelationRowsItem">
         <Button
             MinHeight="0"
             Padding="0"
             VerticalAlignment="Center"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <Grid Padding="4,2">
                 <Grid.ColumnDefinitions>
@@ -25,21 +26,21 @@
                     Width="20"
                     Height="20"
                     Margin="0,0,4,0"
-                    Visibility="{Binding IsShowIcon, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind IsShowIcon, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Viewbox
                         Width="14"
                         Height="14"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        Visibility="{Binding IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{Binding Icon}" />
+                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Icon}" />
                     </Viewbox>
                     <Border
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Visibility="{Binding IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                         </Border.Background>
                     </Border>
                 </Grid>
@@ -49,31 +50,31 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     FontSize="12"
-                    Text="{Binding Title}"
-                    Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    Text="{x:Bind Title}"
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
         </Button>
     </DataTemplate>
 
-    <DataTemplate x:Key="ReplyRowsItemTemplate">
+    <DataTemplate x:Key="ReplyRowsItemTemplate" x:DataType="feeds:SourceFeedReplyModel">
         <Grid
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1"
-            Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}">
+            Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
             <controls:TextBlockEx
                 Margin="4"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 IsTextSelectionEnabled="True"
-                Text="{Binding Message}" />
+                Text="{x:Bind Message}" />
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="VoteItemTemplate">
+    <DataTemplate x:Key="VoteItemTemplate" x:DataType="feeds:VoteItem">
         <Grid
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1"
-            Visibility="{Binding Title, Converter={StaticResource StringVisibilityConverter}}">
+            Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
@@ -86,7 +87,7 @@
                 Stroke="{ThemeResource TextFillColorSecondaryBrush}"
                 StrokeThickness="1">
                 <Ellipse.Fill>
-                    <SolidColorBrush Color="{Binding Color}" />
+                    <SolidColorBrush Color="{x:Bind Color}" />
                 </Ellipse.Fill>
             </Ellipse>
             <controls:TextBlockEx
@@ -95,7 +96,7 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 IsTextSelectionEnabled="True"
-                Text="{Binding Title}"
+                Text="{x:Bind Title}"
                 TextWrapping="Wrap" />
         </Grid>
     </DataTemplate>

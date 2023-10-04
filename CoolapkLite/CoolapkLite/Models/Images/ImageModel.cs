@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : INotifyPropertyChanged, IPic
+    public class ImageModel : INotifyPropertyChanged
     {
         private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
 

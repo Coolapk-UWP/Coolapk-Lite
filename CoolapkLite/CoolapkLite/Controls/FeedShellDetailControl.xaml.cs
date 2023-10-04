@@ -25,7 +25,27 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class FeedShellDetailControl : UserControl
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedShellDetailControl"/> class.
+        /// </summary>
         public FeedShellDetailControl() => InitializeComponent();
+
+        #region FeedDetail
+
+        public static readonly DependencyProperty FeedDetailProperty =
+            DependencyProperty.Register(
+                nameof(FeedDetail),
+                typeof(FeedDetailModel),
+                typeof(FeedShellListControl),
+                null);
+
+        public FeedDetailModel FeedDetail
+        {
+            get => (FeedDetailModel)GetValue(FeedDetailProperty);
+            set => SetValue(FeedDetailProperty, value);
+        }
+
+        #endregion
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

@@ -5,6 +5,7 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:converters="using:CoolapkLite.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:feeds="using:CoolapkLite.Models.Feeds"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Controls.DataTemplates"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -17,7 +18,7 @@
 
     <converters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
 
-    <DataTemplate x:Key="FeedDefaultTemplate">
+    <DataTemplate x:Key="FeedDefaultTemplate" x:DataType="feeds:FeedModel">
         <UserControl
             x:Name="RootGrid"
             Background="{ThemeResource SystemControlTransparentBrush}"
@@ -25,7 +26,7 @@
             KeyDown="FrameworkElement_KeyDown"
             Loaded="UserControl_Loaded"
             SizeChanged="UserControl_SizeChanged"
-            Tag="{Binding Url}"
+            Tag="{x:Bind Url}"
             Tapped="FrameworkElement_Tapped">
             <UserControl.Resources>
                 <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
@@ -38,7 +39,7 @@
                             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                         </Style>
                     </Flyout.FlyoutPresenterStyle>
-                    <controls:ShowQRCodeControl QRCodeText="{Binding ShareUrl}" />
+                    <controls:ShowQRCodeControl QRCodeText="{x:Bind ShareUrl}" />
                 </Flyout>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -48,25 +49,25 @@
                         <ToggleMenuFlyoutItem
                             x:Name="CopyButton"
                             x:Uid="/Feed/CopyFree"
-                            IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
+                            IsChecked="{x:Bind IsCopyEnabled, Mode=TwoWay}" />
                         <MenuFlyoutItem
                             x:Uid="/Feed/CopyLink"
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding ShareUrl}" />
+                            Tag="{x:Bind ShareUrl}" />
                         <MenuFlyoutItem
                             x:Uid="/Feed/CopyAll"
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}" />
+                            Tag="{x:Bind Message, Converter={StaticResource HTMLToTextConverter}}" />
                         <MenuFlyoutItem
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}', Mode=OneWay}"
-                            Text="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}', Mode=OneWay}" />
+                            Tag="{x:Bind UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}', Mode=OneWay}"
+                            Text="{x:Bind UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}', Mode=OneWay}" />
                     </MenuFlyoutSubItem>
                     <MenuFlyoutItem
                         x:Name="PinTileButton"
                         x:Uid="/Feed/PinTile"
                         Click="FeedButton_Click"
-                        Tag="{Binding}">
+                        Tag="{x:Bind}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE840;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -75,7 +76,7 @@
                         x:Name="ReportButton"
                         x:Uid="/Feed/Report"
                         Click="FeedButton_Click"
-                        Tag="{Binding ID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=feed&amp;m=report&amp;type=feed&amp;id={0}', Mode=OneWay}">
+                        Tag="{x:Bind ID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=feed&amp;m=report&amp;type=feed&amp;id={0}', Mode=OneWay}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F8;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -84,7 +85,7 @@
                         x:Name="NewWindow"
                         x:Uid="/Feed/NewWindow"
                         Click="FeedButton_Click"
-                        Tag="{Binding Url}">
+                        Tag="{x:Bind Url}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -117,7 +118,7 @@
                     x:Name="StickUp"
                     Grid.Row="0"
                     Orientation="Horizontal"
-                    Visibility="{Binding IsStickTop, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind IsStickTop, Converter={StaticResource BoolToVisibilityConverter}}">
                     <FontIcon
                         Margin="4,0,0,0"
                         FontFamily="{StaticResource SymbolThemeFontFamily}"
@@ -129,23 +130,23 @@
                         Margin="5,4,5,5"
                         HorizontalAlignment="Left"
                         Foreground="Red"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                 </StackPanel>
                 <StackPanel
                     x:Name="UserBar"
                     Grid.Row="1"
                     Orientation="Horizontal"
-                    Visibility="{Binding ShowUser, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind ShowUser, Converter={StaticResource BoolToVisibilityConverter}}">
                     <Button
                         Margin="0,4"
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding UserInfo.Url}"
+                        Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
                         <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
+                                <ImageBrush ImageSource="{x:Bind UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
                         </Ellipse>
                     </Button>
@@ -157,8 +158,8 @@
                         <TextBlock
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                            Text="{Binding UserInfo.UserName}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind UserInfo.UserName}"
                             TextTrimming="CharacterEllipsis" />
                         <controls:StackPanelEx
                             Grid.Row="1"
@@ -170,38 +171,38 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding Info}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Info}"
                                 TextTrimming="CharacterEllipsis" />
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding Dateline}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Dateline}"
                                 TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
-                                Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                Visibility="{x:Bind ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding InfoHTML}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind InfoHTML}"
                                 TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
-                                Visibility="{Binding ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                Visibility="{x:Bind ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis">
                                 <Hyperlink
                                     Click="DeviceHyperlink_Click"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     UnderlineStyle="None">
-                                    <Run Text="{Binding DeviceTitle}" />
+                                    <Run Text="{x:Bind DeviceTitle}" />
                                 </Hyperlink>
                             </TextBlock>
                         </controls:StackPanelEx>
@@ -212,30 +213,30 @@
                     Grid.Row="1"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal"
-                    Visibility="{Binding ShowButtons, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind ShowButtons, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <Button
                         x:Name="LikeButton"
                         x:Uid="/Feed/LikeButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
+                        Tag="{x:Bind}"
                         Tapped="Button_Tapped"
-                        Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 Glyph="&#xE8E1;"
-                                Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Glyph="&#xE8E1;"
-                                Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding LikeNum}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind LikeNum, Mode=OneWay}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -243,16 +244,16 @@
                         x:Uid="/Feed/ReplyButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
+                        Tag="{x:Bind}"
                         Tapped="Button_Tapped"
-                        Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding ReplyNum}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind ReplyNum, Mode=OneWay}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -261,16 +262,16 @@
                         Click="FeedButton_Click"
                         Flyout="{StaticResource QRCodeFlyout}"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding ShareUrl}"
+                        Tag="{x:Bind ShareUrl}"
                         Tapped="Button_Tapped"
-                        Visibility="{Binding ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind ShowLikes, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding ShareNum}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind ShareNum}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -289,15 +290,15 @@
                     HorizontalAlignment="Left"
                     FontSize="16"
                     FontWeight="Black"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                    Text="{Binding MessageTitle}"
+                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                    Text="{x:Bind MessageTitle}"
                     TextWrapping="Wrap"
-                    Visibility="{Binding MessageTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind MessageTitle, Converter={StaticResource StringVisibilityConverter}}" />
                 <controls:StackPanelEx
                     Grid.Row="4"
                     Margin="4"
                     Spacing="4">
-                    <Grid Visibility="{Binding IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <Grid Visibility="{x:Bind IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
@@ -314,32 +315,32 @@
                                 x:Uid="/Feed/Rating"
                                 FontSize="12"
                                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                         </Border>
                         <controls:RatingControl
                             x:Name="RatingStarControl"
                             Grid.Column="1"
                             Margin="8,7,8,0"
                             IsReadOnly="True"
-                            Value="{Binding RatingStar, Mode=OneWay}" />
+                            Value="{x:Bind RatingStar, Mode=OneWay}" />
                         <TextBlock
                             Grid.Column="2"
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
-                            <Run Text="{Binding RatingStar, Converter={StaticResource NumMultConverter}, ConverterParameter='2', Mode=OneWay}" />
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                            <Run Text="{x:Bind RatingStar, Converter={StaticResource NumMultConverter}, ConverterParameter='2', Mode=OneWay}" />
                             <Run Text="分" />
                         </TextBlock>
                     </Grid>
                     <controls:TextBlockEx
                         x:Name="Message"
                         HorizontalAlignment="Left"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                         LineSpacing="10"
-                        Text="{Binding Message}"
-                        Visibility="{Binding Message, Converter={StaticResource StringVisibilityConverter}}" />
+                        Text="{x:Bind Message}"
+                        Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}" />
                 </controls:StackPanelEx>
                 <GridView
                     Grid.Row="5"
@@ -348,10 +349,10 @@
                     Padding="0"
                     HorizontalContentAlignment="Left"
                     ItemTemplate="{StaticResource PicDefaultTemplate}"
-                    ItemsSource="{Binding PicArr}"
+                    ItemsSource="{x:Bind PicArr}"
                     ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionChanged="GridView_SelectionChanged"
-                    Visibility="{Binding PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsWrapGrid
@@ -369,13 +370,13 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    Visibility="{Binding VoteRows, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind VoteRows, Converter={StaticResource CollectionVisibilityConverter}}">
                     <ListView
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                         ItemTemplate="{StaticResource VoteItemTemplate}"
-                        ItemsSource="{Binding VoteRows}"
+                        ItemsSource="{x:Bind VoteRows}"
                         ShowsScrollingPlaceholders="False" />
                     <Grid Margin="4">
                         <Grid.ColumnDefinitions>
@@ -386,11 +387,11 @@
                             HorizontalAlignment="Left"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
-                            <Run FontWeight="Bold" Text="{Binding TotalVoteNum}" />
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                            <Run FontWeight="Bold" Text="{x:Bind TotalVoteNum}" />
                             <Run Text="人投票" />
                             <Run Text="•" />
-                            <Run FontWeight="Bold" Text="{Binding TotalCommentNum}" />
+                            <Run FontWeight="Bold" Text="{x:Bind TotalCommentNum}" />
                             <Run Text="个观点" />
                         </TextBlock>
                         <TextBlock
@@ -398,10 +399,10 @@
                             HorizontalAlignment="Right"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
-                            <Run FontWeight="Bold" Text="{Binding VoteStartTime}" />
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                            <Run FontWeight="Bold" Text="{x:Bind VoteStartTime}" />
                             <Run Text="-" />
-                            <Run FontWeight="Bold" Text="{Binding VoteEndTime}" />
+                            <Run FontWeight="Bold" Text="{x:Bind VoteEndTime}" />
                         </TextBlock>
                     </Grid>
                 </StackPanel>
@@ -412,16 +413,17 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    Visibility="{Binding ShowSourceFeed, Converter={StaticResource BoolToVisibilityConverter}}">
+                    Visibility="{x:Bind ShowSourceFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock
                         x:Uid="/Feed/SourceFeedNotFount"
                         Margin="12,8"
                         HorizontalAlignment="Left"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                        Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    <Border Visibility="{Binding EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding SourceFeed}" />
-                    </Border>
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                        Visibility="{x:Bind EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <ContentControl
+                        ContentTemplate="{StaticResource SourceFeedDefaultTemplate}"
+                        DataContext="{x:Bind SourceFeed}"
+                        Visibility="{x:Bind EmptySourceFeed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                 </Grid>
                 <Grid
                     Grid.Row="8"
@@ -430,11 +432,11 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     KeyDown="FrameworkElement_KeyDown"
-                    Tag="{Binding ExtraUrl}"
+                    Tag="{x:Bind ExtraUrl}"
                     Tapped="FrameworkElement_Tapped"
-                    ToolTipService.ToolTip="{Binding ExtraUrl}"
-                    Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
-                    <Grid Padding="8" Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                    ToolTipService.ToolTip="{x:Bind ExtraUrl}"
+                    Visibility="{x:Bind ExtraTitle, Converter={StaticResource StringVisibilityConverter}}">
+                    <Grid Padding="8" Visibility="{x:Bind LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
@@ -442,9 +444,9 @@
                         <Border
                             Width="56"
                             Height="56"
-                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                             <Border.Background>
-                                <ImageBrush ImageSource="{Binding ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                <ImageBrush ImageSource="{x:Bind ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                             </Border.Background>
                         </Border>
                         <Border
@@ -453,7 +455,7 @@
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            Visibility="{Binding ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
                             <FontIcon
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -467,24 +469,25 @@
                             VerticalAlignment="Center">
                             <TextBlock
                                 HorizontalAlignment="Left"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 MaxLines="2"
-                                Text="{Binding ExtraTitle}"
+                                Text="{x:Bind ExtraTitle}"
                                 TextTrimming="WordEllipsis"
                                 TextWrapping="Wrap"
-                                Visibility="{Binding ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding ExtraSubtitle}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind ExtraSubtitle}"
                                 TextWrapping="Wrap"
-                                Visibility="{Binding ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind ExtraSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
                         </StackPanel>
                     </Grid>
-                    <Border Visibility="{Binding LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{Binding LinkSourceFeed}" />
-                    </Border>
+                    <ContentControl
+                        ContentTemplate="{StaticResource SourceFeedDefaultTemplate}"
+                        DataContext="{x:Bind LinkSourceFeed}"
+                        Visibility="{x:Bind LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                 </Grid>
                 <Grid
                     Grid.Row="9"
@@ -494,10 +497,10 @@
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     KeyDown="FrameworkElement_KeyDown"
-                    Tag="{Binding MediaUrl}"
+                    Tag="{x:Bind MediaUrl}"
                     Tapped="FrameworkElement_Tapped"
-                    ToolTipService.ToolTip="{Binding MediaUrl}"
-                    Visibility="{Binding MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
+                    ToolTipService.ToolTip="{x:Bind MediaUrl}"
+                    Visibility="{x:Bind MediaUrl, Converter={StaticResource StringVisibilityConverter}}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
@@ -505,9 +508,9 @@
                     <Border
                         Width="56"
                         Height="56"
-                        Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                         </Border.Background>
                     </Border>
                     <Border
@@ -516,7 +519,7 @@
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{Binding MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
+                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true'}">
                         <FontIcon
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -530,18 +533,18 @@
                         VerticalAlignment="Center">
                         <TextBlock
                             HorizontalAlignment="Left"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                             MaxLines="2"
-                            Text="{Binding MediaTitle}"
+                            Text="{x:Bind MediaTitle}"
                             TextTrimming="WordEllipsis"
                             TextWrapping="Wrap" />
                         <TextBlock
                             HorizontalAlignment="Left"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                            Text="{Binding MediaSubtitle}"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            Text="{x:Bind MediaSubtitle}"
                             TextWrapping="Wrap"
-                            Visibility="{Binding MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
+                            Visibility="{x:Bind MediaSubtitle, Converter={StaticResource StringVisibilityConverter}}" />
                     </StackPanel>
                 </Grid>
                 <ListView
@@ -552,10 +555,10 @@
                     ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                     ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                     ItemTemplate="{StaticResource RelationRowsItemTemplate}"
-                    ItemsSource="{Binding RelationRows}"
+                    ItemsSource="{x:Bind RelationRows}"
                     ShowsScrollingPlaceholders="False"
                     Style="{StaticResource VerticalListViewStyle}"
-                    Visibility="{Binding RelationRows, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind RelationRows, Converter={StaticResource CollectionVisibilityConverter}}">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <controls:StackPanelEx
@@ -574,23 +577,23 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    Visibility="{Binding ReplyRows, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind ReplyRows, Converter={StaticResource CollectionVisibilityConverter}}">
                     <ListView
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                         ItemTemplate="{StaticResource ReplyRowsItemTemplate}"
-                        ItemsSource="{Binding ReplyRows}"
+                        ItemsSource="{x:Bind ReplyRows}"
                         ShowsScrollingPlaceholders="False" />
                     <TextBlock
                         Margin="4"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
                         <Run x:Uid="/Feed/SeeAll" />
                         <Run Text="(" />
-                        <Run Text="{Binding ReplyNum}" />
+                        <Run Text="{x:Bind ReplyNum}" />
                         <Run Text=")" />
                     </TextBlock>
                 </StackPanel>
@@ -603,33 +606,33 @@
                         HorizontalAlignment="Left"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                        Visibility="{Binding IsQuestionFeed, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Run FontWeight="Bold" Text="{Binding QuestionAnswerNum}" />
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                        Visibility="{x:Bind IsQuestionFeed, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Run FontWeight="Bold" Text="{x:Bind QuestionAnswerNum}" />
                         <Run Text="人回答" />
                         <Run Text="•" />
-                        <Run FontWeight="Bold" Text="{Binding QuestionFollowNum}" />
+                        <Run FontWeight="Bold" Text="{x:Bind QuestionFollowNum}" />
                         <Run Text="人关注" />
                     </TextBlock>
                     <Border
                         Margin="2,0"
                         HorizontalAlignment="Left"
-                        Visibility="{Binding IsQuestionFeed, Converter={StaticResource BoolToVisibilityConverter}}">
+                        Visibility="{x:Bind IsQuestionFeed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Text="•"
-                            Visibility="{Binding IPLocation, Converter={StaticResource StringVisibilityConverter}}" />
+                            Visibility="{x:Bind IPLocation, Converter={StaticResource StringVisibilityConverter}}" />
                     </Border>
                     <TextBlock
                         HorizontalAlignment="Left"
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                        Visibility="{Binding IPLocation, Converter={StaticResource StringVisibilityConverter}}">
+                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                        Visibility="{x:Bind IPLocation, Converter={StaticResource StringVisibilityConverter}}">
                         <Run x:Uid="/Feed/PublishFrom" />
-                        <Run FontWeight="Bold" Text="{Binding IPLocation}" />
+                        <Run FontWeight="Bold" Text="{x:Bind IPLocation}" />
                     </TextBlock>
                 </StackPanel>
             </Grid>
@@ -760,7 +763,7 @@
         </UserControl>
     </DataTemplate>
 
-    <DataTemplate x:Key="FeedReplyDefaultTemplate">
+    <DataTemplate x:Key="FeedReplyDefaultTemplate" x:DataType="feeds:FeedReplyModel">
         <UserControl
             x:Name="RootGrid"
             Background="{ThemeResource SystemControlTransparentBrush}"
@@ -775,21 +778,21 @@
                         <ToggleMenuFlyoutItem
                             x:Name="CopyButton"
                             x:Uid="/Feed/CopyFree"
-                            IsChecked="{Binding IsCopyEnabled, Mode=TwoWay}" />
+                            IsChecked="{x:Bind IsCopyEnabled, Mode=TwoWay}" />
                         <MenuFlyoutItem
                             x:Uid="/Feed/CopyAll"
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding Message, Converter={StaticResource HTMLToTextConverter}}" />
+                            Tag="{x:Bind Message, Converter={StaticResource HTMLToTextConverter}}" />
                         <MenuFlyoutItem
                             Click="CopyMenuItem_Click"
-                            Tag="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}', Mode=OneWay}"
-                            Text="{Binding UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}', Mode=OneWay}" />
+                            Tag="{x:Bind UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='@{0}', Mode=OneWay}"
+                            Text="{x:Bind UserInfo.UserName, Converter={StaticResource StringFormatConverter}, ConverterParameter='复制 @{0}', Mode=OneWay}" />
                     </MenuFlyoutSubItem>
                     <MenuFlyoutItem
                         x:Name="ReportButton"
                         x:Uid="/Feed/Report"
                         Click="FeedButton_Click"
-                        Tag="{Binding ID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=feed&amp;m=report&amp;type=feed_reply&amp;id={0}', Mode=OneWay}">
+                        Tag="{x:Bind ID, Converter={StaticResource StringFormatConverter}, ConverterParameter='https://m.coolapk.com/mp/do?c=feed&amp;m=report&amp;type=feed_reply&amp;id={0}', Mode=OneWay}">
                         <helpers:FlyoutBaseHelper.Icon>
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8F8;" />
                         </helpers:FlyoutBaseHelper.Icon>
@@ -820,11 +823,11 @@
                         Padding="0"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding UserInfo.Url}"
+                        Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
                         <Ellipse Width="36" Height="36">
                             <Ellipse.Fill>
-                                <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
+                                <ImageBrush ImageSource="{x:Bind UserInfo.UserAvatar.Pic, Mode=OneWay}" />
                             </Ellipse.Fill>
                         </Ellipse>
                     </Button>
@@ -835,22 +838,22 @@
                             Orientation="Horizontal">
                             <TextBlock
                                 HorizontalAlignment="Left"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding UserInfo.UserName}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind UserInfo.UserName}" />
                             <Border
                                 Margin="6,0"
                                 VerticalAlignment="Center"
                                 BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                                 BorderThickness="1"
                                 CornerRadius="{ThemeResource ControlCornerRadius}"
-                                Visibility="{Binding IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
+                                Visibility="{x:Bind IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock
                                     x:Uid="/Feed/FeedAuthor"
                                     Margin="1"
                                     HorizontalAlignment="Left"
                                     FontSize="12"
                                     Foreground="{ThemeResource AccentFillColorDefaultBrush}"
-                                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}" />
+                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                             </Border>
                         </StackPanel>
                         <StackPanel Margin="-1,0" Orientation="Horizontal">
@@ -858,27 +861,27 @@
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding Dateline}"
-                                ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind Dateline}"
+                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                             <TextBlock
                                 Margin="2,0,0,0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="@"
-                                Visibility="{Binding Rusername, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
                             <HyperlinkButton
                                 x:Name="Ruser"
                                 Margin="0,-5"
                                 Click="Button_Click"
-                                Content="{Binding Rusername}"
+                                Content="{x:Bind Rusername}"
                                 FontWeight="Normal"
                                 Style="{StaticResource TextBlockButtonStyle}"
-                                Tag="{Binding Rurl}"
+                                Tag="{x:Bind Rurl}"
                                 Tapped="Button_Tapped"
-                                Visibility="{Binding Rusername, Converter={StaticResource StringVisibilityConverter}}" />
+                                Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
                         </StackPanel>
                     </StackPanel>
                 </StackPanel>
@@ -892,23 +895,23 @@
                         x:Uid="/Feed/LikeButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
+                        Tag="{x:Bind}"
                         Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                 Glyph="&#xE8E1;"
-                                Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                 Glyph="&#xE8E1;"
-                                Visibility="{Binding Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
+                                Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding LikeNum}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind LikeNum, Mode=OneWay}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -916,15 +919,15 @@
                         x:Uid="/Feed/ReplyButton"
                         Click="FeedButton_Click"
                         Style="{StaticResource TransparentButtonStyle}"
-                        Tag="{Binding}"
+                        Tag="{x:Bind}"
                         Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
                             <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE90A;" />
                             <TextBlock
                                 Margin="8,0,0,0"
                                 VerticalAlignment="Center"
-                                IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                                Text="{Binding ReplyNum}" />
+                                IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                Text="{x:Bind ReplyNum, Mode=OneWay}" />
                         </StackPanel>
                     </Button>
                     <Button
@@ -941,9 +944,9 @@
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
+                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                     LineSpacing="10"
-                    Text="{Binding Message}" />
+                    Text="{x:Bind Message}" />
                 <GridView
                     Grid.Row="4"
                     MinHeight="0"
@@ -951,10 +954,10 @@
                     Padding="0"
                     HorizontalContentAlignment="Left"
                     ItemTemplate="{StaticResource PicDefaultTemplate}"
-                    ItemsSource="{Binding PicArr}"
+                    ItemsSource="{x:Bind PicArr}"
                     ScrollViewer.VerticalScrollMode="Disabled"
                     SelectionChanged="GridView_SelectionChanged"
-                    Visibility="{Binding PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsWrapGrid
@@ -973,13 +976,13 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    Visibility="{Binding ReplyRows, Converter={StaticResource CollectionVisibilityConverter}}">
+                    Visibility="{x:Bind ReplyRows, Converter={StaticResource CollectionVisibilityConverter}}">
                     <ListView
                         HorizontalAlignment="Stretch"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                         ItemTemplate="{StaticResource ReplyRowsItemTemplate}"
-                        ItemsSource="{Binding ReplyRows}"
+                        ItemsSource="{x:Bind ReplyRows}"
                         ShowsScrollingPlaceholders="False" />
                     <Button
                         x:Name="SeeAllButton"
@@ -988,7 +991,7 @@
                         HorizontalContentAlignment="Left"
                         Background="{ThemeResource SystemControlTransparentBrush}"
                         Click="Button_Click"
-                        Tag="{Binding}"
+                        Tag="{x:Bind}"
                         Tapped="Button_Tapped">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
@@ -996,7 +999,7 @@
                                     x:Name="NewWindow"
                                     x:Uid="/Feed/NewWindow"
                                     Click="Button_Click"
-                                    Tag="{Binding}">
+                                    Tag="{x:Bind}">
                                     <helpers:FlyoutBaseHelper.Icon>
                                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8A7;" />
                                     </helpers:FlyoutBaseHelper.Icon>
@@ -1008,10 +1011,10 @@
                             VerticalAlignment="Center"
                             FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}">
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
                             <Run x:Uid="/Feed/SeeAll" />
                             <Run Text="(" />
-                            <Run Text="{Binding ReplyNum}" />
+                            <Run Text="{x:Bind ReplyNum}" />
                             <Run Text=")" />
                         </TextBlock>
                     </Button>

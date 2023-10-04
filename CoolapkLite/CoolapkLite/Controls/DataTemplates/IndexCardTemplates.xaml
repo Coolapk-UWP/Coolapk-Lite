@@ -4,20 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:CoolapkLite.Models"
     mc:Ignorable="d">
-    <DataTemplate x:Key="ImageCardTemplate">
+    <DataTemplate x:Key="ImageCardTemplate" x:DataType="models:IndexPageHasEntitiesModel">
         <FlipView
             x:Name="FlipView"
             Background="{ThemeResource SystemControlTransparentBrush}"
-            ItemsSource="{Binding Entities}"
+            ItemsSource="{x:Bind Entities}"
             Loaded="FlipView_Loaded"
             SizeChanged="FlipView_SizeChanged"
-            Visibility="{Binding Entities, Converter={StaticResource CollectionVisibilityConverter}}">
+            Visibility="{x:Bind Entities, Converter={StaticResource CollectionVisibilityConverter}}">
             <FlipView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:IHasDescription">
                     <Border>
                         <Border.Background>
-                            <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                            <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
                         </Border.Background>
                     </Border>
                 </DataTemplate>
