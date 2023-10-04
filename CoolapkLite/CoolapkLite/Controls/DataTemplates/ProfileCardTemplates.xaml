@@ -290,7 +290,7 @@
                     TextAlignment="Center"
                     TextTrimming="CharacterEllipsis" />
                 <TextBlock
-                    x:Name="SubTitle"
+                    x:Name="SubTitleText"
                     HorizontalAlignment="Stretch"
                     FontSize="12"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"

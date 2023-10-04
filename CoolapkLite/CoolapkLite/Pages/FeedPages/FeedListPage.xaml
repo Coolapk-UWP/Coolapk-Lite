@@ -180,7 +180,7 @@
                                                 FontSize="15"
                                                 Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                             <TextBlock
-                                                x:Name="FollowStatus"
+                                                x:Name="FollowStatusText"
                                                 Margin="8,0,0,0"
                                                 VerticalAlignment="Center"
                                                 Text="{x:Bind FollowStatus, Mode=OneWay}" />
@@ -213,7 +213,7 @@
                                             Text="{x:Bind NextLevelNowExperience}" />
                                     </Grid>
                                     <ProgressBar
-                                        x:Name="NextLevelPercentage"
+                                        x:Name="NextLevelPercentageBar"
                                         Grid.Row="1"
                                         Width="160"
                                         Margin="0,4"
@@ -431,7 +431,7 @@
                                         FontSize="15"
                                         Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
-                                        x:Name="FollowStatus"
+                                        x:Name="FollowStatusText"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{x:Bind FollowStatus, Mode=OneWay}" />
@@ -539,7 +539,7 @@
                                         FontSize="15"
                                         Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
-                                        x:Name="FollowStatus"
+                                        x:Name="FollowStatusText"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{x:Bind FollowStatus, Mode=OneWay}" />
@@ -726,7 +726,7 @@
                                             FontSize="15"
                                             Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                         <TextBlock
-                                            x:Name="FollowStatus"
+                                            x:Name="FollowStatusText"
                                             Margin="8,0,0,0"
                                             VerticalAlignment="Center"
                                             Text="{x:Bind FollowStatus, Mode=OneWay}" />
@@ -1259,7 +1259,7 @@
                                         FontSize="15"
                                         Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                     <TextBlock
-                                        x:Name="FollowStatus"
+                                        x:Name="FollowStatusText"
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"
                                         Text="{x:Bind FollowStatus, Mode=OneWay}" />
@@ -1394,7 +1394,7 @@
                                             FontSize="15"
                                             Glyph="{x:Bind FollowGlyph, Mode=OneWay}" />
                                         <TextBlock
-                                            x:Name="FollowStatus"
+                                            x:Name="FollowStatusText"
                                             Margin="8,0,0,0"
                                             VerticalAlignment="Center"
                                             Text="{x:Bind FollowStatus, Mode=OneWay}" />

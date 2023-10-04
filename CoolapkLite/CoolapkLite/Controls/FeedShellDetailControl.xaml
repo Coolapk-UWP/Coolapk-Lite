@@ -425,7 +425,7 @@
                         Margin="0,4"
                         Visibility="{x:Bind FeedDetail.IsFeedArticle, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', FallbackValue='Collapsed', Mode=OneWay}">
                         <local:TextBlockEx
-                            x:Name="MessageTitle"
+                            x:Name="MessageTitleText"
                             HorizontalAlignment="Left"
                             FontSize="16"
                             FontWeight="Black"
@@ -435,7 +435,7 @@
                             Visibility="{x:Bind FeedDetail.MessageTitle, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
                     </Border>
                     <local:TextBlockEx
-                        x:Name="Message"
+                        x:Name="MessageText"
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="True"
@@ -443,7 +443,7 @@
                         Text="{x:Bind FeedDetail.Message, Mode=OneWay}"
                         Visibility="{x:Bind FeedDetail.MessageRawOutput, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
                     <local:TextBlockEx
-                        x:Name="ArticleMessage"
+                        x:Name="ArticleMessageText"
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="True"

@@ -199,8 +199,8 @@
             <ctrl:TextBlockEx
                 Grid.Row="2"
                 Grid.Column="1"
-                d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
                 VerticalAlignment="Center"
+                d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
                 Text="{Binding Description}"

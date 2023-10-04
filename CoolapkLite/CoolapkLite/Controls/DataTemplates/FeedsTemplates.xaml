@@ -284,7 +284,7 @@
                     </Button>
                 </StackPanel>
                 <controls:TextBlockEx
-                    x:Name="MessageTitle"
+                    x:Name="MessageTitleText"
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
@@ -335,7 +335,7 @@
                         </TextBlock>
                     </Grid>
                     <controls:TextBlockEx
-                        x:Name="Message"
+                        x:Name="MessageText"
                         HorizontalAlignment="Left"
                         IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                         LineSpacing="10"
@@ -570,7 +570,7 @@
                     </ListView.ItemsPanel>
                 </ListView>
                 <StackPanel
-                    x:Name="ReplyRows"
+                    x:Name="ReplyRowsPanel"
                     Grid.Row="11"
                     Margin="0,4"
                     Padding="4"
@@ -940,7 +940,7 @@
                     </Button>
                 </StackPanel>
                 <controls:TextBlockEx
-                    x:Name="Message"
+                    x:Name="MessageText"
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
@@ -969,7 +969,7 @@
                     </GridView.ItemsPanel>
                 </GridView>
                 <StackPanel
-                    x:Name="ReplyRows"
+                    x:Name="ReplyRowsPanel"
                     Grid.Row="5"
                     Margin="0,4"
                     Padding="4"
