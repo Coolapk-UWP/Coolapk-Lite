@@ -29,9 +29,9 @@
                                 <RowDefinition Height="3*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="15*" />
-                                <ColumnDefinition Width="70*" />
-                                <ColumnDefinition Width="15*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="14*" />
+                                <ColumnDefinition Width="3*" />
                             </Grid.ColumnDefinitions>
                             <Viewbox
                                 Grid.Row="1"
@@ -134,9 +134,9 @@
                             CornerRadius="{TemplateBinding ImageCornerRadius}"
                             Opacity="1.0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="0.75*" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="0.75*" />
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="3*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="3*" />
@@ -254,9 +254,9 @@
                                 <RowDefinition Height="3*" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="15*" />
-                                <ColumnDefinition Width="70*" />
-                                <ColumnDefinition Width="15*" />
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="14*" />
+                                <ColumnDefinition Width="3*" />
                             </Grid.ColumnDefinitions>
                             <Viewbox
                                 Grid.Row="1"
