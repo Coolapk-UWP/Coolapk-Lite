@@ -2,7 +2,6 @@
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Message;
 using CoolapkLite.Models.Pages;
-using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -10,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public sealed class CardTemplateSelector : DataTemplateSelector
+    public class CardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Feed { get; set; }
         public DataTemplate User { get; set; }
@@ -60,7 +59,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public sealed class ProfileCardTemplateSelector : DataTemplateSelector
+    public class ProfileCardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate TitleCard { get; set; }
@@ -93,7 +92,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public sealed class ProfileItemTemplateSelector : DataTemplateSelector
+    public class ProfileItemTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Empty { get; set; }
         public DataTemplate History { get; set; }
@@ -125,7 +124,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public sealed class SearchTemplateSelector : DataTemplateSelector
+    public class SearchTemplateSelector : DataTemplateSelector
     {
         public DataTemplate App { get; set; }
         public DataTemplate SearchWord { get; set; }
@@ -135,7 +134,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public sealed class ChatCardTemplateSelector : DataTemplateSelector
+    public class ChatCardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate MessageLeft { get; set; }

@@ -536,6 +536,8 @@ namespace CoolapkLite.Controls
             base.OnApplyTemplate();
         }
 
+        public bool BackToTop() => _scroller?.ChangeView(0, 0, null) == true;
+
         private void OnApplyRefreshContainerTemplate()
         {
             if (_refreshContainer != null)
@@ -597,7 +599,7 @@ namespace CoolapkLite.Controls
             LoadMoreItems(scrollViewer);
         }
 
-        public async void LoadMoreItems(ScrollViewer scrollViewer)
+        private async void LoadMoreItems(ScrollViewer scrollViewer)
         {
             if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
             if (Items.Count > 0 && !source.HasMoreItems) { return; }

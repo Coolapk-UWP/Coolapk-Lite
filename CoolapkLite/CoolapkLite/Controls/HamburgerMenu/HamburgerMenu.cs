@@ -12,20 +12,16 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// The HamburgerMenu is based on a SplitView control. By default it contains a HamburgerButton and a ListView to display menu items.
     /// </summary>
-    [TemplatePart(Name = "LayoutRoot", Type = typeof(Grid))]
     [TemplatePart(Name = "HamburgerButton", Type = typeof(Button))]
     [TemplatePart(Name = "ButtonsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "OptionsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "PaneAutoSuggestItem", Type = typeof(ListViewItem))]
     public partial class HamburgerMenu : ContentControl
     {
-        private Grid _layoutRoot;
         private Button _hamburgerButton;
         private ListViewBase _buttonsListView;
         private ListViewBase _optionsListView;
         private ListViewItem _paneAutoSuggestItem;
-        private VisualStateGroup _windowsSizeGroup;
-        private AnimateSelectionProvider _selectionProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HamburgerMenu"/> class.
@@ -35,6 +31,8 @@ namespace CoolapkLite.Controls
             DefaultStyleKey = typeof(HamburgerMenu);
             SizeChanged += OnSizeChanged;
         }
+
+        protected AnimateSelectionProvider SelectionProvider { get; set; }
 
         /// <summary>
         /// Override default OnApplyTemplate to capture children controls
@@ -69,12 +67,10 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped -= PaneAutoSuggestButton_Tapped;
             }
 
-            _layoutRoot = (Grid)GetTemplateChild("LayoutRoot");
             _hamburgerButton = (Button)GetTemplateChild("HamburgerButton");
             _buttonsListView = (ListViewBase)GetTemplateChild("ButtonsListView");
             _optionsListView = (ListViewBase)GetTemplateChild("OptionsListView");
             _paneAutoSuggestItem = (ListViewItem)GetTemplateChild("PaneAutoSuggestItem");
-            _windowsSizeGroup = _layoutRoot.FindVisualStateGroupByName("WindowsSizeGroup");
 
             if (_hamburgerButton != null)
             {
@@ -99,7 +95,7 @@ namespace CoolapkLite.Controls
                 _paneAutoSuggestItem.Tapped += PaneAutoSuggestButton_Tapped;
             }
 
-            _selectionProvider = new AnimateSelectionProvider
+            SelectionProvider = new AnimateSelectionProvider
             {
                 IndicatorName = "SelectionIndicator",
                 Orientation = Orientation.Vertical,
@@ -109,8 +105,6 @@ namespace CoolapkLite.Controls
                     _optionsListView
                 }
             };
-
-            UpdateTitleBarPadding();
 
             base.OnApplyTemplate();
         }
@@ -139,11 +133,6 @@ namespace CoolapkLite.Controls
         {
             VisualStateManager.GoToState(this, DisplayMode == SplitViewDisplayMode.CompactOverlay && !IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
             VisualStateManager.GoToState(this, (DisplayMode == SplitViewDisplayMode.Overlay || DisplayMode == SplitViewDisplayMode.CompactOverlay) && IsPaneOpen ? "PaneOverlaying" : "PaneNotOverlaying", true);
-        }
-
-        private void UpdateTitleBarPadding()
-        {
-            VisualStateManager.GoToState(this, UIHelper.HasStatusBar || UIHelper.HasTitleBar ? "TitleBarVisible" : "TitleBarCollapsed", true);
         }
 
         private void UpdateDisplayModeState()

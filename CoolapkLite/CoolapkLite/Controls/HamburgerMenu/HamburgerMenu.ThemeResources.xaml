@@ -438,10 +438,6 @@
                     <VisualState x:Name="CompactSize" />
                     <VisualState x:Name="ExpandedSize" />
                 </VisualStateGroup>
-                <VisualStateGroup x:Name="TitleBarVisibilityGroup">
-                    <VisualState x:Name="TitleBarVisible" />
-                    <VisualState x:Name="TitleBarCollapsed" />
-                </VisualStateGroup>
                 <VisualStateGroup x:Name="AutoSuggestGroup">
                     <VisualState x:Name="AutoSuggestBoxVisible" />
                     <VisualState x:Name="AutoSuggestBoxCollapsed">

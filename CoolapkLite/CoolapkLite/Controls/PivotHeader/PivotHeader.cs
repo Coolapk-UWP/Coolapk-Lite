@@ -11,9 +11,9 @@ using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Controls
 {
-    public sealed class PivotHeader : ListBox
+    public class PivotHeader : ListBox
     {
-        private readonly AnimateSelectionProvider _selectionProvider;
+        protected AnimateSelectionProvider SelectionProvider { get; }
 
         /// <summary>
         /// Creates a new instance of the <see cref="PivotHeader"/> class.
@@ -21,7 +21,7 @@ namespace CoolapkLite.Controls
         public PivotHeader()
         {
             DefaultStyleKey = typeof(PivotHeader);
-            _selectionProvider = new AnimateSelectionProvider
+            SelectionProvider = new AnimateSelectionProvider
             {
                 Orientation = Orientation.Horizontal,
                 IndicatorName = c_selectionIndicatorName,
