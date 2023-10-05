@@ -70,15 +70,16 @@
                         BorderThickness="1"
                         Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <control:ImageControl
-                            MaxWidth="102"
+                            MaxWidth="200"
                             HorizontalAlignment="Left"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
+                            EnableLazyLoading="False"
                             KeyDown="Image_KeyDown"
                             Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
@@ -206,15 +207,16 @@
                         BorderThickness="1"
                         Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <control:ImageControl
-                            MaxWidth="102"
+                            MaxWidth="200"
                             HorizontalAlignment="Right"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
+                            EnableLazyLoading="False"
                             KeyDown="Image_KeyDown"
                             Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
+                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem

@@ -745,7 +745,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
             if (ItemSource == null)
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionContents, ID, "1", ""), true);
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionContents, ID, "1", string.Empty, string.Empty), true);
                 if (isSucceed)
                 {
                     JArray array = result as JArray;

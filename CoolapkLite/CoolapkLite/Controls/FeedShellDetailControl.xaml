@@ -138,10 +138,11 @@
                 </helpers:UIElementHelper.ContextFlyout>
                 <local:ImageControl
                     x:Name="MessageCover"
-                    EnableLazyLoading="False"
                     KeyDown="FrameworkElement_KeyDown"
+                    SizeChanged="FlipView_SizeChanged"
                     Source="{x:Bind FeedDetail.MessageCover, Mode=OneWay}"
                     Stretch="UniformToFill"
+                    Style="{StaticResource ImageBrushImageControlStyle}"
                     Tag="{x:Bind FeedDetail.MessageCover, Mode=OneWay}"
                     Tapped="FrameworkElement_Tapped"
                     Visibility="{x:Bind FeedDetail.MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />

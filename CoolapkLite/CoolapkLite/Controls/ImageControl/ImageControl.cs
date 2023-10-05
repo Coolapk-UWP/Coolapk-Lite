@@ -38,11 +38,8 @@ namespace CoolapkLite.Controls
         {
             DefaultStyleKey = typeof(ImageControl);
             SetValue(TemplateSettingsProperty, new ImageControlTemplateSettings());
-            if (!ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
-            {
-                Loaded += (sender, args) => _isLoaded = true;
-                Unloaded += (sender, args) => _isLoaded = true;
-            }
+            Loaded += ImageControl_Loaded;
+            Unloaded += ImageControl_Unloaded;
         }
 
         /// <summary>
@@ -55,6 +52,21 @@ namespace CoolapkLite.Controls
                 SetSource();
             }
             base.OnApplyTemplate();
+        }
+
+        private void ImageControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            _isLoaded = true;
+            if (!EnableLazyLoading)
+            {
+                SetSource();
+            }
+        }
+
+        private void ImageControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _isLoaded = false;
+            RemoveSource();
         }
 
         private void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs args)
@@ -114,7 +126,7 @@ namespace CoolapkLite.Controls
             {
                 await Dispatcher.ResumeForegroundAsync();
             }
-            VisualStateManager.GoToState(this, sender.IsLoaded ? LoadedState : LoadingState, true);
+            VisualStateManager.GoToState(this, args ? LoadingState : LoadedState, true);
         }
 
         private void ImageControl_LayoutUpdated(object sender, object e)
@@ -124,13 +136,7 @@ namespace CoolapkLite.Controls
 
         private void InvalidateLazyLoading()
         {
-            if (Source == null)
-            {
-                TemplateSettings.ActualSource = null;
-                return;
-            }
-
-            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? !IsLoaded : !_isLoaded)
+            if (Source == null || !(ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded))
             {
                 return;
             }
@@ -160,7 +166,7 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                TemplateSettings.ActualSource = null;
+                RemoveSource();
             }
         }
 
@@ -169,11 +175,18 @@ namespace CoolapkLite.Controls
             if (TemplateSettings.ActualSource?.Equals(Source) != true)
             {
                 TemplateSettings.ActualSource = Source;
-                if (Source?.IsLoaded == true)
-                {
-                    VisualStateManager.GoToState(this, LoadedState, true);
-                }
             }
+
+            if (Source?.IsLoaded == true)
+            {
+                VisualStateManager.GoToState(this, LoadedState, true);
+            }
+        }
+
+        private void RemoveSource()
+        {
+            TemplateSettings.ActualSource = null;
+            VisualStateManager.GoToState(this, LoadingState, true);
         }
     }
 }

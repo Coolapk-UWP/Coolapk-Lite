@@ -151,10 +151,10 @@ namespace CoolapkLite.Helpers
                     client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 case APIVersions.V13:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.3-2308241-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "13.3.3");
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2308241");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2308241");
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.4-2309211-universal");
+                    client.DefaultRequestHeaders.Add("X-App-Version", "13.3.4");
+                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2309211");
+                    client.DefaultRequestHeaders.Add("X-App-Code", "2309211");
                     client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
                 case APIVersions.Custom:

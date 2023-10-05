@@ -11,12 +11,12 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public IndexCardTemplates() => InitializeComponent();
 
-        private void FlipView_SizeChanged(object sender, SizeChangedEventArgs e) => (sender as FlipView).MaxHeight = e.NewSize.Width / 3;
+        private void FlipView_SizeChanged(object sender, SizeChangedEventArgs e) => (sender as FrameworkElement).Height = e.NewSize.Width / 3;
 
         private void FlipView_Loaded(object sender, RoutedEventArgs e)
         {
             FlipView view = sender as FlipView;
-            view.MaxHeight = view.ActualWidth / 3;
+            view.Height = view.ActualWidth / 3;
             DispatcherTimer timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromSeconds(20)

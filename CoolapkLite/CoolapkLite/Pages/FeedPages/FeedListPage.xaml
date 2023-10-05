@@ -572,6 +572,7 @@
                                         KeyDown="FrameworkElement_KeyDown"
                                         Source="{x:Bind}"
                                         Stretch="UniformToFill"
+                                        Style="{StaticResource ImageBrushImageControlStyle}"
                                         Tag="{x:Bind}"
                                         Tapped="FrameworkElement_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>
@@ -1156,10 +1157,11 @@
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
-                        EnableLazyLoading="False"
                         KeyDown="FrameworkElement_KeyDown"
+                        SizeChanged="FlipView_SizeChanged"
                         Source="{x:Bind Cover}"
                         Stretch="UniformToFill"
+                        Style="{StaticResource ImageBrushImageControlStyle}"
                         Tag="{x:Bind Cover}"
                         Tapped="FrameworkElement_Tapped" />
                     <Grid

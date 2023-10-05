@@ -108,7 +108,7 @@ namespace CoolapkLite.Helpers
         {
             switch (type)
             {
-                case UriType.DataList: return "/v6/page/dataList?url={0}{1}&page={2}{3}{4}";
+                case UriType.DataList: return "/v6/page/dataList?url={0}&page={1}{2}{3}";
                 case UriType.CheckLoginInfo: return "/v6/account/checkLoginInfo";
                 case UriType.CreateFeed: return "/v6/feed/createFeed";
                 case UriType.CreateFeedReply: return "/v6/feed/reply?id={0}&type=feed";
