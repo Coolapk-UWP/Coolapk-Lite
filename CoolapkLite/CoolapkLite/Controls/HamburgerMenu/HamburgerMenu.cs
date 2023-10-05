@@ -131,8 +131,8 @@ namespace CoolapkLite.Controls
 
         private void UpdatePaneState()
         {
-            VisualStateManager.GoToState(this, DisplayMode == SplitViewDisplayMode.CompactOverlay && !IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
-            VisualStateManager.GoToState(this, (DisplayMode == SplitViewDisplayMode.Overlay || DisplayMode == SplitViewDisplayMode.CompactOverlay) && IsPaneOpen ? "PaneOverlaying" : "PaneNotOverlaying", true);
+            _ = VisualStateManager.GoToState(this, DisplayMode == SplitViewDisplayMode.CompactOverlay && !IsPaneOpen ? "ClosedCompact" : "NotClosedCompact", true);
+            _ = VisualStateManager.GoToState(this, (DisplayMode == SplitViewDisplayMode.Overlay || DisplayMode == SplitViewDisplayMode.CompactOverlay) && IsPaneOpen ? "PaneOverlaying" : "PaneNotOverlaying", true);
         }
 
         private void UpdateDisplayModeState()
@@ -140,23 +140,23 @@ namespace CoolapkLite.Controls
             switch (DisplayMode)
             {
                 case SplitViewDisplayMode.Overlay:
-                    VisualStateManager.GoToState(this, "MinimalSize", true);
+                    _ = VisualStateManager.GoToState(this, "MinimalSize", true);
                     break;
                 case SplitViewDisplayMode.CompactOverlay:
-                    VisualStateManager.GoToState(this, "CompactSize", true);
+                    _ = VisualStateManager.GoToState(this, "CompactSize", true);
                     break;
                 case SplitViewDisplayMode.CompactInline:
-                    VisualStateManager.GoToState(this, "ExpandedSize", true);
+                    _ = VisualStateManager.GoToState(this, "ExpandedSize", true);
                     break;
                 case SplitViewDisplayMode.Inline:
-                    VisualStateManager.GoToState(this, "InlineSize", true);
+                    _ = VisualStateManager.GoToState(this, "InlineSize", true);
                     break;
             }
         }
 
         private void UpdateAutoSuggestBoxState()
         {
-            VisualStateManager.GoToState(this, AutoSuggestBox == null ? "AutoSuggestBoxCollapsed" : "AutoSuggestBoxVisible", true);
+            _ = VisualStateManager.GoToState(this, AutoSuggestBox == null ? "AutoSuggestBoxCollapsed" : "AutoSuggestBoxVisible", true);
         }
     }
 }

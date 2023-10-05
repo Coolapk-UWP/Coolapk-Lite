@@ -134,43 +134,33 @@ namespace CoolapkLite.Controls
 
         public void UpdateBackButton()
         {
-            VisualStateManager.GoToState(this, IsBackButtonVisible ? "BackButtonVisible" : "BackButtonCollapsed", false);
+            _ = VisualStateManager.GoToState(this, IsBackButtonVisible ? "BackButtonVisible" : "BackButtonCollapsed", false);
         }
 
         public void UpdateRefreshButton()
         {
-            VisualStateManager.GoToState(this, IsRefreshButtonVisible ? "RefreshButtonVisible" : "RefreshButtonCollapsed", false);
+            _ = VisualStateManager.GoToState(this, IsRefreshButtonVisible ? "RefreshButtonVisible" : "RefreshButtonCollapsed", false);
         }
 
         public void UpdateHeight()
         {
-            VisualStateManager.GoToState(this, (CustomContent == null) ? "CompactHeight" : "ExpandedHeight", false);
+            _ = VisualStateManager.GoToState(this, (CustomContent == null) ? "CompactHeight" : "ExpandedHeight", false);
         }
 
         public void UpdateIcon()
         {
             UIElement source = IconSource;
-            if (source != null)
-            {
-                VisualStateManager.GoToState(this, "IconVisible", false);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "IconCollapsed", false);
-            }
+            _ = source != null
+                ? VisualStateManager.GoToState(this, "IconVisible", false)
+                : VisualStateManager.GoToState(this, "IconCollapsed", false);
         }
 
         public void UpdateTitle()
         {
             string titleText = Title;
-            if (string.IsNullOrEmpty(titleText))
-            {
-                VisualStateManager.GoToState(this, "TitleTextCollapsed", false);
-            }
-            else
-            {
-                VisualStateManager.GoToState(this, "TitleTextVisible", false);
-            }
+            _ = string.IsNullOrEmpty(titleText)
+                ? VisualStateManager.GoToState(this, "TitleTextCollapsed", false)
+                : VisualStateManager.GoToState(this, "TitleTextVisible", false);
         }
 
         private void UpdateTopPadding()

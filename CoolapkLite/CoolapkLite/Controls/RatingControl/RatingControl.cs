@@ -247,39 +247,39 @@ namespace CoolapkLite.Controls
                     {
                         if (placeholderValue == -1)
                         {
-                            VisualStateManager.GoToState(this, "PointerOverPlaceholder", false);
+                            _ = VisualStateManager.GoToState(this, "PointerOverPlaceholder", false);
                             CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.PointerOverPlaceholder);
                         }
                         else
                         {
-                            VisualStateManager.GoToState(this, "PointerOverUnselected", false);
+                            _ = VisualStateManager.GoToState(this, "PointerOverUnselected", false);
                             // The API is locked, so we can't change this part to be consistent any more:
                             CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.PointerOverPlaceholder);
                         }
                     }
                     else
                     {
-                        VisualStateManager.GoToState(this, "PointerOverSet", false);
+                        _ = VisualStateManager.GoToState(this, "PointerOverSet", false);
                         CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.PointerOverSet);
                     }
                 }
                 else if (ratingValue > c_noValueSetSentinel)
                 {
                     value = ratingValue;
-                    VisualStateManager.GoToState(this, "Set", false);
+                    _ = VisualStateManager.GoToState(this, "Set", false);
                     CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.Set);
                 }
                 else if (placeholderValue > c_noValueSetSentinel)
                 {
                     value = placeholderValue;
-                    VisualStateManager.GoToState(this, "Placeholder", false);
+                    _ = VisualStateManager.GoToState(this, "Placeholder", false);
                     CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.Placeholder);
                 } // there's no "unset" state because the foreground items are simply cropped out
 
                 if (!IsEnabled)
                 {
                     // TODO: MSFT 11521414 - complete disabled state functionality [merge this code block with ifs above]
-                    VisualStateManager.GoToState(this, "Disabled", false);
+                    _ = VisualStateManager.GoToState(this, "Disabled", false);
                     CustomizeStackPanel(m_foregroundStackPanel, RatingControlStates.Disabled);
                 }
 

@@ -99,7 +99,7 @@ namespace CoolapkLite.Controls
             Control thisAsControl = this;
             if (Value >= 0)
             {
-                VisualStateManager.GoToState(thisAsControl, "Value", true);
+                _ = VisualStateManager.GoToState(thisAsControl, "Value", true);
             }
             else
             {
@@ -109,16 +109,16 @@ namespace CoolapkLite.Controls
                     TemplateSettings.IconElement = iconSource;
                     if (iconSource is FontIcon)
                     {
-                        VisualStateManager.GoToState(thisAsControl, "FontIcon", true);
+                        _ = VisualStateManager.GoToState(thisAsControl, "FontIcon", true);
                     }
                     else
                     {
-                        VisualStateManager.GoToState(thisAsControl, "Icon", true);
+                        _ = VisualStateManager.GoToState(thisAsControl, "Icon", true);
                     }
                 }
                 else
                 {
-                    VisualStateManager.GoToState(thisAsControl, "Dot", true);
+                    _ = VisualStateManager.GoToState(thisAsControl, "Dot", true);
                 }
             }
         }

@@ -47,10 +47,13 @@ namespace CoolapkLite.Controls
         /// </summary>
         protected override void OnApplyTemplate()
         {
+            _ = VisualStateManager.GoToState(this, LoadingState, false);
+
             if (!EnableLazyLoading)
             {
                 SetSource();
             }
+
             base.OnApplyTemplate();
         }
 
@@ -98,7 +101,7 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                VisualStateManager.GoToState(this, LoadingState, true);
+                _ = VisualStateManager.GoToState(this, LoadingState, true);
             }
         }
 
@@ -108,7 +111,7 @@ namespace CoolapkLite.Controls
             {
                 await Dispatcher.ResumeForegroundAsync();
             }
-            VisualStateManager.GoToState(this, LoadingState, true);
+            _ = VisualStateManager.GoToState(this, LoadingState, true);
         }
 
         private async void ImageModel_LoadCompleted(ImageModel sender, object args)
@@ -117,7 +120,7 @@ namespace CoolapkLite.Controls
             {
                 await Dispatcher.ResumeForegroundAsync();
             }
-            VisualStateManager.GoToState(this, sender.IsNoPic ? LoadingState : LoadedState, true);
+            _ = VisualStateManager.GoToState(this, sender.IsNoPic ? LoadingState : LoadedState, true);
         }
 
         private async void ImageModel_NoPicChanged(ImageModel sender, bool args)
@@ -126,7 +129,7 @@ namespace CoolapkLite.Controls
             {
                 await Dispatcher.ResumeForegroundAsync();
             }
-            VisualStateManager.GoToState(this, args ? LoadingState : LoadedState, true);
+            _ = VisualStateManager.GoToState(this, args ? LoadingState : LoadedState, true);
         }
 
         private void ImageControl_LayoutUpdated(object sender, object e)
@@ -179,14 +182,14 @@ namespace CoolapkLite.Controls
 
             if (Source?.IsLoaded == true)
             {
-                VisualStateManager.GoToState(this, LoadedState, true);
+                _ = VisualStateManager.GoToState(this, LoadedState, true);
             }
         }
 
         private void RemoveSource()
         {
             TemplateSettings.ActualSource = null;
-            VisualStateManager.GoToState(this, LoadingState, true);
+            _ = VisualStateManager.GoToState(this, LoadingState, true);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace CoolapkLite.Controls
         {
             if (string.IsNullOrWhiteSpace(DisplayName))
             {
-                VisualStateManager.GoToState(this, "NoInitials", false);
+                _ = VisualStateManager.GoToState(this, "NoInitials", false);
             }
             base.OnApplyTemplate();
         }
@@ -47,19 +47,19 @@ namespace CoolapkLite.Controls
         {
             if (string.IsNullOrWhiteSpace(DisplayName))
             {
-                VisualStateManager.GoToState(this, "NoInitials", false);
+                _ = VisualStateManager.GoToState(this, "NoInitials", false);
             }
             else
             {
                 string m_displayNameInitials = InitialsGenerator.InitialsFromDisplayName(DisplayName);
                 if (string.IsNullOrWhiteSpace(m_displayNameInitials))
                 {
-                    VisualStateManager.GoToState(this, "NoInitials", false);
+                    _ = VisualStateManager.GoToState(this, "NoInitials", false);
                 }
                 else
                 {
                     TemplateSettings.ActualInitials = m_displayNameInitials;
-                    VisualStateManager.GoToState(this, "Initials", false);
+                    _ = VisualStateManager.GoToState(this, "Initials", false);
                 }
             }
         }

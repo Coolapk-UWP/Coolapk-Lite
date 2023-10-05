@@ -207,25 +207,25 @@ namespace CoolapkLite.Controls
                 switch (m_currentMode)
                 {
                     case ViewMode.Pane1Only:
-                        VisualStateManager.GoToState(this, "ViewMode_OneOnly", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_OneOnly", true);
                         break;
                     case ViewMode.Pane2Only:
-                        VisualStateManager.GoToState(this, "ViewMode_TwoOnly", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_TwoOnly", true);
                         break;
                     case ViewMode.LeftRight:
-                        VisualStateManager.GoToState(this, "ViewMode_LeftRight", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_LeftRight", true);
                         newViewMode = TwoPaneViewMode.Wide;
                         break;
                     case ViewMode.RightLeft:
-                        VisualStateManager.GoToState(this, "ViewMode_RightLeft", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_RightLeft", true);
                         newViewMode = TwoPaneViewMode.Wide;
                         break;
                     case ViewMode.TopBottom:
-                        VisualStateManager.GoToState(this, "ViewMode_TopBottom", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_TopBottom", true);
                         newViewMode = TwoPaneViewMode.Tall;
                         break;
                     case ViewMode.BottomTop:
-                        VisualStateManager.GoToState(this, "ViewMode_BottomTop", true);
+                        _ = VisualStateManager.GoToState(this, "ViewMode_BottomTop", true);
                         newViewMode = TwoPaneViewMode.Tall;
                         break;
                 }

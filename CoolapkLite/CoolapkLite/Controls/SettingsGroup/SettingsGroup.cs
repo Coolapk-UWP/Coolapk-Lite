@@ -39,7 +39,7 @@ namespace CoolapkLite.Controls
 
         private void SetEnabledState()
         {
-            VisualStateManager.GoToState(this, IsEnabled ? "Normal" : "Disabled", true);
+            _ = VisualStateManager.GoToState(this, IsEnabled ? "Normal" : "Disabled", true);
         }
 
         /// <summary>

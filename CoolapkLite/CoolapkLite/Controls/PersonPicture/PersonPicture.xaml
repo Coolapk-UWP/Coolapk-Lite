@@ -92,7 +92,8 @@
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             Opacity="0.0"
                             Stroke="{TemplateBinding BorderBrush}"
-                            StrokeThickness="{TemplateBinding BorderThickness}">
+                            StrokeThickness="{TemplateBinding BorderThickness}"
+                            Visibility="Collapsed">
                             <Ellipse.Fill>
                                 <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                             </Ellipse.Fill>
@@ -102,55 +103,53 @@
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition From="Loading" To="Loaded">
                                         <Storyboard>
-                                            <DoubleAnimation
-                                                AutoReverse="False"
-                                                BeginTime="0"
-                                                Storyboard.TargetName="Image"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="0"
-                                                To="1"
-                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
-                                            <DoubleAnimation
-                                                AutoReverse="False"
-                                                BeginTime="0"
-                                                Storyboard.TargetName="PlaceholderImage"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="1"
-                                                To="0"
-                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="{StaticResource ControlNormalAnimationDuration}" Value="1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="{StaticResource ControlNormalAnimationDuration}" Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="{StaticResource ControlNormalAnimationDuration}" Value="Collapsed" />
+                                            </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualTransition>
                                     <VisualTransition From="Loaded" To="Loading">
                                         <Storyboard>
-                                            <DoubleAnimation
-                                                AutoReverse="False"
-                                                BeginTime="0"
-                                                Storyboard.TargetName="Image"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="1"
-                                                To="0"
-                                                Duration="{StaticResource ControlFastAnimationDuration}" />
-                                            <DoubleAnimation
-                                                AutoReverse="False"
-                                                BeginTime="0"
-                                                Storyboard.TargetName="PlaceholderImage"
-                                                Storyboard.TargetProperty="Opacity"
-                                                From="0"
-                                                To="1"
-                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="0" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                                <DiscreteObjectKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="Collapsed" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Opacity">
+                                                <LinearDoubleKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="1" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Visibility">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                            </ObjectAnimationUsingKeyFrames>
                                         </Storyboard>
                                     </VisualTransition>
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Loading">
                                     <VisualState.Setters>
                                         <Setter Target="Image.Opacity" Value="0" />
+                                        <Setter Target="Image.Visibility" Value="Collapsed" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="1" />
+                                        <Setter Target="PlaceholderImage.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Loaded">
                                     <VisualState.Setters>
                                         <Setter Target="Image.Opacity" Value="1" />
+                                        <Setter Target="Image.Visibility" Value="Visible" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="0" />
+                                        <Setter Target="PlaceholderImage.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
