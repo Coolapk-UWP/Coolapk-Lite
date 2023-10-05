@@ -46,10 +46,10 @@ namespace CoolapkLite.Controls.Writers
         private static DependencyObject CreateImage(HtmlNode node, string src, TextBlockEx textBlockEx)
         {
             ImageModel imageModel;
-            Image image = new Image();
+            ImageControl image = new ImageControl { EnableLazyLoading = false };
 
             imageModel = new ImageModel(src, SettingsHelper.Get<bool>(SettingsHelper.IsDisplayOriginPicture) ? ImageType.OriginImage : ImageType.SmallImage);
-            image.SetBinding(Image.SourceProperty, CreateBinding(imageModel, nameof(imageModel.Pic)));
+            image.Source = imageModel;
 
             string alt = node.GetAttributeValue("alt", string.Empty);
             if (!string.IsNullOrEmpty(alt))

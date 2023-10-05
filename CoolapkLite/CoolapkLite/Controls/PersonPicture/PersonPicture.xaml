@@ -1,0 +1,174 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <StaticResource x:Key="PersonPictureForegroundThemeBrush" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="PersonPictureEllipseFillThemeBrush" ResourceKey="ControlAltFillColorQuarternary" />
+            <StaticResource x:Key="PersonPictureEllipseFillStrokeBrush" ResourceKey="CardStrokeColorDefaultBrush" />
+            <x:Double x:Key="PersonPictureEllipseStrokeThickness">1</x:Double>
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Light">
+            <StaticResource x:Key="PersonPictureForegroundThemeBrush" ResourceKey="TextFillColorPrimaryBrush" />
+            <StaticResource x:Key="PersonPictureEllipseFillThemeBrush" ResourceKey="ControlAltFillColorQuarternary" />
+            <StaticResource x:Key="PersonPictureEllipseFillStrokeBrush" ResourceKey="CardStrokeColorDefaultBrush" />
+            <x:Double x:Key="PersonPictureEllipseStrokeThickness">1</x:Double>
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="HighContrast">
+            <StaticResource x:Key="PersonPictureForegroundThemeBrush" ResourceKey="SystemControlForegroundBaseHighBrush" />
+            <StaticResource x:Key="PersonPictureEllipseFillThemeBrush" ResourceKey="SystemColorHighlightTextColorBrush" />
+            <StaticResource x:Key="PersonPictureEllipseFillStrokeBrush" ResourceKey="CardStrokeColorDefaultBrush" />
+            <x:Double x:Key="PersonPictureEllipseStrokeThickness">1</x:Double>
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+
+    <Style TargetType="controls:PersonPicture">
+        <Setter Property="Foreground" Value="{ThemeResource PersonPictureForegroundThemeBrush}" />
+        <Setter Property="Background" Value="{ThemeResource PersonPictureEllipseFillThemeBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource PersonPictureEllipseFillStrokeBrush}" />
+        <Setter Property="BorderThickness" Value="{ThemeResource PersonPictureEllipseStrokeThickness}" />
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="100" />
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontWeight" Value="SemiLight" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="AutomationProperties.AccessibilityView" Value="Raw" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Stretch" Value="UniformToFill" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:PersonPicture">
+                    <Grid>
+                        <Grid
+                            Name="PlaceholderImage"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Opacity="1.0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="4*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Ellipse
+                                Grid.RowSpan="3"
+                                Grid.ColumnSpan="3"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                Fill="{TemplateBinding Background}"
+                                Stroke="{TemplateBinding BorderBrush}"
+                                StrokeThickness="{TemplateBinding BorderThickness}" />
+                            <Viewbox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Stretch="Uniform">
+                                <TextBlock
+                                    x:Name="InitialsTextBlock"
+                                    AutomationProperties.AccessibilityView="Raw"
+                                    FontFamily="{TemplateBinding FontFamily}"
+                                    FontSize="40"
+                                    FontWeight="{TemplateBinding FontWeight}"
+                                    Foreground="{TemplateBinding Foreground}"
+                                    IsTextScaleFactorEnabled="False"
+                                    Text="{Binding TemplateSettings.ActualInitials, RelativeSource={RelativeSource TemplatedParent}}"
+                                    TextLineBounds="Tight" />
+                            </Viewbox>
+                        </Grid>
+                        <Ellipse
+                            x:Name="Image"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Opacity="0.0"
+                            Stroke="{TemplateBinding BorderBrush}"
+                            StrokeThickness="{TemplateBinding BorderThickness}">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Loading" To="Loaded">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="Loaded" To="Loading">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Loading">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="0" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Loaded">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="1" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="InitialsStates">
+                                <VisualState x:Name="Initials" />
+                                <VisualState x:Name="NoInitials">
+                                    <VisualState.Setters>
+                                        <Setter Target="InitialsTextBlock.FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+                                        <!--  Placeholder symbol for 'Contact' (https://docs.microsoft.com/en-us/windows/uwp/design/style/segoe-ui-symbol-font)  -->
+                                        <Setter Target="InitialsTextBlock.Text" Value="&#xE77B;" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

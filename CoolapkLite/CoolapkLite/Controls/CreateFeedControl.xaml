@@ -154,11 +154,12 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <Ellipse Width="24" Height="24">
-                                                        <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                                        </Ellipse.Fill>
-                                                    </Ellipse>
+                                                    <local:PersonPicture
+                                                        Width="24"
+                                                        Height="24"
+                                                        DisplayName="{x:Bind UserName}"
+                                                        EnableLazyLoading="False"
+                                                        Source="{x:Bind UserAvatar}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="10,0,0,2"
@@ -205,14 +206,12 @@
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <Border
+                                                    <local:ImageControl
                                                         Width="24"
                                                         Height="24"
-                                                        d:DataContext="{d:DesignInstance Type=models:IHasDescription}">
-                                                        <Border.Background>
-                                                            <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                                                        </Border.Background>
-                                                    </Border>
+                                                        d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
+                                                        EnableLazyLoading="False"
+                                                        Source="{Binding Pic}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="10,0,0,2"

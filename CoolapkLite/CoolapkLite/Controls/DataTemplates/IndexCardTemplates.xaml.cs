@@ -15,38 +15,31 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private void FlipView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+            FlipView view = sender as FlipView;
+            view.MaxHeight = view.ActualWidth / 3;
+            DispatcherTimer timer = new DispatcherTimer
             {
-                (sender as FrameworkElement).Visibility = Visibility.Collapsed;
-            }
-            else
+                Interval = TimeSpan.FromSeconds(20)
+            };
+            timer.Tick += (_, __) =>
             {
-                FlipView view = sender as FlipView;
-                view.MaxHeight = view.ActualWidth / 3;
-                DispatcherTimer timer = new DispatcherTimer
+                if (view.SelectedIndex != -1)
                 {
-                    Interval = TimeSpan.FromSeconds(20)
-                };
-                timer.Tick += (_, __) =>
-                {
-                    if (view.SelectedIndex != -1)
+                    if (view.SelectedIndex + 1 >= view.Items.Count)
                     {
-                        if (view.SelectedIndex + 1 >= view.Items.Count)
+                        while (view.SelectedIndex > 0)
                         {
-                            while (view.SelectedIndex > 0)
-                            {
-                                view.SelectedIndex -= 1;
-                            }
-                        }
-                        else
-                        {
-                            view.SelectedIndex += 1;
+                            view.SelectedIndex -= 1;
                         }
                     }
-                };
-                view.Unloaded += (_, __) => timer.Stop();
-                timer.Start();
-            }
+                    else
+                    {
+                        view.SelectedIndex += 1;
+                    }
+                }
+            };
+            view.Unloaded += (_, __) => timer.Stop();
+            timer.Start();
         }
     }
 }

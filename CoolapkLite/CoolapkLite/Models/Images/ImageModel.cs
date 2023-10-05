@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -35,6 +36,8 @@ namespace CoolapkLite.Models.Images
 
         public string Title => GetTitle();
 
+        public bool IsLoaded => !isLoading && !isNoPic && pic?.TryGetTarget(out BitmapImage _) == true;
+
         public bool IsSmallImage => Type.HasFlag(ImageType.Small);
 
         private bool isLongPic = false;
@@ -62,7 +65,37 @@ namespace CoolapkLite.Models.Images
         public bool IsLoading
         {
             get => isLoading;
-            private set => SetProperty(ref isLoading, value);
+            private set
+            {
+                if (isLoading != value)
+                {
+                    isLoading = value;
+                    RaisePropertyChangedEvent();
+                    if (value)
+                    {
+                        LoadStarted?.Invoke(this, null);
+                    }
+                    else
+                    {
+                        LoadCompleted?.Invoke(this, null);
+                    }
+                }
+            }
+        }
+
+        private bool isNoPic = true;
+        public bool IsNoPic
+        {
+            get => isNoPic;
+            private set
+            {
+                if (isNoPic != value)
+                {
+                    isNoPic = value;
+                    RaisePropertyChangedEvent();
+                    NoPicChanged?.Invoke(this, value);
+                }
+            }
         }
 
         private string uri;
@@ -74,7 +107,7 @@ namespace CoolapkLite.Models.Images
                 if (uri != value)
                 {
                     uri = value;
-                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    if (pic?.TryGetTarget(out BitmapImage _) == true)
                     {
                         _ = GetImageAsync();
                     }
@@ -93,7 +126,7 @@ namespace CoolapkLite.Models.Images
                 if (type != value)
                 {
                     type = value;
-                    if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                    if (pic?.TryGetTarget(out BitmapImage _) == true)
                     {
                         _ = GetImageAsync();
                     }
@@ -113,12 +146,13 @@ namespace CoolapkLite.Models.Images
                     Dispatcher = UIHelper.TryGetForCurrentCoreDispatcher();
                 }
 
-                if (pic != null && pic.TryGetTarget(out BitmapImage image))
+                if (pic?.TryGetTarget(out BitmapImage image) == true)
                 {
                     return image;
                 }
                 else
                 {
+                    IsNoPic = true;
                     _ = GetImageAsync();
                     return ImageCacheHelper.GetNoPic(Dispatcher);
                 }
@@ -212,6 +246,7 @@ namespace CoolapkLite.Models.Images
             ThemeHelper.UISettingChanged.Remove(UISettingChanged);
         }
 
+        public event TypedEventHandler<ImageModel, bool> NoPicChanged;
         public event TypedEventHandler<ImageModel, object> LoadStarted;
         public event TypedEventHandler<ImageModel, object> LoadCompleted;
 
@@ -228,9 +263,13 @@ namespace CoolapkLite.Models.Images
             try
             {
                 IsLoading = true;
-                LoadStarted?.Invoke(this, null);
                 await semaphoreSlim.WaitAsync();
-                if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode)) { Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher); }
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+                {
+                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    IsNoPic = true;
+                    return;
+                }
                 BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
                 if (bitmapImage.Dispatcher != Dispatcher)
                 {
@@ -247,6 +286,7 @@ namespace CoolapkLite.Models.Images
                 }
                 if (bitmapImage != null)
                 {
+                    IsNoPic = false;
                     Pic = bitmapImage;
                     if (!bitmapImage.Dispatcher.HasThreadAccess)
                     {
@@ -266,6 +306,7 @@ namespace CoolapkLite.Models.Images
                 else
                 {
                     Pic = null;
+                    IsNoPic = true;
                     IsLongPic = false;
                     IsWidePic = false;
                     IsGif = Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
@@ -273,7 +314,6 @@ namespace CoolapkLite.Models.Images
             }
             finally
             {
-                LoadCompleted?.Invoke(this, null);
                 semaphoreSlim.Release();
                 IsLoading = false;
             }

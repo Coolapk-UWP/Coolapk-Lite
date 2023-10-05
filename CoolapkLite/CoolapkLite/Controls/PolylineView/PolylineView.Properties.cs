@@ -90,7 +90,7 @@ namespace CoolapkLite.Controls
         public PolylineViewTemplateSettings TemplateSettings
         {
             get => (PolylineViewTemplateSettings)GetValue(TemplateSettingsProperty);
-            set => SetValue(TemplateSettingsProperty, value);
+            private set => SetValue(TemplateSettingsProperty, value);
         }
 
         #endregion`

@@ -179,16 +179,13 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Border
+                <controls:ImageControl
                     Grid.RowSpan="2"
                     Width="40"
                     Height="40"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Top">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                    </Border.Background>
-                </Border>
+                    VerticalAlignment="Top"
+                    Source="{x:Bind Pic}" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
@@ -227,16 +224,14 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <Border
+                <controls:ImageControl
                     Grid.RowSpan="2"
                     Width="40"
                     Height="40"
                     HorizontalAlignment="Center"
-                    VerticalAlignment="Top">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                    </Border.Background>
-                </Border>
+                    VerticalAlignment="Top"
+                    Source="{x:Bind Pic}"
+                    Style="{StaticResource ImageBrushImageControlStyle}" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
@@ -276,14 +271,11 @@
             Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <StackPanel>
-                <Border
+                <controls:ImageControl
                     Width="36"
                     Height="36"
-                    Margin="4">
-                    <Border.Background>
-                        <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                    </Border.Background>
-                </Border>
+                    Margin="4"
+                    Source="{x:Bind Pic}" />
                 <TextBlock
                     HorizontalAlignment="Stretch"
                     Text="{x:Bind Title}"
@@ -317,11 +309,12 @@
                     <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Image
+                <controls:ImageControl
                     Width="20"
                     Height="20"
                     VerticalAlignment="Center"
-                    Source="{x:Bind Pic.Pic, Mode=OneWay}" />
+                    Source="{x:Bind Pic}"
+                    Stretch="Uniform" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,2"

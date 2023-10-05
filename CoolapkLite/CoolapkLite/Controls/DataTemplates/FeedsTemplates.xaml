@@ -144,11 +144,11 @@
                         Click="Button_Click"
                         Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
-                        <Ellipse Width="36" Height="36">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind UserInfo.UserAvatar.Pic, Mode=OneWay}" />
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <controls:PersonPicture
+                            Width="36"
+                            Height="36"
+                            DisplayName="{x:Bind UserInfo.UserName}"
+                            Source="{x:Bind UserInfo.UserAvatar}" />
                     </Button>
                     <Grid Margin="8,0" VerticalAlignment="Center">
                         <Grid.RowDefinitions>
@@ -441,14 +441,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Border
+                        <controls:ImageControl
                             Width="56"
                             Height="56"
-                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                            <Border.Background>
-                                <ImageBrush ImageSource="{x:Bind ExtraPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                            </Border.Background>
-                        </Border>
+                            Source="{x:Bind ExtraPic}"
+                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}" />
                         <Border
                             Width="56"
                             Height="56"
@@ -505,14 +502,12 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Border
+                    <controls:ImageControl
                         Width="56"
                         Height="56"
-                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{x:Bind MediaPic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
+                        Source="{x:Bind MediaPic}"
+                        Style="{StaticResource ImageBrushImageControlStyle}"
+                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}}" />
                     <Border
                         Width="56"
                         Height="56"
@@ -706,14 +701,12 @@
                         Tag="{Binding UserInfo.Url}"
                         Tapped="Button_Tapped">
                         <StackPanel Orientation="Horizontal">
-                            <Ellipse
+                            <controls:PersonPicture
                                 Width="20"
                                 Height="20"
-                                VerticalAlignment="Center">
-                                <Ellipse.Fill>
-                                    <ImageBrush ImageSource="{Binding UserInfo.UserAvatar.Pic, Mode=OneWay}" />
-                                </Ellipse.Fill>
-                            </Ellipse>
+                                VerticalAlignment="Center"
+                                DisplayName="{Binding UserInfo.UserName}"
+                                Source="{Binding UserInfo.UserAvatar}" />
                             <TextBlock
                                 Margin="4,0,0,0"
                                 VerticalAlignment="Center"
@@ -825,11 +818,11 @@
                         Click="Button_Click"
                         Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
-                        <Ellipse Width="36" Height="36">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind UserInfo.UserAvatar.Pic, Mode=OneWay}" />
-                            </Ellipse.Fill>
-                        </Ellipse>
+                        <controls:PersonPicture
+                            Width="36"
+                            Height="36"
+                            DisplayName="{Binding UserInfo.UserName}"
+                            Source="{Binding UserInfo.UserAvatar}" />
                     </Button>
                     <StackPanel Margin="8,0" VerticalAlignment="Center">
                         <StackPanel

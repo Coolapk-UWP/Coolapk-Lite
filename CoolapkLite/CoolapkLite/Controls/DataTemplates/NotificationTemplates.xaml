@@ -28,19 +28,17 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Ellipse
+            <control:PersonPicture
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                DisplayName="{x:Bind UserName}"
                 KeyDown="FrameworkElement_KeyDown"
+                Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
-                Tapped="FrameworkElement_Tapped">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                </Ellipse.Fill>
-            </Ellipse>
+                Tapped="FrameworkElement_Tapped" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
@@ -94,14 +92,12 @@
                     Tag="{x:Bind UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse
+                        <control:PersonPicture
                             Width="20"
                             Height="20"
-                            VerticalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                            </Ellipse.Fill>
-                        </Ellipse>
+                            VerticalAlignment="Center"
+                            DisplayName="{x:Bind UserName}"
+                            Source="{x:Bind UserAvatar}" />
                         <TextBlock
                             Margin="4,0,0,0"
                             VerticalAlignment="Center"
@@ -156,14 +152,12 @@
                     Tag="{x:Bind UserUrl}"
                     Tapped="Button_Tapped">
                     <StackPanel Orientation="Horizontal">
-                        <Ellipse
+                        <control:PersonPicture
                             Width="20"
                             Height="20"
-                            VerticalAlignment="Center">
-                            <Ellipse.Fill>
-                                <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                            </Ellipse.Fill>
-                        </Ellipse>
+                            VerticalAlignment="Center"
+                            DisplayName="{x:Bind UserName}"
+                            Source="{x:Bind UserAvatar}" />
                         <TextBlock
                             Margin="4,0,0,0"
                             VerticalAlignment="Center"
@@ -216,19 +210,17 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Ellipse
+            <control:PersonPicture
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                DisplayName="{x:Bind UserName}"
                 KeyDown="FrameworkElement_KeyDown"
+                Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
-                Tapped="FrameworkElement_Tapped">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                </Ellipse.Fill>
-            </Ellipse>
+                Tapped="FrameworkElement_Tapped" />
             <Grid
                 Grid.Row="0"
                 Grid.Column="1"

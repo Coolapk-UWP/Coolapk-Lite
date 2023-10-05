@@ -163,7 +163,7 @@ namespace CoolapkLite.Controls
         public QRCodeTemplateSettings TemplateSettings
         {
             get => (QRCodeTemplateSettings)GetValue(TemplateSettingsProperty);
-            set => SetValue(TemplateSettingsProperty, value);
+            private set => SetValue(TemplateSettingsProperty, value);
         }
 
         #endregion

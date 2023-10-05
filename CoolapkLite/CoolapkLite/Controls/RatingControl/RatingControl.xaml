@@ -5,7 +5,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="RatingControl.ThemeResources.xaml" />
     </ResourceDictionary.MergedDictionaries>
-    
+
     <Style TargetType="local:RatingControl">
         <Setter Property="Height" Value="32" />
         <!--  9794813: retire these two properties as customisation points once all resource keys available  -->

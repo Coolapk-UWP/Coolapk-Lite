@@ -196,6 +196,13 @@
     <Compile Include="Controls\Flyouts\SettingsFlyoutControl.xaml.cs">
       <DependentUpon>SettingsFlyoutControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ImageControl\ImageControl.cs">
+      <DependentUpon>ImageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageControl\ImageControl.Properties.cs">
+      <DependentUpon>ImageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ImageControl\ImageControlTemplateSettings.cs" />
     <Compile Include="Controls\InfoBadge\InfoBadge.cs">
       <DependentUpon>InfoBadge.xaml</DependentUpon>
     </Compile>
@@ -204,6 +211,10 @@
       <DependentUpon>MediaPlayerElementEx.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MediaPlayerElementEx\MediaPlayerElementExTemplateSettings.cs" />
+    <Compile Include="Controls\PersonPicture\InitialsGenerator.cs" />
+    <Compile Include="Controls\PersonPicture\PersonPicture.cs">
+      <DependentUpon>PersonPicture.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Picker\Picker.cs">
       <DependentUpon>Picker.xaml</DependentUpon>
     </Compile>
@@ -1150,6 +1161,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ImageControl\ImageControl.Themeresources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ImageControl\ImageControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\InfoBadge\InfoBadge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1167,6 +1186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MediaPlayerElementEx\MediaPlayerElementEx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\PersonPicture\PersonPicture.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

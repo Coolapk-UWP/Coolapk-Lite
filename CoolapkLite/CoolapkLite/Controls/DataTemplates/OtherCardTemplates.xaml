@@ -40,17 +40,15 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Ellipse
+            <ctrl:PersonPicture
                 Grid.RowSpan="2"
                 Width="36"
                 Height="36"
                 Margin="0,0,8,0"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                </Ellipse.Fill>
-            </Ellipse>
+                VerticalAlignment="Center"
+                DisplayName="{x:Bind UserName}"
+                Source="{x:Bind UserAvatar}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
@@ -112,16 +110,13 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Border
+            <ctrl:ImageControl
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Top">
-                <Border.Background>
-                    <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                </Border.Background>
-            </Border>
+                VerticalAlignment="Top"
+                Source="{x:Bind Pic}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
@@ -170,17 +165,15 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Ellipse
+            <ctrl:ImageControl
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
-                d:DataContext="{d:DesignInstance Type=models:IHasDescription}">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{Binding Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                </Ellipse.Fill>
-            </Ellipse>
+                d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
+                Source="{Binding Pic}"
+                Style="{StaticResource EllipseImageControlStyle}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"

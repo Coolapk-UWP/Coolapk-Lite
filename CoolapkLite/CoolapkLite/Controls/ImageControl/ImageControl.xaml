@@ -1,0 +1,6 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:controls="using:CoolapkLite.Controls">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ImageControl.Themeresources.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    <Style BasedOn="{StaticResource DefaultImageControlStyle}" TargetType="controls:ImageControl" />
+</ResourceDictionary>

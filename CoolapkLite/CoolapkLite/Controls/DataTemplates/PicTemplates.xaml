@@ -2,10 +2,11 @@
     x:Class="CoolapkLite.Controls.DataTemplates.PicTemplates"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:images="using:CoolapkLite.Models.Images">
     <DataTemplate x:Key="PicDefaultTemplate" x:DataType="images:ImageModel">
-        <Border
+        <Grid
             Width="102"
             Height="102"
             CanDrag="True"
@@ -14,9 +15,6 @@
             Tag="{x:Bind}"
             Tapped="Image_Tapped"
             ToolTipService.ToolTip="{x:Bind Title}">
-            <Border.Background>
-                <ImageBrush ImageSource="{x:Bind Pic, Mode=OneWay}" Stretch="UniformToFill" />
-            </Border.Background>
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
@@ -67,53 +65,56 @@
                     </MenuFlyoutItem>
                 </MenuFlyout>
             </helpers:UIElementHelper.ContextFlyout>
-            <Grid>
-                <StackPanel
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal">
-                    <Border
-                        x:Name="GIF"
-                        Background="#0F9D58"
-                        Visibility="{x:Bind IsGif, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <TextBlock
-                            Margin="2,0"
-                            Foreground="White"
-                            Text="GIF" />
-                    </Border>
-                </StackPanel>
-                <!--  如果你觉得你的设备性能很好的话可以把注释去掉  -->
-                <!--<ProgressRing
+            <controls:ImageControl
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Source="{x:Bind}"
+                Style="{StaticResource ImageBrushImageControlStyle}" />
+            <StackPanel
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Border
+                    x:Name="GIF"
+                    Background="#0F9D58"
+                    Visibility="{x:Bind IsGif, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock
+                        Margin="2,0"
+                        Foreground="White"
+                        Text="GIF" />
+                </Border>
+            </StackPanel>
+            <!--  如果你觉得你的设备性能很好的话可以把注释去掉  -->
+            <!--<ProgressRing
                     Width="50"
                     Height="50"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     IsActive="{x:Bind IsLoading, Mode=OneWay}"
                     Visibility="{x:Bind IsLoading, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />-->
-                <StackPanel
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Orientation="Horizontal">
-                    <Border
-                        x:Name="LongPic"
-                        Background="#0F9D58"
-                        Visibility="{x:Bind IsLongPic, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <TextBlock
-                            x:Uid="/Feed/LongPic"
-                            Margin="2,0"
-                            Foreground="White" />
-                    </Border>
-                    <Border
-                        x:Name="WidePic"
-                        Background="#0F9D58"
-                        Visibility="{x:Bind IsWidePic, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                        <TextBlock
-                            x:Uid="/Feed/WidePic"
-                            Margin="2,0"
-                            Foreground="White" />
-                    </Border>
-                </StackPanel>
-            </Grid>
-        </Border>
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Orientation="Horizontal">
+                <Border
+                    x:Name="LongPic"
+                    Background="#0F9D58"
+                    Visibility="{x:Bind IsLongPic, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock
+                        x:Uid="/Feed/LongPic"
+                        Margin="2,0"
+                        Foreground="White" />
+                </Border>
+                <Border
+                    x:Name="WidePic"
+                    Background="#0F9D58"
+                    Visibility="{x:Bind IsWidePic, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock
+                        x:Uid="/Feed/WidePic"
+                        Margin="2,0"
+                        Foreground="White" />
+                </Border>
+            </StackPanel>
+        </Grid>
     </DataTemplate>
 </ResourceDictionary>

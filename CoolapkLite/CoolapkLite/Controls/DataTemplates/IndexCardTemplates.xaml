@@ -2,6 +2,7 @@
     x:Class="CoolapkLite.Controls.DataTemplates.IndexCardTemplates"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoolapkLite.Models"
@@ -16,11 +17,11 @@
             Visibility="{x:Bind Entities, Converter={StaticResource CollectionVisibilityConverter}}">
             <FlipView.ItemTemplate>
                 <DataTemplate x:DataType="models:IHasDescription">
-                    <Border>
-                        <Border.Background>
-                            <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
+                    <controls:ImageControl
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        EnableLazyLoading="False"
+                        Source="{x:Bind Pic}" />
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>

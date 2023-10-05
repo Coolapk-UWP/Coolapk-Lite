@@ -35,14 +35,11 @@
                         Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Icon}" />
                     </Viewbox>
-                    <Border
+                    <controls:ImageControl
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
+                        Source="{x:Bind Logo, Mode=OneWay}"
+                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Grid>
                 <TextBlock
                     Grid.Column="1"

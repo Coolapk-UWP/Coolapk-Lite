@@ -35,18 +35,16 @@
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Ellipse
+            <control:PersonPicture
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                DisplayName="{x:Bind UserName}"
                 KeyDown="FrameworkElement_KeyDown"
+                Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
-                Tapped="FrameworkElement_Tapped">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                </Ellipse.Fill>
-            </Ellipse>
+                Tapped="FrameworkElement_Tapped" />
             <Grid
                 Grid.Column="1"
                 HorizontalAlignment="Left"
@@ -71,13 +69,13 @@
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
                         Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <Image
+                        <control:ImageControl
                             MaxWidth="102"
                             HorizontalAlignment="Left"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
                             KeyDown="Image_KeyDown"
-                            Source="{x:Bind MessagePic.Pic, Mode=OneWay}"
+                            Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
                             Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
@@ -131,7 +129,7 @@
                                     </MenuFlyoutItem>
                                 </MenuFlyout>
                             </helpers:UIElementHelper.ContextFlyout>
-                        </Image>
+                        </control:ImageControl>
                         <Border
                             Padding="8"
                             HorizontalAlignment="Left"
@@ -207,13 +205,13 @@
                         BorderBrush="{ThemeResource ControlStrokeColorOnAccentDefault}"
                         BorderThickness="1"
                         Visibility="{x:Bind IsCard, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <Image
+                        <control:ImageControl
                             MaxWidth="102"
                             HorizontalAlignment="Right"
                             CanDrag="True"
                             DragStarting="Border_DragStarting"
                             KeyDown="Image_KeyDown"
-                            Source="{x:Bind MessagePic.Pic, Mode=OneWay}"
+                            Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
                             Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}}">
@@ -267,7 +265,7 @@
                                     </MenuFlyoutItem>
                                 </MenuFlyout>
                             </helpers:UIElementHelper.ContextFlyout>
-                        </Image>
+                        </control:ImageControl>
                         <Border
                             Padding="8"
                             HorizontalAlignment="Left"
@@ -290,19 +288,17 @@
                     </Border>
                 </control:StackPanelEx>
             </Grid>
-            <Ellipse
+            <control:PersonPicture
                 Grid.Column="1"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
+                DisplayName="{x:Bind UserName}"
                 KeyDown="FrameworkElement_KeyDown"
+                Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
-                Tapped="FrameworkElement_Tapped">
-                <Ellipse.Fill>
-                    <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                </Ellipse.Fill>
-            </Ellipse>
+                Tapped="FrameworkElement_Tapped" />
         </Grid>
     </DataTemplate>
 
@@ -322,16 +318,13 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Border
+            <control:ImageControl
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top">
-                <Border.Background>
-                    <ImageBrush ImageSource="{x:Bind Pic.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                </Border.Background>
-            </Border>
+                VerticalAlignment="Top"
+                Source="{x:Bind Pic}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
@@ -358,16 +351,14 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Ellipse
+                <control:PersonPicture
                     Width="16"
                     Height="16"
                     Margin="0,2,6,0"
                     VerticalAlignment="Center"
-                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="{x:Bind ExtraPic.Pic, Mode=OneWay}" />
-                    </Ellipse.Fill>
-                </Ellipse>
+                    DisplayName="{x:Bind ExtraText}"
+                    Source="{x:Bind ExtraPic}"
+                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}" />
                 <control:TextBlockEx
                     Grid.Column="1"
                     VerticalAlignment="Center"

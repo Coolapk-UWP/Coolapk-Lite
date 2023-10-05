@@ -88,15 +88,13 @@
                                         <ColumnDefinition Width="12" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Ellipse
+                                    <controls:PersonPicture
                                         Width="49"
                                         Height="49"
+                                        DisplayName="{x:Bind Provider.ProfileDetail.UserName, Mode=OneWay}"
                                         DoubleTapped="Grid_DoubleTapped"
-                                        IsDoubleTapEnabled="True">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind Provider.ProfileDetail.UserAvatar.Pic, Mode=OneWay}" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                        IsDoubleTapEnabled="True"
+                                        Source="{x:Bind Provider.ProfileDetail.UserAvatar, Mode=OneWay}" />
                                     <Grid Grid.Column="2">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />

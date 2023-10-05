@@ -354,14 +354,11 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border
+                            <control:ImageControl
                                 Width="56"
                                 Height="56"
-                                HorizontalAlignment="Left">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                                </Border.Background>
-                            </Border>
+                                HorizontalAlignment="Left"
+                                Source="{x:Bind Logo}" />
                             <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
@@ -392,17 +389,15 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:ISourceUserModel">
-                                                <Ellipse
+                                                <control:PersonPicture
                                                     Width="16"
                                                     Height="16"
+                                                    DisplayName="{x:Bind UserName}"
                                                     KeyDown="FrameworkElement_KeyDown"
+                                                    Source="{x:Bind UserAvatar}"
                                                     Tag="{x:Bind Url}"
                                                     Tapped="FrameworkElement_Tapped"
-                                                    ToolTipService.ToolTip="{x:Bind UserName}">
-                                                    <Ellipse.Fill>
-                                                        <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                                    </Ellipse.Fill>
-                                                </Ellipse>
+                                                    ToolTipService.ToolTip="{x:Bind UserName}" />
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -481,14 +476,11 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <Border
+                            <control:ImageControl
                                 Width="56"
                                 Height="56"
-                                HorizontalAlignment="Left">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                                </Border.Background>
-                            </Border>
+                                HorizontalAlignment="Left"
+                                Source="{x:Bind Logo}" />
                             <StackPanel Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
@@ -509,11 +501,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Ellipse Width="16" Height="16">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                    <control:PersonPicture
+                                        Width="16"
+                                        Height="16"
+                                        DisplayName="{x:Bind UserName}"
+                                        Source="{x:Bind UserAvatar}" />
                                     <TextBlock
                                         Grid.Column="1"
                                         Margin="4,0"
@@ -570,14 +562,15 @@
                             SizeChanged="FlipView_SizeChanged">
                             <FlipView.ItemTemplate>
                                 <DataTemplate x:DataType="images:ImageModel">
-                                    <Image
+                                    <control:ImageControl
                                         x:Name="Picture"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
                                         CanDrag="True"
                                         DragStarting="Image_DragStarting"
+                                        EnableLazyLoading="False"
                                         KeyDown="FrameworkElement_KeyDown"
-                                        Source="{x:Bind Pic, Mode=OneWay}"
+                                        Source="{x:Bind}"
                                         Stretch="UniformToFill"
                                         Tag="{x:Bind}"
                                         Tapped="FrameworkElement_Tapped">
@@ -631,7 +624,7 @@
                                                 </MenuFlyoutItem>
                                             </MenuFlyout>
                                         </helpers:UIElementHelper.ContextFlyout>
-                                    </Image>
+                                    </control:ImageControl>
                                 </DataTemplate>
                             </FlipView.ItemTemplate>
                         </FlipView>
@@ -649,14 +642,11 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Border
+                                <control:ImageControl
                                     Width="56"
                                     Height="56"
-                                    HorizontalAlignment="Left">
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                                    </Border.Background>
-                                </Border>
+                                    HorizontalAlignment="Left"
+                                    Source="{x:Bind Logo}" />
                                 <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
@@ -687,17 +677,15 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="models:ISourceUserModel">
-                                                    <Ellipse
+                                                    <control:PersonPicture
                                                         Width="16"
                                                         Height="16"
+                                                        DisplayName="{x:Bind UserName}"
                                                         KeyDown="FrameworkElement_KeyDown"
+                                                        Source="{x:Bind UserAvatar}"
                                                         Tag="{x:Bind Url}"
                                                         Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{x:Bind UserName}">
-                                                        <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                                        </Ellipse.Fill>
-                                                    </Ellipse>
+                                                        ToolTipService.ToolTip="{x:Bind UserName}" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -1162,14 +1150,15 @@
                             </MenuFlyoutSubItem>
                         </MenuFlyout>
                     </Grid.Resources>
-                    <Image
+                    <control:ImageControl
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         CanDrag="True"
                         DragStarting="Image_DragStarting"
+                        EnableLazyLoading="False"
                         KeyDown="FrameworkElement_KeyDown"
-                        Source="{x:Bind Cover.Pic, Mode=OneWay}"
+                        Source="{x:Bind Cover}"
                         Stretch="UniformToFill"
                         Tag="{x:Bind Cover}"
                         Tapped="FrameworkElement_Tapped" />
@@ -1197,15 +1186,13 @@
                                     <ColumnDefinition Width="4" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Ellipse
+                                <control:PersonPicture
                                     Grid.Column="0"
                                     Width="20"
                                     Height="20"
-                                    VerticalAlignment="Center">
-                                    <Ellipse.Fill>
-                                        <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                    </Ellipse.Fill>
-                                </Ellipse>
+                                    VerticalAlignment="Center"
+                                    DisplayName="{x:Bind UserName}"
+                                    Source="{x:Bind UserAvatar}" />
                                 <TextBlock
                                     Grid.Column="2"
                                     Margin="0,0,0,2"
@@ -1307,14 +1294,11 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Border
+                                <control:ImageControl
                                     Width="56"
                                     Height="56"
-                                    HorizontalAlignment="Left">
-                                    <Border.Background>
-                                        <ImageBrush ImageSource="{x:Bind Logo.Pic, Mode=OneWay}" Stretch="UniformToFill" />
-                                    </Border.Background>
-                                </Border>
+                                    HorizontalAlignment="Left"
+                                    Source="{x:Bind Logo}" />
                                 <StackPanel Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
@@ -1355,17 +1339,15 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="models:ISourceUserModel">
-                                                    <Ellipse
+                                                    <control:PersonPicture
                                                         Width="16"
                                                         Height="16"
+                                                        DisplayName="{x:Bind UserName}"
                                                         KeyDown="FrameworkElement_KeyDown"
+                                                        Source="{x:Bind UserAvatar}"
                                                         Tag="{x:Bind Url}"
                                                         Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{x:Bind UserName}">
-                                                        <Ellipse.Fill>
-                                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                                        </Ellipse.Fill>
-                                                    </Ellipse>
+                                                        ToolTipService.ToolTip="{x:Bind UserName}" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -1575,7 +1557,7 @@
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="images:ImageModel">
-                                <Image
+                                <control:ImageControl
                                     x:Name="Picture"
                                     Height="306"
                                     Margin="1"
@@ -1583,8 +1565,9 @@
                                     VerticalAlignment="Center"
                                     CanDrag="True"
                                     DragStarting="Image_DragStarting"
+                                    EnableLazyLoading="False"
                                     KeyDown="FrameworkElement_KeyDown"
-                                    Source="{x:Bind Pic, Mode=OneWay}"
+                                    Source="{x:Bind}"
                                     Stretch="UniformToFill"
                                     Tag="{x:Bind}"
                                     Tapped="FrameworkElement_Tapped">
@@ -1638,7 +1621,7 @@
                                             </MenuFlyoutItem>
                                         </MenuFlyout>
                                     </helpers:UIElementHelper.ContextFlyout>
-                                </Image>
+                                </control:ImageControl>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

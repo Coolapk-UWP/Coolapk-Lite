@@ -1,0 +1,349 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CoolapkLite.Controls">
+
+    <Style x:Key="DefaultImageControlStyle" TargetType="controls:ImageControl">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Stretch" Value="UniformToFill" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ImageControl">
+                    <Grid
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding ImageCornerRadius}">
+                        <Grid
+                            Name="PlaceholderImage"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            Opacity="1.0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15*" />
+                                <ColumnDefinition Width="70*" />
+                                <ColumnDefinition Width="15*" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+                                <Path
+                                    Data="{StaticResource CoolapkLogoGeometry}"
+                                    Fill="{ThemeResource TextFillColorDisabledBrush}"
+                                    StrokeThickness="0" />
+                            </Viewbox>
+                        </Grid>
+                        <Image
+                            x:Name="Image"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Opacity="0.0"
+                            Source="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}"
+                            Stretch="{TemplateBinding Stretch}" />
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Loading" To="Loaded">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="Loaded" To="Loading">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Loading">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="0" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Loaded">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="1" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ImageBrushImageControlStyle" TargetType="controls:ImageControl">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Stretch" Value="UniformToFill" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ImageControl">
+                    <Grid>
+                        <Grid
+                            Name="PlaceholderImage"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            Opacity="1.0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="0.75*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="0.75*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*" />
+                                <ColumnDefinition Width="14*" />
+                                <ColumnDefinition Width="3*" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+                                <Path
+                                    Data="{StaticResource CoolapkLogoGeometry}"
+                                    Fill="{ThemeResource TextFillColorDisabledBrush}"
+                                    StrokeThickness="0" />
+                            </Viewbox>
+                        </Grid>
+                        <Border
+                            x:Name="Image"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            Opacity="0.0">
+                            <Border.Background>
+                                <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </Border.Background>
+                        </Border>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Loading" To="Loaded">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="Loaded" To="Loading">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Loading">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="0" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Loaded">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="1" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="EllipseImageControlStyle" TargetType="controls:ImageControl">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Stretch" Value="UniformToFill" />
+        <Setter Property="EnableLazyLoading" Value="True" />
+        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:ImageControl">
+                    <Grid>
+                        <Grid
+                            Name="PlaceholderImage"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            Opacity="1.0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*" />
+                                <RowDefinition Height="4*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15*" />
+                                <ColumnDefinition Width="70*" />
+                                <ColumnDefinition Width="15*" />
+                            </Grid.ColumnDefinitions>
+                            <Viewbox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch">
+                                <Path
+                                    Data="{StaticResource CoolapkLogoGeometry}"
+                                    Fill="{ThemeResource TextFillColorDisabledBrush}"
+                                    StrokeThickness="0" />
+                            </Viewbox>
+                        </Grid>
+                        <Ellipse
+                            x:Name="Image"
+                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Opacity="0.0"
+                            Stroke="{TemplateBinding BorderBrush}"
+                            StrokeThickness="{TemplateBinding BorderThickness}">
+                            <Ellipse.Fill>
+                                <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition From="Loading" To="Loaded">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlNormalAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                    <VisualTransition From="Loaded" To="Loading">
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="Image"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="1"
+                                                To="0"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                            <DoubleAnimation
+                                                AutoReverse="False"
+                                                BeginTime="0"
+                                                Storyboard.TargetName="PlaceholderImage"
+                                                Storyboard.TargetProperty="Opacity"
+                                                From="0"
+                                                To="1"
+                                                Duration="{StaticResource ControlFastAnimationDuration}" />
+                                        </Storyboard>
+                                    </VisualTransition>
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Loading">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="0" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="1" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Loaded">
+                                    <VisualState.Setters>
+                                        <Setter Target="Image.Opacity" Value="1" />
+                                        <Setter Target="PlaceholderImage.Opacity" Value="0" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
