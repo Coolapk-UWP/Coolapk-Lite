@@ -360,7 +360,7 @@
                     VerticalAlignment="Center"
                     DisplayName="{x:Bind ExtraText}"
                     Source="{x:Bind ExtraPic}"
-                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
                 <control:TextBlockEx
                     Grid.Column="1"
                     VerticalAlignment="Center"

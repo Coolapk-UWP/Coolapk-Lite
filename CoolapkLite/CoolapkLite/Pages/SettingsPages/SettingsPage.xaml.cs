@@ -56,7 +56,7 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 Provider = SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
             }
-            UISettingChanged = (mode) => UpdateThemeRadio();
+            UISettingChanged = mode => UpdateThemeRadio();
             ThemeHelper.UISettingChanged.Add(UISettingChanged);
             UpdateThemeRadio();
         }

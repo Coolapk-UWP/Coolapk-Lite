@@ -37,14 +37,14 @@ namespace CoolapkLite.Common
             {
                 int length = collection.Count();
                 int count = collection is List<TSource> _list
-                    ? _list.FindLastIndex((x) => x != null) + 1
+                    ? _list.FindLastIndex(x => x != null) + 1
                     : collection is TSource[] _array
-                        ? Array.FindLastIndex(_array, (x) => x != null) + 1
+                        ? Array.FindLastIndex(_array, x => x != null) + 1
                         : length;
 
                 if (count > 0)
                 {
-                    int _size = Array.FindLastIndex(array, (x) => x != null) + 1;
+                    int _size = Array.FindLastIndex(array, x => x != null) + 1;
                     if (array.Length - _size < count)
                     {
                         throw new ArgumentOutOfRangeException(nameof(array));
@@ -254,7 +254,7 @@ namespace CoolapkLite.Common
 
             if (source is List<TSource> list)
             {
-                return list.RemoveAll((x) => predicate(x));
+                return list.RemoveAll(x => predicate(x));
             }
             else if (source is TSource[] array)
             {
@@ -285,7 +285,7 @@ namespace CoolapkLite.Common
             }
             else if (source is HashSet<TSource> hashSet)
             {
-                return hashSet.RemoveWhere((x) => predicate(x));
+                return hashSet.RemoveWhere(x => predicate(x));
             }
             else if (source is IList<TSource> items)
             {
@@ -333,11 +333,11 @@ namespace CoolapkLite.Common
 
             if (source is TSource[] array)
             {
-                return array.RemoveAll((x) => collection.Contains(x));
+                return array.RemoveAll(x => collection.Contains(x));
             }
             else
             {
-                return collection.Select(source.Remove).Count((x) => x);
+                return collection.Select(source.Remove).Count(x => x);
             }
         }
 
@@ -379,7 +379,7 @@ namespace CoolapkLite.Common
                 if (predicate(element))
                 {
                     yield return element;
-                    if (--count == 0) break;
+                    if (--count == 0) { break; }
                 }
             }
         }

@@ -191,7 +191,7 @@ namespace CoolapkLite.Helpers
         {
             if (values?.Any() == true)
             {
-                return builder.Append(string.Join(separator, values.Where((x) => !string.IsNullOrWhiteSpace(x))));
+                return builder.Append(string.Join(separator, values.Where(x => !string.IsNullOrWhiteSpace(x))));
             }
             return builder;
         }
@@ -224,7 +224,7 @@ namespace CoolapkLite.Helpers
         {
             if (value?.Any() == true)
             {
-                return builder.AppendLine(string.Join(separator, value.Where((x) => !string.IsNullOrWhiteSpace(x))));
+                return builder.AppendLine(string.Join(separator, value.Where(x => !string.IsNullOrWhiteSpace(x))));
             }
             return builder;
         }

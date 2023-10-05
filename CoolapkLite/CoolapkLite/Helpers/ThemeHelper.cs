@@ -116,7 +116,7 @@ namespace CoolapkLite.Helpers
 
         public static async void SetRootTheme(ElementTheme value)
         {
-            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
+            WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
                 if (!window.Dispatcher.HasThreadAccess)
                 {
@@ -144,7 +144,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task SetRootThemeAsync(ElementTheme value)
         {
-            await Task.WhenAll(WindowHelper.ActiveWindows.Values.Select(async (window) =>
+            await Task.WhenAll(WindowHelper.ActiveWindows.Values.Select(async window =>
             {
                 if (!window.Dispatcher.HasThreadAccess)
                 {
@@ -244,7 +244,7 @@ namespace CoolapkLite.Helpers
 
         public static void UpdateExtendViewIntoTitleBar(bool IsExtendsTitleBar)
         {
-            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
+            WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
                 if (window.Dispatcher?.HasThreadAccess == false)
                 {
@@ -271,7 +271,7 @@ namespace CoolapkLite.Helpers
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
 
-            WindowHelper.ActiveWindows.Values.ForEach(async (window) =>
+            WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
                 if (window.Dispatcher?.HasThreadAccess == false)
                 {

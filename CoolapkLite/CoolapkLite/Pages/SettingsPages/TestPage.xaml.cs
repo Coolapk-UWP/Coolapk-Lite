@@ -99,7 +99,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "NewWindow":
                     bool IsExtendsTitleBar = Provider.IsExtendsTitleBar;
-                    _ = await WindowHelper.CreateWindowAsync((window) =>
+                    _ = await WindowHelper.CreateWindowAsync(window =>
                     {
                         if (IsExtendsTitleBar)
                         {
@@ -173,7 +173,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "AddJumpList" when ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported():
                     JumpList list = await JumpList.LoadCurrentAsync();
-                    if (!list.Items.Any((x) => x.GroupName == "设置"))
+                    if (!list.Items.Any(x => x.GroupName == "设置"))
                     {
                         ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
                         list.Items.Add(JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));

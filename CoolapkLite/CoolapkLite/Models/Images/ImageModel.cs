@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.UI.Controls;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -212,7 +211,7 @@ namespace CoolapkLite.Models.Images
         {
             Uri = uri;
             Type = type;
-            UISettingChanged = async (mode) =>
+            UISettingChanged = async mode =>
             {
                 switch (mode)
                 {
@@ -458,7 +457,7 @@ namespace CoolapkLite.Models.Images
                 pic = null;
                 RaisePropertyChangedEvent(nameof(Pic));
             }
-            ContextArray.ForEach((x) => x.ChangeDispatcher(dispatcher));
+            ContextArray.ForEach(x => x.ChangeDispatcher(dispatcher));
         }
 
         private string GetTitle()

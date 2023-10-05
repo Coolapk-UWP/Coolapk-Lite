@@ -107,7 +107,7 @@ namespace CoolapkLite.ViewModels.DataSource
             if (item is IndexPageHasEntitiesModel model
                 && model.EntitiesType == EntityType.TabLink)
             {
-                string Uri = GetUri((model.Entities.Where((x) => x is IndexPageModel).FirstOrDefault() as IndexPageModel).Url);
+                string Uri = GetUri((model.Entities.Where(x => x is IndexPageModel).FirstOrDefault() as IndexPageModel).Url);
                 SubProvider = new CoolapkListProvider(
                     (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetIndexPage, Uri, Uri.Contains("?") ? "&" : "?", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     Provider.GetEntities,

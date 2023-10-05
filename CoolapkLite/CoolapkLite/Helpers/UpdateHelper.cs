@@ -67,7 +67,7 @@ namespace CoolapkLite.Helpers
 
                     if (result != null)
                     {
-                        RunInfo run = result.Value.FirstOrDefault((x) => x.Result == "succeeded");
+                        RunInfo run = result.Value.FirstOrDefault(x => x.Result == "succeeded");
 
                         if (run != null)
                         {

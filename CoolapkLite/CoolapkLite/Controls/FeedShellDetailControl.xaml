@@ -145,7 +145,7 @@
                     Style="{StaticResource ImageBrushImageControlStyle}"
                     Tag="{x:Bind FeedDetail.MessageCover, Mode=OneWay}"
                     Tapped="FrameworkElement_Tapped"
-                    Visibility="{x:Bind FeedDetail.MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+                    Visibility="{x:Bind FeedDetail.MessageCover.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                 <Border VerticalAlignment="Bottom" Background="{ThemeResource TitleBarBackgroundBrush}">
                     <TextBlock
                         Margin="8,4"
@@ -552,14 +552,14 @@
                         Width="56"
                         Height="56"
                         Source="{x:Bind FeedDetail.ExtraPic, Mode=OneWay}"
-                        Visibility="{x:Bind FeedDetail.ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+                        Visibility="{x:Bind FeedDetail.ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                     <Border
                         Width="56"
                         Height="56"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{x:Bind FeedDetail.ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true', Mode=OneWay}">
+                        Visibility="{x:Bind FeedDetail.ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true', FallbackValue='Visible', Mode=OneWay}">
                         <FontIcon
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"

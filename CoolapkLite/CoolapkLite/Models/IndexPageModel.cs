@@ -148,7 +148,7 @@ namespace CoolapkLite.Models
 
         public override string ToString()
         {
-            string result = string.Join(Environment.NewLine, new[] { Title, SubTitle, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            string result = string.Join(Environment.NewLine, new[] { Title, SubTitle, Description }.Where(x => !string.IsNullOrWhiteSpace(x)));
             result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
             return result;
         }
@@ -242,7 +242,7 @@ namespace CoolapkLite.Models
 
         public override string ToString()
         {
-            string result = string.Join(Environment.NewLine, new[] { Title, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            string result = string.Join(Environment.NewLine, new[] { Title, Description }.Where(x => !string.IsNullOrWhiteSpace(x)));
             result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
             return result;
         }
@@ -375,7 +375,7 @@ namespace CoolapkLite.Models
 
         public override string ToString()
         {
-            string result = string.Join(Environment.NewLine, new[] { Title, Description }.Where((x) => !string.IsNullOrWhiteSpace(x)));
+            string result = string.Join(Environment.NewLine, new[] { Title, Description }.Where(x => !string.IsNullOrWhiteSpace(x)));
             result = string.IsNullOrWhiteSpace(result) ? base.ToString() : result;
             return result;
         }

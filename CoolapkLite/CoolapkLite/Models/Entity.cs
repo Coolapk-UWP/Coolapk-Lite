@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace CoolapkLite.Models
 {
@@ -38,6 +39,11 @@ namespace CoolapkLite.Models
             {
                 EntityForward = entityForward.ToString();
             }
+        }
+
+        public IEnumerable<Entity> AsEnumerable()
+        {
+            yield return this;
         }
 
         public override string ToString() => $"{GetType().Name}: {string.Join(" - ", EntityType, EntityIDText)}";

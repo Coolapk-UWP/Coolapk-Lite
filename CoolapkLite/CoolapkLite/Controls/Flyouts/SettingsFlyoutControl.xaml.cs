@@ -53,7 +53,7 @@ namespace CoolapkLite.Controls
 
         private void SettingsFlyout_Loaded(object sender, RoutedEventArgs e)
         {
-            UISettingChanged = (mode) =>
+            UISettingChanged = mode =>
             {
                 switch (mode)
                 {

@@ -73,7 +73,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             Dispatcher = dispatcher;
             uri = url.TryGetUri();
-            UISettingChanged = (mode) =>
+            UISettingChanged = mode =>
             {
                 switch (mode)
                 {

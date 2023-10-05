@@ -94,7 +94,7 @@ namespace CoolapkLite.Helpers
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
 
-            return element.FindAscendant<Page>((x) => x is IHaveTitleBar) as IHaveTitleBar
+            return element.FindAscendant<Page>(x => x is IHaveTitleBar) as IHaveTitleBar
                 ?? await element.Dispatcher.GetAppTitleAsync().ConfigureAwait(false);
         }
 
@@ -380,7 +380,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                OpenLinkFactory factory = (frame) => frame.NavigateAsync(pageType, parameter(frame.Dispatcher), infoOverride);
+                OpenLinkFactory factory = frame => frame.NavigateAsync(pageType, parameter(frame.Dispatcher), infoOverride);
 
                 if (!dispatcher?.HasThreadAccess == false)
                 {
@@ -403,7 +403,7 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    bool result = await WindowHelper.CreateWindowAsync((window) =>
+                    bool result = await WindowHelper.CreateWindowAsync(window =>
                     {
                         if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                         {
@@ -465,7 +465,7 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    return await WindowHelper.CreateWindowAsync((window) =>
+                    return await WindowHelper.CreateWindowAsync(window =>
                     {
                         if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                         {
@@ -527,7 +527,7 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                bool result = await WindowHelper.CreateWindowAsync((window) =>
+                bool result = await WindowHelper.CreateWindowAsync(window =>
                 {
                     if (SettingsHelper.Get<bool>(SettingsHelper.IsExtendsTitleBar))
                     {
@@ -557,7 +557,7 @@ namespace CoolapkLite.Helpers
                 link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
                 if (link.StartsWith("image.coolapk.com"))
                 {
-                    return (frame) => frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
+                    return frame => frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
                 }
                 else
                 {
@@ -568,7 +568,7 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        return (frame) => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
+                        return frame => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
                     }
                 }
             }
@@ -588,20 +588,20 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
                 string url = link.Substring(6);
-                return (frame) => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(url, frame.Dispatcher));
             }
             else if (link.StartsWith("/u/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string url = link.Substring(3, "?");
                     string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
@@ -617,14 +617,14 @@ namespace CoolapkLite.Helpers
             {
                 if (link.StartsWith("/feed/changeHistoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetSinglePageProvider(link, "动态编辑记录", frame.Dispatcher));
+                    return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetSinglePageProvider(link, "动态编辑记录", frame.Dispatcher));
                 }
                 else
                 {
                     string id = link.Substring(6, "?");
                     if (int.TryParse(id, out _))
                     {
-                        return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                        return frame => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                     }
                     else
                     {
@@ -637,7 +637,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(9, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                    return frame => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/question/", StringComparison.OrdinalIgnoreCase))
@@ -645,7 +645,7 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(10, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
+                    return frame => frame.NavigateAsync(typeof(FeedShellPage), new QuestionViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/vote/", StringComparison.OrdinalIgnoreCase))
@@ -653,12 +653,12 @@ namespace CoolapkLite.Helpers
                 string id = link.Substring(6, "?");
                 if (int.TryParse(id, out _))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
+                    return frame => frame.NavigateAsync(typeof(FeedShellPage), new VoteViewModel(id, frame.Dispatcher));
                 }
             }
             else if (link.StartsWith("/t/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string tag = link.Substring(3, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
@@ -671,7 +671,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string tag = link.Substring(5, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
@@ -686,11 +686,11 @@ namespace CoolapkLite.Helpers
             {
                 if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
                 {
-                    return (frame) => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
+                    return frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
                 }
                 else
                 {
-                    return async (frame) =>
+                    return async frame =>
                     {
                         string tag = link.Substring(9, "?");
                         FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
@@ -704,7 +704,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string id = link.Substring(12, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
@@ -717,7 +717,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/apk/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string id = link.Substring(5, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
@@ -730,7 +730,7 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/appba/", StringComparison.OrdinalIgnoreCase))
             {
-                return async (frame) =>
+                return async frame =>
                 {
                     string id = link.Substring(7, "?");
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
@@ -743,15 +743,15 @@ namespace CoolapkLite.Helpers
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))
             {
-                return (frame) => frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
             }
             else if (origin.StartsWith("http://") || link.StartsWith("https://"))
             {
-                return (frame) => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
             }
             else if (origin.Contains("://") && origin.TryGetUri(out Uri uri))
             {
-                return (frame) => frame.LaunchUriAsync(uri);
+                return frame => frame.LaunchUriAsync(uri);
             }
 
             return null;

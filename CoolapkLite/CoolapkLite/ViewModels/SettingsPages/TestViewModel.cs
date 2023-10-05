@@ -242,7 +242,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     {
                         await cache.Key.ResumeForegroundAsync();
                     }
-                    names.ForEach((name) => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
+                    names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
                 }
             }
         }

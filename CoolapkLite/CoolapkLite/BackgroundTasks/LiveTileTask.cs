@@ -52,10 +52,10 @@ namespace CoolapkLite.BackgroundTasks
             if (isSucceed)
             {
                 result.OfType<JObject>()
-                      .Select((x) => GetTileContent(EntityTemplateSelector.GetEntity(x)))
-                      .Take(5, (x) => x != null)
+                      .Select(x => GetTileContent(EntityTemplateSelector.GetEntity(x)))
+                      .Take(5, x => x != null)
                       .Reverse()
-                      .ForEach((x) => UpdateTile(x));
+                      .ForEach(x => UpdateTile(x));
             }
         }
 

@@ -113,7 +113,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p,
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                        (o) => new[] { new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])) },
+                        o => new UserModel((JObject)(isFollowList ? o["fUserInfo"] : o["userInfo"])).AsEnumerable(),
                         "fuid"),
                     $"{name}的{(isFollowList ? "关注" : "粉丝")}",
                     dispatcher);
@@ -132,7 +132,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p,
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                        (o) => new[] { new FeedReplyModel(o) },
+                        o => new FeedReplyModel(o).AsEnumerable(),
                         "uid"),
                     $"热门回复",
                     dispatcher);
@@ -151,7 +151,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 p,
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                        (o) => new[] { new FeedReplyModel(o) },
+                        o => new FeedReplyModel(o).AsEnumerable(),
                         "uid"),
                     title,
                     dispatcher);
@@ -182,7 +182,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                             p,
                             string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                             string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                    (o) => new[] { new HistoryModel(o) },
+                    o => new HistoryModel(o).AsEnumerable(),
                     "uid"),
                 title,
                 dispatcher);

@@ -502,7 +502,7 @@ namespace CoolapkLite.Controls
         /// <param name="delim">String on which to perform the split operation.</param>
         /// <param name="maxIterations">Maximum number of times to perform a <code>getline</code> loop.</param>
         /// <returns>A vector of pieces from the source string, separated by delimiter</returns>
-        static string[] Split(string source, char delim, int maxIterations = 25)
+        private static string[] Split(string source, char delim, int maxIterations = 25)
         {
             return source.Split(new[] { delim }, maxIterations);
         }
@@ -512,7 +512,7 @@ namespace CoolapkLite.Controls
         /// </summary>
         /// <param name="source">String on which to perform the operation.</param>
         /// <returns>A string with the content within brackets removed.</returns>
-        static void StripTrailingBrackets(ref string source)
+        private static void StripTrailingBrackets(ref string source)
         {
             // Guidance from the world readiness team is that text within a final set of brackets
             // can be removed for the purposes of calculating initials. ex. John Smith (OSG)
@@ -523,14 +523,14 @@ namespace CoolapkLite.Controls
                 return;
             }
 
-            foreach (var delimiter in delimiters)
+            foreach (string delimiter in delimiters)
             {
                 if (source[source.Length - 1] != delimiter[1])
                 {
                     continue;
                 }
 
-                var start = source.LastIndexOf(delimiter[0]);
+                int start = source.LastIndexOf(delimiter[0]);
                 if (start == -1)
                 {
                     continue;
@@ -546,7 +546,7 @@ namespace CoolapkLite.Controls
         /// </summary>
         /// <param name="str">String from which to extract the character.</param>
         /// <returns>A wstring which represents a given character.</returns>
-        static string GetFirstFullCharacter(string str)
+        private static string GetFirstFullCharacter(string str)
         {
             // Index should begin at the first desireable character.
             int start = 0;

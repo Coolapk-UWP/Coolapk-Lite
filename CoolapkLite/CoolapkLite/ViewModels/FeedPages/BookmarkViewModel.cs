@@ -78,8 +78,8 @@ namespace CoolapkLite.ViewModels.FeedPages
                 JumpList JumpList = await JumpList.LoadCurrentAsync();
                 JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
 
-                _ = JumpList.Items.RemoveAll((x) => x.GroupName == "收藏");
-                JumpList.Items.AddRange(_bookmarks.Take(4).Select((x) => JumpListItem.CreateWithArguments(x.Url, x.Title).AddGroupNameAndLogo("收藏", new Uri("ms-appx:///Assets/Icons/KnowledgeArticle.png"))));
+                _ = JumpList.Items.RemoveAll(x => x.GroupName == "收藏");
+                JumpList.Items.AddRange(_bookmarks.Take(4).Select(x => JumpListItem.CreateWithArguments(x.Url, x.Title).AddGroupNameAndLogo("收藏", new Uri("ms-appx:///Assets/Icons/KnowledgeArticle.png"))));
 
                 await JumpList.SaveAsync();
             }

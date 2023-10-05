@@ -68,11 +68,11 @@ namespace CoolapkLite.Controls
                 double actualWidth = PolylineBorder.ActualWidth - StrokeThickness;
                 double actualHeight = PolylineBorder.ActualHeight - StrokeThickness;
 
-                double miniX = ItemSource.Min((x) => x.X);
-                double miniY = ItemSource.Min((x) => x.Y);
+                double miniX = ItemSource.Min(x => x.X);
+                double miniY = ItemSource.Min(x => x.Y);
 
-                double width = ItemSource.Max((x) => x.X) - miniX;
-                double height = ItemSource.Max((x) => x.Y) - miniY;
+                double width = ItemSource.Max(x => x.X) - miniX;
+                double height = ItemSource.Max(x => x.Y) - miniY;
 
                 double scaleX = actualWidth / width;
                 double scaleY = actualHeight / height;

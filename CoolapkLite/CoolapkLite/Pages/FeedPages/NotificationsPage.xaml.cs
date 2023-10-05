@@ -88,7 +88,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new SimpleNotificationModel(o) },
+                                    o => new SimpleNotificationModel(o).AsEnumerable(),
                                     "id"), Dispatcher));
                         break;
                     case "AtMe":
@@ -101,7 +101,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new FeedModel(o) },
+                                    o => new FeedModel(o).AsEnumerable(),
                                     "id"), Dispatcher));
                         break;
                     case "AtCommentMe":
@@ -114,7 +114,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new AtCommentMeNotificationModel(o) },
+                                    o => new AtCommentMeNotificationModel(o).AsEnumerable(),
                                     "id"), Dispatcher));
                         break;
                     case "FeedLike":
@@ -127,7 +127,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new LikeNotificationModel(o) },
+                                    o => new LikeNotificationModel(o).AsEnumerable(),
                                     "id"), Dispatcher));
                         break;
                     case "Follow":
@@ -140,7 +140,7 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new SimpleNotificationModel(o) },
+                                    o => new SimpleNotificationModel(o).AsEnumerable(),
                                     "id"), Dispatcher));
                         break;
                     case "Message":
@@ -152,17 +152,17 @@ namespace CoolapkLite.Pages.FeedPages
                                         p,
                                         string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                         string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
-                                    (o) => new[] { new MessageNotificationModel(o) },
+                                    o => new MessageNotificationModel(o).AsEnumerable(),
                                     "ukey"), Dispatcher));
                         break;
                     default:
                         break;
                 }
-                RefreshTask = (reset) => (Frame.Content as AdaptivePage)?.Refresh(reset);
+                RefreshTask = reset => (Frame.Content as AdaptivePage)?.Refresh(reset);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {
-                RefreshTask = (reset) => AdaptivePage.Refresh(reset);
+                RefreshTask = reset => AdaptivePage.Refresh(reset);
             }
         }
 

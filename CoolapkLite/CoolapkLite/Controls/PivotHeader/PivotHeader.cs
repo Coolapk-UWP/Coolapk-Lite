@@ -64,7 +64,7 @@ namespace CoolapkLite.Controls
                 Path = new PropertyPath(nameof(SelectedIndex))
             });
             ItemCollection items = Pivot.Items;
-            ItemsSource = Pivot.Items.Select((x) => x is PivotItem item ? item.Header : x).ToList();
+            ItemsSource = Pivot.Items.Select(x => x is PivotItem item ? item.Header : x).ToList();
             HidePivotHeader();
         }
 

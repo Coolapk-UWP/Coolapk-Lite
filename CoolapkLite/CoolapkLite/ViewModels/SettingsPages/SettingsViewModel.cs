@@ -175,7 +175,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     {
                         await cache.Key.ResumeForegroundAsync();
                     }
-                    names.ForEach((name) => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
+                    names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
                 }
             }
         }
@@ -225,7 +225,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             IsCleanCacheButtonEnabled = false;
             try
             {
-                await ImageCacheHelper.CleanCacheAsync().ContinueWith((x) => IsCleanCacheButtonEnabled = true);
+                await ImageCacheHelper.CleanCacheAsync().ContinueWith(x => IsCleanCacheButtonEnabled = true);
             }
             catch (Exception ex)
             {

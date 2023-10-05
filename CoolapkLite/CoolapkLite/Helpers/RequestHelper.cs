@@ -161,7 +161,7 @@ namespace CoolapkLite.Helpers
                         UploadPicturePrepareResult data = result.ToObject<UploadPicturePrepareResult>();
                         foreach (UploadFileInfo info in data.FileInfo)
                         {
-                            UploadFileFragment image = images.FirstOrDefault((x) => x.MD5 == info.MD5);
+                            UploadFileFragment image = images.FirstOrDefault(x => x.MD5 == info.MD5);
                             if (image == null) { continue; }
                             using (Stream stream = image.Bytes.GetStream())
                             {

@@ -60,12 +60,12 @@ namespace CoolapkLite.Controls
         /// </summary>
         public RatingControl() => DefaultStyleKey = typeof(RatingControl);
 
-        double RenderingRatingFontSize => c_defaultRatingFontSizeForRendering * GetUISettings().TextScaleFactor;
+        private double RenderingRatingFontSize => c_defaultRatingFontSizeForRendering * GetUISettings().TextScaleFactor;
 
-        double ActualRatingFontSize => RenderingRatingFontSize / 2;
+        private double ActualRatingFontSize => RenderingRatingFontSize / 2;
 
         // TODO MSFT #10030063: Convert to itemspacing DP
-        double ItemSpacing
+        private double ItemSpacing
         {
             get
             {
@@ -76,7 +76,7 @@ namespace CoolapkLite.Controls
                 // Therefore we should include TextScaleFactor when calculating item spacing
                 // in order to get correct total width and star center positions.
                 const double defaultFontSize = c_defaultRatingFontSizeForRendering / 2;
-                return c_defaultItemSpacing - (GetUISettings().TextScaleFactor - 1.0) * defaultFontSize / 2;
+                return c_defaultItemSpacing - ((GetUISettings().TextScaleFactor - 1.0) * defaultFontSize / 2);
             }
         }
 
@@ -284,7 +284,7 @@ namespace CoolapkLite.Controls
                 }
 
                 int i = 0;
-                foreach (var uiElement in m_foregroundStackPanel.Children)
+                foreach (UIElement uiElement in m_foregroundStackPanel.Children)
                 {
                     // Handle clips on stars
                     double width = RenderingRatingFontSize;
@@ -750,7 +750,7 @@ namespace CoolapkLite.Controls
             // Fire property change for UIA
             if (FrameworkElementAutomationPeer.FromElement(this) is AutomationPeer peer)
             {
-                var ratingPeer = (RatingControlAutomationPeer)peer;
+                RatingControlAutomationPeer ratingPeer = (RatingControlAutomationPeer)peer;
                 ratingPeer.RaisePropertyChangedEvent(Value);
             }
 
@@ -791,7 +791,7 @@ namespace CoolapkLite.Controls
                 if (ShouldEnableAnimation && IsUseCompositor)
                 {
                     m_sharedPointerPropertySet.InsertScalar("starsScaleFocalPoint", (float)xPosition);
-                    var deviceType = args.Pointer.PointerDeviceType;
+                    PointerDeviceType deviceType = args.Pointer.PointerDeviceType;
 
                     switch (deviceType)
                     {

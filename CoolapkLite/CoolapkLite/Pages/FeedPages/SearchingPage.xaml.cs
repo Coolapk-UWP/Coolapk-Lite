@@ -80,7 +80,7 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
-                Refresh = (reset) => _ = ItemsSource.Refresh(reset);
+                Refresh = reset => _ = ItemsSource.Refresh(reset);
             }
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }

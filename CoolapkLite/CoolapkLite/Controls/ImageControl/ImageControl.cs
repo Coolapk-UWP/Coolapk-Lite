@@ -143,7 +143,7 @@ namespace CoolapkLite.Controls
 
             // Find the first ascendant ScrollViewer, if not found, use the root element.
             IEnumerable<FrameworkElement> ascendants = this.FindAscendants().OfType<FrameworkElement>().Reverse();
-            FrameworkElement hostElement = ascendants.FirstOrDefault((x) => x is ScrollViewer) ?? ascendants.FirstOrDefault();
+            FrameworkElement hostElement = ascendants.FirstOrDefault(x => x is ScrollViewer) ?? ascendants.FirstOrDefault();
 
             if (hostElement == null)
             {

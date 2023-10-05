@@ -148,7 +148,7 @@ namespace CoolapkLite
                 JumpList JumpList = await JumpList.LoadCurrentAsync();
                 JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
 
-                if (!JumpList.Items.Any((x) => x.GroupName == "导航"))
+                if (!JumpList.Items.Any(x => x.GroupName == "导航"))
                 {
                     ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
                     JumpList.Items.Add(JumpListItem.CreateWithArguments("home", loader.GetString("Home")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Home.png")));
@@ -157,7 +157,7 @@ namespace CoolapkLite
                     JumpList.Items.Add(JumpListItem.CreateWithArguments("history", loader.GetString("History")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Calendar.png")));
                 }
 
-                if (!JumpList.Items.Any((x) => x.GroupName == "个人"))
+                if (!JumpList.Items.Any(x => x.GroupName == "个人"))
                 {
                     JumpList.Items.Add(JumpListItem.CreateWithArguments("me", "个人空间").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Contact.png")));
                     JumpList.Items.Add(JumpListItem.CreateWithArguments("notifications", "通知").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Message.png")));
