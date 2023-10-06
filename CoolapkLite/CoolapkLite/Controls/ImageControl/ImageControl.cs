@@ -3,9 +3,9 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -15,6 +15,10 @@ namespace CoolapkLite.Controls
     public partial class ImageControl : Control
     {
         private bool _isLoaded = false;
+        private bool _isImageLoaded = false;
+
+        private readonly bool IsUseNoPicFallback = SettingsHelper.Get<bool>(SettingsHelper.IsUseNoPicFallback);
+        private readonly bool IsEnableLazyLoading = SettingsHelper.Get<bool>(SettingsHelper.IsEnableLazyLoading);
 
         /// <summary>
         /// VisualStates name in template
@@ -47,9 +51,18 @@ namespace CoolapkLite.Controls
         /// </summary>
         protected override void OnApplyTemplate()
         {
-            _ = VisualStateManager.GoToState(this, LoadingState, false);
+            if (IsUseNoPicFallback)
+            {
+                _ = VisualStateManager.GoToState(this, LoadedState, false);
+                _isLoaded = true;
+            }
+            else
+            {
+                _ = VisualStateManager.GoToState(this, LoadingState, false);
+                _isLoaded = false;
+            }
 
-            if (!EnableLazyLoading)
+            if (!(IsEnableLazyLoading && EnableLazyLoading))
             {
                 SetSource();
             }
@@ -60,7 +73,7 @@ namespace CoolapkLite.Controls
         private void ImageControl_Loaded(object sender, RoutedEventArgs e)
         {
             _isLoaded = true;
-            if (!EnableLazyLoading)
+            if (!(IsEnableLazyLoading && EnableLazyLoading))
             {
                 SetSource();
             }
@@ -74,23 +87,9 @@ namespace CoolapkLite.Controls
 
         private void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs args)
         {
-            if (args.OldValue is ImageModel oldValue)
+            if (IsUseNoPicFallback)
             {
-                oldValue.LoadStarted -= ImageModel_LoadStarted;
-                oldValue.LoadCompleted -= ImageModel_LoadCompleted;
-                oldValue.NoPicChanged -= ImageModel_NoPicChanged;
-            }
-
-            if (args.NewValue is ImageModel newValue)
-            {
-                newValue.LoadStarted -= ImageModel_LoadStarted;
-                newValue.LoadStarted += ImageModel_LoadStarted;
-                newValue.LoadCompleted -= ImageModel_LoadCompleted;
-                newValue.LoadCompleted += ImageModel_LoadCompleted;
-                newValue.NoPicChanged -= ImageModel_NoPicChanged;
-                newValue.NoPicChanged += ImageModel_NoPicChanged;
-
-                if (EnableLazyLoading)
+                if (IsEnableLazyLoading && EnableLazyLoading)
                 {
                     InvalidateLazyLoading();
                 }
@@ -101,41 +100,45 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                _ = VisualStateManager.GoToState(this, LoadingState, true);
+                if (args.OldValue is ImageModel oldValue)
+                {
+                    oldValue.LoadStarted -= ImageModel_LoadStarted;
+                    oldValue.LoadCompleted -= ImageModel_LoadCompleted;
+                    oldValue.NoPicChanged -= ImageModel_NoPicChanged;
+                }
+
+                if (args.NewValue is ImageModel newValue)
+                {
+                    newValue.LoadStarted -= ImageModel_LoadStarted;
+                    newValue.LoadStarted += ImageModel_LoadStarted;
+                    newValue.LoadCompleted -= ImageModel_LoadCompleted;
+                    newValue.LoadCompleted += ImageModel_LoadCompleted;
+                    newValue.NoPicChanged -= ImageModel_NoPicChanged;
+                    newValue.NoPicChanged += ImageModel_NoPicChanged;
+
+                    if (IsEnableLazyLoading && EnableLazyLoading)
+                    {
+                        InvalidateLazyLoading();
+                    }
+                    else
+                    {
+                        SetSource();
+                    }
+                }
+                else
+                {
+                    _ = UpdateState(false);
+                }
             }
         }
 
-        private async void ImageModel_LoadStarted(ImageModel sender, object args)
-        {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
-            _ = VisualStateManager.GoToState(this, LoadingState, true);
-        }
+        private void ImageModel_LoadStarted(ImageModel sender, object args) => _ = UpdateState(false);
 
-        private async void ImageModel_LoadCompleted(ImageModel sender, object args)
-        {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
-            _ = VisualStateManager.GoToState(this, sender.IsNoPic ? LoadingState : LoadedState, true);
-        }
+        private void ImageModel_LoadCompleted(ImageModel sender, object args) => _ = UpdateState(!sender.IsNoPic);
 
-        private async void ImageModel_NoPicChanged(ImageModel sender, bool args)
-        {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
-            _ = VisualStateManager.GoToState(this, args ? LoadingState : LoadedState, true);
-        }
+        private void ImageModel_NoPicChanged(ImageModel sender, bool args) => _ = UpdateState(!args);
 
-        private void ImageControl_LayoutUpdated(object sender, object e)
-        {
-            InvalidateLazyLoading();
-        }
+        private void ImageControl_LayoutUpdated(object sender, object e) => InvalidateLazyLoading();
 
         private void InvalidateLazyLoading()
         {
@@ -182,21 +185,35 @@ namespace CoolapkLite.Controls
 
         private void SetSource()
         {
-            if (TemplateSettings.ActualSource?.Equals(Source) != true)
+            if (TemplateSettings.ActualSource?.Uri != Source?.Uri)
             {
                 TemplateSettings.ActualSource = Source;
             }
 
             if (Source?.IsLoaded == true)
             {
-                _ = VisualStateManager.GoToState(this, LoadedState, true);
+                _ = UpdateState(true);
             }
         }
 
         private void RemoveSource()
         {
             TemplateSettings.ActualSource = null;
-            _ = VisualStateManager.GoToState(this, LoadingState, true);
+            _ = UpdateState(false);
+        }
+
+        private async Task UpdateState(bool isLoaded, bool useTransitions = true)
+        {
+            if (IsUseNoPicFallback) { return; }
+            if (_isImageLoaded != isLoaded)
+            {
+                _isImageLoaded = isLoaded;
+                if (Dispatcher?.HasThreadAccess == false)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                }
+                _ = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions);
+            }
         }
     }
 }

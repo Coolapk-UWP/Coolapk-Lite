@@ -103,7 +103,7 @@ namespace CoolapkLite.Controls
             if (sender is ImageControl control)
             {
                 bool value = (bool)args.NewValue;
-                if (value)
+                if (value && control.IsEnableLazyLoading)
                 {
                     control.LayoutUpdated -= control.ImageControl_LayoutUpdated;
                     control.LayoutUpdated += control.ImageControl_LayoutUpdated;

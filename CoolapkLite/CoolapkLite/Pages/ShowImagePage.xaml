@@ -136,8 +136,8 @@
                                 ZoomMode="Enabled">
                                 <controls:ImageControl
                                     x:Name="Image"
-                                    MaxWidth="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
-                                    MaxHeight="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                    Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                    Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     CanDrag="True"

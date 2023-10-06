@@ -185,6 +185,26 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        public bool IsUseNoPicFallback
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseNoPicFallback);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.IsUseNoPicFallback, value);
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public bool IsEnableLazyLoading
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsEnableLazyLoading);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.IsEnableLazyLoading, value);
+                RaisePropertyChangedEvent();
+            }
+        }
+
         public double SemaphoreSlimCount
         {
             get => SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount);
@@ -278,6 +298,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsUseBlurBrush),
                     nameof(IsUseCompositor),
                     nameof(IsUseVirtualizing),
+                    nameof(IsEnableLazyLoading),
                     nameof(SemaphoreSlimCount));
             }
             userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();

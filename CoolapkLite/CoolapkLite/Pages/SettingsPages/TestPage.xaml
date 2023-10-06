@@ -118,6 +118,8 @@
                         Click="Button_Click"
                         Content="自定义版本号"
                         Tag="CustomAPI" />
+                </control:SettingsGroup>
+                <control:SettingsGroup Header="图片测试">
                     <Slider
                         Header="可同时加载的图片数"
                         Maximum="256"
@@ -125,6 +127,8 @@
                         TickFrequency="1"
                         TickPlacement="Outside"
                         Value="{x:Bind Provider.SemaphoreSlimCount, Mode=TwoWay}" />
+                    <ToggleSwitch Header="是否虚拟化图片控件" IsOn="{x:Bind Provider.IsEnableLazyLoading, Mode=TwoWay}" />
+                    <ToggleSwitch Header="是否无图时使用图片占位" IsOn="{x:Bind Provider.IsUseNoPicFallback, Mode=TwoWay}" />
                 </control:SettingsGroup>
                 <control:SettingsGroup Header="界面测试">
                     <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind Provider.IsExtendsTitleBar, Mode=TwoWay}" />

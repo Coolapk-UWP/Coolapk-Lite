@@ -40,8 +40,10 @@ namespace CoolapkLite.Helpers
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
         public const string IsExtendsTitleBar = nameof(IsExtendsTitleBar);
+        public const string IsUseNoPicFallback = nameof(IsUseNoPicFallback);
         public const string ShowOtherException = nameof(ShowOtherException);
         public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
+        public const string IsEnableLazyLoading = nameof(IsEnableLazyLoading);
         public const string IsDisplayOriginPicture = nameof(IsDisplayOriginPicture);
         public const string CheckUpdateWhenLaunching = nameof(CheckUpdateWhenLaunching);
 
@@ -148,6 +150,10 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsExtendsTitleBar, SystemInformation.Instance.OperatingSystemVersion.Build >= 10586);
             }
+            if (!LocalObject.KeyExists(IsUseNoPicFallback))
+            {
+                LocalObject.Save(IsUseNoPicFallback, false);
+            }
             if (!LocalObject.KeyExists(ShowOtherException))
             {
                 LocalObject.Save(ShowOtherException, true);
@@ -155,6 +161,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(SemaphoreSlimCount))
             {
                 LocalObject.Save(SemaphoreSlimCount, Environment.ProcessorCount);
+            }
+            if (!LocalObject.KeyExists(IsEnableLazyLoading))
+            {
+                LocalObject.Save(IsEnableLazyLoading, true);
             }
             if (!LocalObject.KeyExists(IsDisplayOriginPicture))
             {

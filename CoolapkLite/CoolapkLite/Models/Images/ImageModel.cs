@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
@@ -153,7 +154,16 @@ namespace CoolapkLite.Models.Images
                 {
                     IsNoPic = true;
                     _ = GetImageAsync();
-                    return ImageCacheHelper.GetNoPic(Dispatcher);
+                    image = ImageCacheHelper.GetNoPic(Dispatcher);
+                    if (pic == null)
+                    {
+                        pic = new WeakReference<BitmapImage>(image);
+                    }
+                    else
+                    {
+                        pic.SetTarget(image);
+                    }
+                    return image;
                 }
             }
             protected set
@@ -265,16 +275,19 @@ namespace CoolapkLite.Models.Images
                 await semaphoreSlim.WaitAsync();
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
-                    IsNoPic = true;
-                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    if (!isNoPic)
+                    {
+                        IsNoPic = true;
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    }
                     return;
                 }
-                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
+                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher);
                 if (bitmapImage != null)
                 {
                     if (bitmapImage.Dispatcher != Dispatcher)
                     {
-                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri);
                         using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
                         {
                             bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
@@ -300,14 +313,17 @@ namespace CoolapkLite.Models.Images
                                 && PixelHeight > PixelWidth * 1.5;
                     IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
                                 && PixelWidth > PixelHeight * 1.5;
-                    IsGif = IsAutoPlaySupported && !Type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
                 else
                 {
-                    IsNoPic = true;
-                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    if (!isNoPic)
+                    {
+                        IsNoPic = true;
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    }
                     IsLongPic = IsWidePic = false;
-                    IsGif = Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
             }
             finally
@@ -336,8 +352,8 @@ namespace CoolapkLite.Models.Images
 
         public async void SavePic()
         {
-            string url = Uri;
-            ImageType type = Type & (ImageType)0xFE;
+            string url = uri;
+            ImageType type = this.type & (ImageType)0xFE;
             StorageFile image = await ImageCacheHelper.GetImageFileAsync(type, url);
             if (image == null)
             {
@@ -388,7 +404,7 @@ namespace CoolapkLite.Models.Images
 
         public async Task<DataPackage> GetImageDataPackageAsync(string title)
         {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type & (ImageType)0xFE, Uri);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(type & (ImageType)0xFE, uri);
             if (file == null) { return null; }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);
 
@@ -402,7 +418,7 @@ namespace CoolapkLite.Models.Images
 
         public async Task GetImageDataPackageAsync(DataPackage dataPackage, string title)
         {
-            StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type & (ImageType)0xFE, Uri);
+            StorageFile file = await ImageCacheHelper.GetImageFileAsync(type & (ImageType)0xFE, uri);
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
@@ -461,12 +477,12 @@ namespace CoolapkLite.Models.Images
 
         private string GetTitle()
         {
-            Match match = Regex.Match(Uri, @"[^/]+(?!.*/)");
+            Match match = Regex.Match(uri, @"[^/]+(?!.*/)");
             return match.Success ? match.Value : $"CoolapkLite_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
         }
 
         public async Task Refresh() => await GetImageAsync();
 
-        public override string ToString() => string.Join(" - ", Title, Uri);
+        public override string ToString() => string.Join(" - ", Title, uri);
     }
 }

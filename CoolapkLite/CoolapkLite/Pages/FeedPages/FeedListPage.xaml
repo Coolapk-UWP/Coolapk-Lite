@@ -154,15 +154,13 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Ellipse
+                                    <control:PersonPicture
                                         Width="56"
                                         Height="56"
                                         HorizontalAlignment="Left"
-                                        VerticalAlignment="Top">
-                                        <Ellipse.Fill>
-                                            <ImageBrush ImageSource="{x:Bind UserAvatar.Pic, Mode=OneWay}" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
+                                        VerticalAlignment="Top"
+                                        DisplayName="{x:Bind UserName}"
+                                        Source="{x:Bind UserAvatar}" />
                                     <Button
                                         x:Name="FollowButton"
                                         Grid.Column="1"
