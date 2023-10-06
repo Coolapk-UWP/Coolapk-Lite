@@ -568,7 +568,6 @@
                                         VerticalAlignment="Center"
                                         CanDrag="True"
                                         DragStarting="Image_DragStarting"
-                                        EnableLazyLoading="False"
                                         KeyDown="FrameworkElement_KeyDown"
                                         Source="{x:Bind}"
                                         Stretch="UniformToFill"

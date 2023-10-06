@@ -20,8 +20,8 @@
                     <controls:ImageControl
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
-                        EnableLazyLoading="False"
-                        Source="{x:Bind Pic}" />
+                        Source="{x:Bind Pic}"
+                        Style="{StaticResource ImageBrushImageControlStyle}" />
                 </DataTemplate>
             </FlipView.ItemTemplate>
         </FlipView>

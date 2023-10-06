@@ -8,7 +8,7 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Stretch" Value="UniformToFill" />
         <Setter Property="EnableLazyLoading" Value="True" />
-        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="LazyLoadingThreshold" Value="3" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ImageControl">
@@ -119,7 +119,7 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Stretch" Value="UniformToFill" />
         <Setter Property="EnableLazyLoading" Value="True" />
-        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="LazyLoadingThreshold" Value="3" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ImageControl">
@@ -234,7 +234,7 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Stretch" Value="UniformToFill" />
         <Setter Property="EnableLazyLoading" Value="True" />
-        <Setter Property="LazyLoadingThreshold" Value="1.5" />
+        <Setter Property="LazyLoadingThreshold" Value="3" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:ImageControl">

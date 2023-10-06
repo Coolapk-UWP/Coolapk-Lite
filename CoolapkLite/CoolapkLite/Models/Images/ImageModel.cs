@@ -265,28 +265,28 @@ namespace CoolapkLite.Models.Images
                 await semaphoreSlim.WaitAsync();
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
-                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
                     IsNoPic = true;
+                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
                     return;
                 }
                 BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(Type, Uri, Dispatcher);
-                if (bitmapImage.Dispatcher != Dispatcher)
-                {
-                    StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
-                    using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
-                    {
-                        bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
-                        {
-                            BitmapImage image = new BitmapImage();
-                            await image.SetSourceAsync(stream);
-                            return image;
-                        });
-                    }
-                }
                 if (bitmapImage != null)
                 {
-                    IsNoPic = false;
+                    if (bitmapImage.Dispatcher != Dispatcher)
+                    {
+                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(Type, Uri);
+                        using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                        {
+                            bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
+                            {
+                                BitmapImage image = new BitmapImage();
+                                await image.SetSourceAsync(stream);
+                                return image;
+                            });
+                        }
+                    }
                     Pic = bitmapImage;
+                    IsNoPic = false;
                     if (!bitmapImage.Dispatcher.HasThreadAccess)
                     {
                         await bitmapImage.Dispatcher.ResumeForegroundAsync();
@@ -304,10 +304,9 @@ namespace CoolapkLite.Models.Images
                 }
                 else
                 {
-                    Pic = null;
                     IsNoPic = true;
-                    IsLongPic = false;
-                    IsWidePic = false;
+                    Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                    IsLongPic = IsWidePic = false;
                     IsGif = Uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
             }

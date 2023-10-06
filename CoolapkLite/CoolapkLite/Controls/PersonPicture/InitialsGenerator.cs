@@ -221,109 +221,109 @@ namespace CoolapkLite.Controls
             // Arabic
             if (character >= 0x0600 && character <= 0x06FF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Arabic Supplement
             if (character >= 0x0750 && character <= 0x077F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Arabic Extended-A
             if (character >= 0x08A0 && character <= 0x08FF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Arabic Presentation Forms-A
             if (character >= 0xFB50 && character <= 0xFDFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Arabic Presentation Forms-B
             if (character >= 0xFE70 && character <= 0xFEFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Devanagari
             if (character >= 0x0900 && character <= 0x097F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Devanagari Extended
             if (character >= 0xA8E0 && character <= 0xA8FF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Bengali
             if (character >= 0x0980 && character <= 0x09FF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Gurmukhi
             if (character >= 0x0A00 && character <= 0x0A7F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Gujarati
             if (character >= 0x0A80 && character <= 0x0AFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Oriya
             if (character >= 0x0B00 && character <= 0x0B7F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Tamil
             if (character >= 0x0B80 && character <= 0x0BFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Telugu
             if (character >= 0x0C00 && character <= 0x0C7F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Kannada
             if (character >= 0x0C80 && character <= 0x0CFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Malayalam
             if (character >= 0x0D00 && character <= 0x0D7F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Sinhala
             if (character >= 0x0D80 && character <= 0x0DFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Thai
             if (character >= 0x0E00 && character <= 0x0E7F)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // Lao
             if (character >= 0x0E80 && character <= 0x0EFF)
             {
-                return CharacterType.Glyph;
+                return CharacterType.Standard;
             }
 
             // SYMBOLIC
@@ -331,37 +331,37 @@ namespace CoolapkLite.Controls
             // CJK Unified Ideographs
             if (character >= 0x4E00 && character <= 0x9FFF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Unified Ideographs Extension 
             if (character >= 0x3400 && character <= 0x4DBF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Unified Ideographs Extension B
             if (character >= 0x20000 && character <= 0x2A6DF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Unified Ideographs Extension C
             if (character >= 0x2A700 && character <= 0x2B73F)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Unified Ideographs Extension D
             if (character >= 0x2B740 && character <= 0x2B81F)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Radicals Supplement
             if (character >= 0x2E80 && character <= 0x2EFF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Symbols and Punctuation
@@ -379,37 +379,37 @@ namespace CoolapkLite.Controls
             // Enclosed CJK Letters and Months
             if (character >= 0x3200 && character <= 0x32FF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Compatibility
             if (character >= 0x3300 && character <= 0x33FF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Compatibility Ideographs
             if (character >= 0xF900 && character <= 0xFAFF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Compatibility Forms
             if (character >= 0xFE30 && character <= 0xFE4F)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // CJK Compatibility Ideographs Supplement
             if (character >= 0x2F800 && character <= 0x2FA1F)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // Greek and Coptic
             if (character >= 0x0370 && character <= 0x03FF)
             {
-                return CharacterType.Symbolic;
+                return CharacterType.Standard;
             }
 
             // Hebrew

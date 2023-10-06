@@ -36,10 +36,7 @@ namespace CoolapkLite.Controls
 
         protected override void OnApplyTemplate()
         {
-            if (string.IsNullOrWhiteSpace(DisplayName))
-            {
-                _ = VisualStateManager.GoToState(this, "NoInitials", false);
-            }
+            OnDisplayNamePropertyChanged();
             base.OnApplyTemplate();
         }
 

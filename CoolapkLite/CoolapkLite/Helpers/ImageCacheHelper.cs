@@ -49,7 +49,7 @@ namespace CoolapkLite.Helpers
                 ? await GetMessageImageUriAsync(type, url)
                 : url.TryGetUri();
 
-            if (uri == null) { return await GetNoPicAsync(dispatcher); }
+            if (uri == null) { return null; }
 
             if (url.StartsWith("ms-appx", StringComparison.Ordinal) || uri.IsFile)
             {
@@ -58,7 +58,7 @@ namespace CoolapkLite.Helpers
             }
             else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
-                return await GetNoPicAsync(dispatcher);
+                return null;
             }
             else
             {
@@ -90,14 +90,14 @@ namespace CoolapkLite.Helpers
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                         dispatcher.ShowMessage(str);
-                        return await GetNoPicAsync(dispatcher);
+                        return null;
                     }
                 }
                 catch (Exception)
                 {
                     string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                     dispatcher.ShowMessage(str);
-                    return await GetNoPicAsync(dispatcher);
+                    return null;
                 }
             }
         }
@@ -259,7 +259,7 @@ namespace CoolapkLite.Helpers
                 ? await GetMessageImageUriAsync(type, url)
                 : url.TryGetUri();
 
-            if (uri == null) { return await GetNoPicAsync(dispatcher); }
+            if (uri == null) { return null; }
 
             if (url.StartsWith("ms-appx", StringComparison.Ordinal))
             {
@@ -267,7 +267,7 @@ namespace CoolapkLite.Helpers
             }
             else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
             {
-                return await GetNoPicAsync(dispatcher);
+                return null;
             }
             else
             {
@@ -318,13 +318,13 @@ namespace CoolapkLite.Helpers
             }
             catch (FileLoadException)
             {
-                return await GetNoPicAsync(dispatcher);
+                return null;
             }
             catch (HttpRequestException)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
                 dispatcher.ShowMessage(str);
-                return await GetNoPicAsync(dispatcher);
+                return null;
             }
         }
 

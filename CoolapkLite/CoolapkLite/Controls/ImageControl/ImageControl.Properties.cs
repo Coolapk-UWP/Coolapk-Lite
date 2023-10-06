@@ -128,7 +128,7 @@ namespace CoolapkLite.Controls
                 nameof(LazyLoadingThreshold),
                 typeof(double),
                 typeof(ImageControl),
-                new PropertyMetadata(1.5, OnLazyLoadingThresholdPropertyChanged));
+                new PropertyMetadata(3d, OnLazyLoadingThresholdPropertyChanged));
 
         /// <summary>
         /// Gets or sets a value indicating the threshold for triggering lazy loading.

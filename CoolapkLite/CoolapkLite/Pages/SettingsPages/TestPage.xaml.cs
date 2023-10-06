@@ -9,12 +9,12 @@ using CoolapkLite.ViewModels.ToolsPages;
 using System;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Search;
 using Windows.Globalization;
 using Windows.System;
+using Windows.System.Threading;
 using Windows.UI.ApplicationSettings;
 using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
@@ -204,7 +204,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = list.SaveAsync();
                     break;
                 case "ShowAsyncError":
-                    await Task.Run(() => throw new Exception(NotifyMessage.Text));
+                    await ThreadPool.RunAsync(_ => throw new Exception(NotifyMessage.Text));
                     break;
                 case "ShowProgressBar":
                     this.ShowProgressBar();
