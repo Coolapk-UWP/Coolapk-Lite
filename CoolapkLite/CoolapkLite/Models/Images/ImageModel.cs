@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;

@@ -6,7 +6,6 @@ using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
