@@ -16,6 +16,7 @@ using UnicodeStyle.Models;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Text;
@@ -441,13 +442,16 @@ namespace CoolapkLite.Controls
 
         private async void InsertEmoji(string data)
         {
-            string name = data[0] == '(' ? $"#{data}" : data;
-            InputBox.Document.Selection.InsertImage(
-                24, 24, 0,
-                VerticalCharacterAlignment.Top,
-                name,
-                await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync());
-            _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
+            using (IRandomAccessStreamWithContentType randomAccessStream = await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync())
+            {
+                string name = data[0] == '(' ? $"#{data}" : data;
+                InputBox.Document.Selection.InsertImage(
+                    24, 24, 0,
+                    VerticalCharacterAlignment.Top,
+                    name,
+                    randomAccessStream);
+                _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
+            }
         }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -464,16 +468,20 @@ namespace CoolapkLite.Controls
             (sender as ListView).SelectedIndex = -1;
         }
 
-        private void Grid_DragOver(object sender, DragEventArgs e)
+        private async void Grid_DragOver(object sender, DragEventArgs e)
         {
-            e.AcceptedOperation = DataPackageOperation.Copy;
+            DragOperationDeferral deferral = e.GetDeferral();
+            e.AcceptedOperation = await Provider.CheckDataAsync(e.DataView) ? DataPackageOperation.Copy : DataPackageOperation.None;
             e.Handled = true;
+            deferral.Complete();
         }
 
-        private void Grid_Drop(object sender, DragEventArgs e)
+        private async void Grid_Drop(object sender, DragEventArgs e)
         {
-            _ = Provider.DropFileAsync(e.DataView);
+            DragOperationDeferral deferral = e.GetDeferral();
+            await Provider.DropFileAsync(e.DataView);
             e.Handled = true;
+            deferral.Complete();
         }
 
         private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)

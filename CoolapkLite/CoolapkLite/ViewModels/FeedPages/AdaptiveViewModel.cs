@@ -293,7 +293,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     if (item is NullEntity) { continue; }
                     if (notOfType || EntityTypes.Contains(item.GetType()))
                     {
-                        await AddAsync(item);
+                        await AddAsync(item).ConfigureAwait(false);
                         AddSubProvider(item);
                     }
                 }

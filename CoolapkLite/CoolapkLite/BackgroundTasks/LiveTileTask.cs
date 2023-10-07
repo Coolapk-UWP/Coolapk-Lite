@@ -37,7 +37,7 @@ namespace CoolapkLite.BackgroundTasks
                 Uri uri = new Uri(SettingsHelper.Get<string>(SettingsHelper.TileUrl));
                 try
                 {
-                    await GetDataAsync(uri);
+                    await GetDataAsync(uri).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -48,7 +48,7 @@ namespace CoolapkLite.BackgroundTasks
 
         private async Task GetDataAsync(Uri uri)
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true).ConfigureAwait(false);
             if (isSucceed)
             {
                 result.OfType<JObject>()

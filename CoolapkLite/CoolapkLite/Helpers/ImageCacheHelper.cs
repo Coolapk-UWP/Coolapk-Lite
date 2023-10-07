@@ -46,7 +46,7 @@ namespace CoolapkLite.Helpers
         public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
             Uri uri = type.HasFlag(ImageType.Message)
-                ? await GetMessageImageUriAsync(type, url)
+                ? await GetMessageImageUriAsync(type, url).ConfigureAwait(false)
                 : url.TryGetUri();
 
             if (uri == null) { return null; }
@@ -105,7 +105,7 @@ namespace CoolapkLite.Helpers
         public static async Task<StorageFile> GetImageFileAsync(ImageType type, string url)
         {
             Uri uri = type.HasFlag(ImageType.Message)
-                ? await GetMessageImageUriAsync(type, url)
+                ? await GetMessageImageUriAsync(type, url).ConfigureAwait(false)
                 : url.TryGetUri();
 
             if (uri == null) { return null; }
@@ -191,7 +191,7 @@ namespace CoolapkLite.Helpers
                 WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
             }
 
-            return await ThemeHelper.IsDarkThemeAsync()
+            return await ThemeHelper.IsDarkThemeAsync().ConfigureAwait(false)
                 ? DarkNoPicMode[dispatcher]
                 : WhiteNoPicMode[dispatcher];
         }
@@ -281,7 +281,7 @@ namespace CoolapkLite.Helpers
                 if (item is null)
                 {
                     StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-                    return await DownloadImageAsync(file, url, dispatcher);
+                    return await DownloadImageAsync(file, url, dispatcher).ConfigureAwait(false);
                 }
                 else
                 {
@@ -334,7 +334,7 @@ namespace CoolapkLite.Helpers
             for (int i = 0; i < 5; i++)
             {
                 ImageType type = (ImageType)i;
-                await (await GetFolderAsync(type)).DeleteAsync();
+                await await GetFolderAsync(type).ContinueWith(x => x.Result.DeleteAsync());
                 await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(type.ToString());
             }
         }
@@ -342,7 +342,7 @@ namespace CoolapkLite.Helpers
         public static async Task CleanCaptchaCacheAsync()
         {
 #pragma warning disable 0612
-            await (await GetFolderAsync(ImageType.Captcha)).DeleteAsync();
+            await await GetFolderAsync(ImageType.Captcha).ContinueWith(x => x.Result.DeleteAsync());
 #pragma warning restore 0612
             await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Captcha");
         }

@@ -96,7 +96,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
             if (reset)
             {
                 OrderedPointList.Clear();
-                Title = (await NetworkHelper.GetUserInfoByNameAsync(ID)).UserName + "的粉丝分析";
+                Title = await NetworkHelper.GetUserInfoByNameAsync(ID).ContinueWith(x => $"{x.Result.UserName}的粉丝分析");
                 await GetContactModelsAsync();
                 await GetOrderedPointListAsync();
             }

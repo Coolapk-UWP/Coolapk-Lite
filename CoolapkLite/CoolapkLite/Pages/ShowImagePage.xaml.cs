@@ -261,9 +261,11 @@ namespace CoolapkLite.Pages
 
         private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
+            DragOperationDeferral deferral = args.GetDeferral();
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
             await (FlipView.SelectedItem as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
+            deferral.Complete();
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)

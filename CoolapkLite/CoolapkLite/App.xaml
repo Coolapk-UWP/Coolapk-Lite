@@ -32,7 +32,7 @@
             <converters:DoubleToVisibilityConverter x:Key="DoubleToVisibilityConverter" GreaterThan="0" />
 
             <converter:NumMultConverter x:Key="NumMultConverter" />
-            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <converter:ImageModelToVisibilityConverter x:Key="ImageModelToVisibilityConverter" />
 
             <common:ItemsPanelSelector
                 x:Key="ItemsPanelSelector"

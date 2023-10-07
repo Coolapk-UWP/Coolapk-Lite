@@ -36,6 +36,8 @@ namespace CoolapkLite.Models.Images
 
         public string Title => GetTitle();
 
+        public bool IsEmpty => string.IsNullOrWhiteSpace(uri);
+
         public bool IsLoaded => !isLoading && !isNoPic && pic?.TryGetTarget(out BitmapImage _) == true;
 
         public bool IsSmallImage => Type.HasFlag(ImageType.Small);
@@ -61,7 +63,7 @@ namespace CoolapkLite.Models.Images
             private set => SetProperty(ref isGif, value);
         }
 
-        private bool isLoading = true;
+        private bool isLoading = false;
         public bool IsLoading
         {
             get => isLoading;
@@ -232,7 +234,7 @@ namespace CoolapkLite.Models.Images
                             if (pic != null && pic.TryGetTarget(out BitmapImage _))
                             {
                                 if (Dispatcher == null) { return; }
-                                Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                                Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
                             }
                         }
                         break;
@@ -278,7 +280,7 @@ namespace CoolapkLite.Models.Images
                     if (!isNoPic)
                     {
                         IsNoPic = true;
-                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
                     }
                     return;
                 }
@@ -395,7 +397,7 @@ namespace CoolapkLite.Models.Images
                     {
                         using (Stream ImageStream = RandomAccessStream.AsStreamForRead())
                         {
-                            await ImageStream.CopyToAsync(FolderStream);
+                            await ImageStream.CopyToAsync(FolderStream).ConfigureAwait(false);
                         }
                     }
                 }
@@ -481,7 +483,7 @@ namespace CoolapkLite.Models.Images
             return match.Success ? match.Value : $"CoolapkLite_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
         }
 
-        public async Task Refresh() => await GetImageAsync();
+        public Task Refresh() => GetImageAsync();
 
         public override string ToString() => string.Join(" - ", Title, uri);
     }

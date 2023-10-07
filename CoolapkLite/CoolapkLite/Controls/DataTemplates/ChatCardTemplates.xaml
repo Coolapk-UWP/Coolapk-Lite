@@ -79,7 +79,7 @@
                             Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
+                            Visibility="{x:Bind MessagePic, Converter={StaticResource ImageModelToVisibilityConverter}}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
@@ -216,7 +216,7 @@
                             Source="{x:Bind MessagePic}"
                             Tag="{x:Bind MessagePic}"
                             Tapped="Image_Tapped"
-                            Visibility="{x:Bind MessagePic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}">
+                            Visibility="{x:Bind MessagePic, Converter={StaticResource ImageModelToVisibilityConverter}}">
                             <helpers:UIElementHelper.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem
@@ -360,7 +360,7 @@
                     VerticalAlignment="Center"
                     DisplayName="{x:Bind ExtraText}"
                     Source="{x:Bind ExtraPic}"
-                    Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
+                    Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
                 <control:TextBlockEx
                     Grid.Column="1"
                     VerticalAlignment="Center"

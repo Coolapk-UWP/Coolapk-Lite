@@ -145,7 +145,7 @@ namespace CoolapkLite.ViewModels.DataSource
             {
                 foreach (T item in items)
                 {
-                    await AddAsync(item);
+                    await AddAsync(item).ConfigureAwait(false);
                 }
             }
         }
@@ -157,6 +157,24 @@ namespace CoolapkLite.ViewModels.DataSource
                 await Dispatcher.ResumeForegroundAsync();
             }
             Add(item);
+        }
+
+        public virtual async Task RemoveAsync(T item)
+        {
+            if (Dispatcher?.HasThreadAccess == false)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+            Remove(item);
+        }
+
+        public virtual async Task ClearAsync()
+        {
+            if (Dispatcher?.HasThreadAccess == false)
+            {
+                await Dispatcher.ResumeForegroundAsync();
+            }
+            Clear();
         }
 
         protected abstract Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count);

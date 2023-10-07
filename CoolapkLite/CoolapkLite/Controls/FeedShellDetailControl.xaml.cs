@@ -94,7 +94,7 @@ namespace CoolapkLite.Controls
         {
             this.ShowProgressBar();
             string device = (sender.Inlines.FirstOrDefault().ElementStart.VisualParent.DataContext as FeedModelBase).DeviceTitle;
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true).ConfigureAwait(false);
             this.HideProgressBar();
             if (!isSucceed) { return; }
 
@@ -118,7 +118,7 @@ namespace CoolapkLite.Controls
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, feed.Title, feed.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, feed.Title, feed.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try

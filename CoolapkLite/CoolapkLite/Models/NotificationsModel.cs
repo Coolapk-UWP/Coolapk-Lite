@@ -193,7 +193,7 @@ namespace CoolapkLite.Models
             {
                 if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 {
-                    await Update(true);
+                    await Update(true).ConfigureAwait(false);
                 }
             };
             timer.Start();
@@ -225,7 +225,7 @@ namespace CoolapkLite.Models
         {
             try
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true).ConfigureAwait(false);
                 if (!isSucceed) { return; }
                 ChangeNumber((JObject)result, notify);
             }

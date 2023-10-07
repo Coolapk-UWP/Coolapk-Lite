@@ -77,7 +77,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id)
         {
-            (bool isSucceed, JToken result) = id.Contains("changeHistoryDetail") ? await RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true);
+            (bool isSucceed, JToken result) = id.Contains("changeHistoryDetail") ? await RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true).ConfigureAwait(false) : await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;
@@ -337,7 +337,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     toggleIsOn ? 1 : 0),
                 GetEntities,
                 "id");
-            await Refresh(true);
+            await Refresh(true).ConfigureAwait(false);
         }
 
         private IEnumerable<Entity> GetEntities(JObject json)

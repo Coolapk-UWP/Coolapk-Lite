@@ -225,7 +225,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             IsCleanCacheButtonEnabled = false;
             try
             {
-                await ImageCacheHelper.CleanCacheAsync().ContinueWith(x => IsCleanCacheButtonEnabled = true);
+                await ImageCacheHelper.CleanCacheAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -373,7 +373,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
             IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
             StorageFile file = files.FirstOrDefault();
-            if (file != null) { return await Dispatcher.LaunchFileAsync(file); }
+            if (file != null) { return await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false); }
             return false;
         }
 

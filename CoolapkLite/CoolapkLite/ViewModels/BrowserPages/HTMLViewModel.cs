@@ -99,7 +99,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             if (uri != null)
             {
-                await LoadHtmlAsync(uri);
+                await LoadHtmlAsync(uri).ConfigureAwait(false);
             }
         }
 
@@ -109,7 +109,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
         private async Task LoadHtmlAsync(Uri uri)
         {
             Dispatcher.ShowProgressBar();
-            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest");
+            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest").ConfigureAwait(false);
             if (isSucceed)
             {
                 JObject json = JObject.Parse(result);
@@ -127,7 +127,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             Dispatcher.HideProgressBar();
         }
 
-        public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light");
+        public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light").ConfigureAwait(false);
 
         public async Task GetHtmlAsync(string html, string theme)
         {

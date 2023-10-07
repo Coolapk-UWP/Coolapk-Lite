@@ -296,6 +296,8 @@
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
     <Compile Include="Helpers\Controls\ListViewHelper.cs" />
+    <Compile Include="Helpers\Converters\EmptyImageModelToObjectConverter.cs" />
+    <Compile Include="Helpers\Converters\ImageModelToVisibilityConverter.cs" />
     <Compile Include="Helpers\WinSDKHelper.cs" />
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />
@@ -318,7 +320,6 @@
     <Compile Include="Common\TokenCreator.cs" />
     <Compile Include="Helpers\UpdateHelper.cs" />
     <Compile Include="Helpers\UriHelper.cs" />
-    <Compile Include="Helpers\Converters\EmptyObjectToVisibilityConverter.cs" />
     <Compile Include="Helpers\VisualStateHelper.cs" />
     <Compile Include="Common\WeakEvent.cs" />
     <Compile Include="Helpers\WindowHelper.cs" />

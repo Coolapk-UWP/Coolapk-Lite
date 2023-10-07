@@ -44,13 +44,13 @@ namespace CoolapkLite.Pages.SettingsPages
 
         public ExtensionPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Provider == null)
             {
                 Provider = new ExtensionManager(ExtensionManager.OSSUploader);
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -59,11 +59,11 @@ namespace CoolapkLite.Pages.SettingsPages
             this.ShowProgressBar();
             if (reset)
             {
-                await Provider.InitializeAsync(Dispatcher);
+                await Provider.InitializeAsync(Dispatcher).ConfigureAwait(false);
             }
             else
             {
-                await Provider.FindAndLoadExtensionsAsync();
+                await Provider.FindAndLoadExtensionsAsync().ConfigureAwait(false);
             }
             this.HideProgressBar();
         }
@@ -83,6 +83,6 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+        private void ListView_RefreshRequested(object sender, EventArgs e) => _ = Refresh(true);
     }
 }

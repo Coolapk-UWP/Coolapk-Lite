@@ -3,12 +3,14 @@ using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using MetroLog.WinRT;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,6 +19,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -411,19 +414,7 @@ namespace CoolapkLite.Pages
         public string Name
         {
             get => name;
-            set
-            {
-                if (name != value)
-                {
-                    name = value;
-                    RaisePropertyChangedEvent();
-                    if (value == loader.GetString("User"))
-                    {
-                        SetUserAvatar(true);
-                        SettingsHelper.LoginChanged += (_, e) => SetUserAvatar(e);
-                    }
-                }
-            }
+            set => SetProperty(ref name, value);
         }
 
         public string icon;
@@ -431,13 +422,6 @@ namespace CoolapkLite.Pages
         {
             get => icon;
             set => SetProperty(ref icon, value);
-        }
-
-        private ImageSource image;
-        public ImageSource Image
-        {
-            get => image;
-            set => SetProperty(ref image, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -465,34 +449,7 @@ namespace CoolapkLite.Pages
 
         public MenuItem(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
-        private async void SetUserAvatar(bool isLogin)
-        {
-            if (isLogin && await SettingsHelper.CheckLoginAsync())
-            {
-                string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if (!string.IsNullOrEmpty(UID))
-                {
-                    (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(UID);
-                    if (results.UID != UID) { return; }
-                    Name = results.UserName;
-                    PageType = typeof(ProfilePage);
-                    if (Dispatcher?.HasThreadAccess == false)
-                    {
-                        await Dispatcher.ResumeForegroundAsync();
-                    }
-                    Image = new BitmapImage(new Uri(results.UserAvatar));
-                }
-            }
-            else
-            {
-                Name = loader.GetString("User");
-                Image = null;
-                PageType = typeof(BrowserPage);
-                ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);
-            }
-        }
-
-        private static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
+        protected static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
 
         public static ObservableCollection<MenuItem> GetMainItems(CoreDispatcher dispatcher)
         {
@@ -510,10 +467,79 @@ namespace CoolapkLite.Pages
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new MenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
+                 new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
                  new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
             };
             return items;
         }
+    }
+
+    public class PersonMenuItem : MenuItem
+    {
+        private ImageModel image;
+        public ImageModel Image
+        {
+            get => image;
+            set => SetProperty(ref image, value);
+        }
+
+        private NotificationsModel _notificationsModel;
+        public NotificationsModel NotificationsModel
+        {
+            get => _notificationsModel;
+            private set => SetProperty(ref _notificationsModel, value);
+        }
+
+        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher)
+        {
+            SettingsHelper.LoginChanged += (sender, e) => _ = SetUserAvatarAsync(e);
+            _ = SetUserAvatarAsync();
+        }
+
+        private Task SetUserAvatarAsync() =>
+            SettingsHelper.CheckLoginAsync().ContinueWith(x => SetUserAvatarAsync(x.Result)).Unwrap();
+
+        private async Task SetUserAvatarAsync(bool isLogin)
+        {
+            if (isLogin)
+            {
+                string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                if (!string.IsNullOrEmpty(UID))
+                {
+                    (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(UID).ConfigureAwait(false);
+                    if (results.UID != UID) { return; }
+                    Name = results.UserName;
+                    PageType = typeof(ProfilePage);
+                    if (Dispatcher?.HasThreadAccess == false)
+                    {
+                        await Dispatcher.ResumeForegroundAsync();
+                    }
+                    Image = new ImageModel(results.UserAvatar, ImageType.BigAvatar, Dispatcher);
+                    ViewModels = null;
+                    if (NotificationsModel == null)
+                    {
+                        NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                    }
+                }
+            }
+            else
+            {
+                Name = loader.GetString("User");
+                Image = null;
+                PageType = typeof(BrowserPage);
+                ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);
+                NotificationsModel = null;
+            }
+        }
+    }
+
+    public class MenuItemTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate Default { get; set; }
+        public DataTemplate PersonPicture { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item) => item is PersonMenuItem ? PersonPicture : Default;
+
+        protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 }

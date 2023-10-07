@@ -48,7 +48,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task Refresh(bool reset)
         {
-            IsLogin = await SettingsHelper.CheckLoginAsync();
+            IsLogin = await SettingsHelper.CheckLoginAsync().ConfigureAwait(false);
             if (IsLogin)
             {
                 if (NotificationsModel == null)
@@ -56,12 +56,13 @@ namespace CoolapkLite.ViewModels.FeedPages
                     NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                ProfileDetail = await GetFeedDetailAsync(UID);
-                await NotificationsModel.Update();
-                await Reset();
+                ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
+                await NotificationsModel.Update().ConfigureAwait(false);
+                await Reset().ConfigureAwait(false);
             }
             else
             {
+                NotificationsModel = null;
                 ProfileDetail = null;
                 Clear();
             }
@@ -90,7 +91,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserProfile, id), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserProfile, id), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;

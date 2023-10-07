@@ -40,7 +40,7 @@ namespace CoolapkLite.Pages.BrowserPages
 
         public HTMLPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is HTMLViewModel ViewModel
@@ -48,7 +48,7 @@ namespace CoolapkLite.Pages.BrowserPages
             {
                 Provider = ViewModel;
                 DataContext = Provider;
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -61,7 +61,7 @@ namespace CoolapkLite.Pages.BrowserPages
             }
         }
 
-        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Refresh(true);
     }

@@ -20,7 +20,7 @@ namespace CoolapkLite.ViewModels.DataSource
             _currentPage = 1;
             _hasMoreItems = true;
 
-            Clear();
+            await ClearAsync().ConfigureAwait(false);
             _ = await LoadMoreItemsAsync(20);
         }
 

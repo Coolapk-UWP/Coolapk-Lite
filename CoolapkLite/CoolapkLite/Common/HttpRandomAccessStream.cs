@@ -138,7 +138,7 @@ namespace CoolapkLite.Common
                 {
                     if (_inputStream == null)
                     {
-                        await SendRequestAsync(cancellationToken);
+                        await SendRequestAsync(cancellationToken).ConfigureAwait(false);
                     }
                 }
                 catch (Exception ex)

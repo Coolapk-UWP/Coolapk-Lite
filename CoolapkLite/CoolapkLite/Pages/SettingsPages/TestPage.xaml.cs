@@ -204,7 +204,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = list.SaveAsync();
                     break;
                 case "ShowAsyncError":
-                    await ThreadPool.RunAsync(_ => throw new Exception(NotifyMessage.Text));
+                    _ = ThreadPool.RunAsync(_ => throw new Exception(NotifyMessage.Text));
                     break;
                 case "ShowProgressBar":
                     this.ShowProgressBar();

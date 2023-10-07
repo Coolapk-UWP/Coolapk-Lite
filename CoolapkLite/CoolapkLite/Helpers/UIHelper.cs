@@ -475,7 +475,7 @@ namespace CoolapkLite.Helpers
                         window.Content = frame;
                         ThemeHelper.Initialize(window);
                         _ = frame.Navigate(typeof(ShowImagePage), image.Clone(window.Dispatcher), new DrillInNavigationTransitionInfo());
-                    });
+                    }).ConfigureAwait(false);
                 }
             }
             else
@@ -604,11 +604,11 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string url = link.Substring(3, "?");
-                    string uid = int.TryParse(url, out _) ? url : (await NetworkHelper.GetUserInfoByNameAsync(url)).UID;
+                    string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID);
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -664,7 +664,7 @@ namespace CoolapkLite.Helpers
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -677,7 +677,7 @@ namespace CoolapkLite.Helpers
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -696,7 +696,7 @@ namespace CoolapkLite.Helpers
                         FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
                         if (provider != null)
                         {
-                            return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                            return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                         }
                         return false;
                     };
@@ -710,7 +710,7 @@ namespace CoolapkLite.Helpers
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -723,7 +723,7 @@ namespace CoolapkLite.Helpers
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -736,7 +736,7 @@ namespace CoolapkLite.Helpers
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
                     if (provider != null)
                     {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider);
+                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                     }
                     return false;
                 };
@@ -768,19 +768,19 @@ namespace CoolapkLite.Helpers
                 case ActivationKind.Launch when args is LaunchActivatedEventArgs LaunchActivatedEventArgs:
                     if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
                     {
-                        return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' '));
+                        return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' ')).ConfigureAwait(false);
                     }
                     else if (ApiInfoHelper.IsTileActivatedInfoSupported && LaunchActivatedEventArgs.TileActivatedInfo != null)
                     {
                         if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
                         {
                             string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
-                            return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' '));
+                            return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' ')).ConfigureAwait(false);
                         }
                     }
                     return false;
                 case ActivationKind.Search when args is ISearchActivatedEventArgs SearchActivatedEventArgs:
-                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher));
+                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher)).ConfigureAwait(false);
                 case ActivationKind.Protocol:
                 case ActivationKind.ProtocolForResults:
                     IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
@@ -790,34 +790,34 @@ namespace CoolapkLite.Helpers
                         case "coolapk.com":
                         case "www.coolmarket.com":
                         case "coolmarket.com":
-                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath);
+                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath).ConfigureAwait(false);
                         case "http":
                         case "https":
-                            return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}");
+                            return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}").ConfigureAwait(false);
                         case "me":
-                            return await frame.NavigateAsync(typeof(ProfilePage));
+                            return await frame.NavigateAsync(typeof(ProfilePage)).ConfigureAwait(false);
                         case "home":
-                            return await frame.NavigateAsync(typeof(IndexPage));
+                            return await frame.NavigateAsync(typeof(IndexPage)).ConfigureAwait(false);
                         case "flags":
-                            return await frame.NavigateAsync(typeof(TestPage));
+                            return await frame.NavigateAsync(typeof(TestPage)).ConfigureAwait(false);
                         case "circle":
-                            return await frame.NavigateAsync(typeof(CirclePage));
+                            return await frame.NavigateAsync(typeof(CirclePage)).ConfigureAwait(false);
                         case "create":
-                            return await frame.ShowCreateFeedControlAsync();
+                            return await frame.ShowCreateFeedControlAsync().ConfigureAwait(false);
                         case "search":
-                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher));
+                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher)).ConfigureAwait(false);
                         case "history":
-                            return await frame.NavigateAsync(typeof(HistoryPage));
+                            return await frame.NavigateAsync(typeof(HistoryPage)).ConfigureAwait(false);
                         case "settings":
-                            return await frame.NavigateAsync(typeof(SettingsPage));
+                            return await frame.NavigateAsync(typeof(SettingsPage)).ConfigureAwait(false);
                         case "favorites":
-                            return await frame.NavigateAsync(typeof(BookmarkPage));
+                            return await frame.NavigateAsync(typeof(BookmarkPage)).ConfigureAwait(false);
                         case "extensions":
-                            return await frame.NavigateAsync(typeof(ExtensionPage));
+                            return await frame.NavigateAsync(typeof(ExtensionPage)).ConfigureAwait(false);
                         case "notifications":
-                            return await frame.NavigateAsync(typeof(NotificationsPage));
+                            return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
                         default:
-                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri);
+                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri).ConfigureAwait(false);
                     }
                 case ActivationKind.ToastNotification when args is IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs:
                     ToastArguments arguments = ToastArguments.Parse(ToastNotificationActivatedEventArgs.Argument);
@@ -832,7 +832,7 @@ namespace CoolapkLite.Helpers
                                 }
                                 break;
                             case "hasNotification":
-                                return await frame.NavigateAsync(typeof(NotificationsPage));
+                                return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
                         }
                     }
                     return false;
@@ -841,7 +841,7 @@ namespace CoolapkLite.Helpers
                     if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported)
                     {
                         return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
-                            && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' '));
+                            && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' ')).ConfigureAwait(false);
                     }
                     return false;
                 default:
@@ -856,31 +856,31 @@ namespace CoolapkLite.Helpers
                 switch (arguments[0].ToLowerInvariant())
                 {
                     case "me":
-                        return await frame.NavigateAsync(typeof(ProfilePage));
+                        return await frame.NavigateAsync(typeof(ProfilePage)).ConfigureAwait(false);
                     case "home":
-                        return await frame.NavigateAsync(typeof(IndexPage));
+                        return await frame.NavigateAsync(typeof(IndexPage)).ConfigureAwait(false);
                     case "flags":
-                        return await frame.NavigateAsync(typeof(TestPage));
+                        return await frame.NavigateAsync(typeof(TestPage)).ConfigureAwait(false);
                     case "caches":
-                        return await frame.NavigateAsync(typeof(CachesPage));
+                        return await frame.NavigateAsync(typeof(CachesPage)).ConfigureAwait(false);
                     case "circle":
-                        return await frame.NavigateAsync(typeof(CirclePage));
+                        return await frame.NavigateAsync(typeof(CirclePage)).ConfigureAwait(false);
                     case "create":
-                        return await frame.ShowCreateFeedControlAsync();
+                        return await frame.ShowCreateFeedControlAsync().ConfigureAwait(false);
                     case "search":
-                        return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(arguments.Length >= 2 ? arguments[1] : string.Empty, frame.Dispatcher));
+                        return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(arguments.Length >= 2 ? arguments[1] : string.Empty, frame.Dispatcher)).ConfigureAwait(false);
                     case "history":
-                        return await frame.NavigateAsync(typeof(HistoryPage));
+                        return await frame.NavigateAsync(typeof(HistoryPage)).ConfigureAwait(false);
                     case "settings":
-                        return await frame.NavigateAsync(typeof(SettingsPage));
+                        return await frame.NavigateAsync(typeof(SettingsPage)).ConfigureAwait(false);
                     case "favorites":
-                        return await frame.NavigateAsync(typeof(BookmarkPage));
+                        return await frame.NavigateAsync(typeof(BookmarkPage)).ConfigureAwait(false);
                     case "extensions" when ExtensionManager.IsOSSUploaderSupported:
-                        return await frame.NavigateAsync(typeof(ExtensionPage));
+                        return await frame.NavigateAsync(typeof(ExtensionPage)).ConfigureAwait(false);
                     case "notifications":
-                        return await frame.NavigateAsync(typeof(NotificationsPage));
+                        return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
                     default:
-                        return await frame.OpenLinkAsync(arguments[0]);
+                        return await frame.OpenLinkAsync(arguments[0]).ConfigureAwait(false);
                 }
             }
             return false;

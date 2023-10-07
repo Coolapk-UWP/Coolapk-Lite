@@ -275,7 +275,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserSpace, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserSpace, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -298,7 +298,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = user.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, user.UserName, user.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, user.UserName, user.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -405,7 +405,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetTagDetail, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetTagDetail, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -428,7 +428,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -516,7 +516,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetDyhDetail, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetDyhDetail, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -539,7 +539,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -688,7 +688,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetail, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetail, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -711,7 +711,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -817,7 +817,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionDetail, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetCollectionDetail, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -840,7 +840,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -963,7 +963,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task<FeedListDetailBase> GetDetailAsync()
         {
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, ID), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, ID), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject token = (JObject)result;
@@ -990,7 +990,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = detail.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, detail.Title, detail.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try
@@ -1027,7 +1027,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 foreach (Entity item in items)
                 {
                     if (item is NullEntity) { continue; }
-                    await AddAsync(item);
+                    await AddAsync(item).ConfigureAwait(false);
                 }
             }
         }

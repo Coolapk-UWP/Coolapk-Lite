@@ -42,7 +42,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         public CachesPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -56,7 +56,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
             if (!Provider.Any)
             {
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -75,7 +75,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+        private void ListView_RefreshRequested(object sender, EventArgs e) => _ = Refresh(true);
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {

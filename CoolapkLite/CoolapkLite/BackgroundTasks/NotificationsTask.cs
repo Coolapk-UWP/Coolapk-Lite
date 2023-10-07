@@ -23,7 +23,7 @@ namespace CoolapkLite.BackgroundTasks
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true);
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetNotificationNumbers), true).ConfigureAwait(false);
                 if (!isSucceed) { return; }
                 JObject token = (JObject)result;
                 if (token != null)

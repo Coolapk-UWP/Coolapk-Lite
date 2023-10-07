@@ -445,14 +445,14 @@
                             Width="56"
                             Height="56"
                             Source="{x:Bind ExtraPic}"
-                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
+                            Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
                         <Border
                             Width="56"
                             Height="56"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                             BorderThickness="1"
-                            Visibility="{x:Bind ExtraPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true', FallbackValue='Visible'}">
+                            Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}, ConverterParameter='true'}">
                             <FontIcon
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
@@ -507,14 +507,14 @@
                         Height="56"
                         Source="{x:Bind MediaPic}"
                         Style="{StaticResource ImageBrushImageControlStyle}"
-                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed'}" />
+                        Visibility="{x:Bind MediaPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
                     <Border
                         Width="56"
                         Height="56"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                         BorderThickness="1"
-                        Visibility="{x:Bind MediaPic.Uri, Converter={StaticResource StringVisibilityConverter}, ConverterParameter='true', FallbackValue='Visibility'}">
+                        Visibility="{x:Bind MediaPic, Converter={StaticResource ImageModelToVisibilityConverter}, ConverterParameter='true'}">
                         <FontIcon
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"

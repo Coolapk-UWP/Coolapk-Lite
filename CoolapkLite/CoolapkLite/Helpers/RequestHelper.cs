@@ -155,7 +155,7 @@ namespace CoolapkLite.Helpers
                     content.Add(uploadDir, "uploadDir");
                     content.Add(is_anonymous, "is_anonymous");
                     content.Add(uploadFileList, "uploadFileList");
-                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content);
+                    (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content).ConfigureAwait(false);
                     if (isSucceed)
                     {
                         UploadPicturePrepareResult data = result.ToObject<UploadPicturePrepareResult>();
@@ -165,7 +165,7 @@ namespace CoolapkLite.Helpers
                             if (image == null) { continue; }
                             using (Stream stream = image.Bytes.GetStream())
                             {
-                                string response = await Task.Run(() => OSSUploadHelper.OssUpload(data.UploadPrepareInfo, info, stream, "image/png"));
+                                string response = await Task.Run(() => OSSUploadHelper.OssUpload(data.UploadPrepareInfo, info, stream, "image/png")).ConfigureAwait(false);
                                 if (!string.IsNullOrEmpty(response))
                                 {
                                     try
@@ -205,7 +205,7 @@ namespace CoolapkLite.Helpers
                 ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() })
             };
-            return await extension.InvokeAsync(message) as string[];
+            return await extension.InvokeAsync(message).ConfigureAwait(false) as string[];
         }
 
         public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)

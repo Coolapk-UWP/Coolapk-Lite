@@ -51,7 +51,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         public SearchingPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is SearchingViewModel ViewModel
@@ -60,7 +60,7 @@ namespace CoolapkLite.Pages.FeedPages
                 Provider = ViewModel;
                 if (Provider.PivotIndex != -1)
                 { PivotIndex = Provider.PivotIndex; }
-                await Provider.Refresh(true);
+                _ = Provider.Refresh(true);
             }
         }
 
@@ -80,7 +80,7 @@ namespace CoolapkLite.Pages.FeedPages
             PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
             if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
             {
-                Refresh = reset => _ = ItemsSource.Refresh(reset);
+                Refresh = reset => ItemsSource.Refresh(reset);
             }
             RightHeader.Visibility = Pivot.SelectedIndex == 0 ? Visibility.Visible : Visibility.Collapsed;
         }
@@ -99,12 +99,12 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e)
+        private void ListView_RefreshRequested(object sender, EventArgs e)
         {
             ListView ListView = sender as ListView;
             if (ListView.ItemsSource is EntityItemSource ItemsSource)
             {
-                await ItemsSource.Refresh(true);
+                _ = ItemsSource.Refresh(true);
             }
         }
 
@@ -148,7 +148,7 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private async void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
+        private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
             if (args.ChosenSuggestion is AppModel app)
             {
@@ -157,12 +157,12 @@ namespace CoolapkLite.Pages.FeedPages
             else if (args.ChosenSuggestion is SearchWord word)
             {
                 Provider.Title = word.ToString();
-                await Provider.Refresh(true);
+                _ = Provider.Refresh(true);
             }
             else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
             {
                 Provider.Title = sender.Text;
-                await Provider.Refresh(true);
+                _ = Provider.Refresh(true);
             }
         }
 

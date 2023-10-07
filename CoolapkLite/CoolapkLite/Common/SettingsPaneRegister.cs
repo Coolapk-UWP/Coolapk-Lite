@@ -105,10 +105,10 @@ namespace CoolapkLite.Common
             SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
             await Task.Run(async () =>
             {
-                await semaphoreSlim.WaitAsync();
+                await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 try
                 {
-                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true).ConfigureAwait(false);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
                         results = new List<string>(array.Count);

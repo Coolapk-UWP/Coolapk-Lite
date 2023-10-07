@@ -100,7 +100,7 @@ namespace CoolapkLite.Common
             _catalog.PackageUpdating += Catalog_PackageUpdating;
             _catalog.PackageStatusChanged += Catalog_PackageStatusChanged; // raised when a package changes with respect to integrity, licensing state, or availability (package is installed on a SD card that is then unplugged; you wouldn't get an uninstalling event)
 
-            await FindAndLoadExtensionsAsync();
+            await FindAndLoadExtensionsAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace CoolapkLite.Common
         /// <param name="args">Contains the package that is updating</param>
         private async void Catalog_PackageUpdating(AppExtensionCatalog sender, AppExtensionPackageUpdatingEventArgs args)
         {
-            await UnloadExtensionsAsync(args.Package);
+            await UnloadExtensionsAsync(args.Package).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace CoolapkLite.Common
         /// <param name="args">Contains the package that is uninstalling</param>
         private async void Catalog_PackageUninstalling(AppExtensionCatalog sender, AppExtensionPackageUninstallingEventArgs args)
         {
-            await RemoveExtensionsAsync(args.Package);
+            await RemoveExtensionsAsync(args.Package).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace CoolapkLite.Common
                 // if it's offline, unload its extensions
                 if (args.Package.Status.PackageOffline)
                 {
-                    await UnloadExtensionsAsync(args.Package);
+                    await UnloadExtensionsAsync(args.Package).ConfigureAwait(false);
                 }
                 else if (args.Package.Status.Servicing || args.Package.Status.DeploymentInProgress)
                 {
@@ -207,12 +207,12 @@ namespace CoolapkLite.Common
                 {
                     // Deal with an invalid or tampered with package, or other issue, by removing the extensions
                     // Adding a UI glyph to the affected extensions could be a good user experience if you wish
-                    await RemoveExtensionsAsync(args.Package);
+                    await RemoveExtensionsAsync(args.Package).ConfigureAwait(false);
                 }
             }
             else // The package is now OK--attempt to load its extensions
             {
-                await LoadExtensionsAsync(args.Package);
+                await LoadExtensionsAsync(args.Package).ConfigureAwait(false);
             }
         }
 

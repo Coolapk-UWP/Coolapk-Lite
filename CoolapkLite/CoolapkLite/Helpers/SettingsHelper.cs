@@ -49,8 +49,8 @@ namespace CoolapkLite.Helpers
 
         public static Type Get<Type>(string key) => LocalObject.Read<Type>(key);
         public static void Set<Type>(string key, Type value) => LocalObject.Save(key, value);
-        public static Task<Type> GetFile<Type>(string key) => LocalObject.ReadFileAsync<Type>($"Settings/{key}");
-        public static Task SetFile<Type>(string key, Type value) => LocalObject.CreateFileAsync($"Settings/{key}", value);
+        public static Task<Type> GetAsync<Type>(string key) => LocalObject.ReadFileAsync<Type>($"Settings/{key}");
+        public static Task SetAsync<Type>(string key, Type value) => LocalObject.CreateFileAsync($"Settings/{key}", value);
 
         public static void SetDefaultSettings()
         {
@@ -164,7 +164,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsEnableLazyLoading))
             {
-                LocalObject.Save(IsEnableLazyLoading, true);
+                LocalObject.Save(IsEnableLazyLoading, false);
             }
             if (!LocalObject.KeyExists(IsDisplayOriginPicture))
             {
@@ -174,16 +174,16 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(CheckUpdateWhenLaunching, false);
             }
-            SetDefaultFileSettings();
+            _ = SetDefaultSettingsAsync();
         }
 
-        public static async void SetDefaultFileSettings()
+        public static async Task SetDefaultSettingsAsync()
         {
             StorageFolder folder = LocalObject.Folder;
             StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
             if (await settings.TryGetItemAsync(Bookmark) == null)
             {
-                await SetFile(Bookmark, Models.Bookmark.GetDefaultBookmarks());
+                await SetAsync(Bookmark, Models.Bookmark.GetDefaultBookmarks()).ConfigureAwait(false);
             }
         }
     }
@@ -221,7 +221,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLoginAsync())
+                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLoginAsync().ConfigureAwait(false))
                 {
                     Logout();
                     return false;
@@ -254,7 +254,7 @@ namespace CoolapkLite.Helpers
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
                 }
-                if (await RequestHelper.CheckLoginAsync())
+                if (await RequestHelper.CheckLoginAsync().ConfigureAwait(false))
                 {
                     Set(SettingsHelper.Uid, Uid);
                     Set(SettingsHelper.Token, Token);
@@ -294,7 +294,7 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync();
+                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync().ConfigureAwait(false);
             }
         }
 

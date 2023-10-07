@@ -168,7 +168,7 @@ namespace CoolapkLite.Models.Feeds
         {
             if (url.Contains("b23.tv") || url.Contains("t.cn"))
             {
-                url = (await url.TryGetUri().ExpandShortUrlAsync()).ToString();
+                url = await url.TryGetUri().ExpandShortUrlAsync().ContinueWith(x => x.Result.ToString());
             }
 
             if (url.Contains("coolapk") && url.Contains("/feed/"))

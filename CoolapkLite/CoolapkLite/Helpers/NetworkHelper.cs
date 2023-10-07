@@ -243,7 +243,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                //await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 HttpResponseMessage response;
                 BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
                 response = await Client.PostAsync(uri, content).ConfigureAwait(false);
@@ -270,7 +270,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                //await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetAsync(uri).ConfigureAwait(false);
             }
@@ -295,7 +295,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                //await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStreamAsync(uri).ConfigureAwait(false);
             }
@@ -320,7 +320,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                //await semaphoreSlim.WaitAsync();
+                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStringAsync(uri).ConfigureAwait(false);
             }

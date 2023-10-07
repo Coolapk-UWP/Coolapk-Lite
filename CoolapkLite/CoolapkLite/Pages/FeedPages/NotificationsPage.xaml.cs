@@ -168,8 +168,8 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async Task Refresh(bool reset = false)
         {
-            await NotificationsModel.Update();
-            await RefreshTask(reset);
+            await NotificationsModel.Update().ConfigureAwait(false);
+            await RefreshTask(reset).ConfigureAwait(false);
         }
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;

@@ -52,21 +52,20 @@ namespace CoolapkLite.Pages.FeedPages
 
         public FeedShellPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is FeedShellViewModel ViewModel
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                await Provider.Refresh(true);
+                _ = Provider.Refresh(true);
                 if (Provider.FeedDetail != null)
                 {
                     SetLayout();
                     GenerateActivityAsync();
                 }
             }
-            await Task.Delay(30);
         }
 
         private void SetLayout()
@@ -98,7 +97,7 @@ namespace CoolapkLite.Pages.FeedPages
             _currentActivity = userActivity.CreateSession();
         }
 
-        private async void FeedButton_Click(object sender, RoutedEventArgs e)
+        private void FeedButton_Click(object sender, RoutedEventArgs e)
         {
             void DisabledCopy()
             {
@@ -129,7 +128,7 @@ namespace CoolapkLite.Pages.FeedPages
 
                 case nameof(LikeButton):
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLikeAsync();
+                    _ = (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":

@@ -156,11 +156,11 @@ namespace CoolapkLite.Pages
                         : MenuItem.Tag.ToString().Contains("V")
                             ? $"/page?url={MenuItem.Tag}"
                             : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
-                Refresh = () => _ = (Frame.Content as AdaptivePage).Refresh(true);
+                Refresh = () => (Frame.Content as AdaptivePage).Refresh(true);
             }
             else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
             {
-                Refresh = () => _ = AdaptivePage.Refresh(true);
+                Refresh = () => AdaptivePage.Refresh(true);
             }
         }
 

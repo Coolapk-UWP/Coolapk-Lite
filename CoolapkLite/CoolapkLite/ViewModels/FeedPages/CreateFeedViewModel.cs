@@ -73,8 +73,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task Refresh(bool reset)
         {
-            await CreateUserItemSource.Refresh(reset);
-            await CreateTopicItemSource.Refresh(reset);
+            await CreateUserItemSource.Refresh(reset).ConfigureAwait(false);
+            await CreateTopicItemSource.Refresh(reset).ConfigureAwait(false);
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is CreateFeedViewModel model && Equals(model);
@@ -83,7 +83,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
             {
-                await ReadStreamAsync(stream);
+                await ReadStreamAsync(stream).ConfigureAwait(false);
             }
         }
 
@@ -121,27 +121,33 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task<bool> CheckDataAsync(DataPackageView data)
         {
-            if (data.Contains(StandardDataFormats.Bitmap))
+            if (Pictures.Count >= 9)
+            {
+                return false;
+            }
+            else if (data.Contains(StandardDataFormats.Bitmap))
             {
                 return true;
             }
             else if (data.Contains(StandardDataFormats.StorageItems))
             {
                 IReadOnlyList<IStorageItem> items = await data.GetStorageItemsAsync();
-                IEnumerable<IStorageItem> images = items.OfType<StorageFile>(i =>
+                if (items.FirstOrDefault() is StorageFolder storageFolder)
                 {
-                    foreach (string type in ImageTypes)
-                    {
-                        if (i.Name.EndsWith(type, StringComparison.OrdinalIgnoreCase))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-                if (images.Any()) { return true; }
+                    IReadOnlyList<StorageFile> files = await storageFolder.GetFilesAsync();
+                    IEnumerable<StorageFile> images = files.Where(i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+                    return images.Any();
+                }
+                else
+                {
+                    IEnumerable<StorageFile> images = items.OfType<StorageFile>(i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+                    return images.Any();
+                }
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         public async void PickImage()
@@ -155,7 +161,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             foreach (StorageFile file in await FileOpen.PickMultipleFilesAsync())
             {
-                if (file != null) { await ReadFileAsync(file); }
+                if (file != null) { await ReadFileAsync(file).ConfigureAwait(false); }
             }
         }
 
@@ -168,7 +174,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             List<UploadFileFragment> fragments = new List<UploadFileFragment>();
             foreach (WriteableBitmap pic in Pictures)
             {
-                fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
+                await UploadFileFragment.FromWriteableBitmapAsync(pic).ContinueWith(x => fragments.Add(x.Result));
             }
             results = await RequestHelper.UploadImages(fragments);
             UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
@@ -182,7 +188,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>();
                     foreach (WriteableBitmap pic in Pictures)
                     {
-                        fragments.Add(await UploadFileFragment.FromWriteableBitmapAsync(pic));
+                        await UploadFileFragment.FromWriteableBitmapAsync(pic).ContinueWith(x => fragments.Add(x.Result));
                     }
                     results = await RequestHelper.UploadImagesAsync(fragments, manager.Extensions.FirstOrDefault());
                     Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
@@ -225,29 +231,32 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task DropFileAsync(DataPackageView data)
         {
-            if (data.Contains(StandardDataFormats.Bitmap))
+            if (Pictures.Count >= 9)
+            {
+                return;
+            }
+            else if (data.Contains(StandardDataFormats.Bitmap))
             {
                 RandomAccessStreamReference bitmap = await data.GetBitmapAsync();
                 using (IRandomAccessStreamWithContentType random = await bitmap.OpenReadAsync())
                 {
-                    await ReadStreamAsync(random);
+                    await ReadStreamAsync(random).ConfigureAwait(false);
                 }
             }
             else if (data.Contains(StandardDataFormats.StorageItems))
             {
                 IReadOnlyList<IStorageItem> items = await data.GetStorageItemsAsync();
-                IEnumerable<IStorageItem> images = items.OfType<StorageFile>(i =>
+                if (items.FirstOrDefault() is StorageFolder storageFolder)
                 {
-                    foreach (string type in ImageTypes)
-                    {
-                        if (i.Name.EndsWith(type, StringComparison.OrdinalIgnoreCase))
-                        {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-                if (images.Any()) { await ReadFileAsync(images.FirstOrDefault() as StorageFile); }
+                    IReadOnlyList<StorageFile> files = await storageFolder.GetFilesAsync();
+                    IEnumerable<StorageFile> images = files.Take(9 - Pictures.Count, i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+                    if (images.Any()) { images.ForEach(async (image) => await ReadFileAsync(image).ConfigureAwait(false)); }
+                }
+                else
+                {
+                    IEnumerable<StorageFile> images = items.OfType<StorageFile>(i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
+                    if (images.Any()) { images.Take(9 - Pictures.Count).ForEach(async (image) => await ReadFileAsync(image).ConfigureAwait(false)); }
+                }
             }
         }
     }

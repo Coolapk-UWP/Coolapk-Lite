@@ -82,7 +82,10 @@ namespace CoolapkLite.Controls
         private void ImageControl_Unloaded(object sender, RoutedEventArgs e)
         {
             _isLoaded = false;
-            RemoveSource();
+            if (IsEnableLazyLoading && EnableLazyLoading)
+            {
+                RemoveSource();
+            }
         }
 
         private void OnSourcePropertyChanged(DependencyPropertyChangedEventArgs args)
@@ -107,7 +110,7 @@ namespace CoolapkLite.Controls
                     oldValue.NoPicChanged -= ImageModel_NoPicChanged;
                 }
 
-                if (args.NewValue is ImageModel newValue)
+                if (args.NewValue is ImageModel newValue && !newValue.IsEmpty)
                 {
                     newValue.LoadStarted -= ImageModel_LoadStarted;
                     newValue.LoadStarted += ImageModel_LoadStarted;
@@ -142,7 +145,7 @@ namespace CoolapkLite.Controls
 
         private void InvalidateLazyLoading()
         {
-            if (Source == null || !(ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded))
+            if (Source == null || Source.IsEmpty || !(ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded))
             {
                 return;
             }
@@ -185,14 +188,24 @@ namespace CoolapkLite.Controls
 
         private void SetSource()
         {
-            if (TemplateSettings.ActualSource?.Uri != Source?.Uri)
+            if (Source == null || Source.IsEmpty)
+            {
+                RemoveSource();
+                return;
+            }
+
+            if (TemplateSettings.ActualSource?.Uri != Source.Uri)
             {
                 TemplateSettings.ActualSource = Source;
             }
 
-            if (Source?.IsLoaded == true)
+            if (Source.IsLoaded)
             {
                 _ = UpdateState(true);
+            }
+            else if (_isLoaded && !Source.IsLoading)
+            {
+                _ = Source.Refresh();
             }
         }
 

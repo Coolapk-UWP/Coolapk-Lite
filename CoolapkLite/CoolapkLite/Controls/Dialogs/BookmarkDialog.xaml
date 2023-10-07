@@ -3,12 +3,18 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:converter="using:CoolapkLite.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/BookmarkDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsPrimaryButtonEnabled="{Binding Text, ElementName=URLTextBox, Converter={StaticResource StringToBoolConverter}}"
     mc:Ignorable="d">
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <converter:StringToBoolConverter x:Key="StringToBoolConverter" />
+        </ResourceDictionary>
+    </ContentDialog.Resources>
     <controls:StackPanelEx Spacing="4">
         <TextBox
             x:Name="TitleTextBox"

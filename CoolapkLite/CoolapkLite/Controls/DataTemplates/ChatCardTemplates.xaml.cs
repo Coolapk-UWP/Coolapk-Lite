@@ -86,9 +86,11 @@ namespace CoolapkLite.Controls.DataTemplates
 
         private async void Border_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
+            DragOperationDeferral deferral = args.GetDeferral();
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
             await ((sender as FrameworkElement)?.Tag as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
+            deferral.Complete();
         }
     }
 }

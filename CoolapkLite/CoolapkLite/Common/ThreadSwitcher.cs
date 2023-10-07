@@ -23,13 +23,23 @@ namespace CoolapkLite.Common
 
         public void OnCompleted(Action continuation)
         {
+            void test()
+            {
+                try
+                {
+                    continuation();
+                }
+                catch(Exception ex)
+                {
+                }
+            }
             if (IsCompleted)
             {
-                continuation();
+                test();
             }
             else
             {
-                _ = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => continuation());
+                _ = dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => test());
             }
         }
     }
@@ -67,7 +77,20 @@ namespace CoolapkLite.Common
 
         public ThreadPoolThreadSwitcher GetAwaiter() => this;
 
-        public void OnCompleted(Action continuation) => _ = ThreadPool.RunAsync(_ => continuation(), WorkItemPriority.Normal);
+        public void OnCompleted(Action continuation)
+        {
+            void test()
+            {
+                try
+                {
+                    continuation();
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            _ = ThreadPool.RunAsync(_ => test(), WorkItemPriority.Normal);
+        }
     }
 
     public static class ThreadSwitcher

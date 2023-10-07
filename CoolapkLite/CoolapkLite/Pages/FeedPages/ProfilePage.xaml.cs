@@ -90,7 +90,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         public ProfilePage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
 
@@ -104,8 +104,7 @@ namespace CoolapkLite.Pages.FeedPages
 
             if (!Provider.IsLogin || dateTime == default || DateTime.UtcNow - dateTime == TimeSpan.FromMinutes(1))
             {
-                await Refresh(true);
-                dateTime = DateTime.UtcNow;
+                _ = Refresh(true);
             }
         }
 
@@ -122,7 +121,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async Task Refresh(bool reset = false)
         {
-            await Provider.Refresh(reset);
+            await Provider.Refresh(reset).ConfigureAwait(false);
             dateTime = DateTime.UtcNow;
         }
 

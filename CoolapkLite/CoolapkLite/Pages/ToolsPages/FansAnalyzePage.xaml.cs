@@ -43,14 +43,14 @@ namespace CoolapkLite.Pages.ToolsPages
 
         public FansAnalyzePage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is FansAnalyzeViewModel ViewModel
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -105,7 +105,7 @@ namespace CoolapkLite.Pages.ToolsPages
             }
         }
 
-        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Refresh(true);
     }

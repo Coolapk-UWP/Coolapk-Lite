@@ -107,7 +107,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         public FeedListPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             Frame.Navigating += OnFrameNavigating;
@@ -117,7 +117,7 @@ namespace CoolapkLite.Pages.FeedPages
                 Provider = ViewModel;
                 TwoPaneView.PanePriority = TwoPaneViewPriority.Pane2;
                 Provider.DataTemplateSelector = DetailTemplateSelector;
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -143,7 +143,7 @@ namespace CoolapkLite.Pages.FeedPages
             await Provider.Refresh(reset);
             if (FeedsListView.ItemsSource is EntityItemSource entities)
             {
-                _ = entities.Refresh(true);
+                await entities.Refresh(true).ConfigureAwait(false);
             }
         }
 
@@ -256,9 +256,11 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
         {
+            DragOperationDeferral deferral = args.GetDeferral();
             args.DragUI.SetContentFromDataPackage();
             args.Data.RequestedOperation = DataPackageOperation.Copy;
             await ((sender as FrameworkElement)?.Tag as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
+            deferral.Complete();
         }
 
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)

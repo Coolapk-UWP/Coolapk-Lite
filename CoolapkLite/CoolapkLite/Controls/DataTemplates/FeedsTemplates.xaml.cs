@@ -76,7 +76,7 @@ namespace CoolapkLite.Controls.DataTemplates
             }
         }
 
-        private async void FeedButton_Click(object sender, RoutedEventArgs e)
+        private void FeedButton_Click(object sender, RoutedEventArgs e)
         {
             void DisabledCopy()
             {
@@ -124,7 +124,7 @@ namespace CoolapkLite.Controls.DataTemplates
 
                 case "LikeButton":
                     DisabledCopy();
-                    await (element.Tag as ICanLike).ChangeLikeAsync();
+                    _ = (element.Tag as ICanLike).ChangeLikeAsync();
                     break;
 
                 case "ReportButton":
@@ -152,7 +152,7 @@ namespace CoolapkLite.Controls.DataTemplates
         {
             sender.ShowProgressBar();
             string device = (sender.Inlines.FirstOrDefault().ElementStart.VisualParent.DataContext as FeedModelBase).DeviceTitle;
-            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true);
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true).ConfigureAwait(false);
             sender.HideProgressBar();
             if (!isSucceed) { return; }
 
@@ -176,7 +176,7 @@ namespace CoolapkLite.Controls.DataTemplates
             // Construct a unique tile ID, which you will need to use later for updating the tile
             string tileId = feed.Url.GetMD5();
 
-            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, $"{feed.UserInfo.UserName}的{feed.Info}", feed.Url);
+            bool isPinned = await LiveTileTask.PinSecondaryTileAsync(tileId, $"{feed.UserInfo.UserName}的{feed.Info}", feed.Url).ConfigureAwait(false);
             if (isPinned)
             {
                 try

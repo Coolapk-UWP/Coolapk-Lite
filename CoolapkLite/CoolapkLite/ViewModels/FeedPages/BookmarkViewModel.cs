@@ -62,13 +62,13 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (Bookmarks != null)
             {
-                await SettingsHelper.SetFile(SettingsHelper.Bookmark, Bookmarks.ToArray());
+                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, Bookmarks.ToArray()).ConfigureAwait(false);
             }
             if (reset)
             {
-                Bookmarks = new ObservableCollection<Bookmark>(await SettingsHelper.GetFile<Bookmark[]>(SettingsHelper.Bookmark));
+                Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
             }
-            await UpdateJumpListAsync();
+            await UpdateJumpListAsync().ConfigureAwait(false);
         }
 
         private async Task UpdateJumpListAsync()

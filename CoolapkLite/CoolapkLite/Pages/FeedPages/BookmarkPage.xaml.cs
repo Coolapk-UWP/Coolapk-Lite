@@ -45,13 +45,13 @@ namespace CoolapkLite.Pages.FeedPages
 
         public BookmarkPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (Provider == null)
             {
                 Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -108,10 +108,10 @@ namespace CoolapkLite.Pages.FeedPages
             if (e != null) { e.Handled = true; }
         }
 
-        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
-        private async void ListView_RefreshRequested(object sender, EventArgs e) => await Refresh(true);
+        private void ListView_RefreshRequested(object sender, EventArgs e) => _ = Refresh(true);
     }
 }

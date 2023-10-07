@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using UnicodeStyle;
 using UnicodeStyle.Models;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -65,7 +66,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         public ChatPage() => InitializeComponent();
 
-        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (e.Parameter is ChatViewModel ViewModel
@@ -79,7 +80,7 @@ namespace CoolapkLite.Pages.FeedPages
 
             if (!Provider.Any)
             {
-                await Refresh(true);
+                _ = Refresh(true);
             }
         }
 
@@ -275,13 +276,16 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async void InsertEmoji(string data)
         {
-            string name = data[0] == '(' ? $"#{data}" : data;
-            InputBox.Document.Selection.InsertImage(
-                24, 24, 0,
-                VerticalCharacterAlignment.Top,
-                name,
-                await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync());
-            _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
+            using (IRandomAccessStreamWithContentType randomAccessStream = await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync())
+            {
+                string name = data[0] == '(' ? $"#{data}" : data;
+                InputBox.Document.Selection.InsertImage(
+                    24, 24, 0,
+                    VerticalCharacterAlignment.Top,
+                    name,
+                    randomAccessStream);
+                _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
+            }
         }
 
         #region 搜索框
@@ -306,7 +310,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void OnLoadMoreCompleted() => this.HideProgressBar();
 
-        public async Task Refresh(bool reset = false) => await Provider.Refresh(reset);
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
