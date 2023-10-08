@@ -67,11 +67,51 @@ namespace CoolapkLite
             }
         }
 
+        #region OnActivated
+
         protected override void OnActivated(IActivatedEventArgs e)
         {
             EnsureWindow(e);
             base.OnActivated(e);
         }
+
+        protected override void OnCachedFileUpdaterActivated(CachedFileUpdaterActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnCachedFileUpdaterActivated(e);
+        }
+
+        protected override void OnFileActivated(FileActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnFileActivated(e);
+        }
+
+        protected override void OnFileOpenPickerActivated(FileOpenPickerActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnFileOpenPickerActivated(e);
+        }
+
+        protected override void OnFileSavePickerActivated(FileSavePickerActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnFileSavePickerActivated(e);
+        }
+
+        protected override void OnSearchActivated(SearchActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnSearchActivated(e);
+        }
+
+        protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs e)
+        {
+            EnsureWindow(e);
+            base.OnShareTargetActivated(e);
+        }
+
+        #endregion
 
         private void EnsureWindow(IActivatedEventArgs e)
         {
@@ -85,7 +125,6 @@ namespace CoolapkLite
             }
 
             Window window = Window.Current;
-            WindowHelper.TrackWindow(window);
 
             // 不要在窗口已包含内容时重复应用程序初始化，
             // 只需确保窗口处于活动状态
@@ -109,6 +148,7 @@ namespace CoolapkLite
                 // 将框架放在当前窗口中
                 window.Content = rootFrame;
 
+                WindowHelper.TrackWindow(window);
                 ThemeHelper.Initialize();
             }
 

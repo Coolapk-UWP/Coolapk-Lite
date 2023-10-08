@@ -464,7 +464,7 @@ namespace CoolapkLite.Pages
         {
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
             {
-                 new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("User"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
+                 new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
                  new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
             };
             return items;
@@ -521,7 +521,7 @@ namespace CoolapkLite.Pages
             }
             else
             {
-                Name = loader.GetString("User");
+                Name = loader.GetString("Login");
                 Image = null;
                 PageType = typeof(BrowserPage);
                 ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);

@@ -144,6 +144,9 @@
   <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
     <value>松手刷新</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>登录</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>搜索</value>
   </data>

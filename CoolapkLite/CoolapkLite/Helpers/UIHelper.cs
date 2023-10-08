@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.System;
 using Windows.UI.Core;
@@ -781,6 +782,8 @@ namespace CoolapkLite.Helpers
                     return false;
                 case ActivationKind.Search when args is ISearchActivatedEventArgs SearchActivatedEventArgs:
                     return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher)).ConfigureAwait(false);
+                case ActivationKind.ShareTarget when args is IShareTargetActivatedEventArgs ShareTargetActivatedEventArgs:
+                    return ShareTargetActivatedEventArgs.ShareOperation.Data != null && await ShowCreateFeedControlAsync(frame, ShareTargetActivatedEventArgs.ShareOperation.Data).ConfigureAwait(false);
                 case ActivationKind.Protocol:
                 case ActivationKind.ProtocolForResults:
                     IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
@@ -838,12 +841,8 @@ namespace CoolapkLite.Helpers
                     return false;
                 case (ActivationKind)1021 when ApiInfoHelper.IsICommandLineActivatedEventArgsSupported
                                             && args is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs:
-                    if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported)
-                    {
-                        return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
+                    return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
                             && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' ')).ConfigureAwait(false);
-                    }
-                    return false;
                 default:
                     return false;
             }
@@ -900,6 +899,25 @@ namespace CoolapkLite.Helpers
                     new PopupThemeTransition()
                 }
             }.Show(element);
+            return false;
+        }
+
+        private static async Task<bool> ShowCreateFeedControlAsync(this UIElement element, DataPackageView data)
+        {
+            if (element.Dispatcher?.HasThreadAccess == false)
+            {
+                await element.Dispatcher.ResumeForegroundAsync();
+            }
+            CreateFeedControl control = new CreateFeedControl
+            {
+                FeedType = CreateFeedType.Feed,
+                PopupTransitions = new TransitionCollection
+                {
+                    new PopupThemeTransition()
+                }
+            };
+            _ = control.Provider.DropFileAsync(data);
+            control.Show(element);
             return false;
         }
 
