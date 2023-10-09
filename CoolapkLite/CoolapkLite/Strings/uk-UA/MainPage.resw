@@ -144,6 +144,9 @@
   <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
     <value>Відпустіть, щоб оновити</value>
   </data>
+  <data name="Login" xml:space="preserve">
+    <value>Увійти</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Пошук</value>
   </data>
