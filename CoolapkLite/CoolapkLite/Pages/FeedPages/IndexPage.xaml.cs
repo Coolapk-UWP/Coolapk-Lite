@@ -66,9 +66,9 @@ namespace CoolapkLite.Pages.FeedPages
             Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
         }
 
-        private void OnLoadMoreStarted() => this.ShowProgressBar();
+        private void OnLoadMoreStarted() => _ = this.ShowProgressBarAsync();
 
-        private void OnLoadMoreCompleted() => this.HideProgressBar();
+        private void OnLoadMoreCompleted() => _ = this.HideProgressBarAsync();
 
         private Task Refresh(bool reset = false) => Provider.Refresh(reset);
 

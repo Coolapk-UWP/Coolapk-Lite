@@ -359,7 +359,7 @@ namespace CoolapkLite.Models.Images
             if (image == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                Dispatcher.ShowMessage(str);
+                _ = Dispatcher.ShowMessageAsync(str);
                 return;
             }
 
@@ -423,7 +423,7 @@ namespace CoolapkLite.Models.Images
             if (file == null)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                Dispatcher.ShowMessage(str);
+                _ = Dispatcher.ShowMessageAsync(str);
                 return;
             }
             RandomAccessStreamReference bitmap = RandomAccessStreamReference.CreateFromFile(file);

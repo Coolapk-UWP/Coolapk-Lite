@@ -92,7 +92,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
 
         public async Task Refresh(bool reset)
         {
-            Dispatcher.ShowProgressBar();
+            _ = Dispatcher.ShowProgressBarAsync();
             if (reset)
             {
                 OrderedPointList.Clear();
@@ -101,7 +101,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
                 await GetOrderedPointListAsync();
             }
             FilteredContactModel = new ObservableCollection<ContactModel>(ContactModels);
-            Dispatcher.HideProgressBar();
+            _ = Dispatcher.HideProgressBarAsync();
         }
 
         private async Task GetContactModelsAsync()
@@ -139,7 +139,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
         {
             try
             {
-                Dispatcher.ShowProgressBar();
+                _ = Dispatcher.ShowProgressBarAsync();
                 await ThreadSwitcher.ResumeBackgroundAsync();
                 CachedSortedColumn = sortBy;
                 switch (sortBy)
@@ -199,7 +199,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
             }
             finally
             {
-                Dispatcher.HideProgressBar();
+                _ = Dispatcher.HideProgressBarAsync();
             }
         }
     }

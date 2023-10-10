@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Upload
 {
-    public class UploadFileFragment
+    public class UploadFileFragment : IEquatable<UploadFileFragment>
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -44,10 +44,10 @@ namespace CoolapkLite.Models.Upload
 
                 await encoder.FlushAsync();
 
-                byte[] bytes = stream.GetBytes();
+                byte[] bytes = await stream.GetBytesAsync();
 
                 HashAlgorithmProvider Provider = HashAlgorithmProvider.OpenAlgorithm(HashAlgorithmNames.Md5);
-                IBuffer computedHash = Provider.HashData(stream.GetBuffer());
+                IBuffer computedHash = Provider.HashData(bytes.AsBuffer());
 
                 return new UploadFileFragment
                 {
@@ -59,14 +59,10 @@ namespace CoolapkLite.Models.Upload
             }
         }
 
-        public override bool Equals(object obj)
-        {
-            return obj is UploadFileFragment && MD5.Equals((obj as UploadFileFragment).MD5);
-        }
+        public override bool Equals(object obj) => Equals(obj as UploadFileFragment);
 
-        public override int GetHashCode()
-        {
-            return MD5.GetHashCode();
-        }
+        public bool Equals(UploadFileFragment other) => other != null && MD5.Equals(other.MD5);
+
+        public override int GetHashCode() => MD5.GetHashCode();
     }
 }

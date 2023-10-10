@@ -67,9 +67,9 @@ namespace CoolapkLite.Pages.SettingsPages
             Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
         }
 
-        private void OnLoadMoreStarted() => this.ShowProgressBar();
+        private void OnLoadMoreStarted() => _ = this.ShowProgressBarAsync();
 
-        private void OnLoadMoreCompleted() => this.HideProgressBar();
+        private void OnLoadMoreCompleted() => _ = this.HideProgressBarAsync();
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 

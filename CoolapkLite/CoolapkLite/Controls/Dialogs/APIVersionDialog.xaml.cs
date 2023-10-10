@@ -61,7 +61,7 @@ namespace CoolapkLite.Controls.Dialogs
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, "com.coolapk.market"));
             if (isSucceed)
             {
@@ -71,7 +71,7 @@ namespace CoolapkLite.Controls.Dialogs
                     APIVersion = new APIVersion(model.VersionName, model.VersionCode);
                 }
             }
-            this.HideProgressBar();
+            _ = this.HideProgressBarAsync();
         }
     }
 }

@@ -291,15 +291,15 @@ namespace CoolapkLite
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
             if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
             {
-                UIHelper.ShowMessage($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+                _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
             }
             else if (e.Exception is CoolapkMessageException)
             {
-                UIHelper.ShowMessage(e.Exception.Message);
+                _ = UIHelper.ShowMessageAsync(e.Exception.Message);
             }
             else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
             {
-                UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
+                _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
             }
             SettingsHelper.LogManager.GetLogger("Unhandled Exception - Application").Error(e.Exception.ExceptionToMessage(), e.Exception);
             e.Handled = true;
@@ -332,15 +332,15 @@ namespace CoolapkLite
                 ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
                 if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
                 {
-                    UIHelper.ShowMessage($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+                    _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
                 }
                 else if (e.Exception is CoolapkMessageException)
                 {
-                    UIHelper.ShowMessage(e.Exception.Message);
+                    _ = UIHelper.ShowMessageAsync(e.Exception.Message);
                 }
                 else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
                 {
-                    UIHelper.ShowMessage($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
+                    _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
                 }
             }
             SettingsHelper.LogManager.GetLogger("Unhandled Exception - SynchronizationContext").Error(e.Exception.ExceptionToMessage(), e.Exception);

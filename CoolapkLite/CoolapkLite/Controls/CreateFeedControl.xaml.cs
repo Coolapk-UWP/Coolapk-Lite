@@ -3,6 +3,7 @@ using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Users;
+using CoolapkLite.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
@@ -195,7 +196,7 @@ namespace CoolapkLite.Controls
 
         private void CreateDataContent()
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
             contentText = contentText.Replace("\r", Environment.NewLine);
             if (string.IsNullOrWhiteSpace(contentText)) { return; }
@@ -211,8 +212,12 @@ namespace CoolapkLite.Controls
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    this.ShowMessage("图片上传失败");
-                    this.HideProgressBar();
+                    _ = this.GetAppTitleAsync().ContinueWith(x =>
+                    {
+                        IHaveTitleBar mainPage = x.Result;
+                        _ = UIHelper.ShowMessageAsync(mainPage, "图片上传失败");
+                        _ = UIHelper.HideProgressBarAsync(mainPage);
+                    });
                     return;
                 }
             }
@@ -240,8 +245,12 @@ namespace CoolapkLite.Controls
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    this.ShowMessage("图片上传失败");
-                    this.HideProgressBar();
+                    _ = this.GetAppTitleAsync().ContinueWith(x =>
+                    {
+                        IHaveTitleBar mainPage = x.Result;
+                        _ = UIHelper.ShowMessageAsync(mainPage, "图片上传失败");
+                        _ = UIHelper.HideProgressBarAsync(mainPage);
+                    });
                     return;
                 }
             }
@@ -288,19 +297,19 @@ namespace CoolapkLite.Controls
             }
             catch (CoolapkMessageException cex)
             {
-                this.ShowMessage(cex.Message);
+                _ = this.ShowMessageAsync(cex.Message);
                 if (cex.MessageStatus == CoolapkMessageException.RequestCaptcha)
                 {
                     //CaptchaDialog dialog = new CaptchaDialog();
                     //_ = await dialog.ShowAsync();
                 }
             }
-            this.HideProgressBar();
+            _ = this.HideProgressBarAsync();
         }
 
         private void SendSuccessful()
         {
-            this.ShowMessage(ResourceLoader.GetForViewIndependentUse("CreateFeedControl").GetString("SendSuccessed"));
+            _ = this.ShowMessageAsync(ResourceLoader.GetForViewIndependentUse("CreateFeedControl").GetString("SendSuccessed"));
             InputBox.Document.SetText(TextSetOptions.None, string.Empty);
             Provider.Pictures.Clear();
             Hide();

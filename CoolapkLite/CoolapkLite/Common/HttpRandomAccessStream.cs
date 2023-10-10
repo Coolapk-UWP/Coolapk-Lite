@@ -16,7 +16,6 @@ namespace CoolapkLite.Common
         private readonly Uri _requestedUri;
         private HttpClient _client;
         private IInputStream _inputStream;
-        private ulong _size;
         private string _etagHeader;
         private string _lastModifiedHeader;
         private bool _isDisposing;
@@ -37,11 +36,7 @@ namespace CoolapkLite.Common
 
         public bool CanWrite => false;
 
-        public ulong Size
-        {
-            get => _size;
-            set => throw new NotSupportedException();
-        }
+        public ulong Size { get; private set; }
 
         public static async Task<HttpRandomAccessStream> CreateAsync(HttpClient client, Uri uri, CancellationToken cancellationToken = default)
         {
@@ -84,7 +79,7 @@ namespace CoolapkLite.Common
                 ContentType = response.Content.Headers.ContentType.MediaType;
             }
 
-            _size = response.Content.Headers.ContentLength ?? 0;
+            Size = response.Content.Headers.ContentLength ?? 0;
 
             if (response.StatusCode != HttpStatusCode.PartialContent && Position != 0)
             {
@@ -161,13 +156,7 @@ namespace CoolapkLite.Common
 
         public IRandomAccessStream CloneStream() => this;
 
-        public IAsyncOperation<bool> FlushAsync() => throw new NotSupportedException();
-
         public IInputStream GetInputStreamAt(ulong position) => _inputStream;
-
-        public IOutputStream GetOutputStreamAt(ulong position) => throw new NotSupportedException();
-
-        public IAsyncOperationWithProgress<uint, uint> WriteAsync(IBuffer buffer) => throw new NotSupportedException();
 
         protected virtual void Dispose(bool disposing)
         {
@@ -198,5 +187,21 @@ namespace CoolapkLite.Common
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        #region Not Implemented
+
+        ulong IRandomAccessStream.Size
+        {
+            get => Size;
+            set => throw new NotImplementedException();
+        }
+
+        IOutputStream IRandomAccessStream.GetOutputStreamAt(ulong position) => throw new NotImplementedException();
+
+        IAsyncOperationWithProgress<uint, uint> IOutputStream.WriteAsync(IBuffer buffer) => throw new NotImplementedException();
+
+        IAsyncOperation<bool> IOutputStream.FlushAsync() => throw new NotImplementedException();
+
+        #endregion
     }
 }

@@ -89,14 +89,14 @@ namespace CoolapkLite.Helpers
                     catch (Exception)
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                        dispatcher.ShowMessage(str);
+                        _ = dispatcher.ShowMessageAsync(str);
                         return null;
                     }
                 }
                 catch (Exception)
                 {
                     string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                    dispatcher.ShowMessage(str);
+                    _ = dispatcher.ShowMessageAsync(str);
                     return null;
                 }
             }
@@ -148,14 +148,14 @@ namespace CoolapkLite.Helpers
                     catch (Exception)
                     {
                         string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                        UIHelper.ShowMessage(str);
+                        _ = UIHelper.ShowMessageAsync(str);
                         return null;
                     }
                 }
                 catch (Exception)
                 {
                     string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                    UIHelper.ShowMessage(str);
+                    _ = UIHelper.ShowMessageAsync(str);
                     return null;
                 }
             }
@@ -285,13 +285,13 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    return item is StorageFile file ? GetLocalImageAsync(file.Path, dispatcher, isForce) : null;
+                    return item is StorageFile file ? GetLocalImage(file.Path, dispatcher, isForce) : null;
                 }
             }
         }
 
         [Obsolete]
-        private static BitmapImage GetLocalImageAsync(string filename, CoreDispatcher dispatcher, bool forceGetPic = false)
+        private static BitmapImage GetLocalImage(string filename, CoreDispatcher dispatcher, bool forceGetPic = false)
         {
             try
             {
@@ -323,7 +323,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException)
             {
                 string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                dispatcher.ShowMessage(str);
+                _ = dispatcher.ShowMessageAsync(str);
                 return null;
             }
         }

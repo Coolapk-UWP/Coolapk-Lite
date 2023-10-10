@@ -112,7 +112,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(UpdateHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
             }
 
             return null;
@@ -191,7 +191,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(UpdateHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
             }
 
             return null;

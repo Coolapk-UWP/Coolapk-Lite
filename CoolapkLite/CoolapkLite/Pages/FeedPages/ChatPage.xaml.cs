@@ -105,7 +105,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async void CreateDataContent()
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
             contentText = contentText.Replace("\r", Environment.NewLine);
             if (string.IsNullOrWhiteSpace(contentText)) { return; }
@@ -130,14 +130,14 @@ namespace CoolapkLite.Pages.FeedPages
             }
             catch (CoolapkMessageException cex)
             {
-                this.ShowMessage(cex.Message);
+                _ = this.ShowMessageAsync(cex.Message);
                 if (cex.MessageStatus == CoolapkMessageException.RequestCaptcha)
                 {
                     //CaptchaDialog dialog = new CaptchaDialog();
                     //_ = await dialog.ShowAsync();
                 }
             }
-            this.HideProgressBar();
+            _ = this.HideProgressBarAsync();
         }
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
@@ -306,9 +306,9 @@ namespace CoolapkLite.Pages.FeedPages
 
         #endregion
 
-        private void OnLoadMoreStarted() => this.ShowProgressBar();
+        private void OnLoadMoreStarted() => _ = this.ShowProgressBarAsync();
 
-        private void OnLoadMoreCompleted() => this.HideProgressBar();
+        private void OnLoadMoreCompleted() => _ = this.HideProgressBarAsync();
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 

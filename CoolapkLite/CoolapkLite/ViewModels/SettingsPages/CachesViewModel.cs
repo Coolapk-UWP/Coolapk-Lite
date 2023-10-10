@@ -33,7 +33,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 }
                 catch (Exception ex)
                 {
-                    Dispatcher.ShowMessage(ex.ExceptionToMessage());
+                    _ = Dispatcher.ShowMessageAsync(ex.ExceptionToMessage());
                 }
             }
 

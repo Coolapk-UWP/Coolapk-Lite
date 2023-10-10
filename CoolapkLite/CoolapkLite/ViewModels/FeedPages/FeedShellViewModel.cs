@@ -84,9 +84,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             return detail != null ? new FeedDetailModel(detail) : null;
         }
 
-        protected void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+        protected void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();
 
-        protected void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
+        protected void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
         public abstract Task Refresh(bool reset = false);
 

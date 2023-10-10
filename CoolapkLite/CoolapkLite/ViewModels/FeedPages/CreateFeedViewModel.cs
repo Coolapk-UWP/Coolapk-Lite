@@ -169,7 +169,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             IList<string> results = null;
             if (!Pictures.Any()) { return Array.Empty<string>(); }
-            Dispatcher.ShowMessage("上传图片");
+            _ = Dispatcher.ShowMessageAsync("上传图片");
 #if NETCORE463
             List<UploadFileFragment> fragments = new List<UploadFileFragment>();
             foreach (WriteableBitmap pic in Pictures)
@@ -177,7 +177,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 await UploadFileFragment.FromWriteableBitmapAsync(pic).ContinueWith(x => fragments.Add(x.Result));
             }
             results = await RequestHelper.UploadImages(fragments);
-            UIHelper.ShowMessage($"上传了 {results.Count} 张图片");
+            _ = Dispatcher.ShowMessageAsync($"上传了 {results.Count} 张图片");
 #else
             if (ExtensionManager.IsOSSUploaderSupported)
             {
@@ -191,7 +191,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                         await UploadFileFragment.FromWriteableBitmapAsync(pic).ContinueWith(x => fragments.Add(x.Result));
                     }
                     results = await RequestHelper.UploadImagesAsync(fragments, manager.Extensions.FirstOrDefault());
-                    Dispatcher.ShowMessage($"上传了 {results.Count} 张图片");
+                    _ = Dispatcher.ShowMessageAsync($"上传了 {results.Count} 张图片");
                     return results;
                 }
             }
@@ -205,24 +205,26 @@ namespace CoolapkLite.ViewModels.FeedPages
                     using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
                     {
                         BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
-                        Stream pixelStream = pic.PixelBuffer.AsStream();
-                        byte[] pixels = new byte[pixelStream.Length];
-                        await pixelStream.ReadAsync(pixels, 0, pixels.Length);
+                        using (Stream pixelStream = pic.PixelBuffer.AsStream())
+                        {
+                            byte[] pixels = new byte[pixelStream.Length];
+                            await pixelStream.ReadAsync(pixels, 0, pixels.Length);
 
-                        encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
-                            (uint)pic.PixelWidth,
-                            (uint)pic.PixelHeight,
-                            96.0,
-                            96.0,
-                            pixels);
+                            encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
+                                (uint)pic.PixelWidth,
+                                (uint)pic.PixelHeight,
+                                96.0,
+                                96.0,
+                                pixels);
 
-                        await encoder.FlushAsync();
+                            await encoder.FlushAsync();
 
-                        byte[] bytes = stream.GetBytes();
-                        (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
-                        if (isSucceed) { results.Add(result); }
+                            byte[] bytes = await stream.GetBytesAsync();
+                            (bool isSucceed, string result) = await RequestHelper.UploadImageAsync(bytes, "pic");
+                            if (isSucceed) { results.Add(result); }
+                        }
                     }
-                    Dispatcher.ShowMessage($"已上传 ({i}/{Pictures.Count})");
+                    _ = Dispatcher.ShowMessageAsync($"已上传 ({i}/{Pictures.Count})");
                 }
             }
 #endif

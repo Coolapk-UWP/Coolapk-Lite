@@ -111,7 +111,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                     });
-                    UIHelper.HideProgressBar(UIHelper.AppTitle);
+                    _ = UIHelper.HideProgressBarAsync(UIHelper.AppTitle);
                     break;
                 case "NewAppWindow":
                     if (WindowHelper.IsAppWindowSupported)
@@ -125,7 +125,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
                         await window.TryShowAsync();
-                        Dispatcher.HideProgressBar();
+                        _ = Dispatcher.HideProgressBarAsync();
                     }
                     break;
                 case "CustomAPI":
@@ -169,7 +169,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
                     break;
                 case "ShowMessage":
-                    this.ShowMessage(NotifyMessage.Text);
+                    _ = this.ShowMessageAsync(NotifyMessage.Text);
                     break;
                 case "AddJumpList" when ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported():
                     JumpList list = await JumpList.LoadCurrentAsync();
@@ -207,10 +207,10 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = ThreadPool.RunAsync(_ => throw new Exception(NotifyMessage.Text));
                     break;
                 case "ShowProgressBar":
-                    this.ShowProgressBar();
+                    _ = this.ShowProgressBarAsync();
                     break;
                 case "HideProgressBar":
-                    this.HideProgressBar();
+                    _ = this.HideProgressBarAsync();
                     break;
                 case "EnterFullWindow":
                     if (this.IsAppWindow())
@@ -219,7 +219,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     { _ = ApplicationView.GetForCurrentView().TryEnterFullScreenMode(); }
                     break;
                 case "ErrorProgressBar":
-                    this.ErrorProgressBar();
+                    _ = this.ErrorProgressBarAsync();
                     break;
                 case "OpenCharmSearch" when SettingsPaneRegister.IsSearchPaneSupported:
                     SearchPane.GetForCurrentView().Show();
@@ -231,13 +231,13 @@ namespace CoolapkLite.Pages.SettingsPages
                     SettingsPane.Show();
                     break;
                 case "PausedProgressBar":
-                    this.PausedProgressBar();
+                    _ = this.PausedProgressBarAsync();
                     break;
                 case "ProgressRingState":
                     if (UIHelper.IsShowingProgressBar)
-                    { this.HideProgressBar(); }
+                    { _ = this.HideProgressBarAsync(); }
                     else
-                    { this.ShowProgressBar(); }
+                    { _ = this.ShowProgressBarAsync(); }
                     break;
                 case "GoToFansAnalyzePage":
                     _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("1122745", Dispatcher));
@@ -272,6 +272,6 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
-        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => this.ShowProgressBar(e.NewValue);
+        private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => _ = this.ShowProgressBarAsync(e.NewValue);
     }
 }

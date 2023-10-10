@@ -269,11 +269,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 {
                     if (results.IsExistNewVersion)
                     {
-                        Dispatcher.ShowMessage($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
+                        _ = Dispatcher.ShowMessageAsync($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
                     }
                     else
                     {
-                        Dispatcher.ShowMessage(_loader.GetString("UpToDate"));
+                        _ = Dispatcher.ShowMessageAsync(_loader.GetString("UpToDate"));
                     }
                     IsCheckUpdateButtonEnabled = true;
                     return results;
@@ -282,7 +282,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
-                Dispatcher.ShowMessage(ex.Message);
+                _ = Dispatcher.ShowMessageAsync(ex.Message);
             }
             IsCheckUpdateButtonEnabled = true;
             return null;

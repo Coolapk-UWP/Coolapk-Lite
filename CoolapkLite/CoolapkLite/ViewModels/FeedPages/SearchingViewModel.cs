@@ -78,9 +78,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             PivotIndex = index;
         }
 
-        private void OnLoadMoreStarted() => Dispatcher.ShowProgressBar();
+        private void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();
 
-        private void OnLoadMoreCompleted() => Dispatcher.HideProgressBar();
+        private void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
         public async Task Refresh(bool reset = false)
         {

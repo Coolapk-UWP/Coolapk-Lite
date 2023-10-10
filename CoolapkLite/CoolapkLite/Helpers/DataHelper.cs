@@ -8,6 +8,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Storage.Streams;
 
 namespace CoolapkLite.Helpers
@@ -172,10 +173,8 @@ namespace CoolapkLite.Helpers
         /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
         /// <returns><see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
         /// or if <paramref name="value"/> is the empty string (""); otherwise, <see langword="false"/>.</returns>
-        public static bool Contains(this string text, string value, StringComparison comparisonType)
-        {
-            return text.IndexOf(value, comparisonType) != -1;
-        }
+        public static bool Contains(this string text, string value, StringComparison comparisonType) =>
+            text.IndexOf(value, comparisonType) != -1;
 #endif
 
         /// <summary>
@@ -187,14 +186,10 @@ namespace CoolapkLite.Helpers
         /// only if <paramref name="value"/> has more than one element.</param>
         /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] values)
-        {
-            if (values?.Any() == true)
-            {
-                return builder.Append(string.Join(separator, values.Where(x => !string.IsNullOrWhiteSpace(x))));
-            }
-            return builder;
-        }
+        public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] values) =>
+            values?.Any() == true
+                ? builder.Append(string.Join(separator, values.Where(x => !string.IsNullOrWhiteSpace(x))))
+                : builder;
 
         /// <summary>
         /// Try to appends a copy of the specified string followed by the default line terminator to the end of the current StringBuilder object.
@@ -202,14 +197,10 @@ namespace CoolapkLite.Helpers
         /// <param name="builder">The builder to append.</param>
         /// <param name="value">The string to append.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public static StringBuilder TryAppendLine(this StringBuilder builder, string value)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                return builder.AppendLine(value);
-            }
-            return builder;
-        }
+        public static StringBuilder TryAppendLine(this StringBuilder builder, string value) =>
+            !string.IsNullOrWhiteSpace(value)
+                ? builder.AppendLine(value)
+                : builder;
 
         /// <summary>
         /// Try to concatenates the strings of the provided array, using the specified separator between each string,
@@ -220,14 +211,10 @@ namespace CoolapkLite.Helpers
         /// only if <paramref name="value"/> has more than one element.</param>
         /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
-        public static StringBuilder TryAppendLineJoin(this StringBuilder builder, string separator, params string[] value)
-        {
-            if (value?.Any() == true)
-            {
-                return builder.AppendLine(string.Join(separator, value.Where(x => !string.IsNullOrWhiteSpace(x))));
-            }
-            return builder;
-        }
+        public static StringBuilder TryAppendLineJoin(this StringBuilder builder, string separator, params string[] value) =>
+            value?.Any() == true
+                ? builder.AppendLine(string.Join(separator, value.Where(x => !string.IsNullOrWhiteSpace(x))))
+                : builder;
 
         /// <summary>
         /// Appends the string returned by processing a composite format string followed by the default line terminator, which contains zero or more
@@ -238,10 +225,8 @@ namespace CoolapkLite.Helpers
         /// <param name="args">An array of objects to format.</param>
         /// <returns>A reference to this instance with <paramref name="format"/> appended. Each format item in <paramref name="format"/>
         /// is replaced by the string representation of the corresponding object argument.</returns>
-        public static StringBuilder AppendLineFormat(this StringBuilder builder, string format, params object[] args)
-        {
-            return builder.AppendFormat(format, args).AppendLine();
-        }
+        public static StringBuilder AppendLineFormat(this StringBuilder builder, string format, params object[] args) =>
+            builder.AppendFormat(format, args).AppendLine();
 
         /// <summary>
         /// Try to appends the string returned by processing a composite format string followed by the default line terminator, which contains zero or more
@@ -252,47 +237,39 @@ namespace CoolapkLite.Helpers
         /// <param name="value">The string to format.</param>
         /// <returns>A reference to this instance with <paramref name="format"/> appended. Each format item in <paramref name="format"/>
         /// is replaced by the string representation of the corresponding object argument.</returns>
-        public static StringBuilder TryAppendLineFormat(this StringBuilder builder, string format, string value)
-        {
-            if (!string.IsNullOrWhiteSpace(format) && !string.IsNullOrWhiteSpace(value))
-            {
-                return builder.AppendLineFormat(format, value);
-            }
-            return builder;
-        }
+        public static StringBuilder TryAppendLineFormat(this StringBuilder builder, string format, string value) =>
+            !string.IsNullOrWhiteSpace(format) && !string.IsNullOrWhiteSpace(value)
+                ? builder.AppendLineFormat(format, value)
+                : builder;
 
-        public static IBuffer GetBuffer(this IRandomAccessStream randomStream)
+        public static async Task<IBuffer> GetBufferAsync(this IRandomAccessStream randomStream)
         {
             using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
             {
-                return stream.GetBuffer();
+                return await stream.GetBufferAsync();
             }
         }
 
-        public static byte[] GetBytes(this IRandomAccessStream randomStream)
+        public static async Task<byte[]> GetBytesAsync(this IRandomAccessStream randomStream)
         {
             using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
             {
-                return stream.GetBytes();
+                return await stream.GetBytesAsync();
             }
         }
 
-        public static IBuffer GetBuffer(this Stream stream)
+        public static async Task<IBuffer> GetBufferAsync(this Stream stream)
         {
-            byte[] bytes = new byte[0];
-            if (stream != null)
-            {
-                bytes = stream.GetBytes();
-            }
+            byte[] bytes = stream != null ? await stream.GetBytesAsync() : Array.Empty<byte>();
             return bytes.AsBuffer();
         }
 
-        public static byte[] GetBytes(this Stream stream)
+        public static async Task<byte[]> GetBytesAsync(this Stream stream)
         {
             if (stream.CanSeek) // stream.Length 已确定
             {
                 byte[] bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, bytes.Length);
+                _ = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
                 stream.Seek(0, SeekOrigin.Begin);
                 return bytes;
             }
@@ -304,7 +281,7 @@ namespace CoolapkLite.Helpers
                 int read = 0;
 
                 int chunk;
-                while ((chunk = stream.Read(buffer, read, buffer.Length - read)) > 0)
+                while ((chunk = await stream.ReadAsync(buffer, read, buffer.Length - read).ConfigureAwait(false)) > 0)
                 {
                     read += chunk;
 

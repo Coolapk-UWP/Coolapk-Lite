@@ -80,7 +80,7 @@ namespace CoolapkLite.BackgroundTasks
             bool isPinned = SecondaryTile.Exists(tileId);
             if (isPinned)
             {
-                UIHelper.ShowMessage(loader.GetString("AlreadyPinnedTile"));
+                _ = UIHelper.ShowMessageAsync(loader.GetString("AlreadyPinnedTile"));
             }
             else
             {
@@ -110,7 +110,7 @@ namespace CoolapkLite.BackgroundTasks
                 // Pin the tile
                 isPinned = await tile.RequestCreateAsync();
 
-                if (isPinned) { UIHelper.ShowMessage(loader.GetString("PinnedTileSucceeded")); }
+                if (isPinned) { _ = UIHelper.ShowMessageAsync(loader.GetString("PinnedTileSucceeded")); }
             }
             return isPinned;
         }

@@ -14,9 +14,6 @@ namespace CoolapkLite.Helpers.Converters
         /// </summary>
         /// <param name="value">Value to be checked.</param>
         /// <returns>True if value is null or empty <see cref="ImageModel"/>, false otherwise.</returns>
-        protected override bool CheckValueIsEmpty(object value)
-        {
-            return (value as ImageModel)?.IsEmpty != false;
-        }
+        protected override bool CheckValueIsEmpty(object value) => (value as ImageModel)?.IsEmpty != false;
     }
 }

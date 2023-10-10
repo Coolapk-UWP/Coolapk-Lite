@@ -320,7 +320,7 @@ namespace CoolapkLite.Helpers
         // Specify your serialization settings
         private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };
 
-        string IObjectSerializer.Serialize<T>(T value) => JsonConvert.SerializeObject(value, typeof(T), Formatting.Indented, settings);
+        public string Serialize<T>(T value) => JsonConvert.SerializeObject(value, typeof(T), Formatting.Indented, settings);
 
         public T Deserialize<T>(string value) => JsonConvert.DeserializeObject<T>(value, settings);
     }

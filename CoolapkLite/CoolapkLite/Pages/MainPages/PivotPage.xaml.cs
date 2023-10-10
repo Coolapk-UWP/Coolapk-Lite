@@ -126,7 +126,7 @@ namespace CoolapkLite.Pages
             {
                 SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = PivotContentFrame.BackStackDepth == 0 ? AppViewBackButtonVisibility.Collapsed : AppViewBackButtonVisibility.Visible;
             }
-            UIHelper.HideProgressBar(this as IHaveTitleBar);
+            _ = UIHelper.HideProgressBarAsync(this as IHaveTitleBar);
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)

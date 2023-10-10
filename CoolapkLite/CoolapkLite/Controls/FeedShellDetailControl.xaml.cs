@@ -92,10 +92,10 @@ namespace CoolapkLite.Controls
 
         private async void DeviceHyperlink_Click(Hyperlink sender, HyperlinkClickEventArgs args)
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             string device = (sender.Inlines.FirstOrDefault().ElementStart.VisualParent.DataContext as FeedModelBase).DeviceTitle;
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetProductDetailByName, device), true).ConfigureAwait(false);
-            this.HideProgressBar();
+            _ = this.HideProgressBarAsync();
             if (!isSucceed) { return; }
 
             JObject token = (JObject)result;
@@ -133,7 +133,7 @@ namespace CoolapkLite.Controls
                 return isPinned;
             }
 
-            this.ShowMessage(loader.GetString("PinnedTileFailed"));
+            _ = this.ShowMessageAsync(loader.GetString("PinnedTileFailed"));
             return isPinned;
         }
 

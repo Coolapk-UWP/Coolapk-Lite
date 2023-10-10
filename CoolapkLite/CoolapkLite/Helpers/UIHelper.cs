@@ -43,10 +43,8 @@ namespace CoolapkLite.Helpers
 
         public static IHaveTitleBar AppTitle { get; internal set; }
 
-        public static async Task<IHaveTitleBar> GetAppTitleAsync()
-        {
-            return Window.Current is Window window ? await window.GetAppTitleAsync().ConfigureAwait(false) : AppTitle;
-        }
+        public static async Task<IHaveTitleBar> GetAppTitleAsync() =>
+            Window.Current is Window window ? await window.GetAppTitleAsync().ConfigureAwait(false) : AppTitle;
 
         public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
         {
@@ -99,11 +97,11 @@ namespace CoolapkLite.Helpers
                 ?? await element.Dispatcher.GetAppTitleAsync().ConfigureAwait(false);
         }
 
-        public static async void ShowProgressBar(this CoreDispatcher dispatcher) => ShowProgressBar(await dispatcher.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task ShowProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => ShowProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void ShowProgressBar(this DependencyObject element) => ShowProgressBar(await element.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task ShowProgressBarAsync(this DependencyObject element) => element.GetAppTitleAsync().ContinueWith(x => ShowProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void ShowProgressBar(IHaveTitleBar mainPage)
+        public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
             if (mainPage.Dispatcher?.HasThreadAccess == false)
@@ -122,11 +120,11 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async void ShowProgressBar(this CoreDispatcher dispatcher, double value) => ShowProgressBar(await dispatcher.GetAppTitleAsync().ConfigureAwait(false), value);
+        public static Task ShowProgressBarAsync(this CoreDispatcher dispatcher, double value) => dispatcher.GetAppTitleAsync().ContinueWith(x => ShowProgressBarAsync(x.Result, value)).Unwrap();
 
-        public static async void ShowProgressBar(this DependencyObject element, double value) => ShowProgressBar(await element.GetAppTitleAsync().ConfigureAwait(false), value);
+        public static Task ShowProgressBarAsync(this DependencyObject element, double value) => element.GetAppTitleAsync().ContinueWith(x => ShowProgressBarAsync(x.Result, value));
 
-        public static async void ShowProgressBar(IHaveTitleBar mainPage, double value)
+        public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage, double value)
         {
             IsShowingProgressBar = true;
             if (mainPage.Dispatcher?.HasThreadAccess == false)
@@ -145,11 +143,11 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async void PausedProgressBar(this CoreDispatcher dispatcher) => PausedProgressBar(await dispatcher.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task PausedProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => PausedProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void PausedProgressBar(this DependencyObject element) => PausedProgressBar(await element.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task PausedProgressBarAsync(this DependencyObject element) => element.GetAppTitleAsync().ContinueWith(x => PausedProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void PausedProgressBar(IHaveTitleBar mainPage)
+        public static async Task PausedProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
             if (mainPage.Dispatcher?.HasThreadAccess == false)
@@ -163,11 +161,11 @@ namespace CoolapkLite.Helpers
             mainPage?.PausedProgressBar();
         }
 
-        public static async void ErrorProgressBar(this CoreDispatcher dispatcher) => ErrorProgressBar(await dispatcher.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task ErrorProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => ErrorProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void ErrorProgressBar(this DependencyObject element) => ErrorProgressBar(await element.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task ErrorProgressBarAsync(this DependencyObject element) => element.GetAppTitleAsync().ContinueWith(x => ErrorProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void ErrorProgressBar(IHaveTitleBar mainPage)
+        public static async Task ErrorProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
             if (mainPage.Dispatcher?.HasThreadAccess == false)
@@ -181,11 +179,11 @@ namespace CoolapkLite.Helpers
             mainPage?.ErrorProgressBar();
         }
 
-        public static async void HideProgressBar(this CoreDispatcher dispatcher) => HideProgressBar(await dispatcher.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task HideProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => HideProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void HideProgressBar(this DependencyObject element) => HideProgressBar(await element.GetAppTitleAsync().ConfigureAwait(false));
+        public static Task HideProgressBarAsync(this DependencyObject element) => element.GetAppTitleAsync().ContinueWith(x => HideProgressBarAsync(x.Result)).Unwrap();
 
-        public static async void HideProgressBar(IHaveTitleBar mainPage)
+        public static async Task HideProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = false;
             if (mainPage.Dispatcher?.HasThreadAccess == false)
@@ -199,13 +197,13 @@ namespace CoolapkLite.Helpers
             mainPage?.HideProgressBar();
         }
 
-        public static async void ShowMessage(string message) => ShowMessage(await GetAppTitleAsync().ConfigureAwait(false), message);
+        public static Task ShowMessageAsync(string message) => GetAppTitleAsync().ContinueWith(x => ShowMessageAsync(x.Result, message)).Unwrap();
 
-        public static async void ShowMessage(this CoreDispatcher dispatcher, string message) => ShowMessage(await dispatcher.GetAppTitleAsync().ConfigureAwait(false), message);
+        public static Task ShowMessageAsync(this CoreDispatcher dispatcher, string message) => dispatcher.GetAppTitleAsync().ContinueWith(x => ShowMessageAsync(x.Result, message)).Unwrap();
 
-        public static async void ShowMessage(this DependencyObject element, string message) => ShowMessage(await element.GetAppTitleAsync().ConfigureAwait(false), message);
+        public static Task ShowMessageAsync(this DependencyObject element, string message) => element.GetAppTitleAsync().ContinueWith(x => ShowMessageAsync(x.Result, message)).Unwrap();
 
-        public static async void ShowMessage(IHaveTitleBar mainPage, string message)
+        public static async Task ShowMessageAsync(IHaveTitleBar mainPage, string message)
         {
             MessageQueue.Enqueue(message);
             if (!IsShowingMessage)
@@ -253,12 +251,13 @@ namespace CoolapkLite.Helpers
 
     public static partial class UIHelper
     {
-        public static void ShowHttpExceptionMessage(HttpRequestException e)
+        public static Task ShowHttpExceptionMessageAsync(HttpRequestException e)
         {
-            if (e.Message.IndexOfAny(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1)
-            { ShowMessage($"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}"); }
-            else if (e.Message == "An error occurred while sending the request.") { ShowMessage("无法连接网络。"); }
-            else { ShowMessage($"请检查网络连接。 {e.Message}"); }
+            return e.Message.IndexOfAny(new[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }) != -1
+                ? ShowMessageAsync($"服务器错误： {e.Message.Replace("Response status code does not indicate success: ", string.Empty)}")
+                : e.Message == "An error occurred while sending the request."
+                    ? ShowMessageAsync("无法连接网络。")
+                    : ShowMessageAsync($"请检查网络连接。 {e.Message}");
         }
 
         public static void SetBadgeNumber(uint number)
@@ -354,8 +353,8 @@ namespace CoolapkLite.Helpers
 
     public static partial class UIHelper
     {
-        public static async Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
-            await NavigateAsync(await element.GetAppTitleAsync().ConfigureAwait(false), pageType, parameter, infoOverride);
+        public static Task<bool> NavigateAsync(this DependencyObject element, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
+            element.GetAppTitleAsync().ContinueWith(x => x.Result.MainFrame.NavigateAsync(pageType, parameter, infoOverride)).Unwrap();
 
         public static Task<bool> NavigateAsync(this IHaveTitleBar mainPage, Type pageType, object parameter = null, NavigationTransitionInfo infoOverride = null) =>
             mainPage.MainFrame.NavigateAsync(pageType, parameter, infoOverride);
@@ -399,7 +398,7 @@ namespace CoolapkLite.Helpers
                     Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                     _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
                     bool result = await window.TryShowAsync();
-                    dispatcher.HideProgressBar();
+                    _ = dispatcher.HideProgressBarAsync();
                     return result;
                 }
                 else
@@ -416,7 +415,7 @@ namespace CoolapkLite.Helpers
                         Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                         _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
                     });
-                    HideProgressBar(AppTitle);
+                    _ = HideProgressBarAsync(AppTitle);
                     return result;
                 }
             }
@@ -444,8 +443,8 @@ namespace CoolapkLite.Helpers
             return await Launcher.LaunchFileAsync(file);
         }
 
-        public static async Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image) =>
-            await ShowImageAsync(await element.GetAppTitleAsync().ConfigureAwait(false), image);
+        public static Task<bool> ShowImageAsync(this DependencyObject element, ImageModel image) =>
+            element.GetAppTitleAsync().ContinueWith(x => x.Result.ShowImageAsync(image)).Unwrap();
 
         public static async Task<bool> ShowImageAsync(this IHaveTitleBar mainPage, ImageModel image)
         {
@@ -490,8 +489,8 @@ namespace CoolapkLite.Helpers
 
     public static partial class UIHelper
     {
-        public static async Task<bool> OpenLinkAsync(this DependencyObject element, string link) =>
-            await OpenLinkAsync(await element.GetAppTitleAsync().ConfigureAwait(false), link);
+        public static Task<bool> OpenLinkAsync(this DependencyObject element, string link) =>
+            element.GetAppTitleAsync().ContinueWith(x => x.Result.MainFrame.OpenLinkAsync(link)).Unwrap();
 
         public static Task<bool> OpenLinkAsync(this IHaveTitleBar mainPage, string link) =>
             mainPage.MainFrame.OpenLinkAsync(link);
@@ -523,7 +522,7 @@ namespace CoolapkLite.Helpers
                 Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                 _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
                 bool result = await window.TryShowAsync();
-                dispatcher.HideProgressBar();
+                _ = dispatcher.HideProgressBarAsync();
                 return result;
             }
             else
@@ -540,7 +539,7 @@ namespace CoolapkLite.Helpers
                     Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
                     _ = frame.Navigate(page, factory, new DrillInNavigationTransitionInfo());
                 });
-                HideProgressBar(AppTitle);
+                _ = HideProgressBarAsync(AppTitle);
                 return result;
             }
         }
@@ -629,7 +628,7 @@ namespace CoolapkLite.Helpers
                     }
                     else
                     {
-                        ShowMessage("暂不支持");
+                        _ = ShowMessageAsync("暂不支持");
                     }
                 }
             }

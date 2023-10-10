@@ -252,7 +252,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return null;
             }
             catch (Exception ex)
@@ -277,7 +277,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return null;
             }
             catch (Exception ex)
@@ -302,7 +302,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return null;
             }
             catch (Exception ex)
@@ -327,7 +327,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return null;
             }
             catch (Exception ex)
@@ -392,7 +392,7 @@ namespace CoolapkLite.Helpers
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { UIHelper.ShowHttpExceptionMessage(e); }
+                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return result;
             }
             catch (Exception ex)

@@ -23,15 +23,9 @@ namespace CoolapkLite.Common
                 _method = callback.GetMethodInfo();
             }
 
-            public bool Equals(Action<TEventArgs> callback)
-            {
-                return _reference.Target == callback.Target && _method == callback.GetMethodInfo();
-            }
+            public bool Equals(Action<TEventArgs> callback) => _reference.Target == callback.Target && _method == callback.GetMethodInfo();
 
-            public void Invoke(TEventArgs arg)
-            {
-                _method.Invoke(_reference.Target, new object[] { arg });
-            }
+            public void Invoke(TEventArgs arg) => _method.Invoke(_reference.Target, new object[] { arg });
         }
 
         private readonly List<Method> _list = new List<Method>();

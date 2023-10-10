@@ -77,7 +77,7 @@ namespace CoolapkLite.Pages.BrowserPages
 
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             if (args.Uri.Host.Contains("coolapk"))
             {
                 WebView.NavigationStarting -= WebView_NavigationStarting;
@@ -97,7 +97,7 @@ namespace CoolapkLite.Pages.BrowserPages
                 Provider.IsLoginPage = true;
             }
             Provider.Title = sender.DocumentTitle;
-            this.HideProgressBar();
+            _ = this.HideProgressBarAsync();
         }
 
         private void OnFrameNavigating(object sender, NavigatingCancelEventArgs args)
@@ -112,7 +112,7 @@ namespace CoolapkLite.Pages.BrowserPages
         private async Task CheckLoginAsync()
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
-            this.ShowMessage(loader.GetString("Logging"));
+            _ = this.ShowMessageAsync(loader.GetString("Logging"));
             if (await SettingsHelper.LoginAsync())
             {
                 if (Frame.CanGoBack)
@@ -120,18 +120,18 @@ namespace CoolapkLite.Pages.BrowserPages
                     Frame.Navigating -= OnFrameNavigating;
                     Frame.GoBack();
                 }
-                this.ShowMessage(loader.GetString("LoginSuccessfully"));
+                _ = this.ShowMessageAsync(loader.GetString("LoginSuccessfully"));
             }
             else
             {
                 WebView.Navigate(new Uri(UriHelper.LoginUri));
-                this.ShowMessage(loader.GetString("CannotGetToken"));
+                _ = this.ShowMessageAsync(loader.GetString("CannotGetToken"));
             }
         }
 
         private async void ManualLoginButton_Click(object sender, RoutedEventArgs e)
         {
-            this.ShowProgressBar();
+            _ = this.ShowProgressBarAsync();
             LoginDialog Dialog = new LoginDialog();
             ContentDialogResult result = await Dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
@@ -140,7 +140,7 @@ namespace CoolapkLite.Pages.BrowserPages
             }
             else
             {
-                this.HideProgressBar();
+                _ = this.HideProgressBarAsync();
             }
         }
 

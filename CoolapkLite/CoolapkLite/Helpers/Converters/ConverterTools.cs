@@ -5,6 +5,7 @@
 using System;
 using Windows.UI.Xaml.Markup;
 
+
 #if !NETCORE463
 using System.Reflection;
 #endif
@@ -38,10 +39,7 @@ namespace CoolapkLite.Helpers.Converters
         /// <param name="value">The value to convert</param>
         /// <param name="targetType">The target type</param>
         /// <returns>The converted value</returns>
-        internal static object Convert(object value, Type targetType)
-        {
-            return targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
-        }
+        internal static object Convert(object value, Type targetType) => targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
 
         /// <summary>
         /// Helper method to convert a value from a source type to a target type.

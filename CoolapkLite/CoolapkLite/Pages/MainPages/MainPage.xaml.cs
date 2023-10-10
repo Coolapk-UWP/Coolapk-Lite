@@ -167,7 +167,7 @@ namespace CoolapkLite.Pages
                     }
                 }
             }
-            UIHelper.HideProgressBar(this as IHaveTitleBar);
+            _ = UIHelper.HideProgressBarAsync(this as IHaveTitleBar);
         }
 
         private void System_BackRequested(object sender, BackRequestedEventArgs e)
