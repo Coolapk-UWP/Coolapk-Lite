@@ -7,10 +7,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageControl"/> class.
         /// </summary>
-        public PersonPicture() : base()
-        {
-            DefaultStyleKey = typeof(PersonPicture);
-        }
+        public PersonPicture() : base() => DefaultStyleKey = typeof(PersonPicture);
 
         #region DisplayName
 
@@ -34,10 +31,27 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region InitialsGlyph
+
+        public static readonly DependencyProperty InitialsGlyphProperty =
+            DependencyProperty.Register(
+                nameof(InitialsGlyph),
+                typeof(string),
+                typeof(PersonPicture),
+                new PropertyMetadata("\uE77B"));
+
+        public string InitialsGlyph
+        {
+            get => (string)GetValue(InitialsGlyphProperty);
+            set => SetValue(InitialsGlyphProperty, value);
+        }
+
+        #endregion
+
         protected override void OnApplyTemplate()
         {
-            OnDisplayNamePropertyChanged();
             base.OnApplyTemplate();
+            OnDisplayNamePropertyChanged();
         }
 
         private void OnDisplayNamePropertyChanged()

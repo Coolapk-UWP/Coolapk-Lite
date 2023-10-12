@@ -352,11 +352,14 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <control:ImageControl
+                            <control:PersonPicture
                                 Width="56"
                                 Height="56"
                                 HorizontalAlignment="Left"
-                                Source="{x:Bind Logo}" />
+                                DisplayName="{x:Bind Title}"
+                                InitialsGlyph="&#xEC24;"
+                                Source="{x:Bind Logo}"
+                                Style="{StaticResource SquarePersonPictureStyle}" />
                             <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
@@ -474,11 +477,14 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <control:ImageControl
+                            <control:PersonPicture
                                 Width="56"
                                 Height="56"
                                 HorizontalAlignment="Left"
-                                Source="{x:Bind Logo}" />
+                                DisplayName="{x:Bind Title}"
+                                InitialsGlyph="&#xE7BC;"
+                                Source="{x:Bind Logo}"
+                                Style="{StaticResource SquarePersonPictureStyle}" />
                             <StackPanel Grid.Column="1" Margin="8,0">
                                 <TextBlock
                                     FontSize="16"
@@ -640,11 +646,14 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <control:ImageControl
+                                <control:PersonPicture
                                     Width="56"
                                     Height="56"
                                     HorizontalAlignment="Left"
-                                    Source="{x:Bind Logo}" />
+                                    DisplayName="{x:Bind Title}"
+                                    InitialsGlyph="&#xE772;"
+                                    Source="{x:Bind Logo}"
+                                    Style="{StaticResource SquarePersonPictureStyle}" />
                                 <control:StackPanelEx Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"
@@ -1293,11 +1302,14 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <control:ImageControl
+                                <control:PersonPicture
                                     Width="56"
                                     Height="56"
                                     HorizontalAlignment="Left"
-                                    Source="{x:Bind Logo}" />
+                                    DisplayName="{x:Bind Title}"
+                                    InitialsGlyph="&#xE74C;"
+                                    Source="{x:Bind Logo}"
+                                    Style="{StaticResource SquarePersonPictureStyle}" />
                                 <StackPanel Grid.Column="1" Margin="8,0">
                                     <TextBlock
                                         FontSize="16"

@@ -320,13 +320,15 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <control:ImageControl
+            <control:PersonPicture
                 Grid.RowSpan="2"
                 Width="40"
                 Height="40"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Source="{x:Bind Pic}" />
+                DisplayName="{x:Bind Title}"
+                Source="{x:Bind Pic}"
+                Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"

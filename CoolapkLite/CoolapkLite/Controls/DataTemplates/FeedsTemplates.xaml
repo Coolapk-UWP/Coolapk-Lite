@@ -441,10 +441,13 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <controls:ImageControl
+                        <controls:PersonPicture
                             Width="56"
                             Height="56"
+                            DisplayName="{x:Bind ExtraTitle}"
+                            InitialsGlyph="&#xE71B;"
                             Source="{x:Bind ExtraPic}"
+                            Style="{StaticResource SquarePersonPictureStyle}"
                             Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
                         <Border
                             Width="56"
@@ -502,11 +505,13 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <controls:ImageControl
+                    <controls:PersonPicture
                         Width="56"
                         Height="56"
+                        DisplayName="{x:Bind MediaTitle}"
+                        InitialsGlyph="&#xE786;"
                         Source="{x:Bind MediaPic}"
-                        Style="{StaticResource ImageBrushImageControlStyle}"
+                        Style="{StaticResource SquarePersonPictureStyle}"
                         Visibility="{x:Bind MediaPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
                     <Border
                         Width="56"

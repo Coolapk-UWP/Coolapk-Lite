@@ -179,13 +179,16 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <controls:ImageControl
+                <controls:PersonPicture
                     Grid.RowSpan="2"
                     Width="40"
                     Height="40"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
-                    Source="{x:Bind Pic}" />
+                    DisplayName="{x:Bind Title}"
+                    InitialsGlyph="&#xE81C;"
+                    Source="{x:Bind Pic}"
+                    Style="{StaticResource SquarePersonPictureStyle}" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
@@ -224,14 +227,16 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <controls:ImageControl
+                <controls:PersonPicture
                     Grid.RowSpan="2"
                     Width="40"
                     Height="40"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
+                    DisplayName="{x:Bind Title}"
+                    InitialsGlyph="&#xE7BC;"
                     Source="{x:Bind Pic}"
-                    Style="{StaticResource ImageBrushImageControlStyle}" />
+                    Style="{StaticResource SquarePersonPictureStyle}" />
                 <TextBlock
                     Grid.Row="0"
                     Grid.Column="1"
@@ -271,11 +276,13 @@
             Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <StackPanel>
-                <controls:ImageControl
+                <controls:PersonPicture
                     Width="36"
                     Height="36"
                     Margin="4"
-                    Source="{x:Bind Pic}" />
+                    DisplayName="{x:Bind Title}"
+                    Source="{x:Bind Pic}"
+                    Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
                 <TextBlock
                     HorizontalAlignment="Stretch"
                     Text="{x:Bind Title}"
@@ -309,12 +316,15 @@
                     <ColumnDefinition Width="8" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <controls:ImageControl
+                <controls:PersonPicture
                     Width="20"
                     Height="20"
                     VerticalAlignment="Center"
+                    DisplayName="{x:Bind Title}"
+                    InitialsGlyph="$#xEA37;"
                     Source="{x:Bind Pic}"
-                    Stretch="Uniform" />
+                    Stretch="Uniform"
+                    Style="{StaticResource SquarePersonPictureStyle}" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,2"

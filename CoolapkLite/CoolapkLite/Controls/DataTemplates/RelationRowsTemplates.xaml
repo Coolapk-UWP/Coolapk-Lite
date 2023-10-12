@@ -35,10 +35,14 @@
                         Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Icon}" />
                     </Viewbox>
-                    <controls:ImageControl
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        Source="{x:Bind Logo, Mode=OneWay}"
+                    <controls:PersonPicture
+                        Width="20"
+                        Height="20"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        DisplayName="{x:Bind Title}"
+                        Source="{x:Bind Logo}"
+                        Style="{StaticResource SquareCoolapkPersonPictureStyle}"
                         Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Grid>
                 <TextBlock

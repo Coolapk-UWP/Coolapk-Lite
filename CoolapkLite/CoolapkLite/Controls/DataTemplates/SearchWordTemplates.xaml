@@ -36,16 +36,18 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <controls:ImageControl
+            <controls:PersonPicture
                 Grid.RowSpan="2"
                 Width="36"
                 Height="36"
                 Margin="0,0,8,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
+                DisplayName="{x:Bind Title}"
                 EnableLazyLoading="False"
+                InitialsGlyph="&#xE74C;"
                 Source="{x:Bind Logo}"
-                Style="{StaticResource EllipseImageControlStyle}" />
+                Style="{StaticResource DefaultPersonPictureStyle}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"

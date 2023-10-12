@@ -19,21 +19,19 @@
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
             ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}">
-            <control:SettingsGroup x:Uid="/SettingsPage/ThemeSettingsHeader">
-                <StackPanel>
-                    <RadioButton
-                        x:Name="Light"
-                        x:Uid="/SettingsPage/ThemeModeLight"
-                        Checked="Button_Checked" />
-                    <RadioButton
-                        x:Name="Dark"
-                        x:Uid="/SettingsPage/ThemeModeDark"
-                        Checked="Button_Checked" />
-                    <RadioButton
-                        x:Name="Default"
-                        x:Uid="/SettingsPage/ThemeModeDefault"
-                        Checked="Button_Checked" />
-                </StackPanel>
+            <control:SettingsGroup x:Uid="/SettingsPage/ThemeSettingsHeader" ItemsPanel="{StaticResource DefaultItemsStackPanelTemplate}">
+                <RadioButton
+                    x:Name="Light"
+                    x:Uid="/SettingsPage/ThemeModeLight"
+                    Checked="Button_Checked" />
+                <RadioButton
+                    x:Name="Dark"
+                    x:Uid="/SettingsPage/ThemeModeDark"
+                    Checked="Button_Checked" />
+                <RadioButton
+                    x:Name="Default"
+                    x:Uid="/SettingsPage/ThemeModeDefault"
+                    Checked="Button_Checked" />
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
                 <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind Provider.IsNoPicsMode, Mode=TwoWay}" />

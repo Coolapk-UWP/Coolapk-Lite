@@ -200,23 +200,25 @@
                                         SelectionChanged="ListView_SelectionChanged"
                                         Tag="TopicList">
                                         <ListView.ItemTemplate>
-                                            <DataTemplate x:DataType="models:IHasTitle">
-                                                <Grid Padding="0,4">
+                                            <DataTemplate x:DataType="models:IHasDescription">
+                                                <Grid Padding="0,4" d:DataContext="{d:DesignInstance Type=models:IHasTitle}">
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="Auto" />
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
-                                                    <local:ImageControl
+                                                    <local:PersonPicture
                                                         Width="24"
                                                         Height="24"
-                                                        d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
+                                                        DisplayName="{Binding Title}"
                                                         EnableLazyLoading="False"
-                                                        Source="{Binding Pic}" />
+                                                        InitialsGlyph="&#xEC24;"
+                                                        Source="{x:Bind Pic}"
+                                                        Style="{StaticResource SquarePersonPictureStyle}" />
                                                     <TextBlock
                                                         Grid.Column="1"
                                                         Margin="10,0,0,2"
                                                         VerticalAlignment="Center"
-                                                        Text="{x:Bind Title}" />
+                                                        Text="{Binding Title}" />
                                                 </Grid>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>

@@ -211,14 +211,17 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <local:ImageControl
+                    <local:PersonPicture
                         Grid.Column="0"
                         Width="32"
                         Height="32"
                         Margin="0,0,8,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Source="{x:Bind FeedDetail.TopicLogo, Mode=OneWay}" />
+                        DisplayName="{x:Bind FeedDetail.TopicTitle, Mode=OneWay}"
+                        InitialsGlyph="&#xEC24;"
+                        Source="{x:Bind FeedDetail.TopicLogo, Mode=OneWay}"
+                        Style="{StaticResource SquarePersonPictureStyle}" />
                     <TextBlock
                         Grid.Column="1"
                         Margin="0,0,0,2"
@@ -255,14 +258,17 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <local:ImageControl
+                    <local:PersonPicture
                         Grid.Column="0"
                         Width="32"
                         Height="32"
                         Margin="0,0,8,0"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        Source="{x:Bind FeedDetail.DyhLogo, Mode=OneWay}" />
+                        DisplayName="{x:Bind FeedDetail.DyhName, Mode=OneWay}"
+                        InitialsGlyph="&#xE8A1;"
+                        Source="{x:Bind FeedDetail.DyhLogo, Mode=OneWay}"
+                        Style="{StaticResource SquarePersonPictureStyle}" />
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -535,6 +541,19 @@
             <Grid
                 Grid.Row="9"
                 Margin="0,4"
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                Tag="{x:Bind FeedDetail.MediaUrl, Mode=OneWay}"
+                Visibility="{x:Bind FeedDetail.MediaUrl, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}">
+                <local:MediaPlayerElementEx
+                    x:Name="MediaPlayerElementEx"
+                    x:FieldModifier="public"
+                    AreTransportControlsEnabled="True"
+                    AutoPlay="False"
+                    MediaInfo="{x:Bind FeedDetail.MediaInfo, Mode=OneWay}" />
+            </Grid>
+            <Grid
+                Grid.Row="10"
+                Margin="0,4"
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
@@ -548,10 +567,13 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <local:ImageControl
+                    <local:PersonPicture
                         Width="56"
                         Height="56"
+                        DisplayName="{x:Bind FeedDetail.ExtraTitle}"
+                        InitialsGlyph="&#xE71B;"
                         Source="{x:Bind FeedDetail.ExtraPic, Mode=OneWay}"
+                        Style="{StaticResource SquarePersonPictureStyle}"
                         Visibility="{x:Bind FeedDetail.ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}" />
                     <Border
                         Width="56"
@@ -589,19 +611,6 @@
                 <Border Visibility="{x:Bind FeedDetail.LinkSourceFeed.IsSucceed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                     <ContentControl ContentTemplate="{StaticResource SourceFeedDefaultTemplate}" DataContext="{x:Bind FeedDetail.LinkSourceFeed, Mode=OneWay}" />
                 </Border>
-            </Grid>
-            <Grid
-                Grid.Row="10"
-                Margin="0,4"
-                Background="{ThemeResource SystemControlTransparentBrush}"
-                Tag="{x:Bind FeedDetail.MediaUrl, Mode=OneWay}"
-                Visibility="{x:Bind FeedDetail.MediaUrl, Converter={StaticResource StringVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}">
-                <local:MediaPlayerElementEx
-                    x:Name="MediaPlayerElementEx"
-                    x:FieldModifier="public"
-                    AreTransportControlsEnabled="True"
-                    AutoPlay="False"
-                    MediaInfo="{x:Bind FeedDetail.MediaInfo, Mode=OneWay}" />
             </Grid>
             <ListView
                 Grid.Row="11"

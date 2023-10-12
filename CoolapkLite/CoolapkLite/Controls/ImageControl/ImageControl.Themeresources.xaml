@@ -21,7 +21,7 @@
                             Name="PlaceholderImage"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            Background="{ThemeResource ControlAltFillColorQuarternaryBrush}"
                             Opacity="1.0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*" />
@@ -128,7 +128,7 @@
                             Name="PlaceholderImage"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            Background="{ThemeResource ControlAltFillColorQuarternaryBrush}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding ImageCornerRadius}"
@@ -243,7 +243,7 @@
                             Name="PlaceholderImage"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Background="{ThemeResource SubtleFillColorSecondaryBrush}"
+                            Background="{ThemeResource ControlAltFillColorQuarternaryBrush}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding ImageCornerRadius}"
