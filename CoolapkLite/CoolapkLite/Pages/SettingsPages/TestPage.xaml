@@ -5,423 +5,421 @@
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:globalization="using:System.Globalization"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=settingspages:TestViewModel}"
     DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
-        <ScrollViewer Margin="{StaticResource ScrollViewerMargin}" Padding="{StaticResource ScrollViewerPadding}">
-            <StackPanel Margin="{StaticResource StackPanelMargin}" Padding="12,0">
-                <StackPanel.ChildrenTransitions>
-                    <TransitionCollection>
-                        <ReorderThemeTransition />
-                    </TransitionCollection>
-                </StackPanel.ChildrenTransitions>
-                <control:SettingsGroup Header="通知测试">
-                    <control:StackPanelEx Spacing="4">
-                        <TextBox x:Name="NotifyMessage" Header="输入信息" />
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="应用内通知"
-                                TabIndex="0"
-                                Tag="ShowMessage" />
-                            <Button
-                                Click="Button_Click"
-                                Content="切换进度条状态"
-                                Tag="ProgressRingState" />
-                        </control:StackPanelEx>
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="生成同步错误"
-                                Tag="ShowError" />
-                            <Button
-                                Click="Button_Click"
-                                Content="生成异步错误"
-                                Tag="ShowAsyncError" />
-                        </control:StackPanelEx>
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="打开进度条"
-                                Tag="ShowProgressBar" />
-                            <Button
-                                Click="Button_Click"
-                                Content="暂停"
-                                Tag="PausedProgressBar" />
-                            <Button
-                                Click="Button_Click"
-                                Content="错误"
-                                Tag="ErrorProgressBar" />
-                            <Button
-                                Click="Button_Click"
-                                Content="关闭"
-                                Tag="HideProgressBar" />
-                        </control:StackPanelEx>
-                    </control:StackPanelEx>
-                    <Slider
-                        Header="修改进度条数值"
-                        TickFrequency="10"
-                        TickPlacement="Outside"
-                        ValueChanged="Slider_ValueChanged" />
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="网络测试">
-                    <control:StackPanelEx Spacing="4">
-                        <TextBox x:Name="WebUrl" Header="输入链接" />
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="打开内置浏览器"
-                                Tag="OpenBrowser" />
-                            <Button
-                                Click="Button_Click"
-                                Content="打开系统浏览器"
-                                Tag="OpenEdge" />
-                        </control:StackPanelEx>
-                        <Button
-                            Click="Button_Click"
-                            Content="获取内容"
-                            Tag="GetContent" />
-                    </control:StackPanelEx>
-                    <ToggleSwitch Header="是否完整加载" IsOn="{x:Bind Provider.IsFullLoad, Mode=TwoWay}" />
-                    <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind Provider.IsUseAPI2, Mode=TwoWay}" />
-                    <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind Provider.IsUseTokenV2, Mode=TwoWay}" />
-                    <ToggleSwitch
-                        x:Name="IsCustomUAToggle"
-                        Header="是否修改 UserAgent"
-                        IsOn="{x:Bind Provider.IsCustomUA, Mode=TwoWay}" />
-                    <Button
-                        Click="Button_Click"
-                        Content="修改 UserAgent"
-                        Tag="CustomUA"
-                        Visibility="{x:Bind IsCustomUAToggle.IsOn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
-                    <ComboBox
-                        x:Name="ComboBoxVersion"
-                        Header="选择兼容版本号"
-                        PlaceholderText="选择版本号"
-                        SelectedIndex="{x:Bind Provider.APIVersion, Mode=TwoWay}">
-                        <ComboBoxItem>Custom</ComboBoxItem>
-                        <ComboBoxItem>小程序</ComboBoxItem>
-                        <ComboBoxItem>V6</ComboBoxItem>
-                        <ComboBoxItem>V7</ComboBoxItem>
-                        <ComboBoxItem>V8</ComboBoxItem>
-                        <ComboBoxItem>V9</ComboBoxItem>
-                        <ComboBoxItem>V10</ComboBoxItem>
-                        <ComboBoxItem>V11</ComboBoxItem>
-                        <ComboBoxItem>V12</ComboBoxItem>
-                        <ComboBoxItem>V13</ComboBoxItem>
-                    </ComboBox>
-                    <Button
-                        Click="Button_Click"
-                        Content="自定义版本号"
-                        Tag="CustomAPI" />
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="图片测试">
-                    <Slider
-                        Header="可同时加载的图片数"
-                        Maximum="256"
-                        Minimum="1"
-                        TickFrequency="1"
-                        TickPlacement="Outside"
-                        Value="{x:Bind Provider.SemaphoreSlimCount, Mode=TwoWay}" />
-                    <ToggleSwitch Header="是否虚拟化图片控件" IsOn="{x:Bind Provider.IsEnableLazyLoading, Mode=TwoWay}" />
-                    <ToggleSwitch Header="是否无图时使用图片占位" IsOn="{x:Bind Provider.IsUseNoPicFallback, Mode=TwoWay}" />
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="界面测试">
-                    <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind Provider.IsExtendsTitleBar, Mode=TwoWay}" />
-                    <control:StackPanelEx Spacing="4">
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="进入全屏模式"
-                                Tag="EnterFullWindow" />
-                            <Button
-                                Click="Button_Click"
-                                Content="退出"
-                                Tag="OutFullWindow" />
-                        </control:StackPanelEx>
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="进入画中画模式"
-                                IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
-                                Tag="EnterPIP" />
-                            <Button
-                                Click="Button_Click"
-                                Content="退出"
-                                IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
-                                Tag="OutPIP" />
-                        </control:StackPanelEx>
-                    </control:StackPanelEx>
-                    <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind Provider.IsUseLiteHome, Mode=TwoWay}" />
+        <ListView
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+            ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+            ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}">
+            <control:SettingsGroup Header="通知测试">
+                <control:StackPanelEx Spacing="4">
+                    <TextBox x:Name="NotifyMessage" Header="输入信息" />
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="打开 Charm 设置"
-                            IsEnabled="{x:Bind Provider.IsSettingsPaneSupported}"
-                            Tag="OpenCharmSettings" />
+                            Content="应用内通知"
+                            TabIndex="0"
+                            Tag="ShowMessage" />
                         <Button
                             Click="Button_Click"
-                            Content="打开 Charm 搜索"
-                            IsEnabled="{x:Bind Provider.IsSearchPaneSupported}"
-                            Tag="OpenCharmSearch" />
+                            Content="切换进度条状态"
+                            Tag="ProgressRingState" />
                     </control:StackPanelEx>
-                    <ToggleSwitch
-                        Header="是否使用 AppWindow"
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="生成同步错误"
+                            Tag="ShowError" />
+                        <Button
+                            Click="Button_Click"
+                            Content="生成异步错误"
+                            Tag="ShowAsyncError" />
+                    </control:StackPanelEx>
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="打开进度条"
+                            Tag="ShowProgressBar" />
+                        <Button
+                            Click="Button_Click"
+                            Content="暂停"
+                            Tag="PausedProgressBar" />
+                        <Button
+                            Click="Button_Click"
+                            Content="错误"
+                            Tag="ErrorProgressBar" />
+                        <Button
+                            Click="Button_Click"
+                            Content="关闭"
+                            Tag="HideProgressBar" />
+                    </control:StackPanelEx>
+                </control:StackPanelEx>
+                <Slider
+                    Header="修改进度条数值"
+                    TickFrequency="10"
+                    TickPlacement="Outside"
+                    ValueChanged="Slider_ValueChanged" />
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="网络测试">
+                <control:StackPanelEx Spacing="4">
+                    <TextBox x:Name="WebUrl" Header="输入链接" />
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="打开内置浏览器"
+                            Tag="OpenBrowser" />
+                        <Button
+                            Click="Button_Click"
+                            Content="打开系统浏览器"
+                            Tag="OpenEdge" />
+                    </control:StackPanelEx>
+                    <Button
+                        Click="Button_Click"
+                        Content="获取内容"
+                        Tag="GetContent" />
+                </control:StackPanelEx>
+                <ToggleSwitch Header="是否完整加载" IsOn="{x:Bind Provider.IsFullLoad, Mode=TwoWay}" />
+                <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind Provider.IsUseAPI2, Mode=TwoWay}" />
+                <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind Provider.IsUseTokenV2, Mode=TwoWay}" />
+                <ToggleSwitch
+                    x:Name="IsCustomUAToggle"
+                    Header="是否修改 UserAgent"
+                    IsOn="{x:Bind Provider.IsCustomUA, Mode=TwoWay}" />
+                <Button
+                    Click="Button_Click"
+                    Content="修改 UserAgent"
+                    Tag="CustomUA"
+                    Visibility="{x:Bind IsCustomUAToggle.IsOn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                <ComboBox
+                    x:Name="ComboBoxVersion"
+                    Header="选择兼容版本号"
+                    PlaceholderText="选择版本号"
+                    SelectedIndex="{x:Bind Provider.APIVersion, Mode=TwoWay}">
+                    <ComboBoxItem>Custom</ComboBoxItem>
+                    <ComboBoxItem>小程序</ComboBoxItem>
+                    <ComboBoxItem>V6</ComboBoxItem>
+                    <ComboBoxItem>V7</ComboBoxItem>
+                    <ComboBoxItem>V8</ComboBoxItem>
+                    <ComboBoxItem>V9</ComboBoxItem>
+                    <ComboBoxItem>V10</ComboBoxItem>
+                    <ComboBoxItem>V11</ComboBoxItem>
+                    <ComboBoxItem>V12</ComboBoxItem>
+                    <ComboBoxItem>V13</ComboBoxItem>
+                </ComboBox>
+                <Button
+                    Click="Button_Click"
+                    Content="自定义版本号"
+                    Tag="CustomAPI" />
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="图片测试">
+                <Slider
+                    Header="可同时加载的图片数"
+                    Maximum="256"
+                    Minimum="1"
+                    TickFrequency="1"
+                    TickPlacement="Outside"
+                    Value="{x:Bind Provider.SemaphoreSlimCount, Mode=TwoWay}" />
+                <ToggleSwitch Header="是否虚拟化图片控件" IsOn="{x:Bind Provider.IsEnableLazyLoading, Mode=TwoWay}" />
+                <ToggleSwitch Header="是否无图时使用图片占位" IsOn="{x:Bind Provider.IsUseNoPicFallback, Mode=TwoWay}" />
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="界面测试">
+                <ToggleSwitch Header="是否展开到标题栏" IsOn="{x:Bind Provider.IsExtendsTitleBar, Mode=TwoWay}" />
+                <control:StackPanelEx Spacing="4">
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="进入全屏模式"
+                            Tag="EnterFullWindow" />
+                        <Button
+                            Click="Button_Click"
+                            Content="退出"
+                            Tag="OutFullWindow" />
+                    </control:StackPanelEx>
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="进入画中画模式"
+                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
+                            Tag="EnterPIP" />
+                        <Button
+                            Click="Button_Click"
+                            Content="退出"
+                            IsEnabled="{x:Bind Provider.IsCompactOverlaySupported}"
+                            Tag="OutPIP" />
+                    </control:StackPanelEx>
+                </control:StackPanelEx>
+                <ToggleSwitch Header="是否使用精简界面" IsOn="{x:Bind Provider.IsUseLiteHome, Mode=TwoWay}" />
+                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                    <Button
+                        Click="Button_Click"
+                        Content="打开 Charm 设置"
+                        IsEnabled="{x:Bind Provider.IsSettingsPaneSupported}"
+                        Tag="OpenCharmSettings" />
+                    <Button
+                        Click="Button_Click"
+                        Content="打开 Charm 搜索"
+                        IsEnabled="{x:Bind Provider.IsSearchPaneSupported}"
+                        Tag="OpenCharmSearch" />
+                </control:StackPanelEx>
+                <ToggleSwitch
+                    Header="是否使用 AppWindow"
+                    IsEnabled="{x:Bind Provider.IsAppWindowSupported}"
+                    IsOn="{x:Bind Provider.IsUseAppWindow, Mode=TwoWay}" />
+                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                    <Button
+                        Click="Button_Click"
+                        Content="新建窗口"
+                        Tag="NewWindow" />
+                    <Button
+                        Click="Button_Click"
+                        Content="新建 AppWindow"
                         IsEnabled="{x:Bind Provider.IsAppWindowSupported}"
-                        IsOn="{x:Bind Provider.IsUseAppWindow, Mode=TwoWay}" />
+                        Tag="NewAppWindow"
+                        ToolTipService.ToolTip="仅支持 1903 及以上" />
+                </control:StackPanelEx>
+                <ToggleSwitch Header="是否使用虚拟化容器" IsOn="{x:Bind Provider.IsUseVirtualizing, Mode=TwoWay}" />
+                <ToggleSwitch
+                    Header="是否使用模糊笔刷"
+                    IsEnabled="{x:Bind Provider.IsXamlCompositionBrushSupported}"
+                    IsOn="{x:Bind Provider.IsUseBlurBrush, Mode=TwoWay}" />
+                <ToggleSwitch
+                    Header="是否使用合成动画"
+                    IsEnabled="{x:Bind Provider.IsGetElementVisualSupported}"
+                    IsOn="{x:Bind Provider.IsUseCompositor, Mode=TwoWay}" />
+                <ComboBox
+                    Header="切换语言 (需要重启)"
+                    ItemsSource="{x:Bind Provider.SupportCultures}"
+                    Loaded="ComboBox_Loaded"
+                    SelectionChanged="ComboBox_SelectionChanged"
+                    Tag="Language">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="globalization:CultureInfo">
+                            <TextBlock>
+                                <Run Text="{x:Bind DisplayName}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                    <Button
+                        Click="Button_Click"
+                        Content="管理插件"
+                        IsEnabled="{x:Bind Provider.IsAppExtensionSupported}"
+                        Tag="GoToExtensionPage" />
+                    <Button
+                        Click="Button_Click"
+                        Content="前往粉丝分析页面"
+                        Tag="GoToFansAnalyzePage" />
+                </control:StackPanelEx>
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="应用测试">
+                <control:StackPanelEx Spacing="4">
+                    <Button
+                        Click="Button_Click"
+                        Content="执行 GC 清理"
+                        Tag="GCCollect" />
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="新建窗口"
-                            Tag="NewWindow" />
+                            Content="关闭应用"
+                            Tag="CloseApp" />
                         <Button
                             Click="Button_Click"
-                            Content="新建 AppWindow"
-                            IsEnabled="{x:Bind Provider.IsAppWindowSupported}"
-                            Tag="NewAppWindow"
-                            ToolTipService.ToolTip="仅支持 1903 及以上" />
+                            Content="重启应用"
+                            Tag="RestartApp" />
+                        <Button
+                            Click="Button_Click"
+                            Content="最小化应用"
+                            IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
+                            Tag="MinimizeApp" />
                     </control:StackPanelEx>
-                    <ToggleSwitch Header="是否使用虚拟化容器" IsOn="{x:Bind Provider.IsUseVirtualizing, Mode=TwoWay}" />
-                    <ToggleSwitch
-                        Header="是否使用模糊笔刷"
-                        IsEnabled="{x:Bind Provider.IsXamlCompositionBrushSupported}"
-                        IsOn="{x:Bind Provider.IsUseBlurBrush, Mode=TwoWay}" />
-                    <ToggleSwitch
-                        Header="是否使用合成动画"
-                        IsEnabled="{x:Bind Provider.IsGetElementVisualSupported}"
-                        IsOn="{x:Bind Provider.IsUseCompositor, Mode=TwoWay}" />
-                    <ComboBox
-                        Header="切换语言 (需要重启)"
-                        ItemsSource="{x:Bind Provider.SupportCultures}"
-                        Loaded="ComboBox_Loaded"
-                        SelectionChanged="ComboBox_SelectionChanged"
-                        Tag="Language">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate x:DataType="globalization:CultureInfo">
-                                <TextBlock>
-                                    <Run Text="{x:Bind DisplayName}" />
-                                </TextBlock>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                         <Button
                             Click="Button_Click"
-                            Content="管理插件"
-                            IsEnabled="{x:Bind Provider.IsAppExtensionSupported}"
-                            Tag="GoToExtensionPage" />
+                            Content="清除 JumpList"
+                            IsEnabled="{x:Bind Provider.IsJumpListSupported}"
+                            Tag="CleanJumpList" />
                         <Button
                             Click="Button_Click"
-                            Content="前往粉丝分析页面"
-                            Tag="GoToFansAnalyzePage" />
+                            Content="添加设置组"
+                            IsEnabled="{x:Bind Provider.IsJumpListSupported}"
+                            Tag="AddJumpList" />
                     </control:StackPanelEx>
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="应用测试">
-                    <control:StackPanelEx Spacing="4">
-                        <Button
-                            Click="Button_Click"
-                            Content="执行 GC 清理"
-                            Tag="GCCollect" />
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="关闭应用"
-                                Tag="CloseApp" />
-                            <Button
-                                Click="Button_Click"
-                                Content="重启应用"
-                                Tag="RestartApp" />
-                            <Button
-                                Click="Button_Click"
-                                Content="最小化应用"
-                                IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
-                                Tag="MinimizeApp" />
-                        </control:StackPanelEx>
-                        <control:StackPanelEx Orientation="Horizontal" Spacing="4">
-                            <Button
-                                Click="Button_Click"
-                                Content="清除 JumpList"
-                                IsEnabled="{x:Bind Provider.IsJumpListSupported}"
-                                Tag="CleanJumpList" />
-                            <Button
-                                Click="Button_Click"
-                                Content="添加设置组"
-                                IsEnabled="{x:Bind Provider.IsJumpListSupported}"
-                                Tag="AddJumpList" />
-                        </control:StackPanelEx>
-                    </control:StackPanelEx>
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="文本测试">
-                    <TextBox
-                        x:Name="UnformattedText"
-                        AcceptsReturn="True"
-                        Header="输入文本"
-                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        TextWrapping="Wrap" />
-                    <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="发帖测试">
-                    <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />
-                </control:SettingsGroup>
-                <!--<control:SettingsGroup Header="一个图片" Visibility="Collapsed">
-                    <Grid Background="#181819" Visibility="Collapsed">
-                        <FontIcon FontSize="900" Glyph="&#xEB5E;" />
-                        <Grid Visibility="Collapsed">
-                            <Border
-                                Width="531"
-                                Height="406"
-                                Margin="0,0,90,62"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                Background="#212121"
-                                BorderBrush="#212121"
-                                CornerRadius="90" />
-                            <FontIcon
-                                Margin="0,0,90,0"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"
-                                FontSize="500"
-                                Glyph="" />
-                        </Grid>
+                </control:StackPanelEx>
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="文本测试">
+                <TextBox
+                    x:Name="UnformattedText"
+                    AcceptsReturn="True"
+                    Header="输入文本"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    TextWrapping="Wrap" />
+                <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="发帖测试">
+                <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />
+            </control:SettingsGroup>
+            <!--<control:SettingsGroup Header="一个图片" Visibility="Collapsed">
+                <Grid Background="#181819" Visibility="Collapsed">
+                    <FontIcon FontSize="900" Glyph="&#xEB5E;" />
+                    <Grid Visibility="Collapsed">
+                        <Border
+                            Width="531"
+                            Height="406"
+                            Margin="0,0,90,62"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            Background="#212121"
+                            BorderBrush="#212121"
+                            CornerRadius="90" />
+                        <FontIcon
+                            Margin="0,0,90,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom"
+                            FontSize="500"
+                            Glyph="" />
                     </Grid>
-                </control:SettingsGroup>-->
-                <control:SettingsGroup Header="设备信息">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
+                </Grid>
+            </control:SettingsGroup>-->
+            <control:SettingsGroup Header="设备信息">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Padding="0,0,0,8"
-                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="框架" />
-                        <TextBlock
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Padding="32,0,0,8"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Provider.FrameworkDescription}"
-                            TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Padding="0,0,0,8"
+                        Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                        Text="框架" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Padding="32,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Provider.FrameworkDescription}"
+                        TextWrapping="WrapWholeWords" />
 
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="0"
-                            Padding="0,0,0,8"
-                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="设备类型" />
-                        <TextBlock
-                            Grid.Row="1"
-                            Grid.Column="1"
-                            Padding="32,0,0,8"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Provider.DeviceFamily}"
-                            TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Padding="0,0,0,8"
+                        Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                        Text="设备类型" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Padding="32,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Provider.DeviceFamily}"
+                        TextWrapping="WrapWholeWords" />
 
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="0"
-                            Padding="0,0,0,8"
-                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="操作系统版本" />
-                        <TextBlock
-                            Grid.Row="2"
-                            Grid.Column="1"
-                            Padding="32,0,0,8"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Provider.OperatingSystemVersion}"
-                            TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Padding="0,0,0,8"
+                        Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                        Text="操作系统版本" />
+                    <TextBlock
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Padding="32,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Provider.OperatingSystemVersion}"
+                        TextWrapping="WrapWholeWords" />
 
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="0"
-                            Padding="0,0,0,8"
-                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="操作系统构架" />
-                        <TextBlock
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Padding="32,0,0,8"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Provider.OSArchitecture}"
-                            TextWrapping="WrapWholeWords" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Padding="0,0,0,8"
+                        Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                        Text="操作系统构架" />
+                    <TextBlock
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Padding="32,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Provider.OSArchitecture}"
+                        TextWrapping="WrapWholeWords" />
 
-                        <TextBlock
-                            Grid.Row="4"
-                            Grid.Column="0"
-                            Padding="0,0,0,8"
-                            Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
-                            Text="当前 UserAgent" />
-                        <TextBlock
-                            Grid.Row="4"
-                            Grid.Column="1"
-                            Padding="32,0,0,8"
-                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                            IsTextSelectionEnabled="True"
-                            Text="{x:Bind Provider.UserAgent, Mode=OneWay}"
-                            TextWrapping="WrapWholeWords" />
-                    </Grid>
-                </control:SettingsGroup>
-                <control:SettingsGroup Header="强调色">
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <Rectangle Width="20" Height="20">
-                            <Rectangle.Fill>
-                                <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
-                            </Rectangle.Fill>
-                        </Rectangle>
-                    </StackPanel>
-                </control:SettingsGroup>
-                <Border Height="8" />
-            </StackPanel>
-        </ScrollViewer>
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="0"
+                        Padding="0,0,0,8"
+                        Foreground="{ThemeResource DefaultTextForegroundThemeBrush}"
+                        Text="当前 UserAgent" />
+                    <TextBlock
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Padding="32,0,0,8"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        IsTextSelectionEnabled="True"
+                        Text="{x:Bind Provider.UserAgent, Mode=OneWay}"
+                        TextWrapping="WrapWholeWords" />
+                </Grid>
+            </control:SettingsGroup>
+            <control:SettingsGroup Header="强调色">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <Rectangle Width="20" Height="20">
+                        <Rectangle.Fill>
+                            <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
+                        </Rectangle.Fill>
+                    </Rectangle>
+                </StackPanel>
+            </control:SettingsGroup>
+        </ListView>
         <control:TitleBar x:Name="TitleBar" Title="{x:Bind Provider.Title}" />
     </Grid>
 </Page>

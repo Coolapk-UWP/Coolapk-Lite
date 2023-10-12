@@ -25,27 +25,39 @@
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Padding" Value="12" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="controls:SettingsGroup">
-                    <Grid HorizontalAlignment="Stretch">
+                    <Grid
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="Stretch"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <ReorderThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <ContentPresenter
                             x:Name="HeaderPresenter"
                             Grid.Row="0"
-                            Margin="0,12,0,10"
+                            Margin="0,0,0,10"
                             Content="{TemplateBinding Header}"
                             FontSize="20"
                             FontWeight="Normal"
                             LineStackingStrategy="MaxHeight"
                             OpticalMarginAlignment="TrimSideBearings"
                             TextLineBounds="Full"
-                            TextWrapping="Wrap" />
+                            TextWrapping="Wrap"
+                            Visibility="{Binding Header, RelativeSource={RelativeSource Mode=TemplatedParent}, Converter={StaticResource StringVisibilityConverter}}" />
                         <ItemsPresenter Grid.Row="1" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">

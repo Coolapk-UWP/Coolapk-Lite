@@ -8,189 +8,184 @@
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
     DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
-        <ScrollViewer
-            Margin="{StaticResource ScrollViewerMargin}"
-            Padding="{StaticResource ScrollViewerPadding}"
-            VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="{StaticResource StackPanelMargin}" Padding="12,0">
-                <StackPanel.ChildrenTransitions>
-                    <TransitionCollection>
-                        <ReorderThemeTransition />
-                    </TransitionCollection>
-                </StackPanel.ChildrenTransitions>
-                <control:SettingsGroup x:Uid="/SettingsPage/ThemeSettingsHeader">
-                    <StackPanel>
-                        <RadioButton
-                            x:Name="Light"
-                            x:Uid="/SettingsPage/ThemeModeLight"
-                            Checked="Button_Checked" />
-                        <RadioButton
-                            x:Name="Dark"
-                            x:Uid="/SettingsPage/ThemeModeDark"
-                            Checked="Button_Checked" />
-                        <RadioButton
-                            x:Name="Default"
-                            x:Uid="/SettingsPage/ThemeModeDefault"
-                            Checked="Button_Checked" />
-                    </StackPanel>
-                </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
-                    <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind Provider.IsNoPicsMode, Mode=TwoWay}" />
-                    <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind Provider.IsUseMultiWindow, Mode=TwoWay}" />
-                    <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind Provider.IsDisplayOriginPicture, Mode=TwoWay}" />
-                    <control:StackPanelEx Orientation="Horizontal" Spacing="8">
-                        <Button
-                            x:Uid="/SettingsPage/CleanCacheButton"
-                            Click="Button_Click"
-                            IsEnabled="{x:Bind Provider.IsCleanCacheButtonEnabled, Mode=OneWay}"
-                            Tag="CleanCache">
-                            <helpers:UIElementHelper.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem
-                                        x:Uid="/SettingsPage/ViewCacheItem"
-                                        Click="MenuFlyoutItem_Click"
-                                        IsEnabled="{x:Bind Provider.IsCleanCacheButtonEnabled, Mode=OneWay}"
-                                        Tag="ViewCache">
-                                        <helpers:FlyoutBaseHelper.Icon>
-                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
-                                        </helpers:FlyoutBaseHelper.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem
-                                        x:Uid="/SettingsPage/OpenCacheFolder"
-                                        Click="MenuFlyoutItem_Click"
-                                        Tag="OpenCache">
-                                        <helpers:FlyoutBaseHelper.Icon>
-                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE838;" />
-                                        </helpers:FlyoutBaseHelper.Icon>
-                                    </MenuFlyoutItem>
-                                </MenuFlyout>
-                            </helpers:UIElementHelper.ContextFlyout>
-                        </Button>
-                        <ProgressRing
-                            HorizontalAlignment="Left"
-                            IsActive="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Visibility="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
-                    </control:StackPanelEx>
-                    <Slider
-                        x:Uid="/SettingsPage/TileUpdateTimeSlider"
-                        Maximum="1440"
-                        Minimum="0"
-                        StepFrequency="15"
-                        TickFrequency="15"
-                        TickPlacement="Outside"
-                        Value="{Binding TileUpdateTime, Mode=TwoWay}" />
-                </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                    <HyperlinkButton
-                        x:Uid="/SettingsPage/AccountSetting"
+        <ListView
+            helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
+            ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
+            ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
+            ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}">
+            <control:SettingsGroup x:Uid="/SettingsPage/ThemeSettingsHeader">
+                <StackPanel>
+                    <RadioButton
+                        x:Name="Light"
+                        x:Uid="/SettingsPage/ThemeModeLight"
+                        Checked="Button_Checked" />
+                    <RadioButton
+                        x:Name="Dark"
+                        x:Uid="/SettingsPage/ThemeModeDark"
+                        Checked="Button_Checked" />
+                    <RadioButton
+                        x:Name="Default"
+                        x:Uid="/SettingsPage/ThemeModeDefault"
+                        Checked="Button_Checked" />
+                </StackPanel>
+            </control:SettingsGroup>
+            <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
+                <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind Provider.IsNoPicsMode, Mode=TwoWay}" />
+                <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind Provider.IsUseMultiWindow, Mode=TwoWay}" />
+                <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind Provider.IsDisplayOriginPicture, Mode=TwoWay}" />
+                <control:StackPanelEx Orientation="Horizontal" Spacing="8">
+                    <Button
+                        x:Uid="/SettingsPage/CleanCacheButton"
                         Click="Button_Click"
-                        Tag="AccountSetting" />
-                    <HyperlinkButton
-                        x:Uid="/SettingsPage/MyDevice"
-                        Click="Button_Click"
-                        Tag="MyDevice" />
-                    <Button Name="AccountLogout" x:Uid="/SettingsPage/AccountLogout">
-                        <Button.Flyout>
-                            <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
-                                <StackPanel>
-                                    <TextBlock
-                                        x:Uid="/SettingsPage/AccountLogoutTitle"
-                                        Margin="0,0,0,12"
-                                        Style="{ThemeResource BaseTextBlockStyle}" />
-                                    <Button
-                                        x:Uid="/SettingsPage/AccountLogoutConfirm"
-                                        Click="Button_Click"
-                                        Tag="AccountLogout" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
-                    <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText, Mode=OneWay}" />
-                    <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{x:Bind Provider.CheckUpdateWhenLaunching, Mode=TwoWay}" />
-                    <control:StackPanelEx Orientation="Horizontal" Spacing="8">
-                        <Button
-                            x:Uid="/SettingsPage/CheckUpdate"
-                            Click="Button_Click"
-                            IsEnabled="{x:Bind Provider.IsCheckUpdateButtonEnabled, Mode=OneWay}"
-                            Tag="CheckUpdate" />
-                        <ProgressRing
-                            HorizontalAlignment="Left"
-                            IsActive="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
-                            Visibility="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
-                    </control:StackPanelEx>
-                </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
-                    <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{x:Bind Provider.ShowOtherException, Mode=TwoWay}" />
-                    <Button Name="Reset" x:Uid="/SettingsPage/ResetSettings">
-                        <Button.Flyout>
-                            <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
-                                <StackPanel>
-                                    <TextBlock
-                                        x:Uid="/SettingsPage/ResetSettingsTitle"
-                                        Margin="0,0,0,12"
-                                        Style="{ThemeResource BaseTextBlockStyle}" />
-                                    <Button
-                                        x:Uid="/SettingsPage/ResetSettingsConfirm"
-                                        Click="Button_Click"
-                                        Tag="Reset" />
-                                </StackPanel>
-                            </Flyout>
-                        </Button.Flyout>
-                    </Button>
-                    <HyperlinkButton
-                        x:Uid="/SettingsPage/FeedbackLink"
-                        NavigateUri="https://github.com/Coolapk-UWP/Coolapk-Lite/issues"
-                        Tag="FeedBack" />
-                    <HyperlinkButton
-                        x:Uid="/SettingsPage/LogFolderLink"
-                        Click="Button_Click"
-                        Tag="LogFolder">
+                        IsEnabled="{x:Bind Provider.IsCleanCacheButtonEnabled, Mode=OneWay}"
+                        Tag="CleanCache">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem
-                                    x:Uid="/SettingsPage/OpenLogFileItem"
+                                    x:Uid="/SettingsPage/ViewCacheItem"
                                     Click="MenuFlyoutItem_Click"
-                                    Tag="OpenLogFile">
+                                    IsEnabled="{x:Bind Provider.IsCleanCacheButtonEnabled, Mode=OneWay}"
+                                    Tag="ViewCache">
                                     <helpers:FlyoutBaseHelper.Icon>
-                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B9;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                                 <MenuFlyoutItem
-                                    x:Uid="/SettingsPage/CleanLogsItem"
+                                    x:Uid="/SettingsPage/OpenCacheFolder"
                                     Click="MenuFlyoutItem_Click"
-                                    IsEnabled="{x:Bind Provider.IsCleanLogsButtonEnabled, Mode=OneWay}"
-                                    Tag="CleanLogs">
+                                    Tag="OpenCache">
                                     <helpers:FlyoutBaseHelper.Icon>
-                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
+                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE838;" />
                                     </helpers:FlyoutBaseHelper.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
                         </helpers:UIElementHelper.ContextFlyout>
-                    </HyperlinkButton>
-                    <Button
-                        x:Name="GoToTestPage"
-                        x:Uid="/SettingsPage/GoToTestPage"
-                        Click="Button_Click"
-                        Tag="TestPage" />
-                </control:SettingsGroup>
-                <control:SettingsGroup x:Uid="/SettingsPage/AboutSettingsHeader">
-                    <cwuc:MarkdownTextBlock
+                    </Button>
+                    <ProgressRing
                         HorizontalAlignment="Left"
-                        Background="{ThemeResource SystemControlTransparentBrush}"
-                        FontSize="{StaticResource ContentControlFontSize}"
-                        LinkClicked="MarkdownTextBlock_LinkClicked"
-                        Text="{x:Bind Provider.AboutTextBlockText, Mode=OneWay}"
-                        TextWrapping="Wrap" />
-                </control:SettingsGroup>
-            </StackPanel>
-        </ScrollViewer>
+                        IsActive="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                        Visibility="{x:Bind Provider.IsCleanCacheButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                </control:StackPanelEx>
+                <Slider
+                    x:Uid="/SettingsPage/TileUpdateTimeSlider"
+                    Maximum="1440"
+                    Minimum="0"
+                    StepFrequency="15"
+                    TickFrequency="15"
+                    TickPlacement="Outside"
+                    Value="{Binding TileUpdateTime, Mode=TwoWay}" />
+            </control:SettingsGroup>
+            <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <HyperlinkButton
+                    x:Uid="/SettingsPage/AccountSetting"
+                    Click="Button_Click"
+                    Tag="AccountSetting" />
+                <HyperlinkButton
+                    x:Uid="/SettingsPage/MyDevice"
+                    Click="Button_Click"
+                    Tag="MyDevice" />
+                <Button Name="AccountLogout" x:Uid="/SettingsPage/AccountLogout">
+                    <Button.Flyout>
+                        <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                            <StackPanel>
+                                <TextBlock
+                                    x:Uid="/SettingsPage/AccountLogoutTitle"
+                                    Margin="0,0,0,12"
+                                    Style="{ThemeResource BaseTextBlockStyle}" />
+                                <Button
+                                    x:Uid="/SettingsPage/AccountLogoutConfirm"
+                                    Click="Button_Click"
+                                    Tag="AccountLogout" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </control:SettingsGroup>
+            <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
+                <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText, Mode=OneWay}" />
+                <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{x:Bind Provider.CheckUpdateWhenLaunching, Mode=TwoWay}" />
+                <control:StackPanelEx Orientation="Horizontal" Spacing="8">
+                    <Button
+                        x:Uid="/SettingsPage/CheckUpdate"
+                        Click="Button_Click"
+                        IsEnabled="{x:Bind Provider.IsCheckUpdateButtonEnabled, Mode=OneWay}"
+                        Tag="CheckUpdate" />
+                    <ProgressRing
+                        HorizontalAlignment="Left"
+                        IsActive="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
+                        Visibility="{x:Bind Provider.IsCheckUpdateButtonEnabled, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                </control:StackPanelEx>
+            </control:SettingsGroup>
+            <control:SettingsGroup x:Uid="/SettingsPage/OthersSettingsHeader">
+                <CheckBox x:Uid="/SettingsPage/ShowOtherExceptionCheckBox" IsChecked="{x:Bind Provider.ShowOtherException, Mode=TwoWay}" />
+                <Button Name="Reset" x:Uid="/SettingsPage/ResetSettings">
+                    <Button.Flyout>
+                        <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                            <StackPanel>
+                                <TextBlock
+                                    x:Uid="/SettingsPage/ResetSettingsTitle"
+                                    Margin="0,0,0,12"
+                                    Style="{ThemeResource BaseTextBlockStyle}" />
+                                <Button
+                                    x:Uid="/SettingsPage/ResetSettingsConfirm"
+                                    Click="Button_Click"
+                                    Tag="Reset" />
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <HyperlinkButton
+                    x:Uid="/SettingsPage/FeedbackLink"
+                    NavigateUri="https://github.com/Coolapk-UWP/Coolapk-Lite/issues"
+                    Tag="FeedBack" />
+                <HyperlinkButton
+                    x:Uid="/SettingsPage/LogFolderLink"
+                    Click="Button_Click"
+                    Tag="LogFolder">
+                    <helpers:UIElementHelper.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                x:Uid="/SettingsPage/OpenLogFileItem"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="OpenLogFile">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE7C3;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Uid="/SettingsPage/CleanLogsItem"
+                                Click="MenuFlyoutItem_Click"
+                                IsEnabled="{x:Bind Provider.IsCleanLogsButtonEnabled, Mode=OneWay}"
+                                Tag="CleanLogs">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74D;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </helpers:UIElementHelper.ContextFlyout>
+                </HyperlinkButton>
+                <Button
+                    x:Name="GoToTestPage"
+                    x:Uid="/SettingsPage/GoToTestPage"
+                    Click="Button_Click"
+                    Tag="TestPage" />
+            </control:SettingsGroup>
+            <control:SettingsGroup x:Uid="/SettingsPage/AboutSettingsHeader">
+                <cwuc:MarkdownTextBlock
+                    HorizontalAlignment="Left"
+                    Background="{ThemeResource SystemControlTransparentBrush}"
+                    FontSize="{StaticResource ContentControlFontSize}"
+                    LinkClicked="MarkdownTextBlock_LinkClicked"
+                    Text="{x:Bind Provider.AboutTextBlockText, Mode=OneWay}"
+                    TextWrapping="Wrap" />
+            </control:SettingsGroup>
+        </ListView>
         <control:TitleBar x:Name="TitleBar" Title="{x:Bind Provider.Title, Mode=OneWay}" />
     </Grid>
 </Page>
