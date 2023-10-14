@@ -26,23 +26,15 @@ namespace CoolapkLite.Helpers
         public static readonly HttpClientHandler ClientHandler;
         public static readonly HttpClient Client;
 
-        private static SemaphoreSlim semaphoreSlim;
         public static TokenCreator token;
 
         static NetworkHelper()
         {
-            semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
             ThemeHelper.UISettingChanged.Add(arg => Client?.DefaultRequestHeaders?.ReplaceDarkMode());
             ClientHandler = new HttpClientHandler();
             Client = new HttpClient(ClientHandler);
             SetRequestHeaders();
             SetLoginCookie();
-        }
-
-        public static void SetSemaphoreSlim(int initialCount)
-        {
-            semaphoreSlim.Dispose();
-            semaphoreSlim = new SemaphoreSlim(initialCount);
         }
 
         public static void SetLoginCookie()
@@ -260,10 +252,6 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
-            finally
-            {
-                //semaphoreSlim.Release();
-            }
         }
 
         public static async Task<HttpResponseMessage> GetAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
@@ -284,10 +272,6 @@ namespace CoolapkLite.Helpers
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
-            }
-            finally
-            {
-                //semaphoreSlim.Release();
             }
         }
 
@@ -310,10 +294,6 @@ namespace CoolapkLite.Helpers
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
             }
-            finally
-            {
-                //semaphoreSlim.Release();
-            }
         }
 
         public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
@@ -334,10 +314,6 @@ namespace CoolapkLite.Helpers
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 return null;
-            }
-            finally
-            {
-                //semaphoreSlim.Release();
             }
         }
     }

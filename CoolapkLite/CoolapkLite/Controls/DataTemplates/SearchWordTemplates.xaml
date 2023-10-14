@@ -47,7 +47,7 @@
                 EnableLazyLoading="False"
                 InitialsGlyph="&#xE74C;"
                 Source="{x:Bind Logo}"
-                Style="{StaticResource DefaultPersonPictureStyle}" />
+                Style="{StaticResource SquarePersonPictureStyle}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"

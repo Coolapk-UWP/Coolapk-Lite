@@ -26,8 +26,8 @@ namespace CoolapkLite.Common
 {
     public class SettingsPaneRegister
     {
+        private int count = -1;
         private UIElement element;
-        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
 
         public static bool IsSearchPaneSupported { get; } = ApiInfoHelper.IsSearchPaneSupported && CheckSearchExtension();
         public static bool IsSettingsPaneSupported { get; } = ApiInfoHelper.IsSettingsPaneSupported;
@@ -105,9 +105,11 @@ namespace CoolapkLite.Common
             SearchPaneSuggestionsRequestDeferral deferral = args.Request.GetDeferral();
             await Task.Run(async () =>
             {
-                await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 try
                 {
+                    count++;
+                    await Task.Delay(500).ConfigureAwait(false);
+                    if (count != 0) { return; }
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true).ConfigureAwait(false);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
@@ -134,7 +136,7 @@ namespace CoolapkLite.Common
                 }
                 finally
                 {
-                    semaphoreSlim.Release();
+                    count--;
                 }
             });
             args.Request.SearchSuggestionCollection.AppendQuerySuggestions(results ?? Array.Empty<string>());

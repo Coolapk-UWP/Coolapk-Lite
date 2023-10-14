@@ -17,7 +17,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -248,20 +247,22 @@ namespace CoolapkLite.Pages
 
         #region 搜索框
 
-        private readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1);
+        private int count = -1;
 
         private async void AutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
         {
             if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
             {
-                ObservableCollection<Entity> observableCollection = new ObservableCollection<Entity>();
-                sender.ItemsSource = observableCollection;
                 string keyWord = sender.Text;
                 await ThreadSwitcher.ResumeBackgroundAsync();
-                await semaphoreSlim.WaitAsync();
                 try
                 {
-                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true);
+                    count++;
+                    await Task.Delay(500).ConfigureAwait(false);
+                    if (count != 0) { return; }
+                    ObservableCollection<Entity> observableCollection = new ObservableCollection<Entity>();
+                    await Dispatcher.AwaitableRunAsync(() => sender.ItemsSource = observableCollection);
+                    (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true).ConfigureAwait(false);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {
                         foreach (JObject token in array.OfType<JObject>())
@@ -281,7 +282,7 @@ namespace CoolapkLite.Pages
                 }
                 finally
                 {
-                    semaphoreSlim.Release();
+                    count--;
                 }
             }
         }

@@ -231,7 +231,7 @@ namespace CoolapkLite.Controls
                 child.Arrange(arrangeRect);
             }
 
-            return result;
+            return base.ArrangeOverride(result);
         }
     }
 }

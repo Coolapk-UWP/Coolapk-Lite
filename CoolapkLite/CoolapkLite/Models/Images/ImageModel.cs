@@ -25,8 +25,6 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged
     {
-        private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
-
         private readonly Action<UISettingChangedType> UISettingChanged;
 
         public static bool IsAutoPlaySupported { get; } = ApiInfoHelper.IsBitmapImageAutoPlaySupported;
@@ -262,33 +260,32 @@ namespace CoolapkLite.Models.Images
 
         public static void SetSemaphoreSlim(int initialCount)
         {
-            semaphoreSlim.Dispose();
-            semaphoreSlim = new SemaphoreSlim(initialCount);
+            ImageModelLocker.SlimLocker.Dispose();
+            ImageModelLocker.SlimLocker = new SemaphoreSlim(initialCount);
         }
 
         private async Task GetImageAsync()
         {
             if (Dispatcher == null) { return; }
             await ThreadSwitcher.ResumeBackgroundAsync();
-            try
+            using (ImageModelLocker locker = await ImageModelLocker.WaitAsync(() => IsLoading = false).ConfigureAwait(false))
             {
                 IsLoading = true;
-                await semaphoreSlim.WaitAsync();
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
                     if (!isNoPic)
                     {
-                        IsNoPic = true;
                         Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                        IsNoPic = true;
                     }
                     return;
                 }
-                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher);
+                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher).ConfigureAwait(false);
                 if (bitmapImage != null)
                 {
                     if (bitmapImage.Dispatcher != Dispatcher)
                     {
-                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri);
+                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri).ConfigureAwait(false);
                         using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
                         {
                             bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
@@ -320,17 +317,12 @@ namespace CoolapkLite.Models.Images
                 {
                     if (!isNoPic)
                     {
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
                         IsNoPic = true;
-                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher);
                     }
                     IsLongPic = IsWidePic = false;
                     IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
                 }
-            }
-            finally
-            {
-                semaphoreSlim.Release();
-                IsLoading = false;
             }
         }
 
@@ -485,5 +477,45 @@ namespace CoolapkLite.Models.Images
         public Task Refresh() => GetImageAsync();
 
         public override string ToString() => string.Join(" - ", Title, uri);
+
+        #region Locker
+
+        private class ImageModelLocker : IDisposable
+        {
+            private readonly Action dispose;
+
+            public static SemaphoreSlim SlimLocker { get; set; } = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
+
+            public ImageModelLocker(Action dispose) => this.dispose = dispose;
+
+            public static ImageModelLocker Wait(Action dispose)
+            {
+                SlimLocker.Wait();
+                return new ImageModelLocker(dispose);
+            }
+
+            public static async Task<ImageModelLocker> WaitAsync(Action dispose)
+            {
+                await SlimLocker.WaitAsync().ConfigureAwait(false);
+                return new ImageModelLocker(dispose);
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    SlimLocker.Release();
+                    dispose();
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        #endregion
     }
 }
