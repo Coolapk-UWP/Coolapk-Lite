@@ -77,7 +77,7 @@ namespace CoolapkLite.Helpers
             }
             if (!token.TryGetValue("data", out JToken data) && token.TryGetValue("message", out JToken message))
             {
-                bool _isSucceed = token.TryGetValue("error", out JToken error) && error.ToObject<int>() == 0;
+                bool _isSucceed = token.TryGetValue("error", out JToken error) && error.ToString() == "0";
                 _ = UIHelper.ShowMessageAsync(message.ToString());
                 return (_isSucceed, token);
             }
@@ -157,14 +157,16 @@ namespace CoolapkLite.Helpers
                     (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content).ConfigureAwait(false);
                     if (isSucceed)
                     {
+                        int i = 0;
                         UploadPicturePrepareResult data = result.ToObject<UploadPicturePrepareResult>();
                         foreach (UploadFileInfo info in data.FileInfo)
                         {
+                            i++;
                             UploadFileFragment image = images.FirstOrDefault(x => x.MD5 == info.MD5);
                             if (image == null) { continue; }
                             using (Stream stream = image.Bytes.GetStream())
                             {
-                                string response = await Task.Run(() => OSSUploadHelper.OssUpload(data.UploadPrepareInfo, info, stream, "image/png")).ConfigureAwait(false);
+                                string response = await OSSUploadHelper.OssUploadAsync(data.UploadPrepareInfo, info, stream, "image/png").ConfigureAwait(false);
                                 if (!string.IsNullOrEmpty(response))
                                 {
                                     try
@@ -175,6 +177,7 @@ namespace CoolapkLite.Helpers
                                             && !string.IsNullOrEmpty(url.ToString()))
                                         {
                                             responses.Add(url.ToString());
+                                            _ = UIHelper.ShowMessageAsync($"已上传 ({i}/{data.FileInfo.Count})");
                                         }
                                     }
                                     catch (Exception ex)

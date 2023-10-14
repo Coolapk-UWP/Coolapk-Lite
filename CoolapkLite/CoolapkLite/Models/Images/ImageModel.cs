@@ -267,10 +267,10 @@ namespace CoolapkLite.Models.Images
         private async Task GetImageAsync()
         {
             if (Dispatcher == null) { return; }
+            IsLoading = true;
             await ThreadSwitcher.ResumeBackgroundAsync();
             using (ImageModelLocker locker = await ImageModelLocker.WaitAsync(() => IsLoading = false).ConfigureAwait(false))
             {
-                IsLoading = true;
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
                     if (!isNoPic)
