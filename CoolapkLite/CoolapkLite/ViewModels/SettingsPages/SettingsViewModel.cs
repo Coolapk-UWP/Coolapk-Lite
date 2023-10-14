@@ -16,6 +16,8 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.ApplicationModel.Background;
+
 
 #if CANARY
 using System.Text;
@@ -116,6 +118,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.TileUpdateTime, value);
                     RaisePropertyChangedEvent();
+                    _ = UpdateLiveTileTask(value);
                 }
             }
         }
@@ -245,12 +248,14 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 await ThreadSwitcher.ResumeBackgroundAsync();
                 StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
                 await folder.DeleteAsync();
-                IsCleanLogsButtonEnabled = true;
             }
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
-                IsCleanCacheButtonEnabled = true;
+            }
+            finally
+            {
+                IsCleanLogsButtonEnabled = true;
             }
         }
 
@@ -284,7 +289,10 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 SettingsHelper.LogManager.GetLogger(nameof(SettingsViewModel)).Error(ex.ExceptionToMessage(), ex);
                 _ = Dispatcher.ShowMessageAsync(ex.Message);
             }
-            IsCheckUpdateButtonEnabled = true;
+            finally
+            {
+                IsCheckUpdateButtonEnabled = true;
+            }
             return null;
         }
 
@@ -375,6 +383,49 @@ namespace CoolapkLite.ViewModels.SettingsPages
             StorageFile file = files.FirstOrDefault();
             if (file != null) { return await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false); }
             return false;
+        }
+
+        private int count = -1;
+
+        public async Task UpdateLiveTileTask(uint time)
+        {
+            if (!ApiInfoHelper.IsTileActivatedInfoSupported || !SettingsHelper.Get<bool>(SettingsHelper.IsUseBackgroundTask))
+            { return; }
+
+            try
+            {
+                count++;
+                await Task.Delay(500).ConfigureAwait(false);
+                if (count != 0) { return; }
+
+                // Check for background access (optional)
+                BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
+
+                if (status != BackgroundAccessStatus.Unspecified
+                    && status != BackgroundAccessStatus.Denied
+                    && status != (BackgroundAccessStatus)7)
+                {
+                    const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+
+                    if (time < 15)
+                    {
+                        // If background task is not registered, do nothing
+                        if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                        { return; }
+
+                        // Unregister (Single Process)
+                        BackgroundTaskHelper.Unregister(LiveTileTask);
+                        return;
+                    }
+
+                    // Register (Single Process)
+                    BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
+                }
+            }
+            finally
+            {
+                count--;
+            }
         }
 
         public Task Refresh(bool reset)

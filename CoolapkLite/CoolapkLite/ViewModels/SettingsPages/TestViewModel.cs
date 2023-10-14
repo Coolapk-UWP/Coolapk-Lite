@@ -11,6 +11,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
 using Windows.System.Profile;
@@ -195,6 +196,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        public bool IsUseBackgroundTask
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBackgroundTask);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.IsUseBackgroundTask, value);
+                RaisePropertyChangedEvent();
+                _ = UpdateBackgroundTask(value);
+            }
+        }
+
         public bool IsEnableLazyLoading
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsEnableLazyLoading);
@@ -281,6 +293,90 @@ namespace CoolapkLite.ViewModels.SettingsPages
             Caches[dispatcher] = this;
         }
 
+        public async Task UpdateBackgroundTask(bool isEnable)
+        {
+            if (!ApiInfoHelper.IsTileActivatedInfoSupported)
+            { return; }
+
+            // Check for background access (optional)
+            BackgroundAccessStatus status = await BackgroundExecutionManager.RequestAccessAsync();
+
+            if (status != BackgroundAccessStatus.Unspecified
+                && status != BackgroundAccessStatus.Denied
+                && status != (BackgroundAccessStatus)7)
+            {
+                if (isEnable)
+                {
+                    RegisterLiveTileTask();
+                    RegisterNotificationsTask();
+                }
+                else
+                {
+                    UnregisterLiveTileTask();
+                    UnregisterNotificationsTask();
+                }
+            }
+
+            #region LiveTileTask
+
+            const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+
+            void RegisterLiveTileTask()
+            {
+                uint time = SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
+                if (time < 15)
+                {
+                    UnregisterLiveTileTask();
+                    return;
+                }
+
+                // If background task is already registered, do nothing
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                { return; }
+
+                // Register (Single Process)
+                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
+            }
+
+            void UnregisterLiveTileTask()
+            {
+                // If background task is not registered, do nothing
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                { return; }
+
+                // Unregister (Single Process)
+                BackgroundTaskHelper.Unregister(LiveTileTask);
+            }
+
+            #endregion
+
+            #region NotificationsTask
+
+            const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
+
+            void RegisterNotificationsTask()
+            {
+                // If background task is already registered, do nothing
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                { return; }
+
+                // Register (Single Process)
+                BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
+            }
+
+            void UnregisterNotificationsTask()
+            {
+                // If background task is not registered, do nothing
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                { return; }
+
+                // Unregister (Single Process)
+                BackgroundTaskHelper.Unregister(NotificationsTask);
+            }
+
+            #endregion
+        }
+
         public static void Refresh(bool reset)
         {
             if (reset)
@@ -297,6 +393,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsUseBlurBrush),
                     nameof(IsUseCompositor),
                     nameof(IsUseVirtualizing),
+                    nameof(IsUseBackgroundTask),
                     nameof(IsEnableLazyLoading),
                     nameof(SemaphoreSlimCount));
             }

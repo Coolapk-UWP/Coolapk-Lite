@@ -261,7 +261,7 @@ namespace CoolapkLite.Pages
                     await Task.Delay(500).ConfigureAwait(false);
                     if (count != 0) { return; }
                     ObservableCollection<Entity> observableCollection = new ObservableCollection<Entity>();
-                    await Dispatcher.AwaitableRunAsync(() => sender.ItemsSource = observableCollection);
+                    await sender.SetValueAsync(ItemsControl.ItemsSourceProperty, observableCollection);
                     (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.SearchWords, keyWord), true).ConfigureAwait(false);
                     if (isSucceed && result != null && result is JArray array && array.Count > 0)
                     {

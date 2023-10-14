@@ -511,7 +511,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void Clipboard_ContentChanged(object sender, object e) => _ = Dispatcher.AwaitableRunAsync(async () => PastePic.IsEnabled = await Provider.CheckDataAsync(Clipboard.GetContent()));
+        private void Clipboard_ContentChanged(object sender, object e) => _ = Provider.CheckDataAsync(Clipboard.GetContent()).ContinueWith(x => PastePic.SetValueAsync(IsEnabledProperty, x.Result)).Unwrap();
 
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
 

@@ -43,6 +43,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseNoPicFallback = nameof(IsUseNoPicFallback);
         public const string ShowOtherException = nameof(ShowOtherException);
         public const string SemaphoreSlimCount = nameof(SemaphoreSlimCount);
+        public const string IsUseBackgroundTask = nameof(IsUseBackgroundTask);
         public const string IsEnableLazyLoading = nameof(IsEnableLazyLoading);
         public const string IsDisplayOriginPicture = nameof(IsDisplayOriginPicture);
         public const string CheckUpdateWhenLaunching = nameof(CheckUpdateWhenLaunching);
@@ -161,6 +162,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(SemaphoreSlimCount))
             {
                 LocalObject.Save(SemaphoreSlimCount, Environment.ProcessorCount);
+            }
+            if (!LocalObject.KeyExists(IsUseBackgroundTask))
+            {
+                LocalObject.Save(IsUseBackgroundTask, true);
             }
             if (!LocalObject.KeyExists(IsEnableLazyLoading))
             {

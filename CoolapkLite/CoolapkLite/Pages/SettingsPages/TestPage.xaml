@@ -221,6 +221,7 @@
                 </control:StackPanelEx>
             </control:SettingsGroup>
             <control:SettingsGroup Header="应用测试">
+                <ToggleSwitch Header="是否使用后台任务" IsOn="{x:Bind Provider.IsUseBackgroundTask, Mode=TwoWay}" />
                 <control:StackPanelEx Spacing="4">
                     <Button
                         Click="Button_Click"

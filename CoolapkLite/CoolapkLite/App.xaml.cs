@@ -359,19 +359,31 @@ namespace CoolapkLite
                 && status != BackgroundAccessStatus.Denied
                 && status != (BackgroundAccessStatus)7)
             {
-                RegisterLiveTileTask();
-                RegisterNotificationsTask();
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsUseBackgroundTask))
+                {
+                    RegisterLiveTileTask();
+                    RegisterNotificationsTask();
+                }
+                else
+                {
+                    UnregisterLiveTileTask();
+                    UnregisterNotificationsTask();
+                }
                 RegisterToastBackgroundTask();
             }
 
             #region LiveTileTask
 
+            const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+
             void RegisterLiveTileTask()
             {
                 uint time = SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
-                if (time < 15) { return; }
-
-                const string LiveTileTask = nameof(BackgroundTasks.LiveTileTask);
+                if (time < 15)
+                {
+                    UnregisterLiveTileTask();
+                    return;
+                }
 
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
@@ -381,20 +393,40 @@ namespace CoolapkLite
                 BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
             }
 
+            void UnregisterLiveTileTask()
+            {
+                // If background task is not registered, do nothing
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                { return; }
+
+                // Unregister (Single Process)
+                BackgroundTaskHelper.Unregister(LiveTileTask);
+            }
+
             #endregion
 
             #region NotificationsTask
 
+            const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
+
             void RegisterNotificationsTask()
             {
-                const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
-
                 // If background task is already registered, do nothing
                 if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
                 { return; }
 
                 // Register (Single Process)
                 BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
+            }
+
+            void UnregisterNotificationsTask()
+            {
+                // If background task is not registered, do nothing
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                { return; }
+
+                // Unregister (Single Process)
+                BackgroundTaskHelper.Unregister(NotificationsTask);
             }
 
             #endregion
