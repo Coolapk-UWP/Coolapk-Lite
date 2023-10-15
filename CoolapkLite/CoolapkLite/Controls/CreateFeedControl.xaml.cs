@@ -3,7 +3,6 @@ using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Users;
-using CoolapkLite.Pages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
@@ -459,18 +458,17 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ListView_ItemClick(object sender, ItemClickEventArgs e)
         {
             LinkFlyout.Hide();
-            if (e.AddedItems.FirstOrDefault() is UserModel UserModel)
+            if (e.ClickedItem is UserModel UserModel)
             {
                 InputBox.Document.Selection.TypeText($"@{UserModel.UserName} ");
             }
-            else if (e.AddedItems.FirstOrDefault() is TopicModel TopicModel)
+            else if (e.ClickedItem is TopicModel TopicModel)
             {
                 InputBox.Document.Selection.TypeText($" #{TopicModel.Title}# ");
             }
-            (sender as ListView).SelectedIndex = -1;
         }
 
         private async void Grid_DragOver(object sender, DragEventArgs e)
@@ -508,8 +506,6 @@ namespace CoolapkLite.Controls
         }
 
         private void Clipboard_ContentChanged(object sender, object e) => _ = Provider.CheckDataAsync(Clipboard.GetContent()).ContinueWith(x => PastePic.SetValueAsync(IsEnabledProperty, x.Result)).Unwrap();
-
-        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
 
         #region 搜索框
 

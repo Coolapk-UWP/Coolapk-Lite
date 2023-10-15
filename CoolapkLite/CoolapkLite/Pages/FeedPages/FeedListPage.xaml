@@ -396,10 +396,11 @@
                                                 <control:PersonPicture
                                                     Width="16"
                                                     Height="16"
+                                                    d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
                                                     DisplayName="{x:Bind UserName}"
                                                     KeyDown="FrameworkElement_KeyDown"
                                                     Source="{x:Bind UserAvatar}"
-                                                    Tag="{x:Bind Url}"
+                                                    Tag="{Binding Url}"
                                                     Tapped="FrameworkElement_Tapped"
                                                     ToolTipService.ToolTip="{x:Bind UserName}" />
                                             </DataTemplate>
@@ -690,10 +691,11 @@
                                                     <control:PersonPicture
                                                         Width="16"
                                                         Height="16"
+                                                        d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
                                                         DisplayName="{x:Bind UserName}"
                                                         KeyDown="FrameworkElement_KeyDown"
                                                         Source="{x:Bind UserAvatar}"
-                                                        Tag="{x:Bind Url}"
+                                                        Tag="{Binding Url}"
                                                         Tapped="FrameworkElement_Tapped"
                                                         ToolTipService.ToolTip="{x:Bind UserName}" />
                                                 </DataTemplate>
@@ -1356,10 +1358,11 @@
                                                     <control:PersonPicture
                                                         Width="16"
                                                         Height="16"
+                                                        d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
                                                         DisplayName="{x:Bind UserName}"
                                                         KeyDown="FrameworkElement_KeyDown"
                                                         Source="{x:Bind UserAvatar}"
-                                                        Tag="{x:Bind Url}"
+                                                        Tag="{Binding Url}"
                                                         Tapped="FrameworkElement_Tapped"
                                                         ToolTipService.ToolTip="{x:Bind UserName}" />
                                                 </DataTemplate>
@@ -1555,6 +1558,7 @@
                     <ListView
                         Margin="1,0"
                         HorizontalAlignment="Stretch"
+                        helpers:ListViewHelper.IsItemClickEnabled="True"
                         ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                         ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                         ItemsSource="{x:Bind ScreenshotArr}"
@@ -1724,6 +1728,7 @@
             <Grid x:Name="LeftGrid">
                 <control:ShyHeaderListView
                     x:Name="DetailListView"
+                    helpers:ListViewHelper.IsItemClickEnabled="True"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     HeaderHeight="40"
                     HeaderMargin="{StaticResource PageTitleHeight}"
@@ -1857,6 +1862,7 @@
             <Grid x:Name="RightGrid">
                 <control:ShyHeaderPivotListView
                     x:Name="FeedsListView"
+                    helpers:ListViewHelper.IsItemClickEnabled="True"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     HeaderHeight="{x:Bind HeaderHeight, Mode=OneWay}"
                     HeaderMargin="{x:Bind HeaderMargin, Mode=OneWay}"

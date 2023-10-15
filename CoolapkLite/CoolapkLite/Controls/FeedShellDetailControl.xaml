@@ -462,10 +462,11 @@
                 <GridView
                     Padding="0"
                     HorizontalContentAlignment="Left"
+                    helpers:ListViewHelper.IsItemClickEnabled="True"
+                    helpers:ListViewHelper.IsSelectionEnabled="False"
                     ItemTemplate="{StaticResource PicDefaultTemplate}"
                     ItemsSource="{x:Bind FeedDetail.PicArr, Mode=OneWay}"
                     ScrollViewer.VerticalScrollMode="Disabled"
-                    SelectionChanged="GridView_SelectionChanged"
                     Visibility="{x:Bind FeedDetail.PicArr, Converter={StaticResource CollectionVisibilityConverter}, Mode=OneWay}">
                     <GridView.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -486,13 +487,10 @@
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1"
                 Visibility="{x:Bind FeedDetail.VoteRows, Converter={StaticResource CollectionVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}">
-                <ListView
+                <ItemsControl
                     HorizontalAlignment="Stretch"
-                    ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-                    ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                     ItemTemplate="{StaticResource VoteItemTemplate}"
-                    ItemsSource="{x:Bind FeedDetail.VoteRows, Mode=OneWay}"
-                    ShowsScrollingPlaceholders="False" />
+                    ItemsSource="{x:Bind FeedDetail.VoteRows, Mode=OneWay}" />
                 <Grid Margin="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -617,6 +615,7 @@
                 Margin="2,0"
                 Padding="0,4"
                 HorizontalAlignment="Stretch"
+                helpers:ListViewHelper.IsItemClickEnabled="True"
                 ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                 ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                 ItemTemplate="{StaticResource RelationRowsItemTemplate}"

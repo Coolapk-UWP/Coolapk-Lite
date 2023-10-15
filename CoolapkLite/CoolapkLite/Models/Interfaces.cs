@@ -1,22 +1,17 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Models.Images;
 using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models
 {
-    public interface IPic
-    {
-        string Uri { get; }
-        ImageType Type { get; }
-        BitmapImage Pic { get; }
-    }
-
-    public interface IHasTitle
+    public interface IHasUrl
     {
         string Url { get; }
+    }
+
+    public interface IHasTitle : IHasUrl
+    {
         string Title { get; }
     }
 
@@ -74,17 +69,15 @@ namespace CoolapkLite.Models
         ImageModel Cover { get; }
     }
 
-    public interface ISourceUserModel
+    public interface ISourceUserModel : IHasUrl
     {
-        string Url { get; }
         string UserName { get; }
         ImageModel UserAvatar { get; }
     }
 
-    public interface ISourceFeedModel : ICanCopy
+    public interface ISourceFeedModel : ICanCopy, IHasUrl
     {
         bool ShowUser { get; set; }
-        string Url { get; }
         string Message { get; }
         string Dateline { get; }
         string MessageTitle { get; }

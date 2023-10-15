@@ -78,7 +78,7 @@ namespace CoolapkLite.Models.Message
                                                                 .ToString();
     }
 
-    public class MessageCard
+    public class MessageCard : IHasTitle
     {
         public string Url { get; set; }
         public string Title { get; set; }

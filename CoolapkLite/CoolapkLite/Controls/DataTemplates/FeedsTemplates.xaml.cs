@@ -203,19 +203,14 @@ namespace CoolapkLite.Controls.DataTemplates
             Clipboard.SetContent(dp);
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            UserControl_SizeChanged(sender, null);
-        }
+        private void UserControl_Loaded(object sender, RoutedEventArgs e) => UserControl_SizeChanged(sender, null);
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            UserControl UserControl = sender as UserControl;
+            FrameworkElement UserControl = sender as FrameworkElement;
             FrameworkElement StackPanel = UserControl.FindChild("BtnsPanel");
             double width = e is null ? UserControl.Width : e.NewSize.Width;
             StackPanel?.SetValue(Grid.RowProperty, width > 600 ? 1 : 20);
         }
-
-        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
     }
 }

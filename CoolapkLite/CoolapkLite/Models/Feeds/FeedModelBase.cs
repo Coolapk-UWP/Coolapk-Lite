@@ -98,7 +98,6 @@ namespace CoolapkLite.Models.Feeds
 
         int ICanFollow.ID => UID;
 
-        public int ID => EntityID;
         public int UID => UserInfo.UID;
         public int VoteType { get; private set; }
         public int ShareNum { get; private set; }
@@ -495,7 +494,7 @@ namespace CoolapkLite.Models.Feeds
         public override string ToString() => Title;
     }
 
-    public class RelationRowsItem
+    public class RelationRowsItem : IHasTitle
     {
         public string Url { get; set; }
         public string Title { get; set; }

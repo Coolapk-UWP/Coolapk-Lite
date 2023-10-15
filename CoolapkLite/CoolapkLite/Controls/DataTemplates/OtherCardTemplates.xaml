@@ -84,7 +84,7 @@
     <DataTemplate x:Key="ListDefaultTemplate" x:DataType="models:IHasDescription">
         <Grid
             Padding="0,8"
-            d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
+            d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
@@ -116,12 +116,14 @@
                 Height="40"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Top"
+                d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
                 DisplayName="{Binding Title}"
                 Source="{x:Bind Pic}"
                 Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
+                d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
                 MaxLines="1"
                 Text="{Binding Title}"
                 TextTrimming="CharacterEllipsis"
@@ -140,7 +142,7 @@
     <DataTemplate x:Key="SubtitleListDefaultTemplate" x:DataType="models:IHasSubtitle">
         <Grid
             Padding="0,8"
-            d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
+            d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
             Background="{ThemeResource SystemControlTransparentBrush}"
             KeyDown="FrameworkElement_KeyDown"
             Tag="{Binding Url}"
@@ -181,6 +183,7 @@
                 Grid.Row="0"
                 Grid.Column="1"
                 VerticalAlignment="Center"
+                d:DataContext="{d:DesignInstance Type=models:IHasTitle}"
                 MaxLines="1"
                 Text="{Binding Title}"
                 TextTrimming="CharacterEllipsis" />

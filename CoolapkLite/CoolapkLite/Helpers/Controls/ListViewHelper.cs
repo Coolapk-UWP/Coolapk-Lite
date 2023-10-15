@@ -1,5 +1,10 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Controls;
+using CoolapkLite.Models;
+using CoolapkLite.Models.Feeds;
+using CoolapkLite.Models.Images;
+using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
@@ -241,6 +246,115 @@ namespace CoolapkLite.Helpers
         private static void SetIsIncrementallyLoading(ItemsControl element, bool value)
         {
             element.SetValue(IsIncrementallyLoadingProperty, value);
+        }
+
+        #endregion
+
+        #region IsSelectionEnabled
+
+        public static readonly DependencyProperty IsSelectionEnabledProperty =
+            DependencyProperty.RegisterAttached(
+                "IsSelectionEnabled",
+                typeof(bool),
+                typeof(ListViewHelper),
+                new PropertyMetadata(true, OnIsSelectionEnabledChanged));
+
+        public static bool GetIsSelectionEnabled(ListViewBase element)
+        {
+            return (bool)element.GetValue(IsSelectionEnabledProperty);
+        }
+
+        public static void SetIsSelectionEnabled(ListViewBase element, bool value)
+        {
+            element.SetValue(IsSelectionEnabledProperty, value);
+        }
+
+        private static void OnIsSelectionEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ListViewBase element)
+            {
+                if (e.NewValue is false)
+                {
+                    element.SelectionChanged -= ListViewBase_SelectionChanged;
+                    element.SelectionChanged += ListViewBase_SelectionChanged;
+                }
+                else
+                {
+                    element.SelectionChanged -= ListViewBase_SelectionChanged;
+                }
+            }
+        }
+
+        private static void ListViewBase_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!(sender is ListViewBase element)) { return; }
+            element.SelectedIndex = -1;
+        }
+
+        #endregion
+
+        #region IsItemClickEnabled
+
+        public static readonly DependencyProperty IsItemClickEnabledProperty =
+            DependencyProperty.RegisterAttached(
+                "IsItemClickEnabled",
+                typeof(bool),
+                typeof(ListViewHelper),
+                new PropertyMetadata(false, OnIsItemClickEnabledChanged));
+
+        public static bool GetIsItemClickEnabled(ListViewBase element)
+        {
+            return (bool)element.GetValue(IsItemClickEnabledProperty);
+        }
+
+        public static void SetIsItemClickEnabled(ListViewBase element, bool value)
+        {
+            element.SetValue(IsItemClickEnabledProperty, value);
+        }
+
+        private static void OnIsItemClickEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is ListViewBase element)
+            {
+                bool isEnabled = (bool)e.NewValue;
+                element.IsItemClickEnabled = isEnabled;
+                if (isEnabled)
+                {
+                    element.ItemClick -= ListViewBase_ItemClick;
+                    element.ItemClick += ListViewBase_ItemClick;
+                }
+                else
+                {
+                    element.ItemClick -= ListViewBase_ItemClick;
+                }
+            }
+        }
+
+        private static void ListViewBase_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (!(sender is DependencyObject element)) { return; }
+            switch (e.ClickedItem)
+            {
+                case SourceFeedModel SourceFeedModel:
+                    FeedShellViewModel provider = SourceFeedModel.IsVoteFeed
+                        ? new VoteViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
+                        : SourceFeedModel.IsQuestionFeed
+                            ? new QuestionViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
+                            : (FeedShellViewModel)new FeedDetailViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher);
+                    _ = element.NavigateAsync(typeof(FeedShellPage), provider);
+                    break;
+                case ImageModel ImageModel:
+                    _ = element.ShowImageAsync(ImageModel);
+                    break;
+                case IHasUrl IHasUrl:
+                    _ = element.OpenLinkAsync(IHasUrl.Url);
+                    break;
+                case string String:
+                    _ = element.OpenLinkAsync(String);
+                    break;
+                default:
+                    break;
+            }
         }
 
         #endregion

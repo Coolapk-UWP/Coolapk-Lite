@@ -174,7 +174,5 @@ namespace CoolapkLite.Controls
         private void UrlButton_Click(object sender, RoutedEventArgs e) => _ = this.OpenLinkAsync((sender as FrameworkElement).Tag.ToString());
 
         private void FlipView_SizeChanged(object sender, SizeChangedEventArgs e) => (sender as FrameworkElement).Height = e.NewSize.Width / 2;
-
-        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
     }
 }

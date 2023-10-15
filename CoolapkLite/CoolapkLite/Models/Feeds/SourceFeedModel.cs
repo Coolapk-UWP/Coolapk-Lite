@@ -41,6 +41,7 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
+        public int ID { get; private set; }
         public int RatingStar { get; private set; }
 
         public bool IsVoteFeed { get; private set; }
@@ -73,13 +74,18 @@ namespace CoolapkLite.Models.Feeds
 
         public SourceFeedModel(JObject token) : base(token)
         {
+            if (token.TryGetValue("id", out JToken id))
+            {
+                ID = id.ToObject<int>();
+            }
+
             if (token.TryGetValue("url", out JToken uri) && !string.IsNullOrEmpty(uri.ToString()))
             {
                 Url = uri.ToString();
             }
-            else if (token.TryGetValue("id", out JToken id))
+            else
             {
-                Url = $"/feed/{id.ToString().Replace("\"", string.Empty)}";
+                Url = $"/feed/{ID}";
             }
 
             if (token.TryGetValue("userInfo", out JToken v1))

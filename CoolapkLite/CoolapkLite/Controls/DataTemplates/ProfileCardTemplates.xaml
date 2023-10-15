@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:models="using:CoolapkLite.Models"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
@@ -105,6 +106,7 @@
                     Visibility="{x:Bind Url, Converter={StaticResource StringVisibilityConverter}}" />
             </Grid>
             <ListView
+                helpers:ListViewHelper.IsItemClickEnabled="True"
                 ui:ListViewExtensions.ItemContainerStretchDirection="Vertical"
                 ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
                 ItemTemplateSelector="{StaticResource ProfileItemTemplateSelector}"
@@ -273,6 +275,7 @@
             Padding="4"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
+            IsTabStop="False"
             Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <StackPanel>

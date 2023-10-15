@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Pages
 {
-    public abstract class NotificationModel : Entity
+    public abstract class NotificationModel : Entity, IHasUrl
     {
         public int ID { get; protected set; }
 

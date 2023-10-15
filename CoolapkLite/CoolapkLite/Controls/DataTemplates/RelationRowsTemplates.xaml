@@ -15,6 +15,7 @@
             VerticalAlignment="Center"
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             Click="Button_Click"
+            IsTabStop="False"
             Tag="{x:Bind Url}"
             Tapped="Button_Tapped">
             <Grid Padding="4,2">

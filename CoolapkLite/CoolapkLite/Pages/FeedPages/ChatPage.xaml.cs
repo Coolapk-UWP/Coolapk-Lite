@@ -393,8 +393,6 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void EmojiGridView_ItemClick(object sender, ItemClickEventArgs e) => InsertEmoji(e.ClickedItem.ToString());
 
-        private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
-
         private void Clipboard_ContentChanged(object sender, object e) => _ = Provider.CheckDataAsync(Clipboard.GetContent()).ContinueWith(x => PastePic.SetValueAsync(IsEnabledProperty, x.Result)).Unwrap();
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)

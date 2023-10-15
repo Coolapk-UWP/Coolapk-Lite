@@ -55,6 +55,7 @@
         <ListView
             x:Name="ListView"
             Grid.Row="1"
+            helpers:ListViewHelper.IsItemClickEnabled="True"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             IncrementalLoadingTrigger="None"
             ItemContainerStyle="{StaticResource TransparentCardItemStyle}"
@@ -177,11 +178,11 @@
                     <PivotItem Header="常规">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind NormalEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind NormalEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
@@ -199,11 +200,11 @@
                     <PivotItem Header="酷币">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind CoolCoinsEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind CoolCoinsEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
@@ -221,11 +222,11 @@
                     <PivotItem Header="滑稽">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind FunnyEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind FunnyEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
@@ -243,11 +244,11 @@
                     <PivotItem Header="Doge">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind DogeEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind DogeEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
@@ -265,11 +266,11 @@
                     <PivotItem Header="传统">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind TraditionEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind TraditionEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
@@ -287,11 +288,11 @@
                     <PivotItem Header="经典">
                         <GridView
                             Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             IsItemClickEnabled="True"
                             ItemClick="EmojiGridView_ItemClick"
                             ItemTemplate="{StaticResource EmojiImageTemplate}"
-                            ItemsSource="{x:Bind ClassicEmojis}"
-                            SelectionChanged="GridView_SelectionChanged">
+                            ItemsSource="{x:Bind ClassicEmojis}">
                             <GridView.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <cwuc:StaggeredPanel
