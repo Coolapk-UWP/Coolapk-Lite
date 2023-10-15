@@ -139,21 +139,23 @@ namespace CoolapkLite.Helpers
 #pragma warning restore 0612
 
 #if NETCORE463
-        public static async Task<List<string>> UploadImages(IEnumerable<UploadFileFragment> images)
+        public static async Task<List<string>> UploadImages(IEnumerable<UploadFileFragment> images, string bucket, string dir, string uid)
         {
             List<string> responses = new List<string>(images.Count());
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             {
                 string json = JsonConvert.SerializeObject(images, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-                using (StringContent uploadBucket = new StringContent("image"))
-                using (StringContent uploadDir = new StringContent("feed"))
+                using (StringContent uploadBucket = new StringContent(bucket))
+                using (StringContent uploadDir = new StringContent(dir))
                 using (StringContent is_anonymous = new StringContent("0"))
                 using (StringContent uploadFileList = new StringContent(json))
+                using (StringContent toUid = new StringContent(uid))
                 {
                     content.Add(uploadBucket, "uploadBucket");
                     content.Add(uploadDir, "uploadDir");
                     content.Add(is_anonymous, "is_anonymous");
                     content.Add(uploadFileList, "uploadFileList");
+                    content.Add(toUid, "toUid");
                     (bool isSucceed, JToken result) = await PostDataAsync(UriHelper.GetUri(UriType.OOSUploadPrepare), content).ConfigureAwait(false);
                     if (isSucceed)
                     {
@@ -195,7 +197,7 @@ namespace CoolapkLite.Helpers
             return responses;
         }
 #else
-        public static async Task<string[]> UploadImagesAsync(IEnumerable<UploadFileFragment> fragments, Extension extension)
+        public static async Task<string[]> UploadImagesAsync(Extension extension, IEnumerable<UploadFileFragment> fragments, string bucket, string dir, string uid)
         {
             ValueSet message = new ValueSet
             {
@@ -205,9 +207,12 @@ namespace CoolapkLite.Helpers
                 ["TokenVersion"] = (int)SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion),
                 ["UserAgent"] = JsonConvert.SerializeObject(UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
                 ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
-                ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() })
+                ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
+                ["UploadBucket"] = bucket,
+                ["UploadDir"] = dir,
+                ["ToUid"] = uid,
             };
-            return await extension.InvokeAsync(message).ConfigureAwait(false) as string[];
+            return await extension?.InvokeAsync(message) as string[];
         }
 
         public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)

@@ -57,15 +57,21 @@ namespace CoolapkLite.Pages.SettingsPages
         public async Task Refresh(bool reset = false)
         {
             _ = this.ShowProgressBarAsync();
-            if (reset)
+            try
             {
-                await Provider.InitializeAsync(Dispatcher).ConfigureAwait(false);
+                if (reset)
+                {
+                    await Provider.InitializeAsync(Dispatcher).ConfigureAwait(false);
+                }
+                else
+                {
+                    await Provider.FindAndLoadExtensionsAsync().ConfigureAwait(false);
+                }
             }
-            else
+            finally
             {
-                await Provider.FindAndLoadExtensionsAsync().ConfigureAwait(false);
+                _ = this.HideProgressBarAsync();
             }
-            _ = this.HideProgressBarAsync();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

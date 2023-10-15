@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Users;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 using Windows.Web.Http;
@@ -102,14 +103,13 @@ namespace CoolapkLite.Controls.Dialogs
 
         private void GetText(string name)
         {
-            (string UID, string UserName, string UserAvatar) results = UIHelper.AwaitByTaskCompleteSource(() => NetworkHelper.GetUserInfoByNameAsync(name));
-            if (!string.IsNullOrWhiteSpace(results.UID))
+            if (UIHelper.AwaitByTaskCompleteSource(() => NetworkHelper.GetUserInfoByNameAsync(name)) is UserInfoModel results)
             {
-                UID = results.UID;
-            }
-            if (!string.IsNullOrWhiteSpace(results.UserName))
-            {
-                UserName = results.UserName;
+                UID = results.UID.ToString();
+                if (!string.IsNullOrWhiteSpace(results.UserName))
+                {
+                    UserName = results.UserName;
+                }
             }
         }
     }

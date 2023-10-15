@@ -109,22 +109,28 @@ namespace CoolapkLite.ViewModels.BrowserPages
         private async Task LoadHtmlAsync(Uri uri)
         {
             _ = Dispatcher.ShowProgressBarAsync();
-            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest").ConfigureAwait(false);
-            if (isSucceed)
+            try
             {
-                JObject json = JObject.Parse(result);
-                RawHTML = json.TryGetValue("html", out JToken html) && !string.IsNullOrEmpty(html.ToString())
-                    ? html.ToString()
-                    : json.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString())
-                        ? description.ToString()
-                        : "<h1>网络错误</h1>";
-
-                if (json.TryGetValue("title", out JToken title))
+                (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest").ConfigureAwait(false);
+                if (isSucceed)
                 {
-                    Title = title.ToString();
+                    JObject json = JObject.Parse(result);
+                    RawHTML = json.TryGetValue("html", out JToken html) && !string.IsNullOrEmpty(html.ToString())
+                        ? html.ToString()
+                        : json.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString())
+                            ? description.ToString()
+                            : "<h1>网络错误</h1>";
+
+                    if (json.TryGetValue("title", out JToken title))
+                    {
+                        Title = title.ToString();
+                    }
                 }
             }
-            _ = Dispatcher.HideProgressBarAsync();
+            finally
+            {
+                _ = Dispatcher.HideProgressBarAsync();
+            }
         }
 
         public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light").ConfigureAwait(false);

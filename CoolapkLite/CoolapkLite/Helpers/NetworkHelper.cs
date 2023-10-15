@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -326,58 +327,33 @@ namespace CoolapkLite.Helpers
         /// <param name="name">要获取信息的用户名或 UID 。</param>
         /// <param name="isBackground">是否通知错误。</param>
         /// <returns>用户信息</returns>
-        public static async Task<(string UID, string UserName, string UserAvatar)> GetUserInfoByNameAsync(string name, bool isBackground = false)
+        public static async Task<UserInfoModel> GetUserInfoByNameAsync(string name, bool isBackground = false)
         {
-            (string UID, string UserName, string UserAvatar) result = (string.Empty, string.Empty, string.Empty);
-
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new UserNameErrorException();
-            }
-
             string str = string.Empty;
             try
             {
                 str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}")).ConfigureAwait(false);
-
                 JObject token = JObject.Parse(str);
                 if (token.TryGetValue("dataRow", out JToken v1))
                 {
                     JObject dataRow = (JObject)v1;
-
-                    if (dataRow.TryGetValue("uid", out JToken uid))
-                    {
-                        result.UID = uid.ToString();
-                    }
-
-                    if (dataRow.TryGetValue("username", out JToken username))
-                    {
-                        result.UserName = username.ToString();
-                    }
-
-                    if (dataRow.TryGetValue("userAvatar", out JToken userAvatar))
-                    {
-                        result.UserAvatar = userAvatar.ToString();
-                    }
-
-                    return result;
+                    return new UserInfoModel(dataRow);
                 }
-
-                throw new Exception();
+                return null;
             }
             catch (HttpRequestException e)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
                 if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
-                return result;
+                return null;
             }
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
                 if (string.IsNullOrWhiteSpace(str)) { throw ex; }
-                JObject o = JObject.Parse(str);
-                if (o == null) { throw ex; }
-                else { throw new CoolapkMessageException(o); }
+                JObject token = JObject.Parse(str);
+                if (token == null) { throw ex; }
+                else { throw new CoolapkMessageException(token, ex); }
             }
         }
 

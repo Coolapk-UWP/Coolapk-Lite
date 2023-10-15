@@ -305,7 +305,7 @@ namespace CoolapkLite.Pages
 
         #region 进度条
 
-        public async void ShowProgressBar()
+        public async Task ShowProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -317,7 +317,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowPaused = false;
         }
 
-        public async void ShowProgressBar(double value)
+        public async Task ShowProgressBarAsync(double value)
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -330,7 +330,7 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = value;
         }
 
-        public async void PausedProgressBar()
+        public async Task PausedProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -342,7 +342,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowPaused = true;
         }
 
-        public async void ErrorProgressBar()
+        public async Task ErrorProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -354,7 +354,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowError = true;
         }
 
-        public async void HideProgressBar()
+        public async Task HideProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -367,7 +367,7 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = 0;
         }
 
-        public async void ShowMessage(string message = null)
+        public async Task ShowMessageAsync(string message = null)
         {
             if (!Dispatcher.HasThreadAccess)
             {

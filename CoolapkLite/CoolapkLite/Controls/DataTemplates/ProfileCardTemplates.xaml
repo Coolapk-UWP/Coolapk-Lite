@@ -324,7 +324,7 @@
                     InitialsGlyph="$#xEA37;"
                     Source="{x:Bind Pic}"
                     Stretch="Uniform"
-                    Style="{StaticResource SquarePersonPictureStyle}" />
+                    Style="{StaticResource SquareTransparentPersonPictureStyle}" />
                 <TextBlock
                     Grid.Column="2"
                     Margin="0,0,0,2"

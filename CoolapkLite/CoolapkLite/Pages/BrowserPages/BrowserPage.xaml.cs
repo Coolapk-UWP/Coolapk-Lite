@@ -88,16 +88,22 @@ namespace CoolapkLite.Pages.BrowserPages
 
         private async void WebView_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            if (Provider.IsLoginPage && args.Uri.AbsoluteUri == "https://www.coolapk.com/")
+            try
             {
-                await CheckLoginAsync();
+                if (Provider.IsLoginPage && args.Uri.AbsoluteUri == "https://www.coolapk.com/")
+                {
+                    await CheckLoginAsync();
+                }
+                else if (args.Uri.AbsoluteUri == UriHelper.LoginUri)
+                {
+                    Provider.IsLoginPage = true;
+                }
+                Provider.Title = sender.DocumentTitle;
             }
-            else if (args.Uri.AbsoluteUri == UriHelper.LoginUri)
+            finally
             {
-                Provider.IsLoginPage = true;
+                _ = this.HideProgressBarAsync();
             }
-            Provider.Title = sender.DocumentTitle;
-            _ = this.HideProgressBarAsync();
         }
 
         private void OnFrameNavigating(object sender, NavigatingCancelEventArgs args)

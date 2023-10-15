@@ -110,13 +110,13 @@ namespace CoolapkLite.Helpers
             }
             if (HasStatusBar)
             {
-                mainPage?.HideProgressBar();
+                await mainPage?.HideProgressBarAsync();
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                mainPage?.ShowProgressBar();
+                await mainPage?.ShowProgressBarAsync();
             }
         }
 
@@ -133,13 +133,13 @@ namespace CoolapkLite.Helpers
             }
             if (HasStatusBar)
             {
-                mainPage?.HideProgressBar();
+                await mainPage?.HideProgressBarAsync();
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                mainPage?.ShowProgressBar(value);
+                await mainPage?.ShowProgressBarAsync(value);
             }
         }
 
@@ -158,7 +158,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            mainPage?.PausedProgressBar();
+            await mainPage?.PausedProgressBarAsync();
         }
 
         public static Task ErrorProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => ErrorProgressBarAsync(x.Result)).Unwrap();
@@ -176,7 +176,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            mainPage?.ErrorProgressBar();
+            await mainPage?.ErrorProgressBarAsync();
         }
 
         public static Task HideProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => HideProgressBarAsync(x.Result)).Unwrap();
@@ -194,7 +194,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            mainPage?.HideProgressBar();
+            await mainPage?.HideProgressBarAsync();
         }
 
         public static Task ShowMessageAsync(string message) => GetAppTitleAsync().ContinueWith(x => ShowMessageAsync(x.Result, message)).Unwrap();
@@ -238,11 +238,11 @@ namespace CoolapkLite.Helpers
                         if (!string.IsNullOrEmpty(message))
                         {
                             string messages = $"[{MessageQueue.Count + 1}] {message.Replace("\n", " ")}";
-                            mainPage.ShowMessage(messages);
+                            await mainPage.ShowMessageAsync(messages);
                             await Task.Delay(Duration);
                         }
                     }
-                    mainPage.ShowMessage();
+                    await mainPage.ShowMessageAsync();
                 }
                 IsShowingMessage = false;
             }
@@ -604,7 +604,7 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string url = link.Substring(3, "?");
-                    string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID);
+                    string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID.ToString());
                     FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
                     if (provider != null)
                     {

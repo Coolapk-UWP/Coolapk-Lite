@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnicodeStyle;
 using UnicodeStyle.Models;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Text;
@@ -18,6 +19,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -82,6 +84,9 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 _ = Refresh(true);
             }
+
+            Clipboard.ContentChanged += Clipboard_ContentChanged;
+            Clipboard_ContentChanged(null, null);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -89,55 +94,126 @@ namespace CoolapkLite.Pages.FeedPages
             base.OnNavigatedFrom(e);
             Provider.LoadMoreStarted -= OnLoadMoreStarted;
             Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
+            Clipboard.ContentChanged -= Clipboard_ContentChanged;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             switch ((sender as FrameworkElement).Tag.ToString())
             {
                 case "SendButton":
-                    CreateDataContent();
+                    SendDataContent();
+                    break;
+                case "ImageButton":
+                    SendImageContent(await Provider.PickImageAsync());
                     break;
                 default:
                     break;
             }
         }
 
-        private async void CreateDataContent()
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Name)
+            {
+                case nameof(PastePic):
+                    SendImageContent(await Provider.DropFileAsync(Clipboard.GetContent()));
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private async void SendDataContent()
         {
             _ = this.ShowProgressBarAsync();
-            InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
-            contentText = contentText.Replace("\r", Environment.NewLine);
-            if (string.IsNullOrWhiteSpace(contentText)) { return; }
-            string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
-            if (string.IsNullOrWhiteSpace(id)) { return; }
             try
             {
-                using (MultipartFormDataContent content = new MultipartFormDataContent())
+                InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
+                contentText = contentText.Replace("\r", Environment.NewLine);
+                if (string.IsNullOrWhiteSpace(contentText)) { return; }
+                string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
+                if (string.IsNullOrWhiteSpace(id)) { return; }
+                try
                 {
-                    using (StringContent message = new StringContent(contentText))
+                    using (MultipartFormDataContent content = new MultipartFormDataContent())
                     {
-                        content.Add(message, "message");
-                        (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
-                        if (isSucceed)
+                        using (StringContent message = new StringContent(contentText))
                         {
-                            MessageModel messageModel = new MessageModel(results.First as JObject);
-                            Provider.Add(messageModel);
-                            InputBox.Document.SetText(TextSetOptions.None, string.Empty);
+                            content.Add(message, "message");
+                            (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
+                            if (isSucceed)
+                            {
+                                MessageModel messageModel = new MessageModel(results.First as JObject);
+                                Provider.Add(messageModel);
+                                InputBox.Document.SetText(TextSetOptions.None, string.Empty);
+                            }
                         }
                     }
                 }
-            }
-            catch (CoolapkMessageException cex)
-            {
-                _ = this.ShowMessageAsync(cex.Message);
-                if (cex.MessageStatus == CoolapkMessageException.RequestCaptcha)
+                catch (CoolapkMessageException cex)
                 {
-                    //CaptchaDialog dialog = new CaptchaDialog();
-                    //_ = await dialog.ShowAsync();
+                    _ = this.ShowMessageAsync(cex.Message);
+                    if (cex.IsRequestCaptcha)
+                    {
+                        //CaptchaDialog dialog = new CaptchaDialog();
+                        //_ = await dialog.ShowAsync();
+                    }
                 }
             }
-            _ = this.HideProgressBarAsync();
+            finally
+            {
+                _ = this.HideProgressBarAsync();
+            }
+        }
+
+        private async void SendImageContent(WriteableBitmap writeableBitmap)
+        {
+            if (writeableBitmap == null) { return; }
+            _ = this.ShowProgressBarAsync();
+            try
+            {
+                string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
+                if (string.IsNullOrWhiteSpace(id)) { return; }
+                string pic = await Provider.UploadPicAsync(writeableBitmap);
+                if (string.IsNullOrWhiteSpace(pic))
+                {
+                    _ = this.ShowMessageAsync("图片上传失败");
+                    return;
+                }
+                int index = pic.IndexOf("/message/");
+                if (index != -1) { pic = pic.Substring(index); }
+                try
+                {
+                    using (MultipartFormDataContent content = new MultipartFormDataContent())
+                    {
+                        using (StringContent message_pic = new StringContent(pic))
+                        {
+                            content.Add(message_pic, "message_pic");
+                            (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
+                            if (isSucceed)
+                            {
+                                MessageModel messageModel = new MessageModel(results.First as JObject);
+                                Provider.Add(messageModel);
+                            }
+                        }
+                    }
+                }
+                catch (CoolapkMessageException cex)
+                {
+                    _ = this.ShowMessageAsync(cex.Message);
+                    if (cex.IsRequestCaptcha)
+                    {
+                        //CaptchaDialog dialog = new CaptchaDialog();
+                        //_ = await dialog.ShowAsync();
+                    }
+                }
+            }
+            finally
+            {
+                _ = this.HideProgressBarAsync();
+            }
         }
 
         private void InputBox_Loaded(object sender, RoutedEventArgs e)
@@ -268,12 +344,6 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
-        private void EmojiGridView_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            GridView gridView = sender as GridView;
-            InsertEmoji(e.ClickedItem.ToString());
-        }
-
         private async void InsertEmoji(string data)
         {
             using (IRandomAccessStreamWithContentType randomAccessStream = await (await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Emoji/{data}.png"))).OpenReadAsync())
@@ -286,6 +356,13 @@ namespace CoolapkLite.Pages.FeedPages
                     randomAccessStream);
                 _ = InputBox.Document.Selection.MoveRight(TextRangeUnit.Character, 1, false);
             }
+        }
+
+        private void InputBox_TextChanged(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is RichEditBox richEditBox)) { return; }
+            richEditBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
+            Provider.IsTextEmpty = string.IsNullOrEmpty(contentText);
         }
 
         #region 搜索框
@@ -314,7 +391,11 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
 
+        private void EmojiGridView_ItemClick(object sender, ItemClickEventArgs e) => InsertEmoji(e.ClickedItem.ToString());
+
         private void GridView_SelectionChanged(object sender, SelectionChangedEventArgs e) => (sender as GridView).SelectedIndex = -1;
+
+        private void Clipboard_ContentChanged(object sender, object e) => _ = Provider.CheckDataAsync(Clipboard.GetContent()).ContinueWith(x => PastePic.SetValueAsync(IsEnabledProperty, x.Result)).Unwrap();
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {

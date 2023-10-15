@@ -194,17 +194,24 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void CreateDataContent()
+        private async void CreateDataContent()
         {
             _ = this.ShowProgressBarAsync();
-            InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
-            contentText = contentText.Replace("\r", Environment.NewLine);
-            if (string.IsNullOrWhiteSpace(contentText)) { return; }
-            if (FeedType == CreateFeedType.Feed) { CreateFeedContent(contentText); }
-            else { CreateReplyContent(contentText); }
+            try
+            {
+                InputBox.Document.GetText(TextGetOptions.UseObjectText, out string contentText);
+                contentText = contentText.Replace("\r", Environment.NewLine);
+                if (string.IsNullOrWhiteSpace(contentText)) { return; }
+                if (FeedType == CreateFeedType.Feed) { await CreateFeedContentAsync(contentText); }
+                else { await CreateReplyContentAsync(contentText); }
+            }
+            finally
+            {
+                _ = this.HideProgressBarAsync();
+            }
         }
 
-        private async void CreateFeedContent(string contentText)
+        private async Task CreateFeedContentAsync(string contentText)
         {
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
@@ -212,12 +219,7 @@ namespace CoolapkLite.Controls
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    _ = this.GetAppTitleAsync().ContinueWith(x =>
-                    {
-                        IHaveTitleBar mainPage = x.Result;
-                        _ = UIHelper.ShowMessageAsync(mainPage, "图片上传失败");
-                        _ = UIHelper.HideProgressBarAsync(mainPage);
-                    });
+                    _ = this.ShowMessageAsync("图片上传失败");
                     return;
                 }
             }
@@ -237,7 +239,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private async void CreateReplyContent(string contentText)
+        private async Task CreateReplyContentAsync(string contentText)
         {
             IList<string> pics = Array.Empty<string>();
             if (Provider.Pictures.Any())
@@ -245,12 +247,7 @@ namespace CoolapkLite.Controls
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
                 {
-                    _ = this.GetAppTitleAsync().ContinueWith(x =>
-                    {
-                        IHaveTitleBar mainPage = x.Result;
-                        _ = UIHelper.ShowMessageAsync(mainPage, "图片上传失败");
-                        _ = UIHelper.HideProgressBarAsync(mainPage);
-                    });
+                    _ = this.ShowMessageAsync("图片上传失败");
                     return;
                 }
             }
@@ -298,13 +295,12 @@ namespace CoolapkLite.Controls
             catch (CoolapkMessageException cex)
             {
                 _ = this.ShowMessageAsync(cex.Message);
-                if (cex.MessageStatus == CoolapkMessageException.RequestCaptcha)
+                if (cex.IsRequestCaptcha)
                 {
                     //CaptchaDialog dialog = new CaptchaDialog();
                     //_ = await dialog.ShowAsync();
                 }
             }
-            _ = this.HideProgressBarAsync();
         }
 
         private void SendSuccessful()

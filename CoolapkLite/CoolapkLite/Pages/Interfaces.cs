@@ -1,17 +1,18 @@
-﻿using Windows.UI.Core;
+﻿using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Pages
 {
     public interface IHaveTitleBar
     {
-        void ShowProgressBar();
-        void HideProgressBar();
-        void ErrorProgressBar();
-        void PausedProgressBar();
-        void ShowProgressBar(double value);
-        void ShowMessage(string message = null);
-        CoreDispatcher Dispatcher { get; }
         Frame MainFrame { get; }
+        CoreDispatcher Dispatcher { get; }
+        Task ShowProgressBarAsync();
+        Task HideProgressBarAsync();
+        Task ErrorProgressBarAsync();
+        Task PausedProgressBarAsync();
+        Task ShowProgressBarAsync(double value);
+        Task ShowMessageAsync(string message = null);
     }
 }

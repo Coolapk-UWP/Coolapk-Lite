@@ -82,10 +82,8 @@ namespace CoolapkLite.Common
         /// <summary>
         /// CreateDeviceCode Generate your custom device code
         /// </summary>
-        private static string CreateDeviceCode(string aid, string mac, string manufactory, string brand, string model, string buildNumber)
-        {
-            return $"{aid}; ; ; {mac}; {manufactory}; {brand}; {model}; {buildNumber}".GetBase64().Reverse();
-        }
+        private static string CreateDeviceCode(string aid, string mac, string manufactory, string brand, string model, string buildNumber) =>
+            $"{aid}; ; ; {mac}; {manufactory}; {brand}; {model}; {buildNumber}".GetBase64().Reverse();
 
         private static string RandMacAddress()
         {

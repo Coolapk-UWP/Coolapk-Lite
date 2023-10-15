@@ -7,26 +7,29 @@ namespace CoolapkLite.Models.Exceptions
     {
         public const string RequestCaptcha = "err_request_captcha";
 
-        public string MessageStatus { get; }
-
         public CoolapkMessageException(string message) : base(message) { }
 
         public CoolapkMessageException(string message, Exception innerException) : base(message, innerException) { }
 
-        public CoolapkMessageException(JObject o) : base(o?.Value<string>("message") ?? string.Empty)
+        public CoolapkMessageException(JObject token)
+            : base(token?.TryGetValue("message", out JToken message) == true ? message.ToString() : string.Empty)
         {
-            if (o != null && o.TryGetValue("messageStatus", out JToken token))
+            if (token != null && token.TryGetValue("messageStatus", out JToken messageStatus))
             {
-                MessageStatus = token.ToString();
+                MessageStatus = messageStatus.ToString();
             }
         }
 
-        public CoolapkMessageException(JObject o, Exception innerException) : base(o?.Value<string>("message") ?? string.Empty, innerException)
+        public CoolapkMessageException(JObject token, Exception innerException)
+            : base(token?.TryGetValue("message", out JToken message) == true ? message.ToString() : string.Empty, innerException)
         {
-            if (o != null && o.TryGetValue("messageStatus", out JToken token))
+            if (token != null && token.TryGetValue("messageStatus", out JToken messageStatus))
             {
-                MessageStatus = token.ToString();
+                MessageStatus = messageStatus.ToString();
             }
         }
+
+        public string MessageStatus { get; }
+        public bool IsRequestCaptcha => MessageStatus == RequestCaptcha;
     }
 }

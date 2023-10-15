@@ -4,6 +4,7 @@ using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Users;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -316,7 +317,7 @@ namespace CoolapkLite.Pages
 
         #region 进度条
 
-        public async void ShowProgressBar()
+        public async Task ShowProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -328,7 +329,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowPaused = false;
         }
 
-        public async void ShowProgressBar(double value)
+        public async Task ShowProgressBarAsync(double value)
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -341,7 +342,7 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = value;
         }
 
-        public async void PausedProgressBar()
+        public async Task PausedProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -353,7 +354,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowPaused = true;
         }
 
-        public async void ErrorProgressBar()
+        public async Task ErrorProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -365,7 +366,7 @@ namespace CoolapkLite.Pages
             ProgressBar.ShowError = true;
         }
 
-        public async void HideProgressBar()
+        public async Task HideProgressBarAsync()
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -378,7 +379,7 @@ namespace CoolapkLite.Pages
             ProgressBar.Value = 0;
         }
 
-        public async void ShowMessage(string message = null)
+        public async Task ShowMessageAsync(string message = null)
         {
             if (!Dispatcher.HasThreadAccess)
             {
@@ -504,15 +505,15 @@ namespace CoolapkLite.Pages
                 string UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 if (!string.IsNullOrEmpty(UID))
                 {
-                    (string UID, string UserName, string UserAvatar) results = await NetworkHelper.GetUserInfoByNameAsync(UID).ConfigureAwait(false);
-                    if (results.UID != UID) { return; }
+                    UserInfoModel results = await NetworkHelper.GetUserInfoByNameAsync(UID).ConfigureAwait(false);
+                    if (results.UID.ToString() != UID) { return; }
                     Name = results.UserName;
                     PageType = typeof(ProfilePage);
                     if (Dispatcher?.HasThreadAccess == false)
                     {
                         await Dispatcher.ResumeForegroundAsync();
                     }
-                    Image = new ImageModel(results.UserAvatar, ImageType.BigAvatar, Dispatcher);
+                    Image = results.UserAvatar;
                     ViewModels = null;
                     if (NotificationsModel == null)
                     {

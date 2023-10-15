@@ -117,8 +117,11 @@
                                             <TextBlock
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
-                                                FontSize="12"
-                                                Text="{x:Bind Provider.ProfileDetail.NextLevelNowExperience, Mode=OneWay}" />
+                                                FontSize="12">
+                                                <Run Text="{x:Bind Provider.ProfileDetail.Experience, Mode=OneWay}" />
+                                                <Run Text="/" />
+                                                <Run Text="{x:Bind Provider.ProfileDetail.NextLevelExperience, Mode=OneWay}" />
+                                            </TextBlock>
                                         </Grid>
                                         <ProgressBar
                                             x:Name="NextLevelPercentage"

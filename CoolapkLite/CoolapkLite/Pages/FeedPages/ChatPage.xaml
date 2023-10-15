@@ -95,15 +95,42 @@
                 Margin="4,0"
                 VerticalAlignment="Center"
                 AcceptsReturn="True"
-                Loaded="InputBox_Loaded" />
+                Loaded="InputBox_Loaded"
+                TextChanged="InputBox_TextChanged" />
+            <Button
+                Grid.Column="2"
+                VerticalAlignment="Bottom"
+                Click="Button_Click"
+                Content="&#xEB9F;"
+                IsEnabled="{x:Bind Provider.IsTextEmpty, Mode=OneWay}"
+                Style="{StaticResource TitleBarIconButtonStyle}"
+                Tag="ImageButton"
+                ToolTipService.ToolTip="图片"
+                Visibility="{x:Bind Provider.IsTextEmpty, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                <helpers:UIElementHelper.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            x:Name="PastePic"
+                            x:Uid="/CreateFeedControl/PastePicItem"
+                            Click="MenuFlyoutItem_Click"
+                            Tag="PastePic">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE77F;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </helpers:UIElementHelper.ContextFlyout>
+            </Button>
             <Button
                 Grid.Column="2"
                 VerticalAlignment="Bottom"
                 Click="Button_Click"
                 Content="&#xE724;"
+                IsEnabled="{x:Bind Provider.IsTextEmpty, Converter={StaticResource BoolNegationConverter}, Mode=OneWay}"
                 Style="{StaticResource TitleBarIconButtonStyle}"
                 Tag="SendButton"
-                ToolTipService.ToolTip="发送" />
+                ToolTipService.ToolTip="发送"
+                Visibility="{x:Bind Provider.IsTextEmpty, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
             <Grid
                 Grid.Row="1"
                 Grid.ColumnSpan="3"

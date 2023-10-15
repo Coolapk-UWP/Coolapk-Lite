@@ -5,19 +5,23 @@ using System.Text;
 
 namespace CoolapkLite.Models.Pages
 {
-    public class ProfileDetailModel : Entity
+    public class ProfileDetailModel : Entity, ISourceUserModel
     {
-        public ImageModel UserAvatar { get; private set; }
+        public int FansNum { get; private set; }
+        public int FeedNum { get; private set; }
+        public int LevelNum { get; private set; }
+        public int FollowNum { get; private set; }
+
         public string Url { get; private set; }
-        public double FansNum { get; private set; }
-        public double FeedNum { get; private set; }
-        public double LevelNum { get; private set; }
         public string UserName { get; private set; }
-        public double FollowNum { get; private set; }
         public string LevelTodayMessage { get; private set; }
-        public double NextLevelExperience { get; private set; }
-        public double NextLevelPercentage { get; private set; }
         public string NextLevelNowExperience { get; private set; }
+
+        public long Experience { get; private set; }
+        public long NextLevelExperience { get; private set; }
+        public double NextLevelPercentage { get; private set; }
+
+        public ImageModel UserAvatar { get; private set; }
 
         public ProfileDetailModel(JObject token) : base(token)
         {
@@ -33,17 +37,17 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("fans", out JToken fans))
             {
-                FansNum = fans.ToObject<double>();
+                FansNum = fans.ToObject<int>();
             }
 
             if (token.TryGetValue("feed", out JToken feed))
             {
-                FeedNum = feed.ToObject<double>();
+                FeedNum = feed.ToObject<int>();
             }
 
             if (token.TryGetValue("level", out JToken level))
             {
-                LevelNum = level.ToObject<double>();
+                LevelNum = level.ToObject<int>();
             }
 
             if (token.TryGetValue("username", out JToken username))
@@ -53,7 +57,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("follow", out JToken follow))
             {
-                FollowNum = follow.ToObject<double>();
+                FollowNum = follow.ToObject<int>();
             }
 
             if (token.TryGetValue("level_today_message", out JToken level_today_message))
@@ -61,17 +65,20 @@ namespace CoolapkLite.Models.Pages
                 LevelTodayMessage = level_today_message.ToString();
             }
 
+            if (token.TryGetValue("experience", out JToken experience))
+            {
+                Experience = experience.ToObject<long>();
+            }
+
             if (token.TryGetValue("next_level_experience", out JToken next_level_experience))
             {
-                NextLevelExperience = next_level_experience.ToObject<double>();
+                NextLevelExperience = next_level_experience.ToObject<long>();
             }
 
             if (token.TryGetValue("next_level_percentage", out JToken next_level_percentage))
             {
                 NextLevelPercentage = next_level_percentage.ToObject<double>();
             }
-
-            NextLevelNowExperience = $"{NextLevelPercentage / 100 * NextLevelExperience:F0}/{NextLevelExperience}";
         }
 
         public override string ToString() => new StringBuilder().TryAppendLine(UserName)

@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {
@@ -62,15 +63,22 @@ namespace CoolapkLite.Controls
             }
             else
             {
-                string m_displayNameInitials = InitialsGenerator.InitialsFromDisplayName(DisplayName);
-                if (string.IsNullOrWhiteSpace(m_displayNameInitials))
+                try
+                {
+                    string m_displayNameInitials = InitialsGenerator.InitialsFromDisplayName(DisplayName);
+                    if (string.IsNullOrWhiteSpace(m_displayNameInitials))
+                    {
+                        _ = VisualStateManager.GoToState(this, "NoInitials", false);
+                    }
+                    else
+                    {
+                        TemplateSettings.ActualInitials = m_displayNameInitials;
+                        _ = VisualStateManager.GoToState(this, "Initials", false);
+                    }
+                }
+                catch (Exception)
                 {
                     _ = VisualStateManager.GoToState(this, "NoInitials", false);
-                }
-                else
-                {
-                    TemplateSettings.ActualInitials = m_displayNameInitials;
-                    _ = VisualStateManager.GoToState(this, "Initials", false);
                 }
             }
         }

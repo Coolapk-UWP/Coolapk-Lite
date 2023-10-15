@@ -109,9 +109,9 @@ namespace CoolapkLite.Models.Pages
         public string BlockStatus { get; private set; }
         public string VerifyTitle { get; private set; }
 
-        public double NextLevelExperience { get; private set; }
+        public long Experience { get; private set; }
+        public long NextLevelExperience { get; private set; }
         public double NextLevelPercentage { get; private set; }
-        public string NextLevelNowExperience { get; private set; }
 
         public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
@@ -212,17 +212,20 @@ namespace CoolapkLite.Models.Pages
                 VerifyTitle = verify_title.ToString();
             }
 
+            if (token.TryGetValue("experience", out JToken experience))
+            {
+                Experience = experience.ToObject<long>();
+            }
+
             if (token.TryGetValue("next_level_experience", out JToken next_level_experience))
             {
-                NextLevelExperience = next_level_experience.ToObject<double>();
+                NextLevelExperience = next_level_experience.ToObject<long>();
             }
 
             if (token.TryGetValue("next_level_percentage", out JToken next_level_percentage))
             {
                 NextLevelPercentage = next_level_percentage.ToObject<double>();
             }
-
-            NextLevelNowExperience = $"{NextLevelPercentage / 100 * NextLevelExperience:F0}/{NextLevelExperience}";
 
             if (token.TryGetValue("cover", out JToken cover))
             {

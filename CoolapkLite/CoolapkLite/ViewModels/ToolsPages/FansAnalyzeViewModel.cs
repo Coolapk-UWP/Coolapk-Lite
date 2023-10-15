@@ -93,15 +93,21 @@ namespace CoolapkLite.ViewModels.ToolsPages
         public async Task Refresh(bool reset)
         {
             _ = Dispatcher.ShowProgressBarAsync();
-            if (reset)
+            try
             {
-                OrderedPointList.Clear();
-                Title = await NetworkHelper.GetUserInfoByNameAsync(ID).ContinueWith(x => $"{x.Result.UserName}的粉丝分析");
-                await GetContactModelsAsync();
-                await GetOrderedPointListAsync();
+                if (reset)
+                {
+                    OrderedPointList.Clear();
+                    Title = await NetworkHelper.GetUserInfoByNameAsync(ID).ContinueWith(x => $"{x.Result.UserName}的粉丝分析");
+                    await GetContactModelsAsync();
+                    await GetOrderedPointListAsync();
+                }
+                FilteredContactModel = new ObservableCollection<ContactModel>(ContactModels);
             }
-            FilteredContactModel = new ObservableCollection<ContactModel>(ContactModels);
-            _ = Dispatcher.HideProgressBarAsync();
+            finally
+            {
+                _ = Dispatcher.HideProgressBarAsync();
+            }
         }
 
         private async Task GetContactModelsAsync()
