@@ -178,9 +178,9 @@
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
-                                Text="{x:Bind Dateline}"
+                                Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}"
                                 TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
                                 Visibility="{x:Bind ShowDateline, Converter={StaticResource BoolToVisibilityConverter}}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
@@ -189,7 +189,7 @@
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind InfoHTML}"
                                 TextTrimming="CharacterEllipsis"
-                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
+                                ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}"
                                 Visibility="{x:Bind ShowDateline, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
@@ -720,8 +720,8 @@
                         VerticalAlignment="Center"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
-                        Text="{Binding Dateline}"
-                        ToolTipService.ToolTip="{Binding DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                        Text="{Binding Dateline, Converter={StaticResource DateLineToReadableConverter}}"
+                        ToolTipService.ToolTip="{Binding Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                 </StackPanel>
                 <controls:TextBlockEx
                     x:Name="Message"
@@ -856,8 +856,8 @@
                                 VerticalAlignment="Center"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
-                                Text="{x:Bind Dateline}"
-                                ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                                Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}"
+                                ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                             <TextBlock
                                 Margin="2,0,0,0"
                                 HorizontalAlignment="Left"
@@ -975,7 +975,8 @@
                     <ItemsControl
                         HorizontalAlignment="Stretch"
                         ItemTemplate="{StaticResource ReplyRowsItemTemplate}"
-                        ItemsSource="{x:Bind ReplyRows}" />
+                        ItemsSource="{x:Bind ReplyRows}"
+                        Visibility="{x:Bind ShowReplyRow, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <Button
                         x:Name="SeeAllButton"
                         Padding="4"

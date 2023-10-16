@@ -127,18 +127,19 @@ namespace CoolapkLite.ViewModels.ToolsPages
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             OrderedPointList.Clear();
-            IOrderedEnumerable<ContactModel> FanListByDate = ContactModels.OrderBy(item => item.DateLine);
-            int temp = FanListByDate.FirstOrDefault().DateLine, num = 0;
+            IOrderedEnumerable<ContactModel> FanListByDate = ContactModels.OrderBy(item => item.Dateline);
+            DateTimeOffset temp = FanListByDate.FirstOrDefault().Dateline;
+            int num = 0;
             foreach (ContactModel contact in FanListByDate)
             {
-                if (temp != contact.DateLine)
+                if (temp != contact.Dateline)
                 {
-                    OrderedPointList.Add(new Point { X = temp, Y = num });
-                    temp = contact.DateLine;
+                    OrderedPointList.Add(new Point { X = temp.UtcTicks, Y = num });
+                    temp = contact.Dateline;
                 }
                 num++;
             }
-            OrderedPointList.Add(new Point { X = temp, Y = num });
+            OrderedPointList.Add(new Point { X = temp.UtcTicks, Y = num });
         }
 
         public async Task SortDataAsync(string sortBy, bool ascending)
@@ -182,8 +183,8 @@ namespace CoolapkLite.ViewModels.ToolsPages
                         break;
                     case "DateLine":
                         FilteredContactModel = ascending
-                            ? new ObservableCollection<ContactModel>(filteredContactModel.OrderBy(item => item.DateLine))
-                            : new ObservableCollection<ContactModel>(filteredContactModel.OrderByDescending(item => item.DateLine));
+                            ? new ObservableCollection<ContactModel>(filteredContactModel.OrderBy(item => item.Dateline))
+                            : new ObservableCollection<ContactModel>(filteredContactModel.OrderByDescending(item => item.Dateline));
                         break;
                     case "LoginTime":
                         FilteredContactModel = ascending

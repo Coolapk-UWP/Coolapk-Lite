@@ -44,9 +44,11 @@
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 MaxLines="1"
-                TextTrimming="CharacterEllipsis">
+                TextTrimming="CharacterEllipsis"
+                ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='通知时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
                 <Run Text="{x:Bind UserName}" />
-                <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline}" />
+                <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
+                <Run Text="{x:Bind Status}" />
             </TextBlock>
             <control:TextBlockEx
                 Grid.Row="1"
@@ -108,7 +110,10 @@
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{x:Bind Dateline}" />
+                    ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='通知时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
+                    <Run Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
+                    <Run Text="{x:Bind Status}" />
+                </TextBlock>
                 <control:InfoBadge
                     Margin="6,0"
                     HorizontalAlignment="Left"
@@ -169,7 +174,10 @@
                     VerticalAlignment="Center"
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                     IsTextSelectionEnabled="{x:Bind FeedDetail.IsCopyEnabled, Mode=OneWay}"
-                    Text="{x:Bind Dateline}" />
+                    ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='通知时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
+                    <Run Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
+                    <Run Text="{x:Bind Status}" />
+                </TextBlock>
                 <control:InfoBadge
                     Margin="6,0"
                     HorizontalAlignment="Left"
@@ -233,9 +241,11 @@
                     Grid.Column="0"
                     HorizontalAlignment="Left"
                     MaxLines="1"
-                    TextTrimming="CharacterEllipsis">
+                    TextTrimming="CharacterEllipsis"
+                    ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='通知时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
                     <Run Text="{x:Bind UserName}" />
-                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline}" />
+                    <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
+                    <Run Text="{x:Bind Status}" />
                 </TextBlock>
                 <Border
                     Grid.Column="1"

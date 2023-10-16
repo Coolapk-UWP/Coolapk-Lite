@@ -17,7 +17,7 @@
             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
-            ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='\{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
+            ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='\{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}">
             <TextBlock
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
@@ -62,7 +62,7 @@
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Text="{x:Bind UserName}"
-                        ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                        ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                     <StackPanel
                         HorizontalAlignment="Left"
                         Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -199,7 +199,7 @@
                         FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         Text="{x:Bind UserName}"
-                        ToolTipService.ToolTip="{x:Bind DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
+                        ToolTipService.ToolTip="{x:Bind Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}}" />
                     <StackPanel
                         HorizontalAlignment="Right"
                         Background="{ThemeResource SystemControlBackgroundAccentBrush}"

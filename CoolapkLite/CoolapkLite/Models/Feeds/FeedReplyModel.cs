@@ -71,10 +71,10 @@ namespace CoolapkLite.Models.Feeds
         public int ReplyRowsMore { get; private set; }
         public int ReplyRowsCount { get; private set; }
 
-        public string Dateline { get; private set; }
+        public bool ShowReplyRow { get; private set; }
 
-        public DateTime DateTime { get; private set; }
         public ImageModel Pic { get; private set; }
+        public DateTimeOffset Dateline { get; private set; }
 
         public ImmutableArray<SourceFeedReplyModel> ReplyRows { get; private set; } = ImmutableArray<SourceFeedReplyModel>.Empty;
 
@@ -85,13 +85,13 @@ namespace CoolapkLite.Models.Feeds
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        public FeedReplyModel(JObject token, bool ShowReplyRow = true) : base(token)
+        public FeedReplyModel(JObject token, bool showReplyRow = true) : base(token)
         {
+            ShowReplyRow = showReplyRow;
+
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
-                Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
-                DateTime = dateTimeOffset.LocalDateTime;
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("message", out JToken message))

@@ -24,10 +24,8 @@ namespace CoolapkLite.Helpers
         /// <summary>
         /// Gets the flyout associated with this element.
         /// </summary>
-        /// <param name="element">The flyout associated with this element.</param>
-        /// <returns>
-        /// The flyout associated with this element, if any; otherwise, <see langword="null"/>. The default is <see langword="null"/>.
-        /// </returns>
+        /// <param name="element">The element from which the property value is read.</param>
+        /// <returns>The flyout associated with this element, if any; otherwise, <see langword="null"/>. The default is <see langword="null"/>.</returns>
         public static FlyoutBase GetContextFlyout(UIElement element)
         {
             return (FlyoutBase)element.GetValue(ContextFlyoutProperty);
@@ -46,7 +44,7 @@ namespace CoolapkLite.Helpers
         private static void OnContextFlyoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UIElement element = (UIElement)d;
-            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout"))
+            if (ApiInfoHelper.IsContextFlyoutSupported)
             {
                 element.ContextFlyout = GetContextFlyout(element);
             }
@@ -109,6 +107,49 @@ namespace CoolapkLite.Helpers
 
         #endregion
 
+        #region CornerRadius
+
+        /// <summary>
+        /// Identifies the CornerRadius dependency property.
+        /// </summary>
+        public static readonly DependencyProperty CornerRadiusProperty =
+            DependencyProperty.RegisterAttached(
+                "CornerRadius",
+                typeof(CornerRadius),
+                typeof(UIElementHelper),
+                new PropertyMetadata(null, OnCornerRadiusChanged));
+
+        /// <summary>
+        /// Gets the radius for the corners of the control's border.
+        /// </summary>
+        /// <param name="element">The element from which the property value is read.</param>
+        /// <returns>The degree to which the corners are rounded, expressed as values of the CornerRadius structure.</returns>
+        public static CornerRadius GetCornerRadius(Control element)
+        {
+            return (CornerRadius)element.GetValue(CornerRadiusProperty);
+        }
+
+        /// <summary>
+        /// Sets the radius for the corners of the control's border.
+        /// </summary>
+        /// <param name="element">The element on which to set the attached property.</param>
+        /// <param name="value">The flyout associated with this element.</param>
+        public static void SetCornerRadius(Control element, CornerRadius value)
+        {
+            element.SetValue(CornerRadiusProperty, value);
+        }
+
+        private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Control element = (Control)d;
+            if (ApiInfoHelper.IsCornerRadiusSupported)
+            {
+                element.CornerRadius = GetCornerRadius(element);
+            }
+        }
+
+        #endregion
+
         #region AllowFocusOnInteraction
 
         /// <summary>
@@ -125,9 +166,7 @@ namespace CoolapkLite.Helpers
         /// Gets a value that indicates whether the element automatically gets focus when the user interacts with it.
         /// </summary>
         /// <param name="element">The element from which the property value is read.</param>
-        /// <returns>
-        /// A value that indicates whether the element automatically gets focus when the user interacts with it.
-        /// </returns>
+        /// <returns>A value that indicates whether the element automatically gets focus when the user interacts with it.</returns>
         public static bool GetAllowFocusOnInteraction(FrameworkElement element)
         {
             return (bool)element.GetValue(AllowFocusOnInteractionProperty);

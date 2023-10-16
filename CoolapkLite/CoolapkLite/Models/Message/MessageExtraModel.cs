@@ -7,8 +7,7 @@ namespace CoolapkLite.Models.Message
     public class MessageExtraModel : Entity
     {
         public string Title { get; private set; }
-        public string Dateline { get; private set; }
-        public DateTime DateTime { get; private set; }
+        public DateTimeOffset Dateline { get; private set; }
 
         public MessageExtraModel(JObject token) : base(token)
         {
@@ -19,9 +18,7 @@ namespace CoolapkLite.Models.Message
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
-                Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
-                DateTime = dateTimeOffset.LocalDateTime;
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
         }
 

@@ -1,19 +1,20 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CoolapkLite.Helpers;
+using Newtonsoft.Json.Linq;
 using System;
 
 namespace CoolapkLite.Models.Users
 {
     public class ContactModel : Entity
     {
-        public int DateLine { get; private set; }
         public bool IsFriend { get; private set; }
         public UserModel UserInfo { get; private set; }
+        public DateTimeOffset Dateline { get; private set; }
 
         public ContactModel(JObject token) : base(token)
         {
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                DateLine = dateline.ToObject<int>();
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("isfriend", out JToken isfriend))

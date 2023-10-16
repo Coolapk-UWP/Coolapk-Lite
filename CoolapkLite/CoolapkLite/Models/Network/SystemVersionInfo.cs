@@ -31,19 +31,14 @@ namespace CoolapkLite.Models.Network
 
         public static bool operator !=(SystemVersionInfo left, SystemVersionInfo right) => !(left == right);
 
-        public int CompareTo(SystemVersionInfo other)
-        {
-            return Major != other.Major
+        public int CompareTo(SystemVersionInfo other) =>
+            Major != other.Major
                 ? Major.CompareTo(other.Major)
                 : Minor != other.Minor
                 ? Minor.CompareTo(other.Minor)
                 : Build != other.Build ? Build.CompareTo(other.Build) : Revision != other.Revision ? Revision.CompareTo(other.Revision) : 0;
-        }
 
-        public int CompareTo(object obj)
-        {
-            return obj is SystemVersionInfo other ? CompareTo(other) : throw new ArgumentException();
-        }
+        public int CompareTo(object obj) => obj is SystemVersionInfo other ? CompareTo(other) : throw new ArgumentException();
 
         public static bool operator <(SystemVersionInfo left, SystemVersionInfo right) => left.CompareTo(right) < 0;
 
@@ -82,5 +77,13 @@ namespace CoolapkLite.Models.Network
         }
 
         public override string ToString() => $"{Major}.{Minor}.{Build}.{Revision}";
+
+        public static implicit operator SystemVersionInfo(Version version) => new SystemVersionInfo(version.Major, version.Minor, version.Build, version.Revision);
+
+        public static implicit operator SystemVersionInfo(PackageVersion version) => new SystemVersionInfo(version.Major, version.Minor, version.Build, version.Revision);
+
+        public static implicit operator Version(SystemVersionInfo version) => new Version(version.Major, version.Minor, version.Build, version.Revision);
+
+        public static explicit operator PackageVersion(SystemVersionInfo version) => new PackageVersion { Major = (ushort)version.Major, Minor = (ushort)version.Minor, Build = (ushort)version.Build, Revision = (ushort)version.Revision };
     }
 }

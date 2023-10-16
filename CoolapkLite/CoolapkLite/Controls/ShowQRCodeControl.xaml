@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Grid Margin="4">
@@ -32,9 +33,9 @@
             ToolTipService.ToolTip="{x:Bind QRCodeText, Mode=OneWay}">
             <controls:QRCode
                 Padding="8"
+                helpers:UIElementHelper.CornerRadius="0"
                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                 Content="{x:Bind QRCodeText}"
-                ContentCornerRadius="0"
                 Foreground="{ThemeResource ApplicationForegroundThemeBrush}"
                 RequestedTheme="Light" />
         </Button>

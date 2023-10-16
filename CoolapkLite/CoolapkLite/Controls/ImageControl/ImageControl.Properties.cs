@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Models.Images;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -57,22 +58,12 @@ namespace CoolapkLite.Controls
         #region CornerRadius
 
         /// <summary>
-        /// Identifies the <see cref="ImageCornerRadius"/> dependency property.
+        /// Gets or sets the radius for the corners of the control's border.
         /// </summary>
-        public static readonly DependencyProperty ImageCornerRadiusProperty =
-            DependencyProperty.Register(
-                nameof(ImageCornerRadius),
-                typeof(CornerRadius),
-                typeof(ImageControl),
-                null);
-
-        /// <summary>
-        /// Gets or sets the payload which shall be encoded in the QR code.
-        /// </summary>
-        public CornerRadius ImageCornerRadius
+        public new CornerRadius CornerRadius
         {
-            get => (CornerRadius)GetValue(ImageCornerRadiusProperty);
-            set => SetValue(ImageCornerRadiusProperty, value);
+            get => (CornerRadius)GetValue(UIElementHelper.CornerRadiusProperty);
+            set => SetValue(UIElementHelper.CornerRadiusProperty, value);
         }
 
         #endregion

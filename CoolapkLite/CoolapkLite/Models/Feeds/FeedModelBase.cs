@@ -149,7 +149,7 @@ namespace CoolapkLite.Models.Feeds
 
             InfoHTML = token.TryGetValue("infoHtml", out JToken infoHtml) && !string.IsNullOrEmpty(infoHtml.ToString())
                 ? infoHtml.ToString()
-                : Dateline;
+                : Dateline.ConvertDateTimeOffsetToReadable();
 
             if (token.TryGetValue("likenum", out JToken likenum))
             {

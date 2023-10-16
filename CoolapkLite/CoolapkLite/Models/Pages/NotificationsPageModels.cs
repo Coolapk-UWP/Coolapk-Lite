@@ -2,7 +2,9 @@
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Images;
 using HtmlAgilityPack;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Text;
 using Windows.ApplicationModel.Resources;
@@ -16,12 +18,13 @@ namespace CoolapkLite.Models.Pages
         public bool IsNew { get; protected set; }
 
         public string Url { get; protected set; }
+        public string Status { get; protected set; }
         public string UserUrl { get; protected set; }
         public string UserName { get; protected set; }
-        public string Dateline { get; protected set; }
         public string BlockStatus { get; protected set; }
 
         public ImageModel UserAvatar { get; protected set; }
+        public DateTimeOffset Dateline { get; protected set; }
 
         protected NotificationModel(JObject token) : base(token)
         {
@@ -54,7 +57,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("note", out JToken _note))
@@ -85,18 +88,23 @@ namespace CoolapkLite.Models.Pages
                 UserName = string.Join(" ", new[] { fromusername.ToString(), BlockStatus }.Where(x => !string.IsNullOrWhiteSpace(x)));
             }
 
+            string[] strings = new string[2];
+
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
             {
-                Dateline += " [已折叠]";
+                strings[0] = "[已折叠]";
             }
 
             if (token.TryGetValue("status", out JToken status) && status.ToString() == "-1")
             {
-                Dateline += " [仅自己可见]";
+                strings[1] += " [仅自己可见]";
             }
+
+            Status = string.Join(" ", strings.Where(string.IsNullOrWhiteSpace));
         }
 
         public override string ToString() => new StringBuilder().TryAppendLine(UserName)
+                                                                .AppendLine(Dateline.ConvertDateTimeOffsetToReadable())
                                                                 .Append(Note.HtmlToString())
                                                                 .ToString();
     }
@@ -128,7 +136,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("extra_title", out JToken extra_title))
@@ -156,19 +164,23 @@ namespace CoolapkLite.Models.Pages
                 UserName = string.Join(" ", new[] { username.ToString(), BlockStatus }.Where(x => !string.IsNullOrWhiteSpace(x)));
             }
 
+            string[] strings = new string[2];
+
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
             {
-                Dateline += " [已折叠]";
+                strings[0] = "[已折叠]";
             }
 
             if (token.TryGetValue("status", out JToken status) && status.ToString() == "-1")
             {
-                Dateline += " [仅自己可见]";
+                strings[1] = "[仅自己可见]";
             }
+
+            Status = string.Join(" ", strings.Where(string.IsNullOrWhiteSpace));
         }
 
         public override string ToString() => new StringBuilder().AppendLineFormat("{0}提及", UserName)
-                                                                .TryAppendLine(Dateline)
+                                                                .AppendLine(Dateline.ConvertDateTimeOffsetToReadable())
                                                                 .Append(Message.HtmlToString())
                                                                 .ToString();
     }
@@ -204,7 +216,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("likeTime", out JToken likeTime))
             {
-                Dateline = likeTime.ToObject<long>().ConvertUnixTimeStampToReadable();
+                Dateline = likeTime.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("likeAvatar", out JToken likeAvatar))
@@ -225,22 +237,26 @@ namespace CoolapkLite.Models.Pages
                 UserName = string.Join(" ", new[] { likeUsername.ToString(), BlockStatus }.Where(x => !string.IsNullOrWhiteSpace(x)));
             }
 
+            string[] strings = new string[2];
+
             if (token.TryGetValue("block_status", out JToken block_status) && block_status.ToString() != "0")
             {
-                Dateline += " [已折叠]";
+                strings[0] = " [已折叠]";
             }
 
             if (token.TryGetValue("status", out JToken status) && status.ToString() == "-1")
             {
-                Dateline += " [仅自己可见]";
+                strings[1] = " [仅自己可见]";
             }
+
+            Status = string.Join(" ", strings.Where(string.IsNullOrWhiteSpace));
 
             FeedDetail = new SourceFeedModel(token);
         }
 
         public override string ToString() => new StringBuilder().Append(UserName)
                                                                 .AppendLine(Title)
-                                                                .TryAppendLine(Dateline)
+                                                                .TryAppendLine(Dateline.ConvertDateTimeOffsetToReadable())
                                                                 .AppendLine("点赞动态：")
                                                                 .Append(FeedDetail)
                                                                 .ToString();
@@ -269,7 +285,7 @@ namespace CoolapkLite.Models.Pages
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToReadable();
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("message", out JToken message))
@@ -308,7 +324,7 @@ namespace CoolapkLite.Models.Pages
         }
 
         public override string ToString() => new StringBuilder().AppendLineFormat("{0}私信", UserName)
-                                                                .TryAppendLine(Dateline)
+                                                                .TryAppendLine(Dateline.ConvertDateTimeOffsetToReadable())
                                                                 .Append(FeedMessage.HtmlToString())
                                                                 .ToString();
     }

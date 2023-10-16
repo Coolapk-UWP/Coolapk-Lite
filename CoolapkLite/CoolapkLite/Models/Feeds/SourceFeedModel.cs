@@ -51,15 +51,14 @@ namespace CoolapkLite.Models.Feeds
 
         public string Url { get; private set; }
         public string Message { get; private set; }
-        public string Dateline { get; private set; }
         public string ShareUrl { get; private set; }
         public string MessageTitle { get; private set; }
         public string FeedType { get; private set; } = "feed";
 
         public ImageModel Pic { get; private set; }
-        public DateTime DateTime { get; private set; }
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
+        public DateTimeOffset Dateline { get; private set; }
 
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
 
@@ -148,9 +147,7 @@ namespace CoolapkLite.Models.Feeds
 
             if (token.TryGetValue("dateline", out JToken dateline))
             {
-                DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
-                Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
-                DateTime = dateTimeOffset.LocalDateTime;
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0)

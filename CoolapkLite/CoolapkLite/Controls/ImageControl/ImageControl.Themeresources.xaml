@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CoolapkLite.Controls">
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:helpers="using:CoolapkLite.Helpers">
 
     <Style x:Key="DefaultImageControlStyle" TargetType="controls:ImageControl">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -16,7 +17,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding ImageCornerRadius}">
+                        CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}">
                         <Grid
                             Name="PlaceholderImage"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -131,7 +132,7 @@
                             Background="{ThemeResource ControlAltFillColorQuarternaryBrush}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}"
                             Opacity="1.0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*" />
@@ -160,7 +161,7 @@
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}"
                             Opacity="0.0"
                             Visibility="Collapsed">
                             <Border.Background>
@@ -246,7 +247,7 @@
                             Background="{ThemeResource ControlAltFillColorQuarternaryBrush}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="{TemplateBinding ImageCornerRadius}"
+                            CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}"
                             Opacity="1.0">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*" />

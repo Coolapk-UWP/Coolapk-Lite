@@ -39,7 +39,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Converters
 
             try
             {
-                CultureInfo culture = string.IsNullOrWhiteSpace(language) ? CultureInfo.InvariantCulture : new CultureInfo(language);
+                CultureInfo culture = string.IsNullOrWhiteSpace(language) ? CultureInfo.CurrentUICulture : new CultureInfo(language);
                 return string.Format(culture, formatString, value);
             }
             catch

@@ -150,6 +150,11 @@ namespace CoolapkLite.Helpers
         public static bool IsFrameworkElementIsLoadedSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "IsLoaded");
 
         /// <summary>
+        /// Is <see cref="Windows.UI.Xaml.UIElement.ContextFlyout"/> supported.
+        /// </summary>
+        public static bool IsContextFlyoutSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "ContextFlyout");
+
+        /// <summary>
         /// Is <see cref="Windows.UI.Xaml.UIElement.XamlRoot"/> supported.
         /// </summary>
         public static bool IsXamlRootSupported { get; } = ApiInformation.IsPropertyPresent("Windows.UI.Xaml.UIElement", "XamlRoot");

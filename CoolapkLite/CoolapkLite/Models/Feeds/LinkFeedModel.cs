@@ -75,17 +75,6 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        private string dateline;
-        public string Dateline
-        {
-            get => dateline;
-            set
-            {
-                dateline = value;
-                RaisePropertyChangedEvent();
-            }
-        }
-
         private bool showUser = true;
         public bool ShowUser
         {
@@ -114,20 +103,6 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        private DateTime dateTime;
-        public DateTime DateTime
-        {
-            get => dateTime;
-            set
-            {
-                if (dateTime != value)
-                {
-                    dateTime = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
         private LinkUserModel userInfo;
         public LinkUserModel UserInfo
         {
@@ -135,6 +110,17 @@ namespace CoolapkLite.Models.Feeds
             set
             {
                 userInfo = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        private DateTimeOffset dateline;
+        public DateTimeOffset Dateline
+        {
+            get => dateline;
+            set
+            {
+                dateline = value;
                 RaisePropertyChangedEvent();
             }
         }
@@ -248,9 +234,7 @@ namespace CoolapkLite.Models.Feeds
                 }
                 if (data.TryGetValue("dateline", out JToken dateline))
                 {
-                    DateTimeOffset dateTimeOffset = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
-                    Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
-                    DateTime = dateTimeOffset.LocalDateTime;
+                    Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
                 }
                 if (data.TryGetValue("message_title", out JToken message_title))
                 {
@@ -351,8 +335,7 @@ namespace CoolapkLite.Models.Feeds
                 }
                 if (data.TryGetValue("createTime", out JToken createTime) && DateTimeOffset.TryParse(createTime.ToString(), out DateTimeOffset dateTimeOffset))
                 {
-                    Dateline = dateTimeOffset.ConvertDateTimeOffsetToReadable();
-                    DateTime = dateTimeOffset.LocalDateTime;
+                    Dateline = dateTimeOffset;
                 }
             }
         }

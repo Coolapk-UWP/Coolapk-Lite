@@ -343,8 +343,8 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         TextTrimming="CharacterEllipsis"
-                        ToolTipService.ToolTip="{x:Bind FeedDetail.DateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}, Mode=OneWay}">
-                        <Run Text="{x:Bind FeedDetail.Dateline, Mode=OneWay}" />
+                        ToolTipService.ToolTip="{x:Bind FeedDetail.Dateline.LocalDateTime, Converter={StaticResource StringFormatConverter}, ConverterParameter='发布时间：{0:F}', ConverterLanguage={StaticResource LanguageCodeResource}, Mode=OneWay}">
+                        <Run Text="{x:Bind FeedDetail.Dateline, Converter={StaticResource DateLineToReadableConverter}, Mode=OneWay}" />
                         <Run Text="{x:Bind FeedDetail.Info, Mode=OneWay}" />
                         <Hyperlink
                             Click="DeviceHyperlink_Click"

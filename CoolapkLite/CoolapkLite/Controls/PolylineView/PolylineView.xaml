@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CoolapkLite.Controls">
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:helpers="using:CoolapkLite.Helpers">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
             <StaticResource x:Key="PolylineViewForeground" ResourceKey="TextFillColorPrimaryBrush" />
@@ -37,7 +38,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding ContentCornerRadius}">
+                        CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}">
                         <Border
                             x:Name="PART_PolylineBorder"
                             HorizontalAlignment="Stretch"

@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Text;
 using Windows.ApplicationModel.Resources;
 
@@ -17,8 +18,6 @@ namespace CoolapkLite.Models.Users
         public int UID { get; private set; }
         public int Level { get; private set; }
         public int Status { get; private set; }
-        public int RegDate { get; private set; }
-        public int LoginTime { get; private set; }
         public int Experience { get; private set; }
         public int BlockStatus { get; private set; }
 
@@ -32,6 +31,9 @@ namespace CoolapkLite.Models.Users
 
         public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
+
+        public DateTimeOffset RegDate { get; private set; }
+        public DateTimeOffset LoginTime { get; private set; }
 
         public string Url => $"/u/{UID}";
         public string Title => UserName;
@@ -77,7 +79,7 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("regdate", out JToken regdate))
             {
-                RegDate = regdate.ToObject<int>();
+                RegDate = regdate.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("username", out JToken username))
@@ -87,8 +89,8 @@ namespace CoolapkLite.Models.Users
 
             if (token.TryGetValue("logintime", out JToken logintime))
             {
-                LoginTime = logintime.ToObject<int>();
-                LoginText = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
+                LoginTime = logintime.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
+                LoginText = $"{LoginTime.ConvertDateTimeOffsetToReadable()}活跃";
             }
 
             if (token.TryGetValue("follow", out JToken follow))

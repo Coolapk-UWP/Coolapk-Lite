@@ -79,9 +79,8 @@ namespace CoolapkLite.Models
     {
         bool ShowUser { get; set; }
         string Message { get; }
-        string Dateline { get; }
         string MessageTitle { get; }
-        DateTime DateTime { get; }
+        DateTimeOffset Dateline { get; }
         ISourceUserModel UserInfo { get; }
         ImmutableArray<ImageModel> PicArr { get; }
     }

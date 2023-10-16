@@ -1,7 +1,8 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:CoolapkLite.Controls">
+    xmlns:controls="using:CoolapkLite.Controls"
+    xmlns:helpers="using:CoolapkLite.Helpers">
     <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Default">
             <StaticResource x:Key="QRCodeForeground" ResourceKey="TextFillColorPrimaryBrush" />
@@ -24,7 +25,7 @@
 
     <Style x:Key="DefaultQRCodeStyle" TargetType="controls:QRCode">
         <Setter Property="Foreground" Value="{ThemeResource QRCodeForeground}" />
-        <Setter Property="ContentCornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
+        <Setter Property="helpers:UIElementHelper.CornerRadius" Value="{ThemeResource OverlayCornerRadius}" />
         <Setter Property="MinHeight" Value="{ThemeResource QRCodeMinHeight}" />
         <Setter Property="MinWidth" Value="{ThemeResource QRCodeMinWidth}" />
         <Setter Property="Padding" Value="{ThemeResource QRCodePadding}" />
@@ -40,7 +41,7 @@
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding ContentCornerRadius}">
+                        CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}">
                         <Path
                             x:Name="PART_QRCodePath"
                             Data="{Binding TemplateSettings.GeometryGroup, RelativeSource={RelativeSource Mode=TemplatedParent}}"
