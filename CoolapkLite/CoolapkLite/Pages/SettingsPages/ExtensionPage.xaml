@@ -20,7 +20,7 @@
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
             ItemsSource="{x:Bind Provider.Extensions, Mode=OneWay}"
-            RefreshRequested="ListView_RefreshRequested"
+            RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
                 <DataTemplate x:DataType="common:Extension">
@@ -87,8 +87,9 @@
         <control:TitleBar
             x:Name="TitleBar"
             Title="{x:Bind Title}"
+            DoubleTappedRequested="{x:Bind ListView.BackToTop}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
-            RefreshRequested="TitleBar_RefreshEvent" />
+            RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}" />
     </Grid>
 </Page>

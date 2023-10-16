@@ -98,6 +98,7 @@
                     Content="修改 UserAgent"
                     Tag="CustomUA"
                     Visibility="{x:Bind IsCustomUAToggle.IsOn, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                <ToggleSwitch Header="是否修改浏览器 UserAgent" IsOn="{x:Bind Provider.IsChangeBrowserUA, Mode=TwoWay}" />
                 <ComboBox
                     x:Name="ComboBoxVersion"
                     Header="选择兼容版本号"
@@ -235,11 +236,12 @@
                         <Button
                             Click="Button_Click"
                             Content="重启应用"
+                            IsEnabled="{x:Bind Provider.IsRequestRestartAsyncSupported}"
                             Tag="RestartApp" />
                         <Button
                             Click="Button_Click"
                             Content="最小化应用"
-                            IsEnabled="{x:Bind Provider.IsAppDiagnosticInfoSupported}"
+                            IsEnabled="{x:Bind Provider.IsRequestInfoForAppAsyncSupported}"
                             Tag="MinimizeApp" />
                     </control:StackPanelEx>
                     <control:StackPanelEx Orientation="Horizontal" Spacing="4">

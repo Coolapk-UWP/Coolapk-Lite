@@ -21,7 +21,7 @@
             IsBackButtonVisible="False"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
-            RefreshRequested="TitleBar_RefreshRequested">
+            RefreshRequested="{x:Bind WebView.Refresh}">
             <Grid>
                 <Button
                     x:Name="GotoSystemBrowserButton"

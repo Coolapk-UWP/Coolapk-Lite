@@ -158,7 +158,6 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void TitleBar_DoubleTappedRequested(TitleBar sender, DoubleTappedRoutedEventArgs args)
         {
-            if (args?.Handled == true) { return; }
             if (args != null)
             {
                 args.Handled = TwoPaneView.Mode == TwoPaneViewMode.SinglePane

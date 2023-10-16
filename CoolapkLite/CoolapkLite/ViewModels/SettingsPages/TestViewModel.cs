@@ -34,17 +34,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsSearchPaneSupported { get; } = SettingsPaneRegister.IsSearchPaneSupported;
 
-        public bool IsSettingsPaneSupported { get; } = SettingsPaneRegister.IsSettingsPaneSupported;
-
         public bool IsAppExtensionSupported { get; } = ExtensionManager.IsOSSUploaderSupported;
+
+        public bool IsSettingsPaneSupported { get; } = SettingsPaneRegister.IsSettingsPaneSupported;
 
         public bool IsCompactOverlaySupported { get; } = ApiInfoHelper.IsApplicationViewViewModeSupported;
 
         public bool IsGetElementVisualSupported { get; } = ApiInfoHelper.IsGetElementVisualSupported;
 
-        public bool IsAppDiagnosticInfoSupported { get; } = ApiInfoHelper.IsAppDiagnosticInfoSupported;
+        public bool IsRequestRestartAsyncSupported { get; } = ApiInfoHelper.IsRequestRestartAsyncSupported;
 
         public bool IsXamlCompositionBrushSupported { get; } = ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
+
+        public bool IsRequestInfoForAppAsyncSupported { get; } = ApiInfoHelper.IsRequestInfoForAppAsyncSupported;
 
         public ImmutableArray<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
 
@@ -182,6 +184,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 SettingsHelper.Set(SettingsHelper.IsUseVirtualizing, value);
                 ItemsPanelSelector.IsVirtualizing = value;
+                RaisePropertyChangedEvent();
+            }
+        }
+
+        public bool IsChangeBrowserUA
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsChangeBrowserUA);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.IsChangeBrowserUA, value);
                 RaisePropertyChangedEvent();
             }
         }
@@ -393,6 +405,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsUseBlurBrush),
                     nameof(IsUseCompositor),
                     nameof(IsUseVirtualizing),
+                    nameof(IsChangeBrowserUA),
                     nameof(IsUseBackgroundTask),
                     nameof(IsEnableLazyLoading),
                     nameof(SemaphoreSlimCount));

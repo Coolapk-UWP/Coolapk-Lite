@@ -74,7 +74,7 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 case "OutPIP":
                     if (this.IsAppWindow())
-                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
+                    { _ = this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
                     else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
@@ -84,7 +84,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "EnterPIP":
                     if (this.IsAppWindow())
-                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
+                    { _ = this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.CompactOverlay); }
                     else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay); }
@@ -105,28 +105,25 @@ namespace CoolapkLite.Pages.SettingsPages
                         {
                             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
                         }
-                        Frame frame = new Frame();
-                        window.Content = frame;
+                        Frame _frame = new Frame();
+                        window.Content = _frame;
                         ThemeHelper.Initialize(window);
-                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                        Type _page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                        _ = _frame.Navigate(_page, null, new DrillInNavigationTransitionInfo());
                     });
                     _ = UIHelper.HideProgressBarAsync(UIHelper.AppTitle);
                     break;
-                case "NewAppWindow":
-                    if (WindowHelper.IsAppWindowSupported)
+                case "NewAppWindow" when WindowHelper.IsAppWindowSupported:
+                    (AppWindow appWindow, Frame frame) = await WindowHelper.CreateWindowAsync();
+                    if (Provider.IsExtendsTitleBar)
                     {
-                        (AppWindow window, Frame frame) = await WindowHelper.CreateWindowAsync();
-                        if (Provider.IsExtendsTitleBar)
-                        {
-                            window.TitleBar.ExtendsContentIntoTitleBar = true;
-                        }
-                        ThemeHelper.Initialize(window);
-                        Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
-                        _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
-                        await window.TryShowAsync();
-                        _ = Dispatcher.HideProgressBarAsync();
+                        appWindow.TitleBar.ExtendsContentIntoTitleBar = true;
                     }
+                    ThemeHelper.Initialize(appWindow);
+                    Type page = SettingsHelper.Get<bool>(SettingsHelper.IsUseLiteHome) ? typeof(PivotPage) : typeof(MainPage);
+                    _ = frame.Navigate(page, null, new DrillInNavigationTransitionInfo());
+                    await appWindow.TryShowAsync();
+                    _ = Dispatcher.HideProgressBarAsync();
                     break;
                 case "CustomAPI":
                     APIVersionDialog _APIVersionDialog = new APIVersionDialog(Provider.UserAgent);
@@ -165,7 +162,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     };
                     _ = await GetJsonDialog.ShowAsync();
                     break;
-                case "RestartApp":
+                case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
                     break;
                 case "ShowMessage":
@@ -189,12 +186,12 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "OpenBrowser":
                     _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel(WebUrl.Text, Dispatcher));
                     break;
-                case "MinimizeApp" when ApiInfoHelper.IsAppDiagnosticInfoSupported:
+                case "MinimizeApp" when ApiInfoHelper.IsRequestInfoForAppAsyncSupported:
                     _ = (await AppDiagnosticInfo.RequestInfoForAppAsync()).FirstOrDefault()?.GetResourceGroups().FirstOrDefault()?.StartSuspendAsync();
                     break;
                 case "OutFullWindow":
                     if (this.IsAppWindow())
-                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    { _ = this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
                     else
                     { ApplicationView.GetForCurrentView().ExitFullScreenMode(); }
                     break;
@@ -213,10 +210,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = this.HideProgressBarAsync();
                     break;
                 case "EnterFullWindow":
-                    if (this.IsAppWindow())
-                    { this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
-                    else
-                    { _ = ApplicationView.GetForCurrentView().TryEnterFullScreenMode(); }
+                    _ = this.IsAppWindow()
+                        ? this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen)
+                        : ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
                     break;
                 case "ErrorProgressBar":
                     _ = this.ErrorProgressBarAsync();
@@ -234,10 +230,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = this.PausedProgressBarAsync();
                     break;
                 case "ProgressRingState":
-                    if (UIHelper.IsShowingProgressBar)
-                    { _ = this.HideProgressBarAsync(); }
-                    else
-                    { _ = this.ShowProgressBarAsync(); }
+                    _ = UIHelper.IsShowingProgressBar ? this.HideProgressBarAsync() : this.ShowProgressBarAsync();
                     break;
                 case "GoToFansAnalyzePage":
                     _ = Frame.Navigate(typeof(FansAnalyzePage), new FansAnalyzeViewModel("1122745", Dispatcher));

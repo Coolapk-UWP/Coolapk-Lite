@@ -37,11 +37,6 @@ namespace CoolapkLite.Helpers
         public static bool IsAppCapabilitySupported { get; } = ApiInformation.IsTypePresent("Windows.Security.Authorization.AppCapabilityAccess.AppCapability");
 
         /// <summary>
-        /// Is <see cref="Windows.System.AppDiagnosticInfo"/> supported.
-        /// </summary>
-        public static bool IsAppDiagnosticInfoSupported { get; } = ApiInformation.IsTypePresent("Windows.System.AppDiagnosticInfo");
-
-        /// <summary>
         /// Is <see cref="Windows.UI.ApplicationSettings.SettingsPane"/> supported.
         /// </summary>
         public static bool IsSettingsPaneSupported { get; } = ApiInformation.IsTypePresent("Windows.UI.ApplicationSettings.SettingsPane");
@@ -99,6 +94,16 @@ namespace CoolapkLite.Helpers
         /// Is <see cref="Windows.ApplicationModel.Core.CoreApplication.EnablePrelaunch(bool)"/> supported.
         /// </summary>
         public static bool IsEnablePrelaunchSupported { get; } = ApiInformation.IsMethodPresent("Windows.ApplicationModel.Core.CoreApplication", "EnablePrelaunch");
+
+        /// <summary>
+        /// Is <see cref="Windows.ApplicationModel.Core.CoreApplication.RequestRestartAsync(string)"/> supported.
+        /// </summary>
+        public static bool IsRequestRestartAsyncSupported { get; } = ApiInformation.IsMethodPresent("Windows.ApplicationModel.Core.CoreApplication", "RequestRestartAsync");
+
+        /// <summary>
+        /// Is <see cref="Windows.System.AppDiagnosticInfo.RequestInfoForAppAsync()"/> supported.
+        /// </summary>
+        public static bool IsRequestInfoForAppAsyncSupported { get; } = ApiInformation.IsMethodPresent("Windows.System.AppDiagnosticInfo", "RequestInfoForAppAsync");
 
         /// <summary>
         /// Is <see cref="Windows.UI.Composition.Compositor.TryCreateBlurredWallpaperBackdropBrush"/> supported.

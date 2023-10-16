@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Controls.Dialogs;
+﻿using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.BrowserPages;
 using System;
@@ -78,7 +77,7 @@ namespace CoolapkLite.Pages.BrowserPages
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             _ = this.ShowProgressBarAsync();
-            if (args.Uri.Host.Contains("coolapk"))
+            if (Provider.IsChangeBrowserUA || args.Uri.Host.Contains("coolapk"))
             {
                 WebView.NavigationStarting -= WebView_NavigationStarting;
                 args.Cancel = true;
@@ -140,20 +139,11 @@ namespace CoolapkLite.Pages.BrowserPages
             _ = this.ShowProgressBarAsync();
             LoginDialog Dialog = new LoginDialog();
             ContentDialogResult result = await Dialog.ShowAsync();
-            if (result == ContentDialogResult.Primary)
-            {
-                _ = CheckLoginAsync();
-            }
-            else
-            {
-                _ = this.HideProgressBarAsync();
-            }
+            _ = result == ContentDialogResult.Primary ? CheckLoginAsync() : this.HideProgressBarAsync();
         }
-
-        private void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(WebView.Source);
 
         private void TryLoginButton_Click(object sender, RoutedEventArgs e) => _ = CheckLoginAsync();
 
-        private void TitleBar_RefreshRequested(TitleBar sender, object args) => WebView.Refresh();
+        private void GotoSystemBrowserButton_Click(object sender, RoutedEventArgs e) => _ = Launcher.LaunchUriAsync(WebView.Source);
     }
 }

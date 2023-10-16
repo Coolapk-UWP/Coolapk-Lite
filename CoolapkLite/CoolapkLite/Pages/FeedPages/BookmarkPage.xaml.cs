@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Controls.Dialogs;
+﻿using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.FeedPages;
@@ -110,8 +109,6 @@ namespace CoolapkLite.Pages.FeedPages
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
-        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
-
-        private void ListView_RefreshRequested(object sender, EventArgs e) => _ = Refresh(true);
+        private void FrameworkElement_RefreshEvent() => _ = Refresh(true);
     }
 }

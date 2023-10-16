@@ -1,7 +1,5 @@
-﻿using CoolapkLite.Controls;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.SettingsPages;
-using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Xaml;
@@ -73,9 +71,7 @@ namespace CoolapkLite.Pages.SettingsPages
 
         public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
-        private void TitleBar_RefreshEvent(TitleBar sender, object e) => _ = Refresh(true);
-
-        private void ListView_RefreshRequested(object sender, EventArgs e) => _ = Refresh(true);
+        private void FrameworkElement_RefreshEvent() => _ = Refresh(true);
 
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {

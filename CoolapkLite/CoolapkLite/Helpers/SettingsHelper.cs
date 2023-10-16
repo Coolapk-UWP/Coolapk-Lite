@@ -39,6 +39,7 @@ namespace CoolapkLite.Helpers
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
+        public const string IsChangeBrowserUA = nameof(IsChangeBrowserUA);
         public const string IsExtendsTitleBar = nameof(IsExtendsTitleBar);
         public const string IsUseNoPicFallback = nameof(IsUseNoPicFallback);
         public const string ShowOtherException = nameof(ShowOtherException);
@@ -146,6 +147,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(IsUseVirtualizing))
             {
                 LocalObject.Save(IsUseVirtualizing, true);
+            }
+            if (!LocalObject.KeyExists(IsChangeBrowserUA))
+            {
+                LocalObject.Save(IsChangeBrowserUA, false);
             }
             if (!LocalObject.KeyExists(IsExtendsTitleBar))
             {

@@ -99,7 +99,11 @@ namespace CoolapkLite.Controls
 
         private void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs args)
         {
-            DoubleTappedRequested?.Invoke(this, args);
+            if (DoubleTappedRequested != null)
+            {
+                args.Handled = true;
+                DoubleTappedRequested.Invoke(this, args);
+            }
         }
 
         public void OnIconSourcePropertyChanged(DependencyPropertyChangedEventArgs args)

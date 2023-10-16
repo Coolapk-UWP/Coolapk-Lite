@@ -16,15 +16,9 @@ namespace CoolapkLite.ViewModels.DataSource
 
         protected static bool IsFullLoad => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
 
-        public EntityItemSource()
-        {
-            Dispatcher = UIHelper.TryGetForCurrentCoreDispatcher();
-        }
+        public EntityItemSource() => Dispatcher = UIHelper.TryGetForCurrentCoreDispatcher();
 
-        public EntityItemSource(CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
-        }
+        public EntityItemSource(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
         protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
         {
