@@ -202,7 +202,7 @@ namespace CoolapkLite.Helpers
     {
         public static event TypedEventHandler<string, bool> LoginChanged;
         public static readonly ILogManager LogManager = LogManagerFactory.CreateLogManager();
-        public static readonly ApplicationDataStorageHelper LocalObject = ApplicationDataStorageHelper.GetCurrent(new SystemTextJsonObjectSerializer());
+        public static readonly ApplicationDataStorageHelper LocalObject = ApplicationDataStorageHelper.GetCurrent(new NewtonsoftJsonObjectSerializer());
 
         static SettingsHelper() => SetDefaultSettings();
 
@@ -325,7 +325,7 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    public class SystemTextJsonObjectSerializer : IObjectSerializer
+    public class NewtonsoftJsonObjectSerializer : IObjectSerializer
     {
         // Specify your serialization settings
         private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };

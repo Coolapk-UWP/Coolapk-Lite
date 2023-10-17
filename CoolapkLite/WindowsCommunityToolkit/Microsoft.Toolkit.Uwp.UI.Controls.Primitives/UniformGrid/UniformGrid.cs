@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
+using Windows.Foundation.Metadata;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -83,8 +84,15 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
             double columnSpacingSize = 0;
             double rowSpacingSize = 0;
 
-            columnSpacingSize = ColumnSpacing * (columns - 1);
-            rowSpacingSize = RowSpacing * (rows - 1);
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Grid", "ColumnSpacing"))
+            {
+                columnSpacingSize = ColumnSpacing * (columns - 1);
+            }
+
+            if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.Grid", "RowSpacing"))
+            {
+                rowSpacingSize = RowSpacing * (rows - 1);
+            }
 
             Size childSize = new Size(
                 (availableSize.Width - columnSpacingSize) / columns,
@@ -112,8 +120,18 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
                         SetRow(child, row);
                         SetColumn(child, column);
 
-                        int rowspan = GetRowSpan(child);
-                        int colspan = GetColumnSpan(child);
+                        int rowspan = 0;
+                        int colspan = 0;
+
+                        if (ApiInformation.IsMethodPresent("Windows.UI.Xaml.Controls.Grid", "GetRowSpan"))
+                        {
+                            rowspan = GetRowSpan(child);
+                        }
+
+                        if (ApiInformation.IsMethodPresent("Windows.UI.Xaml.Controls.Grid", "GetColumnSpan"))
+                        {
+                            colspan = GetColumnSpan(child);
+                        }
 
                         if (rowspan > 1 || colspan > 1)
                         {

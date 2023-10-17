@@ -46,9 +46,9 @@ namespace CoolapkLite.Common
 
             if (IsSettingsPaneSupported)
             {
-                SettingsPane searchPane = SettingsPane.GetForCurrentView();
-                searchPane.CommandsRequested -= OnCommandsRequested;
-                searchPane.CommandsRequested += OnCommandsRequested;
+                SettingsPane settingsPane = SettingsPane.GetForCurrentView();
+                settingsPane.CommandsRequested -= OnCommandsRequested;
+                settingsPane.CommandsRequested += OnCommandsRequested;
                 window.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
                 window.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
             }
