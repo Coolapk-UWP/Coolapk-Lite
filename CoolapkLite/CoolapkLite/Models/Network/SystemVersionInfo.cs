@@ -3,7 +3,7 @@ using Windows.ApplicationModel;
 
 namespace CoolapkLite.Models.Network
 {
-    public readonly struct SystemVersionInfo
+    public readonly struct SystemVersionInfo : IComparable, IEquatable<SystemVersionInfo>, IComparable<SystemVersionInfo>
     {
         public SystemVersionInfo(int major, int minor, int build, int revision = 0)
         {
@@ -51,12 +51,8 @@ namespace CoolapkLite.Models.Network
         /// <summary>
         /// Returns a string representation of a version with the format 'Major.Minor.Build.Revision'.
         /// </summary>
-        /// <param name="packageVersion">The <see cref="PackageVersion"/> to convert to a string</param>
         /// <param name="significance">The number of version numbers to return, default is 4 for the full version number.</param>
         /// <returns>Version string of the format 'Major.Minor.Build.Revision'</returns>
-        /// <example>
-        /// Package.Current.Id.Version.ToFormattedString(2); // Returns "7.0" for instance.
-        /// </example>
         public string ToString(int significance = 4)
         {
             switch (significance)
@@ -71,9 +67,7 @@ namespace CoolapkLite.Models.Network
                     return $"{Major}";
             }
 
-            string ThrowArgumentOutOfRangeException() => throw new ArgumentOutOfRangeException(nameof(significance), "Value must be a value 1 through 4.");
-
-            return ThrowArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(significance), "Value must be a value 1 through 4.");
         }
 
         public override string ToString() => $"{Major}.{Minor}.{Build}.{Revision}";

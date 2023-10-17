@@ -72,19 +72,13 @@ namespace CoolapkLite.Helpers
                         if (run != null)
                         {
                             SystemVersionInfo newVersionInfo = GetAsVersionInfo(run.CreatedDate, run.ID);
-                            int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
-                            int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
-                            int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
-                            int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
-
-                            SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
 
                             UpdateInfo updateInfo = new UpdateInfo
                             {
                                 CreatedAt = run.CreatedDate,
                                 PublishedAt = run.FinishedDate,
                                 ReleaseUrl = run.Links?.Web?.Href,
-                                IsExistNewVersion = newVersionInfo > currentVersionInfo,
+                                IsExistNewVersion = newVersionInfo > currentVersion,
                                 Version = newVersionInfo
                             };
 
@@ -174,14 +168,8 @@ namespace CoolapkLite.Helpers
                     if (result != null)
                     {
                         SystemVersionInfo newVersionInfo = GetAsVersionInfo(result.TagName);
-                        int major = currentVersion.Major <= 0 ? 0 : currentVersion.Major;
-                        int minor = currentVersion.Minor <= 0 ? 0 : currentVersion.Minor;
-                        int build = currentVersion.Build <= 0 ? 0 : currentVersion.Build;
-                        int revision = currentVersion.Revision <= 0 ? 0 : currentVersion.Revision;
 
-                        SystemVersionInfo currentVersionInfo = new SystemVersionInfo(major, minor, build, revision);
-
-                        result.IsExistNewVersion = newVersionInfo > currentVersionInfo;
+                        result.IsExistNewVersion = newVersionInfo > currentVersion;
                         result.Version = newVersionInfo;
 
                         return result;
