@@ -8,12 +8,13 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage.Streams;
 
 namespace CoolapkLite.Helpers
 {
-    public static partial class DataHelper
+    public static class DataHelper
     {
         public static string GetMD5(this string input)
         {
@@ -162,6 +163,26 @@ namespace CoolapkLite.Helpers
                     return str;
                 }
             }
+        }
+
+        public static TResult AwaitByTaskCompleteSource<TResult>(this Task<TResult> function, CancellationToken cancellationToken = default)
+        {
+            TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
+            Task<TResult> task = taskCompletionSource.Task;
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    TResult result = await function.ConfigureAwait(false);
+                    taskCompletionSource.SetResult(result);
+                }
+                catch (Exception e)
+                {
+                    taskCompletionSource.SetException(e);
+                }
+            }, cancellationToken);
+            TResult taskResult = task.Result;
+            return taskResult;
         }
 
 #if !NETCORE463

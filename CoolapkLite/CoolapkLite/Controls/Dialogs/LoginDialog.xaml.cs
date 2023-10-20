@@ -103,7 +103,7 @@ namespace CoolapkLite.Controls.Dialogs
 
         private void GetText(string name)
         {
-            if (UIHelper.AwaitByTaskCompleteSource(() => NetworkHelper.GetUserInfoByNameAsync(name)) is UserInfoModel results)
+            if (NetworkHelper.GetUserInfoByNameAsync(name).AwaitByTaskCompleteSource() is UserInfoModel results)
             {
                 UID = results.UID.ToString();
                 if (!string.IsNullOrWhiteSpace(results.UserName))

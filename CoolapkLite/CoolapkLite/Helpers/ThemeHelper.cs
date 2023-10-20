@@ -38,13 +38,13 @@ namespace CoolapkLite.Helpers
             window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
                 : window.Dispatcher?.HasThreadAccess == false
-                    ? UIHelper.AwaitByTaskCompleteSource(() =>
-                        window.Dispatcher?.AwaitableRunAsync(() =>
-                            window.Content is FrameworkElement _rootElement
-                                && _rootElement.RequestedTheme != ElementTheme.Default
-                                    ? _rootElement.RequestedTheme
-                                    : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
-                            CoreDispatcherPriority.High))
+                    ? window.Dispatcher?.AwaitableRunAsync(() =>
+                        window.Content is FrameworkElement _rootElement
+                            && _rootElement.RequestedTheme != ElementTheme.Default
+                                ? _rootElement.RequestedTheme
+                                : SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme),
+                        CoreDispatcherPriority.High)?.AwaitByTaskCompleteSource()
+                        ?? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
                     : window.Content is FrameworkElement rootElement
                         && rootElement.RequestedTheme != ElementTheme.Default
                             ? rootElement.RequestedTheme
@@ -91,12 +91,11 @@ namespace CoolapkLite.Helpers
                     ? window.Content is FrameworkElement rootElement
                         ? rootElement.RequestedTheme
                         : ElementTheme.Default
-                    : UIHelper.AwaitByTaskCompleteSource(() =>
-                        window.Dispatcher.AwaitableRunAsync(() =>
-                            window.Content is FrameworkElement _rootElement
-                                ? _rootElement.RequestedTheme
-                                : ElementTheme.Default,
-                            CoreDispatcherPriority.High));
+                    : window.Dispatcher.AwaitableRunAsync(() =>
+                        window.Content is FrameworkElement _rootElement
+                            ? _rootElement.RequestedTheme
+                            : ElementTheme.Default,
+                        CoreDispatcherPriority.High).AwaitByTaskCompleteSource();
 
         public static Task<ElementTheme> GetRootThemeAsync() =>
             GetRootThemeAsync(Window.Current ?? CurrentApplicationWindow);

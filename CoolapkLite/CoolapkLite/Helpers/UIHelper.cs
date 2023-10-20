@@ -15,7 +15,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -291,26 +290,6 @@ namespace CoolapkLite.Helpers
                                .TryAppendLine(ex.StackTrace)
                                .TryAppendLineFormat("HelperLink: {0}", ex.HelpLink)
                                .ToString();
-
-        public static TResult AwaitByTaskCompleteSource<TResult>(Func<Task<TResult>> function, CancellationToken cancellationToken = default)
-        {
-            TaskCompletionSource<TResult> taskCompletionSource = new TaskCompletionSource<TResult>();
-            Task<TResult> task = taskCompletionSource.Task;
-            _ = Task.Run(async () =>
-            {
-                try
-                {
-                    TResult result = await function.Invoke().ConfigureAwait(false);
-                    taskCompletionSource.SetResult(result);
-                }
-                catch (Exception e)
-                {
-                    taskCompletionSource.SetException(e);
-                }
-            }, cancellationToken);
-            TResult taskResult = task.Result;
-            return taskResult;
-        }
 
         public static CoreDispatcher TryGetForCurrentCoreDispatcher()
         {
