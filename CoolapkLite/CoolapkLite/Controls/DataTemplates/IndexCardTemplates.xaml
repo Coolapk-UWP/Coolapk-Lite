@@ -20,6 +20,7 @@
                     <controls:ImageControl
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
+                        EnableDrag="True"
                         Source="{x:Bind Pic}"
                         Style="{StaticResource ImageBrushImageControlStyle}" />
                 </DataTemplate>

@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
@@ -6,7 +7,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
@@ -255,17 +255,12 @@ namespace CoolapkLite.Pages
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
-            FrameworkElement element = scrollViewer.Content as FrameworkElement;
-            element.CanDrag = scrollViewer.ZoomFactor <= 1;
-        }
-
-        private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
-        {
-            DragOperationDeferral deferral = args.GetDeferral();
-            args.DragUI.SetContentFromDataPackage();
-            args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await (FlipView.SelectedItem as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
-            deferral.Complete();
+            ImageControl element = scrollViewer.Content as ImageControl;
+            bool isEnable = scrollViewer.ZoomFactor <= 1;
+            if (element.EnableDrag != isEnable)
+            {
+                element.EnableDrag = isEnable;
+            }
         }
 
         private void Image_PointerPressed(object sender, PointerRoutedEventArgs e)

@@ -9,8 +9,6 @@
         <Grid
             Width="102"
             Height="102"
-            CanDrag="True"
-            DragStarting="Border_DragStarting"
             KeyDown="Image_KeyDown"
             Tag="{x:Bind}"
             Tapped="Image_Tapped"
@@ -68,6 +66,7 @@
             <controls:ImageControl
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
+                EnableDrag="True"
                 Source="{x:Bind}"
                 Style="{StaticResource ImageBrushImageControlStyle}" />
             <StackPanel

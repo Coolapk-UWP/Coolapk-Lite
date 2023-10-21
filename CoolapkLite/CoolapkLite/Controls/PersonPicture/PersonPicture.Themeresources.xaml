@@ -100,6 +100,7 @@
                                 Stroke="{TemplateBinding BorderBrush}"
                                 StrokeThickness="{TemplateBinding BorderThickness}" />
                             <Ellipse
+                                x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Stroke="{StaticResource SystemControlTransparentBrush}"
@@ -277,6 +278,7 @@
                                 Stroke="{TemplateBinding BorderBrush}"
                                 StrokeThickness="{TemplateBinding BorderThickness}" />
                             <Ellipse
+                                x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Stroke="{StaticResource SystemControlTransparentBrush}"
@@ -433,6 +435,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}" />
                             <Border
+                                x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 BorderBrush="{StaticResource SystemControlTransparentBrush}"
@@ -610,6 +613,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}" />
                             <Border
+                                x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 BorderBrush="{StaticResource SystemControlTransparentBrush}"
@@ -754,7 +758,7 @@
                             </Viewbox>
                         </Grid>
                         <Border
-                            x:Name="Image"
+                            x:Name="PART_Image"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}"
@@ -769,10 +773,10 @@
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition From="Loading" To="Loaded">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Opacity">
                                                 <LinearDoubleKeyFrame KeyTime="{StaticResource ControlNormalAnimationDuration}" Value="1" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Opacity">
@@ -786,10 +790,10 @@
                                     </VisualTransition>
                                     <VisualTransition From="Loaded" To="Loading">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Opacity">
                                                 <LinearDoubleKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                                 <DiscreteObjectKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="Collapsed" />
                                             </ObjectAnimationUsingKeyFrames>
@@ -804,16 +808,16 @@
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Loading">
                                     <VisualState.Setters>
-                                        <Setter Target="Image.Opacity" Value="0" />
-                                        <Setter Target="Image.Visibility" Value="Collapsed" />
+                                        <Setter Target="PART_Image.Opacity" Value="0" />
+                                        <Setter Target="PART_Image.Visibility" Value="Collapsed" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="1" />
                                         <Setter Target="PlaceholderImage.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Loaded">
                                     <VisualState.Setters>
-                                        <Setter Target="Image.Opacity" Value="1" />
-                                        <Setter Target="Image.Visibility" Value="Visible" />
+                                        <Setter Target="PART_Image.Opacity" Value="1" />
+                                        <Setter Target="PART_Image.Visibility" Value="Visible" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="0" />
                                         <Setter Target="PlaceholderImage.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>
@@ -918,7 +922,7 @@
                             </Grid>
                         </Grid>
                         <Border
-                            x:Name="Image"
+                            x:Name="PART_Image"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}"
@@ -933,10 +937,10 @@
                                 <VisualStateGroup.Transitions>
                                     <VisualTransition From="Loading" To="Loaded">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Opacity">
                                                 <LinearDoubleKeyFrame KeyTime="{StaticResource ControlNormalAnimationDuration}" Value="1" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                             </ObjectAnimationUsingKeyFrames>
                                             <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PlaceholderImage" Storyboard.TargetProperty="Opacity">
@@ -950,10 +954,10 @@
                                     </VisualTransition>
                                     <VisualTransition From="Loaded" To="Loading">
                                         <Storyboard>
-                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Opacity">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Opacity">
                                                 <LinearDoubleKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="0" />
                                             </DoubleAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Image" Storyboard.TargetProperty="Visibility">
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_Image" Storyboard.TargetProperty="Visibility">
                                                 <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
                                                 <DiscreteObjectKeyFrame KeyTime="{StaticResource ControlFastAnimationDuration}" Value="Collapsed" />
                                             </ObjectAnimationUsingKeyFrames>
@@ -968,16 +972,16 @@
                                 </VisualStateGroup.Transitions>
                                 <VisualState x:Name="Loading">
                                     <VisualState.Setters>
-                                        <Setter Target="Image.Opacity" Value="0" />
-                                        <Setter Target="Image.Visibility" Value="Collapsed" />
+                                        <Setter Target="PART_Image.Opacity" Value="0" />
+                                        <Setter Target="PART_Image.Visibility" Value="Collapsed" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="1" />
                                         <Setter Target="PlaceholderImage.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Loaded">
                                     <VisualState.Setters>
-                                        <Setter Target="Image.Opacity" Value="1" />
-                                        <Setter Target="Image.Visibility" Value="Visible" />
+                                        <Setter Target="PART_Image.Opacity" Value="1" />
+                                        <Setter Target="PART_Image.Visibility" Value="Visible" />
                                         <Setter Target="PlaceholderImage.Opacity" Value="0" />
                                         <Setter Target="PlaceholderImage.Visibility" Value="Collapsed" />
                                     </VisualState.Setters>

@@ -68,6 +68,37 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region EnableDrag
+
+        /// <summary>
+        /// Identifies the <see cref="EnableDrag"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EnableDragProperty =
+            DependencyProperty.Register(
+                nameof(EnableDrag),
+                typeof(bool),
+                typeof(ImageControl),
+                new PropertyMetadata(false, OnEnableDragPropertyChanged));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether gets or sets is drag enable.
+        /// </summary>
+        public bool EnableDrag
+        {
+            get => (bool)GetValue(EnableDragProperty);
+            set => SetValue(EnableDragProperty, value);
+        }
+
+        private static void OnEnableDragPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
+        {
+            if (sender is ImageControl control)
+            {
+                control.OnEnableDragPropertyChanged((bool)args.NewValue);
+            }
+        }
+
+        #endregion
+
         #region EnableLazyLoading
 
         /// <summary>

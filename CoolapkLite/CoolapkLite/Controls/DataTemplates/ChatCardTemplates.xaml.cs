@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
@@ -82,15 +81,6 @@ namespace CoolapkLite.Controls.DataTemplates
                     image.Type &= (ImageType)0xFE;
                     break;
             }
-        }
-
-        private async void Border_DragStarting(UIElement sender, DragStartingEventArgs args)
-        {
-            DragOperationDeferral deferral = args.GetDeferral();
-            args.DragUI.SetContentFromDataPackage();
-            args.Data.RequestedOperation = DataPackageOperation.Copy;
-            await ((sender as FrameworkElement)?.Tag as ImageModel)?.GetImageDataPackageAsync(args.Data, "拖拽图片");
-            deferral.Complete();
         }
     }
 }

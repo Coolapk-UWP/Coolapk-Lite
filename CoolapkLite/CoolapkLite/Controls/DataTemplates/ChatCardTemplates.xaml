@@ -72,8 +72,7 @@
                         <control:ImageControl
                             MaxWidth="200"
                             HorizontalAlignment="Left"
-                            CanDrag="True"
-                            DragStarting="Border_DragStarting"
+                            EnableDrag="True"
                             EnableLazyLoading="False"
                             KeyDown="Image_KeyDown"
                             Source="{x:Bind MessagePic}"
@@ -209,8 +208,7 @@
                         <control:ImageControl
                             MaxWidth="200"
                             HorizontalAlignment="Right"
-                            CanDrag="True"
-                            DragStarting="Border_DragStarting"
+                            EnableDrag="True"
                             EnableLazyLoading="False"
                             KeyDown="Image_KeyDown"
                             Source="{x:Bind MessagePic}"

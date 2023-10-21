@@ -6,14 +6,18 @@ using Microsoft.Toolkit.Uwp.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls
 {
+    [TemplatePart(Name = ImageControlName, Type = typeof(FrameworkElement))]
     public partial class ImageControl : Control
     {
+        private const string ImageControlName = "PART_Image";
+
         private bool _isLoaded = false;
         private bool _isImageLoaded = false;
 
@@ -34,6 +38,8 @@ namespace CoolapkLite.Controls
         /// Loaded state name in template
         /// </summary>
         protected const string LoadedState = "Loaded";
+
+        private FrameworkElement Image;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageControl"/> class.
@@ -66,6 +72,10 @@ namespace CoolapkLite.Controls
             {
                 SetSource();
             }
+
+            Image = GetTemplateChild(ImageControlName) as FrameworkElement;
+
+            OnEnableDragPropertyChanged(EnableDrag);
 
             base.OnApplyTemplate();
         }
@@ -143,6 +153,18 @@ namespace CoolapkLite.Controls
 
         private void ImageControl_LayoutUpdated(object sender, object e) => InvalidateLazyLoading();
 
+        private async void Image_DragStarting(UIElement sender, DragStartingEventArgs args)
+        {
+            if (Source is ImageModel image)
+            {
+                DragOperationDeferral deferral = args.GetDeferral();
+                args.DragUI.SetContentFromDataPackage();
+                args.Data.RequestedOperation = DataPackageOperation.Copy;
+                await image.GetImageDataPackageAsync(args.Data, "拖拽图片");
+                deferral.Complete();
+            }
+        }
+
         private void InvalidateLazyLoading()
         {
             if (Source == null || Source.IsEmpty || !(ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded))
@@ -213,6 +235,23 @@ namespace CoolapkLite.Controls
         {
             TemplateSettings.ActualSource = null;
             _ = UpdateState(false);
+        }
+
+        private void OnEnableDragPropertyChanged(bool value)
+        {
+            if (Image != null)
+            {
+                Image.CanDrag = value;
+                if (value)
+                {
+                    Image.DragStarting -= Image_DragStarting;
+                    Image.DragStarting += Image_DragStarting;
+                }
+                else
+                {
+                    Image.DragStarting += Image_DragStarting;
+                }
+            }
         }
 
         private async Task UpdateState(bool isLoaded, bool useTransitions = true)
