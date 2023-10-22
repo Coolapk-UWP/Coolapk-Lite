@@ -15,9 +15,6 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:FeedsTemplates />
-                <templates:IndexCardTemplates />
-                <templates:OtherCardTemplates />
                 <templates:NotificationTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector

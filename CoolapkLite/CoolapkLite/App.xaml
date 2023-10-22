@@ -4,15 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="using:CoolapkLite.Common"
     xmlns:converter="using:CoolapkLite.Helpers.Converters"
-    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters">
+    xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
+    xmlns:templates="using:CoolapkLite.Controls.DataTemplates">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--  Resources  -->
                 <common:AccentColorResource />
                 <common:CustomBrushResource />
                 <common:LanguageCodeResource />
                 <common:CustomControlResource />
                 <ResourceDictionary Source="ms-appx:///Themes/CustomStyles.xaml" />
+                <!--  Templates  -->
+                <templates:FeedsTemplates />
+                <templates:IndexCardTemplates />
+                <templates:OtherCardTemplates />
             </ResourceDictionary.MergedDictionaries>
 
             <x:Double x:Key="TitleBarHeight">32</x:Double>

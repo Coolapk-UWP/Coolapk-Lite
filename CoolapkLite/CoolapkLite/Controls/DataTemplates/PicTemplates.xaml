@@ -9,9 +9,6 @@
         <Grid
             Width="102"
             Height="102"
-            KeyDown="Image_KeyDown"
-            Tag="{x:Bind}"
-            Tapped="Image_Tapped"
             ToolTipService.ToolTip="{x:Bind Title}">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
@@ -68,7 +65,8 @@
                 VerticalAlignment="Stretch"
                 EnableDrag="True"
                 Source="{x:Bind}"
-                Style="{StaticResource ImageBrushImageControlStyle}" />
+                Style="{StaticResource ImageBrushImageControlStyle}"
+                Tapped="Image_Tapped" />
             <StackPanel
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"

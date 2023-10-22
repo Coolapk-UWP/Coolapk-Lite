@@ -19,14 +19,7 @@
     <converters:HTMLToTextConverter x:Key="HTMLToTextConverter" />
 
     <DataTemplate x:Key="FeedDefaultTemplate" x:DataType="feeds:FeedModel">
-        <Border
-            x:Name="RootGrid"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Loaded="UserControl_Loaded"
-            SizeChanged="UserControl_SizeChanged"
-            Tag="{x:Bind Url}"
-            Tapped="FrameworkElement_Tapped">
+        <Border>
             <Border.Resources>
                 <Flyout x:Key="QRCodeFlyout" helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                     <Flyout.FlyoutPresenterStyle>
@@ -96,7 +89,8 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
-                Background="{ThemeResource SystemControlTransparentBrush}">
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                SizeChanged="UserControl_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -428,7 +422,6 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    KeyDown="FrameworkElement_KeyDown"
                     Tag="{x:Bind ExtraUrl}"
                     Tapped="FrameworkElement_Tapped"
                     ToolTipService.ToolTip="{x:Bind ExtraUrl}"
@@ -493,7 +486,6 @@
                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    KeyDown="FrameworkElement_KeyDown"
                     Tag="{x:Bind MediaUrl}"
                     Tapped="FrameworkElement_Tapped"
                     ToolTipService.ToolTip="{x:Bind MediaUrl}"
@@ -636,15 +628,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="SourceFeedDefaultTemplate">
-        <Border
-            x:Name="RootGrid"
-            Margin="8,4"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Loaded="UserControl_Loaded"
-            SizeChanged="UserControl_SizeChanged"
-            Tag="{Binding Url}"
-            Tapped="FrameworkElement_Tapped">
+        <Border>
             <Border.Resources>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -680,10 +664,14 @@
                 </MenuFlyout>
             </Border.Resources>
             <Grid
+                Padding="8,4"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
-                Background="{ThemeResource SystemControlTransparentBrush}">
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                SizeChanged="UserControl_SizeChanged"
+                Tag="{Binding Url}"
+                Tapped="FrameworkElement_Tapped">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -758,11 +746,7 @@
     </DataTemplate>
 
     <DataTemplate x:Key="FeedReplyDefaultTemplate" x:DataType="feeds:FeedReplyModel">
-        <Border
-            x:Name="RootGrid"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            Loaded="UserControl_Loaded"
-            SizeChanged="UserControl_SizeChanged">
+        <Border>
             <Border.Resources>
                 <MenuFlyout x:Key="MoreFlyout">
                     <MenuFlyoutSubItem x:Uid="/Feed/Copy">
@@ -798,7 +782,8 @@
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
-                Background="{ThemeResource SystemControlTransparentBrush}">
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                SizeChanged="UserControl_SizeChanged">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

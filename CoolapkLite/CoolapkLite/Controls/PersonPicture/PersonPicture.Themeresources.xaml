@@ -103,7 +103,7 @@
                                 x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Stroke="{StaticResource SystemControlTransparentBrush}"
+                                Stroke="{ThemeResource SystemControlTransparentBrush}"
                                 StrokeThickness="{TemplateBinding BorderThickness}">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
@@ -281,7 +281,7 @@
                                 x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                Stroke="{StaticResource SystemControlTransparentBrush}"
+                                Stroke="{ThemeResource SystemControlTransparentBrush}"
                                 StrokeThickness="{TemplateBinding BorderThickness}">
                                 <Ellipse.Fill>
                                     <ImageBrush ImageSource="{Binding TemplateSettings.ActualSource.Pic, RelativeSource={RelativeSource Mode=TemplatedParent}, Mode=OneWay}" Stretch="{Binding Stretch, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
@@ -438,7 +438,7 @@
                                 x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                BorderBrush="{StaticResource SystemControlTransparentBrush}"
+                                BorderBrush="{ThemeResource SystemControlTransparentBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}">
                                 <Border.Background>
@@ -616,7 +616,7 @@
                                 x:Name="PART_Image"
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
-                                BorderBrush="{StaticResource SystemControlTransparentBrush}"
+                                BorderBrush="{ThemeResource SystemControlTransparentBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 CornerRadius="{TemplateBinding helpers:UIElementHelper.CornerRadius}">
                                 <Border.Background>

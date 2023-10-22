@@ -23,19 +23,6 @@ namespace CoolapkLite.Controls.DataTemplates
             _ = element.OpenLinkAsync(element.Tag?.ToString());
         }
 
-        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e?.Handled == true) { return; }
-            switch (e.Key)
-            {
-                case VirtualKey.Enter:
-                case VirtualKey.Space:
-                    FrameworkElement_Tapped(sender, null);
-                    e.Handled = true;
-                    break;
-            }
-        }
-
         public void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (e?.Handled == true) { return; }

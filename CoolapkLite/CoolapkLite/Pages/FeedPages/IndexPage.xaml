@@ -15,11 +15,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <templates:FeedsTemplates />
-                <templates:IndexCardTemplates />
-                <templates:OtherCardTemplates />
-            </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"
                 Feed="{StaticResource FeedDefaultTemplate}"

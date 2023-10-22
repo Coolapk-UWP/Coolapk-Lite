@@ -16,10 +16,7 @@
     <Page.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <templates:FeedsTemplates />
                 <templates:SearchWordTemplates />
-                <templates:IndexCardTemplates />
-                <templates:OtherCardTemplates />
             </ResourceDictionary.MergedDictionaries>
             <templates:CardTemplateSelector
                 x:Key="CardTemplateSelector"

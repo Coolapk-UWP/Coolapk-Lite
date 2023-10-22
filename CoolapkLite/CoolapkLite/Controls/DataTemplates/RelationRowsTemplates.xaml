@@ -9,53 +9,55 @@
     mc:Ignorable="d">
 
     <DataTemplate x:Key="RelationRowsItemTemplate" x:DataType="feeds:RelationRowsItem">
-        <Button
-            MinHeight="0"
-            Padding="0"
-            VerticalAlignment="Center"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            Click="Button_Click"
-            IsTabStop="False"
-            Tag="{x:Bind Url}"
-            Tapped="Button_Tapped">
-            <Grid Padding="4,2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid
-                    Width="20"
-                    Height="20"
-                    Margin="0,0,4,0"
-                    Visibility="{x:Bind IsShowIcon, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Viewbox
-                        Width="14"
-                        Height="14"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
-                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Icon}" />
-                    </Viewbox>
-                    <controls:PersonPicture
+        <Border>
+            <Button
+                MinHeight="0"
+                Padding="0"
+                VerticalAlignment="Center"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                Click="Button_Click"
+                IsTabStop="False"
+                Tag="{x:Bind Url}"
+                Tapped="Button_Tapped">
+                <Grid Padding="4,2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid
                         Width="20"
                         Height="20"
-                        HorizontalAlignment="Center"
+                        Margin="0,0,4,0"
+                        Visibility="{x:Bind IsShowIcon, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Viewbox
+                            Width="14"
+                            Height="14"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true'}">
+                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="{x:Bind Icon}" />
+                        </Viewbox>
+                        <controls:PersonPicture
+                            Width="20"
+                            Height="20"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            DisplayName="{x:Bind Title}"
+                            Source="{x:Bind Logo}"
+                            Style="{StaticResource SquareCoolapkPersonPictureStyle}"
+                            Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="0,0,0,2"
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        DisplayName="{x:Bind Title}"
-                        Source="{x:Bind Logo}"
-                        Style="{StaticResource SquareCoolapkPersonPictureStyle}"
-                        Visibility="{x:Bind IsShowLogo, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        FontSize="12"
+                        Text="{x:Bind Title}"
+                        Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
                 </Grid>
-                <TextBlock
-                    Grid.Column="1"
-                    Margin="0,0,0,2"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontSize="12"
-                    Text="{x:Bind Title}"
-                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
-            </Grid>
-        </Button>
+            </Button>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="ReplyRowsItemTemplate" x:DataType="feeds:SourceFeedReplyModel">

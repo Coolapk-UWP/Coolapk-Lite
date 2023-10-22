@@ -119,35 +119,37 @@
                     SelectionChanged="FlipView_SelectionChanged">
                     <FlipView.ItemTemplate>
                         <DataTemplate x:DataType="images:ImageModel">
-                            <ScrollViewer
-                                x:Name="ImageScrollViewer"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                Background="{ThemeResource SystemControlTransparentBrush}"
-                                DoubleTapped="ScrollViewer_DoubleTapped"
-                                HorizontalScrollBarVisibility="Hidden"
-                                HorizontalScrollMode="Auto"
-                                MaxZoomFactor="5"
-                                MinZoomFactor="0.5"
-                                Tapped="ScrollViewer_Tapped"
-                                VerticalScrollBarVisibility="Hidden"
-                                VerticalScrollMode="Auto"
-                                ViewChanged="ScrollViewer_ViewChanged"
-                                ZoomMode="Enabled">
-                                <controls:ImageControl
-                                    x:Name="Image"
-                                    Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
-                                    Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    EnableDrag="True"
-                                    EnableLazyLoading="False"
-                                    PointerMoved="Image_PointerMoved"
-                                    PointerPressed="Image_PointerPressed"
-                                    RenderTransformOrigin="0.5,0.5"
-                                    Source="{x:Bind}"
-                                    Stretch="Uniform" />
-                            </ScrollViewer>
+                            <Border>
+                                <ScrollViewer
+                                    x:Name="ImageScrollViewer"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="{ThemeResource SystemControlTransparentBrush}"
+                                    DoubleTapped="ScrollViewer_DoubleTapped"
+                                    HorizontalScrollBarVisibility="Hidden"
+                                    HorizontalScrollMode="Auto"
+                                    MaxZoomFactor="5"
+                                    MinZoomFactor="0.5"
+                                    Tapped="ScrollViewer_Tapped"
+                                    VerticalScrollBarVisibility="Hidden"
+                                    VerticalScrollMode="Auto"
+                                    ViewChanged="ScrollViewer_ViewChanged"
+                                    ZoomMode="Enabled">
+                                    <controls:ImageControl
+                                        x:Name="Image"
+                                        Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                        Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        EnableDrag="True"
+                                        EnableLazyLoading="False"
+                                        PointerMoved="Image_PointerMoved"
+                                        PointerPressed="Image_PointerPressed"
+                                        RenderTransformOrigin="0.5,0.5"
+                                        Source="{x:Bind}"
+                                        Stretch="Uniform" />
+                                </ScrollViewer>
+                            </Border>
                         </DataTemplate>
                     </FlipView.ItemTemplate>
                 </FlipView>

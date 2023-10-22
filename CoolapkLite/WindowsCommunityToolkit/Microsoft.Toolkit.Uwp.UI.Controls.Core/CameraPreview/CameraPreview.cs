@@ -173,8 +173,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Controls
         private void SetFrameSourceGroupButtonVisibility()
         {
             _frameSourceGroupButton.Visibility = IsFrameSourceGroupButtonAvailable && IsFrameSourceGroupButtonVisible
-                                                                ? Visibility.Visible
-                                                                : Visibility.Collapsed;
+                ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>

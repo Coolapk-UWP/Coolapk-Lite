@@ -28,10 +28,7 @@
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Bookmark">
-                    <Grid
-                        Background="{ThemeResource SystemControlTransparentBrush}"
-                        Tag="{x:Bind Url}"
-                        Tapped="FrameworkElement_Tapped">
+                    <Grid Background="{ThemeResource SystemControlTransparentBrush}">
                         <helpers:UIElementHelper.ContextFlyout>
                             <MenuFlyout>
                                 <MenuFlyoutItem

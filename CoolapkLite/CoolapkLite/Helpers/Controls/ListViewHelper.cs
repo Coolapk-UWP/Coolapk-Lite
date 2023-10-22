@@ -3,6 +3,8 @@ using CoolapkLite.Controls;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Message;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -345,6 +347,19 @@ namespace CoolapkLite.Helpers
                     break;
                 case ImageModel ImageModel:
                     _ = element.ShowImageAsync(ImageModel);
+                    break;
+                case MessageNotificationModel MessageNotification:
+                    _ = element.NavigateAsync(typeof(ChatPage), new ChatViewModel(MessageNotification.UKey, $"{MessageNotification.UserName}的私信", element.Dispatcher));
+                    break;
+                case MessageModel MessageModel:
+                    if (MessageModel.MessageCard is IHasUrl _IHasUrl)
+                    {
+                        _ = element.OpenLinkAsync(_IHasUrl.Url);
+                    }
+                    else if (MessageModel.MessagePic is ImageModel _ImageModel)
+                    {
+                        _ = element.ShowImageAsync(_ImageModel);
+                    }
                     break;
                 case IHasUrl IHasUrl:
                     _ = element.OpenLinkAsync(IHasUrl.Url);

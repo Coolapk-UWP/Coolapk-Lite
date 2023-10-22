@@ -203,9 +203,7 @@
                     Tag="Language">
                     <ComboBox.ItemTemplate>
                         <DataTemplate x:DataType="globalization:CultureInfo">
-                            <TextBlock>
-                                <Run Text="{x:Bind DisplayName}" />
-                            </TextBlock>
+                            <TextBlock Text="{x:Bind DisplayName}" />
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>

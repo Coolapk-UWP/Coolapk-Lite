@@ -13,22 +13,9 @@ namespace CoolapkLite.Controls.DataTemplates
         public void Image_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (e?.Handled == true) { return; }
-            if (!(sender is FrameworkElement element)) { return; }
-            _ = element.ShowImageAsync(element.Tag as ImageModel);
+            if (!(sender is ImageControl element)) { return; }
+            _ = element.ShowImageAsync(element.Source);
             if (e != null) { e.Handled = true; }
-        }
-
-        public void Image_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e?.Handled == true) { return; }
-            switch (e.Key)
-            {
-                case VirtualKey.Enter:
-                case VirtualKey.Space:
-                    Image_Tapped(sender, null);
-                    e.Handled = true;
-                    break;
-            }
         }
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)

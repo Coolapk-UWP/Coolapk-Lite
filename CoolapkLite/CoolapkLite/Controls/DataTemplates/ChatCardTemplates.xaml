@@ -41,14 +41,14 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 DisplayName="{x:Bind UserName}"
-                KeyDown="FrameworkElement_KeyDown"
                 Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped" />
             <Grid
                 Grid.Column="1"
                 HorizontalAlignment="Left"
-                VerticalAlignment="Top">
+                VerticalAlignment="Top"
+                Background="{ThemeResource SystemControlTransparentBrush}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
@@ -295,7 +295,6 @@
                 HorizontalAlignment="Right"
                 VerticalAlignment="Top"
                 DisplayName="{x:Bind UserName}"
-                KeyDown="FrameworkElement_KeyDown"
                 Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped" />
@@ -303,74 +302,75 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MessageCardTemplate" x:DataType="message:MessageCard">
-        <Grid
-            Padding="8"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind Url}"
-            Tapped="FrameworkElement_Tapped">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="48" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <control:PersonPicture
-                Grid.RowSpan="2"
-                Width="40"
-                Height="40"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                DisplayName="{x:Bind Title}"
-                Source="{x:Bind Pic}"
-                Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
-            <TextBlock
-                Grid.Row="0"
-                Grid.Column="1"
-                MaxLines="1"
-                Text="{x:Bind Title}"
-                TextTrimming="CharacterEllipsis"
-                Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
-            <control:TextBlockEx
-                Grid.Row="1"
-                Grid.Column="1"
-                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                MaxLines="10"
-                Text="{x:Bind SubTitle}"
-                TextTrimming="CharacterEllipsis"
-                Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+        <Border>
             <Grid
-                Grid.Row="2"
-                Grid.ColumnSpan="2"
-                Margin="0,4,0,0"
-                Padding="0,2,0,0"
-                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                BorderThickness="0,1,0,0">
+                Padding="8"
+                Background="{ThemeResource SystemControlTransparentBrush}"
+                Tag="{x:Bind Url}"
+                Tapped="FrameworkElement_Tapped">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="48" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
                 <control:PersonPicture
-                    Width="16"
-                    Height="16"
-                    Margin="0,2,6,0"
-                    VerticalAlignment="Center"
-                    DisplayName="{x:Bind ExtraText}"
-                    Source="{x:Bind ExtraPic}"
-                    Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
-                <control:TextBlockEx
+                    Grid.RowSpan="2"
+                    Width="40"
+                    Height="40"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    DisplayName="{x:Bind Title}"
+                    Source="{x:Bind Pic}"
+                    Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
+                <TextBlock
+                    Grid.Row="0"
                     Grid.Column="1"
-                    VerticalAlignment="Center"
                     MaxLines="1"
-                    Text="{x:Bind ExtraText}"
+                    Text="{x:Bind Title}"
                     TextTrimming="CharacterEllipsis"
-                    TextWrapping="NoWrap"
-                    Visibility="{x:Bind ExtraText, Converter={StaticResource StringVisibilityConverter}}" />
+                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
+                <control:TextBlockEx
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    MaxLines="10"
+                    Text="{x:Bind SubTitle}"
+                    TextTrimming="CharacterEllipsis"
+                    Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                <Grid
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2"
+                    Margin="0,4,0,0"
+                    Padding="0,2,0,0"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="0,1,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <control:PersonPicture
+                        Width="16"
+                        Height="16"
+                        Margin="0,2,6,0"
+                        VerticalAlignment="Center"
+                        DisplayName="{x:Bind ExtraText}"
+                        Source="{x:Bind ExtraPic}"
+                        Visibility="{x:Bind ExtraPic, Converter={StaticResource ImageModelToVisibilityConverter}}" />
+                    <control:TextBlockEx
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MaxLines="1"
+                        Text="{x:Bind ExtraText}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="NoWrap"
+                        Visibility="{x:Bind ExtraText, Converter={StaticResource StringVisibilityConverter}}" />
+                </Grid>
             </Grid>
-        </Grid>
+        </Border>
     </DataTemplate>
 
 </ResourceDictionary>

@@ -16,7 +16,6 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <templates:PicTemplates />
-                <templates:FeedsTemplates />
                 <templates:RelationRowsTemplates />
             </ResourceDictionary.MergedDictionaries>
             <valueconverters:HTMLToTextConverter x:Key="HTMLToTextConverter" />

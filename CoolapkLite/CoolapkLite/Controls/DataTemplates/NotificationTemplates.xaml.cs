@@ -22,27 +22,9 @@ namespace CoolapkLite.Controls.DataTemplates
 
             if (e != null) { e.Handled = true; }
 
-            if (element.Tag is MessageNotificationModel messageNotification)
-            {
-                _ = element.NavigateAsync(typeof(ChatPage), new ChatViewModel(messageNotification.UKey, $"{messageNotification.UserName}的私信", element.Dispatcher));
-            }
-            else
-            {
-                _ = element.OpenLinkAsync(element.Tag?.ToString());
-            }
-        }
-
-        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e?.Handled == true) { return; }
-            switch (e.Key)
-            {
-                case VirtualKey.Enter:
-                case VirtualKey.Space:
-                    FrameworkElement_Tapped(sender, null);
-                    e.Handled = true;
-                    break;
-            }
+            _ = element.Tag is MessageNotificationModel messageNotification
+                ? element.NavigateAsync(typeof(ChatPage), new ChatViewModel(messageNotification.UKey, $"{messageNotification.UserName}的私信", element.Dispatcher))
+                : element.OpenLinkAsync(element.Tag?.ToString());
         }
 
         private void Button_Tapped(object sender, TappedRoutedEventArgs e)

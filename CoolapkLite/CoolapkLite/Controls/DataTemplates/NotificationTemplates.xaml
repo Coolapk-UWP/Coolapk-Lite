@@ -6,19 +6,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pages="using:CoolapkLite.Models.Pages"
-    xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     mc:Ignorable="d">
-    <ResourceDictionary.MergedDictionaries>
-        <templates:FeedsTemplates />
-    </ResourceDictionary.MergedDictionaries>
 
     <DataTemplate x:Key="SimpleNotificationCardTemplate" x:DataType="pages:SimpleNotificationModel">
         <Grid
+            x:Name="RootGrid"
             Padding="8"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind Url}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="*" />
@@ -35,7 +29,6 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 DisplayName="{x:Bind UserName}"
-                KeyDown="FrameworkElement_KeyDown"
                 Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped" />
@@ -70,11 +63,9 @@
 
     <DataTemplate x:Key="AtCommentMeCardTemplate" x:DataType="pages:AtCommentMeNotificationModel">
         <Grid
+            x:Name="RootGrid"
             Padding="4"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind Url}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -124,7 +115,6 @@
                 Grid.Row="1"
                 Padding="6,0,6,6"
                 Background="{ThemeResource SystemControlTransparentBrush}"
-                KeyDown="FrameworkElement_KeyDown"
                 Tag="{x:Bind FeedUrl}"
                 Tapped="FrameworkElement_Tapped">
                 <control:TextBlockEx HorizontalAlignment="Left" Text="{x:Bind Message}" />
@@ -138,9 +128,9 @@
 
     <DataTemplate x:Key="LikeNotificationCardTemplate" x:DataType="pages:LikeNotificationModel">
         <Grid
+            x:Name="RootGrid"
             Padding="8"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            Tag="{x:Bind Url}">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -204,11 +194,9 @@
 
     <DataTemplate x:Key="MessageNotificationCardTemplate" x:DataType="pages:MessageNotificationModel">
         <Grid
+            x:Name="RootGrid"
             Padding="8"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="48" />
                 <ColumnDefinition Width="*" />
@@ -225,7 +213,6 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 DisplayName="{x:Bind UserName}"
-                KeyDown="FrameworkElement_KeyDown"
                 Source="{x:Bind UserAvatar}"
                 Tag="{x:Bind UserUrl}"
                 Tapped="FrameworkElement_Tapped" />

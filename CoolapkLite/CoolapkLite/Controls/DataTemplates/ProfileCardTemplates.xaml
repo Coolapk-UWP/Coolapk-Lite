@@ -164,178 +164,186 @@
     <!--  二级卡片  -->
 
     <DataTemplate x:Key="HistoryTemplate" x:DataType="models:IndexPageModel">
-        <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Click="Button_Click"
-            Style="{StaticResource TransparentButtonStyle}"
-            Tag="{x:Bind Url}"
-            Tapped="Button_Tapped">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="56" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <controls:PersonPicture
-                    Grid.RowSpan="2"
-                    Width="40"
-                    Height="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    DisplayName="{x:Bind Title}"
-                    InitialsGlyph="&#xE81C;"
-                    Source="{x:Bind Pic}"
-                    Style="{StaticResource SquarePersonPictureStyle}" />
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    MaxLines="1"
-                    Text="{x:Bind Title}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
-                <controls:TextBlockEx
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    MaxLines="10"
-                    Text="{x:Bind Description}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
-            </Grid>
-        </Button>
+        <Border>
+            <Button
+                Padding="0,8"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Click="Button_Click"
+                Style="{StaticResource TransparentButtonStyle}"
+                Tag="{x:Bind Url}"
+                Tapped="Button_Tapped">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <controls:PersonPicture
+                        Grid.RowSpan="2"
+                        Width="40"
+                        Height="40"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        DisplayName="{x:Bind Title}"
+                        InitialsGlyph="&#xE81C;"
+                        Source="{x:Bind Pic}"
+                        Style="{StaticResource SquarePersonPictureStyle}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        MaxLines="1"
+                        Text="{x:Bind Title}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    <controls:TextBlockEx
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        MaxLines="10"
+                        Text="{x:Bind Description}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
+                </Grid>
+            </Button>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="CollectionTemplate" x:DataType="models:CollectionModel">
-        <Button
-            Padding="0,8"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Click="Button_Click"
-            Style="{StaticResource TransparentButtonStyle}"
-            Tag="{x:Bind Url}"
-            Tapped="Button_Tapped">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="56" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <controls:PersonPicture
-                    Grid.RowSpan="2"
-                    Width="40"
-                    Height="40"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    DisplayName="{x:Bind Title}"
-                    InitialsGlyph="&#xE7BC;"
-                    Source="{x:Bind Pic}"
-                    Style="{StaticResource SquarePersonPictureStyle}" />
-                <TextBlock
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    MaxLines="1"
-                    Text="{x:Bind Title}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
-                <TextBlock
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    MaxLines="1"
-                    Text="{x:Bind SubTitle}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-                <controls:TextBlockEx
-                    Grid.Row="2"
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    MaxLines="10"
-                    Text="{x:Bind Description}"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
-            </Grid>
-        </Button>
+        <Border>
+            <Button
+                Padding="0,8"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Click="Button_Click"
+                Style="{StaticResource TransparentButtonStyle}"
+                Tag="{x:Bind Url}"
+                Tapped="Button_Tapped">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <controls:PersonPicture
+                        Grid.RowSpan="2"
+                        Width="40"
+                        Height="40"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Top"
+                        DisplayName="{x:Bind Title}"
+                        InitialsGlyph="&#xE7BC;"
+                        Source="{x:Bind Pic}"
+                        Style="{StaticResource SquarePersonPictureStyle}" />
+                    <TextBlock
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        MaxLines="1"
+                        Text="{x:Bind Title}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind Title, Converter={StaticResource StringVisibilityConverter}}" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        MaxLines="1"
+                        Text="{x:Bind SubTitle}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                    <controls:TextBlockEx
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        MaxLines="10"
+                        Text="{x:Bind Description}"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind Description, Converter={StaticResource StringVisibilityConverter}}" />
+                </Grid>
+            </Button>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="IconLinkTemplate" x:DataType="models:IndexPageModel">
-        <Button
-            Width="86"
-            Padding="4"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            Click="Button_Click"
-            IsTabStop="False"
-            Tag="{x:Bind Url}"
-            Tapped="Button_Tapped">
-            <StackPanel>
-                <controls:PersonPicture
-                    Width="36"
-                    Height="36"
-                    Margin="4"
-                    DisplayName="{x:Bind Title}"
-                    Source="{x:Bind Pic}"
-                    Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
-                <TextBlock
-                    HorizontalAlignment="Stretch"
-                    Text="{x:Bind Title}"
-                    TextAlignment="Center"
-                    TextTrimming="CharacterEllipsis" />
-                <TextBlock
-                    x:Name="SubTitleText"
-                    HorizontalAlignment="Stretch"
-                    FontSize="12"
-                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                    Text="{x:Bind SubTitle}"
-                    TextAlignment="Center"
-                    TextTrimming="CharacterEllipsis"
-                    Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
-            </StackPanel>
-        </Button>
+        <Border>
+            <Button
+                Width="86"
+                Padding="4"
+                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                Click="Button_Click"
+                IsTabStop="False"
+                Tag="{x:Bind Url}"
+                Tapped="Button_Tapped">
+                <StackPanel>
+                    <controls:PersonPicture
+                        Width="36"
+                        Height="36"
+                        Margin="4"
+                        DisplayName="{x:Bind Title}"
+                        Source="{x:Bind Pic}"
+                        Style="{StaticResource SquareCoolapkPersonPictureStyle}" />
+                    <TextBlock
+                        HorizontalAlignment="Stretch"
+                        Text="{x:Bind Title}"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis" />
+                    <TextBlock
+                        x:Name="SubTitleText"
+                        HorizontalAlignment="Stretch"
+                        FontSize="12"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{x:Bind SubTitle}"
+                        TextAlignment="Center"
+                        TextTrimming="CharacterEllipsis"
+                        Visibility="{x:Bind SubTitle, Converter={StaticResource StringVisibilityConverter}}" />
+                </StackPanel>
+            </Button>
+        </Border>
     </DataTemplate>
 
     <DataTemplate x:Key="TextLinkTemplate" x:DataType="models:IndexPageModel">
-        <Button
-            Padding="8"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Click="Button_Click"
-            Style="{StaticResource TransparentButtonStyle}"
-            Tag="{x:Bind Url}"
-            Tapped="Button_Tapped">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="8" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <controls:PersonPicture
-                    Width="20"
-                    Height="20"
-                    VerticalAlignment="Center"
-                    DisplayName="{x:Bind Title}"
-                    InitialsGlyph="$#xEA37;"
-                    Source="{x:Bind Pic}"
-                    Stretch="Uniform"
-                    Style="{StaticResource SquareTransparentPersonPictureStyle}" />
-                <TextBlock
-                    Grid.Column="2"
-                    Margin="0,0,0,2"
-                    VerticalAlignment="Center"
-                    Text="{x:Bind Title}"
-                    TextTrimming="CharacterEllipsis" />
-            </Grid>
-        </Button>
+        <Border>
+            <Button
+                Padding="8"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Click="Button_Click"
+                Style="{StaticResource TransparentButtonStyle}"
+                Tag="{x:Bind Url}"
+                Tapped="Button_Tapped">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <controls:PersonPicture
+                        Width="20"
+                        Height="20"
+                        VerticalAlignment="Center"
+                        DisplayName="{x:Bind Title}"
+                        InitialsGlyph="$#xEA37;"
+                        Source="{x:Bind Pic}"
+                        Stretch="Uniform"
+                        Style="{StaticResource SquareTransparentPersonPictureStyle}" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Margin="0,0,0,2"
+                        VerticalAlignment="Center"
+                        Text="{x:Bind Title}"
+                        TextTrimming="CharacterEllipsis" />
+                </Grid>
+            </Button>
+        </Border>
     </DataTemplate>
 
 </ResourceDictionary>

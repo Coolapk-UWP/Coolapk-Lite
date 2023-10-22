@@ -566,17 +566,17 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
                     : format.FormatType == GattPresentationFormatTypes.Utf8
                         ? DisplayTypes.Utf8
                         : format.FormatType == GattPresentationFormatTypes.Utf16
-                                            ? DisplayTypes.Utf16
-                                            : format.FormatType == GattPresentationFormatTypes.UInt128 ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.SInt128 ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.DUInt16 ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.SInt64 ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.Struct ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.Float ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.Float32 ||
-                                                                                     format.FormatType == GattPresentationFormatTypes.Float64
-                                                                ? DisplayTypes.Unsupported
-                                                                : DisplayTypes.Unsupported;
+                            ? DisplayTypes.Utf16
+                            : format.FormatType == GattPresentationFormatTypes.UInt128 ||
+                                format.FormatType == GattPresentationFormatTypes.SInt128 ||
+                                format.FormatType == GattPresentationFormatTypes.DUInt16 ||
+                                format.FormatType == GattPresentationFormatTypes.SInt64 ||
+                                format.FormatType == GattPresentationFormatTypes.Struct ||
+                                format.FormatType == GattPresentationFormatTypes.Float ||
+                                format.FormatType == GattPresentationFormatTypes.Float32 ||
+                                format.FormatType == GattPresentationFormatTypes.Float64
+                                    ? DisplayTypes.Unsupported
+                                    : DisplayTypes.Unsupported;
             }
 
             // Decode the value into the right display type

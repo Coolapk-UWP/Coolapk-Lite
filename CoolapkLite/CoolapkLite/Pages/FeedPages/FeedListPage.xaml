@@ -20,11 +20,6 @@
     mc:Ignorable="d">
     <Page.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <templates:FeedsTemplates />
-                <templates:IndexCardTemplates />
-                <templates:OtherCardTemplates />
-            </ResourceDictionary.MergedDictionaries>
             <DataTemplate x:Key="UserDetailCard" x:DataType="pages:UserDetail">
                 <Border>
                     <Border.Resources>
@@ -260,7 +255,7 @@
                                     <Button
                                         x:Name="FansButton"
                                         Padding="0"
-                                        Background="{StaticResource SystemControlTransparentBrush}"
+                                        Background="{ThemeResource SystemControlTransparentBrush}"
                                         Click="Button_Click"
                                         FontSize="16"
                                         Tapped="Button_Tapped">
@@ -393,16 +388,18 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate x:DataType="models:ISourceUserModel">
-                                                <control:PersonPicture
-                                                    Width="16"
-                                                    Height="16"
-                                                    d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
-                                                    DisplayName="{x:Bind UserName}"
-                                                    KeyDown="FrameworkElement_KeyDown"
-                                                    Source="{x:Bind UserAvatar}"
-                                                    Tag="{Binding Url}"
-                                                    Tapped="FrameworkElement_Tapped"
-                                                    ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                <Border>
+                                                    <control:PersonPicture
+                                                        Width="16"
+                                                        Height="16"
+                                                        d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
+                                                        DisplayName="{x:Bind UserName}"
+                                                        KeyDown="FrameworkElement_KeyDown"
+                                                        Source="{x:Bind UserAvatar}"
+                                                        Tag="{Binding Url}"
+                                                        Tapped="FrameworkElement_Tapped"
+                                                        ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
@@ -570,68 +567,70 @@
                             SizeChanged="FlipView_SizeChanged">
                             <FlipView.ItemTemplate>
                                 <DataTemplate x:DataType="images:ImageModel">
-                                    <control:ImageControl
-                                        x:Name="Picture"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        EnableDrag="True"
-                                        KeyDown="FrameworkElement_KeyDown"
-                                        Source="{x:Bind}"
-                                        Stretch="UniformToFill"
-                                        Style="{StaticResource ImageBrushImageControlStyle}"
-                                        Tag="{x:Bind}"
-                                        Tapped="FrameworkElement_Tapped">
-                                        <helpers:UIElementHelper.ContextFlyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem
-                                                    x:Name="RefreshButton"
-                                                    x:Uid="/ShowImagePage/RefreshMenuItem"
-                                                    Click="AppBarButton_Click"
-                                                    Tag="{x:Bind}">
-                                                    <helpers:FlyoutBaseHelper.Icon>
-                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
-                                                    </helpers:FlyoutBaseHelper.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem
-                                                    x:Name="CopyButton"
-                                                    x:Uid="/ShowImagePage/CopyMenuItem"
-                                                    Click="AppBarButton_Click"
-                                                    Tag="{x:Bind}">
-                                                    <helpers:FlyoutBaseHelper.Icon>
-                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
-                                                    </helpers:FlyoutBaseHelper.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem
-                                                    x:Name="ShareButton"
-                                                    x:Uid="/ShowImagePage/ShareMenuItem"
-                                                    Click="AppBarButton_Click"
-                                                    Tag="{x:Bind}">
-                                                    <helpers:FlyoutBaseHelper.Icon>
-                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
-                                                    </helpers:FlyoutBaseHelper.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem
-                                                    x:Name="SaveButton"
-                                                    x:Uid="/ShowImagePage/SaveMenuItem"
-                                                    Click="AppBarButton_Click"
-                                                    Tag="{x:Bind}">
-                                                    <helpers:FlyoutBaseHelper.Icon>
-                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
-                                                    </helpers:FlyoutBaseHelper.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem
-                                                    x:Name="OriginButton"
-                                                    x:Uid="/ShowImagePage/OriginMenuItem"
-                                                    Click="AppBarButton_Click"
-                                                    Tag="{x:Bind}"
-                                                    Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                                    <helpers:FlyoutBaseHelper.Icon>
-                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
-                                                    </helpers:FlyoutBaseHelper.Icon>
-                                                </MenuFlyoutItem>
-                                            </MenuFlyout>
-                                        </helpers:UIElementHelper.ContextFlyout>
-                                    </control:ImageControl>
+                                    <Border>
+                                        <control:ImageControl
+                                            x:Name="Picture"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            EnableDrag="True"
+                                            KeyDown="FrameworkElement_KeyDown"
+                                            Source="{x:Bind}"
+                                            Stretch="UniformToFill"
+                                            Style="{StaticResource ImageBrushImageControlStyle}"
+                                            Tag="{x:Bind}"
+                                            Tapped="FrameworkElement_Tapped">
+                                            <helpers:UIElementHelper.ContextFlyout>
+                                                <MenuFlyout>
+                                                    <MenuFlyoutItem
+                                                        x:Name="RefreshButton"
+                                                        x:Uid="/ShowImagePage/RefreshMenuItem"
+                                                        Click="AppBarButton_Click"
+                                                        Tag="{x:Bind}">
+                                                        <helpers:FlyoutBaseHelper.Icon>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
+                                                        </helpers:FlyoutBaseHelper.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                        x:Name="CopyButton"
+                                                        x:Uid="/ShowImagePage/CopyMenuItem"
+                                                        Click="AppBarButton_Click"
+                                                        Tag="{x:Bind}">
+                                                        <helpers:FlyoutBaseHelper.Icon>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
+                                                        </helpers:FlyoutBaseHelper.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                        x:Name="ShareButton"
+                                                        x:Uid="/ShowImagePage/ShareMenuItem"
+                                                        Click="AppBarButton_Click"
+                                                        Tag="{x:Bind}">
+                                                        <helpers:FlyoutBaseHelper.Icon>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+                                                        </helpers:FlyoutBaseHelper.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                        x:Name="SaveButton"
+                                                        x:Uid="/ShowImagePage/SaveMenuItem"
+                                                        Click="AppBarButton_Click"
+                                                        Tag="{x:Bind}">
+                                                        <helpers:FlyoutBaseHelper.Icon>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                                        </helpers:FlyoutBaseHelper.Icon>
+                                                    </MenuFlyoutItem>
+                                                    <MenuFlyoutItem
+                                                        x:Name="OriginButton"
+                                                        x:Uid="/ShowImagePage/OriginMenuItem"
+                                                        Click="AppBarButton_Click"
+                                                        Tag="{x:Bind}"
+                                                        Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                                        <helpers:FlyoutBaseHelper.Icon>
+                                                            <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                                        </helpers:FlyoutBaseHelper.Icon>
+                                                    </MenuFlyoutItem>
+                                                </MenuFlyout>
+                                            </helpers:UIElementHelper.ContextFlyout>
+                                        </control:ImageControl>
+                                    </Border>
                                 </DataTemplate>
                             </FlipView.ItemTemplate>
                         </FlipView>
@@ -687,16 +686,18 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="models:ISourceUserModel">
-                                                    <control:PersonPicture
-                                                        Width="16"
-                                                        Height="16"
-                                                        d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
-                                                        DisplayName="{x:Bind UserName}"
-                                                        KeyDown="FrameworkElement_KeyDown"
-                                                        Source="{x:Bind UserAvatar}"
-                                                        Tag="{Binding Url}"
-                                                        Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                    <Border>
+                                                        <control:PersonPicture
+                                                            Width="16"
+                                                            Height="16"
+                                                            d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
+                                                            DisplayName="{x:Bind UserName}"
+                                                            KeyDown="FrameworkElement_KeyDown"
+                                                            Source="{x:Bind UserAvatar}"
+                                                            Tag="{Binding Url}"
+                                                            Tapped="FrameworkElement_Tapped"
+                                                            ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                    </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -1353,16 +1354,18 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="models:ISourceUserModel">
-                                                    <control:PersonPicture
-                                                        Width="16"
-                                                        Height="16"
-                                                        d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
-                                                        DisplayName="{x:Bind UserName}"
-                                                        KeyDown="FrameworkElement_KeyDown"
-                                                        Source="{x:Bind UserAvatar}"
-                                                        Tag="{Binding Url}"
-                                                        Tapped="FrameworkElement_Tapped"
-                                                        ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                    <Border>
+                                                        <control:PersonPicture
+                                                            Width="16"
+                                                            Height="16"
+                                                            d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
+                                                            DisplayName="{x:Bind UserName}"
+                                                            KeyDown="FrameworkElement_KeyDown"
+                                                            Source="{x:Bind UserAvatar}"
+                                                            Tag="{Binding Url}"
+                                                            Tapped="FrameworkElement_Tapped"
+                                                            ToolTipService.ToolTip="{x:Bind UserName}" />
+                                                    </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
@@ -1573,70 +1576,72 @@
                         </ListView.ItemsPanel>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="images:ImageModel">
-                                <control:ImageControl
-                                    x:Name="Picture"
-                                    Height="306"
-                                    Margin="1"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    EnableDrag="True"
-                                    EnableLazyLoading="False"
-                                    KeyDown="FrameworkElement_KeyDown"
-                                    Source="{x:Bind}"
-                                    Stretch="UniformToFill"
-                                    Tag="{x:Bind}"
-                                    Tapped="FrameworkElement_Tapped">
-                                    <helpers:UIElementHelper.ContextFlyout>
-                                        <MenuFlyout>
-                                            <MenuFlyoutItem
-                                                x:Name="RefreshButton"
-                                                x:Uid="/ShowImagePage/RefreshMenuItem"
-                                                Click="AppBarButton_Click"
-                                                Tag="{x:Bind}">
-                                                <helpers:FlyoutBaseHelper.Icon>
-                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
-                                                </helpers:FlyoutBaseHelper.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem
-                                                x:Name="CopyButton"
-                                                x:Uid="/ShowImagePage/CopyMenuItem"
-                                                Click="AppBarButton_Click"
-                                                Tag="{x:Bind}">
-                                                <helpers:FlyoutBaseHelper.Icon>
-                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
-                                                </helpers:FlyoutBaseHelper.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem
-                                                x:Name="ShareButton"
-                                                x:Uid="/ShowImagePage/ShareMenuItem"
-                                                Click="AppBarButton_Click"
-                                                Tag="{x:Bind}">
-                                                <helpers:FlyoutBaseHelper.Icon>
-                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
-                                                </helpers:FlyoutBaseHelper.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem
-                                                x:Name="SaveButton"
-                                                x:Uid="/ShowImagePage/SaveMenuItem"
-                                                Click="AppBarButton_Click"
-                                                Tag="{x:Bind}">
-                                                <helpers:FlyoutBaseHelper.Icon>
-                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
-                                                </helpers:FlyoutBaseHelper.Icon>
-                                            </MenuFlyoutItem>
-                                            <MenuFlyoutItem
-                                                x:Name="OriginButton"
-                                                x:Uid="/ShowImagePage/OriginMenuItem"
-                                                Click="AppBarButton_Click"
-                                                Tag="{x:Bind}"
-                                                Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                                                <helpers:FlyoutBaseHelper.Icon>
-                                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
-                                                </helpers:FlyoutBaseHelper.Icon>
-                                            </MenuFlyoutItem>
-                                        </MenuFlyout>
-                                    </helpers:UIElementHelper.ContextFlyout>
-                                </control:ImageControl>
+                                <Border>
+                                    <control:ImageControl
+                                        x:Name="Picture"
+                                        Height="306"
+                                        Margin="1"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        EnableDrag="True"
+                                        EnableLazyLoading="False"
+                                        KeyDown="FrameworkElement_KeyDown"
+                                        Source="{x:Bind}"
+                                        Stretch="UniformToFill"
+                                        Tag="{x:Bind}"
+                                        Tapped="FrameworkElement_Tapped">
+                                        <helpers:UIElementHelper.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem
+                                                    x:Name="RefreshButton"
+                                                    x:Uid="/ShowImagePage/RefreshMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{x:Bind}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72C;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="CopyButton"
+                                                    x:Uid="/ShowImagePage/CopyMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{x:Bind}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8C8;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="ShareButton"
+                                                    x:Uid="/ShowImagePage/ShareMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{x:Bind}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE72D;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="SaveButton"
+                                                    x:Uid="/ShowImagePage/SaveMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{x:Bind}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE74E;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem
+                                                    x:Name="OriginButton"
+                                                    x:Uid="/ShowImagePage/OriginMenuItem"
+                                                    Click="AppBarButton_Click"
+                                                    Tag="{x:Bind}"
+                                                    Visibility="{x:Bind IsSmallImage, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                                    <helpers:FlyoutBaseHelper.Icon>
+                                                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
+                                                    </helpers:FlyoutBaseHelper.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </helpers:UIElementHelper.ContextFlyout>
+                                    </control:ImageControl>
+                                </Border>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

@@ -41,19 +41,6 @@ namespace CoolapkLite.Controls.DataTemplates
             _ = element.OpenLinkAsync(element.Tag?.ToString());
         }
 
-        public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e?.Handled == true) { return; }
-            switch (e.Key)
-            {
-                case VirtualKey.Enter:
-                case VirtualKey.Space:
-                    FrameworkElement_Tapped(sender, null);
-                    e.Handled = true;
-                    break;
-            }
-        }
-
         private void Button_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (e != null) { e.Handled = true; }
@@ -202,8 +189,6 @@ namespace CoolapkLite.Controls.DataTemplates
             dp.SetText(element.Tag?.ToString());
             Clipboard.SetContent(dp);
         }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e) => UserControl_SizeChanged(sender, null);
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {

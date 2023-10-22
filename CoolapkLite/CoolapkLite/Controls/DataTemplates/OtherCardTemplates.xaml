@@ -13,11 +13,9 @@
 
     <DataTemplate x:Key="UserTemplate" x:DataType="users:UserModel">
         <Grid
+            x:Name="RootGrid"
             Padding="8"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{x:Bind Url}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
@@ -85,10 +83,7 @@
         <Grid
             Padding="0,8"
             d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding Url}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
@@ -143,10 +138,7 @@
         <Grid
             Padding="0,8"
             d:DataContext="{d:DesignInstance Type=models:IHasUrl}"
-            Background="{ThemeResource SystemControlTransparentBrush}"
-            KeyDown="FrameworkElement_KeyDown"
-            Tag="{Binding Url}"
-            Tapped="FrameworkElement_Tapped">
+            Background="{ThemeResource SystemControlTransparentBrush}">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
                     <MenuFlyoutItem
