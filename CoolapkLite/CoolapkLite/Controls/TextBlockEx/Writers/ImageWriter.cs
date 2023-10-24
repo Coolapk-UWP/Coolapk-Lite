@@ -57,7 +57,7 @@ namespace CoolapkLite.Controls.Writers
                 ToolTipService.SetToolTip(image, new ToolTip { Content = alt });
             }
 
-            if (src.Contains("emoticons"))
+            if (src.Contains("emoticons", StringComparison.OrdinalIgnoreCase))
             {
                 InlineUIContainer container = new InlineUIContainer();
                 Viewbox viewBox = new Viewbox

@@ -103,7 +103,7 @@ namespace CoolapkLite.ViewModels.DataSource
             {
                 string Uri = GetUri((model.Entities.Where(x => x is IndexPageModel).FirstOrDefault() as IndexPageModel).Url);
                 SubProvider = new CoolapkListProvider(
-                    (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetIndexPage, Uri, Uri.Contains("?") ? "&" : "?", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
+                    (p, firstItem, lastItem) => UriHelper.GetUri(UriType.GetIndexPage, Uri, Uri.Contains('?') ? "&" : "?", p, string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}", string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                     Provider.GetEntities,
                     "entityId");
                 _currentPage = 1;
@@ -112,20 +112,21 @@ namespace CoolapkLite.ViewModels.DataSource
 
         private string GetUri(string uri)
         {
-            if (uri.StartsWith("url="))
+            if (uri.StartsWith("url=", StringComparison.OrdinalIgnoreCase))
             {
                 uri = uri.Substring(4);
             }
 
-            if (uri.StartsWith("/page", StringComparison.Ordinal) && !uri.Contains("/page/dataList"))
+            int index = uri.IndexOf("/page", StringComparison.OrdinalIgnoreCase);
+            if (index == 0 && !uri.Contains("/page/dataList", StringComparison.OrdinalIgnoreCase))
             {
-                uri = uri.Replace("/page", "/page/dataList");
+                uri = uri.Insert(5, "/dataList");
             }
-            else if (uri.Contains("/page", StringComparison.Ordinal) && uri.StartsWith("#", StringComparison.Ordinal))
+            else if (index != -1 && uri.StartsWith("#"))
             {
                 uri = $"/page/dataList?url={uri}";
             }
-            else if (!uri.Contains("/main/") && !uri.Contains("/user/") && !uri.Contains("/apk/") && !uri.Contains("/appForum/") && !uri.Contains("/picture/") && !uri.Contains("/topic/") && !uri.Contains("/discovery/"))
+            else if (!uri.ContainsAny(new[] { "/main/", "/user/", "/apk/", "/appForum/", "/picture/", "/topic/", "/discovery/" }, StringComparison.OrdinalIgnoreCase))
             {
                 uri = $"/page/dataList?url={uri}";
             }

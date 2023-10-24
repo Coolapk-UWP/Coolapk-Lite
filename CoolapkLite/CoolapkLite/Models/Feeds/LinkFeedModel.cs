@@ -152,16 +152,16 @@ namespace CoolapkLite.Models.Feeds
 
         private async void ParseLink(string url)
         {
-            if (url.Contains("b23.tv") || url.Contains("t.cn"))
+            if (url.ContainsAny(new[] { "b23.tv" , "t.cn" }, StringComparison.OrdinalIgnoreCase))
             {
                 url = await url.TryGetUri().ExpandShortUrlAsync().ContinueWith(x => x.Result.ToString());
             }
 
-            if (url.Contains("coolapk") && url.Contains("/feed/"))
+            if (url.ContainsAll(new[] { "coolapk", "/feed/" }, StringComparison.OrdinalIgnoreCase))
             {
                 GetJson(url.TryGetUri(), LinkType.Coolapk);
             }
-            else if (url.Contains("ithome") && url.Contains("content"))
+            else if (url.ContainsAll(new[] { "ithome", "content" }, StringComparison.OrdinalIgnoreCase))
             {
                 Match match = Regex.Match(url, @"(\?|%3F|&|%26)id(=|%3D)([\w]+)");
                 if (match.Success && match.Groups.Count >= 4)
@@ -225,7 +225,7 @@ namespace CoolapkLite.Models.Feeds
                 if (data.TryGetValue("message", out JToken message))
                 {
                     MessageRawOutput = message.ToString();
-                    int length = MessageRawOutput.Contains("</a>") ? 200 : 120;
+                    int length = MessageRawOutput.Contains("</a>", StringComparison.OrdinalIgnoreCase) ? 200 : 120;
                     if (MessageRawOutput.Length - length >= 7)
                     {
                         ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");

@@ -77,7 +77,7 @@ namespace CoolapkLite.Pages.BrowserPages
         private void WebView_NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
         {
             _ = this.ShowProgressBarAsync();
-            if (Provider.IsChangeBrowserUA || args.Uri.Host.Contains("coolapk"))
+            if (Provider.IsChangeBrowserUA || args.Uri.Host.Contains("coolapk", StringComparison.OrdinalIgnoreCase))
             {
                 WebView.NavigationStarting -= WebView_NavigationStarting;
                 args.Cancel = true;

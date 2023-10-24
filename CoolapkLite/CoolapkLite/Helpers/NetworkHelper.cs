@@ -167,7 +167,7 @@ namespace CoolapkLite.Helpers
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                if (uri.Host.Contains("coolapk"))
+                if (uri.Host.Contains("coolapk", StringComparison.OrdinalIgnoreCase))
                 {
                     foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
                     {
@@ -405,7 +405,7 @@ namespace CoolapkLite.Helpers
             if (string.IsNullOrWhiteSpace(url)) { return false; }
             try
             {
-                return url.Contains(":")
+                return url.Contains(':')
                     ? Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri)
                     : url[0] == '/'
                         ? Uri.TryCreate(UriHelper.CoolapkUri, url, out uri)

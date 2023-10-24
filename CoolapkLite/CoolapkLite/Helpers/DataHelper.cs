@@ -126,7 +126,7 @@ namespace CoolapkLite.Helpers
                 //换行和段落
                 string s = str.Replace("<br>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br/>", "\n").Replace("<p>", "").Replace("</p>", "\n").Replace("&nbsp;", " ").Replace("<br />", "").Replace("<br />", "");
                 //链接彻底删除！
-                while (s.IndexOf("<a", StringComparison.Ordinal) > 0)
+                while (s.Contains("<a", StringComparison.Ordinal))
                 {
                     s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", "");
                     s = s.Replace("</a>", "");
@@ -187,6 +187,14 @@ namespace CoolapkLite.Helpers
 
 #if !NETCORE463
         /// <summary>
+        /// Returns a value indicating whether a specified character occurs within this string.
+        /// </summary>
+        /// <param name="text">A sequence in which to locate a value.</param>
+        /// <param name="value">The character to seek.</param>
+        /// <returns><see langword="true"/> if the <paramref name="value"/> parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
+        public static bool Contains(this string text, char value) => text.IndexOf(value) != -1;
+
+        /// <summary>
         /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
         /// </summary>
         /// <param name="text">A sequence in which to locate a value.</param>
@@ -194,9 +202,34 @@ namespace CoolapkLite.Helpers
         /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
         /// <returns><see langword="true"/> if the <paramref name="value"/> parameter occurs within this string,
         /// or if <paramref name="value"/> is the empty string (""); otherwise, <see langword="false"/>.</returns>
-        public static bool Contains(this string text, string value, StringComparison comparisonType) =>
-            text.IndexOf(value, comparisonType) != -1;
+        public static bool Contains(this string text, string value, StringComparison comparisonType) => text.IndexOf(value, comparisonType) != -1;
 #endif
+
+        /// <summary>
+        /// Returns a value indicating whether all of a specified array of string occurs within this string, using the specified comparison rules.
+        /// </summary>
+        /// <param name="text">A sequence in which to locate a value.</param>
+        /// <param name="allOf">A Unicode character array containing one or more characters to seek.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+        /// <returns><see langword="true"/> if the <paramref name="allOf"/> parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
+        public static bool ContainsAll(this string text, string[] allOf, StringComparison comparisonType) => allOf.All(x => text.Contains(x, comparisonType));
+
+        /// <summary>
+        /// Returns a value indicating whether any of a specified array of string occurs within this string.
+        /// </summary>
+        /// <param name="text">A sequence in which to locate a value.</param>
+        /// <param name="anyOf">A Unicode character array containing one or more characters to seek.</param>
+        /// <returns><see langword="true"/> if the <paramref name="anyOf"/> parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
+        public static bool ContainsAny(this string text, params string[] anyOf) => anyOf.Any(text.Contains);
+
+        /// <summary>
+        /// Returns a value indicating whether any of a specified array of string occurs within this string, using the specified comparison rules.
+        /// </summary>
+        /// <param name="text">A sequence in which to locate a value.</param>
+        /// <param name="anyOf">A Unicode character array containing one or more characters to seek.</param>
+        /// <param name="comparisonType">One of the enumeration values that specifies the rules to use in the comparison.</param>
+        /// <returns><see langword="true"/> if the <paramref name="anyOf"/> parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
+        public static bool ContainsAny(this string text, string[] anyOf, StringComparison comparisonType) => anyOf.Any(x => text.Contains(x, comparisonType));
 
         /// <summary>
         /// Try to concatenates the strings of the provided array, using the specified separator between each string,

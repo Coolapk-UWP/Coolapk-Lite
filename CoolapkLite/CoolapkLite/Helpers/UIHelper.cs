@@ -534,7 +534,7 @@ namespace CoolapkLite.Helpers
             if (link.StartsWith("http", StringComparison.OrdinalIgnoreCase))
             {
                 link = link.Replace("http://", string.Empty).Replace("https://", string.Empty);
-                if (link.StartsWith("image.coolapk.com"))
+                if (link.StartsWith("image.coolapk.com", StringComparison.OrdinalIgnoreCase))
                 {
                     return frame => frame.ShowImageAsync(new ImageModel(origin, ImageType.SmallImage, frame.Dispatcher));
                 }
@@ -724,7 +724,7 @@ namespace CoolapkLite.Helpers
             {
                 return frame => frame.NavigateAsync(typeof(HTMLPage), new HTMLViewModel(origin, frame.Dispatcher));
             }
-            else if (origin.StartsWith("http://") || link.StartsWith("https://"))
+            else if (origin.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || link.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             {
                 return frame => frame.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(origin, frame.Dispatcher));
             }

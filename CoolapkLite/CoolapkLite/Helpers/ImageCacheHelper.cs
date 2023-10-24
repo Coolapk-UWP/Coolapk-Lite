@@ -51,7 +51,7 @@ namespace CoolapkLite.Helpers
 
             if (uri == null) { return null; }
 
-            if (url.StartsWith("ms-appx", StringComparison.Ordinal) || uri.IsFile)
+            if (url.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase) || uri.IsFile)
             {
                 if (!dispatcher.HasThreadAccess) { await dispatcher.ResumeForegroundAsync(); }
                 return new BitmapImage(uri);
@@ -64,7 +64,7 @@ namespace CoolapkLite.Helpers
             {
                 if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
-                    if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
+                    if (url.Contains("image.coolapk.com", StringComparison.OrdinalIgnoreCase)) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
                 }
 
@@ -110,7 +110,7 @@ namespace CoolapkLite.Helpers
 
             if (uri == null) { return null; }
 
-            if (url.StartsWith("ms-appx", StringComparison.Ordinal))
+            if (url.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase))
             {
                 return await StorageFile.GetFileFromApplicationUriAsync(uri);
             }
@@ -122,7 +122,7 @@ namespace CoolapkLite.Helpers
             {
                 if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
-                    if (url.Contains("image.coolapk.com")) { url += ".s.jpg"; }
+                    if (url.Contains("image.coolapk.com", StringComparison.OrdinalIgnoreCase)) { url += ".s.jpg"; }
                     uri = url.TryGetUri();
                 }
 
@@ -261,7 +261,7 @@ namespace CoolapkLite.Helpers
 
             if (uri == null) { return null; }
 
-            if (url.StartsWith("ms-appx", StringComparison.Ordinal))
+            if (url.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase))
             {
                 return new BitmapImage(uri);
             }
@@ -276,7 +276,7 @@ namespace CoolapkLite.Helpers
                 IStorageItem item = await folder.TryGetItemAsync(fileName);
                 if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
                 {
-                    if (url.Contains("coolapk.com") && !url.EndsWith(".png")) { url += ".s.jpg"; }
+                    if (url.Contains("image.coolapk.com", StringComparison.OrdinalIgnoreCase)) { url += ".s.jpg"; }
                 }
                 if (item is null)
                 {

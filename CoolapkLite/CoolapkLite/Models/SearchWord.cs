@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CoolapkLite.Helpers;
+using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
@@ -11,7 +12,7 @@ namespace CoolapkLite.Models
         {
             if (keys.TryGetValue("logo", out JToken logo))
             {
-                Glyph = logo.ToString().Contains("app") || logo.ToString().Contains("cube")
+                Glyph = logo.ToString().ContainsAny(new[] { "app", "cube" })
                     ? "\uE719"
                     : logo.ToString().Contains("xitongguanli") ? "\uE77B" : "\uE721";
             }

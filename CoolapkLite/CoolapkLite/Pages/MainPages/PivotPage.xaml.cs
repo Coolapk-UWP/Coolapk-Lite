@@ -153,7 +153,7 @@ namespace CoolapkLite.Pages
                 _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
                     MenuItem.Tag.ToString() == "indexV8"
                         ? "/main/indexV8"
-                        : MenuItem.Tag.ToString().Contains("V")
+                        : MenuItem.Tag.ToString().Contains('V')
                             ? $"/page?url={MenuItem.Tag}"
                             : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
                 Refresh = () => (Frame.Content as AdaptivePage).Refresh(true);

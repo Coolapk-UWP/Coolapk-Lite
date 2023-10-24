@@ -489,7 +489,7 @@ namespace CoolapkLite.Controls
 
         private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
-            if (args.EventType.ToString().Contains("Down"))
+            if (args.EventType == CoreAcceleratorKeyEventType.KeyDown || args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown)
             {
                 CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
                 if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
