@@ -570,8 +570,6 @@
                                     <Border>
                                         <control:ImageControl
                                             x:Name="Picture"
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
                                             EnableDrag="True"
                                             KeyDown="FrameworkElement_KeyDown"
                                             Source="{x:Bind}"
@@ -1163,8 +1161,6 @@
                         </MenuFlyout>
                     </Grid.Resources>
                     <control:ImageControl
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
                         helpers:UIElementHelper.ContextFlyout="{StaticResource MoreFlyout}"
                         EnableDrag="True"
                         KeyDown="FrameworkElement_KeyDown"
@@ -1581,13 +1577,12 @@
                                         x:Name="Picture"
                                         Height="306"
                                         Margin="1"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
                                         EnableDrag="True"
                                         EnableLazyLoading="False"
                                         KeyDown="FrameworkElement_KeyDown"
                                         Source="{x:Bind}"
                                         Stretch="UniformToFill"
+                                        Style="{StaticResource ImageBrushImageControlStyle}"
                                         Tag="{x:Bind}"
                                         Tapped="FrameworkElement_Tapped">
                                         <helpers:UIElementHelper.ContextFlyout>

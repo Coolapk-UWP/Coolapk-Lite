@@ -18,6 +18,7 @@ namespace CoolapkLite.Controls
     {
         private const string ImageControlName = "PART_Image";
 
+        private bool _status = false;
         private bool _isLoaded = false;
         private bool _isImageLoaded = false;
 
@@ -140,16 +141,16 @@ namespace CoolapkLite.Controls
                 }
                 else
                 {
-                    _ = UpdateState(false);
+                    _ = UpdateStateAsync(false);
                 }
             }
         }
 
-        private void ImageModel_LoadStarted(ImageModel sender, object args) => _ = UpdateState(false);
+        private void ImageModel_LoadStarted(ImageModel sender, object args) => _ = UpdateStateAsync(false);
 
-        private void ImageModel_LoadCompleted(ImageModel sender, object args) => _ = UpdateState(!sender.IsNoPic);
+        private void ImageModel_LoadCompleted(ImageModel sender, object args) => _ = UpdateStateAsync(!sender.IsNoPic);
 
-        private void ImageModel_NoPicChanged(ImageModel sender, bool args) => _ = UpdateState(!args);
+        private void ImageModel_NoPicChanged(ImageModel sender, bool args) => _ = UpdateStateAsync(!args);
 
         private void ImageControl_LayoutUpdated(object sender, object e) => InvalidateLazyLoading();
 
@@ -167,7 +168,7 @@ namespace CoolapkLite.Controls
 
         private void InvalidateLazyLoading()
         {
-            if (Source == null || Source.IsEmpty || !(ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded))
+            if (Source == null || Source.IsEmpty || !GetIsLoaded())
             {
                 return;
             }
@@ -223,9 +224,9 @@ namespace CoolapkLite.Controls
 
             if (Source.IsLoaded)
             {
-                _ = UpdateState(true);
+                _ = UpdateStateAsync(true);
             }
-            else if (_isLoaded && !Source.IsLoading)
+            else if (GetIsLoaded() && !Source.IsLoading)
             {
                 _ = Source.Refresh();
             }
@@ -234,7 +235,7 @@ namespace CoolapkLite.Controls
         private void RemoveSource()
         {
             TemplateSettings.ActualSource = null;
-            _ = UpdateState(false);
+            _ = UpdateStateAsync(false);
         }
 
         private void OnEnableDragPropertyChanged(bool value)
@@ -254,18 +255,31 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private async Task UpdateState(bool isLoaded, bool useTransitions = true)
+        private async Task UpdateStateAsync(bool isLoaded, bool useTransitions = true)
         {
             if (IsUseNoPicFallback) { return; }
             if (_isImageLoaded != isLoaded)
             {
-                _isImageLoaded = isLoaded;
                 if (Dispatcher?.HasThreadAccess == false)
                 {
                     await Dispatcher.ResumeForegroundAsync();
                 }
-                _ = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions);
+
+                bool result = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions);
+
+                _isImageLoaded = isLoaded ^ result;
+                if (result || _status)
+                {
+                    _status = false;
+                }
+                else
+                {
+                    _status = true;
+                    _ = Source?.Refresh();
+                }
             }
         }
+
+        private bool GetIsLoaded() => ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded;
     }
 }

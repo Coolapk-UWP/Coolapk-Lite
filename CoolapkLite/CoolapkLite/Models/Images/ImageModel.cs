@@ -151,8 +151,6 @@ namespace CoolapkLite.Models.Images
                 }
                 else
                 {
-                    IsNoPic = true;
-                    _ = GetImageAsync();
                     image = ImageCacheHelper.GetNoPic(Dispatcher);
                     if (pic == null)
                     {
@@ -162,6 +160,8 @@ namespace CoolapkLite.Models.Images
                     {
                         pic.SetTarget(image);
                     }
+                    IsNoPic = true;
+                    _ = GetImageAsync();
                     return image;
                 }
             }

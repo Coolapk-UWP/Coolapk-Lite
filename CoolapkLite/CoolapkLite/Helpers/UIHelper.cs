@@ -603,7 +603,15 @@ namespace CoolapkLite.Helpers
                     string id = link.Substring(6, "?");
                     if (int.TryParse(id, out _))
                     {
-                        return frame => frame.NavigateAsync(typeof(FeedShellPage), new FeedDetailViewModel(id, frame.Dispatcher));
+                        return async frame =>
+                        {
+                            FeedShellViewModel provider = await FeedShellViewModel.GetProviderAsync(id, frame.Dispatcher).ConfigureAwait(false);
+                            if (provider != null)
+                            {
+                                return await frame.NavigateAsync(typeof(FeedShellPage), provider).ConfigureAwait(false);
+                            }
+                            return false;
+                        };
                     }
                     else
                     {

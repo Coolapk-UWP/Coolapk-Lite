@@ -75,9 +75,31 @@ namespace CoolapkLite.ViewModels.FeedPages
             ID = id;
         }
 
+        protected FeedShellViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : this(id, dispatcher)
+        {
+            FeedDetail = feedDetail;
+        }
+
+        public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher)
+        {
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
+            if (!isSucceed) { return null; }
+
+            if (result is JObject detail)
+            {
+                FeedDetailModel model = new FeedDetailModel(detail);
+                return model.IsQuestionFeed
+                    ? new QuestionViewModel(id, model, dispatcher)
+                    : model.IsVoteFeed
+                        ? new VoteViewModel(id, model, dispatcher)
+                        : (FeedShellViewModel)new FeedDetailViewModel(id, model, dispatcher);
+            }
+            return null;
+        }
+
         protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id)
         {
-            (bool isSucceed, JToken result) = id.Contains("changeHistoryDetail") ? await RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true).ConfigureAwait(false) : await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true).ConfigureAwait(false);
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;
@@ -88,7 +110,19 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public abstract Task Refresh(bool reset = false);
+        public virtual async Task Refresh(bool reset = false)
+        {
+            if (FeedDetail == null || reset)
+            {
+                FeedDetail = await GetFeedDetailAsync(ID);
+                if (FeedDetail == null)
+                {
+                    ItemSource = null;
+                    return;
+                }
+                Title = FeedDetail.Title;
+            }
+        }
 
         bool IViewModel.IsEqual(IViewModel other) => other is FeedShellViewModel model && IsEqual(model);
         public bool IsEqual(FeedShellViewModel other) => ID == other.ID;
@@ -102,14 +136,14 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public FeedDetailViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
+        public FeedDetailViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
+
         public override async Task Refresh(bool reset = false)
         {
-            if (FeedDetail == null || reset)
+            await base.Refresh(reset);
+            if (FeedDetail != null && ItemSource == null)
             {
-                FeedDetail = await GetFeedDetailAsync(ID);
-                if (FeedDetail == null) { return; }
                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(3);
-                Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new ReplyItemSource(ID);
@@ -157,14 +191,14 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public QuestionViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
+        public QuestionViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
+
         public override async Task Refresh(bool reset = false)
         {
-            if (FeedDetail == null || reset)
+            await base.Refresh(reset);
+            if (FeedDetail != null && ItemSource == null)
             {
-                FeedDetail = await GetFeedDetailAsync(ID);
-                if (FeedDetail == null) { return; }
                 List<ShyHeaderItem> ItemSource = new List<ShyHeaderItem>(3);
-                Title = FeedDetail.Title;
                 if (ReplyItemSource == null || ReplyItemSource.ID != ID)
                 {
                     ReplyItemSource = new QuestionItemSource(ID, "reply");
@@ -208,14 +242,14 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public VoteViewModel(string id, CoreDispatcher dispatcher) : base(id, dispatcher) { }
 
+        public VoteViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
+
         public override async Task Refresh(bool reset = false)
         {
-            if (FeedDetail == null || reset)
+            await base.Refresh(reset);
+            if (FeedDetail != null && ItemSource == null)
             {
-                FeedDetail = await GetFeedDetailAsync(ID);
-                if (FeedDetail == null) { return; }
                 List<ShyHeaderItem> ItemSource;
-                Title = FeedDetail.Title;
                 if (FeedDetail.VoteType == 0)
                 {
                     ItemSource = new List<ShyHeaderItem>(FeedDetail.VoteRows.Length);
@@ -256,7 +290,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
                 base.ItemSource = ItemSource;
             }
-            await (ItemSource.FirstOrDefault()?.ItemSource as EntityItemSource)?.Refresh(reset);
+            await (ItemSource?.FirstOrDefault()?.ItemSource as EntityItemSource)?.Refresh(reset);
         }
     }
 

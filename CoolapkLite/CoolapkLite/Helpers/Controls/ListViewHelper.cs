@@ -338,10 +338,10 @@ namespace CoolapkLite.Helpers
             switch (e.ClickedItem)
             {
                 case SourceFeedModel SourceFeedModel:
-                    FeedShellViewModel provider = SourceFeedModel.IsVoteFeed
-                        ? new VoteViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
-                        : SourceFeedModel.IsQuestionFeed
-                            ? new QuestionViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
+                    FeedShellViewModel provider = SourceFeedModel.IsQuestionFeed
+                        ? new QuestionViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
+                        : SourceFeedModel.IsVoteFeed
+                            ? new VoteViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher)
                             : (FeedShellViewModel)new FeedDetailViewModel(SourceFeedModel.ID.ToString(), element.Dispatcher);
                     _ = element.NavigateAsync(typeof(FeedShellPage), provider);
                     break;
