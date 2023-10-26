@@ -18,7 +18,6 @@ namespace CoolapkLite.Controls
     {
         private const string ImageControlName = "PART_Image";
 
-        private bool _status = false;
         private bool _isLoaded = false;
         private bool _isImageLoaded = false;
 
@@ -264,19 +263,7 @@ namespace CoolapkLite.Controls
                 {
                     await Dispatcher.ResumeForegroundAsync();
                 }
-
-                bool result = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions);
-
-                _isImageLoaded = isLoaded ^ result;
-                if (result || _status)
-                {
-                    _status = false;
-                }
-                else
-                {
-                    _status = true;
-                    _ = Source?.Refresh();
-                }
+                _isImageLoaded = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions) == isLoaded;
             }
         }
 

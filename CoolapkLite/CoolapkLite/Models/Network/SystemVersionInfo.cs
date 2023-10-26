@@ -25,7 +25,7 @@ namespace CoolapkLite.Models.Network
 
         public override bool Equals(object obj) => obj is SystemVersionInfo other && Equals(other);
 
-        public override int GetHashCode() => Major.GetHashCode() ^ Minor.GetHashCode() ^ Build.GetHashCode() ^ Revision.GetHashCode();
+        public override int GetHashCode() => (Major, Minor, Build, Revision).GetHashCode();
 
         public static bool operator ==(SystemVersionInfo left, SystemVersionInfo right) => left.Equals(right);
 

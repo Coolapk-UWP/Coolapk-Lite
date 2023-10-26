@@ -185,7 +185,6 @@ namespace CoolapkLite.Helpers
             return taskResult;
         }
 
-#if !NETCORE463
         /// <summary>
         /// Returns a value indicating whether a specified character occurs within this string.
         /// </summary>
@@ -194,6 +193,7 @@ namespace CoolapkLite.Helpers
         /// <returns><see langword="true"/> if the <paramref name="value"/> parameter occurs within this string; otherwise, <see langword="false"/>.</returns>
         public static bool Contains(this string text, char value) => text.IndexOf(value) != -1;
 
+#if !NETCORE463
         /// <summary>
         /// Returns a value indicating whether a specified string occurs within this string, using the specified comparison rules.
         /// </summary>
