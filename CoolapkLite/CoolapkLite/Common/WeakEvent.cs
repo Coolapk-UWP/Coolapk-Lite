@@ -79,19 +79,6 @@ namespace CoolapkLite.Common
             set => _list[index] = value;
         }
 
-        public void Add(Action<TEventArgs> callback) => _list.Add(callback);
-
-        public void Remove(Action<TEventArgs> callback)
-        {
-            for (int i = _list.Count; --i >= 0;)
-            {
-                if (_list[i].Equals(callback))
-                {
-                    _list.RemoveAt(i);
-                }
-            }
-        }
-
         public void Invoke(TEventArgs arg)
         {
             for (int i = _list.Count; --i >= 0;)
@@ -107,9 +94,15 @@ namespace CoolapkLite.Common
             }
         }
 
-        public void Clear() => _list.Clear();
+        public void Add(Action<TEventArgs> callback) => _list.Add(callback);
 
-        public int IndexOf(Action<TEventArgs> callback)
+        public void AddRange(IEnumerable<Action<TEventArgs>> collection) => _list.AddRange(collection.Select<Action<TEventArgs>, Method>(x => x));
+
+        public void Insert(int index, Action<TEventArgs> item) => _list.Insert(index, item);
+
+        public void CopyTo(Action<TEventArgs>[] array, int arrayIndex) => Array.Copy(_list.Select(x => (Action<TEventArgs>)x).ToArray(), 0, array, arrayIndex, _list.Count);
+
+        public void Remove(Action<TEventArgs> callback)
         {
             for (int i = _list.Count; --i >= 0;)
             {
@@ -119,15 +112,33 @@ namespace CoolapkLite.Common
                 }
                 else if (_list[i].Equals(callback))
                 {
-                    return i;
+                    _list.RemoveAt(i);
                 }
             }
-            return -1;
         }
 
-        public void Insert(int index, Action<TEventArgs> item) => _list.Insert(index, item);
+        bool ICollection<Action<TEventArgs>>.Remove(Action<TEventArgs> callback)
+        {
+            for (int i = _list.Count; --i >= 0;)
+            {
+                if (_list[i].IsDead)
+                {
+                    _list.RemoveAt(i);
+                }
+                else if (_list[i].Equals(callback))
+                {
+                    _list.RemoveAt(i);
+                    return true;
+                }
+            }
+            return false;
+        }
 
         public void RemoveAt(int index) => _list.RemoveAt(index);
+
+        public int RemoveAll(Predicate<Action<TEventArgs>> predicate) => _list.RemoveAll(x => predicate((Action<TEventArgs>)x));
+
+        public void Clear() => _list.Clear();
 
         public bool Contains(Action<TEventArgs> callback)
         {
@@ -145,23 +156,36 @@ namespace CoolapkLite.Common
             return false;
         }
 
-        public void CopyTo(Action<TEventArgs>[] array, int arrayIndex) => Array.Copy(_list.Select(x => (Action<TEventArgs>)x).ToArray(), 0, array, arrayIndex, _list.Count);
-
-        bool ICollection<Action<TEventArgs>>.Remove(Action<TEventArgs> callback)
+        public int IndexOf(Action<TEventArgs> callback)
         {
             for (int i = _list.Count; --i >= 0;)
             {
-                if (_list[i].Equals(callback))
+                if (_list[i].IsDead)
                 {
                     _list.RemoveAt(i);
-                    return true;
+                }
+                else if (_list[i].Equals(callback))
+                {
+                    return i;
                 }
             }
-            return false;
+            return -1;
         }
 
         public IEnumerator<Action<TEventArgs>> GetEnumerator() => _list.Select(x => (Action<TEventArgs>)x).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public static WeakEvent<TEventArgs> operator +(WeakEvent<TEventArgs> weakEvent, Action<TEventArgs> callback)
+        {
+            weakEvent.Add(callback);
+            return weakEvent;
+        }
+
+        public static WeakEvent<TEventArgs> operator -(WeakEvent<TEventArgs> weakEvent, Action<TEventArgs> callback)
+        {
+            weakEvent.Remove(callback);
+            return weakEvent;
+        }
     }
 }

@@ -13,7 +13,6 @@ namespace CoolapkLite.ViewModels.BrowserPages
     public class HTMLViewModel : IViewModel
     {
         private readonly Uri uri;
-        private readonly Action<UISettingChangedType> UISettingChanged;
 
         public CoreDispatcher Dispatcher { get; }
 
@@ -73,26 +72,27 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             Dispatcher = dispatcher;
             uri = url.TryGetUri();
-            UISettingChanged = mode =>
-            {
-                switch (mode)
-                {
-                    case UISettingChangedType.LightMode:
-                        _ = GetHtmlAsync(RawHTML, "Light");
-                        break;
-                    case UISettingChangedType.DarkMode:
-                        _ = GetHtmlAsync(RawHTML, "Dark");
-                        break;
-                    case UISettingChangedType.NoPicChanged:
-                        break;
-                }
-            };
-            ThemeHelper.UISettingChanged.Add(UISettingChanged);
+            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
         }
 
         ~HTMLViewModel()
         {
-            ThemeHelper.UISettingChanged.Remove(UISettingChanged);
+            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
+        }
+
+        private void OnUISettingChanged(UISettingChangedType mode)
+        {
+            switch (mode)
+            {
+                case UISettingChangedType.LightMode:
+                    _ = GetHtmlAsync(RawHTML, "Light");
+                    break;
+                case UISettingChangedType.DarkMode:
+                    _ = GetHtmlAsync(RawHTML, "Dark");
+                    break;
+                case UISettingChangedType.NoPicChanged:
+                    break;
+            }
         }
 
         public async Task Refresh(bool reset)

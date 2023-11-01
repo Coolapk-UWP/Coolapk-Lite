@@ -22,8 +22,6 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
-        private Action<UISettingChangedType> UISettingChanged;
-
         #region Provider
 
         /// <summary>
@@ -56,16 +54,17 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 Provider = SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
             }
-            UISettingChanged = mode => UpdateThemeRadio();
-            ThemeHelper.UISettingChanged.Add(UISettingChanged);
+            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
             UpdateThemeRadio();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ThemeHelper.UISettingChanged.Remove(UISettingChanged);
+            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
         }
+
+        private void OnUISettingChanged(UISettingChangedType mode) => UpdateThemeRadio();
 
         private async void UpdateThemeRadio()
         {

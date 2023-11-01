@@ -25,8 +25,6 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged
     {
-        private readonly Action<UISettingChangedType> UISettingChanged;
-
         public static bool IsAutoPlaySupported { get; } = ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
         public CoreDispatcher Dispatcher { get; private set; }
@@ -220,28 +218,7 @@ namespace CoolapkLite.Models.Images
         {
             Uri = uri;
             Type = type;
-            UISettingChanged = async mode =>
-            {
-                switch (mode)
-                {
-                    case UISettingChangedType.LightMode:
-                    case UISettingChangedType.DarkMode:
-                        if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
-                        {
-                            if (pic != null && pic.TryGetTarget(out BitmapImage _))
-                            {
-                                if (Dispatcher == null) { return; }
-                                Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
-                            }
-                        }
-                        break;
-
-                    case UISettingChangedType.NoPicChanged when pic != null && pic.TryGetTarget(out BitmapImage _):
-                        _ = GetImageAsync();
-                        break;
-                }
-            };
-            ThemeHelper.UISettingChanged.Add(UISettingChanged);
+            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
         }
 
         public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher) : this(uri, type)
@@ -251,7 +228,7 @@ namespace CoolapkLite.Models.Images
 
         ~ImageModel()
         {
-            ThemeHelper.UISettingChanged.Remove(UISettingChanged);
+            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
         }
 
         public event TypedEventHandler<ImageModel, bool> NoPicChanged;
@@ -262,6 +239,28 @@ namespace CoolapkLite.Models.Images
         {
             ImageModelLocker.SlimLocker.Dispose();
             ImageModelLocker.SlimLocker = new SemaphoreSlim(initialCount);
+        }
+
+        private async void OnUISettingChanged(UISettingChangedType mode)
+        {
+            switch (mode)
+            {
+                case UISettingChangedType.LightMode:
+                case UISettingChangedType.DarkMode:
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+                    {
+                        if (pic != null && pic.TryGetTarget(out BitmapImage _))
+                        {
+                            if (Dispatcher == null) { return; }
+                            Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                        }
+                    }
+                    break;
+
+                case UISettingChangedType.NoPicChanged when pic != null && pic.TryGetTarget(out BitmapImage _):
+                    _ = GetImageAsync();
+                    break;
+            }
         }
 
         private async Task GetImageAsync()

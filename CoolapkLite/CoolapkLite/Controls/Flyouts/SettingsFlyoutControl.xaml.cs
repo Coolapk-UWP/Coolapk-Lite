@@ -19,8 +19,6 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class SettingsFlyoutControl : SettingsFlyout
     {
-        private Action<UISettingChangedType> UISettingChanged;
-
         #region Provider
 
         /// <summary>
@@ -53,29 +51,30 @@ namespace CoolapkLite.Controls
 
         private void SettingsFlyout_Loaded(object sender, RoutedEventArgs e)
         {
-            UISettingChanged = mode =>
-            {
-                switch (mode)
-                {
-                    case UISettingChangedType.LightMode:
-                        RequestedTheme = ElementTheme.Light;
-                        break;
-                    case UISettingChangedType.DarkMode:
-                        RequestedTheme = ElementTheme.Dark;
-                        break;
-                    default:
-                        break;
-                }
-                UpdateThemeRadio();
-            };
             Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher));
-            ThemeHelper.UISettingChanged.Add(UISettingChanged);
+            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
             UpdateThemeRadio();
         }
 
         private void SettingsFlyout_Unloaded(object sender, RoutedEventArgs e)
         {
-            ThemeHelper.UISettingChanged.Remove(UISettingChanged);
+            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
+        }
+
+        private void OnUISettingChanged(UISettingChangedType mode)
+        {
+            switch (mode)
+            {
+                case UISettingChangedType.LightMode:
+                    RequestedTheme = ElementTheme.Light;
+                    break;
+                case UISettingChangedType.DarkMode:
+                    RequestedTheme = ElementTheme.Dark;
+                    break;
+                default:
+                    break;
+            }
+            UpdateThemeRadio();
         }
 
         private async void UpdateThemeRadio()
