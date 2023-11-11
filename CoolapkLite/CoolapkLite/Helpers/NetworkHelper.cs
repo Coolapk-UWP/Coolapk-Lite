@@ -75,7 +75,7 @@ namespace CoolapkLite.Helpers
             APIVersions APIVersion = SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion);
 
             client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("X-Sdk-Int", "30");
+            client.DefaultRequestHeaders.Add("X-Sdk-Int", "33");
             client.DefaultRequestHeaders.Add("X-Sdk-Locale", Culture);
             client.DefaultRequestHeaders.Add("X-App-Mode", "universal");
             client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
@@ -143,10 +143,10 @@ namespace CoolapkLite.Helpers
                     client.DefaultRequestHeaders.Add("X-Api-Version", "12");
                     break;
                 case APIVersions.V13:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.5-2310181-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "13.3.5");
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2310181");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2310181");
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.6-2310232-universal");
+                    client.DefaultRequestHeaders.Add("X-App-Version", "13.3.6");
+                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2310232");
+                    client.DefaultRequestHeaders.Add("X-App-Code", "2310232");
                     client.DefaultRequestHeaders.Add("X-Api-Version", "13");
                     break;
                 case APIVersions.Custom:
