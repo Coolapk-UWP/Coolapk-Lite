@@ -97,13 +97,13 @@ namespace CoolapkLite.Helpers
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
-                await mainPage?.HideProgressBarAsync();
+                if (mainPage != null) { await mainPage.HideProgressBarAsync(); }
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                await mainPage?.ShowProgressBarAsync();
+                await mainPage.ShowProgressBarAsync();
             }
         }
 
@@ -117,13 +117,13 @@ namespace CoolapkLite.Helpers
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
-                await mainPage?.HideProgressBarAsync();
+                if (mainPage != null) { await mainPage.HideProgressBarAsync(); }
                 StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
                 await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
             }
             else
             {
-                await mainPage?.ShowProgressBarAsync(value);
+                await mainPage.ShowProgressBarAsync(value);
             }
         }
 
@@ -139,7 +139,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            await mainPage?.PausedProgressBarAsync();
+            await mainPage.PausedProgressBarAsync();
         }
 
         public static Task ErrorProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => ErrorProgressBarAsync(x.Result)).Unwrap();
@@ -154,7 +154,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            await mainPage?.ErrorProgressBarAsync();
+            await mainPage.ErrorProgressBarAsync();
         }
 
         public static Task HideProgressBarAsync(this CoreDispatcher dispatcher) => dispatcher.GetAppTitleAsync().ContinueWith(x => HideProgressBarAsync(x.Result)).Unwrap();
@@ -169,7 +169,7 @@ namespace CoolapkLite.Helpers
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
             }
-            await mainPage?.HideProgressBarAsync();
+            await mainPage.HideProgressBarAsync();
         }
 
         public static Task ShowMessageAsync(string message) => GetAppTitleAsync().ContinueWith(x => ShowMessageAsync(x.Result, message)).Unwrap();

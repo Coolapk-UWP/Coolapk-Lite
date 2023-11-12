@@ -114,9 +114,9 @@ namespace CoolapkLite.ViewModels.FeedPages
                     SearchTopicItemSource.Keyword = Title;
                 }
             }
-            await SearchFeedItemSource?.Refresh(reset);
-            await SearchUserItemSource?.Refresh(reset);
-            await SearchTopicItemSource?.Refresh(reset);
+            if (SearchFeedItemSource != null) { await SearchFeedItemSource.Refresh(reset); }
+            if (SearchUserItemSource != null) { await SearchUserItemSource.Refresh(reset); }
+            if (SearchTopicItemSource != null) { await SearchTopicItemSource.Refresh(reset); }
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is SearchingViewModel model && IsEqual(model);

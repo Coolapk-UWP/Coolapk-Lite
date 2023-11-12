@@ -433,7 +433,7 @@ namespace CoolapkLite.Common
         /// Invoke the extension's app service
         /// </summary>
         /// <param name="message">The parameters for the app service call</param>
-        public async Task<object> InvokeAsync(ValueSet message)
+        public async Task<T> InvokeAsync<T>(ValueSet message)
         {
             if (Loaded)
             {
@@ -460,7 +460,7 @@ namespace CoolapkLite.Common
                             if (response.Status == AppServiceResponseStatus.Success)
                             {
                                 ValueSet answer = response.Message;
-                                if (answer.TryGetValue("Result", out object result)) // When our app service returns "Result", it means it succeeded
+                                if (answer.TryGetValue("Result", out object value) && value is T result) // When our app service returns "Result", it means it succeeded
                                 {
                                     return result;
                                 }
@@ -473,7 +473,7 @@ namespace CoolapkLite.Common
                     Debug.WriteLine("Calling the App Service failed");
                 }
             }
-            return null; // indicates an error from the app service
+            return default; // indicates an error from the app service
         }
 
         /// <summary>

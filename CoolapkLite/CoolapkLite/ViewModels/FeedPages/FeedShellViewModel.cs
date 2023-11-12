@@ -176,7 +176,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 });
                 base.ItemSource = ItemSource;
             }
-            await ReplyItemSource?.Refresh(reset);
+            if (ReplyItemSource != null) { await ReplyItemSource.Refresh(reset); }
         }
     }
 
@@ -231,7 +231,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 });
                 base.ItemSource = ItemSource;
             }
-            await ReplyItemSource?.Refresh(reset);
+            if (ReplyItemSource != null) { await ReplyItemSource.Refresh(reset); }
         }
     }
 

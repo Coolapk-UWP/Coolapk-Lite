@@ -208,7 +208,7 @@ namespace CoolapkLite.Helpers
                 ["UploadDir"] = dir,
                 ["ToUid"] = uid,
             };
-            return await extension?.InvokeAsync(message) as string[];
+            return await (extension?.InvokeAsync<string[]>(message) ?? Task.FromResult(Array.Empty<string>()));
         }
 
         public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)

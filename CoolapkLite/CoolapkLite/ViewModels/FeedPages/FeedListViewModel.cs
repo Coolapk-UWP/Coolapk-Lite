@@ -141,7 +141,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 SearchItemSource.Keyword = Title;
             }
-            await SearchItemSource?.Refresh(true);
+            if (SearchItemSource != null) { await SearchItemSource.Refresh(true); }
         }
 
         private void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();
