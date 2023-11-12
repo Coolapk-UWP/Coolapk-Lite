@@ -11,40 +11,61 @@ using ThreadPool = Windows.System.Threading.ThreadPool;
 namespace CoolapkLite.Common
 {
     /// <summary>
+    /// The interface of helper type for switch thread.
+    /// </summary>
+    public interface IThreadSwitcher : INotifyCompletion
+    {
+        /// <summary>
+        /// Gets a value that indicates whether the asynchronous operation has completed.
+        /// </summary>
+        bool IsCompleted { get; }
+
+        /// <summary>
+        /// Ends the await on the completed task.
+        /// </summary>
+        void GetResult();
+
+        /// <summary>
+        /// Gets an awaiter used to await this <see cref="IThreadSwitcher"/>.
+        /// </summary>
+        /// <returns>An awaiter instance.</returns>
+        IThreadSwitcher GetAwaiter();
+    }
+
+    /// <summary>
     /// A helper type for switch thread by <see cref="CoreDispatcher"/>. This type is not intended to be used directly from your code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public readonly struct DispatcherThreadSwitcher : INotifyCompletion
+    public readonly struct CoreDispatcherThreadSwitcher : IThreadSwitcher
     {
         private readonly CoreDispatcher dispatcher;
         private readonly CoreDispatcherPriority priority;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DispatcherThreadSwitcher"/> struct.
+        /// Initializes a new instance of the <see cref="CoreDispatcherThreadSwitcher"/> struct.
         /// </summary>
         /// <param name="dispatcher">A <see cref="CoreDispatcher"/> whose foreground thread to switch execution to.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
-        public DispatcherThreadSwitcher(CoreDispatcher dispatcher, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
+        public CoreDispatcherThreadSwitcher(CoreDispatcher dispatcher, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal)
         {
             this.dispatcher = dispatcher;
             this.priority = priority;
         }
 
-        /// <summary>
-        /// Gets a value that indicates whether the asynchronous operation has completed.
-        /// </summary>
-        public bool IsCompleted => dispatcher.HasThreadAccess;
+        /// <inheritdoc/>
+        public bool IsCompleted => dispatcher?.HasThreadAccess != false;
 
-        /// <summary>
-        /// Ends the await on the completed task.
-        /// </summary>
+        /// <inheritdoc/>
         public void GetResult() { }
 
         /// <summary>
-        /// Gets an awaiter used to await this <see cref="DispatcherThreadSwitcher"/>.
+        /// Gets an awaiter used to await this <see cref="CoreDispatcherThreadSwitcher"/>.
         /// </summary>
         /// <returns>An awaiter instance.</returns>
-        public DispatcherThreadSwitcher GetAwaiter() => this;
+        public CoreDispatcherThreadSwitcher GetAwaiter() => this;
+
+        /// <inheritdoc/>
+        IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
 
         /// <inheritdoc/>
         public void OnCompleted(Action continuation) => _ = dispatcher.RunAsync(priority, () => continuation());
@@ -54,7 +75,7 @@ namespace CoolapkLite.Common
     /// A helper type for switch thread by <see cref="DispatcherQueue"/>. This type is not intended to be used directly from your code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public readonly struct DispatcherQueueThreadSwitcher : INotifyCompletion
+    public readonly struct DispatcherQueueThreadSwitcher : IThreadSwitcher
     {
         private readonly DispatcherQueue dispatcher;
         private readonly DispatcherQueuePriority priority;
@@ -70,14 +91,11 @@ namespace CoolapkLite.Common
             this.priority = priority;
         }
 
-        /// <summary>
-        /// Gets a value that indicates whether the asynchronous operation has completed.
-        /// </summary>
-        public bool IsCompleted => ThreadSwitcher.IsHasThreadAccessPropertyAvailable && dispatcher.HasThreadAccess;
+        /// <inheritdoc/>
+        public bool IsCompleted => !(this.dispatcher is DispatcherQueue dispatcher)
+            || (ThreadSwitcher.IsHasThreadAccessPropertyAvailable && dispatcher.HasThreadAccess);
 
-        /// <summary>
-        /// Ends the await on the completed task.
-        /// </summary>
+        /// <inheritdoc/>
         public void GetResult() { }
 
         /// <summary>
@@ -87,6 +105,9 @@ namespace CoolapkLite.Common
         public DispatcherQueueThreadSwitcher GetAwaiter() => this;
 
         /// <inheritdoc/>
+        IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
+
+        /// <inheritdoc/>
         public void OnCompleted(Action continuation) => _ = dispatcher.TryEnqueue(priority, () => continuation());
     }
 
@@ -94,7 +115,7 @@ namespace CoolapkLite.Common
     /// A helper type for switch thread by <see cref="ThreadPool"/>. This type is not intended to be used directly from your code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public readonly struct ThreadPoolThreadSwitcher : INotifyCompletion
+    public readonly struct ThreadPoolThreadSwitcher : IThreadSwitcher
     {
         private readonly WorkItemPriority priority;
 
@@ -104,14 +125,10 @@ namespace CoolapkLite.Common
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         public ThreadPoolThreadSwitcher(WorkItemPriority priority = WorkItemPriority.Normal) => this.priority = priority;
 
-        /// <summary>
-        /// Gets a value that indicates whether the asynchronous operation has completed.
-        /// </summary>
+        /// <inheritdoc/>
         public bool IsCompleted => SynchronizationContext.Current == null;
 
-        /// <summary>
-        /// Ends the await on the completed task.
-        /// </summary>
+        /// <inheritdoc/>
         public void GetResult() { }
 
         /// <summary>
@@ -119,6 +136,9 @@ namespace CoolapkLite.Common
         /// </summary>
         /// <returns>An awaiter instance.</returns>
         public ThreadPoolThreadSwitcher GetAwaiter() => this;
+
+        /// <inheritdoc/>
+        IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
 
         /// <inheritdoc/>
         public void OnCompleted(Action continuation) => _ = ThreadPool.RunAsync(_ => continuation(), priority);
@@ -148,7 +168,7 @@ namespace CoolapkLite.Common
         /// <param name="dispatcher">A <see cref="CoreDispatcher"/> whose foreground thread to switch execution to.</param>
         /// <param name="priority">Specifies the priority for event dispatch.</param>
         /// <returns>An object that you can <see langword="await"/>.</returns>
-        public static DispatcherThreadSwitcher ResumeForegroundAsync(this CoreDispatcher dispatcher, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal) => new DispatcherThreadSwitcher(dispatcher, priority);
+        public static CoreDispatcherThreadSwitcher ResumeForegroundAsync(this CoreDispatcher dispatcher, CoreDispatcherPriority priority = CoreDispatcherPriority.Normal) => new CoreDispatcherThreadSwitcher(dispatcher, priority);
 
         /// <summary>
         /// A helper function—for use within a coroutine—that returns control to the caller, and then immediately resumes execution on a thread pool thread.

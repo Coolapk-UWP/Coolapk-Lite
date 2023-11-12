@@ -47,10 +47,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
         {
-            if (window.Dispatcher?.HasThreadAccess == false)
-            {
-                await window.Dispatcher.ResumeForegroundAsync();
-            }
+            await window.Dispatcher.ResumeForegroundAsync();
             Page page = window.Content.FindDescendant<Page>();
             return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
         }
@@ -59,10 +56,7 @@ namespace CoolapkLite.Helpers
         {
             if (WindowHelper.ActiveWindows.TryGetValue(dispatcher, out Window window))
             {
-                if (window.Dispatcher?.HasThreadAccess == false)
-                {
-                    await window.Dispatcher.ResumeForegroundAsync();
-                }
+                await window.Dispatcher.ResumeForegroundAsync();
                 Page page = window.Content.FindDescendant<Page>();
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
@@ -79,10 +73,7 @@ namespace CoolapkLite.Helpers
                 return mainPage;
             }
 
-            if (element.Dispatcher?.HasThreadAccess == false)
-            {
-                await element.Dispatcher.ResumeForegroundAsync();
-            }
+            await element.Dispatcher.ResumeForegroundAsync();
 
             if (WindowHelper.IsXamlRootSupported
                 && element is UIElement uiElement
@@ -103,10 +94,7 @@ namespace CoolapkLite.Helpers
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (mainPage.Dispatcher?.HasThreadAccess == false)
-            {
-                await mainPage.Dispatcher.ResumeForegroundAsync();
-            }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
                 await mainPage?.HideProgressBarAsync();
@@ -126,10 +114,7 @@ namespace CoolapkLite.Helpers
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage, double value)
         {
             IsShowingProgressBar = true;
-            if (mainPage.Dispatcher?.HasThreadAccess == false)
-            {
-                await mainPage.Dispatcher.ResumeForegroundAsync();
-            }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
                 await mainPage?.HideProgressBarAsync();
@@ -149,10 +134,7 @@ namespace CoolapkLite.Helpers
         public static async Task PausedProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (mainPage.Dispatcher?.HasThreadAccess == false)
-            {
-                await mainPage.Dispatcher.ResumeForegroundAsync();
-            }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -167,10 +149,7 @@ namespace CoolapkLite.Helpers
         public static async Task ErrorProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = true;
-            if (mainPage.Dispatcher?.HasThreadAccess == false)
-            {
-                await mainPage.Dispatcher.ResumeForegroundAsync();
-            }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -185,10 +164,7 @@ namespace CoolapkLite.Helpers
         public static async Task HideProgressBarAsync(IHaveTitleBar mainPage)
         {
             IsShowingProgressBar = false;
-            if (mainPage.Dispatcher?.HasThreadAccess == false)
-            {
-                await mainPage.Dispatcher.ResumeForegroundAsync();
-            }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
             {
                 await StatusBar.GetForCurrentView().ProgressIndicator.HideAsync();
@@ -208,10 +184,7 @@ namespace CoolapkLite.Helpers
             if (!IsShowingMessage)
             {
                 IsShowingMessage = true;
-                if (mainPage.Dispatcher?.HasThreadAccess == false)
-                {
-                    await mainPage.Dispatcher.ResumeForegroundAsync();
-                }
+                await mainPage.Dispatcher.ResumeForegroundAsync();
                 if (HasStatusBar)
                 {
                     StatusBar statusBar = StatusBar.GetForCurrentView();
@@ -306,19 +279,13 @@ namespace CoolapkLite.Helpers
 
         public static async Task<T> GetValueAsync<T>(this DependencyObject element, DependencyProperty dp)
         {
-            if (element.Dispatcher?.HasThreadAccess == false)
-            {
-                await element.Dispatcher.ResumeForegroundAsync();
-            }
+            await element.Dispatcher.ResumeForegroundAsync();
             return (T)element.GetValue(dp);
         }
 
         public static async Task SetValueAsync<T>(this DependencyObject element, DependencyProperty dp, T value)
         {
-            if (element.Dispatcher?.HasThreadAccess == false)
-            {
-                await element.Dispatcher.ResumeForegroundAsync();
-            }
+            await element.Dispatcher.ResumeForegroundAsync();
             element.SetValue(dp, value);
         }
 
@@ -342,8 +309,7 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                if (!frame.Dispatcher.HasThreadAccess)
-                { await frame.Dispatcher.ResumeForegroundAsync(); }
+                await frame.Dispatcher.ResumeForegroundAsync();
                 return infoOverride is null
                     ? frame.Navigate(pageType, parameter)
                     : frame.Navigate(pageType, parameter, infoOverride);
@@ -361,10 +327,7 @@ namespace CoolapkLite.Helpers
             {
                 OpenLinkFactory factory = frame => frame.NavigateAsync(pageType, parameter(frame.Dispatcher), infoOverride);
 
-                if (!dispatcher?.HasThreadAccess == false)
-                {
-                    await dispatcher.ResumeForegroundAsync();
-                }
+                await dispatcher.ResumeForegroundAsync();
 
                 if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
                 {
@@ -410,15 +373,13 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> LaunchUriAsync(this CoreDispatcher dispatcher, Uri uri)
         {
-            if (!dispatcher.HasThreadAccess)
-            { await dispatcher.ResumeForegroundAsync(); }
+            await dispatcher.ResumeForegroundAsync();
             return await Launcher.LaunchUriAsync(uri);
         }
 
         public static async Task<bool> LaunchFileAsync(this CoreDispatcher dispatcher, IStorageFile file)
         {
-            if (!dispatcher.HasThreadAccess)
-            { await dispatcher.ResumeForegroundAsync(); }
+            await dispatcher.ResumeForegroundAsync();
             return await Launcher.LaunchFileAsync(file);
         }
 
@@ -427,8 +388,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> ShowImageAsync(this IHaveTitleBar mainPage, ImageModel image)
         {
-            if (!mainPage.Dispatcher.HasThreadAccess)
-            { await mainPage.Dispatcher.ResumeForegroundAsync(); }
+            await mainPage.Dispatcher.ResumeForegroundAsync();
             if (SettingsHelper.Get<bool>(SettingsHelper.IsUseMultiWindow))
             {
                 if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
@@ -485,10 +445,7 @@ namespace CoolapkLite.Helpers
 
             if (!(await TryGetOpenLinkFactory(link) is OpenLinkFactory factory)) { return false; }
 
-            if (!dispatcher?.HasThreadAccess == false)
-            {
-                await dispatcher.ResumeForegroundAsync();
-            }
+            await dispatcher.ResumeForegroundAsync();
 
             if (WindowHelper.IsAppWindowSupported && SettingsHelper.Get<bool>(SettingsHelper.IsUseAppWindow))
             {
@@ -873,10 +830,7 @@ namespace CoolapkLite.Helpers
 
         private static async Task<bool> ShowCreateFeedControlAsync(this UIElement element)
         {
-            if (element.Dispatcher?.HasThreadAccess == false)
-            {
-                await element.Dispatcher.ResumeForegroundAsync();
-            }
+            await element.Dispatcher.ResumeForegroundAsync();
             new CreateFeedControl
             {
                 FeedType = CreateFeedType.Feed,
@@ -890,10 +844,7 @@ namespace CoolapkLite.Helpers
 
         private static async Task<bool> ShowCreateFeedControlAsync(this UIElement element, DataPackageView data)
         {
-            if (element.Dispatcher?.HasThreadAccess == false)
-            {
-                await element.Dispatcher.ResumeForegroundAsync();
-            }
+            await element.Dispatcher.ResumeForegroundAsync();
             CreateFeedControl control = new CreateFeedControl
             {
                 FeedType = CreateFeedType.Feed,

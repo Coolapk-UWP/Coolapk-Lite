@@ -83,19 +83,13 @@ namespace CoolapkLite.Helpers
                         await Task.Delay(100).ConfigureAwait(false);
                         if (tokenSource.IsCancellationRequested)
                         {
-                            if (element.Dispatcher?.HasThreadAccess == false)
-                            {
-                                await element.Dispatcher.ResumeForegroundAsync();
-                            }
+                            await element.Dispatcher.ResumeForegroundAsync();
                             element.Loaded -= OnListViewLoaded;
                             element.Loaded += OnListViewLoaded;
                         }
                     }
                 }
-                if (itemsPresenter.Dispatcher?.HasThreadAccess == false)
-                {
-                    await itemsPresenter.Dispatcher.ResumeForegroundAsync();
-                }
+                await itemsPresenter.Dispatcher.ResumeForegroundAsync();
                 UpdatePadding(element, GetPadding(element));
             }
             else

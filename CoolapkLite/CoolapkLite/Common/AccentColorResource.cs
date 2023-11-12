@@ -40,10 +40,7 @@ namespace CoolapkLite.Common
 
         private async void OnColorValuesChanged(UISettings sender, object args)
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             UpdateSystemAccentColors(sender);
         }
     }

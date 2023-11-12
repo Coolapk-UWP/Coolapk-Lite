@@ -152,7 +152,7 @@ namespace CoolapkLite.Models.Feeds
 
         private async void ParseLink(string url)
         {
-            if (url.ContainsAny(new[] { "b23.tv" , "t.cn" }, StringComparison.OrdinalIgnoreCase))
+            if (url.ContainsAny(new[] { "b23.tv", "t.cn" }, StringComparison.OrdinalIgnoreCase))
             {
                 url = await url.TryGetUri().ExpandShortUrlAsync().ContinueWith(x => x.Result.ToString());
             }

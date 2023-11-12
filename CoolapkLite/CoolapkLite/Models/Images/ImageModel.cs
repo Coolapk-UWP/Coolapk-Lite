@@ -197,10 +197,7 @@ namespace CoolapkLite.Models.Images
         {
             if (name != null)
             {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
+                await Dispatcher.ResumeForegroundAsync();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
@@ -297,10 +294,7 @@ namespace CoolapkLite.Models.Images
                     }
                     Pic = bitmapImage;
                     IsNoPic = false;
-                    if (!bitmapImage.Dispatcher.HasThreadAccess)
-                    {
-                        await bitmapImage.Dispatcher.ResumeForegroundAsync();
-                    }
+                    await bitmapImage.Dispatcher.ResumeForegroundAsync();
                     double PixelWidth = bitmapImage.PixelWidth;
                     double PixelHeight = bitmapImage.PixelHeight;
                     Rect Bounds = Window.Current is Window window

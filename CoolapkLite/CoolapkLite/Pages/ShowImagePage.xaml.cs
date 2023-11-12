@@ -294,11 +294,7 @@ namespace CoolapkLite.Pages
 
         public async void UpdateTitle(string title = null)
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
-
+            await Dispatcher.ResumeForegroundAsync();
             if (this.IsAppWindow())
             {
                 this.GetWindowForElement().Title = title ?? string.Empty;

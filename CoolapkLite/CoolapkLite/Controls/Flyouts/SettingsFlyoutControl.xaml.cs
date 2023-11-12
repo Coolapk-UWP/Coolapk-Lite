@@ -80,12 +80,7 @@ namespace CoolapkLite.Controls
         private async void UpdateThemeRadio()
         {
             ElementTheme theme = await ThemeHelper.GetActualThemeAsync().ConfigureAwait(false);
-
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
-
+            await Dispatcher.ResumeForegroundAsync();
             switch (theme)
             {
                 case ElementTheme.Light:

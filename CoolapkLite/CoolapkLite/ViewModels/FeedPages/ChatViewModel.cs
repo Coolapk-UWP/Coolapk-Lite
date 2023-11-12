@@ -77,10 +77,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public override async Task AddAsync(Entity item)
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             InsertItem(0, item);
         }
 

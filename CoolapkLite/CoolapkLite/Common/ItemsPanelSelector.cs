@@ -99,10 +99,7 @@ namespace CoolapkLite.Common
 
         private async void OnIsVirtualizingChanged(bool value)
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             Template = value ? VirtualizingTemplate : NonVirtualizingTemplate;
         }
 

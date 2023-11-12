@@ -165,10 +165,7 @@ namespace CoolapkLite.Models
             {
                 foreach (KeyValuePair<CoreDispatcher, NotificationsModel> cache in Caches)
                 {
-                    if (cache.Key?.HasThreadAccess == false)
-                    {
-                        await cache.Key.ResumeForegroundAsync();
-                    }
+                    await cache.Key.ResumeForegroundAsync();
                     cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
                 }
             }

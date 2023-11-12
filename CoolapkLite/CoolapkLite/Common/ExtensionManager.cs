@@ -136,10 +136,7 @@ namespace CoolapkLite.Common
         private async void Catalog_PackageInstalled(AppExtensionCatalog sender, AppExtensionPackageInstalledEventArgs args)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
-            if (_dispatcher?.HasThreadAccess == false)
-            {
-                await _dispatcher.ResumeForegroundAsync();
-            }
+            await _dispatcher.ResumeForegroundAsync();
             foreach (AppExtension ext in args.Extensions)
             {
                 await LoadExtensionAsync(ext);
@@ -154,10 +151,7 @@ namespace CoolapkLite.Common
         private async void Catalog_PackageUpdated(AppExtensionCatalog sender, AppExtensionPackageUpdatedEventArgs args)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
-            if (_dispatcher?.HasThreadAccess == false)
-            {
-                await _dispatcher.ResumeForegroundAsync();
-            }
+            await _dispatcher.ResumeForegroundAsync();
             foreach (AppExtension ext in args.Extensions)
             {
                 await LoadExtensionAsync(ext);
@@ -283,10 +277,7 @@ namespace CoolapkLite.Common
         public async Task LoadExtensionsAsync(Package package)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
-            if (_dispatcher?.HasThreadAccess == false)
-            {
-                await _dispatcher.ResumeForegroundAsync();
-            }
+            await _dispatcher.ResumeForegroundAsync();
             Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => e.MarkAsLoaded());
         }
 
@@ -298,10 +289,7 @@ namespace CoolapkLite.Common
         public async Task UnloadExtensionsAsync(Package package)
         {
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
-            if (_dispatcher?.HasThreadAccess == false)
-            {
-                await _dispatcher.ResumeForegroundAsync();
-            }
+            await _dispatcher.ResumeForegroundAsync();
             Extensions.Where(ext => ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName).ForEach(e => { e.Unload(); });
         }
 
@@ -313,10 +301,7 @@ namespace CoolapkLite.Common
         /// <returns></returns>
         public async Task RemoveExtensionsAsync(Package package)
         {
-            if (_dispatcher?.HasThreadAccess == false)
-            {
-                await _dispatcher.ResumeForegroundAsync();
-            }
+            await _dispatcher.ResumeForegroundAsync();
             _ = Extensions.RemoveRange(Extensions.Where(ext =>
             {
                 bool result = ext.AppExtension.Package.Id.FamilyName == package.Id.FamilyName;

@@ -307,10 +307,7 @@ namespace CoolapkLite.Pages
 
         public async Task ShowProgressBarAsync()
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
@@ -319,10 +316,7 @@ namespace CoolapkLite.Pages
 
         public async Task ShowProgressBarAsync(double value)
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -332,10 +326,7 @@ namespace CoolapkLite.Pages
 
         public async Task PausedProgressBarAsync()
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowError = false;
@@ -344,10 +335,7 @@ namespace CoolapkLite.Pages
 
         public async Task ErrorProgressBarAsync()
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             ProgressBar.Visibility = Visibility.Visible;
             ProgressBar.IsIndeterminate = true;
             ProgressBar.ShowPaused = false;
@@ -356,10 +344,7 @@ namespace CoolapkLite.Pages
 
         public async Task HideProgressBarAsync()
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             ProgressBar.Visibility = Visibility.Collapsed;
             ProgressBar.IsIndeterminate = false;
             ProgressBar.ShowError = false;
@@ -369,10 +354,7 @@ namespace CoolapkLite.Pages
 
         public async Task ShowMessageAsync(string message = null)
         {
-            if (!Dispatcher.HasThreadAccess)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
 
             AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
 

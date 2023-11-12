@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 

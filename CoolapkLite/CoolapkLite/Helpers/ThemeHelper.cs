@@ -19,7 +19,8 @@ namespace CoolapkLite.Helpers
         private static Window CurrentApplicationWindow;
 
         // Keep reference so it does not get optimized/garbage collected
-        public static UISettings UISettings;
+        public static UISettings UISettings { get; } = new UISettings();
+        public static AccessibilitySettings AccessibilitySettings { get; } = new AccessibilitySettings();
 
         public static WeakEvent<UISettingChangedType> UISettingChanged { get; } = new WeakEvent<UISettingChangedType>();
 
@@ -38,7 +39,7 @@ namespace CoolapkLite.Helpers
             window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
                 : window.Dispatcher?.HasThreadAccess == false
-                    ? window.Dispatcher?.AwaitableRunAsync(() =>
+                    ? window.Dispatcher.AwaitableRunAsync(() =>
                         window.Content is FrameworkElement _rootElement
                             && _rootElement.RequestedTheme != ElementTheme.Default
                                 ? _rootElement.RequestedTheme
@@ -57,7 +58,7 @@ namespace CoolapkLite.Helpers
             window == null
                 ? SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme)
                 : window.Dispatcher?.HasThreadAccess == false
-                    ? await window.Dispatcher?.AwaitableRunAsync(() =>
+                    ? await window.Dispatcher.AwaitableRunAsync(() =>
                         window.Content is FrameworkElement _rootElement
                             && _rootElement.RequestedTheme != ElementTheme.Default
                                 ? _rootElement.RequestedTheme
@@ -87,15 +88,15 @@ namespace CoolapkLite.Helpers
         public static ElementTheme GetRootTheme(Window window) =>
             window == null
                 ? ElementTheme.Default
-                : window.Dispatcher.HasThreadAccess
-                    ? window.Content is FrameworkElement rootElement
-                        ? rootElement.RequestedTheme
-                        : ElementTheme.Default
-                    : window.Dispatcher.AwaitableRunAsync(() =>
+                : window.Dispatcher?.HasThreadAccess == false
+                    ? window.Dispatcher.AwaitableRunAsync(() =>
                         window.Content is FrameworkElement _rootElement
                             ? _rootElement.RequestedTheme
                             : ElementTheme.Default,
-                        CoreDispatcherPriority.High).AwaitByTaskCompleteSource();
+                        CoreDispatcherPriority.High).AwaitByTaskCompleteSource()
+                    : window.Content is FrameworkElement rootElement
+                        ? rootElement.RequestedTheme
+                        : ElementTheme.Default;
 
         public static Task<ElementTheme> GetRootThemeAsync() =>
             GetRootThemeAsync(Window.Current ?? CurrentApplicationWindow);
@@ -103,24 +104,21 @@ namespace CoolapkLite.Helpers
         public static async Task<ElementTheme> GetRootThemeAsync(Window window) =>
             window == null
                 ? ElementTheme.Default
-                : window.Dispatcher.HasThreadAccess
-                    ? window.Content is FrameworkElement rootElement
-                        ? rootElement.RequestedTheme
-                        : ElementTheme.Default
-                    : await window.Dispatcher.AwaitableRunAsync(() =>
+                : window.Dispatcher?.HasThreadAccess == false
+                    ? await window.Dispatcher.AwaitableRunAsync(() =>
                         window.Content is FrameworkElement _rootElement
                             ? _rootElement.RequestedTheme
                             : ElementTheme.Default,
-                        CoreDispatcherPriority.High);
+                        CoreDispatcherPriority.High)
+                    : window.Content is FrameworkElement rootElement
+                        ? rootElement.RequestedTheme
+                        : ElementTheme.Default;
 
         public static async void SetRootTheme(ElementTheme value)
         {
             WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
-                if (!window.Dispatcher.HasThreadAccess)
-                {
-                    await window.Dispatcher.ResumeForegroundAsync();
-                }
+                await window.Dispatcher.ResumeForegroundAsync();
 
                 if (window.Content is FrameworkElement rootElement)
                 {
@@ -145,10 +143,7 @@ namespace CoolapkLite.Helpers
         {
             await Task.WhenAll(WindowHelper.ActiveWindows.Values.Select(async window =>
             {
-                if (!window.Dispatcher.HasThreadAccess)
-                {
-                    await window.Dispatcher.ResumeForegroundAsync();
-                }
+                await window.Dispatcher.ResumeForegroundAsync();
 
                 if (window.Content is FrameworkElement rootElement)
                 {
@@ -178,7 +173,7 @@ namespace CoolapkLite.Helpers
             RootTheme = SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme);
 
             // Registering to color changes, thus we notice when user changes theme system wide
-            UISettings = new UISettings();
+            UISettings.ColorValuesChanged -= UISettings_ColorValuesChanged;
             UISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
         }
 
@@ -247,10 +242,7 @@ namespace CoolapkLite.Helpers
         {
             WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
-                if (window.Dispatcher?.HasThreadAccess == false)
-                {
-                    await window.Dispatcher.ResumeForegroundAsync();
-                }
+                await window.Dispatcher.ResumeForegroundAsync();
 
                 CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = IsExtendsTitleBar;
 
@@ -267,17 +259,14 @@ namespace CoolapkLite.Helpers
         public static async void UpdateSystemCaptionButtonColors()
         {
             bool IsDark = await IsDarkThemeAsync();
-            bool IsHighContrast = new AccessibilitySettings().HighContrast;
+            bool IsHighContrast = AccessibilitySettings.HighContrast;
 
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
 
             WindowHelper.ActiveWindows.Values.ForEach(async window =>
             {
-                if (window.Dispatcher?.HasThreadAccess == false)
-                {
-                    await window.Dispatcher.ResumeForegroundAsync();
-                }
+                await window.Dispatcher.ResumeForegroundAsync();
 
                 if (UIHelper.HasStatusBar)
                 {
@@ -311,13 +300,10 @@ namespace CoolapkLite.Helpers
 
         public static async void UpdateSystemCaptionButtonColors(Window window)
         {
-            if (window.Dispatcher?.HasThreadAccess == false)
-            {
-                await window.Dispatcher.ResumeForegroundAsync();
-            }
+            await window.Dispatcher.ResumeForegroundAsync();
 
             bool IsDark = window?.Content is FrameworkElement rootElement ? IsDarkTheme(rootElement.RequestedTheme) : await IsDarkThemeAsync();
-            bool IsHighContrast = new AccessibilitySettings().HighContrast;
+            bool IsHighContrast = AccessibilitySettings.HighContrast;
 
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
@@ -341,13 +327,10 @@ namespace CoolapkLite.Helpers
 
         public static async void UpdateSystemCaptionButtonColors(AppWindow window)
         {
-            if (!(ThreadSwitcher.IsHasThreadAccessPropertyAvailable && window.DispatcherQueue?.HasThreadAccess == false))
-            {
-                await window.DispatcherQueue.ResumeForegroundAsync();
-            }
+            await window.DispatcherQueue.ResumeForegroundAsync();
 
             bool IsDark = window.GetXamlRootForWindow() is FrameworkElement rootElement ? IsDarkTheme(rootElement.RequestedTheme) : await IsDarkThemeAsync();
-            bool IsHighContrast = new AccessibilitySettings().HighContrast;
+            bool IsHighContrast = AccessibilitySettings.HighContrast;
 
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);

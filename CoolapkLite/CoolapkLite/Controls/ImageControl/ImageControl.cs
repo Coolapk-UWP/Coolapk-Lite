@@ -259,10 +259,7 @@ namespace CoolapkLite.Controls
             if (IsUseNoPicFallback) { return; }
             if (_isImageLoaded != isLoaded)
             {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
+                await Dispatcher.ResumeForegroundAsync();
                 _isImageLoaded = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions) == isLoaded;
             }
         }

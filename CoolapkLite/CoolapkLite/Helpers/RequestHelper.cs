@@ -129,11 +129,7 @@ namespace CoolapkLite.Helpers
                 await stream.CopyToAsync(fileStream).ConfigureAwait(false);
             }
 
-            if (dispatcher?.HasThreadAccess == false)
-            {
-                await dispatcher.ResumeForegroundAsync();
-            }
-
+            await dispatcher.ResumeForegroundAsync();
             return new BitmapImage(new Uri(file.Path));
         }
 #pragma warning restore 0612

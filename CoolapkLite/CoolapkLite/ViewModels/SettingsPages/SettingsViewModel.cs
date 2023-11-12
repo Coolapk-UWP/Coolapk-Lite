@@ -159,10 +159,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
                 {
-                    if (cache.Key?.HasThreadAccess == false)
-                    {
-                        await cache.Key.ResumeForegroundAsync();
-                    }
+                    await cache.Key.ResumeForegroundAsync();
                     cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
                 }
             }
@@ -174,10 +171,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
                 {
-                    if (cache.Key?.HasThreadAccess == false)
-                    {
-                        await cache.Key.ResumeForegroundAsync();
-                    }
+                    await cache.Key.ResumeForegroundAsync();
                     names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
                 }
             }

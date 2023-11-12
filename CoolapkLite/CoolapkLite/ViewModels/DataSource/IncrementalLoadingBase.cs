@@ -72,10 +72,7 @@ namespace CoolapkLite.ViewModels.DataSource
         {
             if (name != null)
             {
-                if (Dispatcher?.HasThreadAccess == false)
-                {
-                    await Dispatcher.ResumeForegroundAsync();
-                }
+                await Dispatcher.ResumeForegroundAsync();
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             }
         }
@@ -152,28 +149,19 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public virtual async Task AddAsync(T item)
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             Add(item);
         }
 
         public virtual async Task RemoveAsync(T item)
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             Remove(item);
         }
 
         public virtual async Task ClearAsync()
         {
-            if (Dispatcher?.HasThreadAccess == false)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-            }
+            await Dispatcher.ResumeForegroundAsync();
             Clear();
         }
 

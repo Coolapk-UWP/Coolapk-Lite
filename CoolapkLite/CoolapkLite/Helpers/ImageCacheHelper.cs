@@ -53,7 +53,7 @@ namespace CoolapkLite.Helpers
 
             if (url.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase) || uri.IsFile)
             {
-                if (!dispatcher.HasThreadAccess) { await dispatcher.ResumeForegroundAsync(); }
+                await dispatcher.ResumeForegroundAsync();
                 return new BitmapImage(uri);
             }
             else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
@@ -165,10 +165,11 @@ namespace CoolapkLite.Helpers
 
         public static BitmapImage GetNoPic(CoreDispatcher dispatcher)
         {
-            if (!dispatcher.HasThreadAccess) { return null; }
+            if (dispatcher == null) { return null; }
 
             if (!DarkNoPicMode.ContainsKey(dispatcher))
             {
+                if (!dispatcher.HasThreadAccess) { return null; }
                 DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
                 WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
             }
@@ -180,10 +181,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<BitmapImage> GetNoPicAsync(CoreDispatcher dispatcher)
         {
-            if (!dispatcher.HasThreadAccess)
-            {
-                await dispatcher.ResumeForegroundAsync();
-            }
+            await dispatcher.ResumeForegroundAsync();
 
             if (!DarkNoPicMode.ContainsKey(dispatcher))
             {
