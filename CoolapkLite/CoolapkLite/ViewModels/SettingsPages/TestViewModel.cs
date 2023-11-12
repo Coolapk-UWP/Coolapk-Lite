@@ -24,39 +24,39 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public static Dictionary<CoreDispatcher, TestViewModel> Caches { get; } = new Dictionary<CoreDispatcher, TestViewModel>();
 
+        public static bool IsJumpListSupported { get; } = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
+
+        public static string FrameworkDescription { get; } = RuntimeInformation.FrameworkDescription;
+
+        public static string DeviceFamily { get; } = AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
+
+        public static string OperatingSystemVersion { get; } = SystemInformation.Instance.OperatingSystemVersion.ToString();
+
+        public static string OSArchitecture { get; } = RuntimeInformation.OSArchitecture.ToString();
+        
         public CoreDispatcher Dispatcher { get; }
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
 
-        public bool IsJumpListSupported { get; } = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
+        public bool IsAppWindowSupported => WindowHelper.IsAppWindowSupported;
 
-        public bool IsAppWindowSupported { get; } = WindowHelper.IsAppWindowSupported;
+        public bool IsSearchPaneSupported => SettingsPaneRegister.IsSearchPaneSupported;
 
-        public bool IsSearchPaneSupported { get; } = SettingsPaneRegister.IsSearchPaneSupported;
+        public bool IsAppExtensionSupported => ExtensionManager.IsOSSUploaderSupported;
 
-        public bool IsAppExtensionSupported { get; } = ExtensionManager.IsOSSUploaderSupported;
+        public bool IsSettingsPaneSupported => SettingsPaneRegister.IsSettingsPaneSupported;
 
-        public bool IsSettingsPaneSupported { get; } = SettingsPaneRegister.IsSettingsPaneSupported;
+        public bool IsCompactOverlaySupported => ApiInfoHelper.IsApplicationViewViewModeSupported;
 
-        public bool IsCompactOverlaySupported { get; } = ApiInfoHelper.IsApplicationViewViewModeSupported;
+        public bool IsGetElementVisualSupported => ApiInfoHelper.IsGetElementVisualSupported;
 
-        public bool IsGetElementVisualSupported { get; } = ApiInfoHelper.IsGetElementVisualSupported;
+        public bool IsRequestRestartAsyncSupported => ApiInfoHelper.IsRequestRestartAsyncSupported;
 
-        public bool IsRequestRestartAsyncSupported { get; } = ApiInfoHelper.IsRequestRestartAsyncSupported;
+        public bool IsXamlCompositionBrushSupported => ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
 
-        public bool IsXamlCompositionBrushSupported { get; } = ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
-
-        public bool IsRequestInfoForAppAsyncSupported { get; } = ApiInfoHelper.IsRequestInfoForAppAsyncSupported;
+        public bool IsRequestInfoForAppAsyncSupported => ApiInfoHelper.IsRequestInfoForAppAsyncSupported;
 
         public ImmutableArray<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
-
-        public string FrameworkDescription => RuntimeInformation.FrameworkDescription;
-
-        public string DeviceFamily => AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
-
-        public string OperatingSystemVersion => SystemInformation.Instance.OperatingSystemVersion.ToString();
-
-        public string OSArchitecture => RuntimeInformation.OSArchitecture.ToString();
 
         public bool IsExtendsTitleBar
         {

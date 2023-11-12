@@ -166,15 +166,17 @@ namespace CoolapkLite.Helpers
 
         #endregion
 
+        static ThemeHelper()
+        {
+            // Registering to color changes, thus we notice when user changes theme system wide
+            UISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
+        }
+
         public static void Initialize()
         {
             // Save reference as this might be null when the user is in another app
             CurrentApplicationWindow = Window.Current;
             RootTheme = SettingsHelper.Get<ElementTheme>(SettingsHelper.SelectedAppTheme);
-
-            // Registering to color changes, thus we notice when user changes theme system wide
-            UISettings.ColorValuesChanged -= UISettings_ColorValuesChanged;
-            UISettings.ColorValuesChanged += UISettings_ColorValuesChanged;
         }
 
         public static async void Initialize(Window window)

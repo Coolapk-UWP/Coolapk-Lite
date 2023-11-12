@@ -56,6 +56,7 @@ namespace CoolapkLite.Pages.SettingsPages
             }
             ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
             UpdateThemeRadio();
+            _ = Refresh();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

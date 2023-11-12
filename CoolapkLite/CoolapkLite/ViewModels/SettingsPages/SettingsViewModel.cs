@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.Background;
 
-
 #if CANARY
 using System.Text;
 #else
@@ -36,6 +35,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public CoreDispatcher Dispatcher { get; }
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
+
+        public string VersionTextBlockText { get; } = $"{ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName} v{Package.Current.Id.Version.ToFormattedString(3)}";
 
         public bool IsLogin
         {
@@ -186,17 +187,6 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public string VersionTextBlockText
-        {
-            get
-            {
-                string name = ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName;
-                string ver = Package.Current.Id.Version.ToFormattedString(3);
-                _ = GetAboutTextBlockTextAsync();
-                return $"{name} v{ver}";
-            }
-        }
-
         public SettingsViewModel(CoreDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
@@ -204,16 +194,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
             SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
         }
 
-        private async Task GetAboutTextBlockTextAsync()
+        private async Task GetAboutTextBlockTextAsync(bool reset)
         {
-            await ThreadSwitcher.ResumeBackgroundAsync();
-            string langCode = LanguageHelper.GetPrimaryLanguage();
-            Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langCode}.md");
-            StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
-            if (file != null)
+            if (reset || string.IsNullOrWhiteSpace(_aboutTextBlockText))
             {
-                string markdown = await FileIO.ReadTextAsync(file);
-                AboutTextBlockText = markdown;
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                string langCode = LanguageHelper.GetPrimaryLanguage();
+                Uri dataUri = new Uri($"ms-appx:///Assets/About/About.{langCode}.md");
+                StorageFile file = await StorageFile.GetFileFromApplicationUriAsync(dataUri);
+                if (file != null)
+                {
+                    string markdown = await FileIO.ReadTextAsync(file);
+                    AboutTextBlockText = markdown;
+                }
             }
         }
 
@@ -436,7 +429,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(TileUpdateTime));
             }
             TestViewModel.Refresh(reset);
-            return GetAboutTextBlockTextAsync();
+            return GetAboutTextBlockTextAsync(reset);
         }
 
         bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);

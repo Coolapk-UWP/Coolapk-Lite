@@ -54,6 +54,7 @@ namespace CoolapkLite.Controls
             Provider = Provider ?? (SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher));
             ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
             UpdateThemeRadio();
+            _ = Refresh();
         }
 
         private void SettingsFlyout_Unloaded(object sender, RoutedEventArgs e)
