@@ -187,6 +187,9 @@
     <Compile Include="Controls\Dialogs\BookmarkDialog.xaml.cs">
       <DependentUpon>BookmarkDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CaptchaDialog.xaml.cs">
+      <DependentUpon>CaptchaDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
@@ -1147,6 +1150,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\BookmarkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CaptchaDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

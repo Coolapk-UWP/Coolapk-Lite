@@ -12,10 +12,10 @@ namespace CoolapkLite.Controls.Dialogs
     public sealed partial class LoginDialog : ContentDialog
     {
         private string _UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
-        internal string UID
+        public string UID
         {
             get => _UID;
-            set
+            private set
             {
                 if (_UID != value)
                 {
@@ -26,10 +26,10 @@ namespace CoolapkLite.Controls.Dialogs
         }
 
         private string userName = SettingsHelper.Get<string>(SettingsHelper.UserName);
-        internal string UserName
+        public string UserName
         {
             get => userName;
-            set
+            private set
             {
                 if (userName != value)
                 {
@@ -40,10 +40,10 @@ namespace CoolapkLite.Controls.Dialogs
         }
 
         private string token = SettingsHelper.Get<string>(SettingsHelper.Token);
-        internal string Token
+        public string Token
         {
             get => token;
-            set
+            private set
             {
                 if (token != value)
                 {

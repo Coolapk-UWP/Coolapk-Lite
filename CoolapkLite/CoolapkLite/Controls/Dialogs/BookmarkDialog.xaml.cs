@@ -8,8 +8,8 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class BookmarkDialog : ContentDialog
     {
-        public string BookmarkURL { get; set; }
-        public string BookmarkTitle { get; set; }
+        public string BookmarkURL { get; private set; }
+        public string BookmarkTitle { get; private set; }
 
         public BookmarkDialog()
         {

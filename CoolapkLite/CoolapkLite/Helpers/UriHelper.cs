@@ -49,6 +49,7 @@ namespace CoolapkLite.Helpers
         GetUserRecentHistory,
         GetUserSpace,
         GetUserProfile,
+        GetCaptchaImage,
         PostUserFollow,
         PostTopicFollow,
         PostDyhFollow,
@@ -153,6 +154,7 @@ namespace CoolapkLite.Helpers
                 case UriType.GetUserRecentHistory: return "/v6/user/recentHistoryList?page={0}{1}{2}";
                 case UriType.GetUserSpace: return "/v6/user/space?uid={0}";
                 case UriType.GetUserProfile: return "/v6/user/profile?uid={0}";
+                case UriType.GetCaptchaImage: return "/v6/account/captchaImage?time={0}&w={1}&h={2}";
                 case UriType.PostUserFollow: return "/v6/user/follow?uid={0}";
                 case UriType.PostTopicFollow: return "/v6/feed/followTag?tag={0}";
                 case UriType.PostDyhFollow: return "/v6/dyh/follow?dyhId={0}";

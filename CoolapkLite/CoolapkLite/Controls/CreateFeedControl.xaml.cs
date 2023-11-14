@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls.Dialogs;
+using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
@@ -278,13 +279,15 @@ namespace CoolapkLite.Controls
                     break;
             }
 
+            object[] arg = Array.Empty<object>();
+            if (type != UriType.CreateFeed)
+            {
+                arg = new object[] { ReplyID };
+            }
+
+            post:
             try
             {
-                object[] arg = Array.Empty<object>();
-                if (type != UriType.CreateFeed)
-                {
-                    arg = new object[] { ReplyID };
-                }
                 (bool isSucceed, JToken _) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, arg), content);
                 if (isSucceed)
                 {
@@ -296,8 +299,19 @@ namespace CoolapkLite.Controls
                 _ = this.ShowMessageAsync(cex.Message);
                 if (cex.IsRequestCaptcha)
                 {
-                    //CaptchaDialog dialog = new CaptchaDialog();
-                    //_ = await dialog.ShowAsync();
+                    captcha:
+                    CaptchaDialog captchaDialog = new CaptchaDialog();
+                    if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
+                    {
+                        if (await captchaDialog.RequestValidateAsync())
+                        {
+                            goto post;
+                        }
+                        else
+                        {
+                            goto captcha;
+                        }
+                    }
                 }
             }
         }

@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Controls;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Message;
@@ -135,6 +136,7 @@ namespace CoolapkLite.Pages.FeedPages
                 if (string.IsNullOrWhiteSpace(contentText)) { return; }
                 string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
                 if (string.IsNullOrWhiteSpace(id)) { return; }
+                post:
                 try
                 {
                     using (MultipartFormDataContent content = new MultipartFormDataContent())
@@ -157,8 +159,22 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.ShowMessageAsync(cex.Message);
                     if (cex.IsRequestCaptcha)
                     {
-                        //CaptchaDialog dialog = new CaptchaDialog();
-                        //_ = await dialog.ShowAsync();
+                        if (cex.IsRequestCaptcha)
+                        {
+                            captcha:
+                            CaptchaDialog captchaDialog = new CaptchaDialog();
+                            if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
+                            {
+                                if (await captchaDialog.RequestValidateAsync())
+                                {
+                                    goto post;
+                                }
+                                else
+                                {
+                                    goto captcha;
+                                }
+                            }
+                        }
                     }
                 }
             }

@@ -9,7 +9,7 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class UserAgentDialog : ContentDialog
     {
-        internal UserAgent UserAgent { get; set; }
+        public UserAgent UserAgent { get; private set; }
 
         public UserAgentDialog(string line)
         {

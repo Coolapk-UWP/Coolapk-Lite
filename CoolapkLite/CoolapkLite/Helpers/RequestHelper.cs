@@ -9,10 +9,13 @@ using System.IO;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
+using CoolapkLite.ViewModels.FeedPages;
+using Windows.Graphics.Imaging;
+
+using Windows.Storage.Streams;
+
 
 #if NETCORE463
 using System.Linq;
@@ -117,22 +120,36 @@ namespace CoolapkLite.Helpers
             }
         }
 
-#pragma warning disable 0612
-        public static async Task<BitmapImage> GetImageAsync(string uri, CoreDispatcher dispatcher, bool isBackground = false)
+        public static async Task<WriteableBitmap> GetImageAsync(Uri uri, bool isBackground = false)
         {
-            StorageFolder folder = await ImageCacheHelper.GetFolderAsync(ImageType.Captcha).ConfigureAwait(false);
-            StorageFile file = await folder.CreateFileAsync(DataHelper.GetMD5(uri));
-
-            using (Stream stream = await NetworkHelper.GetStreamAsync(new Uri(uri), NetworkHelper.GetCoolapkCookies(new Uri(uri)), "XMLHttpRequest", isBackground).ConfigureAwait(false))
-            using (Stream fileStream = await file.OpenStreamForWriteAsync().ConfigureAwait(false))
+            using (Stream stream = await NetworkHelper.GetStreamAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground))
+            using (MemoryStream memoryStream = new MemoryStream())
             {
-                await stream.CopyToAsync(fileStream).ConfigureAwait(false);
+                stream.CopyTo(memoryStream);
+                using (IRandomAccessStream randomAccessStream = memoryStream.AsRandomAccessStream())
+                {
+                    try
+                    {
+                        BitmapDecoder ImageDecoder = await BitmapDecoder.CreateAsync(randomAccessStream);
+                        SoftwareBitmap SoftwareImage = await ImageDecoder.GetSoftwareBitmapAsync();
+                        using (InMemoryRandomAccessStream random = new InMemoryRandomAccessStream())
+                        {
+                            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, random);
+                            encoder.SetSoftwareBitmap(SoftwareImage);
+                            await encoder.FlushAsync();
+                            WriteableBitmap WriteableImage = new WriteableBitmap((int)ImageDecoder.PixelWidth, (int)ImageDecoder.PixelHeight);
+                            await WriteableImage.SetSourceAsync(random);
+                            return WriteableImage;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(e.ExceptionToMessage(), e);
+                    }
+                }
             }
-
-            await dispatcher.ResumeForegroundAsync();
-            return new BitmapImage(new Uri(file.Path));
+            return null;
         }
-#pragma warning restore 0612
 
 #if NETCORE463
         public static async Task<List<string>> UploadImages(IEnumerable<UploadFileFragment> images, string bucket, string dir, string uid)
