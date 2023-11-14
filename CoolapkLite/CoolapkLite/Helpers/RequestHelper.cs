@@ -35,7 +35,7 @@ namespace CoolapkLite.Helpers
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground = false)
         {
             if (uri == null) { return (false, null); }
-            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground).ConfigureAwait(false);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), NetworkHelper.XMLHttpRequest, isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
             JObject token;
             try { token = JObject.Parse(results); }
@@ -122,7 +122,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<WriteableBitmap> GetImageAsync(Uri uri, bool isBackground = false)
         {
-            using (Stream stream = await NetworkHelper.GetStreamAsync(uri, NetworkHelper.GetCoolapkCookies(uri), "XMLHttpRequest", isBackground))
+            using (Stream stream = await NetworkHelper.GetStreamAsync(uri, NetworkHelper.GetCoolapkCookies(uri), NetworkHelper.XMLHttpRequest, isBackground))
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 stream.CopyTo(memoryStream);

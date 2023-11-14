@@ -23,6 +23,8 @@ namespace CoolapkLite.Helpers
 {
     public static partial class NetworkHelper
     {
+        public const string XMLHttpRequest = "XMLHttpRequest";
+
         public static readonly HttpClientHandler ClientHandler;
         public static readonly HttpClient Client;
 
@@ -235,9 +237,8 @@ namespace CoolapkLite.Helpers
         {
             try
             {
-                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 HttpResponseMessage response;
-                BeforeGetOrPost(coolapkCookies, uri, "XMLHttpRequest");
+                BeforeGetOrPost(coolapkCookies, uri, XMLHttpRequest);
                 response = await Client.PostAsync(uri, content).ConfigureAwait(false);
                 return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             }
@@ -254,11 +255,10 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<HttpResponseMessage> GetAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
+        public static async Task<HttpResponseMessage> GetAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = XMLHttpRequest, bool isBackground = false)
         {
             try
             {
-                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetAsync(uri).ConfigureAwait(false);
             }
@@ -275,11 +275,10 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
+        public static async Task<Stream> GetStreamAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = XMLHttpRequest, bool isBackground = false)
         {
             try
             {
-                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStreamAsync(uri).ConfigureAwait(false);
             }
@@ -296,11 +295,10 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = "XMLHttpRequest", bool isBackground = false)
+        public static async Task<string> GetStringAsync(Uri uri, IEnumerable<(string name, string value)> coolapkCookies, string request = XMLHttpRequest, bool isBackground = false)
         {
             try
             {
-                //await semaphoreSlim.WaitAsync().ConfigureAwait(false);
                 BeforeGetOrPost(coolapkCookies, uri, request);
                 return await Client.GetStringAsync(uri).ConfigureAwait(false);
             }

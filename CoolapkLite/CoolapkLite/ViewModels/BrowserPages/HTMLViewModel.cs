@@ -108,7 +108,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             _ = Dispatcher.ShowProgressBarAsync();
             try
             {
-                (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest").ConfigureAwait(false);
+                (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest).ConfigureAwait(false);
                 if (isSucceed)
                 {
                     JObject json = JObject.Parse(result);

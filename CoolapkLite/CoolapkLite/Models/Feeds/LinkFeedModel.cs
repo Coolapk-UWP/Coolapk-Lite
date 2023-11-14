@@ -174,7 +174,7 @@ namespace CoolapkLite.Models.Feeds
 
         private async void GetJson(Uri uri, LinkType type)
         {
-            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, "XMLHttpRequest");
+            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest);
             if (isSucceed && !string.IsNullOrEmpty(result))
             {
                 JObject json = JObject.Parse(result);

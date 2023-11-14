@@ -208,7 +208,7 @@ namespace CoolapkLite.Helpers
 
                 NetworkHelper.SetRequestHeaders(client);
                 client.DefaultRequestHeaders.Add("X-App-Token", token.GetToken());
-                client.DefaultRequestHeaders.Add("X-Requested-With", "XMLHttpRequest");
+                client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
 
                 foreach ((string name, string value) in NetworkHelper.GetCoolapkCookies(uri))
                 {
@@ -219,130 +219,6 @@ namespace CoolapkLite.Helpers
 
                 return response?.Headers.Location;
             }
-        }
-    }
-
-    public static partial class ImageCacheHelper
-    {
-        [Obsolete]
-        private static readonly Dictionary<ImageType, StorageFolder> folders = new Dictionary<ImageType, StorageFolder>();
-
-        [Obsolete]
-        internal static async Task<StorageFolder> GetFolderAsync(ImageType type)
-        {
-            StorageFolder folder;
-            if (folders.ContainsKey(type))
-            {
-                folder = folders[type];
-            }
-            else
-            {
-                folder = await ApplicationData.Current.LocalCacheFolder.TryGetItemAsync(type.ToString()) as StorageFolder;
-                if (folder is null)
-                {
-                    folder = await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(type.ToString(), CreationCollisionOption.OpenIfExists);
-                }
-                if (!folders.ContainsKey(type))
-                {
-                    folders.Add(type, folder);
-                }
-            }
-            return folder;
-        }
-
-        [Obsolete]
-        internal static async Task<BitmapImage> GetImageAsyncOld(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
-        {
-            Uri uri = type.HasFlag(ImageType.Message)
-                ? await GetMessageImageUriAsync(type, url)
-                : url.TryGetUri();
-
-            if (uri == null) { return null; }
-
-            if (url.StartsWith("ms-appx", StringComparison.OrdinalIgnoreCase))
-            {
-                return new BitmapImage(uri);
-            }
-            else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
-            {
-                return null;
-            }
-            else
-            {
-                string fileName = DataHelper.GetMD5(url);
-                StorageFolder folder = await GetFolderAsync(type);
-                IStorageItem item = await folder.TryGetItemAsync(fileName);
-                if (!type.HasFlag(ImageType.Message) && type.HasFlag(ImageType.Small))
-                {
-                    if (url.Contains("image.coolapk.com", StringComparison.OrdinalIgnoreCase)) { url += ".s.jpg"; }
-                }
-                if (item is null)
-                {
-                    StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-                    return await DownloadImageAsync(file, url, dispatcher).ConfigureAwait(false);
-                }
-                else
-                {
-                    return item is StorageFile file ? GetLocalImage(file.Path, dispatcher, isForce) : null;
-                }
-            }
-        }
-
-        [Obsolete]
-        private static BitmapImage GetLocalImage(string filename, CoreDispatcher dispatcher, bool forceGetPic = false)
-        {
-            try
-            {
-                return (filename is null || (!forceGetPic && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))) ? GetNoPic(dispatcher) : new BitmapImage(new Uri(filename));
-            }
-            catch (Exception)
-            {
-                return GetNoPic(dispatcher);
-            }
-        }
-
-        [Obsolete]
-        private static async Task<BitmapImage> DownloadImageAsync(StorageFile file, string url, CoreDispatcher dispatcher)
-        {
-            try
-            {
-                using (HttpClient hc = new HttpClient())
-                using (Stream stream = await hc.GetStreamAsync(new Uri(url)))
-                using (Stream fs = await file.OpenStreamForWriteAsync())
-                {
-                    await stream.CopyToAsync(fs);
-                }
-                return new BitmapImage(new Uri(file.Path));
-            }
-            catch (FileLoadException)
-            {
-                return null;
-            }
-            catch (HttpRequestException)
-            {
-                string str = ResourceLoader.GetForViewIndependentUse().GetString("ImageLoadError");
-                _ = dispatcher.ShowMessageAsync(str);
-                return null;
-            }
-        }
-
-        [Obsolete]
-        internal static async Task CleanOldVersionImageCacheAsync()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                ImageType type = (ImageType)i;
-                await await GetFolderAsync(type).ContinueWith(x => x.Result.DeleteAsync());
-                await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync(type.ToString());
-            }
-        }
-
-        public static async Task CleanCaptchaCacheAsync()
-        {
-#pragma warning disable 0612
-            await await GetFolderAsync(ImageType.Captcha).ContinueWith(x => x.Result.DeleteAsync());
-#pragma warning restore 0612
-            await ApplicationData.Current.LocalCacheFolder.CreateFolderAsync("Captcha");
         }
     }
 }
