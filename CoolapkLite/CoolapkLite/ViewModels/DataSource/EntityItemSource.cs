@@ -14,7 +14,7 @@ namespace CoolapkLite.ViewModels.DataSource
         protected CoolapkListProvider Provider;
         protected CoolapkListProvider SubProvider;
 
-        protected static bool IsFullLoad => SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
+        protected bool IsFullLoad { get; } = SettingsHelper.Get<bool>(SettingsHelper.IsFullLoad);
 
         public EntityItemSource() => Dispatcher = UIHelper.TryGetForCurrentCoreDispatcher();
 

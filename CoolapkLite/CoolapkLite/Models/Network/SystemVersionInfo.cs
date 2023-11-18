@@ -21,6 +21,14 @@ namespace CoolapkLite.Models.Network
 
         public int Revision { get; }
 
+        public void Deconstruct(out int major, out int minor, out int build, out int revision)
+        {
+            major = Major;
+            minor = Minor;
+            build = Build;
+            revision = Revision;
+        }
+
         public bool Equals(SystemVersionInfo other) => Major == other.Major && Minor == other.Minor && Build == other.Build && Revision == other.Revision;
 
         public override bool Equals(object obj) => obj is SystemVersionInfo other && Equals(other);
@@ -35,8 +43,12 @@ namespace CoolapkLite.Models.Network
             Major != other.Major
                 ? Major.CompareTo(other.Major)
                 : Minor != other.Minor
-                ? Minor.CompareTo(other.Minor)
-                : Build != other.Build ? Build.CompareTo(other.Build) : Revision != other.Revision ? Revision.CompareTo(other.Revision) : 0;
+                    ? Minor.CompareTo(other.Minor)
+                    : Build != other.Build
+                        ? Build.CompareTo(other.Build)
+                        : Revision != other.Revision
+                            ? Revision.CompareTo(other.Revision)
+                            : 0;
 
         public int CompareTo(object obj) => obj is SystemVersionInfo other ? CompareTo(other) : throw new ArgumentException();
 
@@ -76,8 +88,12 @@ namespace CoolapkLite.Models.Network
 
         public static implicit operator SystemVersionInfo(PackageVersion version) => new SystemVersionInfo(version.Major, version.Minor, version.Build, version.Revision);
 
+        public static implicit operator SystemVersionInfo((int Major, int Minor, int Build, int Revision) version) => new SystemVersionInfo(version.Major, version.Minor, version.Build, version.Revision);
+
         public static implicit operator Version(SystemVersionInfo version) => new Version(version.Major, version.Minor, version.Build, version.Revision);
 
-        public static explicit operator PackageVersion(SystemVersionInfo version) => new PackageVersion { Major = (ushort)version.Major, Minor = (ushort)version.Minor, Build = (ushort)version.Build, Revision = (ushort)version.Revision };
+        public static explicit operator PackageVersion(SystemVersionInfo version) => new PackageVersion() { Major = (ushort)version.Major, Minor = (ushort)version.Minor, Build = (ushort)version.Build, Revision = (ushort)version.Revision };
+
+        public static implicit operator (int Major, int Minor, int Build, int Revision)(SystemVersionInfo version) => (version.Major, version.Minor, version.Build, version.Revision);
     }
 }

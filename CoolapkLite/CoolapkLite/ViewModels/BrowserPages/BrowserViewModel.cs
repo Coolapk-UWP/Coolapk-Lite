@@ -15,7 +15,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
 
         public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
-        public bool IsChangeBrowserUA => SettingsHelper.Get<bool>(SettingsHelper.IsChangeBrowserUA);
+        public bool IsChangeBrowserUA { get; } = SettingsHelper.Get<bool>(SettingsHelper.IsChangeBrowserUA);
 
         private string title;
         public string Title

@@ -288,15 +288,18 @@ namespace CoolapkLite.Controls
             post:
             try
             {
-                (bool isSucceed, JToken _) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, arg), content);
+                (bool isSucceed, JToken token) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, arg), content);
                 if (isSucceed)
                 {
                     SendSuccessful();
                 }
+                else if (token != null)
+                {
+                    throw new CoolapkMessageException(token as JObject);
+                }
             }
             catch (CoolapkMessageException cex)
             {
-                _ = this.ShowMessageAsync(cex.Message);
                 if (cex.IsRequestCaptcha)
                 {
                     captcha:

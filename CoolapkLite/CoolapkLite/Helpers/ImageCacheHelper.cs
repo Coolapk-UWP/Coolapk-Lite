@@ -216,7 +216,6 @@ namespace CoolapkLite.Helpers
                 }
 
                 HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false);
-
                 return response?.Headers.Location;
             }
         }

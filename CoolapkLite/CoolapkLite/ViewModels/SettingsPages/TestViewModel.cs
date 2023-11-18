@@ -79,6 +79,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             set
             {
                 SettingsHelper.Set(SettingsHelper.IsUseAPI2, value);
+                UriHelper.IsUseAPI2 = value;
                 RaisePropertyChangedEvent();
             }
         }

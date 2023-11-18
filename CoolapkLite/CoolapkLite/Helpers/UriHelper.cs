@@ -26,8 +26,8 @@ namespace CoolapkLite.Helpers
         GetVoteComments,
         GetChangeHistoryList,
         GetHotReplies,
+        GetInitPage,
         GetIndexPage,
-        GetIndexPageNames,
         GetLikeList,
         GetMyPageCard,
         GetMessageList,
@@ -79,7 +79,7 @@ namespace CoolapkLite.Helpers
 
     public static class UriHelper
     {
-        private static bool IsUseAPI2 => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
+        public static bool IsUseAPI2 { get; set; } = SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
 
         public static readonly Uri BaseUri = new Uri("https://api.coolapk.com");
         public static readonly Uri Base2Uri = new Uri("https://api2.coolapk.com");
@@ -131,8 +131,8 @@ namespace CoolapkLite.Helpers
                 case UriType.GetVoteComments: return "/v6/vote/commentList?fid={0}{1}&page={2}{3}{4}";
                 case UriType.GetChangeHistoryList: return "/v6/feed/changeHistoryList?id={0}";
                 case UriType.GetHotReplies: return "/v6/feed/hotReplyList?id={0}&page={1}{2}{3}&discussMode=1";
+                case UriType.GetInitPage: return "/v6/main/init?t={0}";
                 case UriType.GetIndexPage: return "/v6{0}{1}page={2}{3}{4}";
-                case UriType.GetIndexPageNames: return "/v6/main/init";
                 case UriType.GetLikeList: return "/v6/feed/likeList?id={0}&listType=lastupdate_desc&page={1}{2}{3}";
                 case UriType.GetMyPageCard: return "/v6/account/loadConfig?key=my_page_card_config";
                 case UriType.GetMessageList: return "/v6/message/list?page={0}{1}{2}";

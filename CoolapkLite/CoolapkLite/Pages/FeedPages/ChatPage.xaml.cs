@@ -151,12 +151,15 @@ namespace CoolapkLite.Pages.FeedPages
                                 Provider.Add(messageModel);
                                 InputBox.Document.SetText(TextSetOptions.None, string.Empty);
                             }
+                            else if (results != null)
+                            {
+                                throw new CoolapkMessageException(results as JObject);
+                            }
                         }
                     }
                 }
                 catch (CoolapkMessageException cex)
                 {
-                    _ = this.ShowMessageAsync(cex.Message);
                     if (cex.IsRequestCaptcha)
                     {
                         if (cex.IsRequestCaptcha)

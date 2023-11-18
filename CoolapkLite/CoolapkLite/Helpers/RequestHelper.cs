@@ -37,18 +37,18 @@ namespace CoolapkLite.Helpers
             if (uri == null) { return (false, null); }
             string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.GetCoolapkCookies(uri), NetworkHelper.XMLHttpRequest, isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
-            JObject token;
+            JObject token = null;
             try { token = JObject.Parse(results); }
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
                 _ = UIHelper.ShowMessageAsync("加载失败");
-                return (false, null);
+                return (false, token);
             }
             if (!token.TryGetValue("data", out JToken data) && token.TryGetValue("message", out JToken message))
             {
                 _ = UIHelper.ShowMessageAsync(message.ToString());
-                return (false, null);
+                return (false, token);
             }
             else { return (data != null && !string.IsNullOrWhiteSpace(data.ToString()), data); }
         }
@@ -70,13 +70,13 @@ namespace CoolapkLite.Helpers
             if (uri == null) { return (false, null); }
             string json = await NetworkHelper.PostAsync(uri, content, NetworkHelper.GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json)) { return (false, null); }
-            JObject token;
+            JObject token = null;
             try { token = JObject.Parse(json); }
             catch (Exception ex)
             {
                 SettingsHelper.LogManager.GetLogger(nameof(RequestHelper)).Error(ex.ExceptionToMessage(), ex);
                 _ = UIHelper.ShowMessageAsync("加载失败");
-                return (false, null);
+                return (false, token);
             }
             if (!token.TryGetValue("data", out JToken data) && token.TryGetValue("message", out JToken message))
             {
@@ -102,22 +102,6 @@ namespace CoolapkLite.Helpers
                 return (false, null);
             }
             else { return (true, json); }
-        }
-
-        private static (int page, Uri uri) GetPage(this Uri uri)
-        {
-            Regex pageRegex = new Regex(@"([&?])page=(\\d+)(\\??)");
-            Match match = pageRegex.Match(uri.ToString());
-            if (match.Success)
-            {
-                int pageNum = Convert.ToInt32(match.Groups[2].Value);
-                Uri baseUri = new Uri(match.Groups[3].Value == "?" ? pageRegex.Replace(uri.ToString(), match.Groups[1].Value) : pageRegex.Replace(uri.ToString(), string.Empty));
-                return (pageNum, baseUri);
-            }
-            else
-            {
-                return (0, uri);
-            }
         }
 
         public static async Task<WriteableBitmap> GetImageAsync(Uri uri, bool isBackground = false)

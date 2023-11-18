@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Common;
-using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Helpers;
@@ -344,38 +343,30 @@ namespace CoolapkLite.Helpers
                 if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
                 return null;
             }
-            catch (Exception ex)
-            {
-                SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(ex.ExceptionToMessage(), ex);
-                if (string.IsNullOrWhiteSpace(str)) { throw ex; }
-                JObject token = JObject.Parse(str);
-                if (token == null) { throw ex; }
-                else { throw new CoolapkMessageException(token, ex); }
-            }
         }
 
         public static Uri GetHost(Uri uri) => new Uri("https://" + uri.Host);
 
-        public static string ExpandShortUrl(this Uri ShortUrl)
+        public static string ExpandShortUrl(this Uri shortUrl)
         {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(ShortUrl);
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(shortUrl);
             try { _ = req.HaveResponse; }
             catch (WebException ex)
             {
                 HttpWebResponse res = ex.Response as HttpWebResponse;
                 if (res.StatusCode == HttpStatusCode.Found)
-                { return res.Headers["Location"] ?? ShortUrl.ToString(); }
+                { return res.Headers["Location"] ?? shortUrl.ToString(); }
             }
-            return ShortUrl.ToString();
+            return shortUrl.ToString();
         }
 
-        public static async Task<Uri> ExpandShortUrlAsync(this Uri ShortUrl)
+        public static async Task<Uri> ExpandShortUrlAsync(this Uri shortUrl)
         {
-            if (ShortUrl.Host == "s.click.taobao.com")
+            if (shortUrl.Host == "s.click.taobao.com")
             {
                 using (HttpClient request = new HttpClient())
                 {
-                    HttpResponseMessage response = await request.GetAsync(ShortUrl).ConfigureAwait(false);
+                    HttpResponseMessage response = await request.GetAsync(shortUrl).ConfigureAwait(false);
                     string urlA = response.RequestMessage.RequestUri.ToString();
                     string urlB = WebUtility.UrlDecode(urlA);
                     string urlC = urlB.Remove(0, 35);
@@ -386,8 +377,15 @@ namespace CoolapkLite.Helpers
             }
             else
             {
-                HttpResponseMessage res = await Client.GetAsync(ShortUrl).ConfigureAwait(false);
-                return res.RequestMessage.RequestUri ?? ShortUrl;
+                using (HttpClientHandler handler = new HttpClientHandler()
+                {
+                    AllowAutoRedirect = false
+                })
+                using (HttpClient client = new HttpClient(handler))
+                {
+                    HttpResponseMessage response = await client.GetAsync(shortUrl).ConfigureAwait(false);
+                    return response?.Headers.Location ?? shortUrl;
+                }
             }
         }
 

@@ -126,9 +126,12 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = Dispatcher.HideProgressBarAsync();
                     break;
                 case "CustomAPI":
-                    APIVersionDialog _APIVersionDialog = new APIVersionDialog(Provider.UserAgent);
-                    await _APIVersionDialog.ShowAsync();
-                    Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    APIVersionDialog versionDialog = new APIVersionDialog(Provider.UserAgent);
+                    if (await versionDialog.ShowAsync() == ContentDialogResult.Primary)
+                    {
+                        Provider.APIVersion = 0;
+                        Provider.UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+                    }
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
@@ -142,7 +145,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         result = "网络错误";
                     }
-                    ContentDialog GetJsonDialog = new ContentDialog
+                    ContentDialog getJsonDialog = new ContentDialog
                     {
                         Title = WebUrl.Text,
                         Content = new ScrollViewer
@@ -160,7 +163,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         CloseButtonText = "好的",
                         DefaultButton = ContentDialogButton.Close
                     };
-                    _ = await GetJsonDialog.ShowAsync();
+                    _ = await getJsonDialog.ShowAsync();
                     break;
                 case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
