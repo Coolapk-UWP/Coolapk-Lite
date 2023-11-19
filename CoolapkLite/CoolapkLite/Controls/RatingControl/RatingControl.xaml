@@ -24,7 +24,7 @@
                             <StackPanel
                                 x:Name="RatingBackgroundStackPanel"
                                 Margin="20,20,0,20"
-                                Background="Transparent"
+                                Background="{ThemeResource SystemControlTransparentBrush}"
                                 Orientation="Horizontal" />
                             <TextBlock
                                 x:Name="Caption"

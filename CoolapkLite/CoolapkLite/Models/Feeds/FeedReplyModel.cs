@@ -1,17 +1,14 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Immutable;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedReplyModel : SourceFeedReplyModel, INotifyPropertyChanged, ICanLike, ICanReply, ICanCopy
+    public class FeedReplyModel : SourceFeedReplyModel, ICanLike, ICanReply, ICanCopy
     {
         private int likeNum;
         public int LikeNum
@@ -54,45 +51,16 @@ namespace CoolapkLite.Models.Feeds
             }
         }
 
-        private bool isCopyEnabled;
-        public bool IsCopyEnabled
-        {
-            get => isCopyEnabled;
-            set
-            {
-                if (isCopyEnabled != value)
-                {
-                    isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
-        }
-
         public int ReplyRowsMore { get; private set; }
         public int ReplyRowsCount { get; private set; }
 
         public bool ShowReplyRow { get; private set; }
 
-        public ImageModel Pic { get; private set; }
-        public DateTimeOffset Dateline { get; private set; }
-
         public ImmutableArray<SourceFeedReplyModel> ReplyRows { get; private set; } = ImmutableArray<SourceFeedReplyModel>.Empty;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
-        {
-            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
-        }
 
         public FeedReplyModel(JObject token, bool showReplyRow = true) : base(token)
         {
             ShowReplyRow = showReplyRow;
-
-            if (token.TryGetValue("dateline", out JToken dateline))
-            {
-                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
-            }
 
             if (token.TryGetValue("message", out JToken message))
             {
@@ -122,11 +90,6 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("replyRows", out JToken replyRows))
             {
                 ReplyRows = replyRows.OfType<JObject>().Select(item => new SourceFeedReplyModel(item)).ToImmutableArray();
-            }
-
-            if (!string.IsNullOrEmpty(PicUri))
-            {
-                Pic = new ImageModel(PicUri, ImageType.SmallImage);
             }
         }
 

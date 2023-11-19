@@ -3,14 +3,30 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class SourceFeedReplyModel : Entity
+    public class SourceFeedReplyModel : Entity, INotifyPropertyChanged
     {
+        private bool isCopyEnabled;
+        public bool IsCopyEnabled
+        {
+            get => isCopyEnabled;
+            set
+            {
+                if (isCopyEnabled != value)
+                {
+                    isCopyEnabled = value;
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public int ID { get; private set; }
         public int BlockStatus { get; private set; }
 
@@ -23,8 +39,16 @@ namespace CoolapkLite.Models.Feeds
 
         public UserModel UserInfo { get; private set; }
         public UserAction UserAction { get; private set; }
+        public DateTimeOffset Dateline { get; private set; }
 
         public ImmutableArray<ImageModel> PicArr { get; private set; } = ImmutableArray<ImageModel>.Empty;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        {
+            if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
 
         public SourceFeedReplyModel(JObject token) : base(token)
         {
@@ -81,6 +105,11 @@ namespace CoolapkLite.Models.Feeds
             {
                 PicUri = pic.ToString();
                 Message += $" <a href=\"{PicUri}\">{loader.GetString("SeePic")}</a>";
+            }
+
+            if (token.TryGetValue("dateline", out JToken dateline))
+            {
+                Dateline = dateline.ToObject<long>().ConvertUnixTimeStampToDateTimeOffset();
             }
 
             if (token.TryGetValue("picArr", out JToken picArr) && (picArr as JArray).Count > 0 && !string.IsNullOrEmpty((picArr as JArray)[0].ToString()))

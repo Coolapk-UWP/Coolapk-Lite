@@ -137,6 +137,75 @@
                         Click="Button_Click"
                         Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
+                        <ToolTipService.ToolTip>
+                            <Border Width="250" Margin="-8,-5,-8,-7">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{x:Bind UserInfo.Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                </Border.Background>
+                                <Border Padding="12" Background="{ThemeResource TextOnAccentFillColorSecondaryBrush}">
+                                    <controls:StackPanelEx Spacing="8">
+                                        <controls:PersonPicture
+                                            Width="56"
+                                            Height="56"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            DisplayName="{x:Bind UserInfo.UserName}"
+                                            Source="{x:Bind UserInfo.UserAvatar}" />
+                                        <Grid HorizontalAlignment="Left">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock
+                                                    Grid.Column="0"
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="12"
+                                                    FontStyle="Italic"
+                                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                                    Text="{x:Bind UserInfo.Level, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    FontSize="12"
+                                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                                    <Run Text="{x:Bind UserInfo.Experience}" />
+                                                    <Run Text="/" />
+                                                    <Run Text="{x:Bind UserInfo.NextLevelExperience}" />
+                                                </TextBlock>
+                                            </Grid>
+                                            <ProgressBar
+                                                x:Name="NextLevelPercentageBar"
+                                                Grid.Row="1"
+                                                Width="160"
+                                                Margin="0,4"
+                                                Value="{x:Bind UserInfo.NextLevelPercentage}" />
+                                        </Grid>
+                                        <TextBlock
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
+                                            <Run
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                Foreground="{ThemeResource CoolapkLogoForeground}"
+                                                Text="&#xE10B;" />
+                                            <Run Text="{x:Bind UserInfo.VerifyTitle}" />
+                                        </TextBlock>
+                                        <TextBlock
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind UserInfo.Bio}"
+                                            TextWrapping="WrapWholeWords"
+                                            Visibility="{x:Bind UserInfo.Bio, Converter={StaticResource StringVisibilityConverter}}" />
+                                        <TextBlock Text="{Binding UserInfo.LoginText}" />
+                                    </controls:StackPanelEx>
+                                </Border>
+                            </Border>
+                        </ToolTipService.ToolTip>
                         <controls:PersonPicture
                             Width="36"
                             Height="36"
@@ -804,11 +873,80 @@
                         Click="Button_Click"
                         Tag="{x:Bind UserInfo.Url}"
                         Tapped="Button_Tapped">
+                        <ToolTipService.ToolTip>
+                            <Border Width="250" Margin="-8,-5,-8,-7">
+                                <Border.Background>
+                                    <ImageBrush ImageSource="{x:Bind UserInfo.Cover.Pic, Mode=OneWay}" Stretch="UniformToFill" />
+                                </Border.Background>
+                                <Border Padding="12" Background="{ThemeResource TextOnAccentFillColorSecondaryBrush}">
+                                    <controls:StackPanelEx Spacing="8">
+                                        <controls:PersonPicture
+                                            Width="56"
+                                            Height="56"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            DisplayName="{x:Bind UserInfo.UserName}"
+                                            Source="{x:Bind UserInfo.UserAvatar}" />
+                                        <Grid HorizontalAlignment="Left">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock
+                                                    Grid.Column="0"
+                                                    HorizontalAlignment="Left"
+                                                    FontSize="12"
+                                                    FontStyle="Italic"
+                                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                                    Text="{x:Bind UserInfo.Level, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    HorizontalAlignment="Right"
+                                                    FontSize="12"
+                                                    IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}">
+                                                    <Run Text="{x:Bind UserInfo.Experience}" />
+                                                    <Run Text="/" />
+                                                    <Run Text="{x:Bind UserInfo.NextLevelExperience}" />
+                                                </TextBlock>
+                                            </Grid>
+                                            <ProgressBar
+                                                x:Name="NextLevelPercentageBar"
+                                                Grid.Row="1"
+                                                Width="160"
+                                                Margin="0,4"
+                                                Value="{x:Bind UserInfo.NextLevelPercentage}" />
+                                        </Grid>
+                                        <TextBlock
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
+                                            <Run
+                                                FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                                Foreground="{ThemeResource CoolapkLogoForeground}"
+                                                Text="&#xE10B;" />
+                                            <Run Text="{x:Bind UserInfo.VerifyTitle}" />
+                                        </TextBlock>
+                                        <TextBlock
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind UserInfo.Bio}"
+                                            TextWrapping="WrapWholeWords"
+                                            Visibility="{x:Bind UserInfo.Bio, Converter={StaticResource StringVisibilityConverter}}" />
+                                        <TextBlock Text="{Binding UserInfo.LoginText}" />
+                                    </controls:StackPanelEx>
+                                </Border>
+                            </Border>
+                        </ToolTipService.ToolTip>
                         <controls:PersonPicture
                             Width="36"
                             Height="36"
-                            DisplayName="{Binding UserInfo.UserName}"
-                            Source="{Binding UserInfo.UserAvatar}" />
+                            DisplayName="{x:Bind UserInfo.UserName}"
+                            Source="{x:Bind UserInfo.UserAvatar}" />
                     </Button>
                     <StackPanel Margin="8,0" VerticalAlignment="Center">
                         <StackPanel

@@ -62,9 +62,113 @@
 
     <DataTemplate x:Key="ReplyRowsItemTemplate" x:DataType="feeds:SourceFeedReplyModel">
         <Grid
+            Background="{ThemeResource SystemControlTransparentBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="0,0,0,1"
             Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
+            <ToolTipService.ToolTip>
+                <Border>
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{ThemeResource SystemControlTransparentBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel
+                            x:Name="UserBar"
+                            Grid.Row="1"
+                            Orientation="Horizontal">
+                            <controls:PersonPicture
+                                Width="36"
+                                Height="36"
+                                Margin="0,4"
+                                DisplayName="{x:Bind UserInfo.UserName}"
+                                Source="{x:Bind UserInfo.UserAvatar}" />
+                            <StackPanel Margin="8,0" VerticalAlignment="Center">
+                                <StackPanel
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind UserInfo.UserName}" />
+                                    <Border
+                                        Margin="6,0"
+                                        VerticalAlignment="Center"
+                                        BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="{ThemeResource ControlCornerRadius}"
+                                        Visibility="{x:Bind IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <TextBlock
+                                            x:Uid="/Feed/FeedAuthor"
+                                            Margin="1"
+                                            HorizontalAlignment="Left"
+                                            FontSize="12"
+                                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
+                                    </Border>
+                                </StackPanel>
+                                <StackPanel Margin="-1,0" Orientation="Horizontal">
+                                    <TextBlock
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
+                                    <TextBlock
+                                        Margin="2,0,0,0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                        Text="@"
+                                        Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
+                                    <HyperlinkButton
+                                        x:Name="Ruser"
+                                        Margin="0,-5"
+                                        Content="{x:Bind Rusername}"
+                                        FontWeight="Normal"
+                                        Style="{StaticResource TextBlockButtonStyle}"
+                                        Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <controls:TextBlockEx
+                            x:Name="MessageText"
+                            Grid.Row="2"
+                            Margin="4"
+                            HorizontalAlignment="Left"
+                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                            LineSpacing="10"
+                            Text="{x:Bind Message}" />
+                        <GridView
+                            Grid.Row="3"
+                            MinHeight="0"
+                            Margin="4"
+                            Padding="0"
+                            HorizontalContentAlignment="Left"
+                            ItemTemplate="{StaticResource PicDefaultTemplate}"
+                            ItemsSource="{x:Bind PicArr}"
+                            ScrollViewer.VerticalScrollMode="Disabled"
+                            SelectionMode="None"
+                            Visibility="{x:Bind PicArr, Converter={StaticResource CollectionVisibilityConverter}}">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsWrapGrid
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        MaximumRowsOrColumns="3"
+                                        Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                    </Grid>
+                </Border>
+            </ToolTipService.ToolTip>
             <controls:TextBlockEx
                 Margin="4"
                 HorizontalAlignment="Left"

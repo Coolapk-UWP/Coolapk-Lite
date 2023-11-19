@@ -18,7 +18,6 @@ namespace CoolapkLite.Models.Users
         public int UID { get; private set; }
         public int Level { get; private set; }
         public int Status { get; private set; }
-        public int Experience { get; private set; }
         public int BlockStatus { get; private set; }
 
         public string Bio { get; private set; }
@@ -27,16 +26,21 @@ namespace CoolapkLite.Models.Users
         public string SubTitle { get; private set; }
         public string LoginText { get; private set; }
         public string FollowNum { get; private set; }
-        public string Description { get; private set; }
+        public string VerifyTitle { get; private set; }
 
         public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
+
+        public long Experience { get; private set; }
+        public long NextLevelExperience { get; private set; }
+        public double NextLevelPercentage { get; private set; }
 
         public DateTimeOffset RegDate { get; private set; }
         public DateTimeOffset LoginTime { get; private set; }
 
         public string Url => $"/u/{UID}";
         public string Title => UserName;
+        public string Description => Bio;
 
         public ImageModel Pic => UserAvatar;
 
@@ -99,9 +103,24 @@ namespace CoolapkLite.Models.Users
                 FollowNum = $"{followNum}{loader.GetString("Follow")}";
             }
 
+            if (token.TryGetValue("verify_title", out JToken verify_title))
+            {
+                VerifyTitle = verify_title.ToString();
+            }
+
             if (token.TryGetValue("experience", out JToken experience))
             {
-                Experience = experience.ToObject<int>();
+                Experience = experience.ToObject<long>();
+            }
+
+            if (token.TryGetValue("next_level_experience", out JToken next_level_experience))
+            {
+                NextLevelExperience = next_level_experience.ToObject<long>();
+            }
+
+            if (token.TryGetValue("next_level_percentage", out JToken next_level_percentage))
+            {
+                NextLevelPercentage = next_level_percentage.ToObject<double>();
             }
 
             if (token.TryGetValue("userAvatar", out JToken userAvatar))
