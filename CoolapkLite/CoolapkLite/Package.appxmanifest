@@ -86,7 +86,7 @@
             <uap:DataFormat>Bitmap</uap:DataFormat>
           </uap:ShareTarget>
         </uap:Extension>
-        <!-- Search Pane can only be registered by Windows.Desktop.
+        <!-- Search Pane can only be registered by Windows.Desktop
         <uap:Extension Category="windows.search" />
         -->
         <uap3:Extension Category="windows.appExtensionHost">

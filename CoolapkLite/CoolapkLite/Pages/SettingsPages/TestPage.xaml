@@ -115,10 +115,16 @@
                     <ComboBoxItem>V12</ComboBoxItem>
                     <ComboBoxItem>V13</ComboBoxItem>
                 </ComboBox>
-                <Button
-                    Click="Button_Click"
-                    Content="自定义版本号"
-                    Tag="CustomAPI" />
+                <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                    <Button
+                        Click="Button_Click"
+                        Content="自定义版本号"
+                        Tag="CustomAPI" />
+                    <Button
+                        Click="Button_Click"
+                        Content="自定义设备信息"
+                        Tag="DeviceInfo" />
+                </control:StackPanelEx>
             </control:SettingsGroup>
             <control:SettingsGroup Header="图片测试">
                 <Slider

@@ -165,6 +165,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     };
                     _ = await getJsonDialog.ShowAsync();
                     break;
+                case "DeviceInfo":
+                    _ = new DeviceInfoDialog().ShowAsync();
+                    break;
                 case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
                     break;

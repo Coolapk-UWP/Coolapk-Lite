@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using Microsoft.Toolkit.Uwp.Helpers;
+using System.Text.RegularExpressions;
+using Windows.Security.ExchangeActiveSyncProvisioning;
 
 namespace CoolapkLite.Models.Network
 {
@@ -9,6 +11,22 @@ namespace CoolapkLite.Models.Network
         public string ProductName { get; set; }
         public string FullProductName { get; set; }
         public string OSVersion { get; set; }
+
+        public static UserAgent Default
+        {
+            get
+            {
+                EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
+                return new UserAgent
+                {
+                    Header = $"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0)",
+                    Manufacturer = DeviceInfo.SystemManufacturer,
+                    ProductName = DeviceInfo.SystemProductName,
+                    FullProductName = $"{DeviceInfo.SystemProductName}_{DeviceInfo.SystemSku}",
+                    OSVersion = SystemInformation.Instance.OperatingSystemVersion.ToString()
+                };
+            }
+        }
 
         public static UserAgent Parse(string line)
         {

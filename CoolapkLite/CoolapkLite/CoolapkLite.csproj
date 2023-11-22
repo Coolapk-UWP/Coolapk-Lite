@@ -190,6 +190,9 @@
     <Compile Include="Controls\Dialogs\CaptchaDialog.xaml.cs">
       <DependentUpon>CaptchaDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\DeviceInfoDialog.xaml.cs">
+      <DependentUpon>DeviceInfoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
@@ -336,6 +339,7 @@
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
     <Compile Include="Models\Message\MessageExtraModel.cs" />
     <Compile Include="Models\Message\MessageModel.cs" />
+    <Compile Include="Models\Network\DeviceInfo.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
@@ -1154,6 +1158,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CaptchaDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\DeviceInfoDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

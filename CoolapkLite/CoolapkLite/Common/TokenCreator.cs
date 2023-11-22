@@ -1,38 +1,18 @@
 ﻿using CoolapkLite.Helpers;
-using Microsoft.Toolkit.Uwp.Helpers;
+using CoolapkLite.Models.Network;
 using System;
-using System.Text;
-using Windows.Security.ExchangeActiveSyncProvisioning;
 
 namespace CoolapkLite.Common
 {
     public class TokenCreator
     {
-        //private static readonly char[] constant = new[]
-        //{
-        //    '0','1','2','3','4','5','6','7','8','9',
-        //    'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-        //    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-        //};
-
         private static readonly string guid = Guid.NewGuid().ToString();
-        //private static readonly string aid = $"DU{RandHexString(14)}_{RandHexString(19)}";
-        private static readonly string aid = RandHexString(16);
-        private static readonly string mac = RandMacAddress();
-        private static readonly string SystemManufacturer;
-        private static readonly string SystemProductName;
 
-        public static string DeviceCode;
+        public static string DeviceCode { get; protected set; }
 
         private readonly TokenVersions TokenVersion;
 
-        static TokenCreator()
-        {
-            EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
-            SystemManufacturer = deviceInfo.SystemManufacturer;
-            SystemProductName = deviceInfo.SystemProductName;
-            DeviceCode = CreateDeviceCode(aid, mac, SystemManufacturer, SystemManufacturer, SystemProductName, SystemInformation.Instance.OperatingSystemVersion.ToString());
-        }
+        static TokenCreator() => DeviceCode = SettingsHelper.Get<DeviceInfo>(SettingsHelper.DeviceInfo).CreateDeviceCode();
 
         public TokenCreator(TokenVersions version = TokenVersions.TokenV2) => TokenVersion = version;
 
@@ -87,41 +67,7 @@ namespace CoolapkLite.Common
             return appToken;
         }
 
-        /// <summary>
-        /// CreateDeviceCode Generate your custom device code
-        /// </summary>
-        private static string CreateDeviceCode(string aid, string mac, string manufactory, string brand, string model, string buildNumber) =>
-            $"{aid}; ; ; {mac}; {manufactory}; {brand}; {model}; {buildNumber}; null".GetBase64().Reverse();
-
-        private static string RandMacAddress()
-        {
-            Random rand = new Random();
-            string macAddress = string.Empty;
-            for (int i = 0; i < 6; i++)
-            {
-                macAddress += rand.Next(256).ToString("x2");
-                if (i != 5)
-                {
-                    macAddress += ":";
-                }
-            }
-            return macAddress;
-        }
-
-        private static string RandHexString(int length)
-        {
-            //StringBuilder newRandom = new StringBuilder(62);
-            //Random random = new Random((int)DateTime.Now.Ticks);
-            //for (int i = 0; i < length; i++)
-            //{
-            //    _ = newRandom.Append(constant[random.Next(62)]);
-            //}
-            //return newRandom.ToString();
-            Random rand = new Random((int)DateTime.Now.Ticks);
-            byte[] bytes = new byte[length];
-            rand.NextBytes(bytes);
-            return BitConverter.ToString(bytes).ToUpperInvariant().Replace("-", "");
-        }
+        public static void UpdateDeviceInfo(DeviceInfo deviceInfo) => DeviceCode = deviceInfo.CreateDeviceCode();
 
         public override string ToString() => GetToken();
     }

@@ -27,6 +27,7 @@ namespace CoolapkLite.Helpers
         public const string IsFirstRun = nameof(IsFirstRun);
         public const string IsCustomUA = nameof(IsCustomUA);
         public const string APIVersion = nameof(APIVersion);
+        public const string DeviceInfo = nameof(DeviceInfo);
         public const string IsNoPicsMode = nameof(IsNoPicsMode);
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
@@ -74,7 +75,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(CustomUA))
             {
-                LocalObject.Save(CustomUA, UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString()));
+                LocalObject.Save(CustomUA, UserAgent.Default);
             }
             if (!LocalObject.KeyExists(IsUseAPI2))
             {
@@ -99,6 +100,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(APIVersion))
             {
                 LocalObject.Save(APIVersion, Common.APIVersions.V13);
+            }
+            if (!LocalObject.KeyExists(DeviceInfo))
+            {
+                LocalObject.Save(DeviceInfo, new DeviceInfo());
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {

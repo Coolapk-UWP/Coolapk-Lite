@@ -15,7 +15,7 @@
             <MenuFlyoutItem
                 Click="MenuFlyoutItem_Click"
                 Tag="Refresh"
-                Text="获取最新版本号">
+                x:Uid="/ContentDialog/UpdateVersionItem">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE117;" />
                 </helpers:FlyoutBaseHelper.Icon>
