@@ -190,15 +190,15 @@
     <value>酷安應用的版本號，如 9.2.2</value>
   </data>
   <data name="CaptchaDialog.PrimaryButtonText" xml:space="preserve">
-    <value>验证并继续</value>
+    <value>驗證並繼續</value>
   </data>
   <data name="CaptchaDialog.Title" xml:space="preserve">
-    <value>图形验证码</value>
+    <value>圖形驗證碼</value>
   </data>
   <data name="CaptchaMessageBlock.Text" xml:space="preserve">
-    <value>您当前的操作需要图形验证码，请输入图片中的验证码</value>
+    <value>您當前的操作需要圖形驗證碼，請輸入圖片中的驗證碼</value>
   </data>
   <data name="CaptchaRefeshButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>换一张</value>
+    <value>換一張</value>
   </data>
 </root>
