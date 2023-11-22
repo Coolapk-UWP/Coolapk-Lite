@@ -7,6 +7,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace CoolapkLite.Models.Feeds
@@ -17,14 +18,7 @@ namespace CoolapkLite.Models.Feeds
         public bool IsCopyEnabled
         {
             get => isCopyEnabled;
-            set
-            {
-                if (isCopyEnabled != value)
-                {
-                    isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCopyEnabled, value);
         }
 
         public int ID { get; private set; }
@@ -45,9 +39,18 @@ namespace CoolapkLite.Models.Feeds
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         public SourceFeedReplyModel(JObject token) : base(token)

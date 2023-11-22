@@ -45,9 +45,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             else
             {
-                List<StorageFile> result = Images;
-                Images.Clear();
-                return result;
+                return Images;
             }
         }
 

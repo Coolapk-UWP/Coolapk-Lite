@@ -119,9 +119,8 @@ namespace CoolapkLite.BackgroundTasks
         {
             try
             {
+                TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId).Clear();
                 TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForSecondaryTile(tileId);
-                tileUpdater.Clear();
-                tileUpdater.EnableNotificationQueue(true);
                 TileNotification tileNotification = new TileNotification(tileContent.GetXml());
                 tileUpdater.Update(tileNotification);
             }

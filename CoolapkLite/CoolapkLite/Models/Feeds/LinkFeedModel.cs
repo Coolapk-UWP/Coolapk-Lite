@@ -6,6 +6,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.ApplicationModel.Resources;
@@ -24,125 +25,88 @@ namespace CoolapkLite.Models.Feeds
         public string Url
         {
             get => url;
-            set
-            {
-                url = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref url, value);
         }
 
         private bool isSucceed = false;
         public bool IsSucceed
         {
             get => isSucceed;
-            set
-            {
-                isSucceed = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref isSucceed, value);
         }
 
         private string message;
         public string Message
         {
             get => message;
-            set
-            {
-                message = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref message, value);
         }
 
         private string messageTitle;
         public string MessageTitle
         {
             get => messageTitle;
-            set
-            {
-                messageTitle = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref messageTitle, value);
         }
 
         private string messageRawOutput;
         public string MessageRawOutput
         {
             get => messageRawOutput;
-            set
-            {
-                messageRawOutput = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref messageRawOutput, value);
         }
 
         private bool showUser = true;
         public bool ShowUser
         {
             get => showUser;
-            set
-            {
-                if (showUser != value)
-                {
-                    showUser = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref showUser, value);
         }
 
         private bool isCopyEnabled;
         public bool IsCopyEnabled
         {
             get => isCopyEnabled;
-            set
-            {
-                if (isCopyEnabled != value)
-                {
-                    isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCopyEnabled, value);
         }
 
         private LinkUserModel userInfo;
         public LinkUserModel UserInfo
         {
             get => userInfo;
-            set
-            {
-                userInfo = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref userInfo, value);
         }
 
         private DateTimeOffset dateline;
         public DateTimeOffset Dateline
         {
             get => dateline;
-            set
-            {
-                dateline = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref dateline, value);
         }
 
         private ImmutableArray<ImageModel> picArr = ImmutableArray<ImageModel>.Empty;
         public ImmutableArray<ImageModel> PicArr
         {
             get => picArr;
-            set
-            {
-                picArr = value;
-                RaisePropertyChangedEvent();
-            }
+            set => SetProperty(ref picArr, value);
         }
 
         ISourceUserModel ISourceFeedModel.UserInfo => UserInfo;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         public LinkFeedModel(string url)

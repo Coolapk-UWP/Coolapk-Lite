@@ -8,15 +8,16 @@ namespace CoolapkLite.Common
 {
     public class TokenCreator
     {
-        private static readonly char[] constant = new[]
-        {
-            '0','1','2','3','4','5','6','7','8','9',
-            'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-            'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
-        };
+        //private static readonly char[] constant = new[]
+        //{
+        //    '0','1','2','3','4','5','6','7','8','9',
+        //    'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
+        //    'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'
+        //};
 
         private static readonly string guid = Guid.NewGuid().ToString();
-        private static readonly string aid = $"DU{RandHexString(14)}_{RandHexString(19)}";
+        //private static readonly string aid = $"DU{RandHexString(14)}_{RandHexString(19)}";
+        private static readonly string aid = RandHexString(16);
         private static readonly string mac = RandMacAddress();
         private static readonly string SystemManufacturer;
         private static readonly string SystemProductName;
@@ -109,13 +110,17 @@ namespace CoolapkLite.Common
 
         private static string RandHexString(int length)
         {
-            StringBuilder newRandom = new StringBuilder(62);
-            Random random = new Random((int)DateTime.Now.Ticks);
-            for (int i = 0; i < length; i++)
-            {
-                _ = newRandom.Append(constant[random.Next(62)]);
-            }
-            return newRandom.ToString();
+            //StringBuilder newRandom = new StringBuilder(62);
+            //Random random = new Random((int)DateTime.Now.Ticks);
+            //for (int i = 0; i < length; i++)
+            //{
+            //    _ = newRandom.Append(constant[random.Next(62)]);
+            //}
+            //return newRandom.ToString();
+            Random rand = new Random((int)DateTime.Now.Ticks);
+            byte[] bytes = new byte[length];
+            rand.NextBytes(bytes);
+            return BitConverter.ToString(bytes).ToUpperInvariant().Replace("-", "");
         }
 
         public override string ToString() => GetToken();

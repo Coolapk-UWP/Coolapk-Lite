@@ -18,42 +18,21 @@ namespace CoolapkLite.Models.Feeds
         public int LikeNum
         {
             get => likeNum;
-            set
-            {
-                if (likeNum != value)
-                {
-                    likeNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref likeNum, value);
         }
 
         private int replyNum;
         public int ReplyNum
         {
             get => replyNum;
-            set
-            {
-                if (replyNum != value)
-                {
-                    replyNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref replyNum, value);
         }
 
         private int starNum;
         public int StarNum
         {
             get => starNum;
-            set
-            {
-                if (starNum != value)
-                {
-                    starNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref starNum, value);
         }
 
         public bool Liked
@@ -86,14 +65,7 @@ namespace CoolapkLite.Models.Feeds
         public bool ShowButtons
         {
             get => showButtons;
-            set
-            {
-                if (showButtons != value)
-                {
-                    showButtons = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref showButtons, value);
         }
 
         int ICanFollow.ID => UID;

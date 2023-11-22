@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Users
@@ -10,56 +11,28 @@ namespace CoolapkLite.Models.Users
         public bool Like
         {
             get => like;
-            set
-            {
-                if (like != value)
-                {
-                    like = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref like, value);
         }
 
         private bool favorite;
         public bool Favorite
         {
             get => favorite;
-            set
-            {
-                if (favorite != value)
-                {
-                    favorite = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref favorite, value);
         }
 
         private bool follow;
         public bool Follow
         {
             get => follow;
-            set
-            {
-                if (follow != value)
-                {
-                    follow = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref follow, value);
         }
 
         private bool collect;
         public bool Collect
         {
             get => collect;
-            set
-            {
-                if (collect != value)
-                {
-                    collect = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref collect, value);
         }
 
         private bool followAuthor;
@@ -81,50 +54,37 @@ namespace CoolapkLite.Models.Users
         public bool AuthorFollowYou
         {
             get => authorFollowYou;
-            set
-            {
-                if (authorFollowYou != value)
-                {
-                    authorFollowYou = value;
-                    RaisePropertyChangedEvent();
-                    OnFollowChanged();
-                }
-            }
+            set => SetProperty(ref authorFollowYou, value);
         }
 
         private string followGlyph;
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         public UserAction(JObject token) : base(token)

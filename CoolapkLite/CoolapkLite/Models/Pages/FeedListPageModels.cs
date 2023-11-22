@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -19,21 +20,23 @@ namespace CoolapkLite.Models.Pages
         public bool IsCopyEnabled
         {
             get => isCopyEnabled;
-            set
-            {
-                if (isCopyEnabled != value)
-                {
-                    isCopyEnabled = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref isCopyEnabled, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([System.Runtime.CompilerServices.CallerMemberName] string name = null)
+        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
+        }
+
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (property == null ? value != null : !property.Equals(value))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
+            }
         }
 
         protected FeedListDetailBase(JObject token) : base(token)
@@ -63,28 +66,14 @@ namespace CoolapkLite.Models.Pages
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         int ICanFollow.ID => UID;
@@ -293,28 +282,14 @@ namespace CoolapkLite.Models.Pages
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         public int ID { get; private set; }
@@ -445,42 +420,21 @@ namespace CoolapkLite.Models.Pages
         public string FollowNum
         {
             get => followNum;
-            set
-            {
-                if (followNum != value)
-                {
-                    followNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followNum, value);
         }
 
         private string followGlyph;
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         public int ID { get; private set; }
@@ -598,28 +552,14 @@ namespace CoolapkLite.Models.Pages
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         public int ID { get; private set; }
@@ -892,56 +832,28 @@ namespace CoolapkLite.Models.Pages
         public string FollowNum
         {
             get => followNum;
-            set
-            {
-                if (followNum != value)
-                {
-                    followNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followNum, value);
         }
 
         private string followGlyph;
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         private bool liked;
         public bool Liked
         {
             get => liked;
-            set
-            {
-                if (liked != value)
-                {
-                    liked = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref liked, value);
         }
 
 
@@ -949,14 +861,7 @@ namespace CoolapkLite.Models.Pages
         public int LikeNum
         {
             get => likeNum;
-            set
-            {
-                if (likeNum != value)
-                {
-                    likeNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref likeNum, value);
         }
 
         public int ID { get; private set; }
@@ -1119,42 +1024,21 @@ namespace CoolapkLite.Models.Pages
         public string FollowNum
         {
             get => followNum;
-            set
-            {
-                if (followNum != value)
-                {
-                    followNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followNum, value);
         }
 
         private string followGlyph;
         public string FollowGlyph
         {
             get => followGlyph;
-            set
-            {
-                if (followGlyph != value)
-                {
-                    followGlyph = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followGlyph, value);
         }
 
         private string followStatus;
         public string FollowStatus
         {
             get => followStatus;
-            set
-            {
-                if (followStatus != value)
-                {
-                    followStatus = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref followStatus, value);
         }
 
         public int ID { get; private set; }

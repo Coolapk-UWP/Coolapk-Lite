@@ -14,28 +14,14 @@ namespace CoolapkLite.Models.Feeds
         public int LikeNum
         {
             get => likeNum;
-            set
-            {
-                if (likeNum != value)
-                {
-                    likeNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref likeNum, value);
         }
 
         private int replyNum;
         public int ReplyNum
         {
             get => replyNum;
-            set
-            {
-                if (replyNum != value)
-                {
-                    replyNum = value;
-                    RaisePropertyChangedEvent();
-                }
-            }
+            set => SetProperty(ref replyNum, value);
         }
 
         public bool Liked
