@@ -34,7 +34,7 @@ namespace CoolapkLite.Pages.FeedPages
         UserPageList,
         DevicePageList,
         ProductPageList,
-        CollectionPageList,
+        CollectionPageList
     }
 
     /// <summary>

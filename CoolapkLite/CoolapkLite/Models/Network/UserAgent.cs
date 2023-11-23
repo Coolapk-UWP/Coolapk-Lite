@@ -6,27 +6,27 @@ namespace CoolapkLite.Models.Network
 {
     public class UserAgent
     {
+        public static UserAgent Default
+        {
+            get
+            {
+                EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
+                return new UserAgent
+                {
+                    Header = $"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0)",
+                    Manufacturer = deviceInfo.SystemManufacturer,
+                    ProductName = deviceInfo.SystemProductName,
+                    FullProductName = deviceInfo.SystemSku ?? $"{deviceInfo.SystemManufacturer}_{deviceInfo.SystemProductName}".Replace(' ', '_'),
+                    OSVersion = SystemInformation.Instance.OperatingSystemVersion.ToString()
+                };
+            }
+        }
+
         public string Header { get; set; }
         public string Manufacturer { get; set; }
         public string ProductName { get; set; }
         public string FullProductName { get; set; }
         public string OSVersion { get; set; }
-
-        public static UserAgent Default
-        {
-            get
-            {
-                EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
-                return new UserAgent
-                {
-                    Header = $"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0)",
-                    Manufacturer = DeviceInfo.SystemManufacturer,
-                    ProductName = DeviceInfo.SystemProductName,
-                    FullProductName = $"{DeviceInfo.SystemProductName}_{DeviceInfo.SystemSku}",
-                    OSVersion = SystemInformation.Instance.OperatingSystemVersion.ToString()
-                };
-            }
-        }
 
         public static UserAgent Parse(string line)
         {

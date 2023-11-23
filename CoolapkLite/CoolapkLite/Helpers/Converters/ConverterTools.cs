@@ -5,7 +5,6 @@
 using System;
 using Windows.UI.Xaml.Markup;
 
-
 #if !NETCORE463
 using System.Reflection;
 #endif

@@ -74,7 +74,7 @@ namespace CoolapkLite.Common
 
     public enum TokenVersions
     {
-        TokenV1,
+        TokenV1 = 1,
         TokenV2
     }
 
@@ -89,6 +89,6 @@ namespace CoolapkLite.Common
         V10,
         V11,
         V12,
-        V13,
+        V13
     }
 }

@@ -4,11 +4,24 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/UserAgentDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Closing="OnClosing"
     mc:Ignorable="d">
+    <helpers:UIElementHelper.ContextFlyout>
+        <MenuFlyout>
+            <MenuFlyoutItem
+                x:Uid="/ContentDialog/ResetFlyoutItem"
+                Click="MenuFlyoutItem_Click"
+                Tag="Reset">
+                <helpers:FlyoutBaseHelper.Icon>
+                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE777;" />
+                </helpers:FlyoutBaseHelper.Icon>
+            </MenuFlyoutItem>
+        </MenuFlyout>
+    </helpers:UIElementHelper.ContextFlyout>
     <controls:StackPanelEx Spacing="4">
         <TextBox
             x:Uid="/ContentDialog/HeaderTextBox"

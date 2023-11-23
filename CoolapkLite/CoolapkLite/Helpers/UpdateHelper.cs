@@ -12,9 +12,6 @@ using HttpClient = System.Net.Http.HttpClient;
 using HttpResponseMessage = System.Net.Http.HttpResponseMessage;
 using HttpStatusCode = System.Net.HttpStatusCode;
 
-#if !CANARY
-#endif
-
 namespace CoolapkLite.Helpers
 {
     public static class UpdateHelper

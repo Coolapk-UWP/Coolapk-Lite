@@ -74,7 +74,7 @@ namespace CoolapkLite.Helpers
         SearchFeeds,
         SearchWords,
         SearchCreateTags,
-        SearchCreateUsers,
+        SearchCreateUsers
     }
 
     public static class UriHelper

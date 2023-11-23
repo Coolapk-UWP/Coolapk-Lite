@@ -265,7 +265,7 @@ namespace CoolapkLite.Controls
 
         private async Task SendContentAsync(HttpContent content)
         {
-            UriType type = (UriType)(-1);
+            UriType type = 0;
             switch (FeedType)
             {
                 case CreateFeedType.Feed:
@@ -506,6 +506,7 @@ namespace CoolapkLite.Controls
 
         private void Dispatcher_AcceleratorKeyActivated(CoreDispatcher sender, AcceleratorKeyEventArgs args)
         {
+            if (args.Handled) { return; }
             if (args.EventType == CoreAcceleratorKeyEventType.KeyDown || args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown)
             {
                 CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
@@ -590,10 +591,11 @@ namespace CoolapkLite.Controls
         }
     }
 
+    [Flags]
     public enum CreateFeedType
     {
-        Feed,
-        Reply,
-        ReplyReply
+        Feed = 0x01,
+        Reply = 0x02,
+        ReplyReply = Feed | Reply
     }
 }

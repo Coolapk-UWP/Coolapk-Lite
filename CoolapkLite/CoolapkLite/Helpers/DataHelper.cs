@@ -24,7 +24,7 @@ namespace CoolapkLite.Helpers
                 // Convert the input string to a byte array and compute the hash.
                 byte[] data = md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(input));
                 string results = BitConverter.ToString(data).ToLowerInvariant();
-                return results.Replace("-", "");
+                return results.Replace("-", string.Empty);
             }
         }
 
@@ -32,7 +32,7 @@ namespace CoolapkLite.Helpers
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input);
             string result = Convert.ToBase64String(bytes);
-            if (!isRaw) { result = result.Replace("=", ""); }
+            if (!isRaw) { result = result.Replace("=", string.Empty); }
             return result;
         }
 
@@ -124,12 +124,12 @@ namespace CoolapkLite.Helpers
             catch
             {
                 //换行和段落
-                string s = str.Replace("<br>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br/>", "\n").Replace("<p>", "").Replace("</p>", "\n").Replace("&nbsp;", " ").Replace("<br />", "").Replace("<br />", "");
+                string s = str.Replace("<br>", "\n").Replace("<br>", "\n").Replace("<br/>", "\n").Replace("<br/>", "\n").Replace("<p>", string.Empty).Replace("</p>", "\n").Replace("&nbsp;", " ").Replace("<br />", string.Empty).Replace("<br />", string.Empty);
                 //链接彻底删除！
                 while (s.Contains("<a", StringComparison.Ordinal))
                 {
-                    s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", "");
-                    s = s.Replace("</a>", "");
+                    s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", string.Empty);
+                    s = s.Replace("</a>", string.Empty);
                 }
                 return s;
             }

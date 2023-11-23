@@ -1,17 +1,14 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Windows.Security.ExchangeActiveSyncProvisioning;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using HttpClient = System.Net.Http.HttpClient;
@@ -71,123 +68,27 @@ namespace CoolapkLite.Helpers
 
         public static async void SetRequestHeaders(HttpClient client)
         {
-            string Culture = LanguageHelper.GetPrimaryLanguage();
-            EasClientDeviceInformation DeviceInfo = new EasClientDeviceInformation();
-            APIVersions APIVersion = SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion);
-
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("X-Sdk-Int", "33");
-            client.DefaultRequestHeaders.Add("X-Sdk-Locale", Culture);
+            client.DefaultRequestHeaders.Add("X-Sdk-Locale", LanguageHelper.GetPrimaryLanguage());
             client.DefaultRequestHeaders.Add("X-App-Mode", "universal");
             client.DefaultRequestHeaders.Add("X-App-Channel", "coolapk");
             client.DefaultRequestHeaders.Add("X-App-Id", "com.coolapk.market");
             client.DefaultRequestHeaders.Add("X-App-Device", TokenCreator.DeviceCode);
             client.DefaultRequestHeaders.Add("X-Dark-Mode", await ThemeHelper.IsDarkThemeAsync() ? "1" : "0");
 
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
+            if (!SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
             {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
+                SettingsHelper.Set(SettingsHelper.CustomUA, UserAgent.Default);
             }
-            else
-            {
-                client.DefaultRequestHeaders.UserAgent.ParseAdd($"Dalvik/2.1.0 (Windows NT {SystemInformation.Instance.OperatingSystemVersion.Major}.{SystemInformation.Instance.OperatingSystemVersion.Minor}; Win{(SystemInformation.Instance.OperatingSystemArchitecture.ToString().Contains("64") ? "64" : "32")}; {SystemInformation.Instance.OperatingSystemArchitecture.ToString().ToLower()}; WebView/3.0) (#Build; {DeviceInfo.SystemManufacturer}; {DeviceInfo.SystemProductName}; {DeviceInfo.SystemProductName}_{DeviceInfo.SystemSku}; {SystemInformation.Instance.OperatingSystemVersion})");
-            }
+            client.DefaultRequestHeaders.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
 
-            switch (APIVersion)
-            {
-                case APIVersions.V6:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/6.10.6-1608291-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "6.10.6");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1608291");
-                    break;
-                case APIVersions.V7:
-                    Client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/7.9.6_S-1710201-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "7.9.6_S");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1710201");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "7");
-                    break;
-                case APIVersions.V8:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/8.7-1809041-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "8.7");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1809041");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "8");
-                    break;
-                case APIVersions.V9:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/9.6.3-1910291-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "9.6.3");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1910291");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "9");
-                    break;
-                case APIVersions.小程序:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/1.0-1902250-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "1.0");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "1902250");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "9");
-                    break;
-                case APIVersions.V10:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/10.5.3-2009271-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "10.5.3");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2009271");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "10");
-                    break;
-                case APIVersions.V11:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/11.4.7-2112231-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "11.4.7");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2112231");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "11");
-                    break;
-                case APIVersions.V12:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/12.5.4-2212261-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "12.5.4");
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2212261");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2212261");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "12");
-                    break;
-                case APIVersions.V13:
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd(" +CoolMarket/13.3.6-2310232-universal");
-                    client.DefaultRequestHeaders.Add("X-App-Version", "13.3.6");
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", "2310232");
-                    client.DefaultRequestHeaders.Add("X-App-Code", "2310232");
-                    client.DefaultRequestHeaders.Add("X-Api-Version", "13");
-                    break;
-                case APIVersions.Custom:
-                    APIVersion CustomAPI = SettingsHelper.Get<APIVersion>(SettingsHelper.CustomAPI);
-                    client.DefaultRequestHeaders.UserAgent.ParseAdd($" {CustomAPI}");
-                    client.DefaultRequestHeaders.Add("X-App-Version", CustomAPI.Version);
-                    client.DefaultRequestHeaders.Add("X-Api-Supported", CustomAPI.VersionCode);
-                    client.DefaultRequestHeaders.Add("X-App-Code", CustomAPI.VersionCode);
-                    client.DefaultRequestHeaders.Add("X-Api-Version", CustomAPI.Version.Split('.').FirstOrDefault());
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
-        {
-            using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
-            {
-                HttpCookieManager cookieManager = filter.CookieManager;
-                if (uri.Host.Contains("coolapk", StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
-                    {
-                        if (item.Name == "uid" ||
-                            item.Name == "username" ||
-                            item.Name == "token")
-                        {
-                            yield return (item.Name, item.Value);
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (HttpCookie item in cookieManager.GetCookies(GetHost(uri)))
-                    {
-                        yield return (item.Name, item.Value);
-                    }
-                }
-            }
+            APIVersion version = APIVersion.Create(SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion));
+            client.DefaultRequestHeaders.UserAgent.ParseAdd($" {version}");
+            client.DefaultRequestHeaders.Add("X-App-Version", version.Version);
+            client.DefaultRequestHeaders.Add("X-Api-Supported", version.VersionCode);
+            client.DefaultRequestHeaders.Add("X-App-Code", version.VersionCode);
+            client.DefaultRequestHeaders.Add("X-Api-Version", version.MajorVersion);
         }
 
         private static void ReplaceDarkMode(this HttpRequestHeaders headers)

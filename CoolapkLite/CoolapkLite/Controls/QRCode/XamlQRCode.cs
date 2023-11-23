@@ -379,12 +379,12 @@ namespace CoolapkLite.Controls
     }
 
     [Flags]
-    public enum RadiusFilterKind : byte
+    public enum RadiusFilterKind
     {
         None = 0x00,
         TopLeft = 0x01,
         TopRight = 0x02,
         BottomLeft = 0x04,
-        BottomRight = 0x08,
+        BottomRight = 0x08
     }
 }

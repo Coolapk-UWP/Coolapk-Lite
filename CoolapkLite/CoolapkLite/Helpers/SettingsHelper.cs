@@ -103,7 +103,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(DeviceInfo))
             {
-                LocalObject.Save(DeviceInfo, new DeviceInfo());
+                LocalObject.Save(DeviceInfo, Models.Network.DeviceInfo.Default);
             }
             if (!LocalObject.KeyExists(IsNoPicsMode))
             {

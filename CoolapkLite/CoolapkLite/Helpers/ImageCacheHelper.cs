@@ -30,7 +30,7 @@ namespace CoolapkLite.Helpers
 
         SmallImage = Image | Small,
         SmallAvatar = Avatar | Small,
-        SmallMessage = Message | Small,
+        SmallMessage = Message | Small
     }
 
     public static partial class ImageCacheHelper
@@ -210,9 +210,10 @@ namespace CoolapkLite.Helpers
                 client.DefaultRequestHeaders.Add("X-App-Token", token.GetToken());
                 client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
 
-                foreach ((string name, string value) in NetworkHelper.GetCoolapkCookies(uri))
+                Uri host = NetworkHelper.GetHost(uri);
+                foreach ((string name, string value) in RequestHelper.GetCoolapkCookies(uri))
                 {
-                    handler.CookieContainer.SetCookies(NetworkHelper.GetHost(uri), $"{name}={value}");
+                    handler.CookieContainer.SetCookies(host, $"{name}={value}");
                 }
 
                 HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false);

@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:control="using:CoolapkLite.Controls"
+    xmlns:converters="using:CoolapkLite.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:globalization="using:System.Globalization"
     xmlns:helpers="using:CoolapkLite.Helpers"
@@ -13,6 +14,9 @@
     DataContext="{x:Bind Provider, Mode=OneWay}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
+    <Page.Resources>
+        <converters:ColorToHexNameConverter x:Key="ColorToHexNameConverter" />
+    </Page.Resources>
     <Grid>
         <ListView
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
@@ -324,7 +328,7 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         Text="{Binding FrameworkDescription}"
-                        TextWrapping="WrapWholeWords" />
+                        TextWrapping="Wrap" />
 
                     <TextBlock
                         Grid.Row="1"
@@ -354,7 +358,7 @@
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         Text="{Binding OperatingSystemVersion}"
-                        TextWrapping="WrapWholeWords" />
+                        TextWrapping="Wrap" />
 
                     <TextBlock
                         Grid.Row="3"
@@ -389,37 +393,72 @@
             </control:SettingsGroup>
             <control:SettingsGroup Header="强调色">
                 <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColor}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorDark1}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorDark2}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorDark3}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorLight1}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorLight2}" />
                         </Rectangle.Fill>
                     </Rectangle>
-                    <Rectangle Width="20" Height="20">
+                    <Rectangle
+                        Width="20"
+                        Height="20"
+                        DoubleTapped="Rectangle_DoubleTapped"
+                        Tag="{Binding Fill, RelativeSource={RelativeSource Mode=Self}, Converter={StaticResource ColorToHexNameConverter}}"
+                        ToolTipService.ToolTip="{Binding Tag, RelativeSource={RelativeSource Mode=Self}}">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{ThemeResource SystemAccentColorLight3}" />
                         </Rectangle.Fill>

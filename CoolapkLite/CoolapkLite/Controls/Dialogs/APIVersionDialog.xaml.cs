@@ -1,7 +1,5 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
-using Newtonsoft.Json.Linq;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -64,14 +62,9 @@ namespace CoolapkLite.Controls.Dialogs
             _ = this.ShowProgressBarAsync();
             try
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetAppDetail, "com.coolapk.market"));
-                if (isSucceed)
+                if (await APIVersion.GetLatestAsync() is APIVersion version)
                 {
-                    AppModel model = new AppModel((JObject)result);
-                    if (!string.IsNullOrEmpty(model.VersionCode) && !string.IsNullOrEmpty(model.VersionName))
-                    {
-                        APIVersion = new APIVersion(model.VersionName, model.VersionCode);
-                    }
+                    APIVersion = version;
                 }
             }
             finally

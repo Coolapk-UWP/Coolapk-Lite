@@ -349,6 +349,6 @@ namespace CoolapkLite.Helpers
     {
         LightMode,
         DarkMode,
-        NoPicChanged,
+        NoPicChanged
     }
 }

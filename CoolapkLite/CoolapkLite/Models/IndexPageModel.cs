@@ -256,7 +256,7 @@ namespace CoolapkLite.Models
         IconLink,
         TextLinks,
         GridLink,
-        SelectorLink,
+        SelectorLink
     }
 
     public class IndexPageHasEntitiesModel : Entity, IHasDescription
@@ -385,7 +385,7 @@ namespace CoolapkLite.Models
     {
         Login,
         Refresh,
-        ShowTitle,
+        ShowTitle
     }
 
     public class IndexPageOperationCardModel : Entity, IHasTitle

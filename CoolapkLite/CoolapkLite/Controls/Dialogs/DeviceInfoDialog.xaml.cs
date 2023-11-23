@@ -94,7 +94,7 @@ namespace CoolapkLite.Controls.Dialogs
                     }
                     break;
                 case "Reset":
-                    DeviceInfo = new DeviceInfo();
+                    DeviceInfo = DeviceInfo.Default;
                     break;
             }
         }
@@ -111,9 +111,7 @@ namespace CoolapkLite.Controls.Dialogs
                     int index = text.Length % 4;
                     byte[] bytes = Convert.FromBase64String(index == 0 ? text : $"{text}{new string(System.Linq.Enumerable.Repeat('=', 4 - index).ToArray())}");
                     string result = Encoding.UTF8.GetString(bytes);
-                    _ = result.Split(';').Length >= 8
-                        ? PasteItem.SetValueAsync(IsEnabledProperty, true)
-                        : PasteItem.SetValueAsync(IsEnabledProperty, false);
+                    _ = PasteItem.SetValueAsync(IsEnabledProperty, result.Split(';').Length >= 8);
                 }
             }
             catch

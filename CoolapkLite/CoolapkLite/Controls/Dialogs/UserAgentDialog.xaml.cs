@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
 using Windows.ApplicationModel.Resources;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“内容对话框”项模板
@@ -9,7 +10,25 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class UserAgentDialog : ContentDialog
     {
-        public UserAgent UserAgent { get; private set; }
+        #region UserAgent
+
+        /// <summary>
+        /// Identifies the <see cref="UserAgent"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty UserAgentProperty =
+            DependencyProperty.Register(
+                nameof(UserAgent),
+                typeof(UserAgent),
+                typeof(UserAgentDialog),
+                null);
+
+        public UserAgent UserAgent
+        {
+            get => (UserAgent)GetValue(UserAgentProperty);
+            private set => SetValue(UserAgentProperty, value);
+        }
+
+        #endregion
 
         public UserAgentDialog(string line)
         {
@@ -37,5 +56,7 @@ namespace CoolapkLite.Controls.Dialogs
                 NetworkHelper.SetRequestHeaders();
             }
         }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e) => UserAgent = UserAgent.Default;
     }
 }
