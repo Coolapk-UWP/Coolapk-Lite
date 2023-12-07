@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -67,7 +66,7 @@ namespace CoolapkLite.Models.Network
                 case APIVersions.V12:
                     return new APIVersion("12.5.4", "2212261");
                 case APIVersions.V13:
-                    return new APIVersion("13.3.6", "2310232");
+                    return new APIVersion("13.4.0", "2311301");
                 default:
                     goto case APIVersions.Custom;
             }
@@ -88,5 +87,19 @@ namespace CoolapkLite.Models.Network
         }
 
         public override string ToString() => $"+CoolMarket/{Version}-{VersionCode}-universal";
+    }
+
+    public enum APIVersions
+    {
+        Custom = 4,
+        小程序,
+        V6,
+        V7,
+        V8,
+        V9,
+        V10,
+        V11,
+        V12,
+        V13
     }
 }

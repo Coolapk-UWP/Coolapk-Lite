@@ -39,6 +39,7 @@
 
             <converter:NumMultConverter x:Key="NumMultConverter" />
             <converter:DateLineToReadableConverter x:Key="DateLineToReadableConverter" />
+            <converter:TimeSpanToolTipValueConverter x:Key="TimeSpanToolTipValueConverter" />
             <converter:ImageModelToVisibilityConverter x:Key="ImageModelToVisibilityConverter" />
 
             <common:ItemsPanelSelector

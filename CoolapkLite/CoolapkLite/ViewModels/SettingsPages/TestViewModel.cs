@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public static string OperatingSystemVersion { get; } = SystemInformation.Instance.OperatingSystemVersion.ToString();
 
         public static string OSArchitecture { get; } = RuntimeInformation.OSArchitecture.ToString();
-        
+
         public CoreDispatcher Dispatcher { get; }
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");

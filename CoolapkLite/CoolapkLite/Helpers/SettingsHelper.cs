@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Models.Network;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Models.Network;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
@@ -99,7 +100,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalObject.Save(APIVersion, Common.APIVersions.V13);
+                LocalObject.Save(APIVersion, APIVersions.V13);
             }
             if (!LocalObject.KeyExists(DeviceInfo))
             {
@@ -111,7 +112,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TokenVersion))
             {
-                LocalObject.Save(TokenVersion, Common.TokenVersions.TokenV2);
+                LocalObject.Save(TokenVersion, TokenVersions.TokenV2);
             }
             if (!LocalObject.KeyExists(IsUseLiteHome))
             {

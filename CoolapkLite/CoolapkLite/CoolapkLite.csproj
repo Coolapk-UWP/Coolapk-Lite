@@ -305,6 +305,7 @@
     <Compile Include="Helpers\Converters\ColorToHexNameConverter.cs" />
     <Compile Include="Helpers\Converters\EmptyImageModelToObjectConverter.cs" />
     <Compile Include="Helpers\Converters\ImageModelToVisibilityConverter.cs" />
+    <Compile Include="Helpers\Converters\TimeSpanToolTipValueConverter.cs" />
     <Compile Include="Helpers\WinSDKHelper.cs" />
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
     <Compile Include="Helpers\Controls\UIElementHelper.cs" />

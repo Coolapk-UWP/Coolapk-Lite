@@ -75,6 +75,7 @@
                     Maximum="1440"
                     Minimum="0"
                     StepFrequency="15"
+                    ThumbToolTipValueConverter="{StaticResource TimeSpanToolTipValueConverter}"
                     TickFrequency="15"
                     TickPlacement="Outside"
                     Value="{Binding TileUpdateTime, Mode=TwoWay}" />
