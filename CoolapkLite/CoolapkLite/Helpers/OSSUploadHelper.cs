@@ -1,7 +1,6 @@
 ﻿using Aliyun.OSS;
 using Aliyun.OSS.Util;
 using CoolapkLite.Models.Upload;
-using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,39 +35,16 @@ namespace CoolapkLite.Helpers
                 stream,
                 metadata);
 
-            return oss.PutObjectAsync(request);
-        }
-
-        private static Task<string> PutObjectAsync(this OssClient client, PutObjectRequest putObjectRequest)
-        {
-            TaskCompletionSource<string> taskCompletionSource = new TaskCompletionSource<string>(client);
-
-            IAsyncResult asyncResult = client.BeginPutObject(putObjectRequest, async iar =>
+            return Task.Factory.FromAsync(oss.BeginPutObject, oss.EndPutObject, request, null).ContinueWith(async x =>
             {
-                // this is the callback
-
-                TaskCompletionSource<string> _taskCompletionSource = (TaskCompletionSource<string>)iar.AsyncState;
-                OssClient _client = (OssClient)_taskCompletionSource.Task.AsyncState;
-
-                try
+                PutObjectResult putResult = x.Result;
+                using (Stream responseStream = putResult.ResponseStream)
                 {
-                    PutObjectResult putResult = _client.EndPutObject(iar);
-                    string callbackResponse = null;
-                    using (Stream stream = putResult.ResponseStream)
-                    {
-                        byte[] buffer = new byte[4 * 1024];
-                        int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
-                        callbackResponse = Encoding.Default.GetString(buffer, 0, bytesRead);
-                    }
-                    _taskCompletionSource.TrySetResult(callbackResponse);
+                    byte[] buffer = new byte[4 * 1024];
+                    int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    return Encoding.Default.GetString(buffer, 0, bytesRead);
                 }
-                catch (Exception ex)
-                {
-                    _taskCompletionSource.TrySetException(ex);
-                }
-            }, taskCompletionSource);
-
-            return taskCompletionSource.Task;
+            }).Unwrap();
         }
     }
 }
