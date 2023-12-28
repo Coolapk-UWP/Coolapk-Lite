@@ -181,7 +181,7 @@ namespace CoolapkLite
             window.Activate();
         }
 
-        private async Task CreateJumpListAsync()
+        private static async Task CreateJumpListAsync()
         {
             if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
             {
@@ -208,7 +208,7 @@ namespace CoolapkLite
             }
         }
 
-        private async Task CheckUpdateAsync()
+        private static async Task CheckUpdateAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
@@ -251,7 +251,7 @@ namespace CoolapkLite
         /// </summary>
         ///<param name="sender">导航失败的框架</param>
         ///<param name="e">有关导航失败的详细信息</param>
-        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        private static void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
@@ -263,14 +263,14 @@ namespace CoolapkLite
         /// </summary>
         /// <param name="sender">挂起的请求的源。</param>
         /// <param name="e">有关挂起请求的详细信息。</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
+        private static void OnSuspending(object sender, SuspendingEventArgs e)
         {
             SuspendingDeferral deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
         }
 
-        private async Task RequestWIFIAccessAsync()
+        private static async Task RequestWIFIAccessAsync()
         {
             if (ApiInfoHelper.IsAppCapabilitySupported)
             {
@@ -286,7 +286,7 @@ namespace CoolapkLite
             }
         }
 
-        private void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        private static void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
             if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
@@ -306,7 +306,7 @@ namespace CoolapkLite
         }
 
 #if NETCORE463
-        private void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+        private static void CurrentDomain_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
         {
             if (e.ExceptionObject is Exception Exception)
             {
@@ -318,14 +318,14 @@ namespace CoolapkLite
         /// <summary>
         /// Should be called from OnActivated and OnLaunched
         /// </summary>
-        private void RegisterExceptionHandlingSynchronizationContext()
+        private static void RegisterExceptionHandlingSynchronizationContext()
         {
             ExceptionHandlingSynchronizationContext
                 .Register()
                 .UnhandledException += SynchronizationContext_UnhandledException;
         }
 
-        private void SynchronizationContext_UnhandledException(object sender, Common.UnhandledExceptionEventArgs e)
+        private static void SynchronizationContext_UnhandledException(object sender, Common.UnhandledExceptionEventArgs e)
         {
             if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))
             {
