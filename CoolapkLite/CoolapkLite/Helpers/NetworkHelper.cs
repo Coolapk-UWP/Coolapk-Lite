@@ -28,7 +28,7 @@ namespace CoolapkLite.Helpers
 
         static NetworkHelper()
         {
-            ThemeHelper.UISettingChanged.Add(arg => Client?.DefaultRequestHeaders?.ReplaceDarkMode());
+            ThemeHelper.UISettingChanged += arg => Client?.DefaultRequestHeaders?.ReplaceDarkMode();
             ClientHandler = new HttpClientHandler();
             Client = new HttpClient(ClientHandler);
             SetRequestHeaders();

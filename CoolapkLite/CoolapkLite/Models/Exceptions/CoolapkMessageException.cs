@@ -6,6 +6,7 @@ namespace CoolapkLite.Models.Exceptions
     public sealed class CoolapkMessageException : Exception
     {
         public const string RequestCaptcha = "err_request_captcha";
+        public const string RequestCaptchaV2 = "err_request_captcha_v2";
 
         public CoolapkMessageException(string message) : base(message) { }
 

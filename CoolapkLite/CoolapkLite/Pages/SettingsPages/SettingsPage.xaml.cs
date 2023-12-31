@@ -54,7 +54,7 @@ namespace CoolapkLite.Pages.SettingsPages
             {
                 Provider = SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
             }
-            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
+            ThemeHelper.UISettingChanged += OnUISettingChanged;
             UpdateThemeRadio();
             _ = Refresh();
         }
@@ -62,7 +62,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
+            ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
         private void OnUISettingChanged(UISettingChangedType mode) => UpdateThemeRadio();

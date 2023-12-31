@@ -215,7 +215,7 @@ namespace CoolapkLite.Models.Images
         {
             Uri = uri;
             Type = type;
-            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
+            ThemeHelper.UISettingChanged += OnUISettingChanged;
         }
 
         public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher) : this(uri, type)
@@ -225,7 +225,7 @@ namespace CoolapkLite.Models.Images
 
         ~ImageModel()
         {
-            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
+            ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
         public event TypedEventHandler<ImageModel, bool> NoPicChanged;

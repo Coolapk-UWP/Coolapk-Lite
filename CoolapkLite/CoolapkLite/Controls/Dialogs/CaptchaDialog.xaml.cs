@@ -67,9 +67,6 @@ namespace CoolapkLite.Controls.Dialogs
             Image.Source = await RequestHelper.GetImageAsync(UriHelper.GetUri(UriType.GetCaptchaImage, timeSpan, GetActualPixel(Image.Width), GetActualPixel(Image.Height)));
         }
 
-        private static double GetActualPixel(double pixel)
-        {
-            return pixel * currentDpi;
-        }
+        private static double GetActualPixel(double pixel) => pixel * currentDpi;
     }
 }

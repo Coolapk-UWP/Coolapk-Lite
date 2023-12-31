@@ -69,12 +69,12 @@ namespace CoolapkLite.ViewModels.BrowserPages
         {
             Dispatcher = dispatcher;
             uri = url.TryGetUri();
-            ThemeHelper.UISettingChanged.Add(OnUISettingChanged);
+            ThemeHelper.UISettingChanged += OnUISettingChanged;
         }
 
         ~HTMLViewModel()
         {
-            ThemeHelper.UISettingChanged.Remove(OnUISettingChanged);
+            ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
         private void OnUISettingChanged(UISettingChangedType mode)
