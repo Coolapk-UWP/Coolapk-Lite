@@ -228,7 +228,7 @@ namespace CoolapkLite.Pages
                     image.SharePic();
                     break;
                 case "Refresh":
-                    _ = image.Refresh();
+                    _ = image.Refresh(Dispatcher);
                     break;
                 case "Origin":
                     image.Type &= (ImageType)0xFE;

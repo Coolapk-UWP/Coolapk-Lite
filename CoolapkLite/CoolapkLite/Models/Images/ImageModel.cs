@@ -265,7 +265,7 @@ namespace CoolapkLite.Models.Images
             if (Dispatcher == null) { return; }
             IsLoading = true;
             await ThreadSwitcher.ResumeBackgroundAsync();
-            using (ImageModelLocker locker = await ImageModelLocker.WaitAsync(() => IsLoading = false).ConfigureAwait(false))
+            using (ImageModelLocker _ = await ImageModelLocker.WaitAsync(() => IsLoading = false).ConfigureAwait(false))
             {
                 if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
@@ -465,6 +465,12 @@ namespace CoolapkLite.Models.Images
         }
 
         public Task Refresh() => GetImageAsync();
+
+        public Task Refresh(CoreDispatcher dispatcher)
+        {
+            Dispatcher = dispatcher;
+            return Refresh();
+        }
 
         public override string ToString() => string.Join(" - ", Title, uri);
 

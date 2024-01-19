@@ -32,7 +32,7 @@ namespace CoolapkLite.Controls.DataTemplates
                     image.SharePic();
                     break;
                 case "RefreshButton":
-                    _ = image.Refresh();
+                    _ = image.Refresh(element.Dispatcher);
                     break;
                 case "ShowImageButton":
                     _ = element.ShowImageAsync(image);

@@ -95,7 +95,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public Task Refresh(bool reset = false) => Images[Index].Refresh();
+        public Task Refresh(bool reset = false) => Images[Index].Refresh(Dispatcher);
 
         bool IViewModel.IsEqual(IViewModel other) => other is ShowImageViewModel model && IsEqual(model);
         public bool IsEqual(ShowImageViewModel other) => Images == other.Images;

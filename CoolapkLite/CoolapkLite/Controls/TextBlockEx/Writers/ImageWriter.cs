@@ -202,30 +202,30 @@ namespace CoolapkLite.Controls.Writers
         private static MenuFlyout CreateMenuFlyout(ImageModel image, TextBlockEx textBlockEx)
         {
             MenuFlyout menuFlyout = new MenuFlyout();
-            MenuFlyoutItem RefreshButton = new MenuFlyoutItem { Text = "刷新" };
-            FlyoutBaseHelper.SetIcon(RefreshButton, CreateFontIcon("\uE72C", textBlockEx));
-            RefreshButton.Click += (sender, args) => _ = image.Refresh();
-            menuFlyout.Items.Add(RefreshButton);
+            MenuFlyoutItem refreshButton = new MenuFlyoutItem { Text = "刷新" };
+            FlyoutBaseHelper.SetIcon(refreshButton, CreateFontIcon("\uE72C", textBlockEx));
+            refreshButton.Click += (sender, args) => _ = image.Refresh(refreshButton.Dispatcher);
+            menuFlyout.Items.Add(refreshButton);
 
-            MenuFlyoutItem CopyButton = new MenuFlyoutItem { Text = "复制" };
-            FlyoutBaseHelper.SetIcon(CopyButton, CreateFontIcon("\uE8C8", textBlockEx));
-            CopyButton.Click += (sender, args) => image.CopyPic();
-            menuFlyout.Items.Add(CopyButton);
+            MenuFlyoutItem copyButton = new MenuFlyoutItem { Text = "复制" };
+            FlyoutBaseHelper.SetIcon(copyButton, CreateFontIcon("\uE8C8", textBlockEx));
+            copyButton.Click += (sender, args) => image.CopyPic();
+            menuFlyout.Items.Add(copyButton);
 
-            MenuFlyoutItem ShareButton = new MenuFlyoutItem { Text = "分享" };
-            FlyoutBaseHelper.SetIcon(ShareButton, CreateFontIcon("\uE72D", textBlockEx));
-            ShareButton.Click += (sender, args) => image.SharePic();
-            menuFlyout.Items.Add(ShareButton);
+            MenuFlyoutItem shareButton = new MenuFlyoutItem { Text = "分享" };
+            FlyoutBaseHelper.SetIcon(shareButton, CreateFontIcon("\uE72D", textBlockEx));
+            shareButton.Click += (sender, args) => image.SharePic();
+            menuFlyout.Items.Add(shareButton);
 
-            MenuFlyoutItem SaveButton = new MenuFlyoutItem { Text = "保存" };
-            FlyoutBaseHelper.SetIcon(SaveButton, CreateFontIcon("\uE74E", textBlockEx));
-            SaveButton.Click += (sender, args) => image.SavePic();
-            menuFlyout.Items.Add(SaveButton);
+            MenuFlyoutItem saveButton = new MenuFlyoutItem { Text = "保存" };
+            FlyoutBaseHelper.SetIcon(saveButton, CreateFontIcon("\uE74E", textBlockEx));
+            saveButton.Click += (sender, args) => image.SavePic();
+            menuFlyout.Items.Add(saveButton);
 
-            MenuFlyoutItem OriginButton = new MenuFlyoutItem { Text = "查看原图" };
-            FlyoutBaseHelper.SetIcon(OriginButton, CreateFontIcon("\uEB9F", textBlockEx));
-            OriginButton.Click += (sender, args) => image.Type &= (ImageType)0xFE;
-            menuFlyout.Items.Add(OriginButton);
+            MenuFlyoutItem originButton = new MenuFlyoutItem { Text = "查看原图" };
+            FlyoutBaseHelper.SetIcon(originButton, CreateFontIcon("\uEB9F", textBlockEx));
+            originButton.Click += (sender, args) => image.Type &= (ImageType)0xFE;
+            menuFlyout.Items.Add(originButton);
 
             return menuFlyout;
         }

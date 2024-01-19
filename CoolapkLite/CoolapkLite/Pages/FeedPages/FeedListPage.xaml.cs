@@ -227,7 +227,7 @@ namespace CoolapkLite.Pages.FeedPages
                     image.SharePic();
                     break;
                 case nameof(RefreshButton):
-                    _ = image.Refresh();
+                    _ = image.Refresh(element.Dispatcher);
                     break;
                 case "ShowImageButton":
                     _ = this.ShowImageAsync(image);

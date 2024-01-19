@@ -82,7 +82,7 @@ namespace CoolapkLite.Controls
                     image.SharePic();
                     break;
                 case nameof(RefreshButton):
-                    _ = image.Refresh();
+                    _ = image.Refresh(element.Dispatcher);
                     break;
                 case "OriginButton":
                     image.Type &= (ImageType)0xFE;

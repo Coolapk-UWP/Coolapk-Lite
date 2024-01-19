@@ -3,8 +3,10 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -227,7 +229,7 @@ namespace CoolapkLite.Controls
             }
             else if (GetIsLoaded() && !Source.IsLoading)
             {
-                _ = Source.Refresh();
+                _ = Source.Refresh(Dispatcher);
             }
         }
 
@@ -257,13 +259,51 @@ namespace CoolapkLite.Controls
         private async Task UpdateStateAsync(bool isLoaded, bool useTransitions = true)
         {
             if (IsUseNoPicFallback) { return; }
-            if (_isImageLoaded != isLoaded)
+            using (UpdateStateLocker _ = await UpdateStateLocker.WaitAsync().ConfigureAwait(false))
             {
-                await Dispatcher.ResumeForegroundAsync();
-                _isImageLoaded = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions) == isLoaded;
+                if (_isImageLoaded != isLoaded)
+                {
+                    await Dispatcher.ResumeForegroundAsync();
+                    _isImageLoaded = VisualStateManager.GoToState(this, isLoaded ? LoadedState : LoadingState, useTransitions) == isLoaded;
+                }
             }
         }
 
         private bool GetIsLoaded() => ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded;
+
+        #region Locker
+
+        private class UpdateStateLocker : IDisposable
+        {
+            public static SemaphoreSlim SlimLocker { get; set; } = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
+
+            public static UpdateStateLocker Wait()
+            {
+                SlimLocker.Wait();
+                return new UpdateStateLocker();
+            }
+
+            public static async Task<UpdateStateLocker> WaitAsync()
+            {
+                await SlimLocker.WaitAsync().ConfigureAwait(false);
+                return new UpdateStateLocker();
+            }
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    SlimLocker.Release();
+                }
+            }
+
+            public void Dispose()
+            {
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
+        }
+
+        #endregion
     }
 }
