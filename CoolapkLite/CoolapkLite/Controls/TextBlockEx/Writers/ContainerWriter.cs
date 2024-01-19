@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using CoolapkLite.Helpers.Converters;
+using HtmlAgilityPack;
 using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -23,6 +24,7 @@ namespace CoolapkLite.Controls.Writers
                 Border border = new Border
                 {
                     Margin = new Thickness(4, 0, 4, -4),
+                    Padding = new Thickness(2, 0, 2, 0),
                     CornerRadius = new CornerRadius(4),
                     BorderThickness = new Thickness(1),
                     VerticalAlignment = VerticalAlignment.Center,
@@ -31,12 +33,12 @@ namespace CoolapkLite.Controls.Writers
 
                 TextBlock textBlock = new TextBlock
                 {
-                    FontSize = 12,
                     Margin = new Thickness(1),
                     Text = _loader.GetString("FeedAuthorText"),
                     Foreground = (SolidColorBrush)Application.Current.Resources["AccentFillColorDefaultBrush"],
                 };
 
+                textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.FontSize), new NumAddConverter(), -2));
                 textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));
 
                 border.Child = textBlock;

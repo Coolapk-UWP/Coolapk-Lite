@@ -132,6 +132,15 @@
   <data name="FeedAuthor.Text" xml:space="preserve">
     <value>楼主</value>
   </data>
+  <data name="FeedAuthorLike" xml:space="preserve">
+    <value>作者赞过</value>
+  </data>
+  <data name="FeedAuthorReply" xml:space="preserve">
+    <value>作者回复了</value>
+  </data>
+  <data name="FeedAuthorReplyLike" xml:space="preserve">
+    <value>作者回复并赞了</value>
+  </data>
   <data name="FeedAuthorText" xml:space="preserve">
     <value>楼主</value>
   </data>

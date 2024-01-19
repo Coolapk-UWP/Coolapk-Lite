@@ -237,7 +237,7 @@ namespace CoolapkLite.Common
                 if (!e.IsIntermediate)
                 {
                     sv.ViewChanged -= Sv_ViewChanged;
-                    tcs.SetResult(true);
+                    _ = tcs.TrySetResult(true);
                 }
             }
         }

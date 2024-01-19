@@ -6,6 +6,7 @@ using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -58,22 +59,33 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                _ = Provider.Refresh(true);
-                if (Provider.FeedDetail != null)
+                _ = Provider.Refresh(true).ContinueWith(x =>
                 {
-                    SetLayout();
-                    GenerateActivityAsync();
-                }
+                    if (Provider.FeedDetail != null)
+                    {
+                        SetLayout();
+                        return GenerateActivityAsync();
+                    }
+                    return Task.CompletedTask;
+                }).Unwrap();
             }
         }
 
         private void SetLayout()
         {
-            TwoPaneView.MinWideModeWidth = Provider.FeedDetail?.IsFeedArticle ?? false ? 876 : 804;
-            TwoPaneView.Pane1Length = new GridLength(Provider.FeedDetail?.IsFeedArticle ?? false ? 520 : 420);
+            if (Provider.FeedDetail?.IsFeedArticle == true)
+            {
+                TwoPaneView.MinWideModeWidth = 876;
+                TwoPaneView.Pane1Length = new GridLength(520);
+            }
+            else
+            {
+                TwoPaneView.MinWideModeWidth = 804;
+                TwoPaneView.Pane1Length = new GridLength(420);
+            }
         }
 
-        private async void GenerateActivityAsync()
+        private async Task GenerateActivityAsync()
         {
             if (!ApiInfoHelper.IsUserActivityChannelSupported)
             { return; }
@@ -83,8 +95,11 @@ namespace CoolapkLite.Pages.FeedPages
             UserActivity userActivity = await channel.GetOrCreateUserActivityAsync(Provider.FeedDetail.Url.GetMD5());
 
             // Populate required properties
-            userActivity.VisualElements.DisplayText = Provider.Title;
-            userActivity.VisualElements.AttributionDisplayText = Provider.Title;
+            if (!string.IsNullOrWhiteSpace(Provider.Title))
+            {
+                userActivity.VisualElements.DisplayText = Provider.Title;
+                userActivity.VisualElements.AttributionDisplayText = Provider.Title;
+            }
             userActivity.VisualElements.Description = Provider.FeedDetail.Message.HtmlToString();
             userActivity.ActivationUri = new Uri($"coolapk://{(Provider.FeedDetail.Url[0] == '/' ? Provider.FeedDetail.Url.Substring(1) : Provider.FeedDetail.Url)}");
 

@@ -174,11 +174,11 @@ namespace CoolapkLite.Helpers
                 try
                 {
                     TResult result = await function.ConfigureAwait(false);
-                    taskCompletionSource.SetResult(result);
+                    _ = taskCompletionSource.TrySetResult(result);
                 }
                 catch (Exception e)
                 {
-                    taskCompletionSource.SetException(e);
+                    _ = taskCompletionSource.TrySetException(e);
                 }
             }, cancellationToken);
             TResult taskResult = task.Result;
@@ -298,7 +298,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<IBuffer> GetBufferAsync(this IRandomAccessStream randomStream)
         {
-            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
+            using (Stream stream = randomStream.GetInputStreamAt(0).AsStreamForRead())
             {
                 return await stream.GetBufferAsync();
             }
@@ -306,7 +306,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<byte[]> GetBytesAsync(this IRandomAccessStream randomStream)
         {
-            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(randomStream.GetInputStreamAt(0)))
+            using (Stream stream = randomStream.GetInputStreamAt(0).AsStreamForRead())
             {
                 return await stream.GetBytesAsync();
             }

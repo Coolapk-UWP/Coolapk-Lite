@@ -18,11 +18,14 @@ namespace CoolapkLite.Helpers
     public static class ThemeHelper
     {
         private static Window CurrentApplicationWindow;
-        private static readonly WeakEvent<UISettingChangedType> actions = new WeakEvent<UISettingChangedType>();
 
         // Keep reference so it does not get optimized/garbage collected
         public static UISettings UISettings { get; } = new UISettings();
         public static AccessibilitySettings AccessibilitySettings { get; } = new AccessibilitySettings();
+
+        #region UISettingChanged
+
+        private static readonly WeakEvent<UISettingChangedType> actions = new WeakEvent<UISettingChangedType>();
 
         public static event Action<UISettingChangedType> UISettingChanged
         {
@@ -31,6 +34,8 @@ namespace CoolapkLite.Helpers
         }
 
         public static void InvokeUISettingChanged(UISettingChangedType value) => actions.Invoke(value);
+
+        #endregion
 
         #region ActualTheme
 

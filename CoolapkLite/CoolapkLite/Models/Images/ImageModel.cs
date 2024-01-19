@@ -377,12 +377,9 @@ namespace CoolapkLite.Models.Images
             {
                 using (Stream FolderStream = await file.OpenStreamForWriteAsync())
                 {
-                    using (IRandomAccessStreamWithContentType RandomAccessStream = await image.OpenReadAsync())
+                    using (Stream ImageStream = await image.OpenStreamForReadAsync())
                     {
-                        using (Stream ImageStream = RandomAccessStream.AsStreamForRead())
-                        {
-                            await ImageStream.CopyToAsync(FolderStream).ConfigureAwait(false);
-                        }
+                        await ImageStream.CopyToAsync(FolderStream).ConfigureAwait(false);
                     }
                 }
             }

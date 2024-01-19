@@ -93,11 +93,12 @@
                                     VerticalAlignment="Top"
                                     Orientation="Horizontal">
                                     <TextBlock
+                                        x:Name="UserName"
                                         HorizontalAlignment="Left"
-                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                         Text="{x:Bind UserInfo.UserName}" />
                                     <Border
                                         Margin="6,0"
+                                        Padding="2,0"
                                         VerticalAlignment="Center"
                                         BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
                                         BorderThickness="1"
@@ -107,7 +108,7 @@
                                             x:Uid="/Feed/FeedAuthor"
                                             Margin="1"
                                             HorizontalAlignment="Left"
-                                            FontSize="12"
+                                            FontSize="10"
                                             Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                             IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                                     </Border>
@@ -117,23 +118,24 @@
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                         Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}" />
                                     <TextBlock
                                         Margin="2,0,0,0"
                                         HorizontalAlignment="Left"
                                         VerticalAlignment="Center"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                        IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                         Text="@"
                                         Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
-                                    <HyperlinkButton
+                                    <TextBlock
                                         x:Name="Ruser"
-                                        Margin="0,-5"
-                                        Content="{x:Bind Rusername}"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
                                         FontWeight="Normal"
-                                        Style="{StaticResource TextBlockButtonStyle}"
-                                        Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}" />
+                                        Visibility="{x:Bind Rusername, Converter={StaticResource StringVisibilityConverter}}">
+                                        <Hyperlink UnderlineStyle="None">
+                                            <Run Text="{x:Bind Rusername}" />
+                                        </Hyperlink>
+                                    </TextBlock>
                                 </StackPanel>
                             </StackPanel>
                         </StackPanel>

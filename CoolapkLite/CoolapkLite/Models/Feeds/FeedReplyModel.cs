@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -41,6 +42,10 @@ namespace CoolapkLite.Models.Feeds
         public int ReplyRowsCount { get; private set; }
 
         public bool ShowReplyRow { get; private set; }
+        public bool IsFeedAuthorLike { get; private set; }
+        public bool IsFeedAuthorReply { get; private set; }
+
+        public string FeedAuthorMessage { get; private set; }
 
         public ImmutableArray<SourceFeedReplyModel> ReplyRows { get; private set; } = ImmutableArray<SourceFeedReplyModel>.Empty;
 
@@ -71,6 +76,28 @@ namespace CoolapkLite.Models.Feeds
             if (token.TryGetValue("replyRowsCount", out JToken replyRowsCount))
             {
                 ReplyRowsCount = replyRowsCount.ToObject<int>();
+            }
+
+            if (token.TryGetValue("isFeedAuthorLike", out JToken isFeedAuthorLike))
+            {
+                IsFeedAuthorLike = isFeedAuthorLike.ToObject<bool>();
+            }
+
+            if (token.TryGetValue("isFeedAuthorReply", out JToken isFeedAuthorReply))
+            {
+                IsFeedAuthorReply = isFeedAuthorReply.ToObject<bool>();
+            }
+
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
+            if (IsFeedAuthorLike)
+            {
+                FeedAuthorMessage = IsFeedAuthorReply
+                    ? loader.GetString("FeedAuthorReplyLike")
+                    : loader.GetString("FeedAuthorLike");
+            }
+            else if (IsFeedAuthorReply)
+            {
+                FeedAuthorMessage = loader.GetString("FeedAuthorReply");
             }
 
             if (token.TryGetValue("replyRows", out JToken replyRows))
