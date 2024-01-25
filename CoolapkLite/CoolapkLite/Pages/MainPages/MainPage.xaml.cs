@@ -14,6 +14,7 @@ using CoolapkLite.ViewModels.FeedPages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -72,7 +73,7 @@ namespace CoolapkLite.Pages
                 { OpenActivatedEventArgs(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
                 { OpenLinkAsync(factory); }
-                else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo()); }
+                else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo()); }
                 isLoaded = true;
             }
         }
@@ -120,7 +121,7 @@ namespace CoolapkLite.Pages
         {
             if (!await factory(HamburgerMenuFrame))
             {
-                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
+                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo());
             }
         }
 
@@ -128,7 +129,7 @@ namespace CoolapkLite.Pages
         {
             if (!await HamburgerMenuFrame.OpenActivatedEventArgsAsync(args))
             {
-                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>)[0], new EntranceNavigationTransitionInfo());
+                HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo());
             }
         }
 
@@ -145,7 +146,7 @@ namespace CoolapkLite.Pages
                 }
                 else
                 {
-                    MenuItem item = (HamburgerMenu.ItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
+                    MenuItem item = (HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                     if (item != default)
                     {
                         HamburgerMenu.SelectedOptionsIndex = -1;
@@ -153,7 +154,7 @@ namespace CoolapkLite.Pages
                     }
                     else
                     {
-                        item = (HamburgerMenu.OptionsItemsSource as ObservableCollection<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
+                        item = (HamburgerMenu.OptionsItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
                         if (item != default)
                         {
                             HamburgerMenu.SelectedIndex = -1;
@@ -429,9 +430,9 @@ namespace CoolapkLite.Pages
 
         protected static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
 
-        public static ObservableCollection<MenuItem> GetMainItems(CoreDispatcher dispatcher)
+        public static MenuItem[] GetMainItems(CoreDispatcher dispatcher)
         {
-            ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
+            MenuItem[] items = new[]
             {
                 new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), Index = 0 },
                 new MenuItem(dispatcher) { Icon = "\uE716", Name = loader.GetString("Circle"), PageType = typeof(CirclePage), Index = 1 },
@@ -441,9 +442,9 @@ namespace CoolapkLite.Pages
             return items;
         }
 
-        public static ObservableCollection<MenuItem> GetOptionsItems(CoreDispatcher dispatcher)
+        public static MenuItem[] GetOptionsItems(CoreDispatcher dispatcher)
         {
-            ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>
+            MenuItem[] items = new[]
             {
                  new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
                  new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
@@ -470,7 +471,7 @@ namespace CoolapkLite.Pages
 
         public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher)
         {
-            SettingsHelper.LoginChanged += (sender, e) => _ = SetUserAvatarAsync(e);
+            SettingsHelper.LoginChanged += args => _ = SetUserAvatarAsync(args);
             _ = SetUserAvatarAsync();
         }
 

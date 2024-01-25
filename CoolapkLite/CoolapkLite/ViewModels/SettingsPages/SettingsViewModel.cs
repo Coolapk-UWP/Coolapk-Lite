@@ -191,7 +191,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             Dispatcher = dispatcher;
             Caches[dispatcher] = this;
-            SettingsHelper.LoginChanged += (sender, args) => IsLogin = args;
+            SettingsHelper.LoginChanged += args => IsLogin = args;
         }
 
         private async Task GetAboutTextBlockTextAsync(bool reset)

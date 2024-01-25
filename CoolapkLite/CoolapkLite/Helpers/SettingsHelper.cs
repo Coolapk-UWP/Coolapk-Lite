@@ -206,13 +206,24 @@ namespace CoolapkLite.Helpers
 
     public static partial class SettingsHelper
     {
-        public static event TypedEventHandler<string, bool> LoginChanged;
-        public static readonly ILogManager LogManager = LogManagerFactory.CreateLogManager();
-        public static readonly ApplicationDataStorageHelper LocalObject = ApplicationDataStorageHelper.GetCurrent(new NewtonsoftJsonObjectSerializer());
+        public static ILogManager LogManager { get; } = LogManagerFactory.CreateLogManager();
+        public static ApplicationDataStorageHelper LocalObject { get; } = ApplicationDataStorageHelper.GetCurrent(new NewtonsoftJsonObjectSerializer());
+
+        #region UISettingChanged
+
+        private static readonly WeakEvent<bool> actions = new WeakEvent<bool>();
+
+        public static event Action<bool> LoginChanged
+        {
+            add => actions.Add(value);
+            remove => actions.Remove(value);
+        }
+
+        public static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
+
+        #endregion
 
         static SettingsHelper() => SetDefaultSettings();
-
-        public static void InvokeLoginChanged(string sender, bool args) => LoginChanged?.Invoke(sender, args);
 
         public static async Task<bool> LoginAsync()
         {
@@ -247,7 +258,7 @@ namespace CoolapkLite.Helpers
                     Set(Uid, uid);
                     Set(Token, token);
                     Set(UserName, userName);
-                    InvokeLoginChanged(uid, true);
+                    InvokeLoginChanged(true);
                     return true;
                 }
             }
@@ -275,7 +286,7 @@ namespace CoolapkLite.Helpers
                     Set(SettingsHelper.Uid, Uid);
                     Set(SettingsHelper.Token, Token);
                     Set(SettingsHelper.UserName, UserName);
-                    InvokeLoginChanged(Uid, true);
+                    InvokeLoginChanged(true);
                     return true;
                 }
                 else
@@ -327,7 +338,7 @@ namespace CoolapkLite.Helpers
             Set(Uid, string.Empty);
             Set(Token, string.Empty);
             Set(UserName, string.Empty);
-            InvokeLoginChanged(string.Empty, false);
+            InvokeLoginChanged(false);
         }
     }
 

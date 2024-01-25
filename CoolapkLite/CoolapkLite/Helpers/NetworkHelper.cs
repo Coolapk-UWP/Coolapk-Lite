@@ -56,7 +56,7 @@ namespace CoolapkLite.Helpers
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
                 }
-                SettingsHelper.InvokeLoginChanged(Uid, true);
+                SettingsHelper.InvokeLoginChanged(true);
             }
         }
 

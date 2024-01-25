@@ -249,12 +249,12 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     IReadOnlyList<StorageFile> files = await storageFolder.GetFilesAsync();
                     IEnumerable<StorageFile> images = files.Take(9 - Pictures.Count, i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
-                    if (images.Any()) { images.ForEach(async (image) => await ReadFileAsync(image).ConfigureAwait(false)); }
+                    if (images.Any()) { images.ForEach(async image => await ReadFileAsync(image).ConfigureAwait(false)); }
                 }
                 else
                 {
                     IEnumerable<StorageFile> images = items.OfType<StorageFile>(i => ImageTypes.Any(x => i.Name.EndsWith(x, StringComparison.OrdinalIgnoreCase)));
-                    if (images.Any()) { images.Take(9 - Pictures.Count).ForEach(async (image) => await ReadFileAsync(image).ConfigureAwait(false)); }
+                    if (images.Any()) { images.Take(9 - Pictures.Count).ForEach(async image => await ReadFileAsync(image).ConfigureAwait(false)); }
                 }
             }
         }

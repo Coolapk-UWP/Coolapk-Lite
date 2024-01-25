@@ -106,6 +106,8 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 _ = Refresh(true);
             }
+
+            SettingsHelper.LoginChanged += OnLoginChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -113,11 +115,14 @@ namespace CoolapkLite.Pages.FeedPages
             base.OnNavigatedFrom(e);
             Provider.LoadMoreStarted -= OnLoadMoreStarted;
             Provider.LoadMoreCompleted -= OnLoadMoreCompleted;
+            SettingsHelper.LoginChanged -= OnLoginChanged;
         }
 
         private void OnLoadMoreStarted() => _ = this.ShowProgressBarAsync();
 
         private void OnLoadMoreCompleted() => _ = this.HideProgressBarAsync();
+
+        private void OnLoginChanged(bool isLogin) => _ = Refresh(true);
 
         private async Task Refresh(bool reset = false)
         {

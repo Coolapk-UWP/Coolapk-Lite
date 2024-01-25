@@ -736,9 +736,11 @@ namespace CoolapkLite.Helpers
                         case "coolapk.com":
                         case "www.coolmarket.com":
                         case "coolmarket.com":
+                            _ = frame.ShowProgressBarAsync();
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath).ConfigureAwait(false);
                         case "http":
                         case "https":
+                            _ = frame.ShowProgressBarAsync();
                             return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}").ConfigureAwait(false);
                         case "me":
                             return await frame.NavigateAsync(typeof(ProfilePage)).ConfigureAwait(false);
@@ -763,6 +765,7 @@ namespace CoolapkLite.Helpers
                         case "notifications":
                             return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
                         default:
+                            _ = frame.ShowProgressBarAsync();
                             return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri).ConfigureAwait(false);
                     }
                 case ActivationKind.ToastNotification when args is IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs:
@@ -822,6 +825,7 @@ namespace CoolapkLite.Helpers
                     case "notifications":
                         return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
                     default:
+                        _ = frame.ShowProgressBarAsync();
                         return await frame.OpenLinkAsync(arguments[0]).ConfigureAwait(false);
                 }
             }

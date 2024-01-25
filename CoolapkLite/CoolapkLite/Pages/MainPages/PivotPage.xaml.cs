@@ -370,10 +370,10 @@ namespace CoolapkLite.Pages
 
         #endregion
 
-        public static ObservableCollection<PivotItem> GetMainItems()
+        public static PivotItem[] GetMainItems()
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("CirclePage");
-            ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
+            PivotItem[] items = new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
                 new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },

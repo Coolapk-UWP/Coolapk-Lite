@@ -1,7 +1,7 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -22,12 +22,28 @@ namespace CoolapkLite.Pages.FeedPages
         private bool isLoaded;
         private Func<bool, Task> Refresh;
 
+        private static bool IsLogin => !string.IsNullOrEmpty(SettingsHelper.Get<string>(SettingsHelper.Uid));
+
         public CirclePage() => InitializeComponent();
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SettingsHelper.LoginChanged += OnLoginChanged;
+        }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
             PivotIndex = Pivot.SelectedIndex;
+            SettingsHelper.LoginChanged -= OnLoginChanged;
+        }
+
+        private async void OnLoginChanged(bool isLogin)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            Pivot.ItemsSource = GetMainItems(isLogin);
+            if (!isLogin) { PivotIndex = 0; }
         }
 
         private void Pivot_Loaded(object sender, RoutedEventArgs e)
@@ -56,10 +72,12 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 
-        public static ObservableCollection<PivotItem> GetMainItems()
+        public static PivotItem[] GetMainItems() => GetMainItems(IsLogin);
+
+        public static PivotItem[] GetMainItems(bool isLogin)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("CirclePage");
-            ObservableCollection<PivotItem> items = new ObservableCollection<PivotItem>
+            PivotItem[] items = isLogin ? new[]
             {
                 new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },
                 new PivotItem { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
@@ -67,6 +85,9 @@ namespace CoolapkLite.Pages.FeedPages
                 new PivotItem { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
                 new PivotItem { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
                 new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
+            } : new[]
+            {
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() }
             };
             return items;
         }
