@@ -18,6 +18,8 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         private readonly string Uri;
         private readonly Type[] EntityTypes;
+        private readonly bool IsEntityTypesEmpty;
+
         protected bool IsInitPage => Uri == "/main/init";
         protected bool IsIndexPage => !Uri.Contains('?');
         protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
@@ -40,6 +42,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             Uri = GetUri(uri);
             EntityTypes = types;
+            IsEntityTypesEmpty = types?.Length > 0;
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                     UriHelper.GetUri(
@@ -285,21 +288,18 @@ namespace CoolapkLite.ViewModels.FeedPages
             yield break;
         }
 
-        protected override async Task AddItemsAsync(IList<Entity> items)
+        public override async Task<bool> AddItemAsync(Entity item)
         {
-            if (items != null)
+            if (item != null && !(item is NullEntity))
             {
-                bool notOfType = EntityTypes?.Any() != true;
-                foreach (Entity item in items)
+                if (!IsEntityTypesEmpty || EntityTypes.Contains(item.GetType()))
                 {
-                    if (item is NullEntity) { continue; }
-                    if (notOfType || EntityTypes.Contains(item.GetType()))
-                    {
-                        await AddAsync(item).ConfigureAwait(false);
-                        AddSubProvider(item);
-                    }
+                    await AddAsync(item).ConfigureAwait(false);
+                    AddSubProvider(item);
+                    return true;
                 }
             }
+            return false;
         }
     }
 }

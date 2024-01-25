@@ -36,36 +36,42 @@ namespace CoolapkLite.ViewModels.DataSource
         /// <summary>
         /// Special for Coolapk, as their items are paged.
         /// </summary>
-        protected override async Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
+        protected override async Task<uint> LoadMoreItemsOverrideAsync(CancellationToken cancellationToken, uint count)
         {
             if (IsInTime())
             {
-                return null;
+                return 0;
             }
 
-            IList<T> newItems = await LoadItemsAsync(count);
+            uint loaded = await LoadItemsAsync(count);
 
             // Network page state.
-            if (newItems != null)
+            if (loaded > 0)
             {
                 _currentPage++;
             }
 
-            _hasMoreItems = newItems != null && newItems.Count > 0;
+            _hasMoreItems = loaded > 0;
 
-            return newItems;
+            return loaded;
         }
 
-        protected void FireErrorEvent(int code)
+        protected async Task<uint> AddItemsAsync(IEnumerable<T> items)
         {
-            DataRequestError?.Invoke(code);
+            uint count = 0;
+            foreach (T item in items)
+            {
+                if (await AddItemAsync(item))
+                {
+                    count++;
+                }
+            }
+            return count;
         }
-
-        public event EventHandler<int> DataRequestError;
 
         protected override bool HasMoreItemsOverride() => _hasMoreItems;
 
-        protected abstract Task<IList<T>> LoadItemsAsync(uint count);
+        protected abstract Task<uint> LoadItemsAsync(uint count);
 
         protected int _currentPage = 1;
         protected bool _hasMoreItems = true;

@@ -61,18 +61,42 @@ namespace CoolapkLite.ViewModels.FeedPages
         bool IViewModel.IsEqual(IViewModel other) => other is ChatViewModel model && IsEqual(model);
         public bool IsEqual(ChatViewModel other) => ID == other.ID;
 
-        protected override async Task AddItemsAsync(IList<Entity> items)
+        protected override async Task<uint> LoadItemsAsync(uint count)
         {
-            if (items != null)
+            if (Provider != null)
             {
-                foreach (Entity item in items.Reverse())
+                List<Entity> models = new List<Entity>((int)count);
+                if (IsFullLoad)
                 {
-                    if (!(item is NullEntity))
+                    uint loaded = 0;
+                    while (loaded < count)
                     {
-                        await AddAsync(item).ConfigureAwait(false);
+                        uint temp = loaded;
+                        if (loaded > 0) { _currentPage++; models.Clear(); }
+                        await Provider.GetEntityAsync(models, _currentPage).ConfigureAwait(false);
+                        models.Reverse();
+                        loaded += await AddItemsAsync(models);
+                        if (loaded <= 0 || loaded <= temp) { return loaded; }
                     }
+                    return loaded;
+                }
+                else
+                {
+                    await Provider.GetEntityAsync(models, _currentPage).ConfigureAwait(false);
+                    return await AddItemsAsync(models).ConfigureAwait(false);
                 }
             }
+            return 0;
+        }
+
+        public override async Task<bool> AddItemAsync(Entity item)
+        {
+            if (item != null && !(item is NullEntity))
+            {
+                await AddAsync(item).ConfigureAwait(false);
+                return true;
+            }
+            return false;
         }
 
         public override async Task AddAsync(Entity item)
@@ -224,7 +248,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 ExtensionManager manager = new ExtensionManager(ExtensionManager.OSSUploader);
                 await manager.InitializeAsync(Dispatcher);
-                if (manager.Extensions.Any())
+                if (manager.Extensions.Count > 0)
                 {
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>
                     {

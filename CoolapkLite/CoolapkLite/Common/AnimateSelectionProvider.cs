@@ -129,7 +129,7 @@ namespace CoolapkLite.Common
                 m_activeIndicator = FindSelectionIndicator(e.RemovedItems.FirstOrDefault());
             }
 
-            if (!e.AddedItems.Any() && ItemsControls.Count() > 1 && ItemsControls.Any(x => (x is Selector selector && selector.SelectedItem != null) || (x is Pivot pivot && pivot.SelectedItem != null)))
+            if (e.AddedItems.Count <= 0 && ItemsControls.Count() > 1 && ItemsControls.Any(x => (x is Selector selector && selector.SelectedItem != null) || (x is Pivot pivot && pivot.SelectedItem != null)))
             {
                 return;
             }

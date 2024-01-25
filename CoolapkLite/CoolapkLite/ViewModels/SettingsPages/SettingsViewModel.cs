@@ -168,7 +168,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         protected static async void RaisePropertyChangedEvent(params string[] names)
         {
-            if (names?.Any() == true)
+            if (names?.Length > 0)
             {
                 foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
                 {
@@ -322,7 +322,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     }
                 };
 
-                if (info.Assets?.Any() == true)
+                if (info.Assets?.Length > 0)
                 {
                     MenuFlyout menuFlyout = new MenuFlyout();
                     MenuFlyoutSubItem menuFlyoutSubItem = new MenuFlyoutSubItem { Text = "下载安装包" };

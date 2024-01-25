@@ -716,7 +716,7 @@ namespace CoolapkLite.Helpers
                     }
                     else if (ApiInfoHelper.IsTileActivatedInfoSupported && LaunchActivatedEventArgs.TileActivatedInfo != null)
                     {
-                        if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Any())
+                        if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Count > 0)
                         {
                             string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
                             return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' ')).ConfigureAwait(false);
@@ -794,9 +794,9 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        private static async Task<bool> ProcessArgumentsAsync(Frame frame, string[] arguments)
+        private static async Task<bool> ProcessArgumentsAsync(Frame frame, params string[] arguments)
         {
-            if (arguments.Length >= 1)
+            if (arguments?.Length > 0)
             {
                 switch (arguments[0].ToLowerInvariant())
                 {

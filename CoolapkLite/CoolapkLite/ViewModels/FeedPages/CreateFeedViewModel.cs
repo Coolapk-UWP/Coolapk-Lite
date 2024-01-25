@@ -165,7 +165,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public async Task<IList<string>> UploadPicAsync()
         {
             IList<string> results = null;
-            if (!Pictures.Any()) { return Array.Empty<string>(); }
+            if (Pictures.Count <= 0) { return Array.Empty<string>(); }
             _ = Dispatcher.ShowMessageAsync("上传图片");
 #if NETCORE463
             List<UploadFileFragment> fragments = new List<UploadFileFragment>();
@@ -180,7 +180,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             {
                 ExtensionManager manager = new ExtensionManager(ExtensionManager.OSSUploader);
                 await manager.InitializeAsync(Dispatcher);
-                if (manager.Extensions.Any())
+                if (manager.Extensions.Count > 0)
                 {
                     List<UploadFileFragment> fragments = new List<UploadFileFragment>();
                     foreach (WriteableBitmap pic in Pictures)

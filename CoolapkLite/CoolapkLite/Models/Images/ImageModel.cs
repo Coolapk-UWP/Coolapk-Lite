@@ -367,7 +367,7 @@ namespace CoolapkLite.Models.Images
                 }
             }
 
-            if (fileSavePicker.FileTypeChoices.Count < 1)
+            if (fileSavePicker.FileTypeChoices.Count <= 0)
             {
                 fileSavePicker.FileTypeChoices.Add("png 文件", new[] { ".png" });
             }
@@ -418,7 +418,7 @@ namespace CoolapkLite.Models.Images
 
         public ImageModel Clone(CoreDispatcher dispatcher)
         {
-            if (contextArray.Any())
+            if (contextArray.Length > 0)
             {
                 ImmutableArray<ImageModel> array = contextArray.Select(x => new ImageModel(x.uri, x.type, dispatcher)).ToImmutableArray();
                 ImageModel image = array.FirstOrDefault(x => x.uri == uri);

@@ -276,7 +276,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         protected static async void RaisePropertyChangedEvent(params string[] names)
         {
-            if (names?.Any() == true)
+            if (names?.Length > 0)
             {
                 foreach (KeyValuePair<CoreDispatcher, TestViewModel> cache in Caches)
                 {

@@ -2,7 +2,6 @@
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.Providers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Core;
@@ -20,56 +19,48 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public EntityItemSource(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
+        protected override async Task<uint> LoadItemsAsync(uint count)
         {
-            List<Entity> Models = new List<Entity>((int)count);
             if (Provider != null)
             {
                 if (IsFullLoad)
                 {
-                    while (Models.Count < count)
+                    uint loaded = 0;
+                    while (loaded < count)
                     {
-                        int temp = Models.Count;
-                        if (Models.Count > 0) { _currentPage++; }
+                        uint temp = loaded;
+                        if (loaded > 0) { _currentPage++; }
                         if (SubProvider == null)
                         {
-                            await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
+                            loaded += await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
                         }
                         else
                         {
-                            await SubProvider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
+                            loaded += await SubProvider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
                         }
-                        if (Models.Count <= 0 || Models.Count <= temp) { break; }
+                        if (loaded <= 0 || loaded <= temp) { return loaded; }
                     }
+                    return loaded;
                 }
                 else
                 {
-                    if (SubProvider == null)
-                    {
-                        await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await SubProvider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
-                    }
+                    return SubProvider == null
+                        ? await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false)
+                        : await SubProvider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
                 }
             }
-            return Models;
+            return 0;
         }
 
-        protected override async Task AddItemsAsync(IList<Entity> items)
+        public override async Task<bool> AddItemAsync(Entity item)
         {
-            if (items != null)
+            if (item != null && !(item is NullEntity))
             {
-                foreach (Entity item in items)
-                {
-                    if (!(item is NullEntity))
-                    {
-                        await AddAsync(item).ConfigureAwait(false);
-                        AddSubProvider(item);
-                    }
-                }
+                await AddAsync(item);
+                AddSubProvider(item);
+                return true;
             }
+            return false;
         }
 
         public virtual async Task Refresh(bool reset = false)

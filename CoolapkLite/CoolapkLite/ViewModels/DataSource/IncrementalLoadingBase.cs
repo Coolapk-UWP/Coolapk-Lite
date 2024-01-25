@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Common;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -39,13 +38,13 @@ namespace CoolapkLite.ViewModels.DataSource
         {
             if (_busy)
             {
-                return Task.Run(() => new LoadMoreItemsResult { Count = 0 }).AsAsyncOperation();
+                return AsyncInfo.Run(_ => Task.FromResult(new LoadMoreItemsResult { Count = 0 }));
             }
 
             _busy = true;
 
             // We need to use AsyncInfo.Run to invoke async operation, as this method cannot return a Task.
-            return AsyncInfo.Run(c => LoadMoreItemsAsync(c, count));
+            return AsyncInfo.Run(cancellationToken => LoadMoreItemsAsync(cancellationToken, count));
         }
 
         #endregion
@@ -89,10 +88,10 @@ namespace CoolapkLite.ViewModels.DataSource
         /// <summary>
         /// We use this method to load data and add to self.
         /// </summary>
-        /// <param name="c">Cancellation Token</param>
+        /// <param name="cancellationToken">Cancellation Token</param>
         /// <param name="count">How many want to load.</param>
         /// <returns>Item count actually loaded.</returns>
-        protected async Task<LoadMoreItemsResult> LoadMoreItemsAsync(CancellationToken c, uint count)
+        protected async Task<LoadMoreItemsResult> LoadMoreItemsAsync(CancellationToken cancellationToken, uint count)
         {
             try
             {
@@ -103,15 +102,19 @@ namespace CoolapkLite.ViewModels.DataSource
                 LoadMoreStarted?.Invoke();
 
                 // Data loading will different for sub-class.
-                IList<T> items = await LoadMoreItemsOverrideAsync(c, count);
-
-                await AddItemsAsync(items);
+                uint loaded = await LoadMoreItemsOverrideAsync(cancellationToken, count).ConfigureAwait(false);
 
                 // We finished loading operation.
                 IsLoading = false;
                 LoadMoreCompleted?.Invoke();
 
-                return new LoadMoreItemsResult { Count = items == null ? 0 : (uint)items.Count };
+                return new LoadMoreItemsResult { Count = loaded };
+            }
+            catch (Exception ex)
+            {
+                IsLoading = false;
+                LoadMoreError?.Invoke(ex);
+                throw;
             }
             finally
             {
@@ -122,7 +125,7 @@ namespace CoolapkLite.ViewModels.DataSource
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnCollectionChanged(e);
-            Any = this.Any();
+            Any = Count > 0;
         }
 
         public delegate void EventHandler();
@@ -130,21 +133,21 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public event EventHandler LoadMoreStarted;
         public event EventHandler LoadMoreCompleted;
+        public event EventHandler<Exception> LoadMoreError;
 
         #region Overridable methods
 
         /// <summary>
         /// Append items to list.
         /// </summary>
-        protected virtual async Task AddItemsAsync(IList<T> items)
+        public virtual async Task<bool> AddItemAsync(T item)
         {
-            if (items != null)
+            if (item != null)
             {
-                foreach (T item in items)
-                {
-                    await AddAsync(item).ConfigureAwait(false);
-                }
+                await AddAsync(item).ConfigureAwait(false);
+                return true;
             }
+            return false;
         }
 
         public virtual async Task AddAsync(T item)
@@ -165,7 +168,7 @@ namespace CoolapkLite.ViewModels.DataSource
             Clear();
         }
 
-        protected abstract Task<IList<T>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count);
+        protected abstract Task<uint> LoadMoreItemsOverrideAsync(CancellationToken cancellationToken, uint count);
 
         protected abstract bool HasMoreItemsOverride();
 

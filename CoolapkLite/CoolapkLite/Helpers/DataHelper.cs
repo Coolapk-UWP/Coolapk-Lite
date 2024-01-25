@@ -241,7 +241,7 @@ namespace CoolapkLite.Helpers
         /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public static StringBuilder TryAppendJoin(this StringBuilder builder, string separator, params string[] values) =>
-            values?.Any() == true
+            values?.Length > 0
                 ? builder.Append(string.Join(separator, values.Where(x => !string.IsNullOrWhiteSpace(x))))
                 : builder;
 
@@ -266,7 +266,7 @@ namespace CoolapkLite.Helpers
         /// <param name="values">An array that contains the strings to concatenate and append to the current instance of the string builder.</param>
         /// <returns>A reference to this instance after the append operation has completed.</returns>
         public static StringBuilder TryAppendLineJoin(this StringBuilder builder, string separator, params string[] value) =>
-            value?.Any() == true
+            value?.Length > 0
                 ? builder.AppendLine(string.Join(separator, value.Where(x => !string.IsNullOrWhiteSpace(x))))
                 : builder;
 

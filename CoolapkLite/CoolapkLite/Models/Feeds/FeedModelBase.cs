@@ -355,7 +355,7 @@ namespace CoolapkLite.Models.Feeds
                             "\uE7BA"));
                 }
 
-                ShowRelationRows = buider.Any();
+                ShowRelationRows = buider.Count > 0;
                 RelationRows = buider.ToImmutable();
             }
 

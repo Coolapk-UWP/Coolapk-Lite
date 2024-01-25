@@ -132,7 +132,7 @@ namespace CoolapkLite.Controls
 
             if (_pivotHeader != null)
             {
-                if (_pivotHeader.Items.Any())
+                if (_pivotHeader.Items.Count > 0)
                 {
                     _pivotHeader.SelectedIndex = 0;
                 }

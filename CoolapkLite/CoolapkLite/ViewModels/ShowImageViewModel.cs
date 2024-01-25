@@ -13,7 +13,7 @@ namespace CoolapkLite.ViewModels
 {
     public class ShowImageViewModel : IViewModel
     {
-        private string ImageName => index == -1 || Images?.Any() != true ? string.Empty : Images[Index].Title;
+        private string ImageName => index != -1 && Images?.Count > 0 ? Images[Index].Title : string.Empty;
 
         public CoreDispatcher Dispatcher { get; }
 
@@ -21,7 +21,7 @@ namespace CoolapkLite.ViewModels
         {
             get
             {
-                if (index == -1 || Images?.Any() != true) { return "查看图片"; }
+                if (index == -1 || !(Images?.Count > 0)) { return "查看图片"; }
                 string name = ImageName;
                 return $"{(string.IsNullOrWhiteSpace(name) ? "查看图片" : name)} ({Index + 1}/{Images.Count})";
             }
@@ -76,7 +76,7 @@ namespace CoolapkLite.ViewModels
             {
                 image = image.Clone(dispatcher);
             }
-            if (image.ContextArray.Any())
+            if (image.ContextArray.Length > 0)
             {
                 Images = image.ContextArray;
                 Index = Images.IndexOf(image);

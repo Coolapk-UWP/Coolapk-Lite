@@ -18,7 +18,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public CachesViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
-        protected override async Task<IList<StorageFile>> LoadItemsAsync(uint count)
+        protected override async Task<uint> LoadItemsAsync(uint count)
         {
             if (_currentPage == 1)
             {
@@ -41,11 +41,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 List<StorageFile> result = Images.GetRange(0, (int)count);
                 Images.RemoveRange(0, (int)count);
-                return result;
+                return await AddItemsAsync(result).ConfigureAwait(false);
             }
             else
             {
-                return Images;
+                return await AddItemsAsync(Images).ConfigureAwait(false);
             }
         }
 

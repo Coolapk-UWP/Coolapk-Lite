@@ -72,19 +72,18 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public bool IsEqual(ProfileViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
 
-        protected override async Task<IList<Entity>> LoadItemsAsync(uint count)
+        protected override async Task<uint> LoadItemsAsync(uint count)
         {
-            List<Entity> Models = new List<Entity>((int)count);
             if (Provider != null && _currentPage == 1)
             {
-                await Provider.GetEntityAsync(Models, _currentPage).ConfigureAwait(false);
+                return await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
             }
-            return Models;
+            return 0;
         }
 
-        protected override async Task<IList<Entity>> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
+        protected override async Task<uint> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)
         {
-            IList<Entity> result = await base.LoadMoreItemsOverrideAsync(c, count).ConfigureAwait(false);
+            uint result = await base.LoadMoreItemsOverrideAsync(c, count).ConfigureAwait(false);
             _hasMoreItems = false;
             return result;
         }

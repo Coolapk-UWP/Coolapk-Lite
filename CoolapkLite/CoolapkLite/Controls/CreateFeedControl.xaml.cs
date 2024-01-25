@@ -214,7 +214,7 @@ namespace CoolapkLite.Controls
         private async Task CreateFeedContentAsync(string contentText)
         {
             IList<string> pics = Array.Empty<string>();
-            if (Provider.Pictures.Any())
+            if (Provider.Pictures.Count > 0)
             {
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)
@@ -242,7 +242,7 @@ namespace CoolapkLite.Controls
         private async Task CreateReplyContentAsync(string contentText)
         {
             IList<string> pics = Array.Empty<string>();
-            if (Provider.Pictures.Any())
+            if (Provider.Pictures.Count > 0)
             {
                 pics = await Provider.UploadPicAsync();
                 if (pics.Count != Provider.Pictures.Count)

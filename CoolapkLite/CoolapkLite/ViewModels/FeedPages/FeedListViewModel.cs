@@ -1017,16 +1017,14 @@ namespace CoolapkLite.ViewModels.FeedPages
             Provider = provider;
         }
 
-        protected override async Task AddItemsAsync(IList<Entity> items)
+        public override async Task<bool> AddItemAsync(Entity item)
         {
-            if (items != null)
+            if (item != null && !(item is NullEntity))
             {
-                foreach (Entity item in items)
-                {
-                    if (item is NullEntity) { continue; }
-                    await AddAsync(item).ConfigureAwait(false);
-                }
+                await AddAsync(item).ConfigureAwait(false);
+                return true;
             }
+            return false;
         }
     }
 

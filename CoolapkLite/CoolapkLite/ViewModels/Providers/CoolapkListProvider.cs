@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.ViewModels.DataSource;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -27,14 +28,14 @@ namespace CoolapkLite.ViewModels.Providers
 
         public void Clear() => _lastItem = _firstItem = string.Empty;
 
-        public async Task GetEntityAsync<T>(ICollection<T> Models, int p = 1) where T : Entity
+        public async Task GetEntityAsync<T>(ICollection<T> models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
                 JArray array = result.result as JArray;
-                if (array.Count < 1) { return; }
+                if (array.Count <= 0) { return; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
                     _firstItem = GetEntityID(array.First as JObject, _idName);
@@ -44,19 +45,19 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
-                    Models.AddRange(entities.OfType<T>());
+                    models.AddRange(entities.OfType<T>());
                 }
             }
         }
 
-        public async Task GetEntityAsync<T>(IEnumerable<T> Models, int p = 1) where T : Entity
+        public async Task<IEnumerable<T>> GetEntityAsync<T>(IEnumerable<T> models, int p = 1) where T : Entity
         {
             if (p == 1) { Clear(); }
             (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
             if (result.isSucceed)
             {
                 JArray array = result.result as JArray;
-                if (array.Count < 1) { return; }
+                if (array.Count <= 0) { return models; }
                 if (string.IsNullOrEmpty(_firstItem))
                 {
                     _firstItem = GetEntityID(array.First as JObject, _idName);
@@ -66,9 +67,41 @@ namespace CoolapkLite.ViewModels.Providers
                 {
                     IEnumerable<Entity> entities = GetEntities(item);
                     if (entities == null) { continue; }
-                    Models = Models.Concat(entities.OfType<T>());
+                    models = models.Concat(entities.OfType<T>());
                 }
             }
+            return models;
+        }
+
+        public async Task<uint> GetEntityAsync<T>(IncrementalLoadingBase<T> models, int p = 1) where T : Entity
+        {
+            if (p == 1) { Clear(); }
+            (bool isSucceed, JToken result) result = await RequestHelper.GetDataAsync(_getUri(p, _firstItem, _lastItem), false).ConfigureAwait(false);
+            if (result.isSucceed)
+            {
+                JArray array = result.result as JArray;
+                if (array.Count <= 0) { return 0; }
+                if (string.IsNullOrEmpty(_firstItem))
+                {
+                    _firstItem = GetEntityID(array.First as JObject, _idName);
+                }
+                _lastItem = GetEntityID(array.Last as JObject, _idName);
+                uint count = 0;
+                foreach (JObject item in array.OfType<JObject>())
+                {
+                    IEnumerable<Entity> entities = GetEntities(item);
+                    if (entities == null) { continue; }
+                    foreach (T entity in entities.OfType<T>())
+                    {
+                        if (await models.AddItemAsync(entity))
+                        {
+                            count++;
+                        }
+                    }
+                }
+                return count;
+            }
+            return 0;
         }
 
         private static string GetEntityID(JObject token, string _idName)
