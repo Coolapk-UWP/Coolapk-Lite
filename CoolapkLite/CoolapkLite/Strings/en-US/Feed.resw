@@ -133,10 +133,10 @@
     <value>Author</value>
   </data>
   <data name="FeedAuthorLike" xml:space="preserve">
-    <value>作者赞过</value>
+    <value/>
   </data>
   <data name="FeedAuthorReply" xml:space="preserve">
-    <value>作者回复了</value>
+    <value/>
   </data>
   <data name="FeedAuthorReplyLike" xml:space="preserve">
     <value>作者回复并赞了</value>
