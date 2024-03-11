@@ -133,6 +133,15 @@
                 </AppBarButton>
                 <AppBarButton
                     Click="AppBarButton_Click"
+                    Label="历史"
+                    Tag="History"
+                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE787;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Click="AppBarButton_Click"
                     Label="用户"
                     Tag="User"
                     ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">

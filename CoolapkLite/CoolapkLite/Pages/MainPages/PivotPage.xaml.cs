@@ -38,7 +38,9 @@ namespace CoolapkLite.Pages
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
         private Action Refresh;
+
         public Frame MainFrame => PivotContentFrame;
+        private static bool IsLogin => !string.IsNullOrEmpty(SettingsHelper.Get<string>(SettingsHelper.Uid));
 
         public PivotPage()
         {
@@ -66,6 +68,7 @@ namespace CoolapkLite.Pages
             { OpenActivatedEventArgs(ActivatedEventArgs); }
             else if (e.Parameter is OpenLinkFactory factory)
             { OpenLinkAsync(factory); }
+            SettingsHelper.LoginChanged += OnLoginChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -86,6 +89,13 @@ namespace CoolapkLite.Pages
             if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed -= System_BackPressed; }
             PivotContentFrame.Navigated -= On_Navigated;
+            SettingsHelper.LoginChanged -= OnLoginChanged;
+        }
+
+        private async void OnLoginChanged(bool isLogin)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            Pivot.ItemsSource = GetMainItems(isLogin);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -218,18 +228,21 @@ namespace CoolapkLite.Pages
 
         private async void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            switch ((sender as FrameworkElement).Tag?.ToString())
             {
                 case "User":
                     _ = await SettingsHelper.CheckLoginAsync()
                         ? PivotContentFrame.Navigate(typeof(ProfilePage))
                         : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));
                     break;
-                case "Bookmark":
-                    _ = PivotContentFrame.Navigate(typeof(BookmarkPage));
+                case "History":
+                    _ = PivotContentFrame.Navigate(typeof(HistoryPage));
                     break;
                 case "Setting":
                     _ = PivotContentFrame.Navigate(typeof(SettingsPage));
+                    break;
+                case "Bookmark":
+                    _ = PivotContentFrame.Navigate(typeof(BookmarkPage));
                     break;
                 case "SearchButton":
                     _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(string.Empty, Dispatcher));
@@ -370,18 +383,24 @@ namespace CoolapkLite.Pages
 
         #endregion
 
-        public static PivotItem[] GetMainItems()
+        public static PivotItem[] GetMainItems() => GetMainItems(IsLogin);
+
+        public static PivotItem[] GetMainItems(bool isLogin)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("CirclePage");
-            PivotItem[] items = new[]
+            PivotItem[] items = isLogin ? new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },
                 new PivotItem { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
                 new PivotItem { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
                 new PivotItem { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
                 new PivotItem { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
                 new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
+            } : new[]
+            {
+                new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() }
             };
             return items;
         }

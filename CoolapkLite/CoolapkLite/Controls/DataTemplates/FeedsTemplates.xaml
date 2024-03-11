@@ -184,9 +184,7 @@
                                                 Margin="0,4"
                                                 Value="{x:Bind UserInfo.NextLevelPercentage}" />
                                         </Grid>
-                                        <TextBlock
-                                            TextTrimming="CharacterEllipsis"
-                                            Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
+                                        <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
                                             <Run
                                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                 Foreground="{ThemeResource CoolapkLogoForeground}"
@@ -916,9 +914,7 @@
                                                 Margin="0,4"
                                                 Value="{x:Bind UserInfo.NextLevelPercentage}" />
                                         </Grid>
-                                        <TextBlock
-                                            TextTrimming="CharacterEllipsis"
-                                            Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
+                                        <TextBlock TextTrimming="CharacterEllipsis" Visibility="{x:Bind UserInfo.VerifyTitle, Converter={StaticResource StringVisibilityConverter}}">
                                             <Run
                                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
                                                 Foreground="{ThemeResource CoolapkLogoForeground}"

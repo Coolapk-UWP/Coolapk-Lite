@@ -199,7 +199,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "OutFullWindow":
                     if (this.IsAppWindow())
-                    { _ = this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.FullScreen); }
+                    { _ = this.GetWindowForElement().Presenter.RequestPresentation(AppWindowPresentationKind.Default); }
                     else
                     { ApplicationView.GetForCurrentView().ExitFullScreenMode(); }
                     break;
