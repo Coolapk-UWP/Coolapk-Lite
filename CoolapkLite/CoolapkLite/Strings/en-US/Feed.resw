@@ -139,7 +139,7 @@
     <value/>
   </data>
   <data name="FeedAuthorReplyLike" xml:space="preserve">
-    <value>作者回复并赞了</value>
+    <value>Author replied and liked</value>
   </data>
   <data name="FeedAuthorText" xml:space="preserve">
     <value>Author</value>
