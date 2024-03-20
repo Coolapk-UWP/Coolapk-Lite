@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Controls;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
@@ -191,6 +192,9 @@ namespace CoolapkLite.Pages.FeedPages
                     break;
                 case "ReportButton":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(element.Tag?.ToString(), Dispatcher));
+                    break;
+                case "RemarkButton":
+                    _ = new RemarkDialog(element.Tag?.ToString()).ShowAsync();
                     break;
                 case "FollowButton" when element.Tag is ICanFollow follow:
                     _ = follow.ChangeFollowAsync();

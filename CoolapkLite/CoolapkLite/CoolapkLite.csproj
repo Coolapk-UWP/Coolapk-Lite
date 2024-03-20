@@ -196,6 +196,9 @@
     <Compile Include="Controls\Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\RemarkDialog.xaml.cs">
+      <DependentUpon>RemarkDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\UserAgentDialog.xaml.cs">
       <DependentUpon>UserAgentDialog.xaml</DependentUpon>
     </Compile>
@@ -345,6 +348,7 @@
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
     <Compile Include="Models\Pages\ProfileDetailModel.cs" />
+    <Compile Include="Models\RemarkModel.cs" />
     <Compile Include="Models\SearchWord.cs" />
     <Compile Include="Models\TopicModel.cs" />
     <Compile Include="Models\Network\APIVersion.cs" />
@@ -1171,6 +1175,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Dialogs\RemarkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Dialogs\UserAgentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1571,7 +1579,6 @@
     <PRIResource Include="Strings\en-US\SettingsPane.resw" />
     <PRIResource Include="Strings\en-US\ShowImagePage.resw" />
     <PRIResource Include="Strings\en-US\TitleBar.resw" />
-    <PRIResource Include="Strings\en-US\UserAgentDialog.resw" />
     <PRIResource Include="Strings\uk-UA\BrowserPage.resw" />
     <PRIResource Include="Strings\uk-UA\CirclePage.resw" />
     <PRIResource Include="Strings\uk-UA\ContentDialog.resw" />
@@ -1587,7 +1594,6 @@
     <PRIResource Include="Strings\uk-UA\SettingsPane.resw" />
     <PRIResource Include="Strings\uk-UA\ShowImagePage.resw" />
     <PRIResource Include="Strings\uk-UA\TitleBar.resw" />
-    <PRIResource Include="Strings\uk-UA\UserAgentDialog.resw" />
     <PRIResource Include="Strings\zh-CN\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-CN\CirclePage.resw" />
     <PRIResource Include="Strings\zh-CN\ContentDialog.resw" />
@@ -1603,7 +1609,6 @@
     <PRIResource Include="Strings\zh-CN\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-CN\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-CN\TitleBar.resw" />
-    <PRIResource Include="Strings\zh-CN\UserAgentDialog.resw" />
     <PRIResource Include="Strings\zh-TW\BrowserPage.resw" />
     <PRIResource Include="Strings\zh-TW\CirclePage.resw" />
     <PRIResource Include="Strings\zh-TW\ContentDialog.resw" />
@@ -1619,7 +1624,6 @@
     <PRIResource Include="Strings\zh-TW\SettingsPane.resw" />
     <PRIResource Include="Strings\zh-TW\ShowImagePage.resw" />
     <PRIResource Include="Strings\zh-TW\TitleBar.resw" />
-    <PRIResource Include="Strings\zh-TW\UserAgentDialog.resw" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0'">

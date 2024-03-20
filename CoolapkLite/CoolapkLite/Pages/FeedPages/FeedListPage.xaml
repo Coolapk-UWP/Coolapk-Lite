@@ -44,6 +44,16 @@
                                 </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
                             <MenuFlyoutItem
+                                x:Name="RemarkButton"
+                                Click="Button_Click"
+                                Tag="{x:Bind UID}"
+                                Text="备注"
+                                Visibility="{x:Bind Followed, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE716;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
                                 x:Name="ReportButton"
                                 x:Uid="/Feed/Report"
                                 Click="Button_Click"
@@ -302,6 +312,17 @@
                                             FontSize="12"
                                             IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                             Text="{x:Bind Astro}" />
+                                    </Border>
+                                    <Border
+                                        Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
+                                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                        BorderThickness="1"
+                                        Visibility="{x:Bind RemarkName, Converter={StaticResource StringVisibilityConverter}}">
+                                        <TextBlock
+                                            Margin="4,2"
+                                            FontSize="12"
+                                            IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
+                                            Text="{x:Bind RemarkName}" />
                                     </Border>
                                     <Border
                                         Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"

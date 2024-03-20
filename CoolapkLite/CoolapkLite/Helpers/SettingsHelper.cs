@@ -1,9 +1,13 @@
 ﻿using CoolapkLite.Common;
+using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
 using MetroLog;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Storage;
@@ -209,7 +213,21 @@ namespace CoolapkLite.Helpers
         public static ILogManager LogManager { get; } = LogManagerFactory.CreateLogManager();
         public static ApplicationDataStorageHelper LocalObject { get; } = ApplicationDataStorageHelper.GetCurrent(new NewtonsoftJsonObjectSerializer());
 
-        #region UISettingChanged
+        private static ImmutableDictionary<int, string> userRemarks;
+        public static ImmutableDictionary<int, string> UserRemarks
+        {
+            get => userRemarks;
+            set
+            {
+                if (userRemarks != value)
+                {
+                    userRemarks = value;
+                }
+                InvokeUserRemarksChanged(value);
+            }
+        }
+
+        #region LoginChanged
 
         private static readonly WeakEvent<bool> actions = new WeakEvent<bool>();
 
@@ -220,6 +238,20 @@ namespace CoolapkLite.Helpers
         }
 
         public static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
+
+        #endregion
+
+        #region UserRemarksChanged
+
+        private static readonly WeakEvent<ImmutableDictionary<int, string>> remarks = new WeakEvent<ImmutableDictionary<int, string>>();
+
+        public static event Action<ImmutableDictionary<int, string>> UserRemarksChanged
+        {
+            add => remarks.Add(value);
+            remove => remarks.Remove(value);
+        }
+
+        public static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks?.Invoke(args);
 
         #endregion
 
@@ -259,6 +291,7 @@ namespace CoolapkLite.Helpers
                     Set(Token, token);
                     Set(UserName, userName);
                     InvokeLoginChanged(true);
+                    _ = RemarkModel.GetRemarkDictionary(uid).ContinueWith(x => UserRemarks = x.Result);
                     return true;
                 }
             }
@@ -287,6 +320,7 @@ namespace CoolapkLite.Helpers
                     Set(SettingsHelper.Token, Token);
                     Set(SettingsHelper.UserName, UserName);
                     InvokeLoginChanged(true);
+                    _ = RemarkModel.GetRemarkDictionary(Uid).ContinueWith(x => UserRemarks = x.Result);
                     return true;
                 }
                 else
@@ -321,7 +355,12 @@ namespace CoolapkLite.Helpers
                             break;
                     }
                 }
-                return !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync().ConfigureAwait(false);
+                bool value = !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync().ConfigureAwait(false);
+                if (value && UserRemarks == null)
+                {
+                    _ = RemarkModel.GetRemarkDictionary(uid).ContinueWith(x => UserRemarks = x.Result);
+                }
+                return value;
             }
         }
 
@@ -339,6 +378,7 @@ namespace CoolapkLite.Helpers
             Set(Token, string.Empty);
             Set(UserName, string.Empty);
             InvokeLoginChanged(false);
+            UserRemarks = null;
         }
     }
 

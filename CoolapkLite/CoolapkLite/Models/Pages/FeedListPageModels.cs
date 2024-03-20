@@ -95,6 +95,7 @@ namespace CoolapkLite.Models.Pages
         public string Gender { get; private set; }
         public string UserName { get; private set; }
         public string LoginText { get; private set; }
+        public string RemarkName { get; private set; }
         public string BlockStatus { get; private set; }
         public string VerifyTitle { get; private set; }
 
@@ -187,6 +188,11 @@ namespace CoolapkLite.Models.Pages
             if (token.TryGetValue("logintime", out JToken logintime))
             {
                 LoginText = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
+            }
+
+            if (SettingsHelper.UserRemarks?.TryGetValue(UID, out string remark_name) == true)
+            {
+                RemarkName = remark_name;
             }
 
             if (token.TryGetValue("block_status", out JToken block_status))

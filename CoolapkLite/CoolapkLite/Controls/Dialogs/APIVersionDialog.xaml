@@ -13,9 +13,9 @@
     <helpers:UIElementHelper.ContextFlyout>
         <MenuFlyout>
             <MenuFlyoutItem
+                x:Uid="/ContentDialog/UpdateVersionItem"
                 Click="MenuFlyoutItem_Click"
-                Tag="Refresh"
-                x:Uid="/ContentDialog/UpdateVersionItem">
+                Tag="Refresh">
                 <helpers:FlyoutBaseHelper.Icon>
                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE117;" />
                 </helpers:FlyoutBaseHelper.Icon>
