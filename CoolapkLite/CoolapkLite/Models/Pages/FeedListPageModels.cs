@@ -245,7 +245,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
+            string type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
 
             (bool isSucceed, _) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, UID), null, true);
             if (!isSucceed) { return; }
@@ -384,7 +384,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostTopicUnfollow : UriType.PostTopicFollow;
+            string type = Followed ? UriType.PostTopicUnfollow : UriType.PostTopicFollow;
 
             (bool isSucceed, _) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, Title), null, true);
             if (!isSucceed) { return; }
@@ -512,7 +512,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostDyhUnfollow : UriType.PostDyhFollow;
+            string type = Followed ? UriType.PostDyhUnfollow : UriType.PostDyhFollow;
 
             (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, ID), null, true);
             if (!isSucceed) { return; }
@@ -962,7 +962,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeLikeAsync()
         {
-            UriType type = Liked ? UriType.PostCollectionUnlike : UriType.PostCollectionLike;
+            string type = Liked ? UriType.PostCollectionUnlike : UriType.PostCollectionLike;
 
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             using (StringContent id = new StringContent(ID.ToString()))
@@ -980,7 +980,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostCollectionUnfollow : UriType.PostCollectionFollow;
+            string type = Followed ? UriType.PostCollectionUnfollow : UriType.PostCollectionFollow;
 
             using (MultipartFormDataContent content = new MultipartFormDataContent())
             using (StringContent id = new StringContent(ID.ToString()))
@@ -1255,7 +1255,7 @@ namespace CoolapkLite.Models.Pages
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostAppUnfollow : UriType.PostAppFollow;
+            string type = Followed ? UriType.PostAppUnfollow : UriType.PostAppFollow;
 
             (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, ID), null, true);
             if (!isSucceed) { return; }

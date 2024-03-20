@@ -164,7 +164,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (string.IsNullOrEmpty(title)) { throw new ArgumentException(nameof(title)); }
 
-            UriType type = UriType.CheckLoginInfo;
+            string type = null;
 
             switch (title)
             {

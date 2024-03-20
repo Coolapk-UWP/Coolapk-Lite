@@ -379,7 +379,7 @@ namespace CoolapkLite.Models.Feeds
 
         public async Task ChangeLikeAsync()
         {
-            UriType type = Liked ? UriType.PostFeedUnlike : UriType.PostFeedLike;
+            string type = Liked ? UriType.PostFeedUnlike : UriType.PostFeedLike;
             (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetV1Uri(type, string.Empty, ID), null, true);
             if (!isSucceed) { return; }
             Liked = !Liked;
@@ -391,7 +391,7 @@ namespace CoolapkLite.Models.Feeds
 
         public async Task ChangeFollowAsync()
         {
-            UriType type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
+            string type = Followed ? UriType.PostUserUnfollow : UriType.PostUserFollow;
 
             (bool isSucceed, _) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, UID), null, true);
             if (!isSucceed) { return; }

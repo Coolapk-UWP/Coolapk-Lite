@@ -265,7 +265,7 @@ namespace CoolapkLite.Controls
 
         private async Task SendContentAsync(HttpContent content)
         {
-            UriType type = 0;
+            string type = null;
             switch (FeedType)
             {
                 case CreateFeedType.Feed:
@@ -279,11 +279,9 @@ namespace CoolapkLite.Controls
                     break;
             }
 
-            object[] arg = Array.Empty<object>();
-            if (type != UriType.CreateFeed)
-            {
-                arg = new object[] { ReplyID };
-            }
+            object[] arg = type == UriType.CreateFeed
+                ? Array.Empty<object>()
+                : new object[] { ReplyID };
 
             post:
             try
