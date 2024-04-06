@@ -36,7 +36,7 @@ namespace CoolapkLite.Common
     /// The interface of helper type for switch thread.
     /// </summary>
     /// <typeparam name="T">The type of the result of <see cref="GetAwaiter"/>.</typeparam>
-    public interface IThreadSwitcher<T> : IThreadSwitcher
+    public interface IThreadSwitcher<out T> : IThreadSwitcher
     {
         /// <summary>
         /// Gets an awaiter used to await <typeparamref name="T"/>.
