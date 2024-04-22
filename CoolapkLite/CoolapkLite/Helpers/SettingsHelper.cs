@@ -6,10 +6,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
@@ -37,12 +34,12 @@ namespace CoolapkLite.Helpers
         public const string TokenVersion = nameof(TokenVersion);
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
         public const string IsUseAppWindow = nameof(IsUseAppWindow);
-        public const string IsUseBlurBrush = nameof(IsUseBlurBrush);
         public const string TileUpdateTime = nameof(TileUpdateTime);
         public const string IsUseCompositor = nameof(IsUseCompositor);
         public const string CurrentLanguage = nameof(CurrentLanguage);
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
+        public const string SelectedBackdrop = nameof(SelectedBackdrop);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
         public const string IsChangeBrowserUA = nameof(IsChangeBrowserUA);
@@ -126,10 +123,6 @@ namespace CoolapkLite.Helpers
             {
                 LocalObject.Save(IsUseAppWindow, false);
             }
-            if (!LocalObject.KeyExists(IsUseBlurBrush))
-            {
-                LocalObject.Save(IsUseBlurBrush, ApiInfoHelper.IsXamlCompositionBrushBaseSupported);
-            }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
                 LocalObject.Save(TileUpdateTime, SystemInformation.Instance.OperatingSystemVersion.Build < 21996 ? 15u : 0u);
@@ -149,6 +142,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(SelectedAppTheme))
             {
                 LocalObject.Save(SelectedAppTheme, ElementTheme.Default);
+            }
+            if (!LocalObject.KeyExists(SelectedBackdrop))
+            {
+                LocalObject.Save(SelectedBackdrop, BackdropType.Default);
             }
             if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {

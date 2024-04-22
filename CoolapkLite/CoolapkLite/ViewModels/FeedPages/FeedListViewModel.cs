@@ -28,7 +28,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         protected const string idName = "id";
 
-        public virtual bool CanSearch { get; } = true;
+        public virtual bool CanSearch => true;
         public string ID { get; }
         public FeedListType ListType { get; }
         public DataTemplateSelector DataTemplateSelector { get; set; }
@@ -447,7 +447,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class DyhViewModel : FeedListViewModel
     {
-        public override bool CanSearch { get; } = false;
+        public override bool CanSearch => false;
 
         public FeedListItemSource AllItemSource { get; private set; }
         public FeedListItemSource SquareItemSource { get; private set; }
@@ -730,7 +730,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     public class CollectionViewModel : FeedListViewModel
     {
-        public override bool CanSearch { get; } = false;
+        public override bool CanSearch => false;
 
         public CollectionViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.CollectionPageList, dispatcher) { }
 

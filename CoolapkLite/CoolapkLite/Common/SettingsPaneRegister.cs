@@ -29,7 +29,7 @@ namespace CoolapkLite.Common
         private UIElement element;
 
         public static bool IsSearchPaneSupported { get; } = ApiInfoHelper.IsSearchPaneSupported && CheckSearchExtension();
-        public static bool IsSettingsPaneSupported { get; } = ApiInfoHelper.IsSettingsPaneSupported;
+        public static bool IsSettingsPaneSupported => ApiInfoHelper.IsSettingsPaneSupported;
 
         public SettingsPaneRegister(Window window)
         {

@@ -10,6 +10,12 @@
                 FallbackColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="HamburgerMenuExpandedPaneBackground"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
             <media:BackdropMicaBrush
                 x:Key="ApplicationPageBackgroundBrush"
                 BackgroundSource="WallpaperBackdrop"
@@ -22,7 +28,6 @@
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.5" />
-            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush
@@ -31,6 +36,12 @@
                 FallbackColor="{ThemeResource CardStrokeColorDefaultSolid}"
                 TintColor="{ThemeResource CardStrokeColorDefaultSolid}"
                 TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="HamburgerMenuExpandedPaneBackground"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
             <media:BackdropMicaBrush
                 x:Key="ApplicationPageBackgroundBrush"
                 BackgroundSource="WallpaperBackdrop"
@@ -43,7 +54,6 @@
                 FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintColor="{ThemeResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.5" />
-            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />

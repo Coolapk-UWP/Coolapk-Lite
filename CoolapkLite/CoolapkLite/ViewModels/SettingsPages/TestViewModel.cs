@@ -27,7 +27,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public static bool IsJumpListSupported { get; } = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
 
-        public static string FrameworkDescription { get; } = RuntimeInformation.FrameworkDescription;
+        public static string FrameworkDescription => RuntimeInformation.FrameworkDescription;
 
         public static string DeviceFamily { get; } = AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
 
@@ -53,11 +53,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsRequestRestartAsyncSupported => ApiInfoHelper.IsRequestRestartAsyncSupported;
 
-        public bool IsXamlCompositionBrushSupported => ApiInfoHelper.IsXamlCompositionBrushBaseSupported;
-
         public bool IsRequestInfoForAppAsyncSupported => ApiInfoHelper.IsRequestInfoForAppAsyncSupported;
 
-        public ImmutableArray<CultureInfo> SupportCultures => LanguageHelper.SupportCultures;
+        public Array BackdropTypes { get; } = Enum.GetValues(typeof(BackdropType));
+
+        public CultureInfo[] SupportCultures => LanguageHelper.SupportCultures;
 
         public bool IsExtendsTitleBar
         {
@@ -159,16 +159,6 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public bool IsUseBlurBrush
-        {
-            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseBlurBrush);
-            set
-            {
-                SettingsHelper.Set(SettingsHelper.IsUseBlurBrush, value);
-                RaisePropertyChangedEvent();
-            }
-        }
-
         public bool IsUseCompositor
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseCompositor);
@@ -243,6 +233,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     ImageModel.SetSemaphoreSlim(result);
                     RaisePropertyChangedEvent();
                 }
+            }
+        }
+
+        public BackdropType SelectedBackdrop
+        {
+            get => SettingsHelper.Get<BackdropType>(SettingsHelper.SelectedBackdrop);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.SelectedBackdrop, value);
+                RaisePropertyChangedEvent();
             }
         }
 
@@ -398,8 +398,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsUseTokenV2),
                     nameof(IsUseLiteHome),
                     nameof(IsUseAppWindow),
-                    nameof(IsUseBlurBrush),
                     nameof(IsUseCompositor),
+                    nameof(SelectedBackdrop),
                     nameof(IsUseVirtualizing),
                     nameof(IsChangeBrowserUA),
                     nameof(IsUseBackgroundTask),

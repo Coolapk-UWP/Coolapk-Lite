@@ -29,7 +29,7 @@ namespace CoolapkLite.Helpers
             "zh-Hant, zh-hk, zh-mo, zh-tw, zh-hant-hk, zh-hant-mo, zh-hant-tw"
         };
 
-        public static ImmutableArray<CultureInfo> SupportCultures { get; } = SupportLanguages.Select(x => new CultureInfo(x)).ToImmutableArray();
+        public static CultureInfo[] SupportCultures { get; } = SupportLanguages.Select(x => new CultureInfo(x)).ToArray();
 
         public static int FindIndexFromSupportLanguageCodes(string language) => Array.FindIndex(SupportLanguageCodes, code => code.Split(',', ' ').Any(x => x.Equals(language, StringComparison.OrdinalIgnoreCase)));
 

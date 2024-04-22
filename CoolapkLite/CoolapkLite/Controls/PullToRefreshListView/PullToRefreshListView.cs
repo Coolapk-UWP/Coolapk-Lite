@@ -32,7 +32,7 @@ namespace CoolapkLite.Controls
         /// <summary>
         /// Gets a value indicating whether <see cref="RefreshContainer"/> is supported
         /// </summary>
-        public static bool IsRefreshContainerSupported { get; } = ApiInfoHelper.IsRefreshContainerSupported;
+        public static bool IsRefreshContainerSupported => ApiInfoHelper.IsRefreshContainerSupported;
 
         private const string PartRoot = "Root";
         private const string PartScroller = "ScrollViewer";

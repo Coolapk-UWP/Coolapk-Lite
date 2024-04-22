@@ -21,7 +21,7 @@ namespace CoolapkLite.Controls
     {
         private const string MediaElementName = "PART_MediaElement";
         private const string MediaElementBorderName = "PART_MediaElementBorder";
-        public static bool IsMediaPlayerElementSupported { get; } = ApiInfoHelper.IsMediaPlayerElementSupported;
+        public static bool IsMediaPlayerElementSupported => ApiInfoHelper.IsMediaPlayerElementSupported;
 
         private Uri _mediaUri;
         private FrameworkElement MediaElementBorder;

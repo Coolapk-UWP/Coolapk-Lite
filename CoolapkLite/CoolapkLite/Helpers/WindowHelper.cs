@@ -24,8 +24,8 @@ namespace CoolapkLite.Helpers
     /// </summary>
     public static class WindowHelper
     {
-        public static bool IsAppWindowSupported { get; } = ApiInfoHelper.IsAppWindowSupported;
-        public static bool IsXamlRootSupported { get; } = ApiInfoHelper.IsXamlRootSupported;
+        public static bool IsAppWindowSupported => ApiInfoHelper.IsAppWindowSupported;
+        public static bool IsXamlRootSupported => ApiInfoHelper.IsXamlRootSupported;
 
         public static async Task<bool> CreateWindowAsync(Action<Window> launched)
         {

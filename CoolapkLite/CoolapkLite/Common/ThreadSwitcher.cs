@@ -207,7 +207,7 @@ namespace CoolapkLite.Common
         /// <summary>
         /// Gets is <see cref="DispatcherQueue.HasThreadAccess"/> supported.
         /// </summary>
-        public static bool IsHasThreadAccessPropertyAvailable { get; } = ApiInfoHelper.IsHasThreadAccessSupported;
+        public static bool IsHasThreadAccessPropertyAvailable => ApiInfoHelper.IsHasThreadAccessSupported;
 
         /// <summary>
         /// A helper function—for use within a coroutine—that you can <see langword="await"/> to switch execution to a specific foreground thread. 

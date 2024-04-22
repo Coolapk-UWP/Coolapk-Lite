@@ -25,7 +25,7 @@ namespace CoolapkLite.Models.Images
 {
     public class ImageModel : INotifyPropertyChanged
     {
-        public static bool IsAutoPlaySupported { get; } = ApiInfoHelper.IsBitmapImageAutoPlaySupported;
+        public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
         public CoreDispatcher Dispatcher { get; private set; }
 

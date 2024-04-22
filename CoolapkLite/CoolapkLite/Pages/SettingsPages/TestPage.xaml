@@ -2,6 +2,7 @@
     x:Class="CoolapkLite.Pages.SettingsPages.TestPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:common="using:CoolapkLite.Common"
     xmlns:control="using:CoolapkLite.Controls"
     xmlns:converters="using:CoolapkLite.Helpers.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -198,10 +199,10 @@
                         ToolTipService.ToolTip="仅支持 1903 及以上" />
                 </control:StackPanelEx>
                 <ToggleSwitch Header="是否使用虚拟化容器" IsOn="{x:Bind Provider.IsUseVirtualizing, Mode=TwoWay}" />
-                <ToggleSwitch
-                    Header="是否使用模糊笔刷"
-                    IsEnabled="{x:Bind Provider.IsXamlCompositionBrushSupported}"
-                    IsOn="{x:Bind Provider.IsUseBlurBrush, Mode=TwoWay}" />
+                <ComboBox
+                    Header="切换背景 (需要重启)"
+                    ItemsSource="{x:Bind Provider.BackdropTypes}"
+                    SelectedItem="{Binding SelectedBackdrop, Mode=TwoWay}" />
                 <ToggleSwitch
                     Header="是否使用合成动画"
                     IsEnabled="{x:Bind Provider.IsGetElementVisualSupported}"

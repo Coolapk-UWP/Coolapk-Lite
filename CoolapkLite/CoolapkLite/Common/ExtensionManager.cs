@@ -28,7 +28,7 @@ namespace CoolapkLite.Common
     {
         public const string OSSUploader = "CoolapkUWP.OSSUploader";
 
-        public static bool IsSupported { get; } = ApiInfoHelper.IsAppExtensionSupported;
+        public static bool IsSupported => ApiInfoHelper.IsAppExtensionSupported;
         public static bool IsOSSUploaderSupported { get; } = IsSupported && CheckExtension(OSSUploader);
 
         private CoreDispatcher _dispatcher; // used to run code on the UI thread for code that may update UI
