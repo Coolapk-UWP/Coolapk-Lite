@@ -133,13 +133,13 @@
     <value>Author</value>
   </data>
   <data name="FeedAuthorLike" xml:space="preserve">
-    <value/>
+    <value>Author Liked</value>
   </data>
   <data name="FeedAuthorReply" xml:space="preserve">
-    <value>Author replied</value>
+    <value>Author Replied</value>
   </data>
   <data name="FeedAuthorReplyLike" xml:space="preserve">
-    <value>Author replied and liked</value>
+    <value>Author Replied &amp; Liked</value>
   </data>
   <data name="FeedAuthorText" xml:space="preserve">
     <value>Author</value>
