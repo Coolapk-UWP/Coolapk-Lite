@@ -136,7 +136,7 @@
     <value/>
   </data>
   <data name="FeedAuthorReply" xml:space="preserve">
-    <value/>
+    <value>Author replied</value>
   </data>
   <data name="FeedAuthorReplyLike" xml:space="preserve">
     <value>Author replied and liked</value>
