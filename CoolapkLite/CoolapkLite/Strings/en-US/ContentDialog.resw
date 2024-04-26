@@ -229,12 +229,12 @@
     <value>Save</value>
   </data>
   <data name="RemarkDialog.Title" xml:space="preserve">
-    <value>设置备注</value>
+    <value>Set Note</value>
   </data>
   <data name="RemarkTextBox.Header" xml:space="preserve">
-    <value>备注名</value>
+    <value>Note Name</value>
   </data>
   <data name="RemarkTextBox.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>备注名需小于15位，不能以数字或_开头，且不得重复</value>
+    <value>Note must be less than 15 bits, cannot start with numbers or _, and cannot be repeated</value>
   </data>
 </root>
