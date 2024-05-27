@@ -7,7 +7,7 @@ namespace CoolapkLite.ViewModels.DataSource
 {
     /// <summary>
     /// Datasource base for Coolapk that enabled incremental loading (page based). <br/>
-    /// Clone from <see cref="cnblogs UAP" href="https://github.com/MS-UAP/cnblogs-UAP"./>
+    /// Clone from <see cref="cnblogs UAP" href="https://github.com/MS-UAP/cnblogs-UAP" />.
     /// </summary>
     public abstract class DataSourceBase<T> : IncrementalLoadingBase<T>
     {

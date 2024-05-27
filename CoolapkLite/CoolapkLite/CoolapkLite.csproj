@@ -1482,7 +1482,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.60</Version>
+      <Version>1.11.61</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>
@@ -1497,7 +1497,7 @@
       <Version>13.0.3</Version>
     </PackageReference>
     <PackageReference Include="QRCoder">
-      <Version>1.4.3</Version>
+      <Version>1.5.1</Version>
     </PackageReference>
     <PackageReference Include="System.ValueTuple">
       <Version>4.5.0</Version>
