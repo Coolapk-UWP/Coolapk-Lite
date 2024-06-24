@@ -91,7 +91,7 @@ namespace System.Runtime.CompilerServices
         /// Gets the built <see cref="string"/>.
         /// </summary>
         /// <returns>The built string.</returns>
-        public override readonly string ToString() => _builder == null ? string.Empty : _builder.ToString();
+        public override string ToString() => _builder == null ? string.Empty : _builder.ToString();
 
         /// <summary>
         /// Gets the built <see cref="string"/> and clears the handler.
@@ -103,7 +103,7 @@ namespace System.Runtime.CompilerServices
         /// and may destabilize the process, as may using any other copies of the handler after ToStringAndClear
         /// is called on any one of them.
         /// </remarks>
-        public readonly string ToStringAndClear()
+        public string ToStringAndClear()
         {
             if (_builder == null) { return string.Empty; }
             string result = _builder.ToString();
@@ -280,7 +280,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         /// <param name="startingPos">The position at which the written value started.</param>
         /// <param name="alignment">Non-zero minimum number of characters that should be written for this value.  If the value is negative, it indicates left-aligned and the required minimum is the absolute value.</param>
-        private readonly void AppendOrInsertAlignmentIfNeeded(int startingPos, int alignment)
+        private void AppendOrInsertAlignmentIfNeeded(int startingPos, int alignment)
         {
             if (_builder == null) { return; }
 

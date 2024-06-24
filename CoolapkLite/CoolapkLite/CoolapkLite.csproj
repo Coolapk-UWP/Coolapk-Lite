@@ -156,6 +156,7 @@
     <Compile Include="Common\AnimateSelectionProvider.cs" />
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
+    <Compile Include="Common\DefaultInterpolatedStringHandler.cs" />
     <Compile Include="Common\Enumerable.cs" />
     <Compile Include="Common\ExtensionManager.cs" />
     <Compile Include="Common\HttpRandomAccessStream.cs" />
