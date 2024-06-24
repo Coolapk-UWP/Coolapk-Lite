@@ -54,7 +54,8 @@ steps:
     platform: 'x64'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:IsUseNetCore463=True
+    msbuildArgs: '/p:LangVersion=latest
+                  /p:IsUseNetCore463=True
                   /p:IsUpdateCIManifest=True
                   /p:CIBuildID="$(Build.BuildId)"
                   /p:AppxBundlePlatforms="$(buildPlatform)"
