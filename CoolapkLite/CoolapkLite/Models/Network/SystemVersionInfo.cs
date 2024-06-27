@@ -3,7 +3,7 @@ using Windows.ApplicationModel;
 
 namespace CoolapkLite.Models.Network
 {
-    public readonly struct SystemVersionInfo : IComparable, IEquatable<SystemVersionInfo>, IComparable<SystemVersionInfo>
+    public readonly struct SystemVersionInfo : IComparable, IEquatable<SystemVersionInfo>, IComparable<SystemVersionInfo>, IFormattable
     {
         public SystemVersionInfo(int major, int minor, int build, int revision = 0)
         {
@@ -83,6 +83,23 @@ namespace CoolapkLite.Models.Network
         }
 
         public override string ToString() => $"{Major}.{Minor}.{Build}.{Revision}";
+
+        public string ToString(string format, IFormatProvider formatProvider)
+        {
+            switch (format)
+            {
+                case "4":
+                    return $"{Major}.{Minor}.{Build}.{Revision}";
+                case "3":
+                    return $"{Major}.{Minor}.{Build}";
+                case "2":
+                    return $"{Major}.{Minor}";
+                case "1":
+                    return $"{Major}";
+                default:
+                    goto case "4";
+            }
+        }
 
         public static implicit operator SystemVersionInfo(Version version) => new SystemVersionInfo(version.Major, version.Minor, version.Build, version.Revision);
 

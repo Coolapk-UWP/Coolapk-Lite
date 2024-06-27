@@ -259,7 +259,7 @@ namespace CoolapkLite.Helpers
         public static string ExceptionToMessage(this Exception ex) =>
             new StringBuilder().AppendLine()
                                .TryAppendLineFormat("Message: {0}", ex.Message)
-                               .AppendLineFormat("HResult: {0} (0x{1})", ex.HResult, Convert.ToString(ex.HResult, 16).ToUpperInvariant())
+                               .AppendLineFormat("HResult: {0} (0x{1:X})", ex.HResult, ex.HResult)
                                .TryAppendLine(ex.StackTrace)
                                .TryAppendLineFormat("HelperLink: {0}", ex.HelpLink)
                                .ToString();

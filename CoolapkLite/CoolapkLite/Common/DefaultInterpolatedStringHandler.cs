@@ -22,6 +22,11 @@ namespace System.Runtime.CompilerServices
         /// since the compiler-provided base length won't include the equivalent character count.
         /// </remarks>
         private const int GuessedLengthPerHole = 11;
+        /// <summary>
+        /// Minimum size array to rent from the pool.
+        /// </summary>
+        /// <remarks>Same as stack-allocation size used today by string.Format.</remarks>
+        private const int MinimumArrayPoolLength = 256;
 
         /// <summary>
         /// Optional provider to pass to IFormattable.ToString or ISpanFormattable.TryFormat calls.
@@ -85,7 +90,7 @@ namespace System.Runtime.CompilerServices
         /// <param name="formattedCount">The number of interpolation expressions in the interpolated string.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)] // becomes a constant when inputs are constant
         internal static int GetDefaultLength(int literalLength, int formattedCount) =>
-            Math.Max(0, literalLength + (formattedCount * GuessedLengthPerHole));
+            Math.Max(MinimumArrayPoolLength, literalLength + (formattedCount * GuessedLengthPerHole));
 
         /// <summary>
         /// Gets the built <see cref="string"/>.

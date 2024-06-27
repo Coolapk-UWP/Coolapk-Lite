@@ -291,7 +291,7 @@ namespace CoolapkLite
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
             if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
             {
-                _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+                _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{e.Exception.HResult:X})");
             }
             else if (e.Exception is CoolapkMessageException)
             {
@@ -299,7 +299,7 @@ namespace CoolapkLite
             }
             else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
             {
-                _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
+                _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{e.Exception.HResult:X})");
             }
             SettingsHelper.LogManager.GetLogger("Unhandled Exception - Application").Error(e.Exception.ExceptionToMessage(), e.Exception);
             e.Handled = true;
@@ -332,7 +332,7 @@ namespace CoolapkLite
                 ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
                 if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
                 {
-                    _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{Convert.ToString(e.Exception.HResult, 16)})");
+                    _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{e.Exception.HResult:X})");
                 }
                 else if (e.Exception is CoolapkMessageException)
                 {
@@ -340,7 +340,7 @@ namespace CoolapkLite
                 }
                 else if (SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException))
                 {
-                    _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{Convert.ToString(e.Exception.HResult, 16)})");
+                    _ = UIHelper.ShowMessageAsync($"{(string.IsNullOrEmpty(e.Exception.Message) ? loader.GetString("ExceptionThrown") : e.Exception.Message)} (0x{e.Exception.HResult:X})");
                 }
             }
             SettingsHelper.LogManager.GetLogger("Unhandled Exception - SynchronizationContext").Error(e.Exception.ExceptionToMessage(), e.Exception);
