@@ -1,10 +1,12 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
@@ -59,15 +61,16 @@ namespace CoolapkLite.Pages.FeedPages
                 && Provider?.IsEqual(ViewModel) != true)
             {
                 Provider = ViewModel;
-                _ = Provider.Refresh(true).ContinueWith(x =>
-                {
-                    if (Provider.FeedDetail != null)
+                _ = Provider.Refresh(true)
+                    .ContinueWith(async x =>
                     {
-                        SetLayout();
-                        return GenerateActivityAsync();
-                    }
-                    return Task.CompletedTask;
-                }).Unwrap();
+                        await Dispatcher.ResumeForegroundAsync();
+                        if (Provider.FeedDetail != null)
+                        {
+                            SetLayout();
+                            _ = GenerateActivityAsync();
+                        }
+                    });
             }
         }
 
