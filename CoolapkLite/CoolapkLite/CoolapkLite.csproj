@@ -1489,7 +1489,7 @@
       <Version>1.0.1</Version>
     </PackageReference>
     <PackageReference Include="MicaForUWP">
-      <Version>0.1.10</Version>
+      <Version>0.1.11</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
@@ -1505,9 +1505,6 @@
     </PackageReference>
     <PackageReference Include="UnicodeStyle">
       <Version>0.2.13</Version>
-    </PackageReference>
-    <PackageReference Include="Win2D.uwp">
-      <Version>1.27.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
