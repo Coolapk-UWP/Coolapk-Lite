@@ -7,43 +7,43 @@
             <media:BackdropBlurBrush
                 x:Key="TitleBarBackgroundBrush"
                 BackgroundSource="Backdrop"
-                FallbackColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
-                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                FallbackColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
                 x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
                 x:Key="ApplicationPivotBackgroundBrush"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <media:BackdropBlurBrush
                 x:Key="TitleBarBackgroundBrush"
                 BackgroundSource="Backdrop"
-                FallbackColor="{ThemeResource CardStrokeColorDefaultSolid}"
-                TintColor="{ThemeResource CardStrokeColorDefaultSolid}"
+                FallbackColor="{StaticResource CardStrokeColorDefaultSolid}"
+                TintColor="{StaticResource CardStrokeColorDefaultSolid}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
                 x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
             <media:BackdropBlurBrush
                 x:Key="ApplicationPivotBackgroundBrush"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
@@ -52,34 +52,4 @@
             <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-
-    <media:BackdropBlurBrush
-        x:Key="SolidBackgroundFillColorBaseWindowBrush"
-        Amount="10"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="0.9" />
-    <media:BackdropBlurBrush
-        x:Key="SolidBackgroundFillColorBaseElementBrush"
-        Amount="10"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="0.91" />
-
-    <media:BackdropBlurBrush
-        x:Key="SystemChromeMediumLowColorWindowBrush"
-        Amount="10"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintOpacity="0.9" />
-    <media:BackdropBlurBrush
-        x:Key="SystemChromeMediumLowColorElementBrush"
-        Amount="10"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintOpacity="0.91" />
 </ResourceDictionary>

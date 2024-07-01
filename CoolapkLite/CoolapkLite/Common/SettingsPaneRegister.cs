@@ -34,44 +34,56 @@ namespace CoolapkLite.Common
         public SettingsPaneRegister(Window window)
         {
             element = window.Content;
-
-            if (IsSearchPaneSupported)
+            try
             {
-                SearchPane searchPane = SearchPane.GetForCurrentView();
-                searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
-                searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
-                searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
-                searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+                if (IsSearchPaneSupported)
+                {
+                    SearchPane searchPane = SearchPane.GetForCurrentView();
+                    searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
+                    searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
+                    searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
+                    searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+                }
+
+                if (IsSettingsPaneSupported)
+                {
+                    SettingsPane settingsPane = SettingsPane.GetForCurrentView();
+                    settingsPane.CommandsRequested -= OnCommandsRequested;
+                    settingsPane.CommandsRequested += OnCommandsRequested;
+                    window.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
+                    window.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+                }
             }
-
-            if (IsSettingsPaneSupported)
+            catch (Exception ex)
             {
-                SettingsPane settingsPane = SettingsPane.GetForCurrentView();
-                settingsPane.CommandsRequested -= OnCommandsRequested;
-                settingsPane.CommandsRequested += OnCommandsRequested;
-                window.Dispatcher.AcceleratorKeyActivated -= Dispatcher_AcceleratorKeyActivated;
-                window.Dispatcher.AcceleratorKeyActivated += Dispatcher_AcceleratorKeyActivated;
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsPaneRegister)).Error(ex.ExceptionToMessage(), ex);
             }
         }
 
         public SettingsPaneRegister(UIElement element)
         {
             this.element = element;
-
-            if (IsSearchPaneSupported)
+            try
             {
-                SearchPane searchPane = SearchPane.GetForCurrentView();
-                searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
-                searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
-                searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
-                searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+                if (IsSearchPaneSupported)
+                {
+                    SearchPane searchPane = SearchPane.GetForCurrentView();
+                    searchPane.QuerySubmitted -= SearchPane_QuerySubmitted;
+                    searchPane.QuerySubmitted += SearchPane_QuerySubmitted;
+                    searchPane.SuggestionsRequested -= SearchPane_SuggestionsRequested;
+                    searchPane.SuggestionsRequested += SearchPane_SuggestionsRequested;
+                }
+
+                if (IsSettingsPaneSupported)
+                {
+                    SettingsPane searchPane = SettingsPane.GetForCurrentView();
+                    searchPane.CommandsRequested -= OnCommandsRequested;
+                    searchPane.CommandsRequested += OnCommandsRequested;
+                }
             }
-
-            if (IsSettingsPaneSupported)
+            catch (Exception ex)
             {
-                SettingsPane searchPane = SettingsPane.GetForCurrentView();
-                searchPane.CommandsRequested -= OnCommandsRequested;
-                searchPane.CommandsRequested += OnCommandsRequested;
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsPaneRegister)).Error(ex.ExceptionToMessage(), ex);
             }
         }
 
@@ -209,19 +221,26 @@ namespace CoolapkLite.Common
 
         private static bool CheckSearchExtension()
         {
-            XDocument doc = XDocument.Load(Path.Combine(Package.Current.InstalledLocation.Path, "AppxManifest.xml"));
-            XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/appx/manifest/uap/windows10");
-            IEnumerable<XElement> extensions = doc.Root.Descendants(ns + "Extension");
-            if (extensions != null)
+            try
             {
-                foreach (XElement extension in extensions)
+                XDocument doc = XDocument.Load(Path.Combine(Package.Current.InstalledLocation.Path, "AppxManifest.xml"));
+                XNamespace ns = XNamespace.Get("http://schemas.microsoft.com/appx/manifest/uap/windows10");
+                IEnumerable<XElement> extensions = doc.Root.Descendants(ns + "Extension");
+                if (extensions != null)
                 {
-                    XAttribute category = extension.Attribute("Category");
-                    if (category != null && category.Value == "windows.search")
+                    foreach (XElement extension in extensions)
                     {
-                        return true;
+                        XAttribute category = extension.Attribute("Category");
+                        if (category != null && category.Value == "windows.search")
+                        {
+                            return true;
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(SettingsPaneRegister)).Error(ex.ExceptionToMessage(), ex);
             }
             return false;
         }

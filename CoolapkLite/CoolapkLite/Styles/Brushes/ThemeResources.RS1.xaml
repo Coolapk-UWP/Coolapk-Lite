@@ -4,19 +4,19 @@
             <SolidColorBrush
                 x:Key="TitleBarBackgroundBrush"
                 Opacity="0.99"
-                Color="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
-            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
-            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
+                Color="{StaticResource LayerOnMicaBaseAltFillColorTertiary}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{StaticResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <SolidColorBrush
                 x:Key="TitleBarBackgroundBrush"
                 Opacity="0.99"
-                Color="{ThemeResource CardStrokeColorDefaultSolid}" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
-            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
-            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SolidBackgroundFillColorTransparent}" />
+                Color="{StaticResource CardStrokeColorDefaultSolid}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{StaticResource SolidBackgroundFillColorTransparent}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
@@ -25,22 +25,4 @@
             <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-
-    <SolidColorBrush
-        x:Key="SolidBackgroundFillColorBaseWindowBrush"
-        Opacity="1"
-        Color="{ThemeResource SolidBackgroundFillColorBase}" />
-    <SolidColorBrush
-        x:Key="SolidBackgroundFillColorBaseElementBrush"
-        Opacity="0.99"
-        Color="{ThemeResource SolidBackgroundFillColorBase}" />
-
-    <SolidColorBrush
-        x:Key="SystemChromeMediumLowColorWindowBrush"
-        Opacity="1"
-        Color="{ThemeResource SystemChromeMediumLowColor}" />
-    <SolidColorBrush
-        x:Key="SystemChromeMediumLowColorElementBrush"
-        Opacity="0.99"
-        Color="{ThemeResource SystemChromeMediumLowColor}" />
 </ResourceDictionary>

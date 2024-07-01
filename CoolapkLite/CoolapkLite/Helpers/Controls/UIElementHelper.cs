@@ -246,5 +246,58 @@ namespace CoolapkLite.Helpers
         }
 
         #endregion
+
+        #region BackgroundTransition
+
+        /// <summary>
+        /// Gets an instance of BrushTransition to automatically animate changes to the Background property.
+        /// </summary>
+        /// <param name="element">The element from which to read the property value.</param>
+        /// <returns>An instance of BrushTransition to automatically animate changes to the Background; otherwise, <see langword="null"/>. The default is <see langword="null"/>.</returns>
+        public static bool GetBackgroundTransition(UIElement element)
+        {
+            return (bool)element.GetValue(BackgroundTransitionProperty);
+        }
+
+        /// <summary>
+        /// Sets an instance of BrushTransition to automatically animate changes to the Background property.
+        /// </summary>
+        /// <param name="element">The element on which to set the attached property.</param>
+        /// <param name="value">The instance of BrushTransition to automatically animate changes to the Background property.</param>
+        public static void SetBackgroundTransition(UIElement element, bool value)
+        {
+            element.SetValue(BackgroundTransitionProperty, value);
+        }
+
+        /// <summary>
+        /// Identifies the BackgroundTransition dependency property.
+        /// </summary>
+        public static readonly DependencyProperty BackgroundTransitionProperty =
+            DependencyProperty.RegisterAttached(
+                "BackgroundTransition",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnBackgroundTransitionChanged));
+
+        private static void OnBackgroundTransitionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (ApiInformation.IsTypePresent("Windows.UI.Xaml.BrushTransition"))
+            {
+                switch (d)
+                {
+                    case Panel panel:
+                        panel.BackgroundTransition = e.NewValue is true ? new BrushTransition() : null;
+                        break;
+                    case Border border:
+                        border.BackgroundTransition = e.NewValue is true ? new BrushTransition() : null;
+                        break;
+                    case ContentPresenter contentPresenter:
+                        contentPresenter.BackgroundTransition = e.NewValue is true ? new BrushTransition() : null;
+                        break;
+                }
+            }
+        }
+
+        #endregion
     }
 }

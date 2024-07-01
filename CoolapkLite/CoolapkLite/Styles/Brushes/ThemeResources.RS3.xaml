@@ -4,43 +4,43 @@
             <AcrylicBrush
                 x:Key="TitleBarBackgroundBrush"
                 BackgroundSource="Backdrop"
-                FallbackColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
-                TintColor="{ThemeResource LayerOnMicaBaseAltFillColorTertiary}"
+                FallbackColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
                 TintOpacity="0.8" />
             <AcrylicBrush
                 x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
             <AcrylicBrush
                 x:Key="ApplicationPivotBackgroundBrush"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush
                 x:Key="TitleBarBackgroundBrush"
                 BackgroundSource="Backdrop"
-                FallbackColor="{ThemeResource CardStrokeColorDefaultSolid}"
-                TintColor="{ThemeResource CardStrokeColorDefaultSolid}"
+                FallbackColor="{StaticResource CardStrokeColorDefaultSolid}"
+                TintColor="{StaticResource CardStrokeColorDefaultSolid}"
                 TintOpacity="0.8" />
             <AcrylicBrush
                 x:Key="HamburgerMenuExpandedPaneBackground"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
             <AcrylicBrush
                 x:Key="ApplicationPivotBackgroundBrush"
                 BackgroundSource="HostBackdrop"
-                FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-                TintColor="{ThemeResource SolidBackgroundFillColorBase}"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintOpacity="0.8" />
-            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SolidBackgroundFillColorBase}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{StaticResource SolidBackgroundFillColorBase}" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="HighContrast">
             <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
@@ -49,30 +49,4 @@
             <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
         </ResourceDictionary>
     </ResourceDictionary.ThemeDictionaries>
-
-    <AcrylicBrush
-        x:Key="SolidBackgroundFillColorBaseWindowBrush"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="1" />
-    <AcrylicBrush
-        x:Key="SolidBackgroundFillColorBaseElementBrush"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintColor="{ThemeResource SolidBackgroundFillColorBase}"
-        TintOpacity="0.9" />
-
-    <AcrylicBrush
-        x:Key="SystemChromeMediumLowColorWindowBrush"
-        BackgroundSource="HostBackdrop"
-        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintOpacity="1" />
-    <AcrylicBrush
-        x:Key="SystemChromeMediumLowColorElementBrush"
-        BackgroundSource="Backdrop"
-        FallbackColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintColor="{ThemeResource SystemChromeMediumLowColor}"
-        TintOpacity="0.9" />
 </ResourceDictionary>

@@ -8,19 +8,4 @@
         <Setter Property="Background" Value="{ThemeResource SystemControlTransparentBrush}" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
     </Style>
-
-    <Style TargetType="ContentDialog">
-        <Setter Property="Background" Value="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
-    </Style>
-
-    <Style TargetType="Frame">
-        <Setter Property="ContentTransitions">
-            <Setter.Value>
-                <TransitionCollection>
-                    <NavigationThemeTransition />
-                </TransitionCollection>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
 </ResourceDictionary>

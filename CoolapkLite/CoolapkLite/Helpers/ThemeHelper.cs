@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
@@ -138,9 +139,9 @@ namespace CoolapkLite.Helpers
                     rootElement.RequestedTheme = value;
                 }
 
-                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out HashSet<AppWindow> appWindows))
                 {
-                    foreach (FrameworkElement element in appWindows.Keys.OfType<FrameworkElement>())
+                    foreach (FrameworkElement element in appWindows.Select(x => x.GetXamlRootForWindow()).OfType<FrameworkElement>())
                     {
                         element.RequestedTheme = value;
                     }
@@ -163,9 +164,9 @@ namespace CoolapkLite.Helpers
                     rootElement.RequestedTheme = value;
                 }
 
-                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out HashSet<AppWindow> appWindows))
                 {
-                    foreach (FrameworkElement element in appWindows.Keys.OfType<FrameworkElement>())
+                    foreach (FrameworkElement element in appWindows.Select(x => x.GetXamlRootForWindow()).OfType<FrameworkElement>())
                     {
                         element.RequestedTheme = value;
                     }
@@ -261,9 +262,9 @@ namespace CoolapkLite.Helpers
 
                 CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = IsExtendsTitleBar;
 
-                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out HashSet<AppWindow> appWindows))
                 {
-                    foreach (AppWindow appWindow in appWindows.Values)
+                    foreach (AppWindow appWindow in appWindows)
                     {
                         appWindow.TitleBar.ExtendsContentIntoTitleBar = IsExtendsTitleBar;
                     }
@@ -299,9 +300,9 @@ namespace CoolapkLite.Helpers
                     TitleBar.ButtonBackgroundColor = TitleBar.ButtonInactiveBackgroundColor = ExtendViewIntoTitleBar ? Colors.Transparent : BackgroundColor;
                 }
 
-                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out System.Collections.Generic.Dictionary<UIElement, AppWindow> appWindows))
+                if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out HashSet<AppWindow> appWindows))
                 {
-                    foreach (AppWindow appWindow in appWindows.Values)
+                    foreach (AppWindow appWindow in appWindows)
                     {
                         bool ExtendViewIntoTitleBar = appWindow.TitleBar.ExtendsContentIntoTitleBar;
                         AppWindowTitleBar TitleBar = appWindow.TitleBar;

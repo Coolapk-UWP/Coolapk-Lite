@@ -248,7 +248,7 @@ namespace CoolapkLite.Helpers
             remove => remarks.Remove(value);
         }
 
-        public static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks?.Invoke(args);
+        private static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks?.Invoke(args);
 
         #endregion
 
