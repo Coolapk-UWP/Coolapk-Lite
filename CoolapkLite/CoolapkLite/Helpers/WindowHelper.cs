@@ -68,36 +68,37 @@ namespace CoolapkLite.Helpers
 
         private static void TrackWindow(this AppWindow window, Frame frame)
         {
-            if (!ActiveAppWindows.TryGetValue(frame.Dispatcher, out HashSet<AppWindow> windows))
+            if (!ActiveAppWindows.TryGetValue(frame.Dispatcher, out Dictionary<XamlRoot, AppWindow> windows))
             {
-                ActiveAppWindows[frame.Dispatcher] = windows = new HashSet<AppWindow>();
+                ActiveAppWindows[frame.Dispatcher] = windows = new Dictionary<XamlRoot, AppWindow>();
             }
 
-            if (!windows.Contains(window))
+            if (!windows.ContainsKey(frame.XamlRoot))
             {
                 window.Closed += (sender, args) =>
                 {
-                    windows.Remove(window);
+                    windows.Remove(frame.XamlRoot);
                     if (windows.Count <= 0)
                     { ActiveAppWindows.Remove(frame.Dispatcher); }
                     frame.Content = null;
                     window = null;
                 };
-                windows.Add(window);
+                windows[frame.XamlRoot] = window;
             }
         }
 
         public static bool IsAppWindow(this UIElement element) =>
             IsAppWindowSupported
-            && element?.UIContext != null
-            && ActiveAppWindows.TryGetValue(element.Dispatcher, out HashSet<AppWindow> windows)
-            && windows.Any(x => x.UIContext == element.UIContext);
+            && element?.XamlRoot != null
+            && ActiveAppWindows.TryGetValue(element.Dispatcher, out Dictionary<XamlRoot, AppWindow> windows)
+            && windows.ContainsKey(element.XamlRoot);
 
         public static AppWindow GetWindowForElement(this UIElement element) =>
             IsAppWindowSupported
-            && element?.UIContext != null
-            && ActiveAppWindows.TryGetValue(element.Dispatcher, out HashSet<AppWindow> windows)
-                ? windows.FirstOrDefault(x => x.UIContext == element.UIContext) : null;
+            && element?.XamlRoot != null
+            && ActiveAppWindows.TryGetValue(element.Dispatcher, out Dictionary<XamlRoot, AppWindow> windows)
+            && windows.TryGetValue(element.XamlRoot, out AppWindow window)
+                ? window : null;
 
         public static UIElement GetXamlRootForWindow(this AppWindow window) =>
             ElementCompositionPreview.GetAppWindowContent(window);
@@ -124,6 +125,6 @@ namespace CoolapkLite.Helpers
         }
 
         public static Dictionary<CoreDispatcher, Window> ActiveWindows { get; } = new Dictionary<CoreDispatcher, Window>();
-        public static Dictionary<CoreDispatcher, HashSet<AppWindow>> ActiveAppWindows { get; } = IsAppWindowSupported ? new Dictionary<CoreDispatcher, HashSet<AppWindow>>() : null;
+        public static Dictionary<CoreDispatcher, Dictionary<XamlRoot, AppWindow>> ActiveAppWindows { get; } = IsAppWindowSupported ? new Dictionary<CoreDispatcher, Dictionary<XamlRoot, AppWindow>>() : null;
     }
 }

@@ -47,9 +47,9 @@ namespace CoolapkLite
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 #endif
 
-            if (ApiInfoHelper.IsRevealFocusVisualKindSupported)
+            if (ApiInfoHelper.IsRevealFocusVisualKindSupported && AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox")
             {
-                FocusVisualKind = AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Xbox" ? FocusVisualKind.Reveal : FocusVisualKind.HighVisibility;
+                FocusVisualKind = FocusVisualKind.Reveal;
             }
         }
 
