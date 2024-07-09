@@ -77,7 +77,7 @@ namespace CoolapkLite.Pages
         public ShowImagePage()
         {
             InitializeComponent();
-            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
+            if (ApiInfoHelper.IsUniversalApiContract14Present)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
         }
 

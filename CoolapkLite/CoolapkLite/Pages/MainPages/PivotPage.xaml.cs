@@ -47,7 +47,7 @@ namespace CoolapkLite.Pages
             InitializeComponent();
             _ = PivotContentFrame.Navigate(typeof(Page));
             UIHelper.AppTitle = UIHelper.AppTitle ?? this;
-            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
+            if (ApiInfoHelper.IsUniversalApiContract14Present)
             { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Right; }
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))

@@ -112,10 +112,8 @@ namespace CoolapkLite.Controls
         {
             InitializeComponent();
             Provider = new CreateFeedViewModel(Dispatcher);
-            if (SystemInformation.Instance.OperatingSystemVersion.Build >= 22000)
-            {
-                CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Collapsed;
-            }
+            if (ApiInfoHelper.IsUniversalApiContract14Present)
+            { CommandBar.DefaultLabelPosition = CommandBarDefaultLabelPosition.Collapsed; }
         }
 
         private void Picker_Loaded(object sender, RoutedEventArgs e)

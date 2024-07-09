@@ -125,7 +125,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
-                LocalObject.Save(TileUpdateTime, SystemInformation.Instance.OperatingSystemVersion.Build < 21996 ? 15u : 0u);
+                LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 15u : 0u);
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
@@ -161,7 +161,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(IsExtendsTitleBar))
             {
-                LocalObject.Save(IsExtendsTitleBar, SystemInformation.Instance.OperatingSystemVersion.Build >= 10586);
+                LocalObject.Save(IsExtendsTitleBar, ApiInfoHelper.IsUniversalApiContract2Present);
             }
             if (!LocalObject.KeyExists(IsUseNoPicFallback))
             {
