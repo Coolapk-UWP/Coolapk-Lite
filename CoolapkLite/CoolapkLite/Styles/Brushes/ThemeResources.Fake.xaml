@@ -1,0 +1,69 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:MicaForUWP.Media">
+    <ResourceDictionary.ThemeDictionaries>
+        <ResourceDictionary x:Key="Default">
+            <AcrylicBrush
+                x:Key="TitleBarBackgroundBrush"
+                BackgroundSource="Backdrop"
+                FallbackColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintColor="{StaticResource LayerOnMicaBaseAltFillColorTertiary}"
+                TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="HamburgerMenuExpandedPaneBackground"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPageBackgroundBrush"
+                Amount="100"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPivotBackgroundBrush"
+                Amount="100"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.5" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="Light">
+            <AcrylicBrush
+                x:Key="TitleBarBackgroundBrush"
+                BackgroundSource="Backdrop"
+                FallbackColor="{StaticResource CardStrokeColorDefaultSolid}"
+                TintColor="{StaticResource CardStrokeColorDefaultSolid}"
+                TintOpacity="0.8" />
+            <AcrylicBrush
+                x:Key="HamburgerMenuExpandedPaneBackground"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.8" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPageBackgroundBrush"
+                Amount="100"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.5" />
+            <media:BackdropMicaBrush
+                x:Key="ApplicationPivotBackgroundBrush"
+                Amount="100"
+                BackgroundSource="HostBackdrop"
+                FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintColor="{StaticResource SolidBackgroundFillColorBase}"
+                TintOpacity="0.5" />
+        </ResourceDictionary>
+        <ResourceDictionary x:Key="HighContrast">
+            <SolidColorBrush x:Key="TitleBarBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="ApplicationPageBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="ApplicationPivotBackgroundBrush" Color="{ThemeResource SystemColorWindowColor}" />
+            <SolidColorBrush x:Key="HamburgerMenuExpandedPaneBackground" Color="{ThemeResource SystemColorWindowColor}" />
+        </ResourceDictionary>
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

@@ -10,6 +10,7 @@ namespace CoolapkLite.Common
         Default = -0x1,
         Mica = 0x7,
         Acrylic = 0x3,
+        FakeMica = 0x5,
         Blur = 0x1,
         Solid = 0x0
     }
@@ -29,6 +30,10 @@ namespace CoolapkLite.Common
                 case BackdropType.Acrylic when ApiInfoHelper.IsAcrylicBrushSupported:
                     AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
                     AddResourceDictionary("ms-appx:///Styles/Brushes/ThemeResources.RS3.xaml");
+                    break;
+                case BackdropType.FakeMica when ApiInfoHelper.IsAcrylicBrushSupported:
+                    AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS3.xaml");
+                    AddResourceDictionary("ms-appx:///Styles/Brushes/ThemeResources.Fake.xaml");
                     break;
                 case BackdropType.Blur when ApiInfoHelper.IsXamlCompositionBrushBaseSupported:
                     AddResourceDictionary("ms-appx:///Styles/Brushes/Acrylic/AcrylicBrush.RS2.xaml");

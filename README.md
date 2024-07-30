@@ -9,7 +9,7 @@
 [![Issues](https://img.shields.io/github/issues/Coolapk-UWP/Coolapk-Lite.svg?label=Issues&style=flat-square)](https://github.com/Coolapk-UWP/Coolapk-Lite/issues "Issues")
 [![Stargazers](https://img.shields.io/github/stars/Coolapk-UWP/Coolapk-Lite.svg?label=Stars&style=flat-square)](https://github.com/Coolapk-UWP/Coolapk-Lite/stargazers "Stargazers")
 
-[![Microsoft Store](https://img.shields.io/badge/download-%e4%b8%8b%e8%bd%bd-magenta.svg?label=Microsoft%20Store&logo=Microsoft&style=for-the-badge&color=11a2f8)](https://www.microsoft.com/store/apps/9NB8J1BH0D7T "Microsoft Store")
+[![Microsoft Store](https://img.shields.io/badge/download-下载-magenta.svg?label=Microsoft%20Store&logo=Microsoft&style=for-the-badge&color=11a2f8)](https://www.microsoft.com/store/apps/9NB8J1BH0D7T "Microsoft Store")
 [![GitHub All Releases](https://img.shields.io/github/downloads/Coolapk-UWP/Coolapk-Lite/total.svg?label=DOWNLOAD&logo=github&style=for-the-badge)](https://github.com/Coolapk-UWP/Coolapk-Lite/releases/latest "GitHub All Releases")
 
 ## 目录

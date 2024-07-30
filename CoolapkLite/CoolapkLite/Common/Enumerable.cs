@@ -112,12 +112,17 @@ namespace CoolapkLite.Common
             {
                 list.ForEach(action);
             }
-#if NETCORE463
             else if (source is TSource[] array)
             {
+#if NETCORE463
                 Array.ForEach(array, action);
-            }
+#else
+                foreach (TSource item in array)
+                {
+                    action(item);
+                }
 #endif
+            }
             else if (source is ImmutableList<TSource> immutableList)
             {
                 immutableList.ForEach(action);
