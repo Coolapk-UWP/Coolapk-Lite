@@ -1487,7 +1487,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.61</Version>
+      <Version>1.11.62</Version>
     </PackageReference>
     <PackageReference Include="MetroLog">
       <Version>1.0.1</Version>

@@ -29,7 +29,7 @@
                 BackgroundSource="HostBackdrop"
                 FallbackColor="{StaticResource SolidBackgroundFillColorBase}"
                 TintColor="{StaticResource SolidBackgroundFillColorBase}"
-                TintOpacity="0.5" />
+                TintOpacity="0.8" />
         </ResourceDictionary>
         <ResourceDictionary x:Key="Light">
             <AcrylicBrush
