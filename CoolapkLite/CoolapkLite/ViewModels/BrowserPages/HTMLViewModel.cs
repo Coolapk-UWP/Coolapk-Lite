@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel;
@@ -39,7 +40,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
                 if (rawHTML != value)
                 {
                     rawHTML = value;
-                    _ = GetHtmlAsync(value);
+                    _ = GetHtmlAsync(value, title);
                     RaisePropertyChangedEvent();
                 }
             }
@@ -112,17 +113,37 @@ namespace CoolapkLite.ViewModels.BrowserPages
                 if (isSucceed)
                 {
                     JObject json = JObject.Parse(result);
-                    RawHTML = json.TryGetValue("html", out JToken html) && !string.IsNullOrEmpty(html.ToString())
-                        ? html.ToString()
-                        : json.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString())
-                            ? description.ToString()
-                            : "<h1>网络错误</h1>";
 
                     if (json.TryGetValue("title", out JToken title))
                     {
                         Title = title.ToString();
                     }
+
+                    if (json.TryGetValue("html", out JToken html) && !string.IsNullOrEmpty(html.ToString()))
+                    {
+                        RawHTML = html.ToString();
+                    }
+                    else if (json.TryGetValue("description", out JToken description) && !string.IsNullOrEmpty(description.ToString()))
+                    {
+                        RawHTML = description.ToString();
+                    }
+                    else
+                    {
+                        (isSucceed, result) = await RequestHelper.GetStringAsync(uri).ConfigureAwait(false);
+                        if (isSucceed && !string.IsNullOrWhiteSpace(result))
+                        {
+                            HtmlDocument doc = new HtmlDocument();
+                            doc.LoadHtml(result);
+                            string content = doc.DocumentNode.ChildNodes.FindFirst("html")?.ChildNodes.FindFirst("body")?.InnerHtml;
+                            if (!string.IsNullOrEmpty(content))
+                            {
+                                RawHTML = content;
+                                return;
+                            }
+                        }
+                    }
                 }
+                RawHTML = "<h1>网络错误</h1>";
             }
             finally
             {
@@ -130,13 +151,13 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public async Task GetHtmlAsync(string html) => await GetHtmlAsync(html, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light").ConfigureAwait(false);
+        public async Task GetHtmlAsync(string html, string title) => await GetHtmlAsync(html, title, await ThemeHelper.IsDarkThemeAsync() ? "Dark" : "Light").ConfigureAwait(false);
 
-        public async Task GetHtmlAsync(string html, string theme)
+        public async Task GetHtmlAsync(string html, string title, string theme)
         {
             StorageFile indexFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/WebView/HTMLView.html"));
             string index = await FileIO.ReadTextAsync(indexFile);
-            HTML = index.Replace("{{RenderTheme}}", theme).Replace("{{HTMLBody}}", html);
+            HTML = index.Replace("{{RenderTheme}}", theme).Replace("{{Title}}", title).Replace("{{HTMLBody}}", html);
         }
     }
 }
