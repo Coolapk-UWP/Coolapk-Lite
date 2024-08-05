@@ -113,7 +113,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TokenVersion))
             {
-                LocalObject.Save(TokenVersion, TokenVersions.TokenV2);
+                LocalObject.Save(TokenVersion, Common.TokenVersion.TokenV2);
             }
             if (!LocalObject.KeyExists(IsUseLiteHome))
             {

@@ -22,7 +22,7 @@ namespace CoolapkLite.Models.Network
 
         public APIVersion() { }
 
-        public APIVersion(string version, string versionCode) : base()
+        public APIVersion(string version, string versionCode) : this()
         {
             Version = version;
             VersionCode = versionCode;

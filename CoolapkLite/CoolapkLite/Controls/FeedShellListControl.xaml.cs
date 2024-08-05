@@ -108,14 +108,14 @@ namespace CoolapkLite.Controls
             if (ShyHeaderPivotListView.ItemsSource is IToggleChangeSelectedIndex ToggleItemsSource)
             {
                 CheckBox.Visibility = Visibility.Visible;
-                CheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding()
+                CheckBox.SetBinding(ToggleButton.IsCheckedProperty, new Binding
                 {
                     Mode = BindingMode.TwoWay,
                     Source = ToggleItemsSource,
                     Path = new PropertyPath("ToggleIsOn")
                 });
                 ToggleSwitch.Visibility = Visibility.Visible;
-                ToggleSwitch.SetBinding(ToggleSwitch.IsOnProperty, new Binding()
+                ToggleSwitch.SetBinding(ToggleSwitch.IsOnProperty, new Binding
                 {
                     Mode = BindingMode.TwoWay,
                     Source = ToggleItemsSource,
@@ -131,7 +131,7 @@ namespace CoolapkLite.Controls
             {
                 ComboBox.Visibility = Visibility.Visible;
                 ComboBox.ItemsSource = ComboBoxItemsSource.ItemSource;
-                ComboBox.SetBinding(Selector.SelectedIndexProperty, new Binding()
+                ComboBox.SetBinding(Selector.SelectedIndexProperty, new Binding
                 {
                     Mode = BindingMode.TwoWay,
                     Source = ComboBoxItemsSource,

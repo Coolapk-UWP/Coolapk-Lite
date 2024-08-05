@@ -8,11 +8,11 @@ namespace CoolapkLite.Common
     {
         public static string DeviceCode { get; protected set; }
 
-        private readonly TokenVersions TokenVersion;
+        private readonly TokenVersion TokenVersion;
 
         static TokenCreator() => DeviceCode = SettingsHelper.Get<DeviceInfo>(SettingsHelper.DeviceInfo).CreateDeviceCode();
 
-        public TokenCreator(TokenVersions version = TokenVersions.TokenV2) => TokenVersion = version;
+        public TokenCreator(TokenVersion version = TokenVersion.TokenV2) => TokenVersion = version;
 
         /// <summary>
         /// GetToken Generate a token with random device info
@@ -21,10 +21,10 @@ namespace CoolapkLite.Common
         {
             switch (TokenVersion)
             {
-                case TokenVersions.TokenV1:
+                case TokenVersion.TokenV1:
                     return GetCoolapkAppToken(DeviceCode);
                 default:
-                case TokenVersions.TokenV2:
+                case TokenVersion.TokenV2:
                     return GetTokenWithDeviceCode(DeviceCode);
             }
         }
@@ -73,7 +73,7 @@ namespace CoolapkLite.Common
         public override string ToString() => GetToken();
     }
 
-    public enum TokenVersions
+    public enum TokenVersion
     {
         TokenV1 = 1,
         TokenV2

@@ -44,7 +44,7 @@ namespace CoolapkLite.Models.Network
 
         public DeviceInfo() { }
 
-        public DeviceInfo(string aid, string mac, string manufactory, string brand, string model, string buildNumber) : base()
+        public DeviceInfo(string aid, string mac, string manufactory, string brand, string model, string buildNumber) : this()
         {
             AndroidID = aid;
             MAC = mac;

@@ -57,7 +57,7 @@ namespace CoolapkLite.Controls
         private void SetPivot()
         {
             if (Pivot == null) { return; }
-            SetBinding(SelectedIndexProperty, new Binding()
+            SetBinding(SelectedIndexProperty, new Binding
             {
                 Source = Pivot,
                 Mode = BindingMode.TwoWay,

@@ -505,16 +505,16 @@ namespace CoolapkLite.Controls
             if (args.Handled) { return; }
             if (args.EventType == CoreAcceleratorKeyEventType.KeyDown || args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown)
             {
-                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
-                if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
+                switch (args.VirtualKey)
                 {
-                    switch (args.VirtualKey)
-                    {
-                        case VirtualKey.V when PastePic.IsEnabled:
-                            _ = Provider.DropFileAsync(Clipboard.GetContent());
-                            args.Handled = true;
-                            break;
-                    }
+                    case VirtualKey.V when PastePic.IsEnabled && Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down):
+                        _ = Provider.DropFileAsync(Clipboard.GetContent());
+                        args.Handled = true;
+                        break;
+                    case VirtualKey.Escape:
+                        Hide();
+                        args.Handled = true;
+                        break;
                 }
             }
         }

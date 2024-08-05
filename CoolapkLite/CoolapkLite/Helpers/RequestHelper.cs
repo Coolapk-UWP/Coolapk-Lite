@@ -19,7 +19,6 @@ using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 using System.Linq;
 #else
 using System.Net.Http.Headers;
-using CoolapkLite.Models.Network;
 using Windows.Foundation.Collections;
 #endif
 
@@ -30,15 +29,12 @@ namespace CoolapkLite.Helpers
         private static bool IsInternetAvailable => mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
         private static readonly object locker = new object();
 
-        public static IEnumerable<(string name, string value)> GetCoolapkCookies(Uri uri)
+        public static HttpCookieCollection GetCoolapkCookies(Uri uri)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                foreach (HttpCookie item in cookieManager.GetCookies(NetworkHelper.GetHost(uri)))
-                {
-                    yield return (item.Name, item.Value);
-                }
+                return cookieManager.GetCookies(NetworkHelper.GetHost(uri));
             }
         }
 
@@ -211,9 +207,9 @@ namespace CoolapkLite.Helpers
                 ["UID"] = SettingsHelper.Get<string>(SettingsHelper.Uid),
                 ["UserName"] = SettingsHelper.Get<string>(SettingsHelper.UserName),
                 ["Token"] = SettingsHelper.Get<string>(SettingsHelper.Token),
-                ["TokenVersion"] = (int)SettingsHelper.Get<TokenVersions>(SettingsHelper.TokenVersion),
-                ["UserAgent"] = JsonConvert.SerializeObject(UserAgent.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
-                ["APIVersion"] = JsonConvert.SerializeObject(APIVersion.Parse(NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString())),
+                ["DeviceCode"] = TokenCreator.DeviceCode,
+                ["AppToken"] = NetworkHelper.TokenCreator.GetToken(),
+                ["UserAgent"] = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString(),
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
                 ["UploadBucket"] = bucket,
                 ["UploadDir"] = dir,

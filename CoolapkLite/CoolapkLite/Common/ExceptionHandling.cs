@@ -128,7 +128,7 @@ namespace CoolapkLite.Common
         {
             if (UnhandledException == null) { return false; }
 
-            UnhandledExceptionEventArgs exWrapper = new UnhandledExceptionEventArgs()
+            UnhandledExceptionEventArgs exWrapper = new UnhandledExceptionEventArgs
             {
                 Exception = exception
             };

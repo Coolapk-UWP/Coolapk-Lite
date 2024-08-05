@@ -445,7 +445,7 @@ namespace CoolapkLite.Controls
         /// </summary>
         private void RefreshableListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Clip = new RectangleGeometry()
+            Clip = new RectangleGeometry
             {
                 Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
             };
