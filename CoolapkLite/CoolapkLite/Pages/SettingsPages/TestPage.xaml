@@ -258,12 +258,12 @@
                         <Button
                             Click="Button_Click"
                             Content="清除 JumpList"
-                            IsEnabled="{Binding IsJumpListSupported}"
+                            IsEnabled="{x:Bind Provider.IsJumpListSupported}"
                             Tag="CleanJumpList" />
                         <Button
                             Click="Button_Click"
                             Content="添加设置组"
-                            IsEnabled="{Binding IsJumpListSupported}"
+                            IsEnabled="{x:Bind Provider.IsJumpListSupported}"
                             Tag="AddJumpList" />
                     </control:StackPanelEx>
                 </control:StackPanelEx>
@@ -329,7 +329,7 @@
                         Padding="32,0,0,8"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        Text="{Binding FrameworkDescription}"
+                        Text="{x:Bind Provider.FrameworkDescription}"
                         TextWrapping="Wrap" />
 
                     <TextBlock
@@ -344,7 +344,7 @@
                         Padding="32,0,0,8"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        Text="{Binding DeviceFamily}"
+                        Text="{x:Bind Provider.DeviceFamily}"
                         TextWrapping="WrapWholeWords" />
 
                     <TextBlock
@@ -359,7 +359,7 @@
                         Padding="32,0,0,8"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        Text="{Binding OperatingSystemVersion}"
+                        Text="{x:Bind Provider.OperatingSystemVersion}"
                         TextWrapping="Wrap" />
 
                     <TextBlock
@@ -374,7 +374,7 @@
                         Padding="32,0,0,8"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
-                        Text="{Binding OSArchitecture}"
+                        Text="{x:Bind Provider.OSArchitecture}"
                         TextWrapping="WrapWholeWords" />
 
                     <TextBlock

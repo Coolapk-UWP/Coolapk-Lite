@@ -89,16 +89,24 @@ namespace CoolapkLite.Helpers
 
         public const string LoginUri = "https://account.coolapk.com/auth/loginByCoolapk";
 
-        public static Uri GetUri(string uri, params object[] args)
-        {
-            string u = string.Format(uri, args);
-            return new Uri(IsUseAPI2 ? Base2Uri : BaseUri, u);
-        }
+        public static Uri GetUri(string uri) => new Uri(IsUseAPI2 ? Base2Uri : BaseUri, uri);
 
-        public static Uri GetV1Uri(string uri, params object[] args)
-        {
-            string u = string.Format(uri, args);
-            return new Uri(BaseUri, u);
-        }
+        public static Uri GetUri(string uri, object arg0) => GetUri(string.Format(uri, arg0));
+
+        public static Uri GetUri(string uri, object arg0, object arg1) => GetUri(string.Format(uri, arg0, arg1));
+
+        public static Uri GetUri(string uri, object arg0, object arg1, object arg2) => GetUri(string.Format(uri, arg0, arg1, arg2));
+
+        public static Uri GetUri(string uri, params object[] args) => GetUri(string.Format(uri, args));
+
+        public static Uri GetV1Uri(string uri) => new Uri(BaseUri, uri);
+
+        public static Uri GetV1Uri(string uri, object arg0) => GetV1Uri(string.Format(uri, arg0));
+
+        public static Uri GetV1Uri(string uri, object arg0, object arg1) => GetV1Uri(string.Format(uri, arg0, arg1));
+
+        public static Uri GetV1Uri(string uri, object arg0, object arg1, object arg2) => GetV1Uri(string.Format(uri, arg0, arg1, arg2));
+
+        public static Uri GetV1Uri(string uri, params object[] args) => GetV1Uri(string.Format(uri, args));
     }
 }

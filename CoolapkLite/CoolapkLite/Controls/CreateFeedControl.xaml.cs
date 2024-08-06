@@ -5,7 +5,6 @@ using CoolapkLite.Models;
 using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -277,14 +276,12 @@ namespace CoolapkLite.Controls
                     break;
             }
 
-            object[] arg = type == UriType.CreateFeed
-                ? Array.Empty<object>()
-                : new object[] { ReplyID };
-
             post:
             try
             {
-                (bool isSucceed, JToken token) = await RequestHelper.PostDataAsync(UriHelper.GetUri(type, arg), content);
+                (bool isSucceed, JToken token) = await (type == UriType.CreateFeed
+                    ? RequestHelper.PostDataAsync(UriHelper.GetUri(type), content)
+                    : RequestHelper.PostDataAsync(UriHelper.GetUri(type, ReplyID), content));
                 if (isSucceed)
                 {
                     SendSuccessful();

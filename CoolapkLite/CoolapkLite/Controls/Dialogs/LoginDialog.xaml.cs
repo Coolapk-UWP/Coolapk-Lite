@@ -1,5 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Users;
+using System;
+using System.Net;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
 using Windows.Web.Http;
@@ -25,15 +27,15 @@ namespace CoolapkLite.Controls.Dialogs
             }
         }
 
-        private string userName = SettingsHelper.Get<string>(SettingsHelper.UserName);
+        private string username = SettingsHelper.Get<string>(SettingsHelper.UserName);
         public string UserName
         {
-            get => userName;
+            get => username;
             private set
             {
-                if (userName != value)
+                if (username != value)
                 {
-                    userName = value;
+                    username = value;
                     CheckText();
                 }
             }
@@ -108,7 +110,7 @@ namespace CoolapkLite.Controls.Dialogs
                 UID = results.UID.ToString();
                 if (!string.IsNullOrWhiteSpace(results.UserName))
                 {
-                    UserName = results.UserName;
+                    UserName = WebUtility.UrlEncode(results.UserName);
                 }
             }
         }

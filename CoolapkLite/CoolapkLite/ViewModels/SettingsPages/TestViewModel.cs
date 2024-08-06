@@ -25,19 +25,28 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public static Dictionary<CoreDispatcher, TestViewModel> Caches { get; } = new Dictionary<CoreDispatcher, TestViewModel>();
 
-        public static bool IsJumpListSupported { get; } = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
+        private static readonly bool isJumpListSupported = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
+        public bool IsJumpListSupported => isJumpListSupported;
 
-        public static string FrameworkDescription => RuntimeInformation.FrameworkDescription;
+        private static readonly string frameworkDescription = RuntimeInformation.FrameworkDescription;
+        public string FrameworkDescription => frameworkDescription;
 
-        public static string DeviceFamily { get; } = AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
+        private static readonly string deviceFamily = AnalyticsInfo.VersionInfo.DeviceFamily.Replace('.', ' ');
+        public string DeviceFamily => deviceFamily;
 
-        public static string OperatingSystemVersion { get; } = SystemInformation.Instance.OperatingSystemVersion.ToString();
+        private static readonly string operatingSystemVersion = SystemInformation.Instance.OperatingSystemVersion.ToString();
+        public string OperatingSystemVersion => operatingSystemVersion;
 
-        public static string OSArchitecture { get; } = RuntimeInformation.OSArchitecture.ToString();
+        private static readonly string _OSArchitecture = RuntimeInformation.OSArchitecture.ToString();
+        public string OSArchitecture => _OSArchitecture;
+
+        private static readonly Array backdropTypes = Enum.GetValues(typeof(BackdropType));
+        public Array BackdropTypes => backdropTypes;
+
+        private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
+        public string Title => title;
 
         public CoreDispatcher Dispatcher { get; }
-
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
 
         public bool IsAppWindowSupported => WindowHelper.IsAppWindowSupported;
 
@@ -54,8 +63,6 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public bool IsRequestRestartAsyncSupported => ApiInfoHelper.IsRequestRestartAsyncSupported;
 
         public bool IsRequestInfoForAppAsyncSupported => ApiInfoHelper.IsRequestInfoForAppAsyncSupported;
-
-        public Array BackdropTypes { get; } = Enum.GetValues(typeof(BackdropType));
 
         public CultureInfo[] SupportCultures => LanguageHelper.SupportCultures;
 

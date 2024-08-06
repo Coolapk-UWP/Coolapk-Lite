@@ -34,9 +34,13 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public CoreDispatcher Dispatcher { get; }
 
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
+        private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
+        public string Title => title;
 
-        public string VersionTextBlockText { get; } = $"{ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName} v{Package.Current.Id.Version.ToFormattedString(3)}";
+        private static readonly string versionTextBlockText = $"{ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName} v{Package.Current.Id.Version.ToFormattedString(3)}";
+        public string VersionTextBlockText => versionTextBlockText;
+
+        public bool IsTileActivatedInfoSupported => ApiInfoHelper.IsTileActivatedInfoSupported;
 
         public bool IsLogin
         {
@@ -110,16 +114,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public uint TileUpdateTime
+        public double TileUpdateTime
         {
             get => SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime);
             set
             {
-                if (TileUpdateTime != value)
+                uint time = (uint)value;
+                if (SettingsHelper.Get<uint>(SettingsHelper.TileUpdateTime) != time)
                 {
-                    SettingsHelper.Set(SettingsHelper.TileUpdateTime, value);
+                    SettingsHelper.Set(SettingsHelper.TileUpdateTime, time);
                     RaisePropertyChangedEvent();
-                    _ = UpdateLiveTileTask(value);
+                    _ = UpdateLiveTileTask(time);
                 }
             }
         }

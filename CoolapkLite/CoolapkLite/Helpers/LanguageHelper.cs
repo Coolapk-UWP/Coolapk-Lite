@@ -12,7 +12,7 @@ namespace CoolapkLite.Helpers
         public const string AutoLanguageCode = "auto";
         public const string FallbackLanguageCode = "zh-CN";
 
-        public static readonly string[] SupportLanguages = new[]
+        private static readonly string[] SupportLanguages = new[]
         {
             "en-US",
             "uk-UA",

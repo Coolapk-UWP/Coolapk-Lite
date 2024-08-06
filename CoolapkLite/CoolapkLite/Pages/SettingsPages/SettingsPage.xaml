@@ -78,7 +78,8 @@
                     ThumbToolTipValueConverter="{StaticResource TimeSpanToolTipValueConverter}"
                     TickFrequency="15"
                     TickPlacement="Outside"
-                    Value="{Binding TileUpdateTime, Mode=TwoWay}" />
+                    Visibility="{x:Bind Provider.IsTileActivatedInfoSupported, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Value="{x:Bind Provider.TileUpdateTime, Mode=TwoWay}" />
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                 <HyperlinkButton
