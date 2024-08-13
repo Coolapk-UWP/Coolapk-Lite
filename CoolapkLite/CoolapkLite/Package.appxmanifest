@@ -11,7 +11,7 @@
   <Identity
     Name="18184wherewhere.CoolapkLite"
     Publisher="CN=2C3A37C0-35FC-4839-B08C-751C1C1AFBF5"
-    Version="0.0.2.0" />
+    Version="0.0.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="0448ed59-70ce-4551-9b19-cb16d7dab42e" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
 
