@@ -123,6 +123,9 @@
   <data name="Browser" xml:space="preserve">
     <value>Браузер</value>
   </data>
+  <data name="Caches" xml:space="preserve">
+    <value>缓存</value>
+  </data>
   <data name="Circle" xml:space="preserve">
     <value>Коло</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
     <value>Відпустіть, щоб оновити</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Увійти</value>
   </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Пошук</value>

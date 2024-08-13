@@ -123,6 +123,9 @@
   <data name="Browser" xml:space="preserve">
     <value>Browser</value>
   </data>
+  <data name="Caches" xml:space="preserve">
+    <value>Caches</value>
+  </data>
   <data name="Circle" xml:space="preserve">
     <value>Circle</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="ListView.ReleaseToRefreshContent" xml:space="preserve">
     <value>Release to refresh</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
   </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Search</value>
