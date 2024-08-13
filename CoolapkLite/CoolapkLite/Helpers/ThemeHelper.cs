@@ -284,7 +284,7 @@ namespace CoolapkLite.Helpers
             {
                 await window.Dispatcher.ResumeForegroundAsync();
 
-                if (UIHelper.HasStatusBar)
+                if (ApiInfoHelper.IsStatusBarSupported)
                 {
                     StatusBar StatusBar = StatusBar.GetForCurrentView();
                     StatusBar.ForegroundColor = ForegroundColor;
@@ -324,7 +324,7 @@ namespace CoolapkLite.Helpers
             Color ForegroundColor = IsDark || IsHighContrast ? Colors.White : Colors.Black;
             Color BackgroundColor = IsHighContrast ? Color.FromArgb(255, 0, 0, 0) : IsDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
 
-            if (UIHelper.HasStatusBar)
+            if (ApiInfoHelper.IsStatusBarSupported)
             {
                 StatusBar StatusBar = StatusBar.GetForCurrentView();
                 StatusBar.ForegroundColor = ForegroundColor;
