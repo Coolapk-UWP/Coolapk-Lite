@@ -125,7 +125,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
-                LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 15u : 0u);
+                LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 0u : 15u);
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
