@@ -41,6 +41,15 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="CacheBase{T}"/> class.
         /// </summary>
+        /// <param name="httpClient">The instance of <see cref="System.Net.Http.HttpClient"/>.</param>
+        public CacheBase(HttpClient httpClient = null) : this()
+        {
+            _httpClient = httpClient;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CacheBase{T}"/> class.
+        /// </summary>
         protected CacheBase()
         {
             CacheDuration = TimeSpan.FromDays(1);
@@ -77,7 +86,7 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// <summary>
         /// Gets instance of <see cref="HttpClient"/>
         /// </summary>
-        protected HttpClient HttpClient
+        public HttpClient HttpClient
         {
             get
             {
@@ -90,6 +99,7 @@ namespace Microsoft.Toolkit.Uwp.UI
 
                 return _httpClient;
             }
+            set => _httpClient = value;
         }
 
         /// <summary>

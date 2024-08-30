@@ -28,7 +28,7 @@ namespace CoolapkLite.Helpers
 
         static NetworkHelper()
         {
-            ClientHandler = new HttpClientHandler();
+            ClientHandler = new HttpClientHandler { MaxConnectionsPerServer = 20 };
             Client = new HttpClient(ClientHandler);
             ThemeHelper.UISettingChanged += arg => Client.DefaultRequestHeaders.ReplaceDarkMode();
             SetRequestHeaders();

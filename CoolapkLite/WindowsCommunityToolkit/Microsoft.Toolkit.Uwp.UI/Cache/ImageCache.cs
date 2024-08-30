@@ -6,9 +6,9 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
@@ -31,9 +31,14 @@ namespace Microsoft.Toolkit.Uwp.UI
         private readonly List<string> _extendedPropertyNames = new List<string>();
 
         /// <summary>
+        /// Gets or sets the factory method to create a new instance of <see cref="ImageCache"/>.
+        /// </summary>
+        public static Func<ImageCache> Factory { get; set; } = () => new ImageCache();
+
+        /// <summary>
         /// Gets public singleton property.
         /// </summary>
-        public static ImageCache Instance => _instance ?? (_instance = new ImageCache());
+        public static ImageCache Instance => _instance ?? (_instance = Factory());
 
         /// <summary>
         /// Gets or sets which CoreDispatcher is used to dispatch UI updates.
@@ -43,10 +48,11 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageCache"/> class.
         /// </summary>
+        /// <param name="httpClient">The instance of <see cref="HttpClient"/>.</param>
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
-        public ImageCache(CoreDispatcher dispatcher = null)
+        public ImageCache(HttpClient httpClient = null, CoreDispatcher dispatcher = null) : base(httpClient)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
             _extendedPropertyNames.Add(DateAccessedProperty);
         }
 

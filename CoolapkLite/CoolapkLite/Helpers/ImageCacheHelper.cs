@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Common;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,7 @@ namespace CoolapkLite.Helpers
         private static Dictionary<CoreDispatcher, BitmapImage> DarkNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
         private static Dictionary<CoreDispatcher, BitmapImage> WhiteNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
 
-        static ImageCacheHelper() => ImageCache.Instance.CacheDuration = TimeSpan.FromHours(8);
+        static ImageCacheHelper() => ImageCache.Factory = () => new ImageCache(NetworkHelper.Client) { CacheDuration = TimeSpan.FromHours(8) };
 
         public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
         {
@@ -68,22 +69,19 @@ namespace CoolapkLite.Helpers
                     uri = url.TryGetUri();
                 }
 
-                if (ImageCache.Instance.Dispatcher != dispatcher)
-                {
-                    ImageCache.Instance.Dispatcher = dispatcher;
-                }
+                ImageCache cache = await dispatcher.AwaitableRunAsync(() => ImageCache.Instance);
 
                 try
                 {
-                    BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                    BitmapImage image = await cache.GetFromCacheAsync(uri, true);
                     return image;
                 }
                 catch (FileNotFoundException)
                 {
                     try
                     {
-                        await ImageCache.Instance.RemoveAsync(new[] { uri });
-                        BitmapImage image = await ImageCache.Instance.GetFromCacheAsync(uri, true);
+                        await cache.RemoveAsync(new[] { uri });
+                        BitmapImage image = await cache.GetFromCacheAsync(uri, true);
                         return image;
                     }
                     catch (Exception)
