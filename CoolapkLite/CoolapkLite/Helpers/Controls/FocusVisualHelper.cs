@@ -43,7 +43,7 @@ namespace CoolapkLite.Helpers
         {
             if (ApiInfoHelper.IsFocusVisualMarginSupported)
             {
-                ((FrameworkElement)d).FocusVisualMargin = GetFocusVisualMargin((FrameworkElement)d);
+                ((FrameworkElement)d).FocusVisualMargin = (Thickness)e.NewValue;
             }
         }
 

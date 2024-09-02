@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -64,35 +65,21 @@ namespace CoolapkLite.Controls
                 Path = new PropertyPath(nameof(SelectedIndex))
             });
             ItemCollection items = Pivot.Items;
-            ItemsSource = Pivot.Items.Select(x => x is PivotItem item ? item.Header : x).ToList();
-            HidePivotHeader();
+            ItemsSource = Pivot.Items.Select(x => x is PivotItem item ? item.Header : x).ToArray();
+            _ = HidePivotHeaderAsync();
         }
 
-        private void HidePivotHeader()
+        private async Task HidePivotHeaderAsync()
         {
-            PivotPanel PivotPanel = Pivot?.FindDescendant<PivotPanel>();
-            if (PivotPanel != null)
+            PivotPanel panel = null;
+            await Pivot.ResumeOnLoadedAsync(() => (panel = Pivot.FindDescendant<PivotPanel>()) != null);
+            if (panel == null)
             {
-                Grid PivotLayoutElement = PivotPanel?.FindDescendant<Grid>();
-                if (PivotLayoutElement != null)
-                {
-                    PivotLayoutElement.RowDefinitions.First().Height = new GridLength(0, GridUnitType.Pixel);
-                }
+                panel = Pivot.FindDescendant<PivotPanel>();
             }
-            else if (!(ApiInfoHelper.IsFrameworkElementIsLoadedSupported && Pivot.IsLoaded))
+            if (panel?.FindDescendant<Grid>()?.RowDefinitions?.FirstOrDefault() is RowDefinition definition)
             {
-                Pivot.Loaded += (sender, args) =>
-                {
-                    PivotPanel = Pivot?.FindDescendant<PivotPanel>();
-                    if (PivotPanel != null)
-                    {
-                        Grid PivotLayoutElement = PivotPanel?.FindDescendant<Grid>();
-                        if (PivotLayoutElement != null)
-                        {
-                            PivotLayoutElement.RowDefinitions.First().Height = new GridLength(0, GridUnitType.Pixel);
-                        }
-                    }
-                };
+                definition.Height = new GridLength(0, GridUnitType.Pixel);
             }
         }
 

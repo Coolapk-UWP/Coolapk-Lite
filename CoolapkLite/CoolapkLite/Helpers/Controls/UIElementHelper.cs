@@ -1,4 +1,7 @@
-﻿using Windows.Foundation.Metadata;
+﻿using CoolapkLite.Common;
+using System;
+using System.ComponentModel;
+using Windows.Foundation.Metadata;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,10 +46,10 @@ namespace CoolapkLite.Helpers
 
         private static void OnContextFlyoutChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            UIElement element = (UIElement)d;
+            if (!(d is UIElement element)) { return; }
             if (ApiInfoHelper.IsContextFlyoutSupported)
             {
-                element.ContextFlyout = GetContextFlyout(element);
+                element.ContextFlyout = e.NewValue as FlyoutBase;
             }
             else if (element is FrameworkElement frameworkElement)
             {
@@ -141,7 +144,7 @@ namespace CoolapkLite.Helpers
 
         private static void OnCornerRadiusChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Control element = (Control)d;
+            if (!(d is Control element)) { return; }
             if (ApiInfoHelper.IsCornerRadiusSupported)
             {
                 element.CornerRadius = GetCornerRadius(element);
@@ -184,10 +187,10 @@ namespace CoolapkLite.Helpers
 
         private static void OnAllowFocusOnInteractionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            FrameworkElement element = (FrameworkElement)d;
+            if (!(d is FrameworkElement element)) { return; }
             if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.FrameworkElement", "AllowFocusOnInteraction"))
             {
-                element.AllowFocusOnInteraction = GetAllowFocusOnInteraction(element);
+                element.AllowFocusOnInteraction = e.NewValue is true;
             }
         }
 
@@ -233,14 +236,14 @@ namespace CoolapkLite.Helpers
             {
                 if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollContentPresenter", "CanContentRenderOutsideBounds"))
                 {
-                    ScrollContentPresenter.CanContentRenderOutsideBounds = GetCanContentRenderOutsideBounds(ScrollContentPresenter);
+                    ScrollContentPresenter.CanContentRenderOutsideBounds = e.NewValue is true;
                 }
             }
             else if (d is DependencyObject element)
             {
                 if (ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Controls.ScrollViewer", "CanContentRenderOutsideBoundsProperty"))
                 {
-                    element.SetValue(ScrollViewer.CanContentRenderOutsideBoundsProperty, GetCanContentRenderOutsideBounds(element));
+                    element.SetValue(ScrollViewer.CanContentRenderOutsideBoundsProperty, e.NewValue is true);
                 }
             }
         }
@@ -299,5 +302,60 @@ namespace CoolapkLite.Helpers
         }
 
         #endregion
+
+        /// <summary>
+        /// A helper function—for use within a coroutine—that you can <see langword="await"/> to switch execution to a specific foreground thread. 
+        /// </summary>
+        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> thread to switch execution to.</param>
+        /// <param name="fallback">Fallback predicate when <see cref="FrameworkElement.IsLoaded"/> is not supported.</param>
+        /// <returns>An object that you can <see langword="await"/>.</returns>
+        public static ElementLoadedSwitcher ResumeOnLoadedAsync(this FrameworkElement element, Func<bool> fallback) => new ElementLoadedSwitcher(element, fallback);
+    }
+
+    /// <summary>
+    /// A helper type for switch thread by <see cref="FrameworkElement.Loaded"/>. This type is not intended to be used directly from your code.
+    /// </summary>
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public struct ElementLoadedSwitcher : IThreadSwitcher<ElementLoadedSwitcher>
+    {
+        private FrameworkElement element;
+        private Func<bool> fallback;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ElementLoadedSwitcher"/> struct.
+        /// </summary>
+        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> thread to switch execution to.</param>
+        /// <param name="fallback">Fallback predicate when <see cref="FrameworkElement.IsLoaded"/> is not supported.</param>
+        public ElementLoadedSwitcher(FrameworkElement element, Func<bool> fallback)
+        {
+            this.element = element;
+            this.fallback = fallback;
+        }
+
+        /// <inheritdoc/>
+        public bool IsCompleted =>
+            ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? element.IsLoaded : fallback();
+
+        /// <inheritdoc/>
+        public void GetResult() { }
+
+        /// <inheritdoc/>
+        public ElementLoadedSwitcher GetAwaiter() => this;
+
+        /// <inheritdoc/>
+        IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
+
+        /// <inheritdoc/>
+        public void OnCompleted(Action continuation)
+        {
+            FrameworkElement element = this.element;
+            element.Loaded -= OnLoaded;
+            element.Loaded += OnLoaded;
+            void OnLoaded(object sender, RoutedEventArgs e)
+            {
+                element.Loaded -= OnLoaded;
+                continuation();
+            }
+        }
     }
 }

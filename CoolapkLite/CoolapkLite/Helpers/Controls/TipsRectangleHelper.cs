@@ -30,7 +30,7 @@ namespace CoolapkLite.Helpers
 
         private static void OnIsEnablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ItemsControl itemsControl)
+            if (d is ItemsControl itemsControl && e.NewValue is true)
             {
                 AnimateSelectionProvider provider = new AnimateSelectionProvider
                 {
@@ -94,7 +94,7 @@ namespace CoolapkLite.Helpers
         {
             if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
             {
-                provider.IndicatorName = GetIndicatorName(itemsControl);
+                provider.IndicatorName = e.NewValue?.ToString();
             }
         }
 
@@ -126,7 +126,7 @@ namespace CoolapkLite.Helpers
         {
             if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
             {
-                provider.Orientation = GetOrientation(itemsControl);
+                provider.Orientation = (Orientation)e.NewValue;
             }
         }
 

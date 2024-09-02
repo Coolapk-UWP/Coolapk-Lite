@@ -151,10 +151,10 @@ namespace CoolapkLite.Controls
             ShyHeaderSelectedIndex = (sender as PivotHeader).SelectedIndex;
             IList<object> AddedItems = (from item in ShyHeaderItemSource
                                         where e.AddedItems.Contains(item.Header)
-                                        select (object)item).ToList();
+                                        select (object)item).ToArray();
             IList<object> RemovedItems = (from item in ShyHeaderItemSource
                                           where e.RemovedItems.Contains(item.Header)
-                                          select (object)item).ToList();
+                                          select (object)item).ToArray();
             ShyHeaderSelectionChanged?.Invoke(this, new SelectionChangedEventArgs(RemovedItems, AddedItems));
         }
 

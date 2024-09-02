@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -28,8 +29,8 @@ namespace CoolapkLite.Helpers
 
         private static void OnIsEnableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            WebView element = (WebView)d;
-            if (GetIsEnable(element))
+            if (!(d is WebView element)) { return; }
+            if (e.NewValue is true)
             {
                 element.SizeChanged += OnSizeChanged;
                 element.NavigationCompleted += OnNavigationCompleted;
@@ -72,11 +73,10 @@ namespace CoolapkLite.Helpers
 
         private static void OnMarginChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            WebView element = (WebView)d;
+            if (!(d is WebView element)) { return; }
             if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
-                Thickness margin = GetMargin(element);
-                UpdateMargin(element, margin);
+                UpdateMargin(element, (Thickness)e.NewValue);
             }
         }
 
@@ -116,11 +116,10 @@ namespace CoolapkLite.Helpers
 
         private static void OnIsVerticalStretchChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            WebView element = (WebView)d;
+            if (!(d is WebView element)) { return; }
             if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
-                bool isVerticalStretch = GetIsVerticalStretch(element);
-                UpdateIsVerticalStretch(element, isVerticalStretch);
+                UpdateIsVerticalStretch(element, e.NewValue is true);
             }
         }
 
@@ -193,37 +192,16 @@ namespace CoolapkLite.Helpers
             element.SetValue(HTMLProperty, value);
         }
 
-        private static void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void OnHTMLChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            WebView element = (WebView)d;
-            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
+            string html = e.NewValue?.ToString() ?? "<div/>";
+            if (!(d is WebView element)) { return; }
+            if (!ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
             {
-                if (element.IsLoaded)
-                {
-                    string html = GetHTML(element) ?? "<div/>";
-                    element.NavigateToString(html);
-                }
-                else
-                {
-                    element.Loaded -= WebView_Loaded;
-                    element.Loaded += WebView_Loaded;
-                }
-            }
-            else
-            {
-                element.Loaded -= WebView_Loaded;
-                element.Loaded += WebView_Loaded;
-
-                string html = GetHTML(element) ?? "<div/>";
                 element.NavigateToString(html);
             }
-        }
-
-        private static void WebView_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is WebView webView)) { return; }
-            string html = GetHTML(webView) ?? "<div/>";
-            webView.NavigateToString(html);
+            await element.ResumeOnLoadedAsync(() => false);
+            element.NavigateToString(html);
         }
 
         #endregion
