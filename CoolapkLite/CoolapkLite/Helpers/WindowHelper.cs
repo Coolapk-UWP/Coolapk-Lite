@@ -3,7 +3,6 @@ using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
@@ -33,10 +32,10 @@ namespace CoolapkLite.Helpers
             CoreApplicationView newView = CoreApplication.CreateNewView();
             int newViewId = await newView.Dispatcher.AwaitableRunAsync(() =>
             {
-                Window newWindow = Window.Current;
-                launched(newWindow);
-                TrackWindow(newWindow);
-                Window.Current.Activate();
+                Window window = Window.Current;
+                TrackWindow(window);
+                launched(window);
+                window.Activate();
                 return ApplicationView.GetForCurrentView().Id;
             });
             return await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);

@@ -22,18 +22,19 @@ namespace CoolapkLite.Common
 
         public ScrollProgressProvider()
         {
-            propSet = Window.Current.Compositor.CreatePropertySet();
+            Compositor compositor = Window.Current.Compositor;
+
+            propSet = compositor.CreatePropertySet();
             propSet.InsertScalar("progress", 0f);
             propSet.InsertScalar("threshold", 0f);
             propSet.InsertScalar("delayprogress", -1f);
 
-            progressBind = Window.Current.Compositor.CreateExpressionAnimation("clamp(prop.progress, 0f, 1f)");
+            progressBind = compositor.CreateExpressionAnimation("clamp(prop.progress, 0f, 1f)");
             progressBind.SetReferenceParameter("prop", propSet);
 
-            thresholdBind = Window.Current.Compositor.CreateExpressionAnimation("max(prop.threshold, 0f)");
+            thresholdBind = compositor.CreateExpressionAnimation("max(prop.threshold, 0f)");
             thresholdBind.SetReferenceParameter("prop", propSet);
         }
-
 
         #region Dependency Properties
 
@@ -49,7 +50,6 @@ namespace CoolapkLite.Common
                     }
                 }
             }));
-
 
         /// <summary>
         /// 改变ScrollViewer
@@ -92,7 +92,6 @@ namespace CoolapkLite.Common
                 newSv.Unloaded += ScrollViewer_Unloaded;
             }
         }
-
 
         public static readonly DependencyProperty ThresholdProperty =
             DependencyProperty.Register("Threshold", typeof(double), typeof(ScrollProgressProvider), new PropertyMetadata(0d, (s, a) =>
@@ -241,7 +240,6 @@ namespace CoolapkLite.Common
                 }
             }
         }
-
 
         public CompositionPropertySet GetProgressPropertySet()
         {

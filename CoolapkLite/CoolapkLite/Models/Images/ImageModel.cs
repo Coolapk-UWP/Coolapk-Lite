@@ -297,7 +297,7 @@ namespace CoolapkLite.Models.Images
                     await bitmapImage.Dispatcher.ResumeForegroundAsync();
                     double PixelWidth = bitmapImage.PixelWidth;
                     double PixelHeight = bitmapImage.PixelHeight;
-                    Rect Bounds = Window.Current is Window window
+                    Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
                         ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
                         : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
                     IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)

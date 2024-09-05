@@ -304,16 +304,16 @@ namespace CoolapkLite.Helpers
         #endregion
 
         /// <summary>
-        /// A helper function—for use within a coroutine—that you can <see langword="await"/> to switch execution to a specific foreground thread. 
+        /// A helper function—for use within a coroutine—that you can <see langword="await"/> to wait for the <see cref="FrameworkElement.Loaded"/> event fired.
         /// </summary>
-        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> thread to switch execution to.</param>
+        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> event to wait for.</param>
         /// <param name="fallback">Fallback predicate when <see cref="FrameworkElement.IsLoaded"/> is not supported.</param>
         /// <returns>An object that you can <see langword="await"/>.</returns>
         public static ElementLoadedSwitcher ResumeOnLoadedAsync(this FrameworkElement element, Func<bool> fallback) => new ElementLoadedSwitcher(element, fallback);
     }
 
     /// <summary>
-    /// A helper type for switch thread by <see cref="FrameworkElement.Loaded"/>. This type is not intended to be used directly from your code.
+    /// A helper type for wait for <see cref="FrameworkElement.Loaded"/> event. This type is not intended to be used directly from your code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public struct ElementLoadedSwitcher : IThreadSwitcher<ElementLoadedSwitcher>
@@ -324,7 +324,7 @@ namespace CoolapkLite.Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementLoadedSwitcher"/> struct.
         /// </summary>
-        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> thread to switch execution to.</param>
+        /// <param name="element">A <see cref="FrameworkElement"/> whose <see cref="FrameworkElement.Loaded"/> event to wait for.</param>
         /// <param name="fallback">Fallback predicate when <see cref="FrameworkElement.IsLoaded"/> is not supported.</param>
         public ElementLoadedSwitcher(FrameworkElement element, Func<bool> fallback)
         {

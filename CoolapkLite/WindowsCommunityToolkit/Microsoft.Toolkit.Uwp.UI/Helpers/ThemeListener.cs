@@ -6,7 +6,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
@@ -69,7 +68,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Helpers
             CurrentTheme = Application.Current.RequestedTheme;
             IsHighContrast = _accessible.HighContrast;
 
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
 
             _accessible.HighContrastChanged += Accessible_HighContrastChanged;
             _settings.ColorValuesChanged += Settings_ColorValuesChanged;

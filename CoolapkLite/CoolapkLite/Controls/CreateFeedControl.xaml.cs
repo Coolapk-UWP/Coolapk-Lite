@@ -504,7 +504,7 @@ namespace CoolapkLite.Controls
             {
                 switch (args.VirtualKey)
                 {
-                    case VirtualKey.V when PastePic.IsEnabled && Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down):
+                    case VirtualKey.V when PastePic.IsEnabled && CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down):
                         _ = Provider.DropFileAsync(Clipboard.GetContent());
                         args.Handled = true;
                         break;

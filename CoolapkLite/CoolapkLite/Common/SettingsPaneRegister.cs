@@ -197,10 +197,11 @@ namespace CoolapkLite.Common
             if (args.Handled) { return; }
             if (args.EventType == CoreAcceleratorKeyEventType.KeyDown || args.EventType == CoreAcceleratorKeyEventType.SystemKeyDown)
             {
-                CoreVirtualKeyStates ctrl = Window.Current.CoreWindow.GetKeyState(VirtualKey.Control);
+                CoreWindow window = CoreWindow.GetForCurrentThread();
+                CoreVirtualKeyStates ctrl = window.GetKeyState(VirtualKey.Control);
                 if (ctrl.HasFlag(CoreVirtualKeyStates.Down))
                 {
-                    CoreVirtualKeyStates shift = Window.Current.CoreWindow.GetKeyState(VirtualKey.Shift);
+                    CoreVirtualKeyStates shift = window.GetKeyState(VirtualKey.Shift);
                     if (shift.HasFlag(CoreVirtualKeyStates.Down))
                     {
                         switch (args.VirtualKey)

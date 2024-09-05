@@ -9,7 +9,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.Advertisement;
 using Windows.Devices.Enumeration;
@@ -65,7 +64,7 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
         private BluetoothLEHelper(CoreDispatcher dispatcher = null)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             Init();
