@@ -17,17 +17,6 @@ namespace CoolapkLite.Controls.DataTemplates
     {
         public ProfileCardTemplates() => InitializeComponent();
 
-        private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            if (e?.Handled == true) { return; }
-
-            if (!(sender is FrameworkElement element)) { return; }
-
-            if (e != null) { e.Handled = true; }
-
-            OnTapped(element, element.Tag);
-        }
-
         public void FrameworkElement_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e?.Handled == true) { return; }

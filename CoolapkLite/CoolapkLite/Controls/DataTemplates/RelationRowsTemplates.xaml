@@ -5,6 +5,7 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:feeds="using:CoolapkLite.Models.Feeds"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
@@ -153,6 +154,8 @@
                             Margin="4"
                             Padding="0"
                             HorizontalContentAlignment="Left"
+                            helpers:ListViewHelper.IsItemClickEnabled="True"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
                             ItemTemplate="{StaticResource PicDefaultTemplate}"
                             ItemsSource="{x:Bind PicArr}"
                             ScrollViewer.VerticalScrollMode="Disabled"

@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Helpers
 {
@@ -261,14 +262,22 @@ namespace CoolapkLite.Helpers
                 element.IsItemClickEnabled = isEnabled;
                 if (isEnabled)
                 {
+                    element.Tapped -= ListViewBase_Tapped;
                     element.ItemClick -= ListViewBase_ItemClick;
+                    element.Tapped += ListViewBase_Tapped;
                     element.ItemClick += ListViewBase_ItemClick;
                 }
                 else
                 {
+                    element.Tapped -= ListViewBase_Tapped;
                     element.ItemClick -= ListViewBase_ItemClick;
                 }
             }
+        }
+
+        private static void ListViewBase_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (e != null) { e.Handled = true; }
         }
 
         private static void ListViewBase_ItemClick(object sender, ItemClickEventArgs e)

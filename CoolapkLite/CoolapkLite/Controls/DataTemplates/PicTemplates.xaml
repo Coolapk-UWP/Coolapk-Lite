@@ -9,6 +9,7 @@
         <Grid
             Width="102"
             Height="102"
+            Background="{ThemeResource SystemControlTransparentBrush}"
             ToolTipService.ToolTip="{x:Bind Title}">
             <helpers:UIElementHelper.ContextFlyout>
                 <MenuFlyout>
@@ -65,8 +66,7 @@
                 VerticalAlignment="Stretch"
                 EnableDrag="True"
                 Source="{x:Bind}"
-                Style="{StaticResource ImageBrushImageControlStyle}"
-                Tapped="Image_Tapped" />
+                Style="{StaticResource ImageBrushImageControlStyle}" />
             <StackPanel
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"

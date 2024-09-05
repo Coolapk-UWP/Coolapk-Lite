@@ -94,14 +94,19 @@
                                         DisplayName="{x:Bind Provider.ProfileDetail.UserName, Mode=OneWay}"
                                         DoubleTapped="Grid_DoubleTapped"
                                         IsDoubleTapEnabled="True"
-                                        Source="{x:Bind Provider.ProfileDetail.UserAvatar, Mode=OneWay}" />
+                                        Source="{x:Bind Provider.ProfileDetail.UserAvatar, Mode=OneWay}"
+                                        Tag="{x:Bind Provider.ProfileDetail.UserAvatar, Mode=OneWay}"
+                                        Tapped="Grid_Tapped" />
                                     <Grid Grid.Column="2">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                             <RowDefinition Height="Auto" />
                                         </Grid.RowDefinitions>
-                                        <TextBlock FontWeight="SemiBold" Text="{x:Bind Provider.ProfileDetail.UserName, FallbackValue='登录', Mode=OneWay}" />
+                                        <TextBlock
+                                            FontWeight="SemiBold"
+                                            Text="{x:Bind Provider.ProfileDetail.UserName, FallbackValue='登录', Mode=OneWay}"
+                                            ToolTipService.ToolTip="{x:Bind Provider.UID, Converter={StaticResource StringFormatConverter}, ConverterParameter='UID: {0}', Mode=OneWay}" />
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto" />

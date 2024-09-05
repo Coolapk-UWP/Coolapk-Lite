@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
+using CoolapkLite.Models.Images;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
@@ -169,10 +170,10 @@ namespace CoolapkLite.Pages.FeedPages
         {
             if (e?.Handled == true) { return; }
             if (!(sender is FrameworkElement element)) { return; }
-            switch (element.Tag?.ToString())
+            switch (element.Tag)
             {
-                case "FeedsButton":
-                    _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
+                case ImageModel image:
+                    _ = element.ShowImageAsync(image);
                     break;
                 default:
                     _ = this.OpenLinkAsync(element.Tag?.ToString());
