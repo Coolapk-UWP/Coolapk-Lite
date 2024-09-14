@@ -98,8 +98,9 @@ namespace CoolapkLite.Helpers
             if (HasStatusBar)
             {
                 if (mainPage != null) { await mainPage.HideProgressBarAsync(); }
-                StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = null;
-                await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+                StatusBar statusBar = StatusBar.GetForCurrentView();
+                statusBar.ProgressIndicator.ProgressValue = null;
+                await statusBar.ProgressIndicator.ShowAsync();
             }
             else
             {
@@ -118,8 +119,9 @@ namespace CoolapkLite.Helpers
             if (HasStatusBar)
             {
                 if (mainPage != null) { await mainPage.HideProgressBarAsync(); }
-                StatusBar.GetForCurrentView().ProgressIndicator.ProgressValue = value * 0.01;
-                await StatusBar.GetForCurrentView().ProgressIndicator.ShowAsync();
+                StatusBar statusBar = StatusBar.GetForCurrentView();
+                statusBar.ProgressIndicator.ProgressValue = value * 0.01;
+                await statusBar.ProgressIndicator.ShowAsync();
             }
             else
             {

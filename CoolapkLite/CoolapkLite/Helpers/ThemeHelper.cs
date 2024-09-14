@@ -272,24 +272,22 @@ namespace CoolapkLite.Helpers
                     statusBar.BackgroundColor = backgroundColor;
                     statusBar.BackgroundOpacity = 0; // 透明度
                 }
-                else
-                {
-                    bool extendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-                    ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                    titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
-                    titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
-                    titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
-                }
+
+                bool extendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+                titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
+                titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
+                titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
 
                 if (WindowHelper.IsAppWindowSupported && WindowHelper.ActiveAppWindows.TryGetValue(window.Dispatcher, out Dictionary<XamlRoot, AppWindow> appWindows))
                 {
                     foreach (AppWindow appWindow in appWindows.Values)
                     {
-                        bool extendViewIntoTitleBar = appWindow.TitleBar.ExtendsContentIntoTitleBar;
-                        AppWindowTitleBar titleBar = appWindow.TitleBar;
-                        titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
-                        titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
-                        titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
+                        bool extendsContentIntoTitleBar = appWindow.TitleBar.ExtendsContentIntoTitleBar;
+                        AppWindowTitleBar appTitleBar = appWindow.TitleBar;
+                        appTitleBar.ForegroundColor = appTitleBar.ButtonForegroundColor = foregroundColor;
+                        appTitleBar.BackgroundColor = appTitleBar.InactiveBackgroundColor = backgroundColor;
+                        appTitleBar.ButtonBackgroundColor = appTitleBar.ButtonInactiveBackgroundColor = extendsContentIntoTitleBar ? Colors.Transparent : backgroundColor;
                     }
                 }
             });
@@ -312,14 +310,12 @@ namespace CoolapkLite.Helpers
                 statusBar.BackgroundColor = backgroundColor;
                 statusBar.BackgroundOpacity = 0; // 透明度
             }
-            else
-            {
-                bool extendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
-                ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
-                titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
-                titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
-                titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
-            }
+
+            bool extendViewIntoTitleBar = CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
+            ApplicationViewTitleBar titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
+            titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
+            titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
         }
 
         public static async void UpdateSystemCaptionButtonColors(AppWindow window)
@@ -332,11 +328,11 @@ namespace CoolapkLite.Helpers
             Color foregroundColor = isDark || isHighContrast ? Colors.White : Colors.Black;
             Color backgroundColor = isHighContrast ? Color.FromArgb(255, 0, 0, 0) : isDark ? Color.FromArgb(255, 32, 32, 32) : Color.FromArgb(255, 243, 243, 243);
 
-            bool extendViewIntoTitleBar = window.TitleBar.ExtendsContentIntoTitleBar;
+            bool extendsContentIntoTitleBar = window.TitleBar.ExtendsContentIntoTitleBar;
             AppWindowTitleBar titleBar = window.TitleBar;
             titleBar.ForegroundColor = titleBar.ButtonForegroundColor = foregroundColor;
             titleBar.BackgroundColor = titleBar.InactiveBackgroundColor = backgroundColor;
-            titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendViewIntoTitleBar ? Colors.Transparent : backgroundColor;
+            titleBar.ButtonBackgroundColor = titleBar.ButtonInactiveBackgroundColor = extendsContentIntoTitleBar ? Colors.Transparent : backgroundColor;
         }
     }
 
