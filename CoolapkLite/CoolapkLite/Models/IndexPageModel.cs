@@ -292,7 +292,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("release_time", out JToken release_time) && !string.IsNullOrEmpty(release_time.ToString()))
             {
-                Description = "发布日期：" + release_time.ToString();
+                Description = $"发布日期：{release_time}";
             }
             else if (token.TryGetValue("link_tag", out JToken link_tag) && !string.IsNullOrEmpty(link_tag.ToString()))
             {

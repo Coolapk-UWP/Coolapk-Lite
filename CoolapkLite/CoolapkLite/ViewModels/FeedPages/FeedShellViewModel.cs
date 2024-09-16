@@ -79,7 +79,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri($"{UriHelper.BaseUri}v6/feed/{id}"), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             if (result is JObject detail)
@@ -96,7 +96,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri(UriHelper.BaseUri.ToString() + "v6/feed/" + id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri($"{UriHelper.BaseUri}v6/feed/{id}"), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;

@@ -248,7 +248,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static Uri GetHost(Uri uri) => new Uri("https://" + uri.Host);
+        public static Uri GetHost(Uri uri) => new Uri($"https://{uri.Host}");
 
         public static string ExpandShortUrl(this Uri shortUrl)
         {

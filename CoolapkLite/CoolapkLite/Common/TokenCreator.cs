@@ -4,18 +4,31 @@ using System;
 
 namespace CoolapkLite.Common
 {
+    /// <summary>
+    /// Create a token for Coolapk.
+    /// </summary>
     public class TokenCreator
     {
+        /// <summary>
+        /// Get or set the default device code.
+        /// </summary>
         public static string DeviceCode { get; protected set; }
 
+        /// <summary>
+        /// The token version.
+        /// </summary>
         private readonly TokenVersion TokenVersion;
 
         static TokenCreator() => DeviceCode = SettingsHelper.Get<DeviceInfo>(SettingsHelper.DeviceInfo).CreateDeviceCode();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenCreator"/> class.
+        /// </summary>
+        /// <param name="version">The token version.</param>
         public TokenCreator(TokenVersion version = TokenVersion.TokenV2) => TokenVersion = version;
 
         /// <summary>
-        /// GetToken Generate a token with random device info
+        /// GetToken Generate a token with random device info.
         /// </summary>
         public string GetToken()
         {
@@ -30,8 +43,10 @@ namespace CoolapkLite.Common
         }
 
         /// <summary>
-        /// GetTokenWithDeviceCode Generate a token with your device code
+        /// Generate a token v1 with your device code.
         /// </summary>
+        /// <param name="deviceCode">The device code.</param>
+        /// <returns>The generated token.</returns>
         private static string GetTokenWithDeviceCode(string deviceCode)
         {
             string timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString();
@@ -52,6 +67,11 @@ namespace CoolapkLite.Common
             return appToken;
         }
 
+        /// <summary>
+        /// Generate a token v2 with your device code.
+        /// </summary>
+        /// <param name="deviceCode">The device code.</param>
+        /// <returns>The generated token.</returns>
         private static string GetCoolapkAppToken(string deviceCode)
         {
             long timeStamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -68,8 +88,13 @@ namespace CoolapkLite.Common
             return appToken;
         }
 
+        /// <summary>
+        /// Update the device info.
+        /// </summary>
+        /// <param name="deviceInfo">The device info to update.</param>
         public static void UpdateDeviceInfo(DeviceInfo deviceInfo) => DeviceCode = deviceInfo.CreateDeviceCode();
 
+        /// <inheritdoc/>
         public override string ToString() => GetToken();
     }
 

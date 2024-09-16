@@ -129,21 +129,20 @@ namespace CoolapkLite.Pages.SettingsPages
                     }
                     break;
                 case "GetContent":
-                    Uri uri = WebUrl.Text.TryGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest, false);
-                    if (!isSucceed)
-                    {
-                        result = "网络错误";
-                    }
+                    string text = WebUrl.Text;
+                    await ThreadSwitcher.ResumeBackgroundAsync();
+                    (bool isSucceed, string result) = text.TryGetUri(out Uri uri) ? await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest, false).ConfigureAwait(true) : (true, "这不是一个链接");
+                    result = isSucceed ? await result.ConvertJsonStringAsync().ConfigureAwait(false) : "网络错误";
+                    await Dispatcher.ResumeForegroundAsync();
                     ContentDialog getJsonDialog = new ContentDialog
                     {
-                        Title = WebUrl.Text,
+                        Title = text,
                         Content = new ScrollViewer
                         {
                             Content = new TextBlock
                             {
                                 IsTextSelectionEnabled = true,
-                                Text = result.ConvertJsonString()
+                                Text = result
                             },
                             VerticalScrollMode = ScrollMode.Enabled,
                             HorizontalScrollMode = ScrollMode.Enabled,
@@ -153,7 +152,7 @@ namespace CoolapkLite.Pages.SettingsPages
                         CloseButtonText = "好的",
                         DefaultButton = ContentDialogButton.Close
                     };
-                    _ = await getJsonDialog.ShowAsync();
+                    _ = getJsonDialog.ShowAsync();
                     break;
                 case "DeviceInfo":
                     _ = new DeviceInfoDialog().ShowAsync();

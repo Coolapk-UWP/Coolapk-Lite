@@ -116,7 +116,7 @@ namespace CoolapkLite.Common
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
             if (_dispatcher == null)
             {
-                throw new ExtensionManagerException("Extension Manager for " + ExtensionContractName + " is not initialized.");
+                throw new ExtensionManagerException($"Extension Manager for {ExtensionContractName} is not initialized.");
             }
 
             #endregion
@@ -218,7 +218,7 @@ namespace CoolapkLite.Common
         public async Task LoadExtensionAsync(AppExtension ext)
         {
             // Build a unique identifier for this extension
-            string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
+            string identifier = $"{ext.AppInfo.AppUserModelId}!{ext.Id}";
 
             // load the extension if the package is OK
             if (!ext.Package.Status.VerifyIsOK()
@@ -408,7 +408,7 @@ namespace CoolapkLite.Common
 
             #endregion
 
-            UniqueId = ext.AppInfo.AppUserModelId + "!" + ext.Id; // The name that identifies this extension in the extension manager
+            UniqueId = $"{ext.AppInfo.AppUserModelId}!{ext.Id}"; // The name that identifies this extension in the extension manager
         }
 
         #region Properties
@@ -484,7 +484,7 @@ namespace CoolapkLite.Common
         public async Task Update(AppExtension ext)
         {
             // ensure this is the same uid
-            string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
+            string identifier = $"{ext.AppInfo.AppUserModelId}!{ext.Id}";
             if (identifier != UniqueId)
             {
                 return;

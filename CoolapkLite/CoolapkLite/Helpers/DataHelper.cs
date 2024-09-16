@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,11 @@ namespace CoolapkLite.Helpers
 {
     public static class DataHelper
     {
+        /// <summary>
+        /// Get the MD5 hash of the input string.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <returns>The MD5 hash of the input string.</returns>
         public static string GetMD5(this string input)
         {
             // Create a new instance of the MD5CryptoServiceProvider object.
@@ -28,6 +34,12 @@ namespace CoolapkLite.Helpers
             }
         }
 
+        /// <summary>
+        /// Get the Base64 string of the input string.
+        /// </summary>
+        /// <param name="input">The input string.</param>
+        /// <param name="isRaw"><see cref="true"/> to remove the padding characters; otherwise, <see cref="false"/>.</param>
+        /// <returns>The Base64 string of the input string.</returns>
         public static string GetBase64(this string input, bool isRaw = false)
         {
             byte[] bytes = Encoding.UTF8.GetBytes(input);
@@ -128,40 +140,22 @@ namespace CoolapkLite.Helpers
                 //链接彻底删除！
                 while (s.Contains("<a", StringComparison.Ordinal))
                 {
-                    s = s.Replace(@"<a href=""" + Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0] + @""">", string.Empty);
+                    s = s.Replace($@"<a href=""{Regex.Split(Regex.Split(s, @"<a href=""")[1], @""">")[0]}"">", string.Empty);
                     s = s.Replace("</a>", string.Empty);
                 }
                 return s;
             }
         }
 
-        public static string ConvertJsonString(this string str)
+        public static async Task<string> ConvertJsonStringAsync(this string str)
         {
-            //格式化 json 字符串
             JsonSerializer serializer = new JsonSerializer();
             using (TextReader textReader = new StringReader(str))
-            using (JsonTextReader jtr = new JsonTextReader(textReader))
+            using (JsonTextReader reader = new JsonTextReader(textReader))
             {
-                object obj = null;
-                try { obj = serializer.Deserialize(jtr); } catch { }
-                if (obj != null)
-                {
-                    using (StringWriter textWriter = new StringWriter())
-                    using (JsonTextWriter jsonWriter = new JsonTextWriter(textWriter)
-                    {
-                        Formatting = Formatting.Indented,
-                        Indentation = 4,
-                        IndentChar = ' '
-                    })
-                    {
-                        serializer.Serialize(jsonWriter, obj);
-                        return textWriter.ToString();
-                    }
-                }
-                else
-                {
-                    return str;
-                }
+                JToken token = null;
+                try { token = await JToken.ReadFromAsync(reader).ConfigureAwait(false); } catch { }
+                return token != null ? token.ToString() : str;
             }
         }
 

@@ -180,7 +180,7 @@ namespace CoolapkLite.Common
         // Consumes inner content from the current tag
         protected void EatInnerContent(string tag)
         {
-            string endTag = "/" + tag;
+            string endTag = $"/{tag}";
 
             while (!EndOfText)
             {
