@@ -3,7 +3,6 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Core;

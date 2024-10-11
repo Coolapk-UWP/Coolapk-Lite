@@ -464,11 +464,11 @@ namespace CoolapkLite
             switch (args.TaskInstance.Task.Name)
             {
                 case nameof(LiveTileTask):
-                    LiveTileTask.Instance?.Run(args.TaskInstance);
+                    LiveTileTask.Instance.Run(args.TaskInstance);
                     break;
 
                 case nameof(NotificationsTask):
-                    NotificationsTask.Instance?.Run(args.TaskInstance);
+                    NotificationsTask.Instance.Run(args.TaskInstance);
                     break;
 
                 case "ToastBackgroundTask":

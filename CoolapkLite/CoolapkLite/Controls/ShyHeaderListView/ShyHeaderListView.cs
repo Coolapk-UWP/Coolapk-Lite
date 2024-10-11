@@ -288,7 +288,7 @@ namespace CoolapkLite.Controls
         private async void LoadMoreItems(ScrollViewer scrollViewer)
         {
             if (!(ItemsSource is ISupportIncrementalLoading source)) { return; }
-            check:
+        check:
             if (Items.Count > 0 && !source.HasMoreItems) { return; }
             if (_isLoading) { return; }
             if (((scrollViewer.ExtentHeight - scrollViewer.VerticalOffset) / scrollViewer.ViewportHeight) - 1.0 <= LoadingThreshold)

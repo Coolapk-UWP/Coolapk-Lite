@@ -57,7 +57,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 }
                 UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
                 ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
-                await NotificationsModel.Update().ConfigureAwait(false);
+                await NotificationsModel.UpdateAsync().ConfigureAwait(false);
                 await Reset().ConfigureAwait(false);
             }
             else

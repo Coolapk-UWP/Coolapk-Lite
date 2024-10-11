@@ -136,7 +136,7 @@ namespace CoolapkLite.Pages.FeedPages
                 if (string.IsNullOrWhiteSpace(contentText)) { return; }
                 string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
                 if (string.IsNullOrWhiteSpace(id)) { return; }
-                post:
+            post:
                 try
                 {
                     using (MultipartFormDataContent content = new MultipartFormDataContent())
@@ -164,7 +164,7 @@ namespace CoolapkLite.Pages.FeedPages
                     {
                         if (cex.IsRequestCaptcha)
                         {
-                            captcha:
+                        captcha:
                             CaptchaDialog captchaDialog = new CaptchaDialog();
                             if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
                             {

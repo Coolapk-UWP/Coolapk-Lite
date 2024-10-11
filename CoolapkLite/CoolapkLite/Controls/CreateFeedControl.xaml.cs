@@ -276,7 +276,7 @@ namespace CoolapkLite.Controls
                     break;
             }
 
-            post:
+        post:
             try
             {
                 (bool isSucceed, JToken token) = await (type == UriType.CreateFeed
@@ -295,7 +295,7 @@ namespace CoolapkLite.Controls
             {
                 if (cex.IsRequestCaptcha)
                 {
-                    captcha:
+                captcha:
                     CaptchaDialog captchaDialog = new CaptchaDialog();
                     if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
                     {

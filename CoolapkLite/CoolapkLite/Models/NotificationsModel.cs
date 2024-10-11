@@ -190,7 +190,7 @@ namespace CoolapkLite.Models
             {
                 if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
                 {
-                    await Update(true).ConfigureAwait(false);
+                    await UpdateAsync(true).ConfigureAwait(false);
                 }
             };
             timer.Start();
@@ -218,7 +218,7 @@ namespace CoolapkLite.Models
             SetNotification(0);
         }
 
-        public static async Task Update(bool notify = false)
+        public static async Task UpdateAsync(bool notify = false)
         {
             try
             {

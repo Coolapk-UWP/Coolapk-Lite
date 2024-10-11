@@ -259,7 +259,7 @@ namespace CoolapkLite.Common
 
             if (source is List<TSource> list)
             {
-                return list.RemoveAll(x => predicate(x));
+                return list.RemoveAll(predicate.Invoke);
             }
             else if (source is TSource[] array)
             {
@@ -290,14 +290,14 @@ namespace CoolapkLite.Common
             }
             else if (source is HashSet<TSource> hashSet)
             {
-                return hashSet.RemoveWhere(x => predicate(x));
+                return hashSet.RemoveWhere(predicate.Invoke);
             }
             else if (source is IList<TSource> items)
             {
                 int result = 0;
                 for (int i = 0; i < items.Count; i++)
                 {
-                    loop:
+                loop:
                     if (predicate(items[i]))
                     {
                         items.RemoveAt(i);
@@ -338,7 +338,7 @@ namespace CoolapkLite.Common
 
             if (source is TSource[] array)
             {
-                return array.RemoveAll(x => collection.Contains(x));
+                return array.RemoveAll(collection.Contains);
             }
             else
             {

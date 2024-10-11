@@ -37,6 +37,7 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
+        private bool isLoaded;
         private Action Refresh;
 
         public Frame MainFrame => PivotContentFrame;
@@ -52,7 +53,7 @@ namespace CoolapkLite.Pages
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarVisible(false); }
-            _ = NotificationsModel.Update();
+            _ = NotificationsModel.UpdateAsync();
             _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
@@ -63,11 +64,15 @@ namespace CoolapkLite.Pages
             { HardwareButtons.BackPressed += System_BackPressed; }
             // Add handler for ContentFrame navigation.
             PivotContentFrame.Navigated += On_Navigated;
-            Pivot.ItemsSource = GetMainItems();
-            if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-            { OpenActivatedEventArgs(ActivatedEventArgs); }
-            else if (e.Parameter is OpenLinkFactory factory)
-            { OpenLinkAsync(factory); }
+            if (!isLoaded)
+            {
+                Pivot.ItemsSource = GetMainItems();
+                if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
+                { OpenActivatedEventArgs(ActivatedEventArgs); }
+                else if (e.Parameter is OpenLinkFactory factory)
+                { OpenLinkAsync(factory); }
+                isLoaded = true;
+            }
             SettingsHelper.LoginChanged += OnLoginChanged;
         }
 

@@ -53,7 +53,7 @@ namespace CoolapkLite.Pages.FeedPages
             {
                 NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
             }
-            _ = NotificationsModel.Update();
+            _ = NotificationsModel.UpdateAsync();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -168,7 +168,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private async Task Refresh(bool reset = false)
         {
-            await NotificationsModel.Update().ConfigureAwait(false);
+            await NotificationsModel.UpdateAsync().ConfigureAwait(false);
             await RefreshTask(reset).ConfigureAwait(false);
         }
 

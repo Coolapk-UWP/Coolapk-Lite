@@ -33,6 +33,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -44,6 +45,7 @@ namespace CoolapkLite.Pages
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
         private bool isLoaded;
+        private static bool firstLoad = true;
 
         public Frame MainFrame => HamburgerMenuFrame;
 
@@ -54,11 +56,9 @@ namespace CoolapkLite.Pages
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarVisible(false); }
-            _ = NotificationsModel.Update();
-            _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (ApiInfoHelper.IsHardwareButtonsSupported)
@@ -68,7 +68,12 @@ namespace CoolapkLite.Pages
             if (!isLoaded)
             {
                 HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
-                HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems(Dispatcher);
+                (MenuItem[] options, PersonMenuItem person) = MenuItem.GetOptionsItems(Dispatcher);
+                HamburgerMenu.OptionsItemsSource = options;
+                if (firstLoad) { await WaitFirstRequestAsync(); }
+                _ = person.InitializeAsync();
+                _ = NotificationsModel.UpdateAsync();
+                _ = LiveTileTask.Instance?.UpdateTileAsync();
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
                 { OpenActivatedEventArgs(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
@@ -114,6 +119,22 @@ namespace CoolapkLite.Pages
                 UpdateTitleBarLayout(TitleBar);
                 if (isLoaded)
                 { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false); }
+            }
+        }
+
+        private async Task WaitFirstRequestAsync()
+        {
+            if (!mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
+            { return; }
+            try
+            {
+                _ = UIHelper.ShowProgressBarAsync((IHaveTitleBar)this);
+                await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetInitPage, DateTimeOffset.UtcNow.ToUnixTimeSeconds()), true);
+            }
+            finally
+            {
+                firstLoad = false;
+                _ = UIHelper.HideProgressBarAsync((IHaveTitleBar)this);
             }
         }
 
@@ -442,14 +463,15 @@ namespace CoolapkLite.Pages
             return items;
         }
 
-        public static MenuItem[] GetOptionsItems(CoreDispatcher dispatcher)
+        public static (MenuItem[], PersonMenuItem) GetOptionsItems(CoreDispatcher dispatcher)
         {
+            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
             MenuItem[] items = new[]
             {
-                 new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
+                 person,
                  new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
             };
-            return items;
+            return (items, person);
         }
     }
 
@@ -469,11 +491,23 @@ namespace CoolapkLite.Pages
             private set => SetProperty(ref _notificationsModel, value);
         }
 
-        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher)
+        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
+
+        ~PersonMenuItem() => SettingsHelper.LoginChanged -= OnLoginChanged;
+
+        public async Task InitializeAsync()
         {
-            SettingsHelper.LoginChanged += args => _ = SetUserAvatarAsync(args);
-            _ = SetUserAvatarAsync();
+            try
+            {
+                await SetUserAvatarAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                SettingsHelper.LoginChanged += OnLoginChanged;
+            }
         }
+
+        private void OnLoginChanged(bool args) => _ = SetUserAvatarAsync(args);
 
         private Task SetUserAvatarAsync() =>
             SettingsHelper.CheckLoginAsync().ContinueWith(x => SetUserAvatarAsync(x.Result)).Unwrap();

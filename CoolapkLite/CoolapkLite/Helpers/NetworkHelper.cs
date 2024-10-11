@@ -131,7 +131,6 @@ namespace CoolapkLite.Helpers
             headers.ReplaceAppToken();
             headers.ReplaceRequested(request);
         }
-
     }
 
     public static partial class NetworkHelper

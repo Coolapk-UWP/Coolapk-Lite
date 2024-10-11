@@ -316,10 +316,10 @@ namespace CoolapkLite.Helpers
     /// A helper type for wait for <see cref="FrameworkElement.Loaded"/> event. This type is not intended to be used directly from your code.
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public struct ElementLoadedSwitcher : IThreadSwitcher<ElementLoadedSwitcher>
+    public readonly struct ElementLoadedSwitcher : IThreadSwitcher<ElementLoadedSwitcher>
     {
-        private FrameworkElement element;
-        private Func<bool> fallback;
+        private readonly FrameworkElement element;
+        private readonly Func<bool> fallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementLoadedSwitcher"/> struct.

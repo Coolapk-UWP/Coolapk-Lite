@@ -10,8 +10,6 @@ namespace CoolapkLite.BackgroundTasks
     {
         public static NotificationsTask Instance = new NotificationsTask();
 
-        public NotificationsTask() => Instance = Instance ?? this;
-
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();

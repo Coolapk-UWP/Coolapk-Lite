@@ -37,7 +37,6 @@ namespace CoolapkLite.Helpers
         public const string GetNotifications = "/v6/notification/{0}?page={1}{2}{3}";
         public const string GetNotificationNumbers = "/v6/notification/checkCount";
         public const string GetReplyReplies = "/v6/feed/replyList?id={0}&page={1}{2}{3}&feedType=feed_reply";
-        public const string GetSearchWords = "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
         public const string GetShareList = "/v6/feed/forwardList?id={0}&type={1}&page={2}{3}{4}";
         public const string GetTagDetail = "/v6/topic/newTagDetail?tag={0}";
         public const string GetTagFeeds = "/v6/topic/tagFeedList?tag={0}&page={1}{2}{3}&listType={4}";
