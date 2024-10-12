@@ -5,7 +5,6 @@ using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -78,6 +77,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     ThemeHelper.UpdateSystemCaptionButtonColors();
                     RaisePropertyChangedEvent();
                 }
+            }
+        }
+
+        public string TileUrl
+        {
+            get => SettingsHelper.Get<string>(SettingsHelper.TileUrl);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.TileUrl, value);
+                RaisePropertyChangedEvent();
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Common;
+﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Common;
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
@@ -7,6 +8,7 @@ using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using CoolapkLite.ViewModels.ToolsPages;
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Windows.ApplicationModel.Core;
@@ -17,6 +19,7 @@ using Windows.Globalization;
 using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
@@ -67,6 +70,16 @@ namespace CoolapkLite.Pages.SettingsPages
             if (Provider == null)
             {
                 Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
+                Provider.PropertyChanged += OnPropertyChanged;
+            }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            if (Provider != null)
+            {
+                Provider.PropertyChanged -= OnPropertyChanged;
             }
         }
 
@@ -80,6 +93,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
+                    break;
+                case "TileUrl":
+                    Provider.TileUrl = TileUrl.Text;
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
@@ -120,6 +136,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "ShowError":
                     throw new Exception(NotifyMessage.Text);
+                case "ClearTile":
+                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                    break;
                 case "CustomAPI":
                     APIVersionDialog versionDialog = new APIVersionDialog(Provider.UserAgent);
                     if (await versionDialog.ShowAsync() == ContentDialogResult.Primary)
@@ -156,6 +175,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "DeviceInfo":
                     _ = new DeviceInfoDialog().ShowAsync();
+                    break;
+                case "UpdateTile":
+                    _ = LiveTileTask.Instance.UpdateTileAsync();
                     break;
                 case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
@@ -283,5 +305,15 @@ namespace CoolapkLite.Pages.SettingsPages
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => _ = this.ShowProgressBarAsync(e.NewValue);
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Provider.TileUrl):
+                    TileUrl.Text = Provider.TileUrl;
+                    break;
+            }
+        }
     }
 }

@@ -72,6 +72,35 @@
                     TickFrequency="10"
                     TickPlacement="Outside"
                     ValueChanged="Slider_ValueChanged" />
+                <control:StackPanelEx Spacing="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="4" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="TileUrl"
+                            Header="磁贴源链接"
+                            Text="{x:Bind Provider.TileUrl, Mode=OneWay}" />
+                        <Button
+                            Grid.Column="2"
+                            VerticalAlignment="Bottom"
+                            Click="Button_Click"
+                            Content="设置"
+                            Tag="TileUrl" />
+                    </Grid>
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="更新磁贴"
+                            Tag="UpdateTile" />
+                        <Button
+                            Click="Button_Click"
+                            Content="清除磁贴"
+                            Tag="ClearTile" />
+                    </control:StackPanelEx>
+                </control:StackPanelEx>
             </control:SettingsGroup>
             <control:SettingsGroup Header="网络测试">
                 <control:StackPanelEx Spacing="4">
