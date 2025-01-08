@@ -68,7 +68,7 @@ namespace CoolapkLite.Helpers
 
                         if (run != null)
                         {
-                            SystemVersionInfo newVersionInfo = GetAsVersionInfo(run.CreatedDate, run.ID);
+                            SystemVersionInfo newVersionInfo = GetAsVersionInfo(run.CreatedDate, (int)run.ID);
 
                             UpdateInfo updateInfo = new UpdateInfo
                             {

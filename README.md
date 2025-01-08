@@ -79,4 +79,4 @@
 - **铺路尚未成功，同志仍需努力！**
 
 ## Star 数量统计
-[![Star 数量统计](https://starchart.cc/Coolapk-UWP/Coolapk-Lite.svg)](https://starchart.cc/Coolapk-UWP/Coolapk-Lite "Star 数量统计")
+[![Star 数量统计](https://starchart.cc/Coolapk-UWP/Coolapk-Lite.svg?variant=adaptive)](https://github.com/Coolapk-UWP/Coolapk-Lite/stargazers "Star 数量统计")
