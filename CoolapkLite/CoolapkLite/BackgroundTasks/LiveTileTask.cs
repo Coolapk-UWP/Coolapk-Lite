@@ -25,8 +25,18 @@ namespace CoolapkLite.BackgroundTasks
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            await UpdateTileAsync();
-            deferral.Complete();
+            try
+            {
+                await UpdateTileAsync();
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
         public async Task UpdateTileAsync()

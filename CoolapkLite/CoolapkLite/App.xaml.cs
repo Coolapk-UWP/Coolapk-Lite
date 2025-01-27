@@ -455,46 +455,55 @@ namespace CoolapkLite
             #endregion
         }
 
-        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        private async void ToastBackgroundTask(IBackgroundTaskInstance taskInstance)
+        {
+            BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
+            try
+            {
+                if (taskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
+                {
+                    ToastArguments arguments = ToastArguments.Parse(details.Argument);
+                    if (arguments.TryGetValue("action", out string action))
+                    {
+                        switch (action)
+                        {
+                            case "hasUpdate":
+                                if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                {
+                                    _ = await Launcher.LaunchUriAsync(uri);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger("ToastBackgroundTask").Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
+        }
+
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
         {
             base.OnBackgroundActivated(args);
-
-            BackgroundTaskDeferral deferral = args.TaskInstance.GetDeferral();
-
             switch (args.TaskInstance.Task.Name)
             {
                 case nameof(LiveTileTask):
                     LiveTileTask.Instance.Run(args.TaskInstance);
                     break;
-
                 case nameof(NotificationsTask):
                     NotificationsTask.Instance.Run(args.TaskInstance);
                     break;
-
                 case "ToastBackgroundTask":
-                    if (args.TaskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
-                    {
-                        ToastArguments arguments = ToastArguments.Parse(details.Argument);
-                        if (arguments.TryGetValue("action", out string action))
-                        {
-                            switch (action)
-                            {
-                                case "hasUpdate":
-                                    if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
-                                    {
-                                        _ = await Launcher.LaunchUriAsync(uri);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                    deferral.Complete();
+                    ToastBackgroundTask(args.TaskInstance);
                     break;
-
                 default:
-                    deferral.Complete();
                     break;
             }
         }
