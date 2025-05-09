@@ -698,91 +698,99 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> OpenActivatedEventArgsAsync(this Frame frame, IActivatedEventArgs args)
         {
-            await ThreadSwitcher.ResumeBackgroundAsync();
-            switch (args.Kind)
+            try
             {
-                case ActivationKind.Launch when args is LaunchActivatedEventArgs LaunchActivatedEventArgs:
-                    if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
-                    {
-                        return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' ')).ConfigureAwait(false);
-                    }
-                    else if (ApiInfoHelper.IsTileActivatedInfoSupported && LaunchActivatedEventArgs.TileActivatedInfo != null)
-                    {
-                        if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Count > 0)
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                switch (args.Kind)
+                {
+                    case ActivationKind.Launch when args is LaunchActivatedEventArgs LaunchActivatedEventArgs:
+                        if (!string.IsNullOrWhiteSpace(LaunchActivatedEventArgs.Arguments))
                         {
-                            string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
-                            return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' ')).ConfigureAwait(false);
+                            return await ProcessArgumentsAsync(frame, LaunchActivatedEventArgs.Arguments.Split(' ')).ConfigureAwait(false);
                         }
-                    }
-                    return false;
-                case ActivationKind.Search when args is ISearchActivatedEventArgs SearchActivatedEventArgs:
-                    return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher)).ConfigureAwait(false);
-                case ActivationKind.ShareTarget when args is IShareTargetActivatedEventArgs ShareTargetActivatedEventArgs:
-                    return ShareTargetActivatedEventArgs.ShareOperation.Data != null && await ShowCreateFeedControlAsync(frame, ShareTargetActivatedEventArgs.ShareOperation.Data).ConfigureAwait(false);
-                case ActivationKind.Protocol:
-                case ActivationKind.ProtocolForResults:
-                    IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
-                    switch (ProtocolActivatedEventArgs.Uri.Host.ToLowerInvariant())
-                    {
-                        case "www.coolapk.com":
-                        case "coolapk.com":
-                        case "www.coolmarket.com":
-                        case "coolmarket.com":
-                            _ = frame.ShowProgressBarAsync();
-                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath).ConfigureAwait(false);
-                        case "http":
-                        case "https":
-                            _ = frame.ShowProgressBarAsync();
-                            return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}").ConfigureAwait(false);
-                        case "me":
-                            return await frame.NavigateAsync(typeof(ProfilePage)).ConfigureAwait(false);
-                        case "home":
-                            return await frame.NavigateAsync(typeof(IndexPage)).ConfigureAwait(false);
-                        case "flags":
-                            return await frame.NavigateAsync(typeof(TestPage)).ConfigureAwait(false);
-                        case "circle":
-                            return await frame.NavigateAsync(typeof(CirclePage)).ConfigureAwait(false);
-                        case "create":
-                            return await frame.ShowCreateFeedControlAsync().ConfigureAwait(false);
-                        case "search":
-                            return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher)).ConfigureAwait(false);
-                        case "history":
-                            return await frame.NavigateAsync(typeof(HistoryPage)).ConfigureAwait(false);
-                        case "settings":
-                            return await frame.NavigateAsync(typeof(SettingsPage)).ConfigureAwait(false);
-                        case "favorites":
-                            return await frame.NavigateAsync(typeof(BookmarkPage)).ConfigureAwait(false);
-                        case "extensions":
-                            return await frame.NavigateAsync(typeof(ExtensionPage)).ConfigureAwait(false);
-                        case "notifications":
-                            return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
-                        default:
-                            _ = frame.ShowProgressBarAsync();
-                            return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri).ConfigureAwait(false);
-                    }
-                case ActivationKind.ToastNotification when args is IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs:
-                    ToastArguments arguments = ToastArguments.Parse(ToastNotificationActivatedEventArgs.Argument);
-                    if (arguments.TryGetValue("action", out string action))
-                    {
-                        switch (action)
+                        else if (ApiInfoHelper.IsTileActivatedInfoSupported && LaunchActivatedEventArgs.TileActivatedInfo != null)
                         {
-                            case "hasUpdate":
-                                if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
-                                {
-                                    _ = frame.LaunchUriAsync(uri);
-                                }
-                                break;
-                            case "hasNotification":
+                            if (LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.Count > 0)
+                            {
+                                string TileArguments = LaunchActivatedEventArgs.TileActivatedInfo.RecentlyShownNotifications.FirstOrDefault().Arguments;
+                                return !string.IsNullOrWhiteSpace(TileArguments) && await ProcessArgumentsAsync(frame, TileArguments.Split(' ')).ConfigureAwait(false);
+                            }
+                        }
+                        return false;
+                    case ActivationKind.Search when args is ISearchActivatedEventArgs SearchActivatedEventArgs:
+                        return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(SearchActivatedEventArgs.QueryText, frame.Dispatcher)).ConfigureAwait(false);
+                    case ActivationKind.ShareTarget when args is IShareTargetActivatedEventArgs ShareTargetActivatedEventArgs:
+                        return ShareTargetActivatedEventArgs.ShareOperation.Data != null && await ShowCreateFeedControlAsync(frame, ShareTargetActivatedEventArgs.ShareOperation.Data).ConfigureAwait(false);
+                    case ActivationKind.Protocol:
+                    case ActivationKind.ProtocolForResults:
+                        IProtocolActivatedEventArgs ProtocolActivatedEventArgs = (IProtocolActivatedEventArgs)args;
+                        switch (ProtocolActivatedEventArgs.Uri.Host.ToLowerInvariant())
+                        {
+                            case "www.coolapk.com":
+                            case "coolapk.com":
+                            case "www.coolmarket.com":
+                            case "coolmarket.com":
+                                _ = frame.ShowProgressBarAsync();
+                                return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsolutePath).ConfigureAwait(false);
+                            case "http":
+                            case "https":
+                                _ = frame.ShowProgressBarAsync();
+                                return await frame.OpenLinkAsync($"{ProtocolActivatedEventArgs.Uri.Host}:{ProtocolActivatedEventArgs.Uri.AbsolutePath}").ConfigureAwait(false);
+                            case "me":
+                                return await frame.NavigateAsync(typeof(ProfilePage)).ConfigureAwait(false);
+                            case "home":
+                                return await frame.NavigateAsync(typeof(IndexPage)).ConfigureAwait(false);
+                            case "flags":
+                                return await frame.NavigateAsync(typeof(TestPage)).ConfigureAwait(false);
+                            case "circle":
+                                return await frame.NavigateAsync(typeof(CirclePage)).ConfigureAwait(false);
+                            case "create":
+                                return await frame.ShowCreateFeedControlAsync().ConfigureAwait(false);
+                            case "search":
+                                return await frame.NavigateAsync(typeof(SearchingPage), new SearchingViewModel(ProtocolActivatedEventArgs.Uri.AbsolutePath.Length > 1 ? ProtocolActivatedEventArgs.Uri.AbsolutePath.Substring(1, ProtocolActivatedEventArgs.Uri.AbsolutePath.Length - 1) : string.Empty, frame.Dispatcher)).ConfigureAwait(false);
+                            case "history":
+                                return await frame.NavigateAsync(typeof(HistoryPage)).ConfigureAwait(false);
+                            case "settings":
+                                return await frame.NavigateAsync(typeof(SettingsPage)).ConfigureAwait(false);
+                            case "favorites":
+                                return await frame.NavigateAsync(typeof(BookmarkPage)).ConfigureAwait(false);
+                            case "extensions":
+                                return await frame.NavigateAsync(typeof(ExtensionPage)).ConfigureAwait(false);
+                            case "notifications":
                                 return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
+                            default:
+                                _ = frame.ShowProgressBarAsync();
+                                return await frame.OpenLinkAsync(ProtocolActivatedEventArgs.Uri.AbsoluteUri).ConfigureAwait(false);
                         }
-                    }
-                    return false;
-                case (ActivationKind)1021 when ApiInfoHelper.IsICommandLineActivatedEventArgsSupported
-                                            && args is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs:
-                    return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
-                            && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' ')).ConfigureAwait(false);
-                default:
-                    return false;
+                    case ActivationKind.ToastNotification when args is IToastNotificationActivatedEventArgs ToastNotificationActivatedEventArgs:
+                        ToastArguments arguments = ToastArguments.Parse(ToastNotificationActivatedEventArgs.Argument);
+                        if (arguments.TryGetValue("action", out string action))
+                        {
+                            switch (action)
+                            {
+                                case "hasUpdate":
+                                    if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                    {
+                                        _ = frame.LaunchUriAsync(uri);
+                                    }
+                                    break;
+                                case "hasNotification":
+                                    return await frame.NavigateAsync(typeof(NotificationsPage)).ConfigureAwait(false);
+                            }
+                        }
+                        return false;
+                    case (ActivationKind)1021 when ApiInfoHelper.IsICommandLineActivatedEventArgsSupported
+                                        && args is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs:
+                        return !string.IsNullOrWhiteSpace(CommandLineActivatedEventArgs.Operation.Arguments)
+                                && await ProcessArgumentsAsync(frame, CommandLineActivatedEventArgs.Operation.Arguments.Split(' ')).ConfigureAwait(false);
+                    default:
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(UIHelper)).Error(ex.ExceptionToMessage(), ex);
+                return false;
             }
         }
 

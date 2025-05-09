@@ -24,6 +24,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -67,6 +68,9 @@ namespace CoolapkLite.Pages
             HamburgerMenuFrame.Navigated += On_Navigated;
             if (!isLoaded)
             {
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
                 HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
                 (MenuItem[] options, PersonMenuItem person) = MenuItem.GetOptionsItems(Dispatcher);
                 HamburgerMenu.OptionsItemsSource = options;
@@ -75,10 +79,11 @@ namespace CoolapkLite.Pages
                 _ = NotificationsModel.UpdateAsync();
                 _ = LiveTileTask.Instance?.UpdateTileAsync();
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-                { OpenActivatedEventArgs(ActivatedEventArgs); }
+                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
-                { OpenLinkAsync(factory); }
+                { await OpenLinkAsync(factory); }
                 else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo()); }
+                deferral?.Complete();
                 isLoaded = true;
             }
         }
@@ -138,7 +143,7 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void OpenLinkAsync(OpenLinkFactory factory)
+        private async Task OpenLinkAsync(OpenLinkFactory factory)
         {
             if (!await factory(HamburgerMenuFrame))
             {
@@ -146,7 +151,7 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void OpenActivatedEventArgs(IActivatedEventArgs args)
+        private async Task OpenActivatedEventArgsAsync(IActivatedEventArgs args)
         {
             if (!await HamburgerMenuFrame.OpenActivatedEventArgsAsync(args))
             {

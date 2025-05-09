@@ -149,6 +149,7 @@
                     <x:String>V12</x:String>
                     <x:String>V13</x:String>
                     <x:String>V14</x:String>
+                    <x:String>V15</x:String>
                 </ComboBox>
                 <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <Button

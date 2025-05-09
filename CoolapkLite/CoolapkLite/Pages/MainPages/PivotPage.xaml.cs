@@ -18,6 +18,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -57,7 +58,7 @@ namespace CoolapkLite.Pages
             _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (ApiInfoHelper.IsHardwareButtonsSupported)
@@ -66,11 +67,15 @@ namespace CoolapkLite.Pages
             PivotContentFrame.Navigated += On_Navigated;
             if (!isLoaded)
             {
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
                 Pivot.ItemsSource = GetMainItems();
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-                { OpenActivatedEventArgs(ActivatedEventArgs); }
+                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
-                { OpenLinkAsync(factory); }
+                { await OpenLinkAsync(factory); }
+                deferral?.Complete();
                 isLoaded = true;
             }
             SettingsHelper.LoginChanged += OnLoginChanged;
@@ -120,15 +125,9 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private void OpenLinkAsync(OpenLinkFactory factory)
-        {
-            _ = factory(PivotContentFrame);
-        }
+        private Task OpenLinkAsync(OpenLinkFactory factory) => factory(PivotContentFrame);
 
-        private void OpenActivatedEventArgs(IActivatedEventArgs args)
-        {
-            _ = PivotContentFrame.OpenActivatedEventArgsAsync(args);
-        }
+        private Task OpenActivatedEventArgsAsync(IActivatedEventArgs args) => PivotContentFrame.OpenActivatedEventArgsAsync(args);
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {

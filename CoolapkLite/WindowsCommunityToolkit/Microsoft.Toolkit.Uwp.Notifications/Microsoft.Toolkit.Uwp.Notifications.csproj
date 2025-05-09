@@ -14,7 +14,7 @@
 
   <!-- Native (C++) doesn't need 'System.ValueTuple' (plus it's incompatible with this package) -->
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" IsImplicitlyDefined="true" />
   </ItemGroup>
 
 </Project>

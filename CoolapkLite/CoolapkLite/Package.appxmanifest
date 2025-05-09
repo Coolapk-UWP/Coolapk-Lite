@@ -94,14 +94,16 @@
             <uap3:Name>CoolapkUWP.OSSUploader</uap3:Name>
           </uap3:AppExtensionHost>
         </uap3:Extension>
-        <uap5:Extension
+        <!-- Execution Alias can only be registered by Windows.Desktop
+        <uap3:Extension
           Category="windows.appExecutionAlias"
           Executable="CoolapkLite.exe"
           EntryPoint="CoolapkLite.App">
-          <uap5:AppExecutionAlias>
-            <uap5:ExecutionAlias Alias="CoolapkLite.exe" />
-          </uap5:AppExecutionAlias>
-        </uap5:Extension>
+          <uap3:AppExecutionAlias>
+            <desktop:ExecutionAlias Alias="CoolapkLite.exe" />
+          </uap3:AppExecutionAlias>
+        </uap3:Extension>
+        -->
       </Extensions>
     </Application>
   </Applications>

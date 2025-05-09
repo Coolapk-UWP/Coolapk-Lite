@@ -15,6 +15,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.System;
 using Windows.System.Profile;
@@ -113,7 +114,7 @@ namespace CoolapkLite
 
         #endregion
 
-        private void EnsureWindow(IActivatedEventArgs e)
+        private async void EnsureWindow(IActivatedEventArgs e)
         {
             if (!isLoaded)
             {
@@ -174,7 +175,12 @@ namespace CoolapkLite
             }
             else if (rootFrame.Content is IHaveTitleBar page)
             {
-                _ = page.OpenActivatedEventArgsAsync(e);
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Kind == (ActivationKind)1021
+                    && e is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
+                _ = await page.OpenActivatedEventArgsAsync(e);
+                deferral?.Complete();
             }
 
             // 确保当前窗口处于活动状态
