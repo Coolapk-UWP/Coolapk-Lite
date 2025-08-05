@@ -102,8 +102,8 @@ namespace CoolapkLite.Pages
             if (this.IsAppWindow())
             {
                 AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Frame.DragRegionVisuals.Remove(CustomTitleBar);
                 appWindow.Changed -= AppWindow_Changed;
-                appWindow.Title = string.Empty;
             }
             else
             {
@@ -136,6 +136,7 @@ namespace CoolapkLite.Pages
             if (this.IsAppWindow())
             {
                 AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Frame.DragRegionVisuals.Add(CustomTitleBar);
                 appWindow.Changed += AppWindow_Changed;
                 appWindow.Title = Provider.Title;
             }
