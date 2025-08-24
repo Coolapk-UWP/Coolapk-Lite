@@ -75,6 +75,11 @@ namespace CoolapkLite.Common
         public string ExtensionContractName { get; private set; }
 
         /// <summary>
+        /// Indicates whether the ExtensionManager has been initialized
+        /// </summary>
+        public bool IsInitialized => _dispatcher != null;
+
+        /// <summary>
         /// Sets up handlers for package events
         /// Be sure to call this from the UI thread.
         /// </summary>

@@ -31,7 +31,7 @@ namespace CoolapkLite.Helpers
             object obj;
             TimeIntervalType type;
 
-            if (baseTime == null)
+            if (!baseTime.HasValue)
             {
                 type = TimeIntervalType.YearsAgo;
                 obj = time.LocalDateTime;

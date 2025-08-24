@@ -10,7 +10,7 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=settingspages:SettingsViewModel}"
-    DataContext="{x:Bind Provider, Mode=OneWay}"
+    DataContext="{x:Bind Provider}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
@@ -78,7 +78,7 @@
                     ThumbToolTipValueConverter="{StaticResource TimeSpanToolTipValueConverter}"
                     TickFrequency="15"
                     TickPlacement="Outside"
-                    Visibility="{x:Bind Provider.IsTileActivatedInfoSupported, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+                    Visibility="{x:Bind Provider.IsTileActivatedInfoSupported, Converter={StaticResource BoolToVisibilityConverter}}"
                     Value="{x:Bind Provider.TileUpdateTime, Mode=TwoWay}" />
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
@@ -108,7 +108,7 @@
                 </Button>
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
-                <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText, Mode=OneWay}" />
+                <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText}" />
                 <CheckBox x:Uid="/SettingsPage/CheckUpdateWhenLaunchingCheckBox" IsChecked="{x:Bind Provider.CheckUpdateWhenLaunching, Mode=TwoWay}" />
                 <control:StackPanelEx Orientation="Horizontal" Spacing="8">
                     <Button
@@ -186,6 +186,6 @@
                     TextWrapping="Wrap" />
             </control:SettingsGroup>
         </ListView>
-        <control:TitleBar x:Name="TitleBar" Title="{x:Bind Provider.Title, Mode=OneWay}" />
+        <control:TitleBar x:Name="TitleBar" Title="{x:Bind Provider.Title}" />
     </Grid>
 </Page>

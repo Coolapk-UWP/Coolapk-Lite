@@ -38,7 +38,7 @@ namespace CoolapkLite.Helpers
         /// Get the Base64 string of the input string.
         /// </summary>
         /// <param name="input">The input string.</param>
-        /// <param name="isRaw"><see cref="true"/> to remove the padding characters; otherwise, <see cref="false"/>.</param>
+        /// <param name="isRaw"><see langword="true"/> to remove the padding characters; otherwise, <see langword="false"/>.</param>
         /// <returns>The Base64 string of the input string.</returns>
         public static string GetBase64(this string input, bool isRaw = false)
         {

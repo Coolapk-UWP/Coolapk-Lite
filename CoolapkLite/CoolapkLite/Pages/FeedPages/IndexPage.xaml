@@ -10,7 +10,7 @@
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:IndexViewModel}"
-    DataContext="{x:Bind Provider, Mode=OneWay}"
+    DataContext="{x:Bind Provider}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -36,12 +36,12 @@
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
             ItemTemplateSelector="{StaticResource CardTemplateSelector}"
             ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
-            ItemsSource="{x:Bind Provider, Mode=OneWay}"
+            ItemsSource="{x:Bind Provider}"
             RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}"
             ShowsScrollingPlaceholders="False" />
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{x:Bind Provider.Title, Mode=OneWay}"
+            Title="{x:Bind Provider.Title}"
             DoubleTappedRequested="{x:Bind ListView.BackToTop}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"

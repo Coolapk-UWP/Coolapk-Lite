@@ -10,7 +10,7 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     xmlns:storage="using:Windows.Storage"
     d:DataContext="{d:DesignInstance Type=settingspages:CachesViewModel}"
-    DataContext="{x:Bind Provider, Mode=OneWay}"
+    DataContext="{x:Bind Provider}"
     mc:Ignorable="d">
     <Grid>
         <control:PullToRefreshListView
@@ -18,7 +18,7 @@
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             IncrementalLoadingTrigger="None"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
-            ItemsSource="{x:Bind Provider, Mode=OneWay}"
+            ItemsSource="{x:Bind Provider}"
             RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemsPanel>

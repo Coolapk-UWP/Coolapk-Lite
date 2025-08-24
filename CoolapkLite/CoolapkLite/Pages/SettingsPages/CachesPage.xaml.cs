@@ -15,39 +15,17 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class CachesPage : Page
     {
-        #region Provider
+        private readonly CachesViewModel Provider;
 
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(CachesViewModel),
-                typeof(CachesPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public CachesViewModel Provider
+        public CachesPage()
         {
-            get => (CachesViewModel)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
+            InitializeComponent();
+            Provider = new CachesViewModel(Dispatcher);
         }
-
-        #endregion
-
-        public CachesPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            if (Provider == null)
-            {
-                Provider = new CachesViewModel(Dispatcher);
-            }
 
             Provider.LoadMoreStarted += OnLoadMoreStarted;
             Provider.LoadMoreCompleted += OnLoadMoreCompleted;

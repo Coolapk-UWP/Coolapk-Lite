@@ -230,7 +230,7 @@ namespace CoolapkLite.Helpers
             string str = string.Empty;
             try
             {
-                str = await Client.GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}")).ConfigureAwait(false);
+                str = await GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}"), null, XMLHttpRequest, isBackground).ConfigureAwait(false);
                 JObject token = JObject.Parse(str);
                 if (token.TryGetValue("dataRow", out JToken v1))
                 {

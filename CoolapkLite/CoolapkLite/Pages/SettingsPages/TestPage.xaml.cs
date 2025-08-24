@@ -39,48 +39,24 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class TestPage : Page
     {
-        #region Provider
+        private readonly TestViewModel Provider;
 
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(TestViewModel),
-                typeof(TestPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public TestViewModel Provider
+        public TestPage()
         {
-            get => (TestViewModel)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
+            InitializeComponent();
+            Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
         }
-
-        #endregion
-
-        public TestPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider == null)
-            {
-                Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
-                Provider.PropertyChanged += OnPropertyChanged;
-            }
+            Provider.PropertyChanged += OnPropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
-            if (Provider != null)
-            {
-                Provider.PropertyChanged -= OnPropertyChanged;
-            }
+            Provider.PropertyChanged -= OnPropertyChanged;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)

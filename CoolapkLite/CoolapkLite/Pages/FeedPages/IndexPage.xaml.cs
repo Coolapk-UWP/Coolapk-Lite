@@ -14,39 +14,17 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class IndexPage : Page
     {
-        #region Provider
+        public readonly IndexViewModel Provider;
 
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(IndexViewModel),
-                typeof(IndexPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public IndexViewModel Provider
+        public IndexPage()
         {
-            get => (IndexViewModel)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
+            InitializeComponent();
+            Provider = new IndexViewModel(Dispatcher);
         }
-
-        #endregion
-
-        public IndexPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            if (Provider == null)
-            {
-                Provider = new IndexViewModel(Dispatcher);
-            }
 
             Provider.LoadMoreStarted += OnLoadMoreStarted;
             Provider.LoadMoreCompleted += OnLoadMoreCompleted;

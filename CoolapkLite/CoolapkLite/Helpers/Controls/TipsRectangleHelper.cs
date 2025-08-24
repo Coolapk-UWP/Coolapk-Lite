@@ -9,7 +9,7 @@ namespace CoolapkLite.Helpers
         #region IsEnable
 
         /// <summary>
-        /// Identifies the <see cref="IsEnable"/> dependency property.
+        /// Identifies the IsEnable dependency property.
         /// </summary>
         public static readonly DependencyProperty IsEnableProperty =
             DependencyProperty.Register(
@@ -47,7 +47,7 @@ namespace CoolapkLite.Helpers
         #region Provider
 
         /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
+        /// Identifies the Provider dependency property.
         /// </summary>
         public static readonly DependencyProperty ProviderProperty =
             DependencyProperty.Register(

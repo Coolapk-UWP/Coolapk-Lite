@@ -15,28 +15,7 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class ExtensionPage : Page
     {
-        #region Provider
-
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(ExtensionManager),
-                typeof(ExtensionPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public ExtensionManager Provider
-        {
-            get => (ExtensionManager)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
-        }
-
-        #endregion
+        private readonly ExtensionManager Provider = new ExtensionManager(ExtensionManager.OSSUploader);
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Extension");
 
@@ -45,9 +24,8 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider == null)
+            if (!Provider.IsInitialized)
             {
-                Provider = new ExtensionManager(ExtensionManager.OSSUploader);
                 _ = Refresh(true);
             }
         }

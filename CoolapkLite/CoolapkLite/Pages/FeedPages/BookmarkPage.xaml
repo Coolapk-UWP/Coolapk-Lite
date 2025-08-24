@@ -10,7 +10,7 @@
     xmlns:models="using:CoolapkLite.Models"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=feedpages:BookmarkViewModel}"
-    DataContext="{x:Bind Provider, Mode=OneWay}"
+    DataContext="{x:Bind Provider}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>
@@ -90,7 +90,7 @@
         </control:PullToRefreshListView>
         <control:TitleBar
             x:Name="TitleBar"
-            Title="{x:Bind Provider.Title, Mode=OneWay}"
+            Title="{x:Bind Provider.Title}"
             DoubleTappedRequested="{x:Bind ListView.BackToTop}"
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
