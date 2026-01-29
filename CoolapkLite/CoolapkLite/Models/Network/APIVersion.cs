@@ -71,6 +71,8 @@ namespace CoolapkLite.Models.Network
                     return new APIVersion("14.6.0", "2411221");
                 case APIVersions.V15:
                     return new APIVersion("15.9.5", "2601051");
+                case APIVersions.V16:
+                    return new APIVersion("16.0.1", "2601271");
                 default:
                     goto case APIVersions.Custom;
             }
@@ -106,6 +108,7 @@ namespace CoolapkLite.Models.Network
         V12,
         V13,
         V14,
-        V15
+        V15,
+        V16
     }
 }

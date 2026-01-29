@@ -196,7 +196,7 @@ namespace CoolapkLite.Helpers
 
         private static string GetVersionNumbers(string version)
         {
-            string allowedChars = "01234567890.";
+            const string allowedChars = "01234567890.";
             return new string(version.Where(allowedChars.Contains).ToArray());
         }
 #endif
