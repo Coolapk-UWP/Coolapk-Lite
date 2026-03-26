@@ -9,15 +9,13 @@ trigger:
       - master
   paths:
     include:
+      - azure-pipelines.yml
       - CoolapkLite/**
 
 pr:
   branches:
     include:
       - master
-  paths:
-    include:
-      - CoolapkLite/**
 
 pool:
   vmImage: windows-2022
