@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
@@ -36,8 +37,9 @@ namespace CoolapkLite.Pages.SettingsPages
             try
             {
                 await (reset
-                    ? Provider.InitializeAsync(Dispatcher).ConfigureAwait(false)
-                    : Provider.FindAndLoadExtensionsAsync().ConfigureAwait(false));
+                    ? Provider.InitializeAsync(Dispatcher)
+                    : Provider.FindAndLoadExtensionsAsync());
+                ListView.SelectedValue = Provider.SelectExtension;
             }
             finally
             {
@@ -55,6 +57,14 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 default:
                     break;
+            }
+        }
+
+        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is ListView listView && listView.SelectedValue is Extension extension)
+            {
+                SettingsHelper.Set(SettingsHelper.SelectedExtension, extension.UniqueId);
             }
         }
 

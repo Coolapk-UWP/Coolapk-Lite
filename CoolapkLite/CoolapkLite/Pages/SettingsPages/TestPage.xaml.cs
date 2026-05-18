@@ -153,7 +153,7 @@ namespace CoolapkLite.Pages.SettingsPages
                     _ = new DeviceInfoDialog().ShowAsync();
                     break;
                 case "UpdateTile":
-                    _ = LiveTileTask.Instance.UpdateTileAsync();
+                    _ = LiveTileTask.UpdateTileAsync();
                     break;
                 case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);

@@ -55,7 +55,7 @@ namespace CoolapkLite.Pages
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarVisible(false); }
             _ = NotificationsModel.UpdateAsync();
-            _ = LiveTileTask.Instance?.UpdateTileAsync();
+            _ = LiveTileTask.UpdateTileAsync();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)

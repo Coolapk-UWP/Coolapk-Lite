@@ -77,7 +77,7 @@ namespace CoolapkLite.Pages
                 if (firstLoad) { await WaitFirstRequestAsync(); }
                 _ = person.InitializeAsync();
                 _ = NotificationsModel.UpdateAsync();
-                _ = LiveTileTask.Instance?.UpdateTileAsync();
+                _ = LiveTileTask.UpdateTileAsync();
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
                 { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)

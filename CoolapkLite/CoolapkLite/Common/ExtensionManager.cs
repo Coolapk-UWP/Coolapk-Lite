@@ -65,6 +65,43 @@ namespace CoolapkLite.Common
         public ObservableCollection<Extension> Extensions { get; } = new ObservableCollection<Extension>();
 
         /// <summary>
+        /// The extension that is currently selected by the user. This is the extension that the host should use when invoking extensions.
+        /// </summary>
+        public Extension SelectExtension
+        {
+            get
+            {
+                string selectedExtensionId = SettingsHelper.Get<string>(SettingsHelper.SelectedExtension);
+                if (string.IsNullOrEmpty(selectedExtensionId))
+                {
+                    Extension extension = Extensions.FirstOrDefault();
+                    if (extension != null)
+                    {
+                        SettingsHelper.Set(SettingsHelper.SelectedExtension, extension.UniqueId);
+                    }
+                    return extension;
+                }
+                else
+                {
+                    Extension extension = Extensions.FirstOrDefault(e => e.UniqueId == selectedExtensionId);
+                    if (extension == null)
+                    {
+                        if (Extensions.Count > 0)
+                        {
+                            extension = Extensions.FirstOrDefault();
+                            SettingsHelper.Set(SettingsHelper.SelectedExtension, extension.UniqueId);
+                        }
+                        else
+                        {
+                            SettingsHelper.Set(SettingsHelper.SelectedExtension, string.Empty);
+                        }
+                    }
+                    return extension;
+                }
+            }
+        }
+
+        /// <summary>
         /// new jtw
         /// </summary>
         public Extension GetExtension(string id) => Extensions.FirstOrDefault(e => e.UniqueId == id);

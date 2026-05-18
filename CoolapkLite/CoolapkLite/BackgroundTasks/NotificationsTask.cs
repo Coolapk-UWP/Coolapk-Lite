@@ -9,9 +9,9 @@ namespace CoolapkLite.BackgroundTasks
 {
     public sealed class NotificationsTask : IBackgroundTask
     {
-        public static NotificationsTask Instance = new NotificationsTask();
+        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance) => Run(taskInstance);
 
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public static async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
             try
@@ -28,7 +28,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private async Task UpdateNotificationsAsync()
+        private static async Task UpdateNotificationsAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {

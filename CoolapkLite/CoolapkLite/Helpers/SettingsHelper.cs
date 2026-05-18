@@ -40,6 +40,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string SelectedBackdrop = nameof(SelectedBackdrop);
+        public const string SelectedExtension = nameof(SelectedExtension);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
         public const string IsChangeBrowserUA = nameof(IsChangeBrowserUA);
@@ -146,6 +147,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(SelectedBackdrop))
             {
                 LocalObject.Save(SelectedBackdrop, BackdropType.Default);
+            }
+            if (!LocalObject.KeyExists(SelectedExtension))
+            {
+                LocalObject.Save(SelectedExtension, string.Empty);
             }
             if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {

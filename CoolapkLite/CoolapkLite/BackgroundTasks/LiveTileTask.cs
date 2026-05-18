@@ -20,9 +20,9 @@ namespace CoolapkLite.BackgroundTasks
 {
     public sealed class LiveTileTask : IBackgroundTask
     {
-        public static LiveTileTask Instance = new LiveTileTask();
+        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance) => Run(taskInstance);
 
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public static async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
             try
@@ -39,7 +39,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        public async Task UpdateTileAsync()
+        public static async Task UpdateTileAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
@@ -55,7 +55,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private async Task GetDataAsync(Uri uri)
+        private static async Task GetDataAsync(Uri uri)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true).ConfigureAwait(false);
             if (isSucceed)
@@ -141,7 +141,7 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private TileContent GetTileContent(Entity item)
+        private static TileContent GetTileContent(Entity item)
         {
             switch (item)
             {

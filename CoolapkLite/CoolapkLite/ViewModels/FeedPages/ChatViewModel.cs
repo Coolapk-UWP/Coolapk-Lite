@@ -254,7 +254,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     {
                         await UploadFileFragment.FromWriteableBitmapAsync(writeableBitmap)
                     };
-                    results = await RequestHelper.UploadImagesAsync(manager.Extensions.FirstOrDefault(), fragments, "message", "message", id);
+                    results = await RequestHelper.UploadImagesAsync(manager.SelectExtension, fragments, "message", "message", id);
                     _ = Dispatcher.ShowMessageAsync($"上传了 {results.Length} 张图片");
                 }
             }
