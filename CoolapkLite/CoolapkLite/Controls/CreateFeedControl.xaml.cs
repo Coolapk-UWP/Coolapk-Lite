@@ -38,12 +38,13 @@ namespace CoolapkLite.Controls
         private AppBarToggleButton UnderLineButton;
         private AppBarToggleButton StrikethroughButton;
 
-        private readonly string[] NormalEmojis = EmojiHelper.Normal;
-        private readonly string[] CoolCoinsEmojis = EmojiHelper.CoolCoins;
-        private readonly string[] FunnyEmojis = EmojiHelper.Funny;
-        private readonly string[] DogeEmojis = EmojiHelper.Doge;
-        private readonly string[] TraditionEmojis = EmojiHelper.Tradition;
-        private readonly string[] ClassicEmojis = EmojiHelper.Classic;
+        private string[] NormalEmojis => EmojiHelper.Normal;
+        private string[] CoolCoinsEmojis => EmojiHelper.CoolCoins;
+        private string[] MooMooEmojis => EmojiHelper.MooMoo;
+        private string[] FunnyEmojis => EmojiHelper.Funny;
+        private string[] DogeEmojis => EmojiHelper.Doge;
+        private string[] TraditionEmojis => EmojiHelper.Tradition;
+        private string[] ClassicEmojis => EmojiHelper.Classic;
 
         #region Provider
 
