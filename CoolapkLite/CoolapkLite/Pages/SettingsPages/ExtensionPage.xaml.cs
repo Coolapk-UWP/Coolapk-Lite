@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;

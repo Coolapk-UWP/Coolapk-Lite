@@ -2,12 +2,14 @@
 using CoolapkLite.Helpers.Converters;
 using HtmlAgilityPack;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -15,7 +17,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class TextWriter : HtmlWriter
     {
-        public override HashSet<string> TargetTags => throw new NotImplementedException();
+        public override string[] TargetTags => throw new NotImplementedException();
 
         public override bool Match(HtmlNode fragment)
         {
@@ -27,18 +29,120 @@ namespace CoolapkLite.Controls.Writers
             HtmlNode text = fragment;
             if (text != null && !string.IsNullOrEmpty(text.InnerText))
             {
-                string[] list = Regex.Split(text.InnerText, @"(\[\S*?\]|#\(\S*?\))");
                 Span span = new Span();
-                foreach (string item in list)
+                if (textBlockEx.IsEnableMarkdown)
                 {
-                    if (GetInline(item) is Inline inline)
+                    using (StringReader reader = new StringReader(text.InnerText))
                     {
-                        span.Inlines.Add(inline);
+                        while (reader.ReadLine() is string line)
+                        {
+                            try
+                            {
+                                if (line.Length == 0)
+                                {
+                                    continue;
+                                }
+                                else if (line.Length < 2)
+                                {
+                                    goto fallback;
+                                }
+                                else
+                                {
+                                    if (line[0] == '#')
+                                    {
+                                        int level = 1;
+                                        while (level < line.Length && line[level] == '#')
+                                        {
+                                            if (++level > 3)
+                                            {
+                                                break;
+                                            }
+                                        }
+                                        if (level + 1 < line.Length && line[level] == ' ')
+                                        {
+                                            string headingText = line.Substring(level + 1);
+                                            Span head = new Span();
+                                            switch (level)
+                                            {
+                                                case 1:
+                                                    BindingOperations.SetBinding(head, TextElement.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header1FontSize)));
+                                                    BindingOperations.SetBinding(head, TextElement.FontWeightProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header1FontWeight)));
+                                                    break;
+                                                case 2:
+                                                    BindingOperations.SetBinding(head, TextElement.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header2FontSize)));
+                                                    BindingOperations.SetBinding(head, TextElement.FontWeightProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header2FontWeight)));
+                                                    break;
+                                                case 3:
+                                                    BindingOperations.SetBinding(head, TextElement.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header3FontSize)));
+                                                    BindingOperations.SetBinding(head, TextElement.FontWeightProperty, CreateBinding(textBlockEx, nameof(textBlockEx.Header3FontWeight)));
+                                                    break;
+                                                default:
+                                                    head = span;
+                                                    break;
+                                            }
+                                            ParseEmoji(headingText, head);
+                                            if (head != span && head.Inlines.Count > 0)
+                                            {
+                                                span.Inlines.Add(head);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            goto fallback;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        string[] list = Regex.Split(line, @"(\*\*.*\*\*)");
+                                        foreach (string item in list)
+                                        {
+                                            if (item.StartsWith("**") && item.EndsWith("**"))
+                                            {
+                                                string boldText = item.Substring(2, item.Length - 4);
+                                                Span boldSpan = new Span { FontWeight = FontWeights.Bold };
+                                                ParseEmoji(boldText, boldSpan);
+                                                if (boldSpan.Inlines.Count > 0) { span.Inlines.Add(boldSpan); }
+                                            }
+                                            else
+                                            {
+                                                ParseEmoji(item, span);
+                                            }
+                                        }
+                                    }
+                                }
+                                continue;
+                            fallback:
+                                span.Inlines.Add(new Run { Text = WebUtility.HtmlDecode(line) });
+                            }
+                            finally
+                            {
+                                if (reader.Peek() != -1)
+                                {
+                                    span.Inlines.Add(new LineBreak());
+                                }
+                            }
+                        }
                     }
+                }
+                else
+                {
+                    ParseEmoji(text.InnerText, span);
                 }
                 if (span.Inlines.Count > 0) { return span; }
             }
             return null;
+        }
+
+        private void ParseEmoji(string line, Span span)
+        {
+            string[] list = Regex.Split(line, @"(\[\S*?\]|#\(\S*?\))");
+            foreach (string item in list)
+            {
+                if (GetInline(item) is Inline inline)
+                {
+                    span.Inlines.Add(inline);
+                }
+            }
         }
 
         private Inline GetInline(string item)

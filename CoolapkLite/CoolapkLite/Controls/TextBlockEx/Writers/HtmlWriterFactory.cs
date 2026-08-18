@@ -34,6 +34,10 @@ namespace CoolapkLite.Controls.Writers
                         case "cite":
                         case "address":
                             return new EmWriter();
+                        case "h1":
+                        case "h2":
+                        case "h3":
+                            return new HeaderWriter();
                         case "img":
                             return new ImageWriter();
                         case "ins":

@@ -306,7 +306,10 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     TextWrapping="Wrap" />
-                <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+                <control:TextBlockEx
+                    IsEnableMarkdown="True"
+                    Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}"
+                    Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
             </control:SettingsGroup>
             <control:SettingsGroup Header="发帖测试">
                 <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />

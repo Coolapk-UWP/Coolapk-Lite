@@ -136,6 +136,7 @@
                             Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
                             <control:TextBlockEx
                                 HorizontalAlignment="Left"
+                                IsEnableMarkdown="True"
                                 IsTextSelectionEnabled="True"
                                 Text="{x:Bind Message}" />
                         </Border>
@@ -272,6 +273,7 @@
                             Visibility="{x:Bind Message, Converter={StaticResource StringVisibilityConverter}}">
                             <control:TextBlockEx
                                 HorizontalAlignment="Left"
+                                IsEnableMarkdown="True"
                                 IsTextSelectionEnabled="True"
                                 LinkForeground="{ThemeResource SystemControlBackgroundChromeWhiteBrush}"
                                 Text="{x:Bind Message}" />

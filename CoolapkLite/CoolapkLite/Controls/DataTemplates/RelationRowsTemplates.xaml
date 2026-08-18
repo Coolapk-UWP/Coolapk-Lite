@@ -101,16 +101,13 @@
                                         Margin="6,0"
                                         Padding="2,0"
                                         VerticalAlignment="Center"
-                                        BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="{ThemeResource ControlCornerRadius}"
+                                        Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                                         Visibility="{x:Bind IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
                                         <TextBlock
                                             x:Uid="/Feed/FeedAuthor"
                                             Margin="1"
                                             HorizontalAlignment="Left"
                                             FontSize="10"
-                                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                             IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                                     </Border>
                                 </StackPanel>

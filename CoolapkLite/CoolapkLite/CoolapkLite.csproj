@@ -286,6 +286,7 @@
     <Compile Include="Controls\TextBlockEx\Writers\ContainerWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\DelWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\EmWriter.cs" />
+    <Compile Include="Controls\TextBlockEx\Writers\HeaderWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\HtmlWriter.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\HtmlWriterFactory.cs" />
     <Compile Include="Controls\TextBlockEx\Writers\ImageWriter.cs" />

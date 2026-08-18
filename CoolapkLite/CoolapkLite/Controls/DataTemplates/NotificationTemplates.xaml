@@ -239,16 +239,13 @@
                     Margin="6,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
-                    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="{ThemeResource ControlCornerRadius}"
+                    Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                     Visibility="{x:Bind IsTop, Converter={StaticResource BoolToVisibilityConverter}}">
                     <TextBlock
                         x:Uid="/Feed/StickUp"
                         Margin="1"
                         HorizontalAlignment="Left"
-                        FontSize="12"
-                        Foreground="{ThemeResource AccentFillColorDefaultBrush}" />
+                        FontSize="12" />
                 </Border>
             </Grid>
             <control:TextBlockEx
