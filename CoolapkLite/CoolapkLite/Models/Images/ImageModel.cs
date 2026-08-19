@@ -18,6 +18,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
@@ -55,6 +56,13 @@ namespace CoolapkLite.Models.Images
         {
             get => isGif;
             private set => SetProperty(ref isGif, value);
+        }
+
+        private bool isLivePhoto = false;
+        public bool IsLivePhoto
+        {
+            get => isLivePhoto;
+            private set => SetProperty(ref isLivePhoto, value);
         }
 
         private bool isLoading = false;
@@ -215,6 +223,7 @@ namespace CoolapkLite.Models.Images
             Uri = uri;
             Type = type;
             ThemeHelper.UISettingChanged += OnUISettingChanged;
+            ThemeHelper.NoPicsModeChanged += OnNoPicsModeChanged;
         }
 
         public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher) : this(uri, type)
@@ -224,6 +233,7 @@ namespace CoolapkLite.Models.Images
 
         ~ImageModel()
         {
+            ThemeHelper.NoPicsModeChanged -= OnNoPicsModeChanged;
             ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
@@ -237,12 +247,12 @@ namespace CoolapkLite.Models.Images
             ImageModelLocker.SlimLocker = new SemaphoreSlim(initialCount);
         }
 
-        private async void OnUISettingChanged(UISettingChangedType mode)
+        private async void OnUISettingChanged(ApplicationTheme mode)
         {
             switch (mode)
             {
-                case UISettingChangedType.LightMode:
-                case UISettingChangedType.DarkMode:
+                case ApplicationTheme.Light:
+                case ApplicationTheme.Dark:
                     if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                     {
                         if (pic != null && pic.TryGetTarget(out BitmapImage _))
@@ -252,10 +262,14 @@ namespace CoolapkLite.Models.Images
                         }
                     }
                     break;
+            }
+        }
 
-                case UISettingChangedType.NoPicChanged when pic != null && pic.TryGetTarget(out BitmapImage _):
-                    _ = GetImageAsync();
-                    break;
+        private void OnNoPicsModeChanged(bool arg)
+        {
+            if (pic != null && pic.TryGetTarget(out BitmapImage _))
+            {
+                _ = GetImageAsync();
             }
         }
 
@@ -304,6 +318,7 @@ namespace CoolapkLite.Models.Images
                     IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
                                 && PixelWidth > PixelHeight * 1.5;
                     IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
                 }
                 else
                 {

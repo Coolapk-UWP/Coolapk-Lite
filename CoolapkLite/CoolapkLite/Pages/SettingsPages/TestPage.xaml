@@ -122,7 +122,15 @@
                 </control:StackPanelEx>
                 <ToggleSwitch Header="是否完整加载" IsOn="{x:Bind Provider.IsFullLoad, Mode=TwoWay}" />
                 <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind Provider.IsUseAPI2, Mode=TwoWay}" />
-                <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind Provider.IsUseTokenV2, Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="ComboBoxTokenVersion"
+                    Header="选择 Token 版本"
+                    PlaceholderText="选择 Token"
+                    SelectedIndex="{x:Bind Provider.TokenVersion, Mode=TwoWay}">
+                    <x:String>Token V1</x:String>
+                    <x:String>Token V2</x:String>
+                    <x:String>Token V3</x:String>
+                </ComboBox>
                 <ToggleSwitch
                     x:Name="IsCustomUAToggle"
                     Header="是否修改 UserAgent"
@@ -150,6 +158,7 @@
                     <x:String>V13</x:String>
                     <x:String>V14</x:String>
                     <x:String>V15</x:String>
+                    <x:String>V16</x:String>
                 </ComboBox>
                 <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <Button

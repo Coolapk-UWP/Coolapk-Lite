@@ -57,7 +57,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
                     RaisePropertyChangedEvent();
-                    ThemeHelper.InvokeUISettingChanged(UISettingChangedType.NoPicChanged);
+                    ThemeHelper.InvokeNoPicsModeChanged(value);
                 }
             }
         }

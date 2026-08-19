@@ -5,11 +5,17 @@
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
+    xmlns:local="using:CoolapkLite.Controls.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/APIVersionDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     Closing="OnClosing"
     mc:Ignorable="d">
+    <ContentDialog.Resources>
+        <ResourceDictionary>
+            <local:Int32ToStringConverter x:Key="Int32ToStringConverter" />
+        </ResourceDictionary>
+    </ContentDialog.Resources>
     <helpers:UIElementHelper.ContextFlyout>
         <MenuFlyout>
             <MenuFlyoutItem
@@ -30,6 +36,6 @@
         <TextBox
             x:Uid="/ContentDialog/APIVersionCodeTextBox"
             PlaceholderText="1905301"
-            Text="{x:Bind APIVersion.VersionCode, Mode=TwoWay}" />
+            Text="{x:Bind APIVersion.VersionCode, Converter={StaticResource Int32ToStringConverter}, Mode=TwoWay}" />
     </controls:StackPanelEx>
 </ContentDialog>

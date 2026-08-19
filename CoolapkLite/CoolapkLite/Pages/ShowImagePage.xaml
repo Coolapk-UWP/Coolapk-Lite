@@ -96,8 +96,7 @@
                     VerticalAlignment="Center"
                     Background="{ThemeResource TitleBarBackgroundBrush}"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                    BorderThickness="1"
-                    CornerRadius="6">
+                    BorderThickness="1">
                     <TextBlock
                         x:Name="AppTitle"
                         MaxLines="1"
@@ -135,19 +134,32 @@
                                     VerticalScrollMode="Auto"
                                     ViewChanged="ScrollViewer_ViewChanged"
                                     ZoomMode="Enabled">
-                                    <controls:ImageControl
-                                        x:Name="Image"
-                                        Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
-                                        Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Center"
-                                        EnableDrag="True"
-                                        EnableLazyLoading="False"
-                                        PointerMoved="Image_PointerMoved"
-                                        PointerPressed="Image_PointerPressed"
-                                        RenderTransformOrigin="0.5,0.5"
-                                        Source="{x:Bind}"
-                                        Stretch="Uniform" />
+                                    <Grid>
+                                        <controls:ImageControl
+                                            x:Name="Image"
+                                            Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                            Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            EnableDrag="True"
+                                            EnableLazyLoading="False"
+                                            PointerMoved="Image_PointerMoved"
+                                            PointerPressed="Image_PointerPressed"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            Source="{x:Bind}"
+                                            Stretch="Uniform"
+                                            Visibility="{x:Bind IsLivePhoto, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
+                                        <controls:MediaPlayerElementEx
+                                            Width="{Binding Path=ViewportWidth, ElementName=ImageScrollViewer}"
+                                            Height="{Binding Path=ViewportHeight, ElementName=ImageScrollViewer}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            AreTransportControlsEnabled="True"
+                                            LivePhoto="{x:Bind}"
+                                            RenderTransformOrigin="0.5,0.5"
+                                            Stretch="Uniform"
+                                            Visibility="{x:Bind IsLivePhoto, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                    </Grid>
                                 </ScrollViewer>
                             </Border>
                         </DataTemplate>

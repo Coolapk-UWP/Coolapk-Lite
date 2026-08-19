@@ -255,11 +255,13 @@ namespace CoolapkLite.Pages
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
-            ImageControl element = scrollViewer.Content as ImageControl;
-            bool isEnable = scrollViewer.ZoomFactor <= 1;
-            if (element.EnableDrag != isEnable)
+            if (scrollViewer.FindDescendant<ImageControl>() is ImageControl element)
             {
-                element.EnableDrag = isEnable;
+                bool isEnable = scrollViewer.ZoomFactor <= 1;
+                if (element.EnableDrag != isEnable)
+                {
+                    element.EnableDrag = isEnable;
+                }
             }
         }
 

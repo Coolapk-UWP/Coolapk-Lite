@@ -34,7 +34,6 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
-using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -46,7 +45,6 @@ namespace CoolapkLite.Pages
     public sealed partial class MainPage : Page, IHaveTitleBar
     {
         private bool isLoaded;
-        private static bool firstLoad = true;
 
         public Frame MainFrame => HamburgerMenuFrame;
 
@@ -74,7 +72,6 @@ namespace CoolapkLite.Pages
                 HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
                 (MenuItem[] options, PersonMenuItem person) = MenuItem.GetOptionsItems(Dispatcher);
                 HamburgerMenu.OptionsItemsSource = options;
-                if (firstLoad) { await WaitFirstRequestAsync(); }
                 _ = person.InitializeAsync();
                 _ = NotificationsModel.UpdateAsync();
                 _ = LiveTileTask.UpdateTileAsync();
@@ -128,22 +125,6 @@ namespace CoolapkLite.Pages
                 UpdateTitleBarLayout(TitleBar);
                 if (isLoaded)
                 { SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = TryGoBack(false); }
-            }
-        }
-
-        private async Task WaitFirstRequestAsync()
-        {
-            if (!mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
-            { return; }
-            try
-            {
-                _ = UIHelper.ShowProgressBarAsync((IHaveTitleBar)this);
-                await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetInitPage, DateTimeOffset.UtcNow.ToUnixTimeSeconds()), true);
-            }
-            finally
-            {
-                firstLoad = false;
-                _ = UIHelper.HideProgressBarAsync((IHaveTitleBar)this);
             }
         }
 

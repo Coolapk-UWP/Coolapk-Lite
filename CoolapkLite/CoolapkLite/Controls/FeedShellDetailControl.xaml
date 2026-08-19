@@ -448,7 +448,7 @@
                 <Grid Margin="0,-4" Visibility="{x:Bind FeedDetail.IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Border

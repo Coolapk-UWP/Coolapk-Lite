@@ -44,7 +44,7 @@ namespace CoolapkLite.Pages.SettingsPages
             ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
-        private void OnUISettingChanged(UISettingChangedType mode) => UpdateThemeRadio();
+        private void OnUISettingChanged(ApplicationTheme mode) => UpdateThemeRadio();
 
         private async void UpdateThemeRadio()
         {

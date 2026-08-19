@@ -192,20 +192,16 @@ namespace CoolapkLite.Helpers
                 : WhiteNoPicMode[dispatcher];
         }
 
-        private static async Task<Uri> GetMessageImageUriAsync(ImageType type, string url)
+        public static async Task<Uri> GetRedirectUriAsync(Uri uri)
         {
-            url += type.HasFlag(ImageType.Small) ? "&type=s" : "&type=n";
-            if (!url.TryGetUri(out Uri uri)) { return null; }
             using (HttpClientHandler handler = new HttpClientHandler
             {
                 AllowAutoRedirect = false
             })
             using (HttpClient client = new HttpClient(handler))
             {
-                TokenCreator token = new TokenCreator(SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion));
-
                 NetworkHelper.SetRequestHeaders(client);
-                client.DefaultRequestHeaders.Add("X-App-Token", token.GetToken());
+                client.DefaultRequestHeaders.Add("X-App-Token", NetworkHelper.TokenCreator.GetToken());
                 client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
 
                 Uri host = NetworkHelper.GetHost(uri);
@@ -217,6 +213,13 @@ namespace CoolapkLite.Helpers
                 HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false);
                 return response?.Headers.Location;
             }
+        }
+
+        private static Task<Uri> GetMessageImageUriAsync(ImageType type, string url)
+        {
+            url += type.HasFlag(ImageType.Small) ? "&type=s" : "&type=n";
+            if (!url.TryGetUri(out Uri uri)) { return null; }
+            return GetRedirectUriAsync(uri);
         }
     }
 }

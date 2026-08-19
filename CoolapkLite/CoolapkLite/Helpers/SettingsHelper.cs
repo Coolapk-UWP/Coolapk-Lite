@@ -86,7 +86,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(CustomAPI))
             {
-                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
+                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", 1905301));
             }
             if (!LocalObject.KeyExists(IsFullLoad))
             {

@@ -26,15 +26,29 @@ namespace CoolapkLite.Helpers
 
         #region UISettingChanged
 
-        private static readonly WeakEvent<UISettingChangedType> actions = new WeakEvent<UISettingChangedType>();
+        private static readonly WeakEvent<ApplicationTheme> actions = new WeakEvent<ApplicationTheme>();
 
-        public static event Action<UISettingChangedType> UISettingChanged
+        public static event Action<ApplicationTheme> UISettingChanged
         {
             add => actions.Add(value);
             remove => actions.Remove(value);
         }
 
-        public static void InvokeUISettingChanged(UISettingChangedType value) => actions.Invoke(value);
+        public static void InvokeUISettingChanged(ApplicationTheme value) => actions.Invoke(value);
+
+        #endregion
+
+        #region NoPicsModeChanged
+
+        private static readonly WeakEvent<bool> nopic = new WeakEvent<bool>();
+
+        public static event Action<bool> NoPicsModeChanged
+        {
+            add => nopic.Add(value);
+            remove => nopic.Remove(value);
+        }
+
+        public static void InvokeNoPicsModeChanged(bool value) => nopic.Invoke(value);
 
         #endregion
 
@@ -150,7 +164,7 @@ namespace CoolapkLite.Helpers
 
             SettingsHelper.Set(SettingsHelper.SelectedAppTheme, value);
             UpdateSystemCaptionButtonColors();
-            InvokeUISettingChanged(await IsDarkThemeAsync() ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
+            InvokeUISettingChanged(await IsDarkThemeAsync() ? ApplicationTheme.Dark : ApplicationTheme.Light);
         }
 
         public static async Task SetRootThemeAsync(ElementTheme value)
@@ -175,7 +189,7 @@ namespace CoolapkLite.Helpers
 
             SettingsHelper.Set(SettingsHelper.SelectedAppTheme, value);
             UpdateSystemCaptionButtonColors();
-            InvokeUISettingChanged(await IsDarkThemeAsync() ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
+            InvokeUISettingChanged(await IsDarkThemeAsync() ? ApplicationTheme.Dark : ApplicationTheme.Light);
         }
 
         #endregion
@@ -215,7 +229,7 @@ namespace CoolapkLite.Helpers
         private static async void UISettings_ColorValuesChanged(UISettings sender, object args)
         {
             UpdateSystemCaptionButtonColors();
-            InvokeUISettingChanged(await IsDarkThemeAsync() ? UISettingChangedType.DarkMode : UISettingChangedType.LightMode);
+            InvokeUISettingChanged(await IsDarkThemeAsync() ? ApplicationTheme.Dark : ApplicationTheme.Light);
         }
 
         public static bool IsDarkTheme() => IsDarkTheme(ActualTheme);

@@ -213,7 +213,7 @@ namespace CoolapkLite.Helpers
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
                 ["UploadBucket"] = bucket,
                 ["UploadDir"] = dir,
-                ["ToUid"] = uid,
+                ["ToUid"] = uid
             };
             return await (extension?.InvokeAsync<string[]>(message) ?? Task.FromResult(Array.Empty<string>()));
         }

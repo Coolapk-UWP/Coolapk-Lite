@@ -9,8 +9,10 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using Windows.Web.Http.Headers;
 using HttpClient = System.Net.Http.HttpClient;
 using HttpResponseMessage = System.Net.Http.HttpResponseMessage;
 using HttpStatusCode = System.Net.HttpStatusCode;
@@ -30,7 +32,7 @@ namespace CoolapkLite.Helpers
         {
             ClientHandler = new HttpClientHandler { MaxConnectionsPerServer = 20 };
             Client = new HttpClient(ClientHandler);
-            ThemeHelper.UISettingChanged += arg => Client.DefaultRequestHeaders.ReplaceDarkMode();
+            ThemeHelper.UISettingChanged += arg => Client.DefaultRequestHeaders.ReplaceDarkMode(arg);
             SetRequestHeaders();
             SetLoginCookie();
         }
@@ -66,9 +68,39 @@ namespace CoolapkLite.Helpers
             SetRequestHeaders(Client);
         }
 
-        public static async void SetRequestHeaders(HttpClient client)
+        public static void SetRequestHeaders(HttpClient client)
         {
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
+
+            headers.Clear();
+            headers.Add("X-Sdk-Int", "33");
+            headers.Add("X-Sdk-Locale", LanguageHelper.GetPrimaryLanguage());
+            headers.Add("X-App-Mode", "universal");
+            headers.Add("X-App-Channel", "coolapk");
+            headers.Add("X-App-Id", "com.coolapk.market");
+            headers.Add("X-App-Device", TokenCreator.DeviceCode);
+            if (Window.Current != null)
+            {
+                headers.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
+            }
+
+            if (!SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
+            {
+                SettingsHelper.Set(SettingsHelper.CustomUA, UserAgent.Default);
+            }
+            headers.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
+
+            APIVersion version = TokenCreator.APIVersion;
+            headers.UserAgent.ParseAdd($" {version}");
+            headers.Add("X-App-Version", version.Version);
+            headers.Add("X-Api-Supported", version.VersionCode.ToString());
+            headers.Add("X-App-Code", version.VersionCode.ToString());
+            headers.Add("X-Api-Version", version.MajorVersion);
+        }
+
+        public static async Task SetRequestHeadersAsync(Windows.Web.Http.HttpClient client)
+        {
+            HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
 
             headers.Clear();
             headers.Add("X-Sdk-Int", "33");
@@ -85,19 +117,19 @@ namespace CoolapkLite.Helpers
             }
             headers.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
 
-            APIVersion version = APIVersion.Create(SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion));
+            APIVersion version = TokenCreator.APIVersion;
             headers.UserAgent.ParseAdd($" {version}");
             headers.Add("X-App-Version", version.Version);
-            headers.Add("X-Api-Supported", version.VersionCode);
-            headers.Add("X-App-Code", version.VersionCode);
+            headers.Add("X-Api-Supported", version.VersionCode.ToString());
+            headers.Add("X-App-Code", version.VersionCode.ToString());
             headers.Add("X-Api-Version", version.MajorVersion);
         }
 
-        private static void ReplaceDarkMode(this HttpRequestHeaders headers)
+        private static void ReplaceDarkMode(this HttpRequestHeaders headers, ApplicationTheme theme)
         {
             const string name = "X-Dark-Mode";
             _ = headers.Remove(name);
-            headers.Add(name, ThemeHelper.IsDarkTheme() ? "1" : "0");
+            headers.Add(name, theme == ApplicationTheme.Dark ? "1" : "0");
         }
 
         private static void ReplaceAppToken(this HttpRequestHeaders headers)

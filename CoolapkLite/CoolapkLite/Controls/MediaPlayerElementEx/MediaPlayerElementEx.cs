@@ -136,6 +136,31 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region LivePhoto
+
+        /// <summary>
+        /// Identifies the <see cref="LivePhoto"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LivePhotoProperty =
+            DependencyProperty.Register(
+                nameof(LivePhoto),
+                typeof(ImageModel),
+                typeof(MediaPlayerElementEx),
+                new PropertyMetadata(null, OnLivePhotoPropertyChanged));
+
+        public ImageModel LivePhoto
+        {
+            get => (ImageModel)GetValue(LivePhotoProperty);
+            set => SetValue(LivePhotoProperty, value);
+        }
+
+        private static void OnLivePhotoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((MediaPlayerElementEx)d).UpdateLivePhoto();
+        }
+
+        #endregion
+
         #region Stretch 
 
         /// <summary>
@@ -210,6 +235,19 @@ namespace CoolapkLite.Controls
             if (MediaInfo != null)
             {
                 ParseMediaInfo(MediaInfo);
+            }
+        }
+
+        private async void UpdateLivePhoto()
+        {
+            if (LivePhoto != null)
+            {
+                Uri url = UriHelper.GetUri(UriType.LivePhotoShowVideo, LivePhoto.Uri);
+                TemplateSettings.PosterSource = LivePhoto;
+                if (await ImageCacheHelper.GetRedirectUriAsync(url) is Uri vedio)
+                {
+                    InitializeAdaptiveMediaSource(vedio);
+                }
             }
         }
 
@@ -334,8 +372,8 @@ namespace CoolapkLite.Controls
             if (result.Status == AdaptiveMediaSourceCreationStatus.Success)
             {
                 AdaptiveMediaSource = result.MediaSource;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
@@ -349,8 +387,8 @@ namespace CoolapkLite.Controls
             else
             {
                 AdaptiveMediaSource = null;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.Source = uri;
                 }
@@ -370,8 +408,8 @@ namespace CoolapkLite.Controls
             {
                 HttpRandomAccessStream = null;
                 AdaptiveMediaSource = result.MediaSource;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
@@ -386,8 +424,8 @@ namespace CoolapkLite.Controls
             {
                 AdaptiveMediaSource = null;
                 HttpRandomAccessStream = await HttpRandomAccessStream.CreateAsync(httpClient, uri);
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetSource(HttpRandomAccessStream, HttpRandomAccessStream.ContentType);
                 }
@@ -400,8 +438,8 @@ namespace CoolapkLite.Controls
 
         private void InitializeAdaptiveMediaSource()
         {
-            if (MediaElement is null) { return; }
-            if (MediaElement is MediaElement mediaElement)
+            if (MediaElement == null) { return; }
+            else if (MediaElement is MediaElement mediaElement)
             {
                 if (AdaptiveMediaSource != null)
                 {
