@@ -138,7 +138,10 @@
   <data name="topic" xml:space="preserve">
     <value>Гілки</value>
   </data>
-  <data name="V9_HOME_TAB_FOLLOW" xml:space="preserve">
-    <value>Все</value>
+  <data name="all" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="recent" xml:space="preserve">
+    <value>常看</value>
   </data>
 </root>
