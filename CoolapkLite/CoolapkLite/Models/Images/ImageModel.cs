@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
@@ -23,7 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : INotifyPropertyChanged
+    public class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
     {
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
@@ -487,6 +488,16 @@ namespace CoolapkLite.Models.Images
         }
 
         public override string ToString() => string.Join(" - ", Title, uri);
+
+        public override bool Equals(object obj) => Equals(obj as ImageModel);
+
+        public override int GetHashCode() => (uri, type, Dispatcher).GetHashCode();
+
+        public bool Equals(ImageModel other) => other != null && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
+
+        public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
+
+        public static bool operator !=(ImageModel left, ImageModel right) => !(left == right);
 
         #region Locker
 

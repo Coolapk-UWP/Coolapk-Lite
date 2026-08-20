@@ -84,11 +84,8 @@ namespace CoolapkLite.Helpers
                 headers.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
             }
 
-            if (!SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
-            {
-                SettingsHelper.Set(SettingsHelper.CustomUA, UserAgent.Default);
-            }
-            headers.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
+            bool isCustomUA = SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
+            headers.UserAgent.ParseAdd((isCustomUA ? SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA) : UserAgent.Default).ToString());
 
             APIVersion version = TokenCreator.APIVersion;
             headers.UserAgent.ParseAdd($" {version}");
@@ -98,7 +95,7 @@ namespace CoolapkLite.Helpers
             headers.Add("X-Api-Version", version.MajorVersion);
         }
 
-        public static async Task SetRequestHeadersAsync(Windows.Web.Http.HttpClient client)
+        public static void SetRequestHeaders(Windows.Web.Http.HttpClient client)
         {
             HttpRequestHeaderCollection headers = client.DefaultRequestHeaders;
 
@@ -109,13 +106,13 @@ namespace CoolapkLite.Helpers
             headers.Add("X-App-Channel", "coolapk");
             headers.Add("X-App-Id", "com.coolapk.market");
             headers.Add("X-App-Device", TokenCreator.DeviceCode);
-            headers.Add("X-Dark-Mode", await ThemeHelper.IsDarkThemeAsync() ? "1" : "0");
-
-            if (!SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA))
+            if (Window.Current != null)
             {
-                SettingsHelper.Set(SettingsHelper.CustomUA, UserAgent.Default);
+                headers.Add("X-Dark-Mode", ThemeHelper.IsDarkTheme() ? "1" : "0");
             }
-            headers.UserAgent.ParseAdd(SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA).ToString());
+
+            bool isCustomUA = SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
+            headers.UserAgent.ParseAdd((isCustomUA ? SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA) : UserAgent.Default).ToString());
 
             APIVersion version = TokenCreator.APIVersion;
             headers.UserAgent.ParseAdd($" {version}");

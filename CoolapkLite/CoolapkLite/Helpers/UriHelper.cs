@@ -76,6 +76,7 @@ namespace CoolapkLite.Helpers
         public const string SearchWords = "/v6/search/suggestSearchWordsNew?searchValue={0}&type=app";
         public const string SearchCreateTags = "/v6/feed/searchTag?q={0}&page={1}{2}{3}";
         public const string SearchCreateUsers = "/v6/user/search?q={0}&page={1}{2}{3}";
+        public const string PlayerGetUrl = "/v6/player/getUrl";
         public const string LivePhotoShowVideo = "/v6/livePhoto/showVideo?picUrl={0}";
     }
 

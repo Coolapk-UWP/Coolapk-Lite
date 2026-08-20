@@ -13,7 +13,6 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 #if NETCORE463
 using System.Linq;
@@ -26,9 +25,6 @@ namespace CoolapkLite.Helpers
 {
     public static class RequestHelper
     {
-        private static bool IsInternetAvailable => mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
-        private static readonly object locker = new object();
-
         public static HttpCookieCollection GetCoolapkCookies(Uri uri)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())

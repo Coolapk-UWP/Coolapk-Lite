@@ -399,16 +399,17 @@ namespace CoolapkLite.Pages
             PivotItem[] items = isLogin ? new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
                 new PivotItem { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
                 new PivotItem { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
                 new PivotItem { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
                 new PivotItem { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
-                new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
+                new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() },
+                new PivotItem { Tag = "recent", Header = loader.GetString("recent"), Content = new Frame() }
             } : new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() }
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() }
             };
             return items;
         }

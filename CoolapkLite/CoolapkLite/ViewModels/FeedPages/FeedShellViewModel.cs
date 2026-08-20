@@ -6,6 +6,7 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -84,7 +85,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
             if (result is JObject detail)
             {
-                FeedDetailModel model = new FeedDetailModel(detail);
+                FeedDetailModel model = await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail));
                 return model.IsQuestionFeed
                     ? new QuestionViewModel(id, model, dispatcher)
                     : model.IsVoteFeed
@@ -94,13 +95,13 @@ namespace CoolapkLite.ViewModels.FeedPages
             return null;
         }
 
-        protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id)
+        protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
         {
             (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri($"{UriHelper.BaseUri}v6/feed/{id}"), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
             if (!isSucceed) { return null; }
 
             JObject detail = (JObject)result;
-            return detail != null ? new FeedDetailModel(detail) : null;
+            return detail != null ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
         }
 
         protected void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();
@@ -111,7 +112,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (FeedDetail == null || reset)
             {
-                FeedDetail = await GetFeedDetailAsync(ID);
+                FeedDetail = await GetFeedDetailAsync(ID, Dispatcher);
                 if (FeedDetail == null)
                 {
                     ItemSource = null;

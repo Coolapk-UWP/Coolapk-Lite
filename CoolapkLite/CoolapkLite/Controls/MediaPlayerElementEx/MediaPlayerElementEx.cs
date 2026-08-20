@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
@@ -131,7 +132,10 @@ namespace CoolapkLite.Controls
 
         private static void OnMediaInfoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((MediaPlayerElementEx)d).UpdateMediaInfo();
+            if (!JToken.DeepEquals(e.OldValue as JToken, e.NewValue as JToken))
+            {
+                ((MediaPlayerElementEx)d).UpdateMediaInfo();
+            }
         }
 
         #endregion
@@ -156,7 +160,10 @@ namespace CoolapkLite.Controls
 
         private static void OnLivePhotoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((MediaPlayerElementEx)d).UpdateLivePhoto();
+            if ((e.OldValue as ImageModel) != (e.NewValue as ImageModel))
+            {
+                ((MediaPlayerElementEx)d).UpdateLivePhoto();
+            }
         }
 
         #endregion
@@ -251,7 +258,7 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ParseMediaInfo(JObject json)
+        private async void ParseMediaInfo(JObject json)
         {
             MediaPlayerElementExTemplateSettings templateSettings = TemplateSettings;
 
@@ -270,20 +277,50 @@ namespace CoolapkLite.Controls
                 templateSettings.PosterSource = new ImageModel(cover.ToString(), ImageType.OriginImage, Dispatcher);
             }
 
-            if (json.TryGetValue("requestParams", out JToken v))
+            if (json.TryGetValue("requestParams", out JToken v) && JObject.Parse(v.ToString())?.First?.First is JObject request)
             {
-                if (JObject.Parse(v.ToString())?.First?.First is JObject request
-                    && request.TryGetValue("fromType", out JToken fromType))
+                using (System.Net.Http.MultipartFormDataContent content = new System.Net.Http.MultipartFormDataContent())
+                {
+                    System.Net.Http.StringContent @params = new System.Net.Http.StringContent(request.ToString());
+                    content.Add(@params, "params");
+                    var (isSucceed, result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.PlayerGetUrl), content);
+                    if (isSucceed)
+                    {
+                        JObject token = (JObject)result;
+                        if (token.TryGetValue("urlList", out JToken urlList))
+                        {
+                            string url = urlList.FirstOrDefault(x => x.Type == JTokenType.String)?.ToString();
+                            if (url.TryGetUri(out Uri uri))
+                            {
+                                HttpClient client = new HttpClient();
+                                if (await client.TryGetAsync(uri) is HttpRequestResult requestResult && requestResult.Succeeded)
+                                {
+                                    InitializeAdaptiveMediaSource(uri);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (request.TryGetValue("fromType", out JToken fromType))
                 {
                     switch (fromType.ToString())
                     {
-                        case "weiboDirect" when request.TryGetValue("0", out JToken url):
-                            GetWeiboVideo(url.ToString());
+                        case "weiboDirect":
+                        case "weiboDirect250924":
+                            if (request.TryGetValue("0", out JToken url))
+                            {
+                                GetWeiboVideo(url.ToString());
+                            }
                             break;
-                        case "biliBiliNormal2" when json.TryGetValue("playHeaders", out JToken playHeaders)
-                                                 && request.TryGetValue("0", out JToken avid)
-                                                 && request.TryGetValue("1", out JToken cid):
-                            GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
+                        case "biliBiliNormal2":
+                        case "biliBiliNormal20230704":
+                            if (json.TryGetValue("playHeaders", out JToken playHeaders)
+                                && request.TryGetValue("0", out JToken avid)
+                                && request.TryGetValue("1", out JToken cid))
+                            {
+                                GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
+                            }
                             break;
                         default:
                             break;
