@@ -390,7 +390,6 @@
                     <controls:TextBlockEx
                         x:Name="MessageText"
                         HorizontalAlignment="Left"
-                        IsEnableMarkdown="True"
                         IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                         LineSpacing="10"
                         Text="{x:Bind Message}"
@@ -777,7 +776,6 @@
                     Grid.Row="1"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    IsEnableMarkdown="True"
                     IsTextSelectionEnabled="{Binding IsCopyEnabled, Mode=OneWay}"
                     LineSpacing="10"
                     Text="{Binding Message}" />
@@ -1061,7 +1059,6 @@
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    IsEnableMarkdown="True"
                     IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                     LineSpacing="10"
                     Text="{x:Bind Message}" />

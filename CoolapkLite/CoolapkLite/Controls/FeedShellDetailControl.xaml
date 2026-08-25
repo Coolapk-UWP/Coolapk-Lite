@@ -500,7 +500,6 @@
                         x:Name="MessageText"
                         Grid.Row="1"
                         HorizontalAlignment="Left"
-                        IsEnableMarkdown="True"
                         IsTextSelectionEnabled="True"
                         LineSpacing="10"
                         Text="{x:Bind FeedDetail.Message, Mode=OneWay}"
