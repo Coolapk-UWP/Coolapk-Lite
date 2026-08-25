@@ -164,63 +164,35 @@ namespace CoolapkLite.Controls.Writers
         private Inline GetOldEmoji(string item)
         {
             string str = item.Substring(1);
-            if (EmojiHelper.Emojis.Contains(str))
-            {
-                InlineUIContainer container = new InlineUIContainer();
-                Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{str}.png")) };
-                ToolTipService.SetToolTip(image, new ToolTip { Content = item });
-                Viewbox viewBox = new Viewbox
-                {
-                    Child = image,
-                    Margin = new Thickness(0, 0, 0, -4),
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
-                container.Child = viewBox;
-                return container;
-            }
-            else
-            {
-                return new Run { Text = WebUtility.HtmlDecode(item) };
-            }
+            return EmojiHelper.Emojis.Contains(str)
+                ? GetEmojiContainer(str)
+                : new Run { Text = WebUtility.HtmlDecode(item) };
         }
 
         private Inline GetEmoji(string item)
         {
-            if (SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode) && EmojiHelper.OldEmojis.Contains(item))
+            return SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode) && EmojiHelper.OldEmojis.Contains(item)
+                ? GetEmojiContainer(item, true)
+                : EmojiHelper.Emojis.Contains(item)
+                    ? GetEmojiContainer(item)
+                    : new Run { Text = WebUtility.HtmlDecode(item) };
+        }
+
+        private static Inline GetEmojiContainer(string item, bool old = false)
+        {
+            InlineUIContainer container = new InlineUIContainer();
+            string path = old ? $"ms-appx:///Assets/Emoji/{item}2.png" : $"ms-appx:///Assets/Emoji/{item}.png";
+            Image image = new Image { Source = new BitmapImage(new Uri(path)) };
+            ToolTipService.SetToolTip(image, new ToolTip { Content = item });
+            Viewbox viewBox = new Viewbox
             {
-                InlineUIContainer container = new InlineUIContainer();
-                Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
-                ToolTipService.SetToolTip(image, new ToolTip { Content = item });
-                Viewbox viewBox = new Viewbox
-                {
-                    Child = image,
-                    Margin = new Thickness(0, 0, 0, -4),
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
-                container.Child = viewBox;
-                return container;
-            }
-            else if (EmojiHelper.Emojis.Contains(item))
-            {
-                InlineUIContainer container = new InlineUIContainer();
-                Image image = new Image { Source = new BitmapImage(new Uri($"ms-appx:///Assets/Emoji/{item}.png")) };
-                ToolTipService.SetToolTip(image, new ToolTip { Content = item });
-                Viewbox viewBox = new Viewbox
-                {
-                    Child = image,
-                    Margin = new Thickness(0, 0, 0, -4),
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
-                container.Child = viewBox;
-                return container;
-            }
-            else
-            {
-                return new Run { Text = WebUtility.HtmlDecode(item) };
-            }
+                Child = image,
+                Margin = new Thickness(0, 0, 0, -4),
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
+            container.Child = viewBox;
+            return container;
         }
     }
 }

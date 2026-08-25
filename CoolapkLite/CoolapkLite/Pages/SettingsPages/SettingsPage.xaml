@@ -35,6 +35,7 @@
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/ContentSettingsHeader">
                 <ToggleSwitch x:Uid="/SettingsPage/NoPicsModeCheckBox" IsOn="{x:Bind Provider.IsNoPicsMode, Mode=TwoWay}" />
+                <ToggleSwitch x:Uid="/SettingsPage/UseOldEmojiModeCheckBox" IsOn="{x:Bind Provider.IsUseOldEmojiMode, Mode=TwoWay}" />
                 <ToggleSwitch x:Uid="/SettingsPage/MultiWindowCheckBox" IsOn="{x:Bind Provider.IsUseMultiWindow, Mode=TwoWay}" />
                 <ToggleSwitch x:Uid="/SettingsPage/DisplayOriginPictureCheckBox" IsOn="{x:Bind Provider.IsDisplayOriginPicture, Mode=TwoWay}" />
                 <control:StackPanelEx Orientation="Horizontal" Spacing="8">

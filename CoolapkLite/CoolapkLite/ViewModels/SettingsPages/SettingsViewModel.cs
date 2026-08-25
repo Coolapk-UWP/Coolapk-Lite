@@ -62,6 +62,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        public bool IsUseOldEmojiMode
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode);
+            set
+            {
+                if (IsUseOldEmojiMode != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsUseOldEmojiMode, value);
+                    RaisePropertyChangedEvent();
+                }
+            }
+        }
+
         public bool? ShowOtherException
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.ShowOtherException);
