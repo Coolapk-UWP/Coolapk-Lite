@@ -21,6 +21,10 @@ namespace CoolapkLite.Helpers
 {
     public static partial class NetworkHelper
     {
+        private static readonly object appTokenLock = new object();
+        private static readonly object darkModeLock = new object();
+        private static readonly object requestedLock = new object();
+
         public const string XMLHttpRequest = "XMLHttpRequest";
 
         public static readonly HttpClientHandler ClientHandler;
@@ -73,7 +77,7 @@ namespace CoolapkLite.Helpers
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
 
             headers.Clear();
-            headers.Add("X-Sdk-Int", "33");
+            headers.Add("X-Sdk-Int", "36");
             headers.Add("X-Sdk-Locale", LanguageHelper.GetPrimaryLanguage());
             headers.Add("X-App-Mode", "universal");
             headers.Add("X-App-Channel", "coolapk");
@@ -124,23 +128,32 @@ namespace CoolapkLite.Helpers
 
         private static void ReplaceDarkMode(this HttpRequestHeaders headers, ApplicationTheme theme)
         {
-            const string name = "X-Dark-Mode";
-            _ = headers.Remove(name);
-            headers.Add(name, theme == ApplicationTheme.Dark ? "1" : "0");
+            lock (darkModeLock)
+            {
+                const string name = "X-Dark-Mode";
+                _ = headers.Remove(name);
+                headers.Add(name, theme == ApplicationTheme.Dark ? "1" : "0");
+            }
         }
 
         private static void ReplaceAppToken(this HttpRequestHeaders headers)
         {
-            const string name = "X-App-Token";
-            _ = headers.Remove(name);
-            headers.Add(name, TokenCreator.GetToken());
+            lock (appTokenLock)
+            {
+                const string name = "X-App-Token";
+                _ = headers.Remove(name);
+                headers.Add(name, TokenCreator.GetToken());
+            }
         }
 
         private static void ReplaceRequested(this HttpRequestHeaders headers, string request)
         {
-            const string name = "X-Requested-With";
-            _ = headers.Remove(name);
-            if (request != null) { headers.Add(name, request); }
+            lock (requestedLock)
+            {
+                const string name = "X-Requested-With";
+                _ = headers.Remove(name);
+                if (request != null) { headers.Add(name, request); }
+            }
         }
 
         private static void ReplaceCoolapkCookie(this CookieContainer container, HttpCookieCollection cookies, Uri uri)
