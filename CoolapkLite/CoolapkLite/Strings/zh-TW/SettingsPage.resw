@@ -219,4 +219,7 @@
   <data name="CleanLogsItem.Text" xml:space="preserve">
     <value>清理紀錄檔</value>
   </data>
+  <data name="UseOldEmojiModeCheckBox.Header" xml:space="preserve">
+    <value>使用旧表情</value>
+  </data>
 </root>
