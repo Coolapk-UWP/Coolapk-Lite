@@ -220,6 +220,6 @@
     <value>清理紀錄檔</value>
   </data>
   <data name="UseOldEmojiModeCheckBox.Header" xml:space="preserve">
-    <value>使用旧表情</value>
+    <value>使用舊表情</value>
   </data>
 </root>
