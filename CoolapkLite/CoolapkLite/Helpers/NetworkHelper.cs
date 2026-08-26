@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
+using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -102,6 +103,20 @@ namespace CoolapkLite.Helpers
             headers.Add("X-Api-Supported", version.VersionCode.ToString());
             headers.Add("X-App-Code", version.VersionCode.ToString());
             headers.Add("X-Api-Version", version.MajorVersion);
+        }
+
+        public static void UpdateDeviceInfo(DeviceInfo deviceInfo)
+        {
+            SettingsHelper.Set(SettingsHelper.DeviceInfo, deviceInfo);
+            TokenCreator.UpdateDeviceInfo(deviceInfo);
+            SetRequestHeaders();
+        }
+
+        public static void UpdateAPIVersion(APIVersions version)
+        {
+            SettingsHelper.Set(SettingsHelper.APIVersion, version);
+            TokenCreator.UpdateAPIVersion(version);
+            SetRequestHeaders();
         }
 
         private static HttpCookieCollection GetCoolapkCookies(Uri uri)

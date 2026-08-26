@@ -68,9 +68,7 @@ namespace CoolapkLite.Controls.Dialogs
         {
             if (args.Result == ContentDialogResult.Primary)
             {
-                SettingsHelper.Set(SettingsHelper.DeviceInfo, DeviceInfo);
-                TokenCreator.UpdateDeviceInfo(DeviceInfo);
-                NetworkHelper.SetRequestHeaders();
+                NetworkHelper.UpdateDeviceInfo(DeviceInfo);
             }
         }
 

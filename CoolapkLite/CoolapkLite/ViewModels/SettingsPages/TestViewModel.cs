@@ -133,10 +133,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 if (APIVersion != value)
                 {
-                    APIVersions version = (APIVersions)(value + 4);
-                    SettingsHelper.Set(SettingsHelper.APIVersion, version);
-                    TokenCreator.UpdateAPIVersion(version);
-                    NetworkHelper.SetRequestHeaders();
+                    NetworkHelper.UpdateAPIVersion((APIVersions)(value + 4));
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     RaisePropertyChangedEvent();
                 }
