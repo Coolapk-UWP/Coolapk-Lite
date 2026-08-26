@@ -57,7 +57,20 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 {
                     SettingsHelper.Set(SettingsHelper.IsNoPicsMode, value);
                     RaisePropertyChangedEvent();
-                    ThemeHelper.InvokeUISettingChanged(UISettingChangedType.NoPicChanged);
+                    ThemeHelper.InvokeNoPicsModeChanged(value);
+                }
+            }
+        }
+
+        public bool IsUseOldEmojiMode
+        {
+            get => SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode);
+            set
+            {
+                if (IsUseOldEmojiMode != value)
+                {
+                    SettingsHelper.Set(SettingsHelper.IsUseOldEmojiMode, value);
+                    RaisePropertyChangedEvent();
                 }
             }
         }

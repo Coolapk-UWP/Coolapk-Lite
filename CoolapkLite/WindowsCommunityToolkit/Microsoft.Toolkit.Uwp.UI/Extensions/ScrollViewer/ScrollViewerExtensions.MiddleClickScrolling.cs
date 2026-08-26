@@ -5,7 +5,6 @@
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Threading;
-using Windows.ApplicationModel.Core;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -194,7 +193,7 @@ namespace Microsoft.Toolkit.Uwp.UI
                 // SubscribeMiddle if middle button is pressed
                 if (pointerPoint.Properties.IsMiddleButtonPressed)
                 {
-                    SubscribeMiddleClickScrolling(CoreApplication.MainView.Dispatcher);
+                    SubscribeMiddleClickScrolling(Window.Current.Dispatcher);
 
                     _startPosition = Window.Current.CoreWindow.PointerPosition;
                     _currentPosition = Window.Current.CoreWindow.PointerPosition;
@@ -246,7 +245,7 @@ namespace Microsoft.Toolkit.Uwp.UI
                 Window.Current.CoreWindow.PointerPressed -= CoreWindow_PointerPressed;
                 Window.Current.CoreWindow.PointerPressed += CoreWindow_PointerPressed;
 
-                SetCursorType(CoreApplication.MainView.Dispatcher, 0, 0);
+                SetCursorType(Window.Current.Dispatcher, 0, 0);
             }
             else
             {

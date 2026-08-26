@@ -62,14 +62,14 @@ namespace CoolapkLite.Controls
             ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
-        private void OnUISettingChanged(UISettingChangedType mode)
+        private void OnUISettingChanged(ApplicationTheme mode)
         {
             switch (mode)
             {
-                case UISettingChangedType.LightMode:
+                case ApplicationTheme.Light:
                     RequestedTheme = ElementTheme.Light;
                     break;
-                case UISettingChangedType.DarkMode:
+                case ApplicationTheme.Dark:
                     RequestedTheme = ElementTheme.Dark;
                     break;
                 default:

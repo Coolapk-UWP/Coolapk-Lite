@@ -12,7 +12,7 @@
     xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     d:DataContext="{d:DesignInstance Type=settingspages:TestViewModel}"
-    DataContext="{x:Bind Provider, Mode=OneWay}"
+    DataContext="{x:Bind Provider}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Page.Resources>
@@ -72,6 +72,35 @@
                     TickFrequency="10"
                     TickPlacement="Outside"
                     ValueChanged="Slider_ValueChanged" />
+                <control:StackPanelEx Spacing="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="4" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox
+                            x:Name="TileUrl"
+                            Header="磁贴源链接"
+                            Text="{x:Bind Provider.TileUrl, Mode=OneWay}" />
+                        <Button
+                            Grid.Column="2"
+                            VerticalAlignment="Bottom"
+                            Click="Button_Click"
+                            Content="设置"
+                            Tag="TileUrl" />
+                    </Grid>
+                    <control:StackPanelEx Orientation="Horizontal" Spacing="4">
+                        <Button
+                            Click="Button_Click"
+                            Content="更新磁贴"
+                            Tag="UpdateTile" />
+                        <Button
+                            Click="Button_Click"
+                            Content="清除磁贴"
+                            Tag="ClearTile" />
+                    </control:StackPanelEx>
+                </control:StackPanelEx>
             </control:SettingsGroup>
             <control:SettingsGroup Header="网络测试">
                 <control:StackPanelEx Spacing="4">
@@ -93,7 +122,15 @@
                 </control:StackPanelEx>
                 <ToggleSwitch Header="是否完整加载" IsOn="{x:Bind Provider.IsFullLoad, Mode=TwoWay}" />
                 <ToggleSwitch Header="是否使用 API2" IsOn="{x:Bind Provider.IsUseAPI2, Mode=TwoWay}" />
-                <ToggleSwitch Header="是否使用 TokenV2" IsOn="{x:Bind Provider.IsUseTokenV2, Mode=TwoWay}" />
+                <ComboBox
+                    x:Name="ComboBoxTokenVersion"
+                    Header="选择 Token 版本"
+                    PlaceholderText="选择 Token"
+                    SelectedIndex="{x:Bind Provider.TokenVersion, Mode=TwoWay}">
+                    <x:String>Token V1</x:String>
+                    <x:String>Token V2</x:String>
+                    <x:String>Token V3</x:String>
+                </ComboBox>
                 <ToggleSwitch
                     x:Name="IsCustomUAToggle"
                     Header="是否修改 UserAgent"
@@ -120,6 +157,8 @@
                     <x:String>V12</x:String>
                     <x:String>V13</x:String>
                     <x:String>V14</x:String>
+                    <x:String>V15</x:String>
+                    <x:String>V16</x:String>
                 </ComboBox>
                 <control:StackPanelEx Orientation="Horizontal" Spacing="4">
                     <Button
@@ -276,7 +315,10 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     TextWrapping="Wrap" />
-                <control:TextBlockEx Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}" Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
+                <control:TextBlockEx
+                    IsEnableMarkdown="True"
+                    Text="{x:Bind Path=UnformattedText.Text, Mode=OneWay}"
+                    Visibility="{x:Bind Path=UnformattedText.Text, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
             </control:SettingsGroup>
             <control:SettingsGroup Header="发帖测试">
                 <control:CreateFeedControl HorizontalContentAlignment="Stretch" FeedType="Feed" />

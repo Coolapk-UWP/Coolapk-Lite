@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Windows.ApplicationModel.Core;
 using Windows.System.RemoteSystems;
 using Windows.UI.Core;
 
@@ -35,7 +34,7 @@ namespace Microsoft.Toolkit.Uwp.Helpers
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
         public RemoteDeviceHelper(CoreDispatcher dispatcher = null)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
             RemoteSystems = new ObservableCollection<RemoteSystem>();
             GenerateSystems();
         }
@@ -47,7 +46,7 @@ namespace Microsoft.Toolkit.Uwp.Helpers
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
         public RemoteDeviceHelper(List<IRemoteSystemFilter> filter, CoreDispatcher dispatcher = null)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
             RemoteSystems = new ObservableCollection<RemoteSystem>();
             GenerateSystemsWithFilterAsync(filter);
         }

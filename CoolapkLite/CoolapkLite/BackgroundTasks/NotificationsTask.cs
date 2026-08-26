@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
@@ -8,18 +9,26 @@ namespace CoolapkLite.BackgroundTasks
 {
     public sealed class NotificationsTask : IBackgroundTask
     {
-        public static NotificationsTask Instance = new NotificationsTask();
+        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance) => Run(taskInstance);
 
-        public NotificationsTask() => Instance = Instance ?? this;
-
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public static async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            await UpdateNotificationsAsync();
-            deferral.Complete();
+            try
+            {
+                await UpdateNotificationsAsync();
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(NotificationsTask)).Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
-        private async Task UpdateNotificationsAsync()
+        private static async Task UpdateNotificationsAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {

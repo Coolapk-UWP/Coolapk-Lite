@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Models.Images;
 using System;
+using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 
@@ -175,7 +176,7 @@ namespace CoolapkLite.Controls
 
         private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            (d as TextBlockEx).RenderTextBlock();
+            ((TextBlockEx)d).RenderTextBlock();
         }
 
         #endregion
@@ -453,6 +454,167 @@ namespace CoolapkLite.Controls
         {
             get => (FontFamily)GetValue(InlineCodeFontFamilyProperty);
             set => SetValue(InlineCodeFontFamilyProperty, value);
+        }
+
+        #endregion
+
+        #region IsEnableMarkdown
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="IsEnableMarkdown"/>.
+        /// </summary>
+        public static readonly DependencyProperty IsEnableMarkdownProperty =
+            DependencyProperty.Register(
+                nameof(IsEnableMarkdown),
+                typeof(bool),
+                typeof(TextBlockEx),
+                new PropertyMetadata(false, OnTextChanged));
+
+        /// <summary>
+        /// Gets or sets a value indicating whether Markdown is enabled.
+        /// </summary>
+        public bool IsEnableMarkdown
+        {
+            get => (bool)GetValue(IsEnableMarkdownProperty);
+            set => SetValue(IsEnableMarkdownProperty, value);
+        }
+
+        #endregion
+
+        #region Header1FontWeight
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header1FontWeight"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header1FontWeightProperty =
+            DependencyProperty.Register(
+                nameof(Header1FontWeight),
+                typeof(FontWeight),
+                typeof(TextBlockEx),
+                new PropertyMetadata(FontWeights.Bold));
+
+        /// <summary>
+        /// Gets or sets the font weight to use for level 1 headers.
+        /// </summary>
+        public FontWeight Header1FontWeight
+        {
+            get => (FontWeight)GetValue(Header1FontWeightProperty);
+            set => SetValue(Header1FontWeightProperty, value);
+        }
+
+        #endregion
+
+        #region Header1FontSize
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header1FontSize"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header1FontSizeProperty =
+            DependencyProperty.Register(
+                nameof(Header1FontSize),
+                typeof(double),
+                typeof(TextBlockEx),
+                new PropertyMetadata(16.0));
+
+        /// <summary>
+        /// Gets or sets the font size for level 1 headers.
+        /// </summary>
+        public double Header1FontSize
+        {
+            get => (double)GetValue(Header1FontSizeProperty);
+            set => SetValue(Header1FontSizeProperty, value);
+        }
+
+        #endregion
+
+        #region Header2FontWeight
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header2FontWeight"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header2FontWeightProperty =
+            DependencyProperty.Register(
+                nameof(Header2FontWeight),
+                typeof(FontWeight),
+                typeof(TextBlockEx),
+                new PropertyMetadata(FontWeights.Bold));
+
+        /// <summary>
+        /// Gets or sets the font weight to use for level 2 headers.
+        /// </summary>
+        public FontWeight Header2FontWeight
+        {
+            get => (FontWeight)GetValue(Header2FontWeightProperty);
+            set => SetValue(Header2FontWeightProperty, value);
+        }
+
+        #endregion
+
+        #region Header2FontSize
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header2FontSize"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header2FontSizeProperty =
+            DependencyProperty.Register(
+                nameof(Header2FontSize),
+                typeof(double),
+                typeof(TextBlockEx),
+                new PropertyMetadata(15.0));
+
+        /// <summary>
+        /// Gets or sets the font size for level 2 headers.
+        /// </summary>
+        public double Header2FontSize
+        {
+            get => (double)GetValue(Header2FontSizeProperty);
+            set => SetValue(Header2FontSizeProperty, value);
+        }
+
+        #endregion
+
+        #region Header3FontWeight
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header3FontWeight"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header3FontWeightProperty =
+            DependencyProperty.Register(
+                nameof(Header3FontWeight),
+                typeof(FontWeight),
+                typeof(TextBlockEx),
+                new PropertyMetadata(FontWeights.Bold));
+
+        /// <summary>
+        /// Gets or sets the font weight to use for level 3 headers.
+        /// </summary>
+        public FontWeight Header3FontWeight
+        {
+            get => (FontWeight)GetValue(Header3FontWeightProperty);
+            set => SetValue(Header3FontWeightProperty, value);
+        }
+
+        #endregion
+
+        #region Header3FontSize
+
+        /// <summary>
+        /// Gets the dependency property for <see cref="Header3FontSize"/>.
+        /// </summary>
+        public static readonly DependencyProperty Header3FontSizeProperty =
+            DependencyProperty.Register(
+                nameof(Header3FontSize),
+                typeof(double),
+                typeof(TextBlockEx),
+                new PropertyMetadata(14.0));
+
+        /// <summary>
+        /// Gets or sets the font size for level 3 headers.
+        /// </summary>
+        public double Header3FontSize
+        {
+            get => (double)GetValue(Header3FontSizeProperty);
+            set => SetValue(Header3FontSizeProperty, value);
         }
 
         #endregion

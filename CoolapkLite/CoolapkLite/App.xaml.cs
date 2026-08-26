@@ -15,6 +15,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Security.Authorization.AppCapabilityAccess;
 using Windows.System;
 using Windows.System.Profile;
@@ -113,7 +114,7 @@ namespace CoolapkLite
 
         #endregion
 
-        private void EnsureWindow(IActivatedEventArgs e)
+        private async void EnsureWindow(IActivatedEventArgs e)
         {
             if (!isLoaded)
             {
@@ -174,7 +175,12 @@ namespace CoolapkLite
             }
             else if (rootFrame.Content is IHaveTitleBar page)
             {
-                _ = page.OpenActivatedEventArgsAsync(e);
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Kind == (ActivationKind)1021
+                    && e is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
+                _ = await page.OpenActivatedEventArgsAsync(e);
+                deferral?.Complete();
             }
 
             // 确保当前窗口处于活动状态
@@ -316,7 +322,7 @@ namespace CoolapkLite
 #endif
 
         /// <summary>
-        /// Should be called from OnActivated and OnLaunched
+        /// Should be called from OnActivated and OnLaunched.
         /// </summary>
         private static void RegisterExceptionHandlingSynchronizationContext()
         {
@@ -385,23 +391,13 @@ namespace CoolapkLite
                     return;
                 }
 
-                // If background task is already registered, do nothing
-                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
-                { return; }
-
                 // Register (Single Process)
-                BackgroundTaskRegistration _LiveTileTask = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false), true);
+                _ = BackgroundTaskHelper.Register(LiveTileTask, new TimeTrigger(time, false));
             }
 
-            void UnregisterLiveTileTask()
-            {
-                // If background task is not registered, do nothing
-                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
-                { return; }
-
+            void UnregisterLiveTileTask() =>
                 // Unregister (Single Process)
                 BackgroundTaskHelper.Unregister(LiveTileTask);
-            }
 
             #endregion
 
@@ -409,25 +405,13 @@ namespace CoolapkLite
 
             const string NotificationsTask = nameof(BackgroundTasks.NotificationsTask);
 
-            void RegisterNotificationsTask()
-            {
-                // If background task is already registered, do nothing
-                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
-                { return; }
-
+            void RegisterNotificationsTask() =>
                 // Register (Single Process)
-                BackgroundTaskRegistration _NotificationsTask = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false), true);
-            }
+                _ = BackgroundTaskHelper.Register(NotificationsTask, new TimeTrigger(15, false));
 
-            void UnregisterNotificationsTask()
-            {
-                // If background task is not registered, do nothing
-                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
-                { return; }
-
+            void UnregisterNotificationsTask() =>
                 // Unregister (Single Process)
                 BackgroundTaskHelper.Unregister(NotificationsTask);
-            }
 
             #endregion
 
@@ -437,64 +421,63 @@ namespace CoolapkLite
             {
                 const string ToastBackgroundTask = "ToastBackgroundTask";
 
-                // If background task is already registered, do nothing
-                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(ToastBackgroundTask)))
-                { return; }
-
-                // Create the background task
-                BackgroundTaskBuilder builder = new BackgroundTaskBuilder
-                { Name = ToastBackgroundTask };
-
-                // Assign the toast action trigger
-                builder.SetTrigger(new ToastNotificationActionTrigger());
-
-                // And register the task
-                BackgroundTaskRegistration registration = builder.Register();
+                // Register the task
+                _ = BackgroundTaskHelper.Register(ToastBackgroundTask, new ToastNotificationActionTrigger());
             }
 
             #endregion
         }
 
-        protected override async void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        private async void ToastBackgroundTask(IBackgroundTaskInstance taskInstance)
         {
-            base.OnBackgroundActivated(args);
-
-            BackgroundTaskDeferral deferral = args.TaskInstance.GetDeferral();
-
-            switch (args.TaskInstance.Task.Name)
+            BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
+            try
             {
-                case nameof(LiveTileTask):
-                    LiveTileTask.Instance?.Run(args.TaskInstance);
-                    break;
-
-                case nameof(NotificationsTask):
-                    NotificationsTask.Instance?.Run(args.TaskInstance);
-                    break;
-
-                case "ToastBackgroundTask":
-                    if (args.TaskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
+                if (taskInstance.TriggerDetails is ToastNotificationActionTriggerDetail details)
+                {
+                    ToastArguments arguments = ToastArguments.Parse(details.Argument);
+                    if (arguments.TryGetValue("action", out string action))
                     {
-                        ToastArguments arguments = ToastArguments.Parse(details.Argument);
-                        if (arguments.TryGetValue("action", out string action))
+                        switch (action)
                         {
-                            switch (action)
-                            {
-                                case "hasUpdate":
-                                    if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
-                                    {
-                                        _ = await Launcher.LaunchUriAsync(uri);
-                                    }
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case "hasUpdate":
+                                if (arguments.TryGetValue("url", out string url) && url.TryGetUri(out Uri uri))
+                                {
+                                    _ = await Launcher.LaunchUriAsync(uri);
+                                }
+                                break;
+                            default:
+                                break;
                         }
                     }
-                    deferral.Complete();
-                    break;
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger("ToastBackgroundTask").Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
+        }
 
+        protected override void OnBackgroundActivated(BackgroundActivatedEventArgs args)
+        {
+            base.OnBackgroundActivated(args);
+            IBackgroundTaskInstance instance = args.TaskInstance;
+            switch (instance.Task.Name)
+            {
+                case nameof(LiveTileTask):
+                    LiveTileTask.Run(instance);
+                    break;
+                case nameof(NotificationsTask):
+                    NotificationsTask.Run(instance);
+                    break;
+                case "ToastBackgroundTask":
+                    ToastBackgroundTask(instance);
+                    break;
                 default:
-                    deferral.Complete();
                     break;
             }
         }

@@ -1,11 +1,14 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -138,11 +141,38 @@ namespace CoolapkLite.Models.Feeds
 
         private async void GetJson(Uri uri, LinkType type)
         {
-            (bool isSucceed, string result) = await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest);
-            if (isSucceed && !string.IsNullOrEmpty(result))
+            try
             {
-                JObject json = JObject.Parse(result);
-                ReadJson(json, type);
+                using (HttpClient client = new HttpClient())
+                {
+                    if (type == LinkType.Coolapk)
+                    {
+                        NetworkHelper.SetRequestHeaders(client);
+                        client.DefaultRequestHeaders.Add("X-App-Token", NetworkHelper.TokenCreator.GetToken());
+                        client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
+                    }
+                    else
+                    {
+                        bool isCustomUA = SettingsHelper.Get<bool>(SettingsHelper.IsCustomUA);
+                        client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
+                        client.DefaultRequestHeaders.UserAgent.ParseAdd((isCustomUA ? SettingsHelper.Get<UserAgent>(SettingsHelper.CustomUA) : UserAgent.Default).ToString());
+                    }
+                    string result = await client.GetStringAsync(uri);
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        JObject json = JObject.Parse(result);
+                        ReadJson(json, type);
+                    }
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LinkFeedModel)).Error(e.ExceptionToMessage(), e);
+                _ = UIHelper.ShowHttpExceptionMessageAsync(e);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LinkFeedModel)).Error(ex.ExceptionToMessage(), ex);
             }
         }
 
@@ -179,6 +209,10 @@ namespace CoolapkLite.Models.Feeds
                     if (userInfo.TryGetValue("username", out JToken username))
                     {
                         UserModel.UserName = username.ToString();
+                    }
+                    if (userInfo.TryGetValue("userAvatar", out JToken userAvatar))
+                    {
+                        UserModel.UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
                     }
                     UserInfo = UserModel;
                 }

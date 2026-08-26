@@ -65,8 +65,12 @@
                 VerticalAlignment="Stretch"
                 EnableDrag="True"
                 Source="{x:Bind}"
-                Style="{StaticResource ImageBrushImageControlStyle}"
-                Tapped="Image_Tapped" />
+                Style="{StaticResource ImageBrushImageControlStyle}" />
+            <Border
+                x:Name="TapArea"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="{ThemeResource SystemControlTransparentBrush}" />
             <StackPanel
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
@@ -79,6 +83,15 @@
                         Margin="2,0"
                         Foreground="White"
                         Text="GIF" />
+                </Border>
+                <Border
+                    x:Name="LivePhoto"
+                    Background="#0F9D58"
+                    Visibility="{x:Bind IsLivePhoto, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                    <TextBlock
+                        Margin="2,0"
+                        Foreground="White"
+                        Text="Live" />
                 </Border>
             </StackPanel>
             <!--  如果你觉得你的设备性能很好的话可以把注释去掉  -->

@@ -150,6 +150,7 @@
                         Margin="8,4"
                         HorizontalAlignment="Left"
                         FontSize="20"
+                        FontWeight="Black"
                         IsTextSelectionEnabled="True"
                         Text="{x:Bind FeedDetail.MessageTitle, Mode=OneWay}"
                         TextWrapping="Wrap" />
@@ -250,7 +251,6 @@
                                                     HorizontalAlignment="Left"
                                                     FontSize="12"
                                                     FontStyle="Italic"
-                                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                                     Text="{x:Bind FeedDetail.UserInfo.Level, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
                                                 <TextBlock
                                                     Grid.Column="1"
@@ -448,20 +448,17 @@
                 <Grid Margin="0,-4" Visibility="{x:Bind FeedDetail.IsRatingFeed, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="8" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Border
                         Padding="1"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
-                        BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-                        BorderThickness="1"
-                        CornerRadius="{ThemeResource ControlCornerRadius}">
+                        Background="{ThemeResource SystemControlBackgroundAccentBrush}">
                         <TextBlock
                             HorizontalAlignment="Left"
                             FontSize="12"
-                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                             Text="评分" />
                     </Border>
                     <local:RatingControl
@@ -492,7 +489,7 @@
                         <local:TextBlockEx
                             x:Name="MessageTitleText"
                             HorizontalAlignment="Left"
-                            FontSize="16"
+                            FontSize="18"
                             FontWeight="Black"
                             IsTextSelectionEnabled="True"
                             Text="{x:Bind FeedDetail.MessageTitle, Mode=OneWay}"
@@ -511,6 +508,7 @@
                         x:Name="ArticleMessageText"
                         Grid.Row="1"
                         HorizontalAlignment="Left"
+                        IsEnableMarkdown="True"
                         IsTextSelectionEnabled="True"
                         LineSpacing="10"
                         Text="{x:Bind FeedDetail.MessageRawOutput, Mode=OneWay}"

@@ -24,6 +24,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -54,11 +55,9 @@ namespace CoolapkLite.Pages
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarVisible(false); }
-            _ = NotificationsModel.Update();
-            _ = LiveTileTask.Instance?.UpdateTileAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (ApiInfoHelper.IsHardwareButtonsSupported)
@@ -67,13 +66,21 @@ namespace CoolapkLite.Pages
             HamburgerMenuFrame.Navigated += On_Navigated;
             if (!isLoaded)
             {
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
                 HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
-                HamburgerMenu.OptionsItemsSource = MenuItem.GetOptionsItems(Dispatcher);
+                (MenuItem[] options, PersonMenuItem person) = MenuItem.GetOptionsItems(Dispatcher);
+                HamburgerMenu.OptionsItemsSource = options;
+                _ = person.InitializeAsync();
+                _ = NotificationsModel.UpdateAsync();
+                _ = LiveTileTask.UpdateTileAsync();
                 if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-                { OpenActivatedEventArgs(ActivatedEventArgs); }
+                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
-                { OpenLinkAsync(factory); }
+                { await OpenLinkAsync(factory); }
                 else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo()); }
+                deferral?.Complete();
                 isLoaded = true;
             }
         }
@@ -83,7 +90,9 @@ namespace CoolapkLite.Pages
             base.OnNavigatedFrom(e);
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed -= AppWindow_Changed;
+                AppWindow window = this.GetWindowForElement();
+                window.Frame.DragRegionVisuals.Clear();
+                window.Changed -= AppWindow_Changed;
             }
             else
             {
@@ -102,7 +111,9 @@ namespace CoolapkLite.Pages
         {
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed += AppWindow_Changed;
+                AppWindow window = this.GetWindowForElement();
+                window.Frame.DragRegionVisuals.Add(CustomTitleBar);
+                window.Changed += AppWindow_Changed;
             }
             else
             {
@@ -117,7 +128,7 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void OpenLinkAsync(OpenLinkFactory factory)
+        private async Task OpenLinkAsync(OpenLinkFactory factory)
         {
             if (!await factory(HamburgerMenuFrame))
             {
@@ -125,7 +136,7 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void OpenActivatedEventArgs(IActivatedEventArgs args)
+        private async Task OpenActivatedEventArgsAsync(IActivatedEventArgs args)
         {
             if (!await HamburgerMenuFrame.OpenActivatedEventArgsAsync(args))
             {
@@ -442,14 +453,15 @@ namespace CoolapkLite.Pages
             return items;
         }
 
-        public static MenuItem[] GetOptionsItems(CoreDispatcher dispatcher)
+        public static (MenuItem[], PersonMenuItem) GetOptionsItems(CoreDispatcher dispatcher)
         {
+            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
             MenuItem[] items = new[]
             {
-                 new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 },
+                 person,
                  new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
             };
-            return items;
+            return (items, person);
         }
     }
 
@@ -469,11 +481,23 @@ namespace CoolapkLite.Pages
             private set => SetProperty(ref _notificationsModel, value);
         }
 
-        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher)
+        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
+
+        ~PersonMenuItem() => SettingsHelper.LoginChanged -= OnLoginChanged;
+
+        public async Task InitializeAsync()
         {
-            SettingsHelper.LoginChanged += args => _ = SetUserAvatarAsync(args);
-            _ = SetUserAvatarAsync();
+            try
+            {
+                await SetUserAvatarAsync().ConfigureAwait(false);
+            }
+            finally
+            {
+                SettingsHelper.LoginChanged += OnLoginChanged;
+            }
         }
+
+        private void OnLoginChanged(bool args) => _ = SetUserAvatarAsync(args);
 
         private Task SetUserAvatarAsync() =>
             SettingsHelper.CheckLoginAsync().ContinueWith(x => SetUserAvatarAsync(x.Result)).Unwrap();

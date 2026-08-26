@@ -15,7 +15,7 @@ namespace CoolapkLite.Helpers
         /// Get is <see cref="Windows.Foundation.UniversalApiContract"/> 14 (Windows 11 version 21H2 (22000)) present.
         /// </summary>
         public static bool IsUniversalApiContract14Present { get; } = ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 14);
-        
+
         #endregion
 
         #region Types

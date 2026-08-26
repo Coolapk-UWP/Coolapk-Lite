@@ -18,6 +18,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.Resources;
+using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
 using Windows.UI.Core;
@@ -37,6 +38,7 @@ namespace CoolapkLite.Pages
     /// </summary>
     public sealed partial class PivotPage : Page, IHaveTitleBar
     {
+        private bool isLoaded;
         private Action Refresh;
 
         public Frame MainFrame => PivotContentFrame;
@@ -52,22 +54,30 @@ namespace CoolapkLite.Pages
             AppTitle.Text = ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             if (!(AnalyticsInfo.VersionInfo.DeviceFamily == "Windows.Desktop"))
             { UpdateTitleBarVisible(false); }
-            _ = NotificationsModel.Update();
-            _ = LiveTileTask.Instance?.UpdateTileAsync();
+            _ = NotificationsModel.UpdateAsync();
+            _ = LiveTileTask.UpdateTileAsync();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
             if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed += System_BackPressed; }
             // Add handler for ContentFrame navigation.
             PivotContentFrame.Navigated += On_Navigated;
-            Pivot.ItemsSource = GetMainItems();
-            if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-            { OpenActivatedEventArgs(ActivatedEventArgs); }
-            else if (e.Parameter is OpenLinkFactory factory)
-            { OpenLinkAsync(factory); }
+            if (!isLoaded)
+            {
+                Deferral deferral = null;
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
+                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
+                Pivot.ItemsSource = GetMainItems();
+                if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
+                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
+                else if (e.Parameter is OpenLinkFactory factory)
+                { await OpenLinkAsync(factory); }
+                deferral?.Complete();
+                isLoaded = true;
+            }
             SettingsHelper.LoginChanged += OnLoginChanged;
         }
 
@@ -76,7 +86,9 @@ namespace CoolapkLite.Pages
             base.OnNavigatedFrom(e);
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed -= AppWindow_Changed;
+                AppWindow window = this.GetWindowForElement();
+                window.Frame.DragRegionVisuals.Clear();
+                window.Changed -= AppWindow_Changed;
             }
             else
             {
@@ -102,7 +114,9 @@ namespace CoolapkLite.Pages
         {
             if (this.IsAppWindow())
             {
-                this.GetWindowForElement().Changed += AppWindow_Changed;
+                AppWindow window = this.GetWindowForElement();
+                window.Frame.DragRegionVisuals.Add(CustomTitleBar);
+                window.Changed += AppWindow_Changed;
             }
             else
             {
@@ -115,15 +129,9 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private void OpenLinkAsync(OpenLinkFactory factory)
-        {
-            _ = factory(PivotContentFrame);
-        }
+        private Task OpenLinkAsync(OpenLinkFactory factory) => factory(PivotContentFrame);
 
-        private void OpenActivatedEventArgs(IActivatedEventArgs args)
-        {
-            _ = PivotContentFrame.OpenActivatedEventArgsAsync(args);
-        }
+        private Task OpenActivatedEventArgsAsync(IActivatedEventArgs args) => PivotContentFrame.OpenActivatedEventArgsAsync(args);
 
         private void On_Navigated(object sender, NavigationEventArgs e)
         {
@@ -391,16 +399,17 @@ namespace CoolapkLite.Pages
             PivotItem[] items = isLogin ? new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() },
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() },
                 new PivotItem { Tag = "circle", Header = loader.GetString("circle"), Content = new Frame() },
                 new PivotItem { Tag = "apk", Header = loader.GetString("apk"), Content = new Frame() },
                 new PivotItem { Tag = "topic", Header = loader.GetString("topic"), Content = new Frame() },
                 new PivotItem { Tag = "question", Header = loader.GetString("question"), Content = new Frame() },
-                new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() }
+                new PivotItem { Tag = "product", Header = loader.GetString("product"), Content = new Frame() },
+                new PivotItem { Tag = "recent", Header = loader.GetString("recent"), Content = new Frame() }
             } : new[]
             {
                 new PivotItem { Tag = "indexV8", Header = loader.GetString("indexV8"), Content = new Frame() },
-                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("V9_HOME_TAB_FOLLOW"), Content = new Frame() }
+                new PivotItem { Tag = "V9_HOME_TAB_FOLLOW", Header = loader.GetString("follow"), Content = new Frame() }
             };
             return items;
         }

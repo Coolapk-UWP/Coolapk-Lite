@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
@@ -131,7 +132,38 @@ namespace CoolapkLite.Controls
 
         private static void OnMediaInfoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((MediaPlayerElementEx)d).UpdateMediaInfo();
+            if (!JToken.DeepEquals(e.OldValue as JToken, e.NewValue as JToken))
+            {
+                ((MediaPlayerElementEx)d).UpdateMediaInfo();
+            }
+        }
+
+        #endregion
+
+        #region LivePhoto
+
+        /// <summary>
+        /// Identifies the <see cref="LivePhoto"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty LivePhotoProperty =
+            DependencyProperty.Register(
+                nameof(LivePhoto),
+                typeof(ImageModel),
+                typeof(MediaPlayerElementEx),
+                new PropertyMetadata(null, OnLivePhotoPropertyChanged));
+
+        public ImageModel LivePhoto
+        {
+            get => (ImageModel)GetValue(LivePhotoProperty);
+            set => SetValue(LivePhotoProperty, value);
+        }
+
+        private static void OnLivePhotoPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((e.OldValue as ImageModel) != (e.NewValue as ImageModel))
+            {
+                ((MediaPlayerElementEx)d).UpdateLivePhoto();
+            }
         }
 
         #endregion
@@ -213,7 +245,20 @@ namespace CoolapkLite.Controls
             }
         }
 
-        private void ParseMediaInfo(JObject json)
+        private async void UpdateLivePhoto()
+        {
+            if (LivePhoto != null)
+            {
+                Uri url = UriHelper.GetUri(UriType.LivePhotoShowVideo, LivePhoto.Uri);
+                TemplateSettings.PosterSource = LivePhoto;
+                if (await ImageCacheHelper.GetRedirectUriAsync(url) is Uri vedio)
+                {
+                    InitializeAdaptiveMediaSource(vedio);
+                }
+            }
+        }
+
+        private async void ParseMediaInfo(JObject json)
         {
             MediaPlayerElementExTemplateSettings templateSettings = TemplateSettings;
 
@@ -232,20 +277,50 @@ namespace CoolapkLite.Controls
                 templateSettings.PosterSource = new ImageModel(cover.ToString(), ImageType.OriginImage, Dispatcher);
             }
 
-            if (json.TryGetValue("requestParams", out JToken v))
+            if (json.TryGetValue("requestParams", out JToken v) && JObject.Parse(v.ToString())?.First?.First is JObject request)
             {
-                if (JObject.Parse(v.ToString())?.First?.First is JObject request
-                    && request.TryGetValue("fromType", out JToken fromType))
+                using (System.Net.Http.MultipartFormDataContent content = new System.Net.Http.MultipartFormDataContent())
+                {
+                    System.Net.Http.StringContent @params = new System.Net.Http.StringContent(request.ToString());
+                    content.Add(@params, "params");
+                    var (isSucceed, result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.PlayerGetUrl), content);
+                    if (isSucceed)
+                    {
+                        JObject token = (JObject)result;
+                        if (token.TryGetValue("urlList", out JToken urlList))
+                        {
+                            string url = urlList.FirstOrDefault(x => x.Type == JTokenType.String)?.ToString();
+                            if (url.TryGetUri(out Uri uri))
+                            {
+                                HttpClient client = new HttpClient();
+                                if (await client.TryGetAsync(uri) is HttpRequestResult requestResult && requestResult.Succeeded)
+                                {
+                                    InitializeAdaptiveMediaSource(uri);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (request.TryGetValue("fromType", out JToken fromType))
                 {
                     switch (fromType.ToString())
                     {
-                        case "weiboDirect" when request.TryGetValue("0", out JToken url):
-                            GetWeiboVideo(url.ToString());
+                        case "weiboDirect":
+                        case "weiboDirect250924":
+                            if (request.TryGetValue("0", out JToken url))
+                            {
+                                GetWeiboVideo(url.ToString());
+                            }
                             break;
-                        case "biliBiliNormal2" when json.TryGetValue("playHeaders", out JToken playHeaders)
-                                                 && request.TryGetValue("0", out JToken avid)
-                                                 && request.TryGetValue("1", out JToken cid):
-                            GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
+                        case "biliBiliNormal2":
+                        case "biliBiliNormal20230704":
+                            if (json.TryGetValue("playHeaders", out JToken playHeaders)
+                                && request.TryGetValue("0", out JToken avid)
+                                && request.TryGetValue("1", out JToken cid))
+                            {
+                                GetBilibiliVideo(avid.ToString(), cid.ToString(), playHeaders.ToString());
+                            }
                             break;
                         default:
                             break;
@@ -334,8 +409,8 @@ namespace CoolapkLite.Controls
             if (result.Status == AdaptiveMediaSourceCreationStatus.Success)
             {
                 AdaptiveMediaSource = result.MediaSource;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
@@ -349,8 +424,8 @@ namespace CoolapkLite.Controls
             else
             {
                 AdaptiveMediaSource = null;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.Source = uri;
                 }
@@ -370,8 +445,8 @@ namespace CoolapkLite.Controls
             {
                 HttpRandomAccessStream = null;
                 AdaptiveMediaSource = result.MediaSource;
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetMediaStreamSource(AdaptiveMediaSource);
                 }
@@ -386,8 +461,8 @@ namespace CoolapkLite.Controls
             {
                 AdaptiveMediaSource = null;
                 HttpRandomAccessStream = await HttpRandomAccessStream.CreateAsync(httpClient, uri);
-                if (MediaElement is null) { return; }
-                if (MediaElement is MediaElement mediaElement)
+                if (MediaElement == null) { return; }
+                else if (MediaElement is MediaElement mediaElement)
                 {
                     mediaElement.SetSource(HttpRandomAccessStream, HttpRandomAccessStream.ContentType);
                 }
@@ -400,8 +475,8 @@ namespace CoolapkLite.Controls
 
         private void InitializeAdaptiveMediaSource()
         {
-            if (MediaElement is null) { return; }
-            if (MediaElement is MediaElement mediaElement)
+            if (MediaElement == null) { return; }
+            else if (MediaElement is MediaElement mediaElement)
             {
                 if (AdaptiveMediaSource != null)
                 {

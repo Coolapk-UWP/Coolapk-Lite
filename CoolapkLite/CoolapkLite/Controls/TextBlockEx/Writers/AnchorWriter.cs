@@ -1,5 +1,4 @@
 ﻿using HtmlAgilityPack;
-using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -9,7 +8,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class AnchorWriter : HtmlWriter
     {
-        public override HashSet<string> TargetTags => new HashSet<string> { "a" };
+        public override string[] TargetTags => new[] { "a" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {

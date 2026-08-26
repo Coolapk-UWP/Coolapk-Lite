@@ -3,7 +3,6 @@ using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.UI;
 using System.ComponentModel;
 using Windows.ApplicationModel.Core;
@@ -103,8 +102,8 @@ namespace CoolapkLite.Pages
             if (this.IsAppWindow())
             {
                 AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Frame.DragRegionVisuals.Remove(CustomTitleBar);
                 appWindow.Changed -= AppWindow_Changed;
-                appWindow.Title = string.Empty;
             }
             else
             {
@@ -137,6 +136,7 @@ namespace CoolapkLite.Pages
             if (this.IsAppWindow())
             {
                 AppWindow appWindow = this.GetWindowForElement();
+                appWindow.Frame.DragRegionVisuals.Add(CustomTitleBar);
                 appWindow.Changed += AppWindow_Changed;
                 appWindow.Title = Provider.Title;
             }
@@ -255,11 +255,13 @@ namespace CoolapkLite.Pages
         private void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             ScrollViewer scrollViewer = sender as ScrollViewer;
-            ImageControl element = scrollViewer.Content as ImageControl;
-            bool isEnable = scrollViewer.ZoomFactor <= 1;
-            if (element.EnableDrag != isEnable)
+            if (scrollViewer.FindDescendant<ImageControl>() is ImageControl element)
             {
-                element.EnableDrag = isEnable;
+                bool isEnable = scrollViewer.ZoomFactor <= 1;
+                if (element.EnableDrag != isEnable)
+                {
+                    element.EnableDrag = isEnable;
+                }
             }
         }
 

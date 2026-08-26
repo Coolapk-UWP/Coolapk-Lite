@@ -30,7 +30,8 @@ namespace CoolapkLite.Models.Network
                     Manufactory = deviceInfo.SystemManufacturer,
                     Brand = deviceInfo.SystemManufacturer,
                     Model = deviceInfo.SystemProductName,
-                    BuildNumber = SystemInformation.Instance.OperatingSystemVersion.ToString()
+                    BuildNumber = SystemInformation.Instance.OperatingSystemVersion.ToString(),
+                    OAID = random
                 };
             }
         }
@@ -41,10 +42,11 @@ namespace CoolapkLite.Models.Network
         public string Brand { get; set; }
         public string Model { get; set; }
         public string BuildNumber { get; set; }
+        public string OAID { get; set; } = "null";
 
         public DeviceInfo() { }
 
-        public DeviceInfo(string aid, string mac, string manufactory, string brand, string model, string buildNumber) : this()
+        public DeviceInfo(string aid, string mac, string manufactory, string brand, string model, string buildNumber = "", string oaid = "null") : this()
         {
             AndroidID = aid;
             MAC = mac;
@@ -52,6 +54,7 @@ namespace CoolapkLite.Models.Network
             Brand = brand;
             Model = model;
             BuildNumber = buildNumber;
+            OAID = oaid;
         }
 
         public string CreateDeviceCode() => ToString().GetBase64().Reverse();
@@ -63,8 +66,17 @@ namespace CoolapkLite.Models.Network
             byte[] bytes = Convert.FromBase64String(index == 0 ? deviceCode : $"{deviceCode}{new string(System.Linq.Enumerable.Repeat('=', 4 - index).ToArray())}");
             string result = Encoding.UTF8.GetString(bytes);
             string[] split = result.Split(';');
-            if (split.Length < 8) { return null; }
-            return new DeviceInfo(split[0].Trim(), split[3].Trim(), split[4].Trim(), split[5].Trim(), split[6].Trim(), split[7].Trim());
+            if (split.Length < 7) { return null; }
+            switch (split.Length)
+            {
+                case 7:
+                    return new DeviceInfo(split[0].Trim(), split[3].Trim(), split[4].Trim(), split[5].Trim(), split[6].Trim());
+                case 8:
+                    return new DeviceInfo(split[0].Trim(), split[3].Trim(), split[4].Trim(), split[5].Trim(), split[6].Trim(), split[7].Trim());
+                case 9:
+                default:
+                    return new DeviceInfo(split[0].Trim(), split[3].Trim(), split[4].Trim(), split[5].Trim(), split[6].Trim(), split[7].Trim(), split[8].Trim());
+            }
         }
 
         private static string RandMacAddress()
@@ -78,9 +90,9 @@ namespace CoolapkLite.Models.Network
         private static string RandHexString(int length)
         {
             Random rand = new Random((int)DateTime.Now.Ticks);
-            byte[] bytes = new byte[length];
+            byte[] bytes = new byte[length / 2];
             rand.NextBytes(bytes);
-            return BitConverter.ToString(bytes).ToUpperInvariant().Replace("-", string.Empty);
+            return string.Concat(bytes.Select(x => x.ToString("x2")));
         }
 
         //private static string RandString(int length)
@@ -94,6 +106,15 @@ namespace CoolapkLite.Models.Network
         //    return newRandom.ToString();
         //}
 
-        public override string ToString() => string.Join("; ", AndroidID == random ? RandHexString(16) : AndroidID, string.Empty, string.Empty, MAC == random ? RandMacAddress() : MAC, Manufactory, Brand, Model, BuildNumber, "null");
+        private static string RandOAID()
+        {
+            string prefix = RandHexString(8);
+            string pattern = RandHexString(8);
+            string suffix = RandHexString(16);
+            string normalized = $"{prefix}{pattern}{suffix}".Substring(0, 31);
+            return normalized += (normalized.Sum(x => Convert.ToInt32(x.ToString(), 16)) % 16).ToString("x");
+        }
+
+        public override string ToString() => string.Join("; ", AndroidID == random ? RandHexString(16) : AndroidID, string.Empty, string.Empty, MAC == random ? RandMacAddress() : MAC, Manufactory, Brand, Model, BuildNumber, OAID == random ? RandOAID() : OAID);
     }
 }

@@ -96,11 +96,6 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Grid.ChildrenTransitions>
-                                        <TransitionCollection>
-                                            <ReorderThemeTransition />
-                                        </TransitionCollection>
-                                    </Grid.ChildrenTransitions>
                                     <ContentPresenter
                                         x:Name="CustomContentPresenter"
                                         Grid.Column="0"

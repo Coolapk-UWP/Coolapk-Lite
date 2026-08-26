@@ -39,78 +39,49 @@ namespace CoolapkLite.Helpers
             element.SetValue(PaddingProperty, value);
         }
 
-        private static void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void OnPaddingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ListViewBase element = (ListViewBase)d;
-            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
-            {
-                if (element.IsLoaded)
-                {
-                    UpdatePadding(element, (Thickness)e.NewValue);
-                }
-                else
-                {
-                    element.Loaded -= OnListViewLoaded;
-                    element.Loaded += OnListViewLoaded;
-                }
-            }
-            else
-            {
-                if (element.FindDescendant<ScrollViewer>() != null)
-                {
-                    UpdatePadding(element, (Thickness)e.NewValue);
-                }
-                else
-                {
-                    element.Loaded -= OnListViewLoaded;
-                    element.Loaded += OnListViewLoaded;
-                }
-            }
+            if (!(d is ListViewBase element)) { return; }
+            await element.ResumeOnLoadedAsync(() => element.FindDescendant<ScrollViewer>() != null);
+            UpdatePadding(element, (Thickness)e.NewValue);
             element.RegisterPropertyChangedCallback(ItemsControl.ItemsPanelProperty, OnItemsPanelChanged);
         }
 
         private static async void OnItemsPanelChanged(DependencyObject sender, DependencyProperty dp)
         {
             if (!(sender is ListViewBase element)) { return; }
-            if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded
-                && element.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer
-                && scrollViewer?.FindDescendant<ItemsPresenter>() is ItemsPresenter itemsPresenter)
+
+            ScrollViewer scrollViewer = null;
+            await element.ResumeOnLoadedAsync(() => (scrollViewer = element.FindDescendant<ScrollViewer>()) != null);
+
+            if ((scrollViewer != null
+                || (scrollViewer = element.FindDescendant<ScrollViewer>()) != null)
+                && scrollViewer.FindDescendant<ItemsPresenter>() is ItemsPresenter itemsPresenter)
             {
                 using (CancellationTokenSource tokenSource = new CancellationTokenSource(3000))
                 {
-                    while (await itemsPresenter.Dispatcher.AwaitableRunAsync(() => itemsPresenter?.FindDescendant<Panel>() == null))
+                    while (await itemsPresenter.Dispatcher.AwaitableRunAsync(() => itemsPresenter.FindDescendant<Panel>() == null))
                     {
                         await Task.Delay(100).ConfigureAwait(false);
                         if (tokenSource.IsCancellationRequested)
                         {
                             await element.Dispatcher.ResumeForegroundAsync();
-                            element.Loaded -= OnListViewLoaded;
-                            element.Loaded += OnListViewLoaded;
+                            await element.ResumeOnLoadedAsync(() => false);
+                            goto end;
                         }
                     }
                 }
-                await itemsPresenter.Dispatcher.ResumeForegroundAsync();
+
+                await element.Dispatcher.ResumeForegroundAsync();
+            end:
                 UpdatePadding(element, GetPadding(element));
             }
-            else
-            {
-                element.Loaded -= OnListViewLoaded;
-                element.Loaded += OnListViewLoaded;
-            }
-        }
-
-        private static void OnListViewLoaded(object sender, RoutedEventArgs e)
-        {
-            if (!(sender is ListViewBase element)) { return; }
-            Thickness padding = GetPadding(element);
-            UpdatePadding(element, padding);
-            element.Loaded -= OnListViewLoaded;
         }
 
         public static void UpdatePadding(this ListViewBase element, Thickness padding)
         {
             if (element?.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer
-                && scrollViewer?.FindDescendant<ItemsPresenter>()?.FindDescendant<Panel>() is Panel panel)
+                && scrollViewer.FindDescendant<ItemsPresenter>()?.FindDescendant<Panel>() is Panel panel)
             {
                 Thickness margin = new Thickness(-padding.Left, -padding.Top, -padding.Right, -padding.Bottom);
 
@@ -142,55 +113,29 @@ namespace CoolapkLite.Helpers
             element.SetValue(EnableIncrementalLoadingProperty, value);
         }
 
-        private static void OnEnableIncrementalLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static async void OnEnableIncrementalLoadingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is ItemsControl element && e.NewValue is true)
             {
-                if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported)
-                {
-                    if (element.IsLoaded)
-                    {
-                        InstallIncrementalLoadingWorkaround(element, null);
-                    }
-                    else
-                    {
-                        element.Loaded -= InstallIncrementalLoadingWorkaround;
-                        element.Loaded += InstallIncrementalLoadingWorkaround;
-                    }
-                }
-                else
-                {
-                    if (element.FindDescendant<ScrollViewer>() != null)
-                    {
-                        InstallIncrementalLoadingWorkaround(element, null);
-                    }
-                    else
-                    {
-                        element.Loaded -= InstallIncrementalLoadingWorkaround;
-                        element.Loaded += InstallIncrementalLoadingWorkaround;
-                    }
-                }
-            }
-        }
+                ScrollViewer scrollViewer = null;
+                await element.ResumeOnLoadedAsync(() => (scrollViewer = element.FindDescendant<ScrollViewer>()) != null);
 
-        private static void InstallIncrementalLoadingWorkaround(object sender, RoutedEventArgs args)
-        {
-            if (sender is ItemsControl element
-                && element.FindDescendant<ScrollViewer>() is ScrollViewer scrollViewer)
-            {
+                if (scrollViewer == null && (scrollViewer = element.FindDescendant<ScrollViewer>()) == null)
+                {
+                    return;
+                }
+
                 scrollViewer.SizeChanged -= ScrollViewer_SizeChanged;
                 scrollViewer.ViewChanged -= ScrollViewer_ViewChanged;
                 scrollViewer.SizeChanged += ScrollViewer_SizeChanged;
                 scrollViewer.ViewChanged += ScrollViewer_ViewChanged;
 
-                element.Loaded -= InstallIncrementalLoadingWorkaround;
-
-                void ScrollViewer_SizeChanged(object _sender, SizeChangedEventArgs e)
+                void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs args)
                 {
                     LoadMoreItems(element, scrollViewer);
                 }
 
-                void ScrollViewer_ViewChanged(object _sender, ScrollViewerViewChangedEventArgs e)
+                void ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs args)
                 {
                     LoadMoreItems(element, scrollViewer);
                 }
@@ -199,7 +144,7 @@ namespace CoolapkLite.Helpers
                 {
                     const double loadingThreshold = 0.5;
                     if (!(listViewBase.ItemsSource is ISupportIncrementalLoading source)) { return; }
-                    check:
+                check:
                     if (listViewBase.Items.Count > 0 && !source.HasMoreItems) { return; }
                     if (GetIsIncrementallyLoading(listViewBase)) { return; }
                     if (((_scrollViewer.ExtentHeight - _scrollViewer.VerticalOffset) / _scrollViewer.ViewportHeight) - 1.0 <= loadingThreshold)

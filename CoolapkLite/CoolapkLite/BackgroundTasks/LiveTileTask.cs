@@ -7,6 +7,7 @@ using CoolapkLite.Models.Users;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
@@ -19,18 +20,26 @@ namespace CoolapkLite.BackgroundTasks
 {
     public sealed class LiveTileTask : IBackgroundTask
     {
-        public static LiveTileTask Instance = new LiveTileTask();
+        void IBackgroundTask.Run(IBackgroundTaskInstance taskInstance) => Run(taskInstance);
 
-        public LiveTileTask() => Instance = Instance ?? this;
-
-        public async void Run(IBackgroundTaskInstance taskInstance)
+        public static async void Run(IBackgroundTaskInstance taskInstance)
         {
             BackgroundTaskDeferral deferral = taskInstance.GetDeferral();
-            await UpdateTileAsync();
-            deferral.Complete();
+            try
+            {
+                await UpdateTileAsync();
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(LiveTileTask)).Error(ex.ExceptionToMessage(), ex);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
-        public async Task UpdateTileAsync()
+        public static async Task UpdateTileAsync()
         {
             if (mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable)
             {
@@ -46,27 +55,29 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private async Task GetDataAsync(Uri uri)
+        private static async Task GetDataAsync(Uri uri)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true).ConfigureAwait(false);
             if (isSucceed)
             {
-                result.OfType<JObject>()
-                      .Select(x => GetTileContent(EntityTemplateSelector.GetEntity(x)))
-                      .Take(5, x => x != null)
-                      .Reverse()
-                      .ForEach(x => UpdateTile(x));
+                UpdateTiles(result.OfType<JObject>()
+                                  .Select(x => GetTileContent(EntityTemplateSelector.GetEntity(x)))
+                                  .Take(5, x => x != null)
+                                  .Reverse());
             }
         }
 
-        private void UpdateTile(TileContent tileContent)
+        private static void UpdateTiles(IEnumerable<TileContent> tileContents)
         {
             try
             {
                 TileUpdater tileUpdater = TileUpdateManager.CreateTileUpdaterForApplication();
                 tileUpdater.EnableNotificationQueue(true);
-                TileNotification tileNotification = new TileNotification(tileContent.GetXml());
-                tileUpdater.Update(tileNotification);
+                foreach (TileContent tileContent in tileContents)
+                {
+                    TileNotification tileNotification = new TileNotification(tileContent.GetXml());
+                    tileUpdater.Update(tileNotification);
+                }
             }
             catch (Exception ex)
             {
@@ -130,31 +141,22 @@ namespace CoolapkLite.BackgroundTasks
             }
         }
 
-        private TileContent GetTileContent(Entity item)
+        private static TileContent GetTileContent(Entity item)
         {
-            if (item is FeedModelBase feedModelBase)
+            switch (item)
             {
-                return GetFeedTile(feedModelBase);
-            }
-            else if (item is IUserModel userModel)
-            {
-                return GetUserTile(userModel);
-            }
-            else if (item is IHasSubtitle subtitle)
-            {
-                return GetListTile(subtitle);
-            }
-            else if (item is IHasDescription description)
-            {
-                return GetListTile(description);
-            }
-            else if (item is IHasTitle title)
-            {
-                return GetListTile(title);
-            }
-            else
-            {
-                return null;
+                case FeedModelBase feedModelBase:
+                    return GetFeedTile(feedModelBase);
+                case IUserModel userModel:
+                    return GetUserTile(userModel);
+                case IHasSubtitle subtitle:
+                    return GetListTile(subtitle);
+                case IHasDescription description:
+                    return GetListTile(description);
+                case IHasTitle title:
+                    return GetListTile(title);
+                default:
+                    return null;
             }
         }
 
@@ -172,11 +174,11 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
-                            {
-                                Source = FeedDetail.Pic.Uri,
-                                HintOverlay = 70
-                            },
+                            //BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
+                            //{
+                            //    Source = FeedDetail.Pic.Uri,
+                            //    HintOverlay = 70
+                            //},
 
                             Children =
                             {
@@ -201,11 +203,11 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
-                            {
-                                Source = FeedDetail.Pic.Uri,
-                                HintOverlay = 70
-                            },
+                            //BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
+                            //{
+                            //    Source = FeedDetail.Pic.Uri,
+                            //    HintOverlay = 70
+                            //},
 
                             Children =
                             {
@@ -256,11 +258,11 @@ namespace CoolapkLite.BackgroundTasks
                     {
                         Content = new TileBindingContentAdaptive
                         {
-                            BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
-                            {
-                                Source = FeedDetail.Pic.Uri,
-                                HintOverlay = 70
-                            },
+                            //BackgroundImage = FeedDetail.Pic == null ? null : new TileBackgroundImage
+                            //{
+                            //    Source = FeedDetail.Pic.Uri,
+                            //    HintOverlay = 70
+                            //},
 
                             Children =
                             {

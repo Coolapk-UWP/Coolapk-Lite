@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers.Converters;
 using HtmlAgilityPack;
-using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -11,7 +10,7 @@ namespace CoolapkLite.Controls.Writers
 {
     public class ContainerWriter : HtmlWriter
     {
-        public override HashSet<string> TargetTags => new HashSet<string> { "div" };
+        public override string[] TargetTags => new[] { "div" };
 
         public override DependencyObject GetControl(HtmlNode fragment, TextBlockEx textBlockEx)
         {
@@ -25,17 +24,15 @@ namespace CoolapkLite.Controls.Writers
                 {
                     Margin = new Thickness(4, 0, 4, -4),
                     Padding = new Thickness(2, 0, 2, 0),
-                    CornerRadius = new CornerRadius(4),
-                    BorderThickness = new Thickness(1),
                     VerticalAlignment = VerticalAlignment.Center,
-                    BorderBrush = (SolidColorBrush)Application.Current.Resources["AccentFillColorDefaultBrush"],
+                    Background = (SolidColorBrush)Application.Current.Resources["SystemControlHighlightAccentBrush"]
                 };
 
                 TextBlock textBlock = new TextBlock
                 {
                     Margin = new Thickness(1),
                     Text = _loader.GetString("FeedAuthorText"),
-                    Foreground = (SolidColorBrush)Application.Current.Resources["AccentFillColorDefaultBrush"],
+                    Foreground = (SolidColorBrush)Application.Current.Resources["SystemControlHighlightAltChromeWhiteBrush"]
                 };
 
                 textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.FontSize), new NumAddConverter(), -2));

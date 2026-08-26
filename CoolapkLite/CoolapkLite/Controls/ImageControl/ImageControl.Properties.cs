@@ -27,7 +27,10 @@ namespace CoolapkLite.Controls
 
         private static void OnSourcePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            ((ImageControl)sender).OnSourcePropertyChanged(args);
+            if ((args.OldValue as ImageModel) != (args.NewValue as ImageModel))
+            {
+                ((ImageControl)sender).OnSourcePropertyChanged(args);
+            }
         }
 
         #endregion

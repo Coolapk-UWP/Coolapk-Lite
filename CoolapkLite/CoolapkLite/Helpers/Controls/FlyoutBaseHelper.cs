@@ -42,23 +42,23 @@ namespace CoolapkLite.Helpers
         {
             if (d is MenuFlyoutItem item)
             {
-                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsMenuFlyoutItemIconSupported)
+                if (ApiInfoHelper.IsMenuFlyoutItemIconSupported)
                 {
-                    item.Icon = IconElement;
+                    item.Icon = e.NewValue as IconElement;
                 }
             }
             else if (d is MenuFlyoutSubItem subitem)
             {
-                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsMenuFlyoutSubItemIconSupported)
+                if (ApiInfoHelper.IsMenuFlyoutSubItemIconSupported)
                 {
-                    subitem.Icon = IconElement;
+                    subitem.Icon = e.NewValue as IconElement;
                 }
             }
             else if (d is ToggleMenuFlyoutItem toggle)
             {
-                if (e.NewValue is IconElement IconElement && ApiInfoHelper.IsToggleMenuFlyoutItemIconSupported)
+                if (ApiInfoHelper.IsToggleMenuFlyoutItemIconSupported)
                 {
-                    toggle.Icon = IconElement;
+                    toggle.Icon = e.NewValue as IconElement;
                 }
             }
         }

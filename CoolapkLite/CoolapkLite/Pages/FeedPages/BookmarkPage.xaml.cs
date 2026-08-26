@@ -19,37 +19,19 @@ namespace CoolapkLite.Pages.FeedPages
     /// </summary>
     public sealed partial class BookmarkPage : Page
     {
-        #region Provider
+        public readonly BookmarkViewModel Provider;
 
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(BookmarkViewModel),
-                typeof(BookmarkPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public BookmarkViewModel Provider
+        public BookmarkPage()
         {
-            get => (BookmarkViewModel)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
+            InitializeComponent();
+            Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
         }
-
-        #endregion
-
-        public BookmarkPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider == null)
+            if (Provider.Bookmarks == null)
             {
-                Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
                 _ = Refresh(true);
             }
         }

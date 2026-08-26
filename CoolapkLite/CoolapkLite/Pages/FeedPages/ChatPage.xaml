@@ -219,6 +219,28 @@
                             </GridView.ItemsPanel>
                         </GridView>
                     </PivotItem>
+                    <PivotItem Header="牛牛">
+                        <GridView
+                            Padding="8,0"
+                            helpers:ListViewHelper.IsSelectionEnabled="False"
+                            IsItemClickEnabled="True"
+                            ItemClick="EmojiGridView_ItemClick"
+                            ItemTemplate="{StaticResource EmojiImageTemplate}"
+                            ItemsSource="{x:Bind MooMooEmojis}">
+                            <GridView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <cwuc:StaggeredPanel
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        DesiredColumnWidth="48">
+                                        <cwuc:StaggeredPanel.RenderTransform>
+                                            <TranslateTransform X="-6" />
+                                        </cwuc:StaggeredPanel.RenderTransform>
+                                    </cwuc:StaggeredPanel>
+                                </ItemsPanelTemplate>
+                            </GridView.ItemsPanel>
+                        </GridView>
+                    </PivotItem>
                     <PivotItem Header="滑稽">
                         <GridView
                             Padding="8,0"

@@ -38,12 +38,13 @@ namespace CoolapkLite.Controls
         private AppBarToggleButton UnderLineButton;
         private AppBarToggleButton StrikethroughButton;
 
-        private readonly string[] NormalEmojis = EmojiHelper.Normal;
-        private readonly string[] CoolCoinsEmojis = EmojiHelper.CoolCoins;
-        private readonly string[] FunnyEmojis = EmojiHelper.Funny;
-        private readonly string[] DogeEmojis = EmojiHelper.Doge;
-        private readonly string[] TraditionEmojis = EmojiHelper.Tradition;
-        private readonly string[] ClassicEmojis = EmojiHelper.Classic;
+        private string[] NormalEmojis => EmojiHelper.Normal;
+        private string[] CoolCoinsEmojis => EmojiHelper.CoolCoins;
+        private string[] MooMooEmojis => EmojiHelper.MooMoo;
+        private string[] FunnyEmojis => EmojiHelper.Funny;
+        private string[] DogeEmojis => EmojiHelper.Doge;
+        private string[] TraditionEmojis => EmojiHelper.Tradition;
+        private string[] ClassicEmojis => EmojiHelper.Classic;
 
         #region Provider
 
@@ -276,7 +277,7 @@ namespace CoolapkLite.Controls
                     break;
             }
 
-            post:
+        post:
             try
             {
                 (bool isSucceed, JToken token) = await (type == UriType.CreateFeed
@@ -295,7 +296,7 @@ namespace CoolapkLite.Controls
             {
                 if (cex.IsRequestCaptcha)
                 {
-                    captcha:
+                captcha:
                     CaptchaDialog captchaDialog = new CaptchaDialog();
                     if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
                     {
@@ -504,7 +505,7 @@ namespace CoolapkLite.Controls
             {
                 switch (args.VirtualKey)
                 {
-                    case VirtualKey.V when PastePic.IsEnabled && Window.Current.CoreWindow.GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down):
+                    case VirtualKey.V when PastePic.IsEnabled && CoreWindow.GetForCurrentThread().GetKeyState(VirtualKey.Control).HasFlag(CoreVirtualKeyStates.Down):
                         _ = Provider.DropFileAsync(Clipboard.GetContent());
                         args.Handled = true;
                         break;

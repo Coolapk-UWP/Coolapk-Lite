@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Graphics.Printing;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -110,7 +109,7 @@ namespace Microsoft.Toolkit.Uwp.Helpers
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
         public PrintHelper(Panel canvasContainer, PrintHelperOptions defaultPrintHelperOptions = null, CoreDispatcher dispatcher = null)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
             _printPreviewPages = new List<FrameworkElement>();
             _printCanvas = new Canvas
             {

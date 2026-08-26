@@ -9,7 +9,7 @@ namespace CoolapkLite.Helpers
         #region IsEnable
 
         /// <summary>
-        /// Identifies the <see cref="IsEnable"/> dependency property.
+        /// Identifies the IsEnable dependency property.
         /// </summary>
         public static readonly DependencyProperty IsEnableProperty =
             DependencyProperty.Register(
@@ -30,7 +30,7 @@ namespace CoolapkLite.Helpers
 
         private static void OnIsEnablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is ItemsControl itemsControl)
+            if (d is ItemsControl itemsControl && e.NewValue is true)
             {
                 AnimateSelectionProvider provider = new AnimateSelectionProvider
                 {
@@ -47,7 +47,7 @@ namespace CoolapkLite.Helpers
         #region Provider
 
         /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
+        /// Identifies the Provider dependency property.
         /// </summary>
         public static readonly DependencyProperty ProviderProperty =
             DependencyProperty.Register(
@@ -94,7 +94,7 @@ namespace CoolapkLite.Helpers
         {
             if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
             {
-                provider.IndicatorName = GetIndicatorName(itemsControl);
+                provider.IndicatorName = e.NewValue?.ToString();
             }
         }
 
@@ -126,7 +126,7 @@ namespace CoolapkLite.Helpers
         {
             if (d is ItemsControl itemsControl && GetProvider(itemsControl) is AnimateSelectionProvider provider)
             {
-                provider.Orientation = GetOrientation(itemsControl);
+                provider.Orientation = (Orientation)e.NewValue;
             }
         }
 

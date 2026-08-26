@@ -205,7 +205,6 @@
                                             HorizontalAlignment="Left"
                                             FontSize="12"
                                             FontStyle="Italic"
-                                            Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                             IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                             Text="{x:Bind LevelNum, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
                                         <TextBlock
@@ -1250,7 +1249,7 @@
                                 <StackPanel Orientation="Horizontal">
                                     <FontIcon
                                         FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                        Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                        Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
                                         Glyph="&#xE8E1;"
                                         Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                                     <FontIcon

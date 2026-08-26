@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
@@ -23,7 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : INotifyPropertyChanged
+    public class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
     {
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
@@ -56,6 +57,13 @@ namespace CoolapkLite.Models.Images
         {
             get => isGif;
             private set => SetProperty(ref isGif, value);
+        }
+
+        private bool isLivePhoto = false;
+        public bool IsLivePhoto
+        {
+            get => isLivePhoto;
+            private set => SetProperty(ref isLivePhoto, value);
         }
 
         private bool isLoading = false;
@@ -216,6 +224,7 @@ namespace CoolapkLite.Models.Images
             Uri = uri;
             Type = type;
             ThemeHelper.UISettingChanged += OnUISettingChanged;
+            ThemeHelper.NoPicsModeChanged += OnNoPicsModeChanged;
         }
 
         public ImageModel(string uri, ImageType type, CoreDispatcher dispatcher) : this(uri, type)
@@ -225,6 +234,7 @@ namespace CoolapkLite.Models.Images
 
         ~ImageModel()
         {
+            ThemeHelper.NoPicsModeChanged -= OnNoPicsModeChanged;
             ThemeHelper.UISettingChanged -= OnUISettingChanged;
         }
 
@@ -238,12 +248,12 @@ namespace CoolapkLite.Models.Images
             ImageModelLocker.SlimLocker = new SemaphoreSlim(initialCount);
         }
 
-        private async void OnUISettingChanged(UISettingChangedType mode)
+        private async void OnUISettingChanged(ApplicationTheme mode)
         {
             switch (mode)
             {
-                case UISettingChangedType.LightMode:
-                case UISettingChangedType.DarkMode:
+                case ApplicationTheme.Light:
+                case ApplicationTheme.Dark:
                     if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                     {
                         if (pic != null && pic.TryGetTarget(out BitmapImage _))
@@ -253,10 +263,14 @@ namespace CoolapkLite.Models.Images
                         }
                     }
                     break;
+            }
+        }
 
-                case UISettingChangedType.NoPicChanged when pic != null && pic.TryGetTarget(out BitmapImage _):
-                    _ = GetImageAsync();
-                    break;
+        private void OnNoPicsModeChanged(bool arg)
+        {
+            if (pic != null && pic.TryGetTarget(out BitmapImage _))
+            {
+                _ = GetImageAsync();
             }
         }
 
@@ -297,7 +311,7 @@ namespace CoolapkLite.Models.Images
                     await bitmapImage.Dispatcher.ResumeForegroundAsync();
                     double PixelWidth = bitmapImage.PixelWidth;
                     double PixelHeight = bitmapImage.PixelHeight;
-                    Rect Bounds = Window.Current is Window window
+                    Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
                         ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
                         : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
                     IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
@@ -305,6 +319,7 @@ namespace CoolapkLite.Models.Images
                     IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
                                 && PixelWidth > PixelHeight * 1.5;
                     IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
                 }
                 else
                 {
@@ -473,6 +488,16 @@ namespace CoolapkLite.Models.Images
         }
 
         public override string ToString() => string.Join(" - ", Title, uri);
+
+        public override bool Equals(object obj) => Equals(obj as ImageModel);
+
+        public override int GetHashCode() => (uri, type, Dispatcher).GetHashCode();
+
+        public bool Equals(ImageModel other) => other != null && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
+
+        public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
+
+        public static bool operator !=(ImageModel left, ImageModel right) => !(left == right);
 
         #region Locker
 

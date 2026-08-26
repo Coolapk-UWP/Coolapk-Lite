@@ -125,17 +125,12 @@ namespace CoolapkLite.Controls
 
         private void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            CornerRadius value()
-            {
-                double cornerRadiusValue = ActualHeight / 2;
-                return ApiInfoHelper.IsCornerRadiusSupported
-                    ? ReadLocalValue(CornerRadiusProperty) == DependencyProperty.UnsetValue
-                        ? new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue)
-                        : CornerRadius
-                    : new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue);
-            };
-
-            TemplateSettings.InfoBadgeCornerRadius = value();
+            double cornerRadiusValue = ActualHeight / 2;
+            TemplateSettings.InfoBadgeCornerRadius = ApiInfoHelper.IsCornerRadiusSupported
+                ? ReadLocalValue(CornerRadiusProperty) == DependencyProperty.UnsetValue
+                    ? new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue)
+                    : CornerRadius
+                : new CornerRadius(cornerRadiusValue, cornerRadiusValue, cornerRadiusValue, cornerRadiusValue);
         }
     }
 }

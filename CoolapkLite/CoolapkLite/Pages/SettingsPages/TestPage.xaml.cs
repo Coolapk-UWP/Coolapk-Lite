@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Common;
+﻿using CoolapkLite.BackgroundTasks;
+using CoolapkLite.Common;
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Pages.BrowserPages;
@@ -7,6 +8,7 @@ using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using CoolapkLite.ViewModels.ToolsPages;
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using Windows.ApplicationModel.Core;
@@ -17,6 +19,7 @@ using Windows.Globalization;
 using Windows.System;
 using Windows.System.Threading;
 using Windows.UI.ApplicationSettings;
+using Windows.UI.Notifications;
 using Windows.UI.StartScreen;
 using Windows.UI.ViewManagement;
 using Windows.UI.WindowManagement;
@@ -36,38 +39,24 @@ namespace CoolapkLite.Pages.SettingsPages
     /// </summary>
     public sealed partial class TestPage : Page
     {
-        #region Provider
+        private readonly TestViewModel Provider;
 
-        /// <summary>
-        /// Identifies the <see cref="Provider"/> dependency property.
-        /// </summary>
-        public static readonly DependencyProperty ProviderProperty =
-            DependencyProperty.Register(
-                nameof(Provider),
-                typeof(TestViewModel),
-                typeof(TestPage),
-                null);
-
-        /// <summary>
-        /// Get the <see cref="ViewModels.IViewModel"/> of current <see cref="Page"/>.
-        /// </summary>
-        public TestViewModel Provider
+        public TestPage()
         {
-            get => (TestViewModel)GetValue(ProviderProperty);
-            private set => SetValue(ProviderProperty, value);
+            InitializeComponent();
+            Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
         }
-
-        #endregion
-
-        public TestPage() => InitializeComponent();
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider == null)
-            {
-                Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
-            }
+            Provider.PropertyChanged += OnPropertyChanged;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            Provider.PropertyChanged -= OnPropertyChanged;
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -80,6 +69,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     else if (ApiInfoHelper.IsApplicationViewViewModeSupported
                         && ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.Default))
                     { _ = ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default); }
+                    break;
+                case "TileUrl":
+                    Provider.TileUrl = TileUrl.Text;
                     break;
                 case "OpenEdge":
                     _ = Launcher.LaunchUriAsync(new Uri(WebUrl.Text));
@@ -120,6 +112,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "ShowError":
                     throw new Exception(NotifyMessage.Text);
+                case "ClearTile":
+                    TileUpdateManager.CreateTileUpdaterForApplication().Clear();
+                    break;
                 case "CustomAPI":
                     APIVersionDialog versionDialog = new APIVersionDialog(Provider.UserAgent);
                     if (await versionDialog.ShowAsync() == ContentDialogResult.Primary)
@@ -129,21 +124,20 @@ namespace CoolapkLite.Pages.SettingsPages
                     }
                     break;
                 case "GetContent":
-                    Uri uri = WebUrl.Text.TryGetUri();
-                    (bool isSucceed, string result) = uri == null ? (true, "这不是一个链接") : await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest, false);
-                    if (!isSucceed)
-                    {
-                        result = "网络错误";
-                    }
+                    string text = WebUrl.Text;
+                    await ThreadSwitcher.ResumeBackgroundAsync();
+                    (bool isSucceed, string result) = text.TryGetUri(out Uri uri) ? await RequestHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest, false).ConfigureAwait(true) : (true, "这不是一个链接");
+                    result = isSucceed ? await result.ConvertJsonStringAsync().ConfigureAwait(false) : "网络错误";
+                    await Dispatcher.ResumeForegroundAsync();
                     ContentDialog getJsonDialog = new ContentDialog
                     {
-                        Title = WebUrl.Text,
+                        Title = text,
                         Content = new ScrollViewer
                         {
                             Content = new TextBlock
                             {
                                 IsTextSelectionEnabled = true,
-                                Text = result.ConvertJsonString()
+                                Text = result
                             },
                             VerticalScrollMode = ScrollMode.Enabled,
                             HorizontalScrollMode = ScrollMode.Enabled,
@@ -153,10 +147,13 @@ namespace CoolapkLite.Pages.SettingsPages
                         CloseButtonText = "好的",
                         DefaultButton = ContentDialogButton.Close
                     };
-                    _ = await getJsonDialog.ShowAsync();
+                    _ = getJsonDialog.ShowAsync();
                     break;
                 case "DeviceInfo":
                     _ = new DeviceInfoDialog().ShowAsync();
+                    break;
+                case "UpdateTile":
+                    _ = LiveTileTask.UpdateTileAsync();
                     break;
                 case "RestartApp" when ApiInfoHelper.IsRequestRestartAsyncSupported:
                     _ = CoreApplication.RequestRestartAsync(string.Empty);
@@ -284,5 +281,15 @@ namespace CoolapkLite.Pages.SettingsPages
         }
 
         private void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e) => _ = this.ShowProgressBarAsync(e.NewValue);
+
+        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Provider.TileUrl):
+                    TileUrl.Text = Provider.TileUrl;
+                    break;
+            }
+        }
     }
 }

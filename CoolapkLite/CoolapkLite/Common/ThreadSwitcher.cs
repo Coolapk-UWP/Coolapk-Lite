@@ -85,7 +85,7 @@ namespace CoolapkLite.Common
         IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
 
         /// <inheritdoc/>
-        public void OnCompleted(Action continuation) => _ = dispatcher.RunAsync(priority, () => continuation());
+        public void OnCompleted(Action continuation) => _ = dispatcher.RunAsync(priority, continuation.Invoke);
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ namespace CoolapkLite.Common
         IThreadSwitcher IThreadSwitcher.GetAwaiter() => this;
 
         /// <inheritdoc/>
-        public void OnCompleted(Action continuation) => _ = dispatcher.TryEnqueue(priority, () => continuation());
+        public void OnCompleted(Action continuation) => _ = dispatcher.TryEnqueue(priority, continuation.Invoke);
     }
 
     /// <summary>

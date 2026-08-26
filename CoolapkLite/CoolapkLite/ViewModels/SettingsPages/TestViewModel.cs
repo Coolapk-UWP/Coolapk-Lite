@@ -5,7 +5,6 @@ using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
@@ -81,6 +80,16 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        public string TileUrl
+        {
+            get => SettingsHelper.Get<string>(SettingsHelper.TileUrl);
+            set
+            {
+                SettingsHelper.Set(SettingsHelper.TileUrl, value);
+                RaisePropertyChangedEvent();
+            }
+        }
+
         public bool IsUseAPI2
         {
             get => SettingsHelper.Get<bool>(SettingsHelper.IsUseAPI2);
@@ -124,7 +133,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 if (APIVersion != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.APIVersion, value + 4);
+                    APIVersions version = (APIVersions)(value + 4);
+                    SettingsHelper.Set(SettingsHelper.APIVersion, version);
+                    TokenCreator.UpdateAPIVersion(version);
                     NetworkHelper.SetRequestHeaders();
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     RaisePropertyChangedEvent();
@@ -132,14 +143,14 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public bool IsUseTokenV2
+        public int TokenVersion
         {
-            get => SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion) == TokenVersion.TokenV2;
+            get => (int)SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion) - 1;
             set
             {
-                if (IsUseTokenV2 != value)
+                if (TokenVersion != value)
                 {
-                    SettingsHelper.Set(SettingsHelper.TokenVersion, (int)(value ? TokenVersion.TokenV2 : TokenVersion.TokenV1));
+                    SettingsHelper.Set(SettingsHelper.TokenVersion, (TokenVersion)value + 1);
                     NetworkHelper.SetRequestHeaders();
                     RaisePropertyChangedEvent();
                 }
@@ -402,7 +413,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsFullLoad),
                     nameof(IsCustomUA),
                     nameof(APIVersion),
-                    nameof(IsUseTokenV2),
+                    nameof(TokenVersion),
                     nameof(IsUseLiteHome),
                     nameof(IsUseAppWindow),
                     nameof(IsUseCompositor),

@@ -102,7 +102,8 @@
                     MaxLines="1"
                     Style="{StaticResource CaptionTextBlockStyle}"
                     Text="酷安 Lite"
-                    TextTrimming="CharacterEllipsis" />
+                    TextTrimming="CharacterEllipsis"
+                    ToolTipService.ToolTip="{Binding Text, RelativeSource={RelativeSource Mode=Self}}" />
             </Grid>
             <controls:HamburgerMenu
                 x:Name="HamburgerMenu"

@@ -4,7 +4,6 @@
 
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using Windows.ApplicationModel.Core;
 using Windows.Networking.Connectivity;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -23,7 +22,7 @@ namespace Microsoft.Toolkit.Uwp.UI.Triggers
         /// </summary>
         public NetworkConnectionStateTrigger()
         {
-            _dispatcher = CoreApplication.MainView.Dispatcher;
+            _dispatcher = CoreWindow.GetForCurrentThread()?.Dispatcher;
             WeakEventListener<NetworkConnectionStateTrigger, object> weakEvent =
                 new WeakEventListener<NetworkConnectionStateTrigger, object>(this)
                 {

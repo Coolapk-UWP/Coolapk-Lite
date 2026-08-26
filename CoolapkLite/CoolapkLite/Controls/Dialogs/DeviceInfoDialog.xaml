@@ -48,5 +48,6 @@
         <TextBox x:Uid="/ContentDialog/BrandTextBox" Text="{x:Bind DeviceInfo.Brand, Mode=TwoWay}" />
         <TextBox x:Uid="/ContentDialog/ModelTextBox" Text="{x:Bind DeviceInfo.Model, Mode=TwoWay}" />
         <TextBox x:Uid="/ContentDialog/BuildNumberTextBox" Text="{x:Bind DeviceInfo.BuildNumber, Mode=TwoWay}" />
+        <TextBox Header="OAID" Text="{x:Bind DeviceInfo.OAID, Mode=TwoWay}" />
     </controls:StackPanelEx>
 </ContentDialog>

@@ -8,7 +8,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.Core;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Security.Cryptography;
@@ -126,7 +125,7 @@ namespace Microsoft.Toolkit.Uwp.Connectivity
         /// <param name="dispatcher">The CoreDispatcher that should be used to dispatch UI updates, or null if this is being called from the UI thread.</param>
         public ObservableGattCharacteristics(GattCharacteristic characteristic, ObservableGattDeviceService parent, CoreDispatcher dispatcher = null)
         {
-            Dispatcher = dispatcher ?? CoreApplication.MainView.Dispatcher;
+            Dispatcher = dispatcher ?? CoreWindow.GetForCurrentThread()?.Dispatcher;
 
             Characteristic = characteristic;
             Parent = parent;

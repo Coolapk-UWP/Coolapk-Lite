@@ -7,7 +7,7 @@ namespace CoolapkLite.Models.Network
     public class RunsInfo
     {
         [JsonProperty("count")]
-        public int Count { get; set; }
+        public long Count { get; set; }
         [JsonProperty("value")]
         public RunInfo[] Value { get; set; }
     }
@@ -29,7 +29,7 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public long ID { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
     }
@@ -57,9 +57,9 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("url")]
         public string Url { get; set; }
         [JsonProperty("id")]
-        public int ID { get; set; }
+        public long ID { get; set; }
         [JsonProperty("revision")]
-        public int Revision { get; set; }
+        public long Revision { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("folder")]
@@ -135,9 +135,9 @@ namespace CoolapkLite.Models.Network
         [JsonProperty("name")]
         public string Name { get; set; }
         [JsonProperty("size")]
-        public int Size { get; set; }
+        public long Size { get; set; }
         [JsonProperty("download_count")]
-        public int DownloadCount { get; set; }
+        public long DownloadCount { get; set; }
         [JsonProperty("created_at")]
         public DateTimeOffset CreatedAt { get; set; }
         [JsonProperty("updated_at")]

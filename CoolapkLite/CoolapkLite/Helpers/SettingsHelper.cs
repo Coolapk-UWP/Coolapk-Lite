@@ -40,6 +40,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
         public const string SelectedAppTheme = nameof(SelectedAppTheme);
         public const string SelectedBackdrop = nameof(SelectedBackdrop);
+        public const string SelectedExtension = nameof(SelectedExtension);
         public const string IsUseOldEmojiMode = nameof(IsUseOldEmojiMode);
         public const string IsUseVirtualizing = nameof(IsUseVirtualizing);
         public const string IsChangeBrowserUA = nameof(IsChangeBrowserUA);
@@ -85,7 +86,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(CustomAPI))
             {
-                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", "1905301"));
+                LocalObject.Save(CustomAPI, new APIVersion("9.2.2", 1905301));
             }
             if (!LocalObject.KeyExists(IsFullLoad))
             {
@@ -125,7 +126,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
-                LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 15u : 0u);
+                LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 0u : 15u);
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
@@ -146,6 +147,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(SelectedBackdrop))
             {
                 LocalObject.Save(SelectedBackdrop, BackdropType.Default);
+            }
+            if (!LocalObject.KeyExists(SelectedExtension))
+            {
+                LocalObject.Save(SelectedExtension, string.Empty);
             }
             if (!LocalObject.KeyExists(IsUseOldEmojiMode))
             {
@@ -234,7 +239,7 @@ namespace CoolapkLite.Helpers
             remove => actions.Remove(value);
         }
 
-        public static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
+        private static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
 
         #endregion
 
@@ -252,7 +257,36 @@ namespace CoolapkLite.Helpers
 
         #endregion
 
-        static SettingsHelper() => SetDefaultSettings();
+        static SettingsHelper()
+        {
+            SetDefaultSettings();
+            SetLoginCookie();
+        }
+
+        private static void SetLoginCookie()
+        {
+            string Uid = Get<string>(SettingsHelper.Uid);
+            string UserName = Get<string>(SettingsHelper.UserName);
+            string Token = Get<string>(SettingsHelper.Token);
+
+            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
+            {
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                {
+                    HttpCookieManager cookieManager = filter.CookieManager;
+                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                    uid.Value = Uid;
+                    username.Value = UserName;
+                    token.Value = Token;
+                    cookieManager.SetCookie(uid);
+                    cookieManager.SetCookie(username);
+                    cookieManager.SetCookie(token);
+                }
+                InvokeLoginChanged(true);
+            }
+        }
 
         public static async Task<bool> LoginAsync()
         {

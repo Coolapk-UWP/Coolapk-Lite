@@ -37,12 +37,13 @@ namespace CoolapkLite.Pages.FeedPages
         private AppBarToggleButton UnderLineButton;
         private AppBarToggleButton StrikethroughButton;
 
-        private readonly string[] NormalEmojis = EmojiHelper.Normal;
-        private readonly string[] CoolCoinsEmojis = EmojiHelper.CoolCoins;
-        private readonly string[] FunnyEmojis = EmojiHelper.Funny;
-        private readonly string[] DogeEmojis = EmojiHelper.Doge;
-        private readonly string[] TraditionEmojis = EmojiHelper.Tradition;
-        private readonly string[] ClassicEmojis = EmojiHelper.Classic;
+        private string[] NormalEmojis => EmojiHelper.Normal;
+        private string[] CoolCoinsEmojis => EmojiHelper.CoolCoins;
+        private string[] MooMooEmojis => EmojiHelper.MooMoo;
+        private string[] FunnyEmojis => EmojiHelper.Funny;
+        private string[] DogeEmojis => EmojiHelper.Doge;
+        private string[] TraditionEmojis => EmojiHelper.Tradition;
+        private string[] ClassicEmojis => EmojiHelper.Classic;
 
         #region Provider
 
@@ -136,7 +137,7 @@ namespace CoolapkLite.Pages.FeedPages
                 if (string.IsNullOrWhiteSpace(contentText)) { return; }
                 string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
                 if (string.IsNullOrWhiteSpace(id)) { return; }
-                post:
+            post:
                 try
                 {
                     using (MultipartFormDataContent content = new MultipartFormDataContent())
@@ -164,7 +165,7 @@ namespace CoolapkLite.Pages.FeedPages
                     {
                         if (cex.IsRequestCaptcha)
                         {
-                            captcha:
+                        captcha:
                             CaptchaDialog captchaDialog = new CaptchaDialog();
                             if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
                             {

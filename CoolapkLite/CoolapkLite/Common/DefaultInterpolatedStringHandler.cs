@@ -37,6 +37,10 @@ namespace System.Runtime.CompilerServices
         /// The <see cref="StringBuilder"/> used to build the string.
         /// </summary>
         private StringBuilder _builder;
+
+        /// <summary>
+        /// Gets the <see cref="StringBuilder"/> used to build the string, creating it if necessary.
+        /// </summary>
         private StringBuilder Builder
         {
             get
@@ -139,8 +143,8 @@ namespace System.Runtime.CompilerServices
                 return;
             }
 
-            string s = value is IFormattable formattable
-                ? formattable.ToString(format: null, _provider) // constrained call avoiding boxing for value types
+            string s = value is IFormattable _
+                ? ((IFormattable)value).ToString(format: null, _provider) // constrained call avoiding boxing for value types
                 : value?.ToString();
 
             if (s != null)
@@ -164,8 +168,8 @@ namespace System.Runtime.CompilerServices
                 return;
             }
 
-            string s = value is IFormattable formattable
-                ? formattable.ToString(format, _provider) // constrained call avoiding boxing for value types
+            string s = value is IFormattable _
+                ? ((IFormattable)value).ToString(format, _provider) // constrained call avoiding boxing for value types
                 : value?.ToString();
 
             if (s != null)
@@ -252,6 +256,39 @@ namespace System.Runtime.CompilerServices
             // formatted with both an alignment and a format, or b) the compiler is unable to target type to T. It
             // exists purely to help make cases from (b) compile. Just delegate to the T-based implementation.
             AppendFormatted<object>(value, alignment, format);
+        #endregion
+
+        #region AppendFormatted char
+        /// <summary>
+        /// Writes the specified value to the handler.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        public void AppendFormatted(char value)
+        {
+            // If there's a custom formatter, always use it.
+            if (_hasCustomFormatter)
+            {
+                AppendCustomFormatter(value, format: null);
+                return;
+            }
+
+            _ = Builder.Append(value);
+        }
+
+        /// <summary>
+        /// Writes the specified value to the handler.
+        /// </summary>
+        /// <param name="value">The value to write.</param>
+        /// <param name="alignment">Minimum number of characters that should be written for this value.  If the value is negative, it indicates left-aligned and the required minimum is the absolute value.</param>
+        public void AppendFormatted(char value, int alignment)
+        {
+            int startingPos = Builder.Length;
+            AppendFormatted(value);
+            if (alignment != 0)
+            {
+                AppendOrInsertAlignmentIfNeeded(startingPos, alignment);
+            }
+        }
         #endregion
         #endregion
 

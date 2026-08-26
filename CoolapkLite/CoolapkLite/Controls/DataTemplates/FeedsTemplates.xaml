@@ -166,7 +166,6 @@
                                                     HorizontalAlignment="Left"
                                                     FontSize="12"
                                                     FontStyle="Italic"
-                                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                                     Text="{x:Bind UserInfo.Level, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
                                                 <TextBlock
                                                     Grid.Column="1"
@@ -281,7 +280,7 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <FontIcon
@@ -344,7 +343,7 @@
                     Grid.Row="3"
                     Margin="4"
                     HorizontalAlignment="Left"
-                    FontSize="16"
+                    FontSize="18"
                     FontWeight="Black"
                     IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                     Text="{x:Bind MessageTitle}"
@@ -364,13 +363,11 @@
                             Padding="1"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-                            BorderThickness="1"
-                            CornerRadius="{ThemeResource ControlCornerRadius}">
+                            Background="{ThemeResource SystemControlHighlightAccentBrush}">
                             <TextBlock
                                 x:Uid="/Feed/Rating"
                                 FontSize="12"
-                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                Foreground="{ThemeResource SystemControlHighlightAltChromeWhiteBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                         </Border>
                         <controls:RatingControl
@@ -896,7 +893,6 @@
                                                     HorizontalAlignment="Left"
                                                     FontSize="12"
                                                     FontStyle="Italic"
-                                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
                                                     Text="{x:Bind UserInfo.Level, Converter={StaticResource StringFormatConverter}, ConverterParameter='Lv.{0}'}" />
                                                 <TextBlock
                                                     Grid.Column="1"
@@ -949,16 +945,14 @@
                                 Margin="6,0"
                                 Padding="2,0"
                                 VerticalAlignment="Center"
-                                BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
-                                BorderThickness="1"
-                                CornerRadius="{ThemeResource ControlCornerRadius}"
+                                Background="{ThemeResource SystemControlHighlightAccentBrush}"
                                 Visibility="{x:Bind IsFeedAuthor, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <TextBlock
                                     x:Uid="/Feed/FeedAuthor"
                                     Margin="1"
                                     HorizontalAlignment="Left"
                                     FontSize="12"
-                                    Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                    Foreground="{ThemeResource SystemControlHighlightAltChromeWhiteBrush}"
                                     IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}" />
                             </Border>
                         </StackPanel>
@@ -992,15 +986,14 @@
                                 Margin="6,0,0,-2"
                                 Padding="2,0"
                                 VerticalAlignment="Center"
-                                Background="{ThemeResource ControlStrokeColorOnAccentSecondaryBrush}"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefault}"
                                 BorderThickness="1"
-                                CornerRadius="{ThemeResource ControlCornerRadius}"
                                 Visibility="{x:Bind FeedAuthorMessage, Converter={StaticResource StringVisibilityConverter}}">
                                 <TextBlock
                                     Margin="1"
                                     HorizontalAlignment="Left"
                                     FontSize="12"
-                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                     IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                     Text="{x:Bind FeedAuthorMessage}" />
                             </Border>
@@ -1022,7 +1015,7 @@
                         <StackPanel Orientation="Horizontal">
                             <FontIcon
                                 FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                Foreground="{ThemeResource AccentFillColorDefaultBrush}"
+                                Foreground="{ThemeResource SystemControlForegroundAccentBrush}"
                                 Glyph="&#xE8E1;"
                                 Visibility="{x:Bind Liked, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <FontIcon

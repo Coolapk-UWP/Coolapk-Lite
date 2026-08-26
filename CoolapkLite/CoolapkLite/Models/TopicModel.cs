@@ -66,7 +66,7 @@ namespace CoolapkLite.Models
             }
             else if (token.TryGetValue("username", out JToken username) && !string.IsNullOrEmpty(username.ToString()))
             {
-                Description = "作者" + username.ToString();
+                Description = $"作者{username}";
             }
             else if (token.TryGetValue("rss_type", out JToken rss_type) && !string.IsNullOrEmpty(rss_type.ToString()))
             {

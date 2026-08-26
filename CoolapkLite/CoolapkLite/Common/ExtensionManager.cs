@@ -65,6 +65,43 @@ namespace CoolapkLite.Common
         public ObservableCollection<Extension> Extensions { get; } = new ObservableCollection<Extension>();
 
         /// <summary>
+        /// The extension that is currently selected by the user. This is the extension that the host should use when invoking extensions.
+        /// </summary>
+        public Extension SelectExtension
+        {
+            get
+            {
+                string selectedExtensionId = SettingsHelper.Get<string>(SettingsHelper.SelectedExtension);
+                if (string.IsNullOrEmpty(selectedExtensionId))
+                {
+                    Extension extension = Extensions.FirstOrDefault();
+                    if (extension != null)
+                    {
+                        SettingsHelper.Set(SettingsHelper.SelectedExtension, extension.UniqueId);
+                    }
+                    return extension;
+                }
+                else
+                {
+                    Extension extension = Extensions.FirstOrDefault(e => e.UniqueId == selectedExtensionId);
+                    if (extension == null)
+                    {
+                        if (Extensions.Count > 0)
+                        {
+                            extension = Extensions.FirstOrDefault();
+                            SettingsHelper.Set(SettingsHelper.SelectedExtension, extension.UniqueId);
+                        }
+                        else
+                        {
+                            SettingsHelper.Set(SettingsHelper.SelectedExtension, string.Empty);
+                        }
+                    }
+                    return extension;
+                }
+            }
+        }
+
+        /// <summary>
         /// new jtw
         /// </summary>
         public Extension GetExtension(string id) => Extensions.FirstOrDefault(e => e.UniqueId == id);
@@ -73,6 +110,11 @@ namespace CoolapkLite.Common
         /// The name that extensions must specify to be considered an extension this host can load
         /// </summary>
         public string ExtensionContractName { get; private set; }
+
+        /// <summary>
+        /// Indicates whether the ExtensionManager has been initialized
+        /// </summary>
+        public bool IsInitialized => _dispatcher != null;
 
         /// <summary>
         /// Sets up handlers for package events
@@ -116,7 +158,7 @@ namespace CoolapkLite.Common
             // Run on the UI thread because the Extensions Tab UI updates as extensions are added or removed
             if (_dispatcher == null)
             {
-                throw new ExtensionManagerException("Extension Manager for " + ExtensionContractName + " is not initialized.");
+                throw new ExtensionManagerException($"Extension Manager for {ExtensionContractName} is not initialized.");
             }
 
             #endregion
@@ -218,7 +260,7 @@ namespace CoolapkLite.Common
         public async Task LoadExtensionAsync(AppExtension ext)
         {
             // Build a unique identifier for this extension
-            string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
+            string identifier = $"{ext.AppInfo.AppUserModelId}!{ext.Id}";
 
             // load the extension if the package is OK
             if (!ext.Package.Status.VerifyIsOK()
@@ -408,7 +450,7 @@ namespace CoolapkLite.Common
 
             #endregion
 
-            UniqueId = ext.AppInfo.AppUserModelId + "!" + ext.Id; // The name that identifies this extension in the extension manager
+            UniqueId = $"{ext.AppInfo.AppUserModelId}!{ext.Id}"; // The name that identifies this extension in the extension manager
         }
 
         #region Properties
@@ -484,7 +526,7 @@ namespace CoolapkLite.Common
         public async Task Update(AppExtension ext)
         {
             // ensure this is the same uid
-            string identifier = ext.AppInfo.AppUserModelId + "!" + ext.Id;
+            string identifier = $"{ext.AppInfo.AppUserModelId}!{ext.Id}";
             if (identifier != UniqueId)
             {
                 return;

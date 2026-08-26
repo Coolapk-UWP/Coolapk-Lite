@@ -6,7 +6,6 @@ using CoolapkLite.Models.Feeds;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
-using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.UserActivities;
@@ -98,7 +97,11 @@ namespace CoolapkLite.Pages.FeedPages
             UserActivity userActivity = await channel.GetOrCreateUserActivityAsync(Provider.FeedDetail.Url.GetMD5());
 
             // Populate required properties
-            if (!string.IsNullOrWhiteSpace(Provider.Title))
+            if (string.IsNullOrWhiteSpace(Provider.Title))
+            {
+                userActivity.VisualElements.DisplayText = "动态";
+            }
+            else
             {
                 userActivity.VisualElements.DisplayText = Provider.Title;
                 userActivity.VisualElements.AttributionDisplayText = Provider.Title;

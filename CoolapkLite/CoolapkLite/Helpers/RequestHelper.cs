@@ -13,7 +13,6 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 #if NETCORE463
 using System.Linq;
@@ -26,22 +25,10 @@ namespace CoolapkLite.Helpers
 {
     public static class RequestHelper
     {
-        private static bool IsInternetAvailable => mtuc.NetworkHelper.Instance.ConnectionInformation.IsInternetAvailable;
-        private static readonly object locker = new object();
-
-        public static HttpCookieCollection GetCoolapkCookies(Uri uri)
-        {
-            using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
-            {
-                HttpCookieManager cookieManager = filter.CookieManager;
-                return cookieManager.GetCookies(NetworkHelper.GetHost(uri));
-            }
-        }
-
         public static async Task<(bool isSucceed, JToken result)> GetDataAsync(Uri uri, bool isBackground = false)
         {
             if (uri == null) { return (false, null); }
-            string results = await NetworkHelper.GetStringAsync(uri, GetCoolapkCookies(uri), NetworkHelper.XMLHttpRequest, isBackground).ConfigureAwait(false);
+            string results = await NetworkHelper.GetStringAsync(uri, NetworkHelper.XMLHttpRequest, isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(results)) { return (false, null); }
             JObject token = null;
             try { token = JObject.Parse(results); }
@@ -62,7 +49,7 @@ namespace CoolapkLite.Helpers
         public static async Task<(bool isSucceed, string result)> GetStringAsync(Uri uri, string request = "com.coolapk.market", bool isBackground = false)
         {
             if (uri == null) { return (false, null); }
-            string results = await NetworkHelper.GetStringAsync(uri, GetCoolapkCookies(uri), request, isBackground).ConfigureAwait(false);
+            string results = await NetworkHelper.GetStringAsync(uri, request, isBackground).ConfigureAwait(false);
             if (string.IsNullOrWhiteSpace(results))
             {
                 _ = UIHelper.ShowMessageAsync("加载失败");
@@ -74,7 +61,7 @@ namespace CoolapkLite.Helpers
         public static async Task<(bool isSucceed, JToken result)> PostDataAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
             if (uri == null) { return (false, null); }
-            string json = await NetworkHelper.PostAsync(uri, content, GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
+            string json = await NetworkHelper.PostAsync(uri, content, isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json)) { return (false, null); }
             JObject token = null;
             try { token = JObject.Parse(json); }
@@ -101,7 +88,7 @@ namespace CoolapkLite.Helpers
         public static async Task<(bool isSucceed, string result)> PostStringAsync(Uri uri, HttpContent content = null, bool isBackground = false)
         {
             if (uri == null) { return (false, null); }
-            string json = await NetworkHelper.PostAsync(uri, content, GetCoolapkCookies(uri), isBackground).ConfigureAwait(false);
+            string json = await NetworkHelper.PostAsync(uri, content, isBackground).ConfigureAwait(false);
             if (string.IsNullOrEmpty(json))
             {
                 _ = UIHelper.ShowMessageAsync("加载失败");
@@ -112,7 +99,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<WriteableBitmap> GetImageAsync(Uri uri, bool isBackground = false)
         {
-            using (Stream stream = await NetworkHelper.GetStreamAsync(uri, GetCoolapkCookies(uri), NetworkHelper.XMLHttpRequest, isBackground))
+            using (Stream stream = await NetworkHelper.GetStreamAsync(uri, NetworkHelper.XMLHttpRequest, isBackground))
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 stream.CopyTo(memoryStream);
@@ -213,7 +200,7 @@ namespace CoolapkLite.Helpers
                 ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
                 ["UploadBucket"] = bucket,
                 ["UploadDir"] = dir,
-                ["ToUid"] = uid,
+                ["ToUid"] = uid
             };
             return await (extension?.InvokeAsync<string[]>(message) ?? Task.FromResult(Array.Empty<string>()));
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -46,7 +47,7 @@ namespace CoolapkLite.Common
             { "/pre", "\n" }
         };
 
-        protected static HashSet<string> _ignoreTags = new HashSet<string>
+        protected static string[] _ignoreTags = new string[]
         {
             "script",
             "noscript",
@@ -180,7 +181,7 @@ namespace CoolapkLite.Common
         // Consumes inner content from the current tag
         protected void EatInnerContent(string tag)
         {
-            string endTag = "/" + tag;
+            string endTag = $"/{tag}";
 
             while (!EndOfText)
             {

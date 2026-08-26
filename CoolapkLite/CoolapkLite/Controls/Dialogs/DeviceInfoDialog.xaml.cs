@@ -70,6 +70,7 @@ namespace CoolapkLite.Controls.Dialogs
             {
                 SettingsHelper.Set(SettingsHelper.DeviceInfo, DeviceInfo);
                 TokenCreator.UpdateDeviceInfo(DeviceInfo);
+                NetworkHelper.SetRequestHeaders();
             }
         }
 

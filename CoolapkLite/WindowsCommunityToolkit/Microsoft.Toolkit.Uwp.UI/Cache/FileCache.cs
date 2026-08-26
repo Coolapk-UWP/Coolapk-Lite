@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Windows.Storage;
 
@@ -23,6 +24,12 @@ namespace Microsoft.Toolkit.Uwp.UI
         /// Gets public singleton property.
         /// </summary>
         public static FileCache Instance => _instance ?? (_instance = new FileCache());
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCache"/> class.
+        /// </summary>
+        /// <param name="httpClient">The instance of <see cref="HttpClient"/>.</param>
+        public FileCache(HttpClient httpClient = null) : base(httpClient) { }
 
         /// <summary>
         /// Cache specific hooks to process items from HTTP response
