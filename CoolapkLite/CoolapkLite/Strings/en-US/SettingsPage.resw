@@ -220,6 +220,6 @@
     <value>Clean log files</value>
   </data>
   <data name="UseOldEmojiModeCheckBox.Header" xml:space="preserve">
-    <value>使用旧表情</value>
+    <value>Use Classical Emoji</value>
   </data>
 </root>
