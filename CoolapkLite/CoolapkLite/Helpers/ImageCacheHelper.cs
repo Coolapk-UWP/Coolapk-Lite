@@ -200,15 +200,9 @@ namespace CoolapkLite.Helpers
             })
             using (HttpClient client = new HttpClient(handler))
             {
-                NetworkHelper.SetRequestHeaders(client);
+                NetworkHelper.SetRequestHeaders(client, handler);
                 client.DefaultRequestHeaders.Add("X-App-Token", NetworkHelper.TokenCreator.GetToken());
                 client.DefaultRequestHeaders.Add("X-Requested-With", NetworkHelper.XMLHttpRequest);
-
-                Uri host = NetworkHelper.GetHost(uri);
-                foreach (Windows.Web.Http.HttpCookie cookie in RequestHelper.GetCoolapkCookies(uri))
-                {
-                    handler.CookieContainer.SetCookies(host, $"{cookie.Name} = {cookie.Value}");
-                }
 
                 HttpResponseMessage response = await client.GetAsync(uri).ConfigureAwait(false);
                 return response?.Headers.Location;

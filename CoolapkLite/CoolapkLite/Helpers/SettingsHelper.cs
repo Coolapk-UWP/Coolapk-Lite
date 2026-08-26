@@ -239,7 +239,7 @@ namespace CoolapkLite.Helpers
             remove => actions.Remove(value);
         }
 
-        public static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
+        private static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
 
         #endregion
 
@@ -257,7 +257,36 @@ namespace CoolapkLite.Helpers
 
         #endregion
 
-        static SettingsHelper() => SetDefaultSettings();
+        static SettingsHelper()
+        {
+            SetDefaultSettings();
+            SetLoginCookie();
+        }
+
+        private static void SetLoginCookie()
+        {
+            string Uid = Get<string>(SettingsHelper.Uid);
+            string UserName = Get<string>(SettingsHelper.UserName);
+            string Token = Get<string>(SettingsHelper.Token);
+
+            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
+            {
+                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                {
+                    HttpCookieManager cookieManager = filter.CookieManager;
+                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                    uid.Value = Uid;
+                    username.Value = UserName;
+                    token.Value = Token;
+                    cookieManager.SetCookie(uid);
+                    cookieManager.SetCookie(username);
+                    cookieManager.SetCookie(token);
+                }
+                InvokeLoginChanged(true);
+            }
+        }
 
         public static async Task<bool> LoginAsync()
         {
