@@ -141,4 +141,7 @@
   <data name="all" xml:space="preserve">
     <value>Все</value>
   </data>
+  <data name="recent" xml:space="preserve">
+    <value>常看</value>
+  </data>
 </root>

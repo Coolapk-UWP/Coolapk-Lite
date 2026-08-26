@@ -141,4 +141,7 @@
   <data name="all" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="recent" xml:space="preserve">
+    <value>Often</value>
+  </data>
 </root>

@@ -219,4 +219,7 @@
   <data name="CleanLogsItem.Text" xml:space="preserve">
     <value>Clean log files</value>
   </data>
+  <data name="UseOldEmojiModeCheckBox.Header" xml:space="preserve">
+    <value>Use Classical Emoji</value>
+  </data>
 </root>

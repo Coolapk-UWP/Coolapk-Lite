@@ -223,7 +223,7 @@
     <value>Reset</value>
   </data>
   <data name="UpdateVersionItem.Text" xml:space="preserve">
-    <value>Get version number</value>
+    <value>Get the latest version</value>
   </data>
   <data name="RemarkDialog.PrimaryButtonText" xml:space="preserve">
     <value>Save</value>
