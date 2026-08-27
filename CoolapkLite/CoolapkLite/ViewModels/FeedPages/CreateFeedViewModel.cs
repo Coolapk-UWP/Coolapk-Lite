@@ -20,6 +20,8 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using CoolapkLite.Models.Network;
+
 
 #if !NETCORE463
 using System.IO;
@@ -296,7 +298,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     GetEntities,
                     "uid");
             }
-            else if (SettingsHelper.Get<string>(SettingsHelper.Uid) is string uid && !string.IsNullOrEmpty(uid))
+            else if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID is string uid && !string.IsNullOrEmpty(uid))
             {
                 Provider = new CoolapkListProvider(
                     (p, firstItem, lastItem) =>

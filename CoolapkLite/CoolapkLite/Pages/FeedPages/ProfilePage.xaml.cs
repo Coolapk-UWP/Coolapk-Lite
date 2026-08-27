@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.FeedPages;
@@ -140,10 +141,10 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
                     break;
                 case "FollowsButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", Dispatcher));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, true, "我", Dispatcher));
                     break;
                 case "FansButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", Dispatcher));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, false, "我", Dispatcher));
                     break;
                 case "LoginButton":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));

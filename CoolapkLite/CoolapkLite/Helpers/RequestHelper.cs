@@ -13,6 +13,8 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using CoolapkLite.Models.Network;
+
 
 #if NETCORE463
 using System.Linq;
@@ -187,22 +189,29 @@ namespace CoolapkLite.Helpers
             return responses;
         }
 #else
-        public static async Task<string[]> UploadImagesAsync(Extension extension, IEnumerable<UploadFileFragment> fragments, string bucket, string dir, string uid)
+        public static Task<string[]> UploadImagesAsync(Extension extension, IEnumerable<UploadFileFragment> fragments, string bucket, string dir, string uid)
         {
-            ValueSet message = new ValueSet
+            if (extension != null && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account && !account.IsEmpty)
             {
-                ["UID"] = SettingsHelper.Get<string>(SettingsHelper.Uid),
-                ["UserName"] = SettingsHelper.Get<string>(SettingsHelper.UserName),
-                ["Token"] = SettingsHelper.Get<string>(SettingsHelper.Token),
-                ["DeviceCode"] = TokenCreator.DeviceCode,
-                ["AppToken"] = NetworkHelper.TokenCreator.GetToken(),
-                ["UserAgent"] = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString(),
-                ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
-                ["UploadBucket"] = bucket,
-                ["UploadDir"] = dir,
-                ["ToUid"] = uid
-            };
-            return await (extension?.InvokeAsync<string[]>(message) ?? Task.FromResult(Array.Empty<string>()));
+                ValueSet message = new ValueSet
+                {
+                    ["UID"] = account.UID,
+                    ["UserName"] = account.UserName,
+                    ["Token"] = account.Token,
+                    ["DeviceCode"] = TokenCreator.DeviceCode,
+                    ["AppToken"] = NetworkHelper.TokenCreator.GetToken(),
+                    ["UserAgent"] = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString(),
+                    ["Images"] = JsonConvert.SerializeObject(fragments, new JsonSerializerSettings { ContractResolver = new IgnoreIgnoredContractResolver() }),
+                    ["UploadBucket"] = bucket,
+                    ["UploadDir"] = dir,
+                    ["ToUid"] = uid
+                };
+                return extension.InvokeAsync<string[]>(message);
+            }
+            else
+            {
+                return Task.FromResult(Array.Empty<string>());
+            }
         }
 
         public static async Task<(bool isSucceed, string result)> UploadImageAsync(byte[] image, string name)

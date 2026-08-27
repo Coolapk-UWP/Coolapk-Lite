@@ -346,6 +346,7 @@
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
     <Compile Include="Models\Message\MessageExtraModel.cs" />
     <Compile Include="Models\Message\MessageModel.cs" />
+    <Compile Include="Models\Network\Account.cs" />
     <Compile Include="Models\Network\DeviceInfo.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />

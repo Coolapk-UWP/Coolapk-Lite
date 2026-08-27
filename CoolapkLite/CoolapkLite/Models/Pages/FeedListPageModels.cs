@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
@@ -115,7 +116,7 @@ namespace CoolapkLite.Models.Pages
             if (token.TryGetValue("uid", out JToken uid))
             {
                 UID = uid.ToObject<int>();
-                IsMe = uid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
+                IsMe = uid.ToString() == SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
             }
 
             if (token.TryGetValue("feed", out JToken feed))

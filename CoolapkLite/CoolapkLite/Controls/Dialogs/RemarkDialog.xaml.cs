@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
@@ -79,7 +80,7 @@ namespace CoolapkLite.Controls.Dialogs
                             if (isSucceed)
                             {
                                 _ = this.ShowMessageAsync("设置成功");
-                                SettingsHelper.UserRemarks = await RemarkModel.GetRemarkDictionary(SettingsHelper.Get<string>(SettingsHelper.Uid)).ContinueWith(x => x.Result);
+                                SettingsHelper.UserRemarks = await RemarkModel.GetRemarkDictionary(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID).ContinueWith(x => x.Result);
                             }
                         }
                     }

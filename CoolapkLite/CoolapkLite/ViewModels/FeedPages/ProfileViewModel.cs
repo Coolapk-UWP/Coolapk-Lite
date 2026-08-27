@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
@@ -55,7 +56,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
-                UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
                 ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
                 await NotificationsModel.UpdateAsync().ConfigureAwait(false);
                 await Reset().ConfigureAwait(false);

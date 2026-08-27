@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.ViewModels.BrowserPages;
@@ -76,13 +77,13 @@ namespace CoolapkLite.Controls.DataTemplates
             }
             else if (url.Contains("我的收藏单"))
             {
-                string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
+                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                if (!string.IsNullOrEmpty(uid)) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
             }
             else if (url.Contains("我的问答"))
             {
-                string uid = SettingsHelper.Get<string>(SettingsHelper.Uid);
-                if (uid != null) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer", element.Dispatcher)); }
+                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                if (!string.IsNullOrEmpty(uid)) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer", element.Dispatcher)); }
             }
             else
             {

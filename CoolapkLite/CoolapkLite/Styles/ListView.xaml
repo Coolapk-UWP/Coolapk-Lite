@@ -56,24 +56,20 @@
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation Storyboard.TargetName="ContentBorder" />
                                     </Storyboard>
                                 </VisualState>
@@ -83,24 +79,20 @@
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PointerOverSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
                                         <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="PressedSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentBorder" Storyboard.TargetProperty="Background">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="ContentPresenter" Storyboard.TargetProperty="Foreground">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextFillColorPrimaryBrush}" />
-                                        </ObjectAnimationUsingKeyFrames>
                                         <PointerDownThemeAnimation Storyboard.TargetName="ContentBorder" />
                                     </Storyboard>
                                 </VisualState>
@@ -108,13 +100,140 @@
                             <VisualStateGroup x:Name="DisabledStates">
                                 <VisualState x:Name="Enabled" />
                                 <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Opacity" Value="0.55" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SelectableCardItemStyle" TargetType="SelectorItem">
+        <Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}" />
+        <Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}" />
+        <Setter Property="Background" Value="{ThemeResource SystemControlTransparentBrush}" />
+        <Setter Property="Foreground" Value="{ThemeResource SystemControlForegroundBaseHighBrush}" />
+        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="TabNavigation" Value="Local" />
+        <Setter Property="IsHoldingEnabled" Value="True" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0.5" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinWidth" Value="{ThemeResource ListViewItemMinWidth}" />
+        <Setter Property="MinHeight" Value="{ThemeResource ListViewItemMinHeight}" />
+        <Setter Property="AllowDrop" Value="False" />
+        <Setter Property="UseSystemFocusVisuals" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="SelectorItem">
+                    <Grid
+                        x:Name="ContentBorder"
+                        Margin="{TemplateBinding Margin}"
+                        helper:FocusVisualHelper.FocusVisualMargin="1"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        Control.IsTemplateFocusTarget="True">
+                        <Grid
+                            x:Name="ContentPresenterGrid"
+                            Margin="0,0,0,0"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                            <Grid.RenderTransform>
+                                <TranslateTransform x:Name="ContentPresenterTranslateTransform" />
+                            </Grid.RenderTransform>
+                            <Grid
+                                Margin="4,0,0,0"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Stretch">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1.25*" MaxHeight="20" />
+                                    <RowDefinition Height="*" MinHeight="16" />
+                                    <RowDefinition Height="1.25*" MaxHeight="20" />
+                                </Grid.RowDefinitions>
+                                <Rectangle
+                                    x:Name="SelectionIndicator"
+                                    Grid.Row="1"
+                                    Width="2"
+                                    Fill="{ThemeResource SystemControlForegroundAccentBrush}"
+                                    Opacity="0.0"
+                                    RadiusX="1"
+                                    RadiusY="1" />
+                            </Grid>
+                            <ContentPresenter
+                                x:Name="ContentPresenter"
+                                Margin="{TemplateBinding Padding}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                ContentTransitions="{TemplateBinding ContentTransitions}" />
+                        </Grid>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal">
                                     <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentBorder"
-                                            Storyboard.TargetProperty="Opacity"
-                                            To="0.55"
-                                            Duration="0" />
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
                                     </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                    </VisualState.Setters>
+                                    <Storyboard>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentBorder" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PointerOverSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorSecondaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
+                                    <Storyboard>
+                                        <PointerUpThemeAnimation Storyboard.TargetName="ContentBorder" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="PressedSelected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Background" Value="{ThemeResource SubtleFillColorTertiaryBrush}" />
+                                        <Setter Target="ContentPresenter.Foreground" Value="{ThemeResource TextFillColorPrimaryBrush}" />
+                                        <Setter Target="SelectionIndicator.Opacity" Value="1.0" />
+                                    </VisualState.Setters>
+                                    <Storyboard>
+                                        <PointerDownThemeAnimation Storyboard.TargetName="ContentBorder" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="DisabledStates">
+                                <VisualState x:Name="Enabled" />
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentBorder.Opacity" Value="0.55" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>

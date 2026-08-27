@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
@@ -26,7 +27,7 @@ namespace CoolapkLite.Models.Message
             {
                 UID = fromuid.ToObject<int>();
                 UserUrl = $"/u/{fromuid}";
-                IsMe = fromuid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
+                IsMe = fromuid.ToString() == SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
             }
 
             if (token.TryGetValue("isnew", out JToken isnew))

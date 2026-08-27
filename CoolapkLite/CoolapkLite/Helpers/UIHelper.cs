@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
@@ -516,11 +517,11 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
