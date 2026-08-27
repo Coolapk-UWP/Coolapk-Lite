@@ -251,6 +251,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task<bool> CheckLoginAsync()
         {
+            NetworkHelper.UpdateCoolapkCookie();
             (bool isSucceed, _) = await GetDataAsync(UriHelper.GetUri(UriType.CheckLoginInfo), true).ConfigureAwait(false);
             return isSucceed;
         }
