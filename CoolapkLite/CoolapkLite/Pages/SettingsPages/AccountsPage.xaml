@@ -8,7 +8,10 @@
     xmlns:local="using:CoolapkLite.Pages.SettingsPages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:network="using:CoolapkLite.Models.Network"
+    xmlns:settingspages="using:CoolapkLite.ViewModels.SettingsPages"
     xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    d:DataContext="{d:DesignInstance Type=settingspages:AccountsViewModel}"
+    DataContext="{x:Bind Provider}"
     NavigationCacheMode="Enabled"
     mc:Ignorable="d">
     <Grid>

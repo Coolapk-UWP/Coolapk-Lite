@@ -225,6 +225,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind Info}"
@@ -232,6 +233,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}"
@@ -241,6 +243,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind InfoHTML}"
@@ -250,6 +253,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 TextTrimming="CharacterEllipsis">
@@ -962,6 +966,7 @@
                             <TextBlock
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind Dateline, Converter={StaticResource DateLineToReadableConverter}}"
@@ -970,6 +975,7 @@
                                 Margin="2,0,0,0"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="@"
@@ -979,6 +985,7 @@
                                 Margin="0,-5"
                                 Click="Button_Click"
                                 Content="{x:Bind Rusername}"
+                                FontSize="12"
                                 FontWeight="Normal"
                                 Style="{StaticResource TextBlockButtonStyle}"
                                 Tag="{x:Bind Rurl}"
