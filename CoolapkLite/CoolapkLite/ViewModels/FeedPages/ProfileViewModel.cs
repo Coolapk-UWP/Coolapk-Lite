@@ -75,11 +75,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override async Task<uint> LoadItemsAsync(uint count)
         {
-            if (Provider != null && _currentPage == 1)
-            {
-                return await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
-            }
-            return 0;
+            return Provider != null && _currentPage == 1 ? await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false) : 0;
         }
 
         protected override async Task<uint> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)

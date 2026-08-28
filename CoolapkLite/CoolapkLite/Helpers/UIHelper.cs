@@ -534,12 +534,8 @@ namespace CoolapkLite.Helpers
                 {
                     string url = link.Substring(3, "?");
                     string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID.ToString());
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
@@ -553,15 +549,8 @@ namespace CoolapkLite.Helpers
                     string id = link.Substring(6, "?");
                     if (int.TryParse(id, out _))
                     {
-                        return async frame =>
-                        {
-                            FeedShellViewModel provider = await FeedShellViewModel.GetProviderAsync(id, frame.Dispatcher).ConfigureAwait(false);
-                            if (provider != null)
-                            {
-                                return await frame.NavigateAsync(typeof(FeedShellPage), provider).ConfigureAwait(false);
-                            }
-                            return false;
-                        };
+                        return async frame => await FeedShellViewModel.GetProviderAsync(id, frame.Dispatcher).ConfigureAwait(false) is FeedShellViewModel provider
+                            && await frame.NavigateAsync(typeof(FeedShellPage), provider).ConfigureAwait(false);
                     }
                     else
                     {
@@ -598,12 +587,8 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string tag = link.Substring(3, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
@@ -611,45 +596,28 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string tag = link.Substring(5, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/product/", StringComparison.OrdinalIgnoreCase))
             {
-                if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
-                {
-                    return frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
-                }
-                else
-                {
-                    return async frame =>
+                return link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase)
+                    ? frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher))
+                    : (OpenLinkFactory)(async frame =>
                     {
                         string tag = link.Substring(9, "?");
-                        FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
-                        if (provider != null)
-                        {
-                            return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                        }
-                        return false;
-                    };
-                }
+                        return FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                            && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
+                    });
             }
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
                 return async frame =>
                 {
                     string id = link.Substring(12, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/apk/", StringComparison.OrdinalIgnoreCase))
@@ -657,12 +625,8 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string id = link.Substring(5, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/appba/", StringComparison.OrdinalIgnoreCase))
@@ -670,12 +634,7 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string id = link.Substring(7, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher) is FeedListViewModel provider && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))

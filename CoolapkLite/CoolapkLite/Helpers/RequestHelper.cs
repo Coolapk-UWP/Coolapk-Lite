@@ -11,8 +11,6 @@ using System.Threading.Tasks;
 using Windows.Graphics.Imaging;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
-using Windows.Web.Http;
-using Windows.Web.Http.Filters;
 using CoolapkLite.Models.Network;
 
 

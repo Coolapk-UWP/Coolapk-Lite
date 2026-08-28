@@ -34,14 +34,7 @@ namespace CoolapkLite.Controls
                 if (ratingValue == -1)
                 {
                     double placeholderValue = GetRatingControl().PlaceholderValue;
-                    if (placeholderValue == -1)
-                    {
-                        valueString = "Rating Unset";
-                    }
-                    else
-                    {
-                        valueString = GenerateValue_ValueString("Community Rating, {0} of {1}", placeholderValue);
-                    }
+                    valueString = placeholderValue == -1 ? "Rating Unset" : GenerateValue_ValueString("Community Rating, {0} of {1}", placeholderValue);
                 }
                 else
                 {
@@ -75,14 +68,7 @@ namespace CoolapkLite.Controls
             {
                 // Change this to provide a placeholder value too.
                 double value = GetRatingControl().Value;
-                if (value == -1)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return value;
-                }
+                return value == -1 ? 0 : value;
             }
         }
 
@@ -95,12 +81,9 @@ namespace CoolapkLite.Controls
 
         protected override object GetPatternCore(PatternInterface patternInterface)
         {
-            if (patternInterface == PatternInterface.Value || patternInterface == PatternInterface.RangeValue)
-            {
-                return this;
-            }
-
-            return base.GetPatternCore(patternInterface);
+            return patternInterface == PatternInterface.Value || patternInterface == PatternInterface.RangeValue
+                ? this
+                : base.GetPatternCore(patternInterface);
         }
 
         protected override AutomationControlType GetAutomationControlTypeCore()
@@ -141,18 +124,7 @@ namespace CoolapkLite.Controls
             // Here we determine the number of digits past the decimal point we care about,
             // and this number is used by the caller to truncate the Value_Value string.
 
-            if (intValue % 100 == 0)
-            {
-                return 0;
-            }
-            else if (intValue % 10 == 0)
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
+            return intValue % 100 == 0 ? 0 : intValue % 10 == 0 ? 1 : 2;
         }
 
         private int DetermineSignificantDigits(double value, int fractionDigits)

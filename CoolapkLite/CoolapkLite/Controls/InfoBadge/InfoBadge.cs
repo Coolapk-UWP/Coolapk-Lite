@@ -107,14 +107,9 @@ namespace CoolapkLite.Controls
                 if (iconSource != null)
                 {
                     TemplateSettings.IconElement = iconSource;
-                    if (iconSource is FontIcon)
-                    {
-                        _ = VisualStateManager.GoToState(thisAsControl, "FontIcon", true);
-                    }
-                    else
-                    {
-                        _ = VisualStateManager.GoToState(thisAsControl, "Icon", true);
-                    }
+                    _ = iconSource is FontIcon
+                        ? VisualStateManager.GoToState(thisAsControl, "FontIcon", true)
+                        : VisualStateManager.GoToState(thisAsControl, "Icon", true);
                 }
                 else
                 {

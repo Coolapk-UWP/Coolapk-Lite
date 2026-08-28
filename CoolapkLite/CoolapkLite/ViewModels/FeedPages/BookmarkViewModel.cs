@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.ViewModels.SettingsPages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

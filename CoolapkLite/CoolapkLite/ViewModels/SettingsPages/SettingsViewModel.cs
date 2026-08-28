@@ -277,14 +277,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 #endif
                 if (results != null)
                 {
-                    if (results.IsExistNewVersion)
-                    {
-                        _ = Dispatcher.ShowMessageAsync($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
-                    }
-                    else
-                    {
-                        _ = Dispatcher.ShowMessageAsync(_loader.GetString("UpToDate"));
-                    }
+                    _ = results.IsExistNewVersion
+                        ? Dispatcher.ShowMessageAsync($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}")
+                        : Dispatcher.ShowMessageAsync(_loader.GetString("UpToDate"));
                     IsCheckUpdateButtonEnabled = true;
                     return results;
                 }
@@ -386,8 +381,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
             IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
             StorageFile file = files.FirstOrDefault();
-            if (file != null) { return await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false); }
-            return false;
+            return file != null && await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false);
         }
 
         private int count = -1;

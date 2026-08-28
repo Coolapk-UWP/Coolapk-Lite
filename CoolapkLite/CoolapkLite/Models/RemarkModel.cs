@@ -47,11 +47,7 @@ namespace CoolapkLite.Models
         public static async Task<IEnumerable<RemarkModel>> GetRemarkList(string uid)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetRemarkList, uid)).ConfigureAwait(false);
-            if (isSucceed)
-            {
-                return result.OfType<JObject>().Select(x => new RemarkModel(x));
-            }
-            return Enumerable.Empty<RemarkModel>();
+            return isSucceed ? result.OfType<JObject>().Select(x => new RemarkModel(x)) : Enumerable.Empty<RemarkModel>();
         }
 
         public static async Task<ImmutableDictionary<int, string>> GetRemarkDictionary(string uid)

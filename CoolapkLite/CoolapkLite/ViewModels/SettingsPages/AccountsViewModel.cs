@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
-using CoolapkLite.ViewModels.FeedPages;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Media.Streaming.Adaptive;
@@ -283,7 +282,7 @@ namespace CoolapkLite.Controls
                 {
                     System.Net.Http.StringContent @params = new System.Net.Http.StringContent(request.ToString());
                     content.Add(@params, "params");
-                    var (isSucceed, result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.PlayerGetUrl), content);
+                    (bool isSucceed, JToken result) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.PlayerGetUrl), content, true);
                     if (isSucceed)
                     {
                         JObject token = (JObject)result;

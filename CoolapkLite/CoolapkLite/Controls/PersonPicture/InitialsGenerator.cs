@@ -487,12 +487,7 @@ namespace CoolapkLite.Controls
             }
 
             // Combining Diacritical Marks
-            if (character >= 0x0300 && character <= 0x036F)
-            {
-                return CharacterType.Standard;
-            }
-
-            return CharacterType.Other;
+            return character >= 0x0300 && character <= 0x036F ? CharacterType.Standard : CharacterType.Other;
         }
 
         /// <summary>

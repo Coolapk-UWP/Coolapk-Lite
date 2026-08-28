@@ -1,8 +1,5 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Controls.Dialogs;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
-using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.SettingsPages;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,7 +33,7 @@ namespace CoolapkLite.Pages.SettingsPages
             }
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)

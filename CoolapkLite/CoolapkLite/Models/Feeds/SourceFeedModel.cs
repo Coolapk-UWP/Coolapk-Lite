@@ -74,14 +74,7 @@ namespace CoolapkLite.Models.Feeds
                 ID = id.ToObject<int>();
             }
 
-            if (token.TryGetValue("url", out JToken uri) && !string.IsNullOrEmpty(uri.ToString()))
-            {
-                Url = uri.ToString();
-            }
-            else
-            {
-                Url = $"/feed/{ID}";
-            }
+            Url = token.TryGetValue("url", out JToken uri) && !string.IsNullOrEmpty(uri.ToString()) ? uri.ToString() : $"/feed/{ID}";
 
             if (token.TryGetValue("userInfo", out JToken v1))
             {
