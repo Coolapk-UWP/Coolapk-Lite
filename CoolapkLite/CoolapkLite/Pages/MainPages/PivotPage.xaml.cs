@@ -43,7 +43,7 @@ namespace CoolapkLite.Pages
         private Action Refresh;
 
         public Frame MainFrame => PivotContentFrame;
-        private static bool IsLogin => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty ?? false;
+        private static bool IsLogin => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty == false;
 
         public PivotPage()
         {

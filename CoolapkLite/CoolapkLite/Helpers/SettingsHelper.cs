@@ -19,6 +19,7 @@ namespace CoolapkLite.Helpers
     {
         public const string TileUrl = nameof(TileUrl);
         public const string CustomUA = nameof(CustomUA);
+        public const string Accounts = nameof(Accounts);
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string CustomAPI = nameof(CustomAPI);
@@ -193,6 +194,10 @@ namespace CoolapkLite.Helpers
         {
             StorageFolder folder = LocalObject.Folder;
             StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
+            if (await settings.TryGetItemAsync(Accounts) == null)
+            {
+                await SetAsync(Accounts, Array.Empty<Account>()).ConfigureAwait(false);
+            }
             if (await settings.TryGetItemAsync(Bookmark) == null)
             {
                 await SetAsync(Bookmark, Models.Bookmark.GetDefaultBookmarks()).ConfigureAwait(false);

@@ -35,6 +35,7 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            x:Uid="/MainPage/ListView"
             helpers:ListViewHelper.IsItemClickEnabled="True"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource DefaultCardItemStyle}"

@@ -60,6 +60,7 @@
                 Grid.Column="1"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="1"
                 TextTrimming="CharacterEllipsis">
@@ -70,6 +71,7 @@
             <TextBlock
                 Grid.Row="2"
                 Grid.Column="1"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
                 Text="{x:Bind Bio}"
@@ -126,6 +128,8 @@
             <ctrl:TextBlockEx
                 Grid.Row="1"
                 Grid.Column="1"
+                EmojiFontSize="16"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
                 Text="{x:Bind Description}"
@@ -192,6 +196,8 @@
                 Grid.Column="1"
                 VerticalAlignment="Center"
                 d:DataContext="{d:DesignInstance Type=models:IHasDescription}"
+                EmojiFontSize="16"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 MaxLines="10"
                 Text="{Binding Description}"

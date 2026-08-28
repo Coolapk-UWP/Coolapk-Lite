@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.ViewModels.SettingsPages;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -57,15 +58,29 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task Refresh(bool reset)
         {
-            if (Bookmarks != null)
+            if (_bookmarks != null)
             {
-                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, Bookmarks.ToArray()).ConfigureAwait(false);
+                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, _bookmarks.ToArray()).ConfigureAwait(false);
             }
             if (reset)
             {
-                Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
+                await ResetAsync().ConfigureAwait(false);
             }
             await UpdateJumpListAsync().ConfigureAwait(false);
+            RefreshOthers();
+        }
+
+        private async Task ResetAsync() => Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
+
+        private void RefreshOthers()
+        {
+            foreach (KeyValuePair<CoreDispatcher, BookmarkViewModel> cache in Caches)
+            {
+                if (cache.Key != Dispatcher)
+                {
+                    _ = cache.Value.ResetAsync();
+                }
+            }
         }
 
         private async Task UpdateJumpListAsync()

@@ -15,6 +15,7 @@
     <Grid>
         <control:PullToRefreshListView
             x:Name="ListView"
+            x:Uid="/MainPage/ListView"
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
             ItemContainerStyle="{StaticResource SelectableCardItemStyle}"

@@ -493,7 +493,7 @@ namespace CoolapkLite.Models.Images
 
         public override int GetHashCode() => (uri, type, Dispatcher).GetHashCode();
 
-        public bool Equals(ImageModel other) => other != null && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
+        public bool Equals(ImageModel other) => other is ImageModel && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
 
         public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
 

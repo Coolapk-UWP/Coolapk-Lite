@@ -44,7 +44,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsLogin
         {
-            get => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty ?? false;
+            get => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty == false;
             set => RaisePropertyChangedEvent();
         }
 

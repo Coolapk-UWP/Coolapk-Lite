@@ -153,7 +153,7 @@
                                 VerticalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1.25*" MaxHeight="20" />
-                                    <RowDefinition Height="*" MinHeight="16" />
+                                    <RowDefinition Height="*" MinHeight="24" />
                                     <RowDefinition Height="1.25*" MaxHeight="20" />
                                 </Grid.RowDefinitions>
                                 <Rectangle

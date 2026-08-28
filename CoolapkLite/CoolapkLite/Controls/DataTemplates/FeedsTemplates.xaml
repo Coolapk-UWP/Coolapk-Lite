@@ -527,6 +527,7 @@
                                 Visibility="{x:Bind ExtraTitle, Converter={StaticResource StringVisibilityConverter}}" />
                             <TextBlock
                                 HorizontalAlignment="Left"
+                                FontSize="12"
                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                 IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                                 Text="{x:Bind ExtraSubtitle}"
@@ -589,6 +590,7 @@
                             TextWrapping="Wrap" />
                         <TextBlock
                             HorizontalAlignment="Left"
+                            FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             IsTextSelectionEnabled="{x:Bind IsCopyEnabled, Mode=OneWay}"
                             Text="{x:Bind MediaSubtitle}"

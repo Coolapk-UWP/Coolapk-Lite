@@ -47,6 +47,8 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
+                EmojiFontSize="16"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind Note}" />
             <control:InfoBadge
@@ -178,7 +180,6 @@
                 <TextBlock
                     Margin="4,0"
                     HorizontalAlignment="Left"
-                    FontSize="16"
                     FontWeight="SemiLight"
                     IsTextSelectionEnabled="{x:Bind FeedDetail.IsCopyEnabled, Mode=OneWay}"
                     Text="{x:Bind Title}" />
@@ -252,6 +253,8 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalAlignment="Left"
+                EmojiFontSize="16"
+                FontSize="12"
                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                 Text="{x:Bind FeedMessage}" />
             <control:InfoBadge

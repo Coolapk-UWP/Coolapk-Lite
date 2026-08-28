@@ -123,6 +123,7 @@
             </Pivot.RightHeader>
             <PivotItem Header="动态">
                 <control:PullToRefreshListView
+                    x:Uid="/MainPage/ListView"
                     helpers:ListViewHelper.IsItemClickEnabled="True"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
@@ -134,6 +135,7 @@
             </PivotItem>
             <PivotItem Header="用户">
                 <control:PullToRefreshListView
+                    x:Uid="/MainPage/ListView"
                     helpers:ListViewHelper.IsItemClickEnabled="True"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
@@ -145,6 +147,7 @@
             </PivotItem>
             <PivotItem Header="话题">
                 <control:PullToRefreshListView
+                    x:Uid="/MainPage/ListView"
                     helpers:ListViewHelper.IsItemClickEnabled="True"
                     ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
                     ItemContainerStyle="{StaticResource DefaultCardItemStyle}"
