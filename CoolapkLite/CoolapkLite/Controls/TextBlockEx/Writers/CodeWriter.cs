@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class CodeWriter : HtmlWriter
+    public sealed class CodeWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "code" };
 

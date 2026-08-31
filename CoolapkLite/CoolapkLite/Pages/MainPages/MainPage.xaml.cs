@@ -466,7 +466,7 @@ namespace CoolapkLite.Pages
         }
     }
 
-    public class PersonMenuItem : MenuItem
+    public sealed class PersonMenuItem : MenuItem
     {
         private ImageModel image;
         public ImageModel Image
@@ -507,7 +507,7 @@ namespace CoolapkLite.Pages
         {
             if (isLogin)
             {
-                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 if (!string.IsNullOrEmpty(uid))
                 {
                     UserInfoModel results = await NetworkHelper.GetUserInfoByNameAsync(uid).ConfigureAwait(false);
@@ -534,7 +534,7 @@ namespace CoolapkLite.Pages
         }
     }
 
-    public class MenuItemTemplateSelector : DataTemplateSelector
+    public sealed class MenuItemTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Default { get; set; }
         public DataTemplate PersonPicture { get; set; }

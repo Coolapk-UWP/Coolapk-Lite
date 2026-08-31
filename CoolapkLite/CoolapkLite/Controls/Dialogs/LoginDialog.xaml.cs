@@ -13,7 +13,7 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class LoginDialog : ContentDialog
     {
-        private readonly Account account = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) ?? new Account();
+        private Account account = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount);
 
         public string UID
         {

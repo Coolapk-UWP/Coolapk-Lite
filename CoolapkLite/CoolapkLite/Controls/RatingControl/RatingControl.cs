@@ -36,7 +36,7 @@ namespace CoolapkLite.Controls
         Image
     }
 
-    public partial class RatingControl : Control
+    public sealed partial class RatingControl : Control
     {
         private const float c_horizontalScaleAnimationCenterPoint = 0.5f;
         private const float c_verticalScaleAnimationCenterPoint = 0.8f;

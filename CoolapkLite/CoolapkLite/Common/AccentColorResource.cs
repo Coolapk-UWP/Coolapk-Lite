@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Common
 {
-    public class AccentColorResource : ResourceDictionary
+    public sealed class AccentColorResource : ResourceDictionary
     {
         private const string AccentDark1Key = "SystemAccentColorDark1";
         private const string AccentDark2Key = "SystemAccentColorDark2";

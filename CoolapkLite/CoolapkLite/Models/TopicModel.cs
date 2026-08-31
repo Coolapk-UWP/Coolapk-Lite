@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoolapkLite.Models
 {
-    public class TopicModel : Entity, IHasDescription
+    public sealed class TopicModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

@@ -17,7 +17,7 @@ namespace CoolapkLite.Controls
 {
     [TemplatePart(Name = MediaElementName, Type = typeof(FrameworkElement))]
     [TemplatePart(Name = MediaElementBorderName, Type = typeof(FrameworkElement))]
-    public class MediaPlayerElementEx : Control
+    public sealed class MediaPlayerElementEx : Control
     {
         private const string MediaElementName = "PART_MediaElement";
         private const string MediaElementBorderName = "PART_MediaElementBorder";

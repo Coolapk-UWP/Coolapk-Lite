@@ -13,7 +13,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class ProfileViewModel : EntityItemSource, IViewModel
+    public sealed class ProfileViewModel : EntityItemSource, IViewModel
     {
         public string UID = string.Empty;
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
@@ -56,7 +56,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
-                UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
                 await NotificationsModel.UpdateAsync().ConfigureAwait(false);
                 await Reset().ConfigureAwait(false);

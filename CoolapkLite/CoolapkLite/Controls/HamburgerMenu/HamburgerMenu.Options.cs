@@ -8,9 +8,6 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls
 {
-    /// <summary>
-    /// The HamburgerMenu is based on a SplitView control. By default it contains a HamburgerButton and a ListView to display menu items.
-    /// </summary>
     public partial class HamburgerMenu
     {
         #region OptionsItemsSource

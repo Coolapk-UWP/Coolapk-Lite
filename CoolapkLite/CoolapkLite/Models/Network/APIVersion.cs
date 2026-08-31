@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.Models.Network
 {
-    public class APIVersion
+    public sealed class APIVersion
     {
         public string Version { get; set; }
         public int VersionCode { get; set; }

@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {
-    public class PersonPicture : ImageControl
+    public sealed class PersonPicture : ImageControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageControl"/> class.

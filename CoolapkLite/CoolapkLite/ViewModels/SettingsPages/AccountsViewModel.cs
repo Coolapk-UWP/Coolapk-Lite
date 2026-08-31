@@ -11,7 +11,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class AccountsViewModel : IViewModel
+    public sealed class AccountsViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, AccountsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, AccountsViewModel>();
 
@@ -28,7 +28,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -37,7 +37,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

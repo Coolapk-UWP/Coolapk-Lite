@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Models.Users
 {
-    public class LinkUserModel : ISourceUserModel, IHasTitle
+    public sealed class LinkUserModel : ISourceUserModel, IHasTitle
     {
         public string Url { get; set; }
         public string Title => UserName;

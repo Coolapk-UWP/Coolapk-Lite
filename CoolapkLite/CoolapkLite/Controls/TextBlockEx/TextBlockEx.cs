@@ -20,7 +20,7 @@ namespace CoolapkLite.Controls
     /// </summary>
     [ContentProperty(Name = nameof(Text))]
     [TemplatePart(Name = RichTextBlockName, Type = typeof(RichTextBlock))]
-    public partial class TextBlockEx : Control
+    public sealed partial class TextBlockEx : Control
     {
         private const string RichTextBlockName = "PART_RichTextBlock";
 

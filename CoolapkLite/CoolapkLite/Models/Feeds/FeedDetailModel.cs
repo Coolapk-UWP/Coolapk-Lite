@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedDetailModel : FeedModelBase
+    public sealed class FeedDetailModel : FeedModelBase
     {
         public int ReadNum { get; private set; }
 

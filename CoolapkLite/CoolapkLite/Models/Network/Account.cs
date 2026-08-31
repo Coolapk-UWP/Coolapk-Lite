@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace CoolapkLite.Models.Network
 {
-    public class Account : IEquatable<Account>
+    public struct Account : IEquatable<Account>
     {
         public string UID { get; set; }
         public string UserName { get; set; }
         public string Token { get; set; }
 
         public bool IsEmpty => string.IsNullOrEmpty(UID) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Token);
-
-        public Account() { }
 
         public Account(string uid, string username, string token) : this()
         {
@@ -27,13 +24,13 @@ namespace CoolapkLite.Models.Network
             token = Token;
         }
 
-        public override bool Equals(object obj) => Equals(obj as Account);
+        public override bool Equals(object obj) => obj is Account other && Equals(other);
 
         public override int GetHashCode() => (UID, UserName, Token).GetHashCode();
 
-        public bool Equals(Account other) => other is Account && UID == other.UID && UserName == other.UserName && Token == other.Token;
+        public bool Equals(Account other) => UID == other.UID && UserName == other.UserName && Token == other.Token;
 
-        public static bool operator ==(Account left, Account right) => EqualityComparer<Account>.Default.Equals(left, right);
+        public static bool operator ==(Account left, Account right) => left.Equals(right);
 
         public static bool operator !=(Account left, Account right) => !(left == right);
     }

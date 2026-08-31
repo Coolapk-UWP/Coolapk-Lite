@@ -10,7 +10,7 @@ namespace CoolapkLite.Helpers.Converters
     /// <summary>
     /// Gets the approximated hex name for the color.
     /// </summary>
-    public class ColorToHexNameConverter : IValueConverter
+    public sealed class ColorToHexNameConverter : IValueConverter
     {
         /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, string language)

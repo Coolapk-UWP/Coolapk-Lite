@@ -141,10 +141,10 @@ namespace CoolapkLite.Pages.FeedPages
                     _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));
                     break;
                 case "FollowsButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, true, "我", Dispatcher));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID, true, "我", Dispatcher));
                     break;
                 case "FansButton":
-                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID, false, "我", Dispatcher));
+                    _ = this.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID, false, "我", Dispatcher));
                     break;
                 case "LoginButton":
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));

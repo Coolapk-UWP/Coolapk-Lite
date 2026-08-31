@@ -28,7 +28,7 @@ using Windows.UI;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class SettingsViewModel : IViewModel
+    public sealed class SettingsViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
 
@@ -44,7 +44,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsLogin
         {
-            get => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty == false;
+            get => !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
             set => RaisePropertyChangedEvent();
         }
 
@@ -172,7 +172,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -184,7 +184,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected static async void RaisePropertyChangedEvent(params string[] names)
+        private static async void RaisePropertyChangedEvent(params string[] names)
         {
             if (names?.Length > 0)
             {
@@ -196,7 +196,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class StrongWriter : HtmlWriter
+    public sealed class StrongWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "strong" };
 

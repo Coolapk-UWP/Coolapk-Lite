@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoolapkLite.Models.Pages
 {
-    public class ProfileDetailModel : Entity, ISourceUserModel
+    public sealed class ProfileDetailModel : Entity, ISourceUserModel
     {
         public int FansNum { get; private set; }
         public int FeedNum { get; private set; }

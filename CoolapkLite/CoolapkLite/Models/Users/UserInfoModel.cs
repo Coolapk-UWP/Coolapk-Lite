@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models.Users
 {
-    public class UserInfoModel : Entity, ISourceUserModel
+    public sealed class UserInfoModel : Entity, ISourceUserModel
     {
         public int UID { get; private set; }
         public int Level { get; private set; }

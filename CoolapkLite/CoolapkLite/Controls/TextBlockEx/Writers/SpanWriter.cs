@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class SpanWriter : HtmlWriter
+    public sealed class SpanWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "span" };
 

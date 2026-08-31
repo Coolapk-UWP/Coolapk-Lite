@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
 {
-    public partial class PolylineViewTemplateSettings : DependencyObject
+    public sealed partial class PolylineViewTemplateSettings : DependencyObject
     {
         #region PointCollection
 

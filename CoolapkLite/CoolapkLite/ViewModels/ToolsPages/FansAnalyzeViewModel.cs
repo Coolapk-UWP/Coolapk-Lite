@@ -15,7 +15,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.ToolsPages
 {
-    public class FansAnalyzeViewModel : IViewModel
+    public sealed class FansAnalyzeViewModel : IViewModel
     {
         private readonly CoolapkListProvider Provider;
 
@@ -48,7 +48,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -57,7 +57,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

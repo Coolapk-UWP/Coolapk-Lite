@@ -10,13 +10,14 @@ using Windows.UI.Xaml.Controls;
 namespace CoolapkLite.Controls
 {
     /// <summary>
-    /// The HamburgerMenu is based on a SplitView control. By default it contains a HamburgerButton and a ListView to display menu items.
+    /// The <see cref="HamburgerMenu"/> is based on a <see cref="SplitView"/> control.
+    /// By default it contains a HamburgerButton and a <see cref="ListView"/> to display menu items.
     /// </summary>
     [TemplatePart(Name = "HamburgerButton", Type = typeof(Button))]
     [TemplatePart(Name = "ButtonsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "OptionsListView", Type = typeof(ListViewBase))]
     [TemplatePart(Name = "PaneAutoSuggestItem", Type = typeof(ListViewItem))]
-    public partial class HamburgerMenu : ContentControl
+    public sealed partial class HamburgerMenu : ContentControl
     {
         private Button _hamburgerButton;
         private ListViewBase _buttonsListView;
@@ -32,7 +33,9 @@ namespace CoolapkLite.Controls
             SizeChanged += OnSizeChanged;
         }
 
-        protected AnimateSelectionProvider SelectionProvider { get; set; }
+#pragma warning disable IDE0052
+        private AnimateSelectionProvider SelectionProvider { get; set; }
+#pragma warning restore IDE0052
 
         /// <summary>
         /// Override default OnApplyTemplate to capture children controls

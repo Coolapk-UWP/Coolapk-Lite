@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Helpers.StateTrigger
 {
-    public class IsTypePresentTrigger : StateTriggerBase
+    public sealed class IsTypePresentTrigger : StateTriggerBase
     {
         public string AssemblyName { get; set; }
         public string ClassTypeName { get; set; }

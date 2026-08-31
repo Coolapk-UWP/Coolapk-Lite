@@ -12,7 +12,7 @@ using Windows.UI;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedModelBase : SourceFeedModel, ICanFollow, ICanLike, ICanReply, ICanStar
+    public abstract class FeedModelBase : SourceFeedModel, ICanFollow, ICanLike, ICanReply, ICanStar
     {
         private int likeNum;
         public int LikeNum
@@ -405,7 +405,7 @@ namespace CoolapkLite.Models.Feeds
                                                                 .ToString();
     }
 
-    public class VoteItem
+    public sealed class VoteItem
     {
         public int ID { get; set; }
         public int Order { get; set; }
@@ -466,7 +466,7 @@ namespace CoolapkLite.Models.Feeds
         public override string ToString() => Title;
     }
 
-    public class RelationRowsItem : IHasTitle
+    public sealed class RelationRowsItem : IHasTitle
     {
         public string Url { get; set; }
         public string Title { get; set; }

@@ -9,7 +9,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.BrowserPages
 {
-    public class BrowserViewModel : IViewModel
+    public sealed class BrowserViewModel : IViewModel
     {
         private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
 
@@ -40,7 +40,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -49,7 +49,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

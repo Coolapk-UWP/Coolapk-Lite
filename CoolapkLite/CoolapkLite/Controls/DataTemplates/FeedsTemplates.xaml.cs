@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class FeedsTemplates : ResourceDictionary
+    public sealed partial class FeedsTemplates : ResourceDictionary
     {
         public FeedsTemplates() => InitializeComponent();
 

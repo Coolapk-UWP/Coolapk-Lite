@@ -16,7 +16,7 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = c_rowTopName, Type = typeof(RowDefinition))]
     [TemplatePart(Name = c_rowMiddleName, Type = typeof(RowDefinition))]
     [TemplatePart(Name = c_rowBottomName, Type = typeof(RowDefinition))]
-    public partial class TwoPaneView : Control
+    public sealed partial class TwoPaneView : Control
     {
         private bool m_loaded = false;
         private ViewMode m_currentMode = ViewMode.None;

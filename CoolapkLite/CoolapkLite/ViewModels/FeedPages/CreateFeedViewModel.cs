@@ -30,7 +30,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class CreateFeedViewModel : IViewModel
+    public sealed class CreateFeedViewModel : IViewModel
     {
         public static string[] ImageTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 
@@ -50,7 +50,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -59,7 +59,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {
@@ -262,7 +262,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class CreateUserItemSource : EntityItemSource
+    public sealed class CreateUserItemSource : EntityItemSource
     {
         private string keyword = string.Empty;
         public string Keyword
@@ -298,7 +298,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                     GetEntities,
                     "uid");
             }
-            else if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID is string uid && !string.IsNullOrEmpty(uid))
+            else if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID is string uid && !string.IsNullOrEmpty(uid))
             {
                 Provider = new CoolapkListProvider(
                     (p, firstItem, lastItem) =>
@@ -320,7 +320,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class CreateTopicItemSource : EntityItemSource
+    public sealed class CreateTopicItemSource : EntityItemSource
     {
         private string keyword = string.Empty;
         public string Keyword

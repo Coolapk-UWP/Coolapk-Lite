@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Containers
 {
-    public class RichTextBlockDocumentContainer : DocumentContainer<RichTextBlock>
+    public sealed class RichTextBlockDocumentContainer : DocumentContainer<RichTextBlock>
     {
         public RichTextBlockDocumentContainer(RichTextBlock element) : base(element)
         {

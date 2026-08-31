@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Common
 {
-    public class ItemsPanelSelector : DependencyObject
+    public sealed class ItemsPanelSelector : DependencyObject
     {
         private static readonly WeakEvent<bool> IsVirtualizingChanged = new WeakEvent<bool>();
 
@@ -87,7 +87,7 @@ namespace CoolapkLite.Common
         public ItemsPanelTemplate Template
         {
             get => (ItemsPanelTemplate)GetValue(TemplateProperty);
-            protected set => SetValue(TemplateProperty, value);
+            private set => SetValue(TemplateProperty, value);
         }
 
         #endregion

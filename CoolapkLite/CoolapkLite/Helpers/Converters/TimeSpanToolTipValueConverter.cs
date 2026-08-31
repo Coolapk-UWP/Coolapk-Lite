@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Helpers.Converters
 {
-    public class TimeSpanToolTipValueConverter : IValueConverter
+    public sealed class TimeSpanToolTipValueConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

@@ -11,7 +11,7 @@ using Windows.Web.Http;
 
 namespace CoolapkLite.Common
 {
-    public class HttpRandomAccessStream : IRandomAccessStreamWithContentType
+    public sealed class HttpRandomAccessStream : IRandomAccessStreamWithContentType
     {
         private readonly Uri _requestedUri;
         private HttpClient _client;
@@ -158,7 +158,7 @@ namespace CoolapkLite.Common
 
         public IInputStream GetInputStreamAt(ulong position) => _inputStream;
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (_isDisposing)
             {

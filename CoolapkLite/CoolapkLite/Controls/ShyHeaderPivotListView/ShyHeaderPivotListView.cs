@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 namespace CoolapkLite.Controls
 {
     [TemplatePart(Name = "PivotHeader", Type = typeof(PivotHeader))]
-    public class ShyHeaderPivotListView : ShyHeaderListView, IShyHeader
+    public sealed class ShyHeaderPivotListView : ShyHeaderListView, IShyHeader
     {
         private PivotHeader _pivotHeader;
 
@@ -182,7 +182,7 @@ namespace CoolapkLite.Controls
         }
     }
 
-    public class ShyHeaderItem : DependencyObject
+    public sealed class ShyHeaderItem : DependencyObject
     {
         public static readonly DependencyProperty TagProperty =
             DependencyProperty.Register(

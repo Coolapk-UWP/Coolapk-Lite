@@ -4,7 +4,7 @@ using System;
 
 namespace CoolapkLite.Models.Message
 {
-    public class MessageExtraModel : Entity
+    public sealed class MessageExtraModel : Entity
     {
         public string Title { get; private set; }
         public DateTimeOffset Dateline { get; private set; }

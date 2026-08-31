@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Automation.Provider;
 
 namespace CoolapkLite.Controls
 {
-    public class RatingControlAutomationPeer :
+    public sealed class RatingControlAutomationPeer :
         FrameworkElementAutomationPeer,
         IValueProvider,
         IRangeValueProvider

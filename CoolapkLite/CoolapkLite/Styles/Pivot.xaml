@@ -72,18 +72,10 @@
                                 </VisualState>
                                 <VisualState x:Name="Unselected" />
                                 <VisualState x:Name="UnselectedLocked">
-                                    <Storyboard>
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenterTranslateTransform"
-                                            Storyboard.TargetProperty="X"
-                                            To="{ThemeResource PivotHeaderItemLockedTranslation}"
-                                            Duration="0" />
-                                        <DoubleAnimation
-                                            Storyboard.TargetName="ContentPresenter"
-                                            Storyboard.TargetProperty="(UIElement.Opacity)"
-                                            To="0"
-                                            Duration="0" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ContentPresenterTranslateTransform.X" Value="{ThemeResource PivotHeaderItemLockedTranslation}" />
+                                        <Setter Target="ContentPresenter.(UIElement.Opacity)" Value="0" />
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>

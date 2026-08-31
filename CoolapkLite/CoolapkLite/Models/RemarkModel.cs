@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.Models
 {
-    public class RemarkModel
+    public sealed class RemarkModel
     {
         public int ID { get; private set; }
         public int UID { get; private set; }

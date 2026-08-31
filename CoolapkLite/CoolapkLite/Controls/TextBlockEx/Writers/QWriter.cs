@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class QWriter : HtmlWriter
+    public sealed class QWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "q" };
 

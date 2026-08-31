@@ -23,13 +23,15 @@ namespace CoolapkLite.Helpers.Converters
         /// <returns>Bool value or false if cast failed</returns>
         internal static bool TryParseBool(object parameter)
         {
-            bool parsed = false;
-            if (parameter != null)
+            switch (parameter)
             {
-                bool.TryParse(parameter.ToString(), out parsed);
+                case bool @bool:
+                    return @bool;
+                case null:
+                    return false;
+                default:
+                    return bool.TryParse(parameter.ToString(), out bool parsed) && parsed;
             }
-
-            return parsed;
         }
 
         /// <summary>
@@ -38,19 +40,26 @@ namespace CoolapkLite.Helpers.Converters
         /// <param name="value">The value to convert</param>
         /// <param name="targetType">The target type</param>
         /// <returns>The converted value</returns>
-        internal static object Convert(object value, Type targetType) => targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
+        internal static object Convert(object value, Type targetType) => value == null || targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
 
         /// <summary>
         /// Helper method to convert a value from a source type to a target type.
         /// </summary>
         /// <param name="value">The value to convert</param>
-        /// <param name="targetType">The target type</param>
+        /// <typeparam name="T">The target type</typeparam>
         /// <returns>The converted value</returns>
         internal static T Convert<T>(object value)
         {
-            Type targetType = typeof(T);
-            object result = targetType.IsInstanceOfType(value) ? value : XamlBindingHelper.ConvertValue(targetType, value);
-            return (T)result;
+            switch (value)
+            {
+                case T typedValue:
+                    return typedValue;
+                case null:
+                    return default;
+                default:
+                    object result = XamlBindingHelper.ConvertValue(typeof(T), value);
+                    return (T)result;
+            }
         }
     }
 }

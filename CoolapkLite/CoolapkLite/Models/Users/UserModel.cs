@@ -7,7 +7,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Users
 {
-    public class UserModel : Entity, IUserModel, IHasSubtitle
+    public sealed class UserModel : Entity, IUserModel, IHasSubtitle
     {
         private readonly int fansNum;
         int IUserModel.FansNum => fansNum;

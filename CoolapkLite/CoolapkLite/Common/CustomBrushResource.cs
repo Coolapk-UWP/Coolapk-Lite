@@ -15,7 +15,7 @@ namespace CoolapkLite.Common
         Solid = 0x0
     }
 
-    public class CustomBrushResource : ResourceDictionary
+    public sealed class CustomBrushResource : ResourceDictionary
     {
         public CustomBrushResource() => AddResource();
 

@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class KeyboardWriter : HtmlWriter
+    public sealed class KeyboardWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "kbd" };
 

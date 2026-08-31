@@ -1,6 +1,6 @@
 ﻿namespace CoolapkLite.Models
 {
-    public class Bookmark : IHasTitle
+    public sealed class Bookmark : IHasTitle
     {
         public string Url { get; set; }
         public string Title { get; set; }

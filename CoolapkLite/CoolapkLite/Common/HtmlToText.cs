@@ -9,10 +9,10 @@ namespace CoolapkLite.Common
     /// <summary>
     /// Converts HTML to plain text.
     /// </summary>
-    public class HtmlToText
+    public sealed class HtmlToText
     {
         // Static data tables
-        protected static Dictionary<string, string> _tags = new Dictionary<string, string>(31)
+        private static readonly Dictionary<string, string> _tags = new Dictionary<string, string>(31)
         {
             { "address", "\n" },
             { "blockquote", "\n" },
@@ -47,7 +47,7 @@ namespace CoolapkLite.Common
             { "/pre", "\n" }
         };
 
-        protected static string[] _ignoreTags = new string[]
+        private static readonly string[] _ignoreTags = new string[]
         {
             "script",
             "noscript",
@@ -56,9 +56,9 @@ namespace CoolapkLite.Common
         };
 
         // Instance variables
-        protected TextBuilder _text;
-        protected string _html;
-        protected int _pos;
+        private TextBuilder _text;
+        private string _html;
+        private int _pos;
 
         /// <summary>
         /// Converts the given HTML to plain text and returns the result.
@@ -131,7 +131,7 @@ namespace CoolapkLite.Common
 
         // Eats all characters that are part of the current tag
         // and returns information about that tag
-        protected string ParseTag(out bool selfClosing)
+        private string ParseTag(out bool selfClosing)
         {
             string tag = string.Empty;
             selfClosing = false;
@@ -179,7 +179,7 @@ namespace CoolapkLite.Common
         }
 
         // Consumes inner content from the current tag
-        protected void EatInnerContent(string tag)
+        private void EatInnerContent(string tag)
         {
             string endTag = $"/{tag}";
 
@@ -207,23 +207,23 @@ namespace CoolapkLite.Common
 
         // Returns true if the current position is at the end of
         // the string
-        protected bool EndOfText => _pos >= _html.Length;
+        private bool EndOfText => _pos >= _html.Length;
 
         // Safely returns the character at the current position
-        protected char Peek()
+        private char Peek()
         {
             return _pos < _html.Length ? _html[_pos] : (char)0;
         }
 
         // Safely advances to current position to the next character
-        protected void MoveAhead()
+        private void MoveAhead()
         {
             _pos = Math.Min(_pos + 1, _html.Length);
         }
 
         // Moves the current position to the next non-whitespace
         // character.
-        protected void EatWhitespace()
+        private void EatWhitespace()
         {
             while (char.IsWhiteSpace(Peek()))
             {
@@ -234,7 +234,7 @@ namespace CoolapkLite.Common
         // Moves the current position to the next non-whitespace
         // character or the start of the next line, whichever
         // comes first
-        protected void EatWhitespaceToNextLine()
+        private void EatWhitespaceToNextLine()
         {
             while (char.IsWhiteSpace(Peek()))
             {
@@ -248,7 +248,7 @@ namespace CoolapkLite.Common
         }
 
         // Moves the current position past a quoted value
-        protected void EatQuotedValue()
+        private void EatQuotedValue()
         {
             char c = Peek();
             if (c == '"' || c == '\'')
@@ -271,7 +271,7 @@ namespace CoolapkLite.Common
         /// <summary>
         /// A StringBuilder class that helps eliminate excess whitespace.
         /// </summary>
-        protected class TextBuilder
+        private sealed class TextBuilder
         {
             private readonly StringBuilder _text;
             private readonly StringBuilder _currLine;
@@ -375,7 +375,7 @@ namespace CoolapkLite.Common
             }
 
             // Appends the current line to output buffer
-            protected void FlushCurrLine()
+            private void FlushCurrLine()
             {
                 // Get current line
                 string line = _currLine.ToString().Trim();

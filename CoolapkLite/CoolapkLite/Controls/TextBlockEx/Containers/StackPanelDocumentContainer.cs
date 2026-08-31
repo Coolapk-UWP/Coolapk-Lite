@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Containers
 {
-    public class StackPanelDocumentContainer : DocumentContainer<StackPanel>
+    public sealed class StackPanelDocumentContainer : DocumentContainer<StackPanel>
     {
         public StackPanelDocumentContainer(StackPanel element) : base(element)
         {

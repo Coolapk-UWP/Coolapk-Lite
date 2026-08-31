@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class TextWriter : HtmlWriter
+    public sealed class TextWriter : HtmlWriter
     {
         public override string[] TargetTags => throw new NotImplementedException();
 
@@ -189,7 +189,7 @@ namespace CoolapkLite.Controls.Writers
                 Margin = new Thickness(0, 0, 0, -4),
                 VerticalAlignment = VerticalAlignment.Center
             };
-            viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(textBlockEx, nameof(textBlockEx.EmojiFontSize)));
+            viewBox.SetBinding(FrameworkElement.HeightProperty, CreateBinding(textBlockEx, nameof(textBlockEx.EmojiFontSize)));
             container.Child = viewBox;
             return container;
         }

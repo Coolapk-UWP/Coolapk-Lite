@@ -14,21 +14,20 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class AdaptiveViewModel : EntityItemSource, IViewModel
+    public sealed class AdaptiveViewModel : EntityItemSource, IViewModel
     {
         private readonly string Uri;
         private readonly Type[] EntityTypes;
         private readonly bool IsEntityTypesEmpty;
 
-        protected bool IsInitPage => Uri == "/main/init";
-        protected bool IsIndexPage => !Uri.Contains('?');
-        protected bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
+        private bool IsIndexPage => !Uri.Contains('?');
+        private bool IsHotFeedPage => Uri == "/main/indexV8" || Uri == "/main/index";
 
         private string title = string.Empty;
         public string Title
         {
             get => title;
-            protected set => SetProperty(ref title, value);
+            private set => SetProperty(ref title, value);
         }
 
         private bool isShowTitle;

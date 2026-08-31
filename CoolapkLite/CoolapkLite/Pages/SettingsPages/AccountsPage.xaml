@@ -30,13 +30,13 @@
             SelectionMode="Single"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate x:DataType="network:Account">
+                <DataTemplate>
                     <Grid Background="{ThemeResource SystemControlTransparentBrush}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <control:AccountCard Margin="4,0,0,0" Account="{x:Bind}" />
+                        <control:AccountCard Margin="4,0,0,0" Account="{Binding}" />
                         <Button
                             Grid.Column="1"
                             Content="&#xE74D;"
@@ -53,7 +53,7 @@
                                             x:Name="Remove"
                                             Click="Button_Click"
                                             Content="删除"
-                                            Tag="{x:Bind}" />
+                                            Tag="{Binding}" />
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>

@@ -9,7 +9,7 @@ namespace CoolapkLite.Controls
 {
     [ContentProperty(Name = nameof(ItemSource))]
     [TemplatePart(Name = PolylineBorderName, Type = typeof(Border))]
-    public partial class PolylineView : Control
+    public sealed partial class PolylineView : Control
     {
         private const string PolylineBorderName = "PART_PolylineBorder";
 

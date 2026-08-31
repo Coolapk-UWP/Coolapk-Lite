@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CoolapkLite.Models
 {
-    public class Entity
+    public abstract class Entity
     {
         public bool EntityFixed { get; set; }
         public int EntityID { get; private set; }
@@ -49,7 +49,7 @@ namespace CoolapkLite.Models
         public override string ToString() => $"{GetType().Name}: {string.Join(" - ", EntityType, EntityIDText)}";
     }
 
-    public class NullEntity : Entity
+    public sealed class NullEntity : Entity
     {
         public NullEntity(JObject token = null) : base(token) { }
     }

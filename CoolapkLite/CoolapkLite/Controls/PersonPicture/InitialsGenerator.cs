@@ -36,7 +36,7 @@ namespace CoolapkLite.Controls
     /// PersonPicture Control. Displays the Profile Picture, or in its absence Initials,
     /// for a given Contact.
     /// </summary>
-    internal class InitialsGenerator
+    internal sealed class InitialsGenerator
     {
         /// <summary>
         /// Helper function which takes in a Contact object and produces initials

@@ -14,7 +14,7 @@ using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class BookmarkViewModel : IViewModel
+    public sealed class BookmarkViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, BookmarkViewModel> Caches { get; } = new Dictionary<CoreDispatcher, BookmarkViewModel>();
 
@@ -31,7 +31,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -40,7 +40,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

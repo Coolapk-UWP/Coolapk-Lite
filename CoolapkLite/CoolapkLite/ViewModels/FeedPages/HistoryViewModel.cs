@@ -9,7 +9,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class HistoryViewModel : EntityItemSource, IViewModel
+    public sealed class HistoryViewModel : EntityItemSource, IViewModel
     {
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("History");
 

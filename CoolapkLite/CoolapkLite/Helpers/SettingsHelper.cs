@@ -394,7 +394,7 @@ namespace CoolapkLite.Helpers
         }
     }
 
-    public class NewtonsoftJsonObjectSerializer : IObjectSerializer
+    public sealed class NewtonsoftJsonObjectSerializer : IObjectSerializer
     {
         // Specify your serialization settings
         private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };

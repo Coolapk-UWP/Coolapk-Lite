@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 
 namespace CoolapkLite.Models
 {
-    public class SearchWord : Entity
+    public sealed class SearchWord : Entity
     {
         public string Glyph { get; set; }
         public string Title { get; set; }

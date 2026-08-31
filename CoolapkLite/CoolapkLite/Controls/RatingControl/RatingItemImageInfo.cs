@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
 {
-    public class RatingItemImageInfo : RatingItemInfo
+    public sealed class RatingItemImageInfo : RatingItemInfo
     {
         /// <summary>
         /// Initializes a new instance of the RatingItemImageInfo class.

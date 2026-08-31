@@ -165,7 +165,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
     }
 
-    public class UserViewModel : FeedListViewModel
+    public sealed class UserViewModel : FeedListViewModel
     {
         public FeedListItemSource FeedItemSource { get; private set; }
         public FeedListItemSource HtmlFeedItemSource { get; private set; }
@@ -315,7 +315,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class TagViewModel : FeedListViewModel
+    public sealed class TagViewModel : FeedListViewModel
     {
         public FeedListItemSource LastUpdateItemSource { get; private set; }
         public FeedListItemSource DatelineItemSource { get; private set; }
@@ -445,7 +445,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class DyhViewModel : FeedListViewModel
+    public sealed class DyhViewModel : FeedListViewModel
     {
         public override bool CanSearch => false;
 
@@ -556,7 +556,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class ProductViewModel : FeedListViewModel
+    public sealed class ProductViewModel : FeedListViewModel
     {
         public FeedListItemSource FeedItemSource { get; private set; }
         public FeedListItemSource AnswerItemSource { get; private set; }
@@ -728,7 +728,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class CollectionViewModel : FeedListViewModel
+    public sealed class CollectionViewModel : FeedListViewModel
     {
         public override bool CanSearch => false;
 
@@ -857,7 +857,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    internal class AppViewModel : FeedListViewModel
+    internal sealed class AppViewModel : FeedListViewModel
     {
         public FeedListItemSource LastUpdateItemSource { get; private set; }
         public FeedListItemSource DatelineItemSource { get; private set; }
@@ -1007,7 +1007,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class FeedListItemSource : EntityItemSource
+    public sealed class FeedListItemSource : EntityItemSource
     {
         public string ID;
 
@@ -1028,7 +1028,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class SearchItemSource : EntityItemSource, INotifyPropertyChanged
+    public sealed class SearchItemSource : EntityItemSource, INotifyPropertyChanged
     {
         public string Keyword;
         public string PageType;

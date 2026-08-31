@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Controls
 {
-    public class Picker : ContentControl
+    public abstract class Picker : ContentControl
     {
         private Popup _popup;
         private Grid _rootGrid;

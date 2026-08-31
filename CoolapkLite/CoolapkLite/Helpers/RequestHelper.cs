@@ -236,7 +236,7 @@ namespace CoolapkLite.Helpers
             return (false, null);
         }
 
-        private class IgnoreIgnoredContractResolver : DefaultContractResolver
+        private sealed class IgnoreIgnoredContractResolver : DefaultContractResolver
         {
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {

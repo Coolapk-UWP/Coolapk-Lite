@@ -8,7 +8,7 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// Represents a control for indicating notifications, alerts, new content, or to attract focus to an area within an app.
     /// </summary>
-    public class InfoBadge : Control
+    public sealed class InfoBadge : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoBadge"/> class.

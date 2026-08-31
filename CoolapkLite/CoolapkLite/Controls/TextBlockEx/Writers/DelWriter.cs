@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class DelWriter : HtmlWriter
+    public sealed class DelWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "del", "s", "strike" };
 

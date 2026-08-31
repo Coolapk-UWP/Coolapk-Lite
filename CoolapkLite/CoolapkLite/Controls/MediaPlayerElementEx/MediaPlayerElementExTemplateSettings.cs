@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {
-    public class MediaPlayerElementExTemplateSettings : DependencyObject
+    public sealed class MediaPlayerElementExTemplateSettings : DependencyObject
     {
         #region Title
 

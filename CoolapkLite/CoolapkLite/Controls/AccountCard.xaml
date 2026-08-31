@@ -9,6 +9,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <UserControl.Resources>
+        <local:UrlDecodeConverter x:Key="UrlDecodeConverter" />
         <converter:ObjectVisibilityConverter x:Key="ObjectVisibilityConverter" />
     </UserControl.Resources>
     <Grid
@@ -54,7 +55,7 @@
             MaxLines="1"
             TextTrimming="CharacterEllipsis"
             Visibility="{x:Bind UserInfo, Converter={StaticResource ObjectVisibilityConverter}, ConverterParameter='true', Mode=OneWay}">
-            <Run Text="{x:Bind Account.UserName, Mode=OneWay}" />
+            <Run Text="{x:Bind Account.UserName, Converter={StaticResource UrlDecodeConverter}, Mode=OneWay}" />
             <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Account.UID, Mode=OneWay}" />
         </TextBlock>
         <TextBlock

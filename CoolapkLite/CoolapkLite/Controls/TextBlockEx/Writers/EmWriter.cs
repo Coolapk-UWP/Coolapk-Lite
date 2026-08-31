@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class EmWriter : HtmlWriter
+    public sealed class EmWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "em", "i", "dfn", "var", "cite", "address" };
 

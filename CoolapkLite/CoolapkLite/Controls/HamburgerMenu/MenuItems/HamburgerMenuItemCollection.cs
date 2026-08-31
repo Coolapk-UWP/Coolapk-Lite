@@ -7,9 +7,9 @@ using System.Collections.Generic;
 namespace CoolapkLite.Controls
 {
     /// <summary>
-    /// The HamburgerMenuItemCollection provides typed collection of HamburgerMenuItem.
+    /// The <see cref="HamburgerMenuItemCollection"/> provides typed collection of <see cref="HamburgerMenuItem"/>.
     /// </summary>
-    public class HamburgerMenuItemCollection : List<HamburgerMenuItem>
+    public sealed class HamburgerMenuItemCollection : List<HamburgerMenuItem>
     {
     }
 }

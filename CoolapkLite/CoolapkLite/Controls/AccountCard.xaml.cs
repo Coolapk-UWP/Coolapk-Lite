@@ -1,9 +1,13 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
+using System;
+using System.Net;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -18,7 +22,7 @@ namespace CoolapkLite.Controls
                 nameof(Account),
                 typeof(Account),
                 typeof(AccountCard),
-                new PropertyMetadata(null, OnAccountChanged));
+                new PropertyMetadata(new Account(), OnAccountChanged));
 
         public Account Account
         {
@@ -28,7 +32,7 @@ namespace CoolapkLite.Controls
 
         private static void OnAccountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            _ = ((AccountCard)d).UpdateUserInfoAsync(e.NewValue as Account);
+            _ = ((AccountCard)d).UpdateUserInfoAsync((Account)e.NewValue);
         }
 
         #endregion
@@ -68,6 +72,21 @@ namespace CoolapkLite.Controls
                 }
             }
             UserInfo = null;
+        }
+    }
+
+    public sealed class UrlDecodeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            string result = WebUtility.UrlDecode(value?.ToString());
+            return ConverterTools.Convert(result, targetType);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            string result = WebUtility.UrlEncode(value?.ToString());
+            return ConverterTools.Convert(result, targetType);
         }
     }
 }

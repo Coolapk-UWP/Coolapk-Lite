@@ -77,12 +77,12 @@ namespace CoolapkLite.Controls.DataTemplates
             }
             else if (url.Contains("我的收藏单"))
             {
-                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 if (!string.IsNullOrEmpty(uid)) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
             }
             else if (url.Contains("我的问答"))
             {
-                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.UID;
+                string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 if (!string.IsNullOrEmpty(uid)) { _ = element.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserFeedsProvider(uid, "questionAndAnswer", element.Dispatcher)); }
             }
             else

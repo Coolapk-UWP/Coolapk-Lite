@@ -23,7 +23,7 @@ namespace CoolapkLite.Pages.FeedPages
         private bool isLoaded;
         private Func<bool, Task> Refresh;
 
-        private static bool IsLogin => SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount)?.IsEmpty == false;
+        private static bool IsLogin => !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
 
         public CirclePage() => InitializeComponent();
 
