@@ -145,7 +145,7 @@
     <value>Go to Github</value>
   </data>
   <data name="HasUpdate" xml:space="preserve">
-    <value>Update to v({0}.{1}.{2} -&gt; {3}).</value>
+    <value>程序更新了 v({0}.{1}.{2} -&gt; {3})</value>
     <comment>{0}.{1}.{2} 和 {3} 表示版本号</comment>
   </data>
   <data name="HasUpdateSubTitle" xml:space="preserve">
@@ -171,7 +171,7 @@
     <value>No</value>
   </data>
   <data name="NoUpdate" xml:space="preserve">
-    <value>No update</value>
+    <value>当前无可用更新</value>
   </data>
   <data name="PinnedTileFailed" xml:space="preserve">
     <value>Failed to pinned tile</value>
@@ -183,7 +183,7 @@
     <value>Please enter your username</value>
   </data>
   <data name="WiFiDataError" xml:space="preserve">
-    <value>未授予 WiFi 数据权限，请前往 设置 &gt; 网络和 Internet &gt; WLAN &gt; 选择能够使用你的 WLAN 数据的应用 授予权限</value>
+    <value>Wi-Fi data access is not granted. Please go to Settings &gt; Network &amp; Internet &gt; WLAN &gt; Choose apps that can use your WLAN data to grant permission</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
