@@ -126,6 +126,9 @@
   <data name="CannotGetToken" xml:space="preserve">
     <value>Не вдалося отримати токен. Спробуйте увійти знову.</value>
   </data>
+  <data name="Logging" xml:space="preserve">
+    <value>正在登录</value>
+  </data>
   <data name="LoginFailed" xml:space="preserve">
     <value>Не вдалося увійти</value>
   </data>
