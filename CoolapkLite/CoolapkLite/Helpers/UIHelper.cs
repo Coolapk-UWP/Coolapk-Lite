@@ -41,7 +41,19 @@ namespace CoolapkLite.Helpers
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInfoHelper.IsStatusBarSupported;
 
-        public static IHaveTitleBar AppTitle { get; internal set; }
+        private static IHaveTitleBar appTitle;
+        public static IHaveTitleBar AppTitle
+        {
+            get => appTitle;
+            internal set
+            {
+                appTitle = value;
+                if (value != null && MessageQueue.Count > 0)
+                {
+                    _ = UIHelper.ShowMessageAsync(value, null);
+                }
+            }
+        }
 
         public static async Task<IHaveTitleBar> GetAppTitleAsync() =>
             Window.Current is Window window ? await window.GetAppTitleAsync().ConfigureAwait(false) : AppTitle;
@@ -49,7 +61,7 @@ namespace CoolapkLite.Helpers
         public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
         {
             await window.Dispatcher.ResumeForegroundAsync();
-            Page page = window.Content.FindDescendant<Page>();
+            Page page = window.Content?.FindDescendant<Page>();
             return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
         }
 
@@ -58,7 +70,7 @@ namespace CoolapkLite.Helpers
             if (WindowHelper.ActiveWindows.TryGetValue(dispatcher, out Window window))
             {
                 await window.Dispatcher.ResumeForegroundAsync();
-                Page page = window.Content.FindDescendant<Page>();
+                Page page = window.Content?.FindDescendant<Page>();
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
             else
@@ -78,9 +90,9 @@ namespace CoolapkLite.Helpers
 
             if (WindowHelper.IsXamlRootSupported
                 && element is UIElement uiElement
-                && uiElement.XamlRoot != null)
+                && uiElement.XamlRoot is XamlRoot root)
             {
-                Page page = uiElement.XamlRoot.Content.FindDescendant<Page>();
+                Page page = root.Content?.FindDescendant<Page>();
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
 
@@ -94,6 +106,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -115,6 +128,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage, double value)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -136,6 +150,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task PausedProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -151,6 +166,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ErrorProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -166,6 +182,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task HideProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = false;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -183,8 +200,9 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowMessageAsync(IHaveTitleBar mainPage, string message)
         {
-            MessageQueue.Enqueue(message);
-            if (!IsShowingMessage)
+            if (!string.IsNullOrWhiteSpace(message)) { MessageQueue.Enqueue(message); }
+            if (mainPage == null) { return; }
+            if (!IsShowingMessage && MessageQueue.Count > 0)
             {
                 IsShowingMessage = true;
                 await mainPage.Dispatcher.ResumeForegroundAsync();
