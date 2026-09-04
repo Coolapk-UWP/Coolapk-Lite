@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public class CardTemplateSelector : DataTemplateSelector
+    public sealed class CardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Feed { get; set; }
         public DataTemplate User { get; set; }
@@ -59,7 +59,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public class ProfileCardTemplateSelector : DataTemplateSelector
+    public sealed class ProfileCardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate TitleCard { get; set; }
@@ -92,7 +92,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public class ProfileItemTemplateSelector : DataTemplateSelector
+    public sealed class ProfileItemTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Empty { get; set; }
         public DataTemplate History { get; set; }
@@ -124,7 +124,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public class SearchTemplateSelector : DataTemplateSelector
+    public sealed class SearchTemplateSelector : DataTemplateSelector
     {
         public DataTemplate App { get; set; }
         public DataTemplate SearchWord { get; set; }
@@ -134,7 +134,7 @@ namespace CoolapkLite.Controls.DataTemplates
         protected override DataTemplate SelectTemplateCore(object item, DependencyObject container) => SelectTemplateCore(item);
     }
 
-    public class ChatCardTemplateSelector : DataTemplateSelector
+    public sealed class ChatCardTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate MessageLeft { get; set; }

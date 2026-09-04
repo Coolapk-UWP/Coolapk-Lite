@@ -83,30 +83,38 @@
                     Value="{x:Bind Provider.TileUpdateTime, Mode=TwoWay}" />
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/AccountSettingsHeader" Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
-                <HyperlinkButton
-                    x:Uid="/SettingsPage/AccountSetting"
-                    Click="Button_Click"
-                    Tag="AccountSetting" />
-                <HyperlinkButton
-                    x:Uid="/SettingsPage/MyDevice"
-                    Click="Button_Click"
-                    Tag="MyDevice" />
-                <Button Name="AccountLogout" x:Uid="/SettingsPage/AccountLogout">
-                    <Button.Flyout>
-                        <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
-                            <StackPanel>
-                                <TextBlock
-                                    x:Uid="/SettingsPage/AccountLogoutTitle"
-                                    Margin="0,0,0,12"
-                                    Style="{ThemeResource BaseTextBlockStyle}" />
-                                <Button
-                                    x:Uid="/SettingsPage/AccountLogoutConfirm"
-                                    Click="Button_Click"
-                                    Tag="AccountLogout" />
-                            </StackPanel>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                <control:StackPanelEx Orientation="Horizontal" Spacing="8">
+                    <HyperlinkButton
+                        x:Uid="/SettingsPage/AccountSetting"
+                        Click="Button_Click"
+                        Tag="AccountSetting" />
+                    <HyperlinkButton
+                        x:Uid="/SettingsPage/MyDevice"
+                        Click="Button_Click"
+                        Tag="MyDevice" />
+                </control:StackPanelEx>
+                <control:StackPanelEx Orientation="Horizontal" Spacing="8">
+                    <Button Name="AccountLogout" x:Uid="/SettingsPage/AccountLogout">
+                        <Button.Flyout>
+                            <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
+                                <StackPanel>
+                                    <TextBlock
+                                        x:Uid="/SettingsPage/AccountLogoutTitle"
+                                        Margin="0,0,0,12"
+                                        Style="{ThemeResource BaseTextBlockStyle}" />
+                                    <Button
+                                        x:Uid="/SettingsPage/AccountLogoutConfirm"
+                                        Click="Button_Click"
+                                        Tag="AccountLogout" />
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <Button
+                        Click="Button_Click"
+                        Content="切换账号"
+                        Tag="SwitchAccount" />
+                </control:StackPanelEx>
             </control:SettingsGroup>
             <control:SettingsGroup x:Uid="/SettingsPage/UpdateSettingsHeader">
                 <TextBlock FontSize="{ThemeResource ContentControlFontSize}" Text="{x:Bind Provider.VersionTextBlockText}" />

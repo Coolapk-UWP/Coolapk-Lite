@@ -1,5 +1,4 @@
 ﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Converters;
 using HtmlAgilityPack;
 using System;
 using System.IO;
@@ -15,7 +14,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class TextWriter : HtmlWriter
+    public sealed class TextWriter : HtmlWriter
     {
         public override string[] TargetTags => throw new NotImplementedException();
 
@@ -80,7 +79,7 @@ namespace CoolapkLite.Controls.Writers
                                                     head = span;
                                                     break;
                                             }
-                                            ParseEmoji(headingText, head);
+                                            ParseEmoji(textBlockEx, headingText, head);
                                             if (head != span && head.Inlines.Count > 0)
                                             {
                                                 span.Inlines.Add(head);
@@ -100,12 +99,12 @@ namespace CoolapkLite.Controls.Writers
                                             {
                                                 string boldText = item.Substring(2, item.Length - 4);
                                                 Span boldSpan = new Span { FontWeight = FontWeights.Bold };
-                                                ParseEmoji(boldText, boldSpan);
+                                                ParseEmoji(textBlockEx, boldText, boldSpan);
                                                 if (boldSpan.Inlines.Count > 0) { span.Inlines.Add(boldSpan); }
                                             }
                                             else
                                             {
-                                                ParseEmoji(item, span);
+                                                ParseEmoji(textBlockEx, item, span);
                                             }
                                         }
                                     }
@@ -126,59 +125,59 @@ namespace CoolapkLite.Controls.Writers
                 }
                 else
                 {
-                    ParseEmoji(text.InnerText, span);
+                    ParseEmoji(textBlockEx, text.InnerText, span);
                 }
                 if (span.Inlines.Count > 0) { return span; }
             }
             return null;
         }
 
-        private void ParseEmoji(string line, Span span)
+        private void ParseEmoji(TextBlockEx textBlockEx, string line, Span span)
         {
             string[] list = Regex.Split(line, @"(\[\S*?\]|#\(\S*?\))");
             foreach (string item in list)
             {
-                if (GetInline(item) is Inline inline)
+                if (GetInline(textBlockEx, item) is Inline inline)
                 {
                     span.Inlines.Add(inline);
                 }
             }
         }
 
-        private Inline GetInline(string item)
+        private Inline GetInline(TextBlockEx textBlockEx, string item)
         {
             if (string.IsNullOrEmpty(item)) { return null; }
             switch (item[0])
             {
                 case '[':
-                    return GetEmoji(item);
+                    return GetEmoji(textBlockEx, item);
                 case '#':
                     return item.Length > 2 && item[1] == '('
-                        ? GetOldEmoji(item)
+                        ? GetOldEmoji(textBlockEx, item)
                         : new Run { Text = WebUtility.HtmlDecode(item) };
                 default:
                     return new Run { Text = WebUtility.HtmlDecode(item) };
             }
         }
 
-        private Inline GetOldEmoji(string item)
+        private Inline GetOldEmoji(TextBlockEx textBlockEx, string item)
         {
             string str = item.Substring(1);
             return EmojiHelper.Emojis.Contains(str)
-                ? GetEmojiContainer(str)
+                ? GetEmojiContainer(textBlockEx, str)
                 : new Run { Text = WebUtility.HtmlDecode(item) };
         }
 
-        private Inline GetEmoji(string item)
+        private Inline GetEmoji(TextBlockEx textBlockEx, string item)
         {
             return SettingsHelper.Get<bool>(SettingsHelper.IsUseOldEmojiMode) && EmojiHelper.OldEmojis.Contains(item)
-                ? GetEmojiContainer(item, true)
+                ? GetEmojiContainer(textBlockEx, item, true)
                 : EmojiHelper.Emojis.Contains(item)
-                    ? GetEmojiContainer(item)
+                    ? GetEmojiContainer(textBlockEx, item)
                     : new Run { Text = WebUtility.HtmlDecode(item) };
         }
 
-        private static Inline GetEmojiContainer(string item, bool old = false)
+        private static Inline GetEmojiContainer(TextBlockEx textBlockEx, string item, bool old = false)
         {
             InlineUIContainer container = new InlineUIContainer();
             string path = old ? $"ms-appx:///Assets/Emoji/{item}2.png" : $"ms-appx:///Assets/Emoji/{item}.png";
@@ -190,7 +189,7 @@ namespace CoolapkLite.Controls.Writers
                 Margin = new Thickness(0, 0, 0, -4),
                 VerticalAlignment = VerticalAlignment.Center
             };
-            viewBox.SetBinding(FrameworkElement.WidthProperty, CreateBinding(container, nameof(container.FontSize), new NumMultConverter(), 4d / 3d));
+            viewBox.SetBinding(FrameworkElement.HeightProperty, CreateBinding(textBlockEx, nameof(textBlockEx.EmojiFontSize)));
             container.Child = viewBox;
             return container;
         }

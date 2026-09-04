@@ -28,7 +28,7 @@ using Windows.UI;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class SettingsViewModel : IViewModel
+    public sealed class SettingsViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
 
@@ -44,7 +44,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public bool IsLogin
         {
-            get => !string.IsNullOrEmpty(SettingsHelper.Get<string>(SettingsHelper.Uid));
+            get => !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
             set => RaisePropertyChangedEvent();
         }
 
@@ -172,7 +172,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -184,7 +184,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected static async void RaisePropertyChangedEvent(params string[] names)
+        private static async void RaisePropertyChangedEvent(params string[] names)
         {
             if (names?.Length > 0)
             {
@@ -196,7 +196,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {
@@ -277,14 +277,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 #endif
                 if (results != null)
                 {
-                    if (results.IsExistNewVersion)
-                    {
-                        _ = Dispatcher.ShowMessageAsync($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}");
-                    }
-                    else
-                    {
-                        _ = Dispatcher.ShowMessageAsync(_loader.GetString("UpToDate"));
-                    }
+                    _ = results.IsExistNewVersion
+                        ? Dispatcher.ShowMessageAsync($"{_loader.GetString("FindUpdate")} {VersionTextBlockText} -> {results.Version.ToString(3)}")
+                        : Dispatcher.ShowMessageAsync(_loader.GetString("UpToDate"));
                     IsCheckUpdateButtonEnabled = true;
                     return results;
                 }
@@ -386,8 +381,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
             IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
             StorageFile file = files.FirstOrDefault();
-            if (file != null) { return await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false); }
-            return false;
+            return file != null && await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false);
         }
 
         private int count = -1;

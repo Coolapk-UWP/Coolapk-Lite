@@ -8,7 +8,7 @@ namespace CoolapkLite.Common
     /// <summary>
     /// Create a token for Coolapk.
     /// </summary>
-    public class TokenCreator
+    public sealed class TokenCreator
     {
         /// <summary>
         /// The alphabet used for token generation.
@@ -22,12 +22,12 @@ namespace CoolapkLite.Common
         /// <summary>
         /// Gets or sets the default device code.
         /// </summary>
-        public static string DeviceCode { get; protected set; } = SettingsHelper.Get<DeviceInfo>(SettingsHelper.DeviceInfo).CreateDeviceCode();
+        public static string DeviceCode { get; private set; } = SettingsHelper.Get<DeviceInfo>(SettingsHelper.DeviceInfo).CreateDeviceCode();
 
         /// <summary>
         /// Gets or sets the default API version.
         /// </summary>
-        public static APIVersion APIVersion { get; protected set; } = APIVersion.Create(SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion));
+        public static APIVersion APIVersion { get; private set; } = APIVersion.Create(SettingsHelper.Get<APIVersions>(SettingsHelper.APIVersion));
 
         /// <summary>
         /// The token version.
@@ -142,8 +142,8 @@ namespace CoolapkLite.Common
         /// <summary>
         /// Update the API version.
         /// </summary>
-        /// <param name="apiVersion">The API version to update.</param>
-        public static void UpdateAPIVersion(APIVersions apiVersion) => APIVersion = APIVersion.Create(apiVersion);
+        /// <param name="version">The API version to update.</param>
+        public static void UpdateAPIVersion(APIVersions version) => APIVersion = APIVersion.Create(version);
 
         /// <inheritdoc/>
         public override string ToString() => GetToken();

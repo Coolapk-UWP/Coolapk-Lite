@@ -13,7 +13,7 @@ using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite.Models
 {
-    public class NotificationsModel : INotifyPropertyChanged
+    public sealed class NotificationsModel : INotifyPropertyChanged
     {
         public static Dictionary<CoreDispatcher, NotificationsModel> Caches { get; } = new Dictionary<CoreDispatcher, NotificationsModel>();
 
@@ -159,7 +159,7 @@ namespace CoolapkLite.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -171,7 +171,7 @@ namespace CoolapkLite.Models
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

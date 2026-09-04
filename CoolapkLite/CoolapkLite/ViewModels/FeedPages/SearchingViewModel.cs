@@ -14,7 +14,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class SearchingViewModel : IViewModel
+    public sealed class SearchingViewModel : IViewModel
     {
         public int PivotIndex = -1;
 
@@ -50,7 +50,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -59,7 +59,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {
@@ -123,7 +123,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public bool IsEqual(SearchingViewModel other) => Title == other.Title;
     }
 
-    public class SearchFeedItemSource : EntityItemSource, INotifyPropertyChanged
+    public sealed class SearchFeedItemSource : EntityItemSource, INotifyPropertyChanged
     {
         private string keyword;
         public string Keyword
@@ -220,7 +220,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class SearchUserItemSource : EntityItemSource
+    public sealed class SearchUserItemSource : EntityItemSource
     {
         private string keyword;
         public string Keyword
@@ -259,7 +259,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public class SearchTopicItemSource : EntityItemSource
+    public sealed class SearchTopicItemSource : EntityItemSource
     {
         private string keyword;
         public string Keyword

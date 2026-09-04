@@ -27,7 +27,7 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = PartIndicatorTransform, Type = typeof(CompositeTransform))]
     [TemplatePart(Name = PartDefaultIndicatorContent, Type = typeof(TextBlock))]
     [TemplatePart(Name = PullAndReleaseIndicatorContent, Type = typeof(ContentPresenter))]
-    public class PullToRefreshListView : ListView
+    public sealed class PullToRefreshListView : ListView
     {
         /// <summary>
         /// Gets a value indicating whether <see cref="RefreshContainer"/> is supported

@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Common
 {
-    public class SettingsPaneRegister
+    public sealed class SettingsPaneRegister
     {
         private int count = -1;
         private UIElement element;

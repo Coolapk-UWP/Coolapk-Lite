@@ -20,7 +20,7 @@ using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class TestViewModel : IViewModel
+    public sealed class TestViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, TestViewModel> Caches { get; } = new Dictionary<CoreDispatcher, TestViewModel>();
 
@@ -133,10 +133,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             {
                 if (APIVersion != value)
                 {
-                    APIVersions version = (APIVersions)(value + 4);
-                    SettingsHelper.Set(SettingsHelper.APIVersion, version);
-                    TokenCreator.UpdateAPIVersion(version);
-                    NetworkHelper.SetRequestHeaders();
+                    NetworkHelper.UpdateAPIVersion((APIVersions)(value + 4));
                     UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
                     RaisePropertyChangedEvent();
                 }
@@ -280,7 +277,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -292,7 +289,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        protected static async void RaisePropertyChangedEvent(params string[] names)
+        private static async void RaisePropertyChangedEvent(params string[] names)
         {
             if (names?.Length > 0)
             {
@@ -301,15 +298,6 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     await cache.Key.ResumeForegroundAsync();
                     names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
                 }
-            }
-        }
-
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
@@ -12,7 +13,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class ProfileViewModel : EntityItemSource, IViewModel
+    public sealed class ProfileViewModel : EntityItemSource, IViewModel
     {
         public string UID = string.Empty;
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
@@ -55,7 +56,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
-                UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+                UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
                 await NotificationsModel.UpdateAsync().ConfigureAwait(false);
                 await Reset().ConfigureAwait(false);
@@ -74,11 +75,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected override async Task<uint> LoadItemsAsync(uint count)
         {
-            if (Provider != null && _currentPage == 1)
-            {
-                return await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false);
-            }
-            return 0;
+            return Provider != null && _currentPage == 1 ? await Provider.GetEntityAsync(this, _currentPage).ConfigureAwait(false) : 0;
         }
 
         protected override async Task<uint> LoadMoreItemsOverrideAsync(CancellationToken c, uint count)

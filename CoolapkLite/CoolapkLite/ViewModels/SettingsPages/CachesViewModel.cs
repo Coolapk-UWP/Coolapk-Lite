@@ -10,7 +10,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public class CachesViewModel : DataSourceBase<StorageFile>, IViewModel
+    public sealed class CachesViewModel : DataSourceBase<StorageFile>, IViewModel
     {
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Caches");
 

@@ -23,7 +23,7 @@ namespace CoolapkLite.Helpers
         private static readonly object appTokenLock = new object();
         private static readonly TimeSpan timeout = TimeSpan.FromTicks(863970000000 / 2);
 
-        private static DateTimeOffset lastUpdate = DateTimeOffset.MinValue;
+        private static DateTimeOffset lastUpdate;
 
         public const string XMLHttpRequest = "XMLHttpRequest";
 
@@ -37,7 +37,7 @@ namespace CoolapkLite.Helpers
             ClientHandler = new HttpClientHandler { MaxConnectionsPerServer = 20 };
             Client = new HttpClient(ClientHandler);
             ThemeHelper.UISettingChanged += arg => Client.DefaultRequestHeaders.ReplaceDarkMode(arg);
-            SettingsHelper.LoginChanged += arg => ClientHandler.CookieContainer.ReplaceCoolapkCookie();
+            SettingsHelper.LoginChanged += arg => UpdateCoolapkCookie();
             SetRequestHeaders();
         }
 
@@ -45,6 +45,7 @@ namespace CoolapkLite.Helpers
         {
             TokenCreator = new TokenCreator(SettingsHelper.Get<TokenVersion>(SettingsHelper.TokenVersion));
             SetRequestHeaders(Client, ClientHandler);
+            Client.DefaultRequestHeaders.ReplaceAppToken(true);
         }
 
         public static void SetRequestHeaders(HttpClient client, HttpClientHandler handler = null)
@@ -103,6 +104,22 @@ namespace CoolapkLite.Helpers
             headers.Add("X-Api-Version", version.MajorVersion);
         }
 
+        public static void UpdateDeviceInfo(DeviceInfo deviceInfo)
+        {
+            SettingsHelper.Set(SettingsHelper.DeviceInfo, deviceInfo);
+            TokenCreator.UpdateDeviceInfo(deviceInfo);
+            SetRequestHeaders();
+        }
+
+        public static void UpdateAPIVersion(APIVersions version)
+        {
+            SettingsHelper.Set(SettingsHelper.APIVersion, version);
+            TokenCreator.UpdateAPIVersion(version);
+            SetRequestHeaders();
+        }
+
+        public static void UpdateCoolapkCookie() => ClientHandler.CookieContainer.ReplaceCoolapkCookie();
+
         private static HttpCookieCollection GetCoolapkCookies(Uri uri)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
@@ -119,12 +136,12 @@ namespace CoolapkLite.Helpers
             headers.Add(name, theme == ApplicationTheme.Dark ? "1" : "0");
         }
 
-        private static void ReplaceAppToken(this HttpRequestHeaders headers)
+        private static void ReplaceAppToken(this HttpRequestHeaders headers, bool forces = false)
         {
             lock (appTokenLock)
             {
                 DateTimeOffset now = DateTimeOffset.UtcNow;
-                if (now - lastUpdate > timeout)
+                if (forces || now - lastUpdate > timeout)
                 {
                     lastUpdate = now;
                     const string name = "X-App-Token";

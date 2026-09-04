@@ -12,9 +12,11 @@ using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Controls
 {
-    public class PivotHeader : ListBox
+    public sealed class PivotHeader : ListBox
     {
-        protected AnimateSelectionProvider SelectionProvider { get; }
+#pragma warning disable IDE0052
+        private AnimateSelectionProvider SelectionProvider { get; }
+#pragma warning restore IDE0052
 
         /// <summary>
         /// Creates a new instance of the <see cref="PivotHeader"/> class.

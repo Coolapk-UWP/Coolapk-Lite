@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class PicTemplates : ResourceDictionary
+    public sealed partial class PicTemplates : ResourceDictionary
     {
         public PicTemplates() => InitializeComponent();
 

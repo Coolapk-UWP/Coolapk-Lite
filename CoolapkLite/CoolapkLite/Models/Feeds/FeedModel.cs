@@ -12,7 +12,7 @@ namespace CoolapkLite.Models.Feeds
         NotShowMessageTitle = 0x04
     }
 
-    public class FeedModel : FeedModelBase
+    public sealed class FeedModel : FeedModelBase
     {
         public bool IsStickTop { get; private set; }
         public bool ShowLikes { get; private set; } = true;

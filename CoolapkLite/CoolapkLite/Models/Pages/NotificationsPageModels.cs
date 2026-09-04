@@ -41,7 +41,7 @@ namespace CoolapkLite.Models.Pages
         public override string ToString() => string.Join(" - ", UserName, Dateline);
     }
 
-    public class SimpleNotificationModel : NotificationModel
+    public sealed class SimpleNotificationModel : NotificationModel
     {
         public string Note { get; private set; }
 
@@ -108,7 +108,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class AtCommentMeNotificationModel : NotificationModel
+    public sealed class AtCommentMeNotificationModel : NotificationModel
     {
         public string FeedUrl { get; private set; }
         public string Message { get; private set; }
@@ -184,7 +184,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class LikeNotificationModel : NotificationModel
+    public sealed class LikeNotificationModel : NotificationModel
     {
         public string Title { get; private set; }
 
@@ -261,7 +261,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class MessageNotificationModel : NotificationModel
+    public sealed class MessageNotificationModel : NotificationModel
     {
         public int UnreadNum { get; private set; }
         public bool IsTop { get; private set; }

@@ -36,7 +36,7 @@ namespace CoolapkLite.Controls
         Image
     }
 
-    public partial class RatingControl : Control
+    public sealed partial class RatingControl : Control
     {
         private const float c_horizontalScaleAnimationCenterPoint = 0.5f;
         private const float c_verticalScaleAnimationCenterPoint = 0.8f;
@@ -443,15 +443,9 @@ namespace CoolapkLite.Controls
 
         private string GetNextGlyphIfNull(string glyph, RatingControlStates fallbackType)
         {
-            if (string.IsNullOrEmpty(glyph))
-            {
-                if (fallbackType == RatingControlStates.Null)
-                {
-                    return string.Empty;
-                }
-                return GetAppropriateGlyph(fallbackType);
-            }
-            return glyph;
+            return string.IsNullOrEmpty(glyph)
+                ? fallbackType == RatingControlStates.Null ? string.Empty : GetAppropriateGlyph(fallbackType)
+                : glyph;
         }
 
         private ImageSource GetAppropriateImageSource(RatingControlStates type)
@@ -484,15 +478,7 @@ namespace CoolapkLite.Controls
 
         private ImageSource GetNextImageIfNull(ImageSource image, RatingControlStates fallbackType)
         {
-            if (image == null)
-            {
-                if (fallbackType == RatingControlStates.Null)
-                {
-                    return null;
-                }
-                return GetAppropriateImageSource(fallbackType);
-            }
-            return image;
+            return image == null ? fallbackType == RatingControlStates.Null ? null : GetAppropriateImageSource(fallbackType) : image;
         }
 
         private void ResetControlWidth()
@@ -513,14 +499,7 @@ namespace CoolapkLite.Controls
                     // If the Value was programmatically set to a fraction, drop that fraction before we modify it
                     if ((int)Value != Value)
                     {
-                        if (change == -1)
-                        {
-                            ratingValue = (int)Value;
-                        }
-                        else
-                        {
-                            ratingValue = (int)Value + change;
-                        }
+                        ratingValue = change == -1 ? (int)Value : (int)Value + change;
                     }
                     else
                     {
@@ -559,13 +538,9 @@ namespace CoolapkLite.Controls
 
                     Value = c_noValueSetSentinel;
                 }
-                else if (ratingValue > 0.0)
-                {
-                    Value = ratingValue;
-                }
                 else
                 {
-                    Value = c_noValueSetSentinel;
+                    Value = ratingValue > 0.0 ? ratingValue : c_noValueSetSentinel;
                 }
 
                 if (ShouldEnableAnimation && IsUseCompositor && ApiInfoHelper.IsFocusEngagedSupported && IsFocusEngaged)

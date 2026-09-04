@@ -14,7 +14,7 @@ using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class BookmarkViewModel : IViewModel
+    public sealed class BookmarkViewModel : IViewModel
     {
         public static Dictionary<CoreDispatcher, BookmarkViewModel> Caches { get; } = new Dictionary<CoreDispatcher, BookmarkViewModel>();
 
@@ -31,7 +31,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -40,7 +40,7 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {
@@ -57,15 +57,29 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public async Task Refresh(bool reset)
         {
-            if (Bookmarks != null)
+            if (_bookmarks != null)
             {
-                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, Bookmarks.ToArray()).ConfigureAwait(false);
+                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, _bookmarks.ToArray()).ConfigureAwait(false);
             }
             if (reset)
             {
-                Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
+                await ResetAsync().ConfigureAwait(false);
             }
             await UpdateJumpListAsync().ConfigureAwait(false);
+            RefreshOthers();
+        }
+
+        private async Task ResetAsync() => Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
+
+        private void RefreshOthers()
+        {
+            foreach (KeyValuePair<CoreDispatcher, BookmarkViewModel> cache in Caches)
+            {
+                if (cache.Key != Dispatcher)
+                {
+                    _ = cache.Value.ResetAsync();
+                }
+            }
         }
 
         private async Task UpdateJumpListAsync()

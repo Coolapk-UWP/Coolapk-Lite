@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using System.Net;
 using Windows.ApplicationModel.Resources;
@@ -12,43 +13,42 @@ namespace CoolapkLite.Controls.Dialogs
 {
     public sealed partial class LoginDialog : ContentDialog
     {
-        private string _UID = SettingsHelper.Get<string>(SettingsHelper.Uid);
+        private Account account = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount);
+
         public string UID
         {
-            get => _UID;
+            get => account.UID;
             private set
             {
-                if (_UID != value)
+                if (account.UID != value)
                 {
-                    _UID = value;
+                    account.UID = value;
                     CheckText();
                 }
             }
         }
 
-        private string username = SettingsHelper.Get<string>(SettingsHelper.UserName);
         public string UserName
         {
-            get => username;
+            get => account.UserName;
             private set
             {
-                if (username != value)
+                if (account.UserName != value)
                 {
-                    username = value;
+                    account.UserName = value;
                     CheckText();
                 }
             }
         }
 
-        private string token = SettingsHelper.Get<string>(SettingsHelper.Token);
         public string Token
         {
-            get => token;
+            get => account.Token;
             private set
             {
-                if (token != value)
+                if (account.Token != value)
                 {
-                    token = value;
+                    account.Token = value;
                     CheckText();
                 }
             }
@@ -84,18 +84,23 @@ namespace CoolapkLite.Controls.Dialogs
                 {
                     GetText(UID);
                 }
-                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+
+                if (!account.IsEmpty)
                 {
-                    HttpCookieManager cookieManager = filter.CookieManager;
-                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
-                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
-                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
-                    uid.Value = UID;
-                    username.Value = UserName;
-                    token.Value = Token;
-                    cookieManager.SetCookie(uid);
-                    cookieManager.SetCookie(username);
-                    cookieManager.SetCookie(token);
+                    SettingsHelper.Set(SettingsHelper.CurrentAccount, account);
+                    using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                    {
+                        HttpCookieManager cookieManager = filter.CookieManager;
+                        HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                        HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                        HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                        uid.Value = UID;
+                        username.Value = UserName;
+                        token.Value = Token;
+                        cookieManager.SetCookie(uid);
+                        cookieManager.SetCookie(username);
+                        cookieManager.SetCookie(token);
+                    }
                 }
             }
         }

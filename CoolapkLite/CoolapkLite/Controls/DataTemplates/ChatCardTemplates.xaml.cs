@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Input;
 
 namespace CoolapkLite.Controls.DataTemplates
 {
-    public partial class ChatCardTemplates : ResourceDictionary
+    public sealed partial class ChatCardTemplates : ResourceDictionary
     {
         public ChatCardTemplates() => InitializeComponent();
 

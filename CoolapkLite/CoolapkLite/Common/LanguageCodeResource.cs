@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Common
 {
-    public class LanguageCodeResource : ResourceDictionary
+    public sealed class LanguageCodeResource : ResourceDictionary
     {
         public LanguageCodeResource() => AddResource();
 

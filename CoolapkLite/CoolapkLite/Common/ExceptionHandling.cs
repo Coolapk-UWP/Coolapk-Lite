@@ -35,7 +35,7 @@ namespace CoolapkLite.Common
     /// }
     /// </code>
     /// </example>
-    public class ExceptionHandlingSynchronizationContext : SynchronizationContext
+    public sealed class ExceptionHandlingSynchronizationContext : SynchronizationContext
     {
         /// <summary>
         /// Registration method. Call this from OnLaunched and OnActivated inside the App.xaml.cs.
@@ -156,7 +156,7 @@ namespace CoolapkLite.Common
     /// <summary>
     /// Provides data for the UnhandledException event.
     /// </summary>
-    public class UnhandledExceptionEventArgs : EventArgs
+    public sealed class UnhandledExceptionEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnhandledExceptionEventArgs"/> class.

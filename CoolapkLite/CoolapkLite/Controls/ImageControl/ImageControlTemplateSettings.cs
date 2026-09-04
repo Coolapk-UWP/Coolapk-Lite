@@ -3,7 +3,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {
-    public class ImageControlTemplateSettings : DependencyObject
+    public sealed class ImageControlTemplateSettings : DependencyObject
     {
         #region ActualSource
 

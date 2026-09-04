@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Helpers
 {
-    public class TipsRectangleHelper : DependencyObject
+    public sealed class TipsRectangleHelper : DependencyObject
     {
         #region IsEnable
 

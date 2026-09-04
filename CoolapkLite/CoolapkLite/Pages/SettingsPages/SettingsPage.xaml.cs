@@ -99,8 +99,8 @@ namespace CoolapkLite.Pages.SettingsPages
                 case "CheckUpdate":
                     _ = (Provider?.CheckUpdateAsync(this));
                     break;
-                case "AccountSetting":
-                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));
+                case "SwitchAccount":
+                    _ = Frame.Navigate(typeof(AccountsPage));
                     break;
                 case "AccountLogout":
                     SettingsHelper.Logout();
@@ -109,6 +109,9 @@ namespace CoolapkLite.Pages.SettingsPages
                     {
                         flyout_logout.Hide();
                     }
+                    break;
+                case "AccountSetting":
+                    _ = Frame.Navigate(typeof(BrowserPage), new BrowserViewModel("https://account.coolapk.com/account/settings", Dispatcher));
                     break;
                 default:
                     break;

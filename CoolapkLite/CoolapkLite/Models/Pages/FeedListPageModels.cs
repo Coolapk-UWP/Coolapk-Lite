@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using Newtonsoft.Json.Linq;
 using System;
@@ -45,7 +46,7 @@ namespace CoolapkLite.Models.Pages
         }
     }
 
-    public class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
+    public sealed class UserDetail : FeedListDetailBase, IUserModel, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -115,7 +116,7 @@ namespace CoolapkLite.Models.Pages
             if (token.TryGetValue("uid", out JToken uid))
             {
                 UID = uid.ToObject<int>();
-                IsMe = uid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
+                IsMe = uid.ToString() == SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
             }
 
             if (token.TryGetValue("feed", out JToken feed))
@@ -267,7 +268,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
+    public sealed class TopicDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -405,7 +406,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
+    public sealed class DyhDetail : FeedListDetailBase, IHasDescription, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -537,7 +538,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class ProductDetail : FeedListDetailBase, IHasDescription, ICanFollow
+    public sealed class ProductDetail : FeedListDetailBase, IHasDescription, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -817,7 +818,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class CollectionDetail : FeedListDetailBase, IHasDescription, ICanLike, ICanFollow
+    public sealed class CollectionDetail : FeedListDetailBase, IHasDescription, ICanLike, ICanFollow
     {
         private bool followed;
         public bool Followed
@@ -1009,7 +1010,7 @@ namespace CoolapkLite.Models.Pages
                                                                 .ToString();
     }
 
-    public class AppDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
+    public sealed class AppDetail : FeedListDetailBase, IHasSubtitle, ICanFollow
     {
         private bool followed;
         public bool Followed

@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Controls;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
@@ -40,7 +41,19 @@ namespace CoolapkLite.Helpers
         public static bool HasTitleBar => !CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar;
         public static bool HasStatusBar => ApiInfoHelper.IsStatusBarSupported;
 
-        public static IHaveTitleBar AppTitle { get; internal set; }
+        private static IHaveTitleBar appTitle;
+        public static IHaveTitleBar AppTitle
+        {
+            get => appTitle;
+            internal set
+            {
+                appTitle = value;
+                if (value != null && MessageQueue.Count > 0)
+                {
+                    _ = UIHelper.ShowMessageAsync(value, null);
+                }
+            }
+        }
 
         public static async Task<IHaveTitleBar> GetAppTitleAsync() =>
             Window.Current is Window window ? await window.GetAppTitleAsync().ConfigureAwait(false) : AppTitle;
@@ -48,7 +61,7 @@ namespace CoolapkLite.Helpers
         public static async Task<IHaveTitleBar> GetAppTitleAsync(this Window window)
         {
             await window.Dispatcher.ResumeForegroundAsync();
-            Page page = window.Content.FindDescendant<Page>();
+            Page page = window.Content?.FindDescendant<Page>();
             return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
         }
 
@@ -57,7 +70,7 @@ namespace CoolapkLite.Helpers
             if (WindowHelper.ActiveWindows.TryGetValue(dispatcher, out Window window))
             {
                 await window.Dispatcher.ResumeForegroundAsync();
-                Page page = window.Content.FindDescendant<Page>();
+                Page page = window.Content?.FindDescendant<Page>();
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
             else
@@ -77,9 +90,9 @@ namespace CoolapkLite.Helpers
 
             if (WindowHelper.IsXamlRootSupported
                 && element is UIElement uiElement
-                && uiElement.XamlRoot != null)
+                && uiElement.XamlRoot is XamlRoot root)
             {
-                Page page = uiElement.XamlRoot.Content.FindDescendant<Page>();
+                Page page = root.Content?.FindDescendant<Page>();
                 return page is IHaveTitleBar appTitle ? appTitle : AppTitle;
             }
 
@@ -93,6 +106,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -114,6 +128,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowProgressBarAsync(IHaveTitleBar mainPage, double value)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -135,6 +150,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task PausedProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -150,6 +166,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task ErrorProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = true;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -165,6 +182,7 @@ namespace CoolapkLite.Helpers
 
         public static async Task HideProgressBarAsync(IHaveTitleBar mainPage)
         {
+            if (mainPage == null) { return; }
             IsShowingProgressBar = false;
             await mainPage.Dispatcher.ResumeForegroundAsync();
             if (HasStatusBar)
@@ -182,8 +200,9 @@ namespace CoolapkLite.Helpers
 
         public static async Task ShowMessageAsync(IHaveTitleBar mainPage, string message)
         {
-            MessageQueue.Enqueue(message);
-            if (!IsShowingMessage)
+            if (!string.IsNullOrWhiteSpace(message)) { MessageQueue.Enqueue(message); }
+            if (mainPage == null) { return; }
+            if (!IsShowingMessage && MessageQueue.Count > 0)
             {
                 IsShowingMessage = true;
                 await mainPage.Dispatcher.ResumeForegroundAsync();
@@ -516,11 +535,11 @@ namespace CoolapkLite.Helpers
 
             if (link == "/contacts/fans")
             {
-                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), false, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID, false, "我", frame.Dispatcher));
             }
             else if (link == "/user/myFollowList")
             {
-                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<string>(SettingsHelper.Uid), true, "我", frame.Dispatcher));
+                return frame => frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserListProvider(SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID, true, "我", frame.Dispatcher));
             }
             else if (link.StartsWith("/page?", StringComparison.OrdinalIgnoreCase))
             {
@@ -533,12 +552,8 @@ namespace CoolapkLite.Helpers
                 {
                     string url = link.Substring(3, "?");
                     string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID.ToString());
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/feed/", StringComparison.OrdinalIgnoreCase))
@@ -552,15 +567,8 @@ namespace CoolapkLite.Helpers
                     string id = link.Substring(6, "?");
                     if (int.TryParse(id, out _))
                     {
-                        return async frame =>
-                        {
-                            FeedShellViewModel provider = await FeedShellViewModel.GetProviderAsync(id, frame.Dispatcher).ConfigureAwait(false);
-                            if (provider != null)
-                            {
-                                return await frame.NavigateAsync(typeof(FeedShellPage), provider).ConfigureAwait(false);
-                            }
-                            return false;
-                        };
+                        return async frame => await FeedShellViewModel.GetProviderAsync(id, frame.Dispatcher).ConfigureAwait(false) is FeedShellViewModel provider
+                            && await frame.NavigateAsync(typeof(FeedShellPage), provider).ConfigureAwait(false);
                     }
                     else
                     {
@@ -597,12 +605,8 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string tag = link.Substring(3, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.TagPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/dyh/", StringComparison.OrdinalIgnoreCase))
@@ -610,45 +614,28 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string tag = link.Substring(5, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.DyhPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/product/", StringComparison.OrdinalIgnoreCase))
             {
-                if (link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase))
-                {
-                    return frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher));
-                }
-                else
-                {
-                    return async frame =>
+                return link.StartsWith("/product/categoryList", StringComparison.OrdinalIgnoreCase)
+                    ? frame => frame.NavigateAsync(typeof(AdaptivePage), new AdaptiveViewModel(link, frame.Dispatcher))
+                    : (OpenLinkFactory)(async frame =>
                     {
                         string tag = link.Substring(9, "?");
-                        FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher);
-                        if (provider != null)
-                        {
-                            return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                        }
-                        return false;
-                    };
-                }
+                        return FeedListViewModel.GetProvider(FeedListType.ProductPageList, tag, frame.Dispatcher) is FeedListViewModel provider
+                            && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
+                    });
             }
             else if (link.StartsWith("/collection/", StringComparison.OrdinalIgnoreCase))
             {
                 return async frame =>
                 {
                     string id = link.Substring(12, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.CollectionPageList, id, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/apk/", StringComparison.OrdinalIgnoreCase))
@@ -656,12 +643,8 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string id = link.Substring(5, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher) is FeedListViewModel provider
+                        && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/appba/", StringComparison.OrdinalIgnoreCase))
@@ -669,12 +652,7 @@ namespace CoolapkLite.Helpers
                 return async frame =>
                 {
                     string id = link.Substring(7, "?");
-                    FeedListViewModel provider = FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher);
-                    if (provider != null)
-                    {
-                        return await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
-                    }
-                    return false;
+                    return FeedListViewModel.GetProvider(FeedListType.AppPageList, id, frame.Dispatcher) is FeedListViewModel provider && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };
             }
             else if (link.StartsWith("/mp/", StringComparison.OrdinalIgnoreCase))

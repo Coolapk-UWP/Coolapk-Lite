@@ -1,12 +1,13 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
 
 namespace CoolapkLite.Models.Message
 {
-    public class MessageModel : Entity
+    public sealed class MessageModel : Entity
     {
         public int UID { get; private set; }
         public bool IsMe { get; private set; }
@@ -26,7 +27,7 @@ namespace CoolapkLite.Models.Message
             {
                 UID = fromuid.ToObject<int>();
                 UserUrl = $"/u/{fromuid}";
-                IsMe = fromuid.ToString() == SettingsHelper.Get<string>(SettingsHelper.Uid);
+                IsMe = fromuid.ToString() == SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
             }
 
             if (token.TryGetValue("isnew", out JToken isnew))
@@ -75,7 +76,7 @@ namespace CoolapkLite.Models.Message
                                                                 .ToString();
     }
 
-    public class MessageCard : IHasTitle
+    public sealed class MessageCard : IHasTitle
     {
         public string Url { get; set; }
         public string Title { get; set; }

@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     x:Uid="/ContentDialog/BookmarkDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-    IsPrimaryButtonEnabled="{Binding Text, ElementName=URLTextBox, Converter={StaticResource StringToBoolConverter}}"
+    IsPrimaryButtonEnabled="{x:Bind URLTextBox.Text, Converter={StaticResource StringToBoolConverter}, Mode=OneWay}"
     mc:Ignorable="d">
     <ContentDialog.Resources>
         <ResourceDictionary>

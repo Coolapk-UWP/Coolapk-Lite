@@ -4,7 +4,7 @@ using System;
 namespace CoolapkLite.Models.Network
 {
 #if CANARY
-    public class RunsInfo
+    public sealed class RunsInfo
     {
         [JsonProperty("count")]
         public long Count { get; set; }
@@ -12,7 +12,7 @@ namespace CoolapkLite.Models.Network
         public RunInfo[] Value { get; set; }
     }
 
-    public class RunInfo
+    public sealed class RunInfo
     {
         [JsonProperty("_links")]
         public Links Links { get; set; }
@@ -34,7 +34,7 @@ namespace CoolapkLite.Models.Network
         public string Name { get; set; }
     }
 
-    public class Links
+    public sealed class Links
     {
         [JsonProperty("self")]
         public Link Self { get; set; }
@@ -46,13 +46,13 @@ namespace CoolapkLite.Models.Network
         public Link Pipeline { get; set; }
     }
 
-    public class Link
+    public sealed class Link
     {
         [JsonProperty("href")]
         public string Href { get; set; }
     }
 
-    public class Pipeline
+    public sealed class Pipeline
     {
         [JsonProperty("url")]
         public string Url { get; set; }
@@ -66,7 +66,7 @@ namespace CoolapkLite.Models.Network
         public string Folder { get; set; }
     }
 
-    public class Asset
+    public sealed class Asset
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -78,7 +78,7 @@ namespace CoolapkLite.Models.Network
         public string DownloadUrl => SignedContent?.Url;
     }
 
-    public class SignedContent
+    public sealed class SignedContent
     {
         [JsonProperty("url")]
         public string Url { get; set; }
@@ -86,7 +86,7 @@ namespace CoolapkLite.Models.Network
         public DateTimeOffset SignatureExpires { get; set; }
     }
 
-    public class UpdateInfo
+    public sealed class UpdateInfo
     {
         public string ReleaseUrl { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
@@ -96,7 +96,7 @@ namespace CoolapkLite.Models.Network
         public SystemVersionInfo Version { get; set; }
     }
 #else
-    public class UpdateInfo
+    public sealed class UpdateInfo
     {
         [JsonProperty("url")]
         public string ApiUrl { get; set; }
@@ -128,7 +128,7 @@ namespace CoolapkLite.Models.Network
         public SystemVersionInfo Version { get; set; }
     }
 
-    public class Asset
+    public sealed class Asset
     {
         [JsonProperty("url")]
         public string Url { get; set; }

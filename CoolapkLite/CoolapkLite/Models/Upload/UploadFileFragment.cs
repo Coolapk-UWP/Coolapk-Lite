@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Upload
 {
-    public class UploadFileFragment : IEquatable<UploadFileFragment>
+    public sealed class UploadFileFragment : IEquatable<UploadFileFragment>
     {
         [JsonProperty("name")]
         public string Name { get; set; }

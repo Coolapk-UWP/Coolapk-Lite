@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class ContainerWriter : HtmlWriter
+    public sealed class ContainerWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "div" };
 

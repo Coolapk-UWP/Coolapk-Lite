@@ -4,7 +4,7 @@ using System;
 
 namespace CoolapkLite.Models.Users
 {
-    public class ContactModel : Entity
+    public sealed class ContactModel : Entity
     {
         public bool IsFriend { get; private set; }
         public UserModel UserInfo { get; private set; }

@@ -9,7 +9,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
 {
-    public class FeedReplyModel : SourceFeedReplyModel, ICanLike, ICanReply, ICanCopy
+    public sealed class FeedReplyModel : SourceFeedReplyModel, ICanLike, ICanReply, ICanCopy
     {
         private int likeNum;
         public int LikeNum

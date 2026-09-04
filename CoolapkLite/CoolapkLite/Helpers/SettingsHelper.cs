@@ -17,11 +17,9 @@ namespace CoolapkLite.Helpers
 {
     public static partial class SettingsHelper
     {
-        public const string Uid = nameof(Uid);
-        public const string Token = nameof(Token);
         public const string TileUrl = nameof(TileUrl);
-        public const string UserName = nameof(UserName);
         public const string CustomUA = nameof(CustomUA);
+        public const string Accounts = nameof(Accounts);
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string CustomAPI = nameof(CustomAPI);
@@ -35,6 +33,7 @@ namespace CoolapkLite.Helpers
         public const string IsUseLiteHome = nameof(IsUseLiteHome);
         public const string IsUseAppWindow = nameof(IsUseAppWindow);
         public const string TileUpdateTime = nameof(TileUpdateTime);
+        public const string CurrentAccount = nameof(CurrentAccount);
         public const string IsUseCompositor = nameof(IsUseCompositor);
         public const string CurrentLanguage = nameof(CurrentLanguage);
         public const string IsUseMultiWindow = nameof(IsUseMultiWindow);
@@ -60,21 +59,9 @@ namespace CoolapkLite.Helpers
 
         public static void SetDefaultSettings()
         {
-            if (!LocalObject.KeyExists(Uid))
-            {
-                LocalObject.Save(Uid, string.Empty);
-            }
-            if (!LocalObject.KeyExists(Token))
-            {
-                LocalObject.Save(Token, string.Empty);
-            }
             if (!LocalObject.KeyExists(TileUrl))
             {
                 LocalObject.Save(TileUrl, "https://api.coolapk.com/v6/page/dataList?url=V9_HOME_TAB_FOLLOW&type=circle");
-            }
-            if (!LocalObject.KeyExists(UserName))
-            {
-                LocalObject.Save(UserName, string.Empty);
             }
             if (!LocalObject.KeyExists(CustomUA))
             {
@@ -127,6 +114,10 @@ namespace CoolapkLite.Helpers
             if (!LocalObject.KeyExists(TileUpdateTime))
             {
                 LocalObject.Save(TileUpdateTime, ApiInfoHelper.IsUniversalApiContract14Present ? 0u : 15u);
+            }
+            if (!LocalObject.KeyExists(CurrentAccount))
+            {
+                LocalObject.Save(CurrentAccount, new Account());
             }
             if (!LocalObject.KeyExists(IsUseCompositor))
             {
@@ -203,6 +194,10 @@ namespace CoolapkLite.Helpers
         {
             StorageFolder folder = LocalObject.Folder;
             StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
+            if (await settings.TryGetItemAsync(Accounts) == null)
+            {
+                await SetAsync(Accounts, Array.Empty<Account>()).ConfigureAwait(false);
+            }
             if (await settings.TryGetItemAsync(Bookmark) == null)
             {
                 await SetAsync(Bookmark, Models.Bookmark.GetDefaultBookmarks()).ConfigureAwait(false);
@@ -265,11 +260,7 @@ namespace CoolapkLite.Helpers
 
         private static void SetLoginCookie()
         {
-            string Uid = Get<string>(SettingsHelper.Uid);
-            string UserName = Get<string>(SettingsHelper.UserName);
-            string Token = Get<string>(SettingsHelper.Token);
-
-            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
+            if (Get<Account>(CurrentAccount) is Account account && !account.IsEmpty)
             {
                 using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
                 {
@@ -277,9 +268,7 @@ namespace CoolapkLite.Helpers
                     HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
                     HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
                     HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
-                    uid.Value = Uid;
-                    username.Value = UserName;
-                    token.Value = Token;
+                    (uid.Value, username.Value, token.Value) = account;
                     cookieManager.SetCookie(uid);
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
@@ -318,9 +307,7 @@ namespace CoolapkLite.Helpers
                 }
                 else
                 {
-                    Set(Uid, uid);
-                    Set(Token, token);
-                    Set(UserName, userName);
+                    Set(CurrentAccount, new Account(uid, userName, token));
                     InvokeLoginChanged(true);
                     _ = RemarkModel.GetRemarkDictionary(uid).ContinueWith(x => UserRemarks = x.Result);
                     return true;
@@ -328,9 +315,9 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static async Task<bool> LoginAsync(string Uid, string UserName, string Token)
+        public static async Task<bool> LoginAsync(Account account)
         {
-            if (!string.IsNullOrEmpty(Uid) && !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Token))
+            if (!account.IsEmpty)
             {
                 using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
                 {
@@ -338,20 +325,16 @@ namespace CoolapkLite.Helpers
                     HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
                     HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
                     HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
-                    uid.Value = Uid;
-                    username.Value = UserName;
-                    token.Value = Token;
+                    (uid.Value, username.Value, token.Value) = account;
                     cookieManager.SetCookie(uid);
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
                 }
                 if (await RequestHelper.CheckLoginAsync().ConfigureAwait(false))
                 {
-                    Set(SettingsHelper.Uid, Uid);
-                    Set(SettingsHelper.Token, Token);
-                    Set(SettingsHelper.UserName, UserName);
+                    Set(CurrentAccount, account);
                     InvokeLoginChanged(true);
-                    _ = RemarkModel.GetRemarkDictionary(Uid).ContinueWith(x => UserRemarks = x.Result);
+                    _ = RemarkModel.GetRemarkDictionary(account.UID).ContinueWith(x => UserRemarks = x.Result);
                     return true;
                 }
                 else
@@ -405,15 +388,13 @@ namespace CoolapkLite.Helpers
                     cookieManager.DeleteCookie(item);
                 }
             }
-            Set(Uid, string.Empty);
-            Set(Token, string.Empty);
-            Set(UserName, string.Empty);
+            Set(CurrentAccount, new Account());
             InvokeLoginChanged(false);
             UserRemarks = null;
         }
     }
 
-    public class NewtonsoftJsonObjectSerializer : IObjectSerializer
+    public sealed class NewtonsoftJsonObjectSerializer : IObjectSerializer
     {
         // Specify your serialization settings
         private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };

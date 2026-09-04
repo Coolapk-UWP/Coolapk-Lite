@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Containers
 {
-    public class ParagraphDocumentContainer : DocumentContainer<Paragraph>
+    public sealed class ParagraphDocumentContainer : DocumentContainer<Paragraph>
     {
         public ParagraphDocumentContainer(Paragraph element) : base(element)
         {

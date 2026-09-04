@@ -10,7 +10,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models
 {
-    public class IndexPageModel : Entity, IHasDescription
+    public sealed class IndexPageModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -154,7 +154,7 @@ namespace CoolapkLite.Models
         }
     }
 
-    public class IndexPageMessageCardModel : Entity
+    public sealed class IndexPageMessageCardModel : Entity
     {
         public string Title { get; private set; }
         public bool ShowEntities { get; private set; }
@@ -259,7 +259,7 @@ namespace CoolapkLite.Models
         SelectorLink
     }
 
-    public class IndexPageHasEntitiesModel : Entity, IHasDescription
+    public sealed class IndexPageHasEntitiesModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }
@@ -388,7 +388,7 @@ namespace CoolapkLite.Models
         ShowTitle
     }
 
-    public class IndexPageOperationCardModel : Entity, IHasTitle
+    public sealed class IndexPageOperationCardModel : Entity, IHasTitle
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

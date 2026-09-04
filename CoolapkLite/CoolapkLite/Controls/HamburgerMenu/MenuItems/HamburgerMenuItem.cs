@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 namespace CoolapkLite.Controls
 {
     /// <summary>
-    /// The HamburgerMenuItem provides an abstract implementation for HamburgerMenu entries.
+    /// The <see cref="HamburgerMenuItem"/> provides an abstract implementation for <see cref="HamburgerMenu"/> entries.
     /// </summary>
     public abstract class HamburgerMenuItem : DependencyObject
     {

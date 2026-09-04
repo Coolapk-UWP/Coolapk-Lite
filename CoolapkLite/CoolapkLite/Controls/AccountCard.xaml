@@ -1,0 +1,74 @@
+﻿<UserControl
+    x:Class="CoolapkLite.Controls.AccountCard"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converter="using:CoolapkLite.Helpers.Converters"
+    xmlns:ctrl="using:CoolapkLite.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:CoolapkLite.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <local:UrlDecodeConverter x:Key="UrlDecodeConverter" />
+        <converter:ObjectVisibilityConverter x:Key="ObjectVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid
+        x:Name="RootGrid"
+        Padding="8"
+        Background="{ThemeResource SystemControlTransparentBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <ctrl:PersonPicture
+            Grid.RowSpan="2"
+            Width="36"
+            Height="36"
+            Margin="0,0,8,0"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            DisplayName="{x:Bind UserInfo.UserName, Mode=OneWay}"
+            Source="{x:Bind UserInfo.UserAvatar, Mode=OneWay}" />
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            MaxLines="1"
+            TextTrimming="CharacterEllipsis"
+            Visibility="{x:Bind UserInfo, Converter={StaticResource ObjectVisibilityConverter}, Mode=OneWay}">
+            <Run Text="{x:Bind UserInfo.UserName, Mode=OneWay}" />
+            <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind UserInfo.UID, Mode=OneWay}" />
+            <Span FontSize="12">
+                Lv.<Run Text="{x:Bind UserInfo.Level, Mode=OneWay}" /></Span>
+        </TextBlock>
+        <TextBlock
+            Grid.Row="0"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            MaxLines="1"
+            TextTrimming="CharacterEllipsis"
+            Visibility="{x:Bind UserInfo, Converter={StaticResource ObjectVisibilityConverter}, ConverterParameter='true', Mode=OneWay}">
+            <Run Text="{x:Bind Account.UserName, Converter={StaticResource UrlDecodeConverter}, Mode=OneWay}" />
+            <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Account.UID, Mode=OneWay}" />
+        </TextBlock>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            FontSize="12"
+            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+            MaxLines="1"
+            TextTrimming="CharacterEllipsis">
+            <Run Text="{x:Bind UserInfo.RegDate, Converter={StaticResource DateLineToReadableConverter}, ConverterParameter='true', Mode=OneWay}" /><Run>注册</Run>
+            <Run Text="{x:Bind UserInfo.LoginText, Mode=OneWay}" />
+        </TextBlock>
+    </Grid>
+</UserControl>

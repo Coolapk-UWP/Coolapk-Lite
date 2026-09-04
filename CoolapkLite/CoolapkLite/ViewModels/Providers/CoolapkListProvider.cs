@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.ViewModels.Providers
 {
-    public class CoolapkListProvider
+    public sealed class CoolapkListProvider
     {
         private readonly string _idName;
         private string _firstItem, _lastItem;

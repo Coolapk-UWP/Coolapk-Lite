@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Data;
 
 namespace CoolapkLite.Helpers.Converters
 {
-    public class DateLineToReadableConverter : IValueConverter
+    public sealed class DateLineToReadableConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -41,18 +41,9 @@ namespace CoolapkLite.Helpers.Converters
             object result = null;
             if (DateTimeOffset.TryParse(value?.ToString(), out DateTimeOffset dateTimeOffset))
             {
-                if (targetType == typeof(DateTimeOffset))
-                {
-                    result = dateTimeOffset;
-                }
-                else if (targetType == typeof(DateTime))
-                {
-                    result = dateTimeOffset.ConvertDateTimeOffsetToDateTime();
-                }
-                else
-                {
-                    result = dateTimeOffset.ToUnixTimeSeconds();
-                }
+                result = targetType == typeof(DateTimeOffset)
+                    ? dateTimeOffset
+                    : targetType == typeof(DateTime) ? dateTimeOffset.ConvertDateTimeOffsetToDateTime() : (object)dateTimeOffset.ToUnixTimeSeconds();
             }
             return ConverterTools.Convert(result, targetType);
         }

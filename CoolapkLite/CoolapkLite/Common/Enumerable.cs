@@ -331,19 +331,9 @@ namespace CoolapkLite.Common
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (collection == null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            if (source is TSource[] array)
-            {
-                return array.RemoveAll(collection.Contains);
-            }
-            else
-            {
-                return collection.Select(source.Remove).Count(x => x);
-            }
+            return collection == null
+                ? throw new ArgumentNullException(nameof(collection))
+                : source is TSource[] array ? array.RemoveAll(collection.Contains) : collection.Select(source.Remove).Count(x => x);
         }
 
         /// <summary>

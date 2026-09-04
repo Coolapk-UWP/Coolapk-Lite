@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Controls
 {
-    public partial class TitleBarTemplateSettings : DependencyObject
+    public sealed partial class TitleBarTemplateSettings : DependencyObject
     {
         #region ProgressValue
 

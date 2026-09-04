@@ -17,7 +17,7 @@ namespace CoolapkLite.Controls
     [TemplatePart(Name = "DragRegion", Type = typeof(Grid))]
     [TemplatePart(Name = "BackButton", Type = typeof(Button))]
     [TemplatePart(Name = "Icon", Type = typeof(Viewbox))]
-    public partial class TitleBar : Control
+    public sealed partial class TitleBar : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TitleBar"/> class.

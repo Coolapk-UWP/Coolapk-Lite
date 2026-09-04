@@ -6,7 +6,7 @@ namespace CoolapkLite.Helpers.Converters
     /// <summary>
     /// This class converts a <see cref="ImageModel"/> value into a Visibility value (if the value is null or empty returns a collapsed value).
     /// </summary>
-    public class ImageModelToVisibilityConverter : EmptyImageModelToObjectConverter
+    public sealed class ImageModelToVisibilityConverter : EmptyImageModelToObjectConverter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ImageModelToVisibilityConverter"/> class.

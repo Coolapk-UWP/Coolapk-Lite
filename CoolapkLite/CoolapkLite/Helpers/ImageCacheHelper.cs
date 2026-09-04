@@ -212,8 +212,7 @@ namespace CoolapkLite.Helpers
         private static Task<Uri> GetMessageImageUriAsync(ImageType type, string url)
         {
             url += type.HasFlag(ImageType.Small) ? "&type=s" : "&type=n";
-            if (!url.TryGetUri(out Uri uri)) { return null; }
-            return GetRedirectUriAsync(uri);
+            return !url.TryGetUri(out Uri uri) ? null : GetRedirectUriAsync(uri);
         }
     }
 }

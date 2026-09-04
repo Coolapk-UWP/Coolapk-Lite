@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls
 {
-    public class XamlQRCode : AbstractQRCode, IDisposable
+    public sealed class XamlQRCode : AbstractQRCode, IDisposable
     {
         private readonly bool _disposed;
 
@@ -368,7 +368,7 @@ namespace CoolapkLite.Controls
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing)
             {

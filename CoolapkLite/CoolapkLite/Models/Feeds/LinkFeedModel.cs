@@ -8,7 +8,6 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
-using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -22,7 +21,7 @@ namespace CoolapkLite.Models.Feeds
         Coolapk
     }
 
-    public class LinkFeedModel : ISourceFeedModel, INotifyPropertyChanged
+    public sealed class LinkFeedModel : ISourceFeedModel, INotifyPropertyChanged
     {
         private string url;
         public string Url
@@ -98,12 +97,12 @@ namespace CoolapkLite.Models.Feeds
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

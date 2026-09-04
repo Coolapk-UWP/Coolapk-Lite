@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Controls
 {
-    public class DisplayRegionHelperInfo
+    public sealed class DisplayRegionHelperInfo
     {
         private const int c_maxRegions = 2;
 

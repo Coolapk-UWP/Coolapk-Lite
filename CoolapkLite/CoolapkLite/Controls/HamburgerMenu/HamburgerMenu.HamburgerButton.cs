@@ -3,12 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.Controls
 {
-    /// <summary>
-    /// The HamburgerMenu is based on a SplitView control. By default it contains a HamburgerButton and a ListView to display menu items.
-    /// </summary>
     public partial class HamburgerMenu
     {
         #region HamburgerWidth

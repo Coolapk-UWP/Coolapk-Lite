@@ -8,9 +8,9 @@ using Windows.UI.Xaml.Media;
 namespace CoolapkLite.Controls
 {
     /// <summary>
-    /// The HamburgerMenuImageItem provides an image based implementation for HamburgerMenu entries.
+    /// The <see cref="HamburgerMenuImageItem"/> provides an image based implementation for <see cref="HamburgerMenu"/> entries.
     /// </summary>
-    public class HamburgerMenuImageItem : HamburgerMenuItem
+    public sealed class HamburgerMenuImageItem : HamburgerMenuItem
     {
         #region Thumbnail
 

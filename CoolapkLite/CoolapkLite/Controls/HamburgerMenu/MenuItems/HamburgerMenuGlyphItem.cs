@@ -7,9 +7,9 @@ using Windows.UI.Xaml;
 namespace CoolapkLite.Controls
 {
     /// <summary>
-    /// The HamburgerMenuGlyphItem provides a glyph based implementation for HamburgerMenu entries.
+    /// The <see cref="HamburgerMenuGlyphItem"/> provides a glyph based implementation for <see cref="HamburgerMenu"/> entries.
     /// </summary>
-    public class HamburgerMenuGlyphItem : HamburgerMenuItem
+    public sealed class HamburgerMenuGlyphItem : HamburgerMenuItem
     {
         #region Glyph
 

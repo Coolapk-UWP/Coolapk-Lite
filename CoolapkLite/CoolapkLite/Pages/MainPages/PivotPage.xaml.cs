@@ -2,6 +2,7 @@
 using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.SettingsPages;
@@ -42,7 +43,7 @@ namespace CoolapkLite.Pages
         private Action Refresh;
 
         public Frame MainFrame => PivotContentFrame;
-        private static bool IsLogin => !string.IsNullOrEmpty(SettingsHelper.Get<string>(SettingsHelper.Uid));
+        private static bool IsLogin => !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
 
         public PivotPage()
         {

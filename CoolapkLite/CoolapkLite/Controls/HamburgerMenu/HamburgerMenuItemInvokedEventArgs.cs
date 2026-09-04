@@ -9,7 +9,7 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// EventArgs used for the <see cref="HamburgerMenu"/> ItemInvoked event
     /// </summary>
-    public class HamburgerMenuItemInvokedEventArgs : EventArgs
+    public sealed class HamburgerMenuItemInvokedEventArgs : EventArgs
     {
         /// <summary>
         /// Gets the invoked item

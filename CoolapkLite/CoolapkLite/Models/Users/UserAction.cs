@@ -5,7 +5,7 @@ using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Users
 {
-    public class UserAction : Entity, INotifyPropertyChanged
+    public sealed class UserAction : Entity, INotifyPropertyChanged
     {
         private bool like;
         public bool Like
@@ -73,12 +73,12 @@ namespace CoolapkLite.Models.Users
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null) { PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)); }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

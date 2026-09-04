@@ -9,7 +9,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Controls
 {
-    public class DisplayRegionHelper
+    public sealed class DisplayRegionHelper
     {
         private static DisplayRegionHelper Instance;
 

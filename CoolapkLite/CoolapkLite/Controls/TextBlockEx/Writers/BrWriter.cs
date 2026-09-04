@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class BrWriter : HtmlWriter
+    public sealed class BrWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "br" };
 

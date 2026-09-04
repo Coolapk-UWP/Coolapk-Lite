@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
+    public sealed class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
     {
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
@@ -141,7 +141,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        protected WeakReference<BitmapImage> pic;
+        private WeakReference<BitmapImage> pic;
         public BitmapImage Pic
         {
             get
@@ -171,7 +171,7 @@ namespace CoolapkLite.Models.Images
                     return image;
                 }
             }
-            protected set
+            private set
             {
                 if (pic == null)
                 {
@@ -185,7 +185,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        protected ImmutableArray<ImageModel> contextArray = ImmutableArray<ImageModel>.Empty;
+        private ImmutableArray<ImageModel> contextArray = ImmutableArray<ImageModel>.Empty;
         public ImmutableArray<ImageModel> ContextArray
         {
             get => contextArray;
@@ -201,7 +201,7 @@ namespace CoolapkLite.Models.Images
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -210,7 +210,7 @@ namespace CoolapkLite.Models.Images
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {
@@ -493,7 +493,7 @@ namespace CoolapkLite.Models.Images
 
         public override int GetHashCode() => (uri, type, Dispatcher).GetHashCode();
 
-        public bool Equals(ImageModel other) => other != null && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
+        public bool Equals(ImageModel other) => other is ImageModel && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
 
         public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
 
@@ -501,7 +501,7 @@ namespace CoolapkLite.Models.Images
 
         #region Locker
 
-        private class ImageModelLocker : IDisposable
+        private sealed class ImageModelLocker : IDisposable
         {
             private readonly Action dispose;
 
@@ -521,7 +521,7 @@ namespace CoolapkLite.Models.Images
                 return new ImageModelLocker(dispose);
             }
 
-            protected virtual void Dispose(bool disposing)
+            private void Dispose(bool disposing)
             {
                 if (disposing)
                 {

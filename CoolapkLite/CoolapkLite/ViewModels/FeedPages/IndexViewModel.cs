@@ -11,7 +11,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class IndexViewModel : EntityItemSource, IViewModel
+    public sealed class IndexViewModel : EntityItemSource, IViewModel
     {
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Home");
 

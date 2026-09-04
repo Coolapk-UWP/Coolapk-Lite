@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media.Animation;
 
 namespace CoolapkLite.Common
 {
-    public class AnimateSelectionProvider : DependencyObject
+    public sealed class AnimateSelectionProvider : DependencyObject
     {
         private static readonly Vector2 c_frame1point1 = new Vector2(0.9f, 0.1f);
         private static readonly Vector2 c_frame1point2 = new Vector2(1.0f, 0.2f);

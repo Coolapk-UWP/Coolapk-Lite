@@ -77,7 +77,7 @@ namespace CoolapkLite.Controls.Dialogs
         }
     }
 
-    public class Int32ToStringConverter : IValueConverter
+    public sealed class Int32ToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

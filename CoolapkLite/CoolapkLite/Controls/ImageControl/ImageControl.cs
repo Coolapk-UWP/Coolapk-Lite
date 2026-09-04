@@ -273,7 +273,7 @@ namespace CoolapkLite.Controls
 
         #region Locker
 
-        private class UpdateStateLocker : IDisposable
+        private sealed class UpdateStateLocker : IDisposable
         {
             public static SemaphoreSlim SlimLocker { get; set; } = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
 
@@ -289,7 +289,7 @@ namespace CoolapkLite.Controls
                 return new UpdateStateLocker();
             }
 
-            protected virtual void Dispose(bool disposing)
+            private void Dispose(bool disposing)
             {
                 if (disposing)
                 {

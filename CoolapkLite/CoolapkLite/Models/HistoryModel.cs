@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CoolapkLite.Models
 {
-    public class HistoryModel : Entity, IHasDescription
+    public sealed class HistoryModel : Entity, IHasDescription
     {
         public string Url { get; private set; }
         public string Title { get; private set; }

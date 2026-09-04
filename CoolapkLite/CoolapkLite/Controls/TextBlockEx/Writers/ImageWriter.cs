@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Media;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class ImageWriter : HtmlWriter
+    public sealed class ImageWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "img" };
 

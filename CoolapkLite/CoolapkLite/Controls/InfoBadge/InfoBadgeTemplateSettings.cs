@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Controls
 {
-    public class InfoBadgeTemplateSettings : DependencyObject
+    public sealed class InfoBadgeTemplateSettings : DependencyObject
     {
         internal InfoBadgeTemplateSettings()
         {

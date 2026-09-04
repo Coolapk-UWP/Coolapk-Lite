@@ -110,7 +110,7 @@ namespace CoolapkLite.Pages.ToolsPages
         private void TitleBar_RefreshRequested(TitleBar sender, object args) => _ = Refresh(true);
     }
 
-    public class IndexToBooleanConverter : IValueConverter
+    public sealed class IndexToBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

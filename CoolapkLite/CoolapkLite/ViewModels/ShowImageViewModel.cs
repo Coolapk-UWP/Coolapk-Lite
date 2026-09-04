@@ -10,7 +10,7 @@ using NetworkHelper = Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper;
 
 namespace CoolapkLite.ViewModels
 {
-    public class ShowImageViewModel : IViewModel
+    public sealed class ShowImageViewModel : IViewModel
     {
         private string ImageName => index != -1 && Images?.Count > 0 ? Images[Index].Title : string.Empty;
 
@@ -50,7 +50,7 @@ namespace CoolapkLite.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -59,7 +59,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (property == null ? value != null : !property.Equals(value))
             {

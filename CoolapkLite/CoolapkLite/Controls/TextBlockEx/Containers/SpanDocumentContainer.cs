@@ -3,7 +3,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Containers
 {
-    public class SpanDocumentContainer : DocumentContainer<Span>
+    public sealed class SpanDocumentContainer : DocumentContainer<Span>
     {
         public SpanDocumentContainer(Span element) : base(element)
         {

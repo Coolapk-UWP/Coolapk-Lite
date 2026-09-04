@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public class ChatViewModel : EntityItemSource, IViewModel
+    public sealed class ChatViewModel : EntityItemSource, IViewModel
     {
         public static string[] ImageTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 

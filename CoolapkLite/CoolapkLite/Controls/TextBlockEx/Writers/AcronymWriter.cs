@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Documents;
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class AcronymWriter : HtmlWriter
+    public sealed class AcronymWriter : HtmlWriter
     {
         public override string[] TargetTags => new[] { "acronym", "abbr" };
 

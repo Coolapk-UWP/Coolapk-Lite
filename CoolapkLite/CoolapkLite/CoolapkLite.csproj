@@ -41,7 +41,7 @@
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -53,7 +53,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X86</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -66,7 +66,7 @@
     <OutputPath>bin\ARM\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -78,7 +78,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;ARM</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -117,7 +117,7 @@
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -129,7 +129,7 @@
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP;X64</DefineConstants>
     <TargetPlatformMinVersion>10.0.$(TargetPlatformMinRevision).0</TargetPlatformMinVersion>
     <Optimize>true</Optimize>
-    <NoWarn>;2008;CS0618</NoWarn>
+    <NoWarn>;2008;CS0618;MSB3277</NoWarn>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
@@ -164,6 +164,9 @@
     <Compile Include="Common\LanguageCodeResource.cs" />
     <Compile Include="Common\SettingsPaneRegister.cs" />
     <Compile Include="Common\ThreadSwitcher.cs" />
+    <Compile Include="Controls\AccountCard.xaml.cs">
+      <DependentUpon>AccountCard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\CreateFeedControl.xaml.cs">
       <DependentUpon>CreateFeedControl.xaml</DependentUpon>
     </Compile>
@@ -310,6 +313,7 @@
     <Compile Include="Helpers\Converters\ColorToHexNameConverter.cs" />
     <Compile Include="Helpers\Converters\EmptyImageModelToObjectConverter.cs" />
     <Compile Include="Helpers\Converters\ImageModelToVisibilityConverter.cs" />
+    <Compile Include="Helpers\Converters\ObjectVisibilityConverter.cs" />
     <Compile Include="Helpers\Converters\TimeSpanToolTipValueConverter.cs" />
     <Compile Include="Helpers\WinSDKHelper.cs" />
     <Compile Include="Helpers\Controls\FlyoutBaseHelper.cs" />
@@ -346,6 +350,7 @@
     <Compile Include="Models\Feeds\LinkFeedModel.cs" />
     <Compile Include="Models\Message\MessageExtraModel.cs" />
     <Compile Include="Models\Message\MessageModel.cs" />
+    <Compile Include="Models\Network\Account.cs" />
     <Compile Include="Models\Network\DeviceInfo.cs" />
     <Compile Include="Models\NotificationsModel.cs" />
     <Compile Include="Models\Pages\NotificationsPageModels.cs" />
@@ -378,6 +383,9 @@
     </Compile>
     <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
       <DependentUpon>SearchingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SettingsPages\AccountsPage.xaml.cs">
+      <DependentUpon>AccountsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SettingsPages\CachesPage.xaml.cs">
       <DependentUpon>CachesPage.xaml</DependentUpon>
@@ -520,6 +528,7 @@
     <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
+    <Compile Include="ViewModels\SettingsPages\AccountsViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\CachesViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SettingsPages\TestViewModel.cs" />
@@ -1165,6 +1174,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\AccountCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\CreateFeedControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -1330,6 +1343,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\FeedPages\SearchingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SettingsPages\AccountsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

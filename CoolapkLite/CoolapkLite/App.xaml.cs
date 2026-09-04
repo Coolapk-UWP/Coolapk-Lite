@@ -226,24 +226,24 @@ namespace CoolapkLite
 #endif
                 if (results != null && results.IsExistNewVersion)
                 {
-                    ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse();
-
-                    string name = _loader?.GetString("AppName") ?? Package.Current.DisplayName;
+                    string name = loader?.GetString("AppName") ?? Package.Current.DisplayName;
                     string ver = Package.Current.Id.Version.ToFormattedString(3);
 
                     new ToastContentBuilder()
                         .SetToastScenario(ToastScenario.Default)
                         .AddArgument("action", "hasUpdate")
                         .AddArgument("url", results?.ReleaseUrl)
-                        .AddText(_loader.GetString("HasUpdateTitle"))
+                        .AddText(loader.GetString("HasUpdateTitle"))
                         .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
-                        .AddText(string.Format(_loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeOffsetToReadable()))
+                        .AddText(string.Format(loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeOffsetToReadable()))
                         .AddButton(new ToastButton()
+                            .SetContent(loader.GetString(
 #if CANARY
-                            .SetContent(_loader.GetString("GoToDevOps"))
+                                "GoToDevOps"
 #else
-                            .SetContent(_loader.GetString("GoToGithub"))
+                                "GoToGithub"
 #endif
+                                ))
                             .SetProtocolActivation(results?.ReleaseUrl?.TryGetUri()))
                         .AddButton(new ToastButton()
                             .SetDismissActivation())
@@ -280,13 +280,15 @@ namespace CoolapkLite
         {
             if (ApiInfoHelper.IsAppCapabilitySupported)
             {
-                AppCapability WIFIData = AppCapability.Create("wifiData");
-                switch (WIFIData.CheckAccess())
+                AppCapability wifiData = AppCapability.Create("wifiData");
+                switch (wifiData.CheckAccess())
                 {
-                    case AppCapabilityAccessStatus.DeniedByUser:
-                    case AppCapabilityAccessStatus.DeniedBySystem:
-                        // Do something
-                        await WIFIData.RequestAccessAsync();
+                    case AppCapabilityAccessStatus.Allowed:
+                    case AppCapabilityAccessStatus.UserPromptRequired
+                        when await wifiData.RequestAccessAsync() == AppCapabilityAccessStatus.Allowed:
+                        break;
+                    default:
+                        _ = UIHelper.ShowMessageAsync(loader.GetString("WiFiDataError"));
                         break;
                 }
             }
@@ -294,7 +296,6 @@ namespace CoolapkLite
 
         private static void Application_UnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
         {
-            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
             if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
             {
                 _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{e.Exception.HResult:X})");
@@ -335,7 +336,6 @@ namespace CoolapkLite
         {
             if (!(e.Exception is TaskCanceledException) && !(e.Exception is OperationCanceledException))
             {
-                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
                 if (e.Exception is HttpRequestException || (e.Exception.HResult <= -2147012721 && e.Exception.HResult >= -2147012895))
                 {
                     _ = UIHelper.ShowMessageAsync($"{loader.GetString("NetworkError")}(0x{e.Exception.HResult:X})");
@@ -483,5 +483,6 @@ namespace CoolapkLite
         }
 
         private bool isLoaded;
+        private static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse();
     }
 }

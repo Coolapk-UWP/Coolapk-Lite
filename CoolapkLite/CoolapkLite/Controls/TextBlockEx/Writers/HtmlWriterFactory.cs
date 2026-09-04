@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Controls.Writers
 {
-    public class HtmlWriterFactory
+    public sealed class HtmlWriterFactory
     {
         public static HtmlWriter Create(HtmlNode fragment)
         {

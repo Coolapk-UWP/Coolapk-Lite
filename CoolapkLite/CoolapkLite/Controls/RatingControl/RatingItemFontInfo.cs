@@ -6,7 +6,7 @@ namespace CoolapkLite.Controls
     /// Represents information about the visual states of font elements that represent
     /// a rating.
     /// </summary>
-    public class RatingItemFontInfo : RatingItemInfo
+    public sealed class RatingItemFontInfo : RatingItemInfo
     {
         /// <summary>
         /// Initializes a new instance of the RatingItemFontInfo class.

@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.Common
 {
-    public class CustomControlResource : ResourceDictionary
+    public sealed class CustomControlResource : ResourceDictionary
     {
         public CustomControlResource() => AddResource();
 

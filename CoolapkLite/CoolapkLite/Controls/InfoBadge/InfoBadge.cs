@@ -8,7 +8,7 @@ namespace CoolapkLite.Controls
     /// <summary>
     /// Represents a control for indicating notifications, alerts, new content, or to attract focus to an area within an app.
     /// </summary>
-    public class InfoBadge : Control
+    public sealed class InfoBadge : Control
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoBadge"/> class.
@@ -107,14 +107,9 @@ namespace CoolapkLite.Controls
                 if (iconSource != null)
                 {
                     TemplateSettings.IconElement = iconSource;
-                    if (iconSource is FontIcon)
-                    {
-                        _ = VisualStateManager.GoToState(thisAsControl, "FontIcon", true);
-                    }
-                    else
-                    {
-                        _ = VisualStateManager.GoToState(thisAsControl, "Icon", true);
-                    }
+                    _ = iconSource is FontIcon
+                        ? VisualStateManager.GoToState(thisAsControl, "FontIcon", true)
+                        : VisualStateManager.GoToState(thisAsControl, "Icon", true);
                 }
                 else
                 {

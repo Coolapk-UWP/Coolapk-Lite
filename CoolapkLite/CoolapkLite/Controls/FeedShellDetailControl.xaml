@@ -403,6 +403,7 @@
                         Grid.Row="1"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
+                        FontSize="12"
                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                         IsTextSelectionEnabled="True"
                         TextTrimming="CharacterEllipsis"
@@ -661,6 +662,7 @@
                             Visibility="{x:Bind FeedDetail.ExtraTitle, Converter={StaticResource StringVisibilityConverter}, Mode=OneWay}" />
                         <TextBlock
                             HorizontalAlignment="Left"
+                            FontSize="12"
                             Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                             Text="{x:Bind FeedDetail.ExtraSubtitle, Mode=OneWay}"
                             TextWrapping="Wrap"

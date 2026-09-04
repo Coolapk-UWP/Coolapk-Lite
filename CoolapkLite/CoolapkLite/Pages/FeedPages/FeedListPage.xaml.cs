@@ -3,6 +3,7 @@ using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
+using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Pages;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.ToolsPages;
@@ -202,7 +203,7 @@ namespace CoolapkLite.Pages.FeedPages
                 case "PinTileButton" when element.Tag is Entity entity:
                     _ = Provider.PinSecondaryTileAsync(entity);
                     break;
-                case "MessageButton" when SettingsHelper.Get<string>(SettingsHelper.Uid) is string uid && !string.IsNullOrEmpty(uid):
+                case "MessageButton" when SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID is string uid && !string.IsNullOrEmpty(uid):
                     _ = this.NavigateAsync(typeof(ChatPage), new ChatViewModel(string.Join("_", uid, element.Tag), $"{Provider.Title}的私信", Dispatcher));
                     break;
                 case "FollowsButton":
@@ -412,7 +413,7 @@ namespace CoolapkLite.Pages.FeedPages
         #endregion 界面模式切换
     }
 
-    public class DetailTemplateSelector : DataTemplateSelector
+    public sealed class DetailTemplateSelector : DataTemplateSelector
     {
         public DataTemplate Others { get; set; }
         public DataTemplate AppDetail { get; set; }

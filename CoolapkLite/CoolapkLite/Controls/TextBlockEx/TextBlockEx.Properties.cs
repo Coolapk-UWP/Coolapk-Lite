@@ -297,6 +297,29 @@ namespace CoolapkLite.Controls
 
         #endregion
 
+        #region EmojiFontSize
+
+        /// <summary>
+        /// Identifies the <see cref="EmojiFontSize"/> dependency property.
+        /// </summary>
+        public static readonly DependencyProperty EmojiFontSizeProperty =
+            DependencyProperty.Register(
+                nameof(EmojiFontSize),
+                typeof(double),
+                typeof(TextBlockEx),
+                new PropertyMetadata(18.0));
+
+        /// <summary>
+        /// Gets or sets a value that indicates how the line box height is determined for each line of text in the <see cref="TextBlockEx"/>.
+        /// </summary>
+        public double EmojiFontSize
+        {
+            get => (double)GetValue(EmojiFontSizeProperty);
+            set => SetValue(EmojiFontSizeProperty, value);
+        }
+
+        #endregion
+
         #region InlineCodeBackground
 
         /// <summary>
