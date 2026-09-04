@@ -126,6 +126,9 @@
   <data name="CannotGetToken" xml:space="preserve">
     <value>没有获取到token，请尝试重新登录</value>
   </data>
+  <data name="Logging" xml:space="preserve">
+    <value>正在登录</value>
+  </data>
   <data name="LoginFailed" xml:space="preserve">
     <value>登录失败</value>
   </data>
