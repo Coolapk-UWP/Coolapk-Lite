@@ -235,15 +235,13 @@ namespace CoolapkLite
                         .AddArgument("url", results?.ReleaseUrl)
                         .AddText(loader.GetString("HasUpdateTitle"))
                         .AddText($"{name} v{ver} -> {results?.Version.ToString(3)}")
-                        .AddText(string.Format(loader.GetString("HasUpdateSubtitle"), results?.PublishedAt.ConvertDateTimeOffsetToReadable()))
+                        .AddText(string.Format(loader.GetString("HasUpdateSubTitle"), results?.PublishedAt.ConvertDateTimeOffsetToReadable()))
                         .AddButton(new ToastButton()
-                            .SetContent(loader.GetString(
 #if CANARY
-                                "GoToDevOps"
+                            .SetContent(loader.GetString("GoToDevOps"))
 #else
-                                "GoToGithub"
+                            .SetContent(loader.GetString("GoToGithub"))
 #endif
-                                ))
                             .SetProtocolActivation(results?.ReleaseUrl?.TryGetUri()))
                         .AddButton(new ToastButton()
                             .SetDismissActivation())
