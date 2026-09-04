@@ -182,6 +182,9 @@
   <data name="UserNameError" xml:space="preserve">
     <value>请输入用户名</value>
   </data>
+  <data name="WiFiDataError" xml:space="preserve">
+    <value>未授予 WiFi 数据权限，请前往 设置 &gt; 网络和 Internet &gt; WLAN &gt; 选择能够使用你的 WLAN 数据的应用 授予权限</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
   </data>
