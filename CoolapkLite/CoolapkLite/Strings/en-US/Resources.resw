@@ -145,7 +145,7 @@
     <value>Go to Github</value>
   </data>
   <data name="HasUpdate" xml:space="preserve">
-    <value>程序更新了 v({0}.{1}.{2} -&gt; {3})</value>
+    <value>Update to v({0}.{1}.{2} -&gt; {3})</value>
     <comment>{0}.{1}.{2} 和 {3} 表示版本号</comment>
   </data>
   <data name="HasUpdateSubTitle" xml:space="preserve">
@@ -171,7 +171,7 @@
     <value>No</value>
   </data>
   <data name="NoUpdate" xml:space="preserve">
-    <value>当前无可用更新</value>
+    <value>There are currently no updates available</value>
   </data>
   <data name="PinnedTileFailed" xml:space="preserve">
     <value>Failed to pinned tile</value>
