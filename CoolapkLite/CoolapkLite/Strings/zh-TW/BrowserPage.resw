@@ -127,7 +127,7 @@
     <value>沒有獲取到token，請嘗試重新登錄</value>
   </data>
   <data name="Logging" xml:space="preserve">
-    <value>正在登录……</value>
+    <value>正在登入……</value>
   </data>
   <data name="LoginFailed" xml:space="preserve">
     <value>登入失敗</value>
