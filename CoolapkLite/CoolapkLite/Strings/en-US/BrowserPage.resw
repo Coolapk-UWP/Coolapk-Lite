@@ -127,7 +127,7 @@
     <value>Unable to get token. Try to Sign in again.</value>
   </data>
   <data name="Logging" xml:space="preserve">
-    <value>正在登录……</value>
+    <value>Logging in...</value>
   </data>
   <data name="LoginFailed" xml:space="preserve">
     <value>Login failed</value>
