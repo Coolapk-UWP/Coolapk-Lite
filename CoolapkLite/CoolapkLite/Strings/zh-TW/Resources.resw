@@ -145,7 +145,7 @@
     <value>前往 Github</value>
   </data>
   <data name="HasUpdate" xml:space="preserve">
-    <value>程式更新了 v({0}.{1}.{2} -&gt; {3})。</value>
+    <value>程序更新了 v({0}.{1}.{2} -&gt; {3})</value>
     <comment>{0}.{1}.{2} 和 {3} 表示版本号</comment>
   </data>
   <data name="HasUpdateSubTitle" xml:space="preserve">
@@ -171,7 +171,7 @@
     <value>否</value>
   </data>
   <data name="NoUpdate" xml:space="preserve">
-    <value>當前無可用更新。</value>
+    <value>当前无可用更新</value>
   </data>
   <data name="PinnedTileFailed" xml:space="preserve">
     <value>固定磁貼失敗</value>
@@ -183,7 +183,7 @@
     <value>請輸入用戶名</value>
   </data>
   <data name="WiFiDataError" xml:space="preserve">
-    <value>未授予 WiFi 数据权限，请前往 设置 &gt; 网络和 Internet &gt; WLAN &gt; 选择能够使用你的 WLAN 数据的应用 授予权限</value>
+    <value>未授予 WiFi 資料權限，請前往 設定 &gt; 網路和 Internet &gt; WLAN &gt; 選擇能夠使用你的 WLAN 資料的應用 授予權限</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>是</value>
