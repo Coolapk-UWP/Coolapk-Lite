@@ -2,7 +2,7 @@
 
 namespace CoolapkLite.Models.Upload
 {
-    public class UploadFileInfo
+    public sealed class UploadFileInfo
     {
         [JsonProperty("name")]
         public string Name { get; set; }
