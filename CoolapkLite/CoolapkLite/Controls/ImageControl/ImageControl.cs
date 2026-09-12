@@ -3,10 +3,8 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using Microsoft.Toolkit.Uwp;
 using Microsoft.Toolkit.Uwp.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -19,6 +17,7 @@ namespace CoolapkLite.Controls
     public partial class ImageControl : Control
     {
         private const string ImageControlName = "PART_Image";
+        private static readonly AsyncLock UpdateStateLocker = new AsyncLock(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
 
         private bool _isLoaded = false;
         private bool _isImageLoaded = false;
@@ -259,7 +258,7 @@ namespace CoolapkLite.Controls
         private async Task UpdateStateAsync(bool isLoaded, bool useTransitions = true)
         {
             if (IsUseNoPicFallback) { return; }
-            using (UpdateStateLocker _ = await UpdateStateLocker.WaitAsync().ConfigureAwait(false))
+            using (await UpdateStateLocker.LockAsync().ConfigureAwait(false))
             {
                 if (_isImageLoaded != isLoaded)
                 {
@@ -270,40 +269,5 @@ namespace CoolapkLite.Controls
         }
 
         private bool GetIsLoaded() => ApiInfoHelper.IsFrameworkElementIsLoadedSupported ? IsLoaded : _isLoaded;
-
-        #region Locker
-
-        private sealed class UpdateStateLocker : IDisposable
-        {
-            public static SemaphoreSlim SlimLocker { get; set; } = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
-
-            public static UpdateStateLocker Wait()
-            {
-                SlimLocker.Wait();
-                return new UpdateStateLocker();
-            }
-
-            public static async Task<UpdateStateLocker> WaitAsync()
-            {
-                await SlimLocker.WaitAsync().ConfigureAwait(false);
-                return new UpdateStateLocker();
-            }
-
-            private void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
-                    SlimLocker.Release();
-                }
-            }
-
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }

@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Helpers.Converters;
-using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using System;
 using System.Net;
@@ -15,24 +14,24 @@ namespace CoolapkLite.Controls
 {
     public sealed partial class AccountCard : UserControl
     {
-        #region Account
+        #region UID
 
-        public static readonly DependencyProperty AccountProperty =
+        public static readonly DependencyProperty UIDProperty =
             DependencyProperty.Register(
-                nameof(Account),
-                typeof(Account),
+                nameof(UID),
+                typeof(string),
                 typeof(AccountCard),
-                new PropertyMetadata(new Account(), OnAccountChanged));
+                new PropertyMetadata(null, OnUIDChanged));
 
-        public Account Account
+        public string UID
         {
-            get => (Account)GetValue(AccountProperty);
-            set => SetValue(AccountProperty, value);
+            get => (string)GetValue(UIDProperty);
+            set => SetValue(UIDProperty, value);
         }
 
-        private static void OnAccountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnUIDChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            _ = ((AccountCard)d).UpdateUserInfoAsync((Account)e.NewValue);
+            _ = ((AccountCard)d).UpdateUserInfoAsync((string)e.NewValue);
         }
 
         #endregion
@@ -59,13 +58,11 @@ namespace CoolapkLite.Controls
             InitializeComponent();
         }
 
-        public async Task UpdateUserInfoAsync(Account account)
+        public async Task UpdateUserInfoAsync(string uid)
         {
-            if (account != null)
+            if (!string.IsNullOrEmpty(uid))
             {
-                string uid = account.UID;
-                string name = string.IsNullOrEmpty(uid) ? account.UserName : uid;
-                if (await NetworkHelper.GetUserInfoByNameAsync(name) is UserInfoModel results)
+                if (await NetworkHelper.GetUserInfoByNameAsync(uid) is UserInfoModel results)
                 {
                     UserInfo = results;
                     return;

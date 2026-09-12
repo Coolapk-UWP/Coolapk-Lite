@@ -259,6 +259,32 @@ namespace CoolapkLite.Pages
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
+            {
+                case "Logout":
+                    SettingsHelper.Logout();
+                    break;
+                case "CreateFeed":
+                    new CreateFeedControl
+                    {
+                        FeedType = CreateFeedType.Feed,
+                        PopupTransitions = new TransitionCollection
+                        {
+                            new PopupThemeTransition()
+                        }
+                    }.Show(this);
+                    break;
+                case "SwitchUser":
+                    _ = HamburgerMenuFrame.Navigate(typeof(AccountsPage));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #region 搜索框
 
         private int count = -1;
@@ -468,6 +494,13 @@ namespace CoolapkLite.Pages
 
     public sealed class PersonMenuItem : MenuItem
     {
+        private bool isLogin;
+        public bool IsLogin
+        {
+            get => isLogin;
+            private set => SetProperty(ref isLogin, value);
+        }
+
         private ImageModel image;
         public ImageModel Image
         {
@@ -505,6 +538,7 @@ namespace CoolapkLite.Pages
 
         private async Task SetUserAvatarAsync(bool isLogin)
         {
+            IsLogin = isLogin;
             if (isLogin)
             {
                 string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;

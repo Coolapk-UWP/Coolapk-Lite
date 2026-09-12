@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CoolapkLite.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:local="using:CoolapkLite.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:templates="using:CoolapkLite.Controls.DataTemplates"
@@ -33,7 +34,38 @@
                 </Grid>
             </DataTemplate>
             <DataTemplate x:Key="PersonPictureTemplate" x:DataType="local:PersonMenuItem">
-                <Grid>
+                <Grid Background="{ThemeResource SystemControlTransparentBrush}">
+                    <helpers:UIElementHelper.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/CreateFeed"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="CreateFeed"
+                                Visibility="{x:Bind IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE932;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator Visibility="{x:Bind IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/SwitchUser"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="SwitchUser">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/Logout"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="Logout"
+                                Visibility="{x:Bind IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </helpers:UIElementHelper.ContextFlyout>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="48" />
                         <ColumnDefinition Width="*" />

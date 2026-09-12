@@ -1,30 +1,47 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Users;
+using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Windows.Security.Credentials;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public sealed class AccountsViewModel : IViewModel
+    public sealed class AccountsViewModel : IList<Credential>, IList, INotifyCollectionChanged, IViewModel
     {
+        private const string IndexerName = "Item[]";
+        private static readonly AsyncLock locker = new AsyncLock();
+        private static readonly PasswordVault vault = new PasswordVault();
+        private static readonly List<Credential> _accounts = new List<Credential>();
         public static Dictionary<CoreDispatcher, AccountsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, AccountsViewModel>();
 
         public string Title => "切换账号";
-
         public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
-        private ObservableCollection<Account> _accounts;
-        public ObservableCollection<Account> Accounts
+        private static int selectedIndex = -1;
+        public int SelectedIndex
         {
-            get => _accounts;
-            set => SetProperty(ref _accounts, value);
+            get => selectedIndex;
+            set
+            {
+                if (selectedIndex != value)
+                {
+                    _ = SetAccountAsync(value);
+                    SetProperty(ref selectedIndex, value);
+                }
+            }
         }
+
+        #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -32,8 +49,11 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             if (name != null)
             {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+                foreach (KeyValuePair<CoreDispatcher, AccountsViewModel> cache in Caches)
+                {
+                    await cache.Key.ResumeForegroundAsync();
+                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
+                }
             }
         }
 
@@ -46,34 +66,326 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
+        #endregion
+
+        #region INotifyCollectionChanged Members
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        private async void RaiseCollectionChangedEvent(NotifyCollectionChangedEventArgs e)
+        {
+            foreach (KeyValuePair<CoreDispatcher, AccountsViewModel> cache in Caches)
+            {
+                await cache.Key.ResumeForegroundAsync();
+                cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(IndexerName));
+                cache.Value.CollectionChanged?.Invoke(cache.Value, e);
+            }
+        }
+
+        #endregion
+
         public AccountsViewModel(CoreDispatcher dispatcher)
         {
             Dispatcher = dispatcher;
             Caches[dispatcher] = this;
         }
 
-        public async Task Refresh(bool reset)
+        #region IList<Credential> Members
+
+        public int Count => _accounts.Count;
+
+        bool ICollection<Credential>.IsReadOnly => ((ICollection<Credential>)_accounts).IsReadOnly;
+
+        public Credential this[int index]
         {
-            if (_accounts != null)
+            get => _accounts[index];
+            set
             {
-                await SettingsHelper.SetAsync(SettingsHelper.Accounts, _accounts.ToArray()).ConfigureAwait(false);
+                Credential old = _accounts[index];
+                if (old.UID == value.UID)
+                {
+                    if (old.Token == value.Token) { return; }
+                    else { Replace(index, old, value); }
+                }
+                else
+                {
+                    int oldIndex = _accounts.FindIndex(x => x.UID == value.UID);
+                    if (oldIndex >= 0)
+                    {
+                        old = _accounts[oldIndex];
+                        if (value.Token != old.Token)
+                        {
+                            Replace(oldIndex, old, value);
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        Replace(index, old, value);
+                        if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
+                            && account.UID == value.UID)
+                        {
+                            SetSelectedIndex(index);
+                        }
+                    }
+                }
             }
-            if (reset)
-            {
-                await ResetAsync().ConfigureAwait(false);
-            }
-            RefreshOthers();
         }
 
-        private async Task ResetAsync() => Accounts = await SettingsHelper.GetAsync<Account[]>(SettingsHelper.Accounts).ContinueWith(x => new ObservableCollection<Account>(x.Result)).ConfigureAwait(false);
-
-        private void RefreshOthers()
+        private void Replace(int index, Credential old, Credential item)
         {
-            foreach (KeyValuePair<CoreDispatcher, AccountsViewModel> cache in Caches)
+            _accounts[index] = item;
+            vault.Remove(old);
+            vault.Add(item);
+            RaiseCollectionChangedEvent(
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Replace,
+                    item,
+                    old,
+                    index));
+        }
+
+        public void Add(Credential item)
+        {
+            int index = _accounts.FindIndex(x => x.UID == item.UID);
+            if (index >= 0)
             {
-                if (cache.Key != Dispatcher)
+                Credential old = _accounts[index];
+                if (item.Token != old.Token)
                 {
-                    _ = cache.Value.ResetAsync();
+                    Replace(index, old, item);
+                }
+            }
+            else
+            {
+                index = _accounts.Count;
+                _accounts.Add(item);
+                vault.Add(item);
+                RaisePropertyChangedEvent(nameof(Count));
+                RaiseCollectionChangedEvent(
+                    new NotifyCollectionChangedEventArgs(
+                        NotifyCollectionChangedAction.Add,
+                        item,
+                        index));
+                if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
+                    && account.UID == item.UID)
+                {
+                    SetSelectedIndex(index);
+                }
+            }
+        }
+
+        private void AddRange(IEnumerable<Credential> collection)
+        {
+            int index = _accounts.Count;
+            _accounts.AddRange(collection);
+            RaisePropertyChangedEvent(nameof(Count));
+            RaiseCollectionChangedEvent(
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Add,
+                    collection is IList list ? list : _accounts.GetRange(index, _accounts.Count - index),
+                    index));
+        }
+
+        public void Insert(int index, Credential item)
+        {
+            int oldIndex = _accounts.FindIndex(x => x.UID == item.UID);
+            if (oldIndex >= 0)
+            {
+                Credential old = _accounts[oldIndex];
+                if (item.Token != old.Token)
+                {
+                    Replace(oldIndex, old, item);
+                }
+            }
+            else
+            {
+                _accounts.Insert(index, item);
+                vault.Add(item);
+                RaisePropertyChangedEvent(nameof(Count));
+                RaiseCollectionChangedEvent(
+                    new NotifyCollectionChangedEventArgs(
+                        NotifyCollectionChangedAction.Add,
+                        item,
+                        index));
+                if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
+                    && account.UID == item.UID)
+                {
+                    SetSelectedIndex(index);
+                }
+            }
+        }
+
+        public void CopyTo(Credential[] array, int arrayIndex) => _accounts.CopyTo(array, arrayIndex);
+
+        private void Remove(int index, Credential item)
+        {
+            _accounts.RemoveAt(index);
+            vault.Remove(item);
+            RaisePropertyChangedEvent(nameof(Count));
+            RaiseCollectionChangedEvent(
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Remove,
+                    item,
+                    index));
+        }
+
+        public bool Remove(Credential item)
+        {
+            int index = _accounts.IndexOf(item);
+            if (index >= 0)
+            {
+                Remove(index, _accounts[index]);
+                return true;
+            }
+            return false;
+        }
+
+        public void RemoveAt(int index)
+        {
+            Credential old = _accounts[index];
+            Remove(index, old);
+        }
+
+        private void Clear()
+        {
+            _accounts.Clear();
+            RaisePropertyChangedEvent(nameof(Count));
+            RaiseCollectionChangedEvent(
+                new NotifyCollectionChangedEventArgs(
+                    NotifyCollectionChangedAction.Reset));
+        }
+
+        void ICollection<Credential>.Clear() => Clear();
+
+        public bool Contains(Credential item) => _accounts.Contains(item);
+
+        public int IndexOf(Credential item) => _accounts.IndexOf(item);
+
+        public IEnumerator<Credential> GetEnumerator() => _accounts.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_accounts).GetEnumerator();
+
+        #endregion
+
+        #region IList Members
+
+        bool IList.IsFixedSize => ((IList)_accounts).IsFixedSize;
+
+        bool IList.IsReadOnly => ((IList)_accounts).IsReadOnly;
+
+        bool ICollection.IsSynchronized => ((ICollection)_accounts).IsSynchronized;
+
+        object ICollection.SyncRoot => ((ICollection)_accounts).SyncRoot;
+
+        object IList.this[int index]
+        {
+            get => ((IList)_accounts)[index];
+            set
+            {
+                if (value is Credential item)
+                {
+                    this[index] = item;
+                }
+                else
+                {
+                    ThrowWrongValueTypeArgumentException(value, typeof(Credential));
+                }
+            }
+        }
+
+        private static void ThrowWrongValueTypeArgumentException<T>(T value, Type targetType) =>
+            throw new ArgumentException($"The value \"{value}\" is not of type \"{targetType}\" and cannot be used in this collection.", nameof(value));
+
+        int IList.Add(object value)
+        {
+            if (value is Credential item)
+            {
+                Add(item);
+            }
+            else
+            {
+                ThrowWrongValueTypeArgumentException(value, typeof(Credential));
+            }
+            return Count - 1;
+        }
+
+        void IList.Insert(int index, object value)
+        {
+            if (value is Credential item)
+            {
+                Insert(index, item);
+            }
+            else
+            {
+                ThrowWrongValueTypeArgumentException(value, typeof(Credential));
+            }
+        }
+
+        void ICollection.CopyTo(Array array, int index) => ((ICollection)_accounts).CopyTo(array, index);
+
+        void IList.Remove(object value)
+        {
+            if (value is Credential item)
+            {
+                Remove(item);
+            }
+        }
+
+        void IList.Clear() => Clear();
+
+        bool IList.Contains(object value) => value is Credential item && Contains(item);
+
+        int IList.IndexOf(object value) => value is Credential item ? IndexOf(item) : -1;
+
+        #endregion
+
+        public int FindIndex(Predicate<Credential> match) => _accounts.FindIndex(match);
+
+        public Task Refresh(bool reset)
+        {
+            try
+            {
+                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(Credential.ResourceName);
+                Clear(); AddRange(credentials.Select<PasswordCredential, Credential>(x => vault.Retrieve(Credential.ResourceName, x.UserName)));
+                SetSelectedIndex(Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account ? FindIndex(x => x.UID == account.UID) : -1);
+            }
+            catch
+            {
+                _ = Dispatcher.ShowMessageAsync("当前没有已保存的账号");
+            }
+            return Task.CompletedTask;
+        }
+
+        private void SetSelectedIndex(int index)
+        {
+            selectedIndex = index;
+            RaisePropertyChangedEvent(nameof(SelectedIndex));
+        }
+
+        private async Task SetAccountAsync(int index)
+        {
+            if (index < 0 || index >= Count) { return; }
+            Credential credential = this[index];
+            if (credential.UID != SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID)
+            {
+                _ = Dispatcher.ShowProgressBarAsync();
+                try
+                {
+                    Account account = await credential.GetAccountAsync().ConfigureAwait(false);
+                    if (!account.IsEmpty)
+                    {
+                        bool result = await SettingsHelper.LoginAsync(account).ConfigureAwait(false);
+                        _ = Dispatcher.ShowMessageAsync(result ? "登录成功" : "登录失败");
+                    }
+                    else
+                    {
+                        _ = Dispatcher.ShowMessageAsync("获取账户信息失败");
+                    }
+                }
+                finally
+                {
+                    _ = Dispatcher.HideProgressBarAsync();
                 }
             }
         }
@@ -81,5 +393,45 @@ namespace CoolapkLite.ViewModels.SettingsPages
         bool IViewModel.IsEqual(IViewModel other) => other is AccountsViewModel model && IsEqual(model);
 
         public bool IsEqual(AccountsViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
+    }
+
+    public sealed class Credential : IEquatable<Credential>
+    {
+        public const string ResourceName = "CoolapkLite";
+
+        public string UID { get; }
+        public string Token { get; }
+        public bool IsEmpty => string.IsNullOrEmpty(UID) || string.IsNullOrEmpty(Token);
+
+        public Credential(string uid, string password)
+        {
+            UID = uid;
+            Token = password;
+        }
+
+        public async Task<Account> GetAccountAsync()
+        {
+            if (!string.IsNullOrEmpty(UID))
+            {
+                if (await NetworkHelper.GetUserInfoByNameAsync(UID) is UserInfoModel results)
+                {
+                    return new Account(results.UID.ToString(), WebUtility.UrlEncode(results.UserName), Token);
+                }
+            }
+            return default;
+        }
+
+        public override bool Equals(object obj) => Equals(obj as Credential);
+
+        public override int GetHashCode() => (UID, Token).GetHashCode();
+
+        public bool Equals(Credential other) => other is Credential && UID == other.UID && Token == other.Token;
+
+        public static bool operator ==(Credential left, Credential right) => EqualityComparer<Credential>.Default.Equals(left, right);
+
+        public static bool operator !=(Credential left, Credential right) => !(left == right);
+
+        public static implicit operator Credential(PasswordCredential credential) => new Credential(credential.UserName, credential.Password);
+        public static implicit operator PasswordCredential(Credential credential) => new PasswordCredential(ResourceName, credential.UID, credential.Token);
     }
 }

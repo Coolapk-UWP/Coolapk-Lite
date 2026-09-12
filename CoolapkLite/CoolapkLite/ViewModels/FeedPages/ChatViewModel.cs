@@ -93,16 +93,16 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (item != null && !(item is NullEntity))
             {
-                await AddAsync(item).ConfigureAwait(false);
+                await InsertItemAsync(0, item).ConfigureAwait(false);
                 return true;
             }
             return false;
         }
 
-        public override async Task AddAsync(Entity item)
+        public async Task InsertItemAsync(int index, Entity item)
         {
             await Dispatcher.ResumeForegroundAsync();
-            InsertItem(0, item);
+            InsertItem(index, item);
         }
 
         private IEnumerable<Entity> GetEntities(JObject json)

@@ -50,12 +50,7 @@ namespace CoolapkLite.ViewModels.DataSource
 
         public CoreDispatcher Dispatcher { get; protected set; }
 
-        private bool any = false;
-        public bool Any
-        {
-            get => any;
-            set => SetProperty(ref any, value);
-        }
+        public bool Any => Count > 0;
 
         private bool isLoading = false;
         public bool IsLoading
@@ -123,8 +118,15 @@ namespace CoolapkLite.ViewModels.DataSource
 
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Remove:
+                case NotifyCollectionChangedAction.Reset:
+                    RaisePropertyChangedEvent(nameof(Any));
+                    break;
+            }
             base.OnCollectionChanged(e);
-            Any = Count > 0;
         }
 
         public delegate void EventHandler();
@@ -149,29 +151,29 @@ namespace CoolapkLite.ViewModels.DataSource
             return false;
         }
 
-        public virtual async Task AddAsync(T item)
-        {
-            await Dispatcher.ResumeForegroundAsync();
-            Add(item);
-        }
-
-        public virtual async Task RemoveAsync(T item)
-        {
-            await Dispatcher.ResumeForegroundAsync();
-            Remove(item);
-        }
-
-        public virtual async Task ClearAsync()
-        {
-            await Dispatcher.ResumeForegroundAsync();
-            Clear();
-        }
-
         protected abstract Task<uint> LoadMoreItemsOverrideAsync(CancellationToken cancellationToken, uint count);
 
         protected abstract bool HasMoreItemsOverride();
 
         #endregion
+
+        public async Task AddAsync(T item)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            Add(item);
+        }
+
+        public async Task RemoveAsync(T item)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            Remove(item);
+        }
+
+        public async Task ClearAsync()
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            Clear();
+        }
 
         protected bool _busy = false;
     }

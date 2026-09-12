@@ -265,6 +265,19 @@ namespace CoolapkLite.Pages
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
 
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
+            {
+                case "SwitchUser":
+                    _ = PivotContentFrame.Navigate(typeof(AccountsPage));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         #region 搜索框
 
         private int count = -1;

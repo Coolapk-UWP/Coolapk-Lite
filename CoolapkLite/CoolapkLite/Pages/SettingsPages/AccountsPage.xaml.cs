@@ -1,7 +1,6 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
 using CoolapkLite.ViewModels.SettingsPages;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,7 +26,7 @@ namespace CoolapkLite.Pages.SettingsPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider.Accounts == null)
+            if (Provider.Count <= 0)
             {
                 _ = Refresh(true);
             }
@@ -39,38 +38,15 @@ namespace CoolapkLite.Pages.SettingsPages
             switch (element.Name)
             {
                 case nameof(AddAccount) when SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account:
-                    Provider.Accounts.Add(account);
-                    _ = Refresh();
+                    Provider.Add(new Credential(account.UID, account.Token));
+                    break;
+                case "RemoveAccount" when element.Tag is Credential credential:
+                    Provider.Remove(credential);
                     break;
             }
         }
 
-        private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (sender is ListView listView && listView.SelectedValue is Account account
-                && account != SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount))
-            {
-                _ = this.ShowProgressBarAsync();
-                try
-                {
-                    bool result = await SettingsHelper.LoginAsync(account);
-                    _ = this.ShowMessageAsync(result ? "登录成功" : "登录失败");
-                }
-                finally
-                {
-                    _ = this.HideProgressBarAsync();
-                }
-            }
-        }
-
-        public async Task Refresh(bool reset = false)
-        {
-            await Provider.Refresh(reset);
-            if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account)
-            {
-                ListView.SelectedValue = Provider.Accounts.FirstOrDefault(x => x == account);
-            }
-        }
+        public Task Refresh(bool reset = false) => Provider.Refresh(reset);
 
         private void FrameworkElement_RefreshEvent() => _ = Refresh(true);
     }

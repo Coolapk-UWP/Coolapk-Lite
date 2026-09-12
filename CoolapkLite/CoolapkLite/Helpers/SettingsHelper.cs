@@ -19,7 +19,6 @@ namespace CoolapkLite.Helpers
     {
         public const string TileUrl = nameof(TileUrl);
         public const string CustomUA = nameof(CustomUA);
-        public const string Accounts = nameof(Accounts);
         public const string Bookmark = nameof(Bookmark);
         public const string IsUseAPI2 = nameof(IsUseAPI2);
         public const string CustomAPI = nameof(CustomAPI);
@@ -194,10 +193,6 @@ namespace CoolapkLite.Helpers
         {
             StorageFolder folder = LocalObject.Folder;
             StorageFolder settings = await folder.CreateFolderAsync("Settings", CreationCollisionOption.OpenIfExists);
-            if (await settings.TryGetItemAsync(Accounts) == null)
-            {
-                await SetAsync(Accounts, Array.Empty<Account>()).ConfigureAwait(false);
-            }
             if (await settings.TryGetItemAsync(Bookmark) == null)
             {
                 await SetAsync(Bookmark, Models.Bookmark.GetDefaultBookmarks()).ConfigureAwait(false);
@@ -397,10 +392,32 @@ namespace CoolapkLite.Helpers
     public sealed class NewtonsoftJsonObjectSerializer : IObjectSerializer
     {
         // Specify your serialization settings
-        private readonly JsonSerializerSettings settings = new JsonSerializerSettings() { DefaultValueHandling = DefaultValueHandling.Ignore };
+        private readonly JsonSerializerSettings settings = new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore };
 
-        public string Serialize<T>(T value) => JsonConvert.SerializeObject(value, typeof(T), Formatting.Indented, settings);
+        public string Serialize<T>(T value)
+        {
+            try
+            {
+                return JsonConvert.SerializeObject(value, typeof(T), Formatting.Indented, settings);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(NewtonsoftJsonObjectSerializer)).Error(ex.ExceptionToMessage(), ex);
+                return string.Empty;
+            }
+        }
 
-        public T Deserialize<T>(string value) => JsonConvert.DeserializeObject<T>(value, settings);
+        public T Deserialize<T>(string value)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject<T>(value, settings);
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(NewtonsoftJsonObjectSerializer)).Error(ex.ExceptionToMessage(), ex);
+                return default;
+            }
+        }
     }
 }

@@ -53,11 +53,9 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Center"
             MaxLines="1"
+            Text="{x:Bind UID, Mode=OneWay}"
             TextTrimming="CharacterEllipsis"
-            Visibility="{x:Bind UserInfo, Converter={StaticResource ObjectVisibilityConverter}, ConverterParameter='true', Mode=OneWay}">
-            <Run Text="{x:Bind Account.UserName, Converter={StaticResource UrlDecodeConverter}, Mode=OneWay}" />
-            <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind Account.UID, Mode=OneWay}" />
-        </TextBlock>
+            Visibility="{x:Bind UserInfo, Converter={StaticResource ObjectVisibilityConverter}, ConverterParameter='true', Mode=OneWay}" />
         <TextBlock
             Grid.Row="1"
             Grid.Column="1"

@@ -149,7 +149,7 @@ namespace CoolapkLite.Pages.FeedPages
                             if (isSucceed)
                             {
                                 MessageModel messageModel = new MessageModel(results.First as JObject);
-                                Provider.Add(messageModel);
+                                await Provider.AddAsync(messageModel);
                                 InputBox.Document.SetText(TextSetOptions.None, string.Empty);
                             }
                             else if (results != null)
@@ -215,7 +215,7 @@ namespace CoolapkLite.Pages.FeedPages
                             if (isSucceed)
                             {
                                 MessageModel messageModel = new MessageModel(results.First as JObject);
-                                Provider.Add(messageModel);
+                                await Provider.AddAsync(messageModel);
                             }
                         }
                     }

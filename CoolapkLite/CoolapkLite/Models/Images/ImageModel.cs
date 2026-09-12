@@ -26,6 +26,7 @@ namespace CoolapkLite.Models.Images
 {
     public sealed class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
     {
+        private static readonly AsyncLock ImageModelLocker = new AsyncLock(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
         public CoreDispatcher Dispatcher { get; private set; }
@@ -242,11 +243,7 @@ namespace CoolapkLite.Models.Images
         public event TypedEventHandler<ImageModel, object> LoadStarted;
         public event TypedEventHandler<ImageModel, object> LoadCompleted;
 
-        public static void SetSemaphoreSlim(int initialCount)
-        {
-            ImageModelLocker.SlimLocker.Dispose();
-            ImageModelLocker.SlimLocker = new SemaphoreSlim(initialCount);
-        }
+        public static void SetSemaphoreSlim(int initialCount) => ImageModelLocker.SetSemaphoreSlim(initialCount);
 
         private async void OnUISettingChanged(ApplicationTheme mode)
         {
@@ -278,59 +275,66 @@ namespace CoolapkLite.Models.Images
         {
             if (Dispatcher == null) { return; }
             IsLoading = true;
-            await ThreadSwitcher.ResumeBackgroundAsync();
-            using (ImageModelLocker _ = await ImageModelLocker.WaitAsync(() => IsLoading = false).ConfigureAwait(false))
+            try
             {
-                if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+                await ThreadSwitcher.ResumeBackgroundAsync();
+                using (await ImageModelLocker.LockAsync().ConfigureAwait(false))
                 {
-                    if (!isNoPic)
+                    if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                     {
-                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
-                        IsNoPic = true;
-                    }
-                    return;
-                }
-                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher).ConfigureAwait(false);
-                if (bitmapImage != null)
-                {
-                    if (bitmapImage.Dispatcher != Dispatcher)
-                    {
-                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri).ConfigureAwait(false);
-                        using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                        if (!isNoPic)
                         {
-                            bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
-                            {
-                                BitmapImage image = new BitmapImage();
-                                await image.SetSourceAsync(stream);
-                                return image;
-                            });
+                            Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                            IsNoPic = true;
                         }
+                        return;
                     }
-                    Pic = bitmapImage;
-                    IsNoPic = false;
-                    await bitmapImage.Dispatcher.ResumeForegroundAsync();
-                    double PixelWidth = bitmapImage.PixelWidth;
-                    double PixelHeight = bitmapImage.PixelHeight;
-                    Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
-                        ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
-                        : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
-                    IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
-                                && PixelHeight > PixelWidth * 1.5;
-                    IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
-                                && PixelWidth > PixelHeight * 1.5;
-                    IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
-                    IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
-                }
-                else
-                {
-                    if (!isNoPic)
+                    BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher).ConfigureAwait(false);
+                    if (bitmapImage != null)
                     {
-                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
-                        IsNoPic = true;
+                        if (bitmapImage.Dispatcher != Dispatcher)
+                        {
+                            StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri).ConfigureAwait(false);
+                            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                            {
+                                bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
+                                {
+                                    BitmapImage image = new BitmapImage();
+                                    await image.SetSourceAsync(stream);
+                                    return image;
+                                });
+                            }
+                        }
+                        Pic = bitmapImage;
+                        IsNoPic = false;
+                        await bitmapImage.Dispatcher.ResumeForegroundAsync();
+                        double PixelWidth = bitmapImage.PixelWidth;
+                        double PixelHeight = bitmapImage.PixelHeight;
+                        Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
+                            ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
+                            : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
+                        IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
+                                    && PixelHeight > PixelWidth * 1.5;
+                        IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
+                                    && PixelWidth > PixelHeight * 1.5;
+                        IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                        IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
                     }
-                    IsLongPic = IsWidePic = false;
-                    IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    else
+                    {
+                        if (!isNoPic)
+                        {
+                            Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                            IsNoPic = true;
+                        }
+                        IsLongPic = IsWidePic = false;
+                        IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                    }
                 }
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -498,45 +502,5 @@ namespace CoolapkLite.Models.Images
         public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
 
         public static bool operator !=(ImageModel left, ImageModel right) => !(left == right);
-
-        #region Locker
-
-        private sealed class ImageModelLocker : IDisposable
-        {
-            private readonly Action dispose;
-
-            public static SemaphoreSlim SlimLocker { get; set; } = new SemaphoreSlim(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
-
-            public ImageModelLocker(Action dispose) => this.dispose = dispose;
-
-            public static ImageModelLocker Wait(Action dispose)
-            {
-                SlimLocker.Wait();
-                return new ImageModelLocker(dispose);
-            }
-
-            public static async Task<ImageModelLocker> WaitAsync(Action dispose)
-            {
-                await SlimLocker.WaitAsync().ConfigureAwait(false);
-                return new ImageModelLocker(dispose);
-            }
-
-            private void Dispose(bool disposing)
-            {
-                if (disposing)
-                {
-                    SlimLocker.Release();
-                    dispose();
-                }
-            }
-
-            public void Dispose()
-            {
-                Dispose(disposing: true);
-                GC.SuppressFinalize(this);
-            }
-        }
-
-        #endregion
     }
 }

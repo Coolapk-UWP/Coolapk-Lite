@@ -20,23 +20,21 @@
             x:Uid="/MainPage/ListView"
             helpers:ListViewHelper.Padding="{StaticResource ListViewPadding}"
             ui:ListViewExtensions.ItemContainerStretchDirection="Horizontal"
-            AllowDrop="True"
-            CanReorderItems="True"
             ItemContainerStyle="{StaticResource SelectableCardItemStyle}"
             ItemsPanel="{Binding Template, Source={StaticResource ItemsPanelSelector}}"
-            ItemsSource="{x:Bind Provider.Accounts, Mode=OneWay}"
+            ItemsSource="{x:Bind Provider}"
             RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}"
-            SelectionChanged="ListView_SelectionChanged"
+            SelectedIndex="{x:Bind Provider.SelectedIndex, FallbackValue='-1', Mode=TwoWay}"
             SelectionMode="Single"
             ShowsScrollingPlaceholders="False">
             <control:PullToRefreshListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="settingspages:Credential">
                     <Grid Background="{ThemeResource SystemControlTransparentBrush}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <control:AccountCard Margin="4,0,0,0" Account="{Binding}" />
+                        <control:AccountCard Margin="4,0,0,0" UID="{x:Bind UID}" />
                         <Button
                             Grid.Column="1"
                             Content="&#xE74D;"
@@ -48,12 +46,12 @@
                                         <TextBlock
                                             Margin="0,0,0,12"
                                             Style="{ThemeResource BaseTextBlockStyle}"
-                                            Text="确定删除？" />
+                                            Text="确定删除此账号？" />
                                         <Button
-                                            x:Name="Remove"
+                                            x:Name="RemoveAccount"
                                             Click="Button_Click"
                                             Content="删除"
-                                            Tag="{Binding}" />
+                                            Tag="{x:Bind}" />
                                     </StackPanel>
                                 </Flyout>
                             </Button.Flyout>
@@ -74,7 +72,8 @@
                 helpers:FocusVisualHelper.FocusVisualMargin="0"
                 Click="Button_Click"
                 Content="&#xE710;"
-                Style="{StaticResource TitleBarIconButtonStyle}" />
+                Style="{StaticResource TitleBarIconButtonStyle}"
+                ToolTipService.ToolTip="保存当前账号" />
         </control:TitleBar>
     </Grid>
 </Page>
