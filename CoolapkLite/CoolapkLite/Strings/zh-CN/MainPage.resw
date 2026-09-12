@@ -129,6 +129,9 @@
   <data name="Circle" xml:space="preserve">
     <value>圈子</value>
   </data>
+  <data name="CreateFeed.Text" xml:space="preserve">
+    <value>写动态</value>
+  </data>
   <data name="Extension" xml:space="preserve">
     <value>插件</value>
   </data>
@@ -147,6 +150,9 @@
   <data name="Login" xml:space="preserve">
     <value>登录</value>
   </data>
+  <data name="Logout.Text" xml:space="preserve">
+    <value>注销</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>搜索</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="Setting" xml:space="preserve">
     <value>设置</value>
+  </data>
+  <data name="SwitchUser.Text" xml:space="preserve">
+    <value>切换用户</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>测试</value>
