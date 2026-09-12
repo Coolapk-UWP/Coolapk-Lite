@@ -129,6 +129,9 @@
   <data name="Circle" xml:space="preserve">
     <value>Circle</value>
   </data>
+  <data name="CreateFeed.Text" xml:space="preserve">
+    <value>Write Feeds</value>
+  </data>
   <data name="Extension" xml:space="preserve">
     <value>Extensions</value>
   </data>
@@ -147,6 +150,9 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="Logout.Text" xml:space="preserve">
+    <value>注销</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="SwitchUser.Text" xml:space="preserve">
+    <value>切换用户</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Testing</value>
