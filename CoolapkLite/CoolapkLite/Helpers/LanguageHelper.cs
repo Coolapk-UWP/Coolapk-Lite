@@ -53,5 +53,19 @@ namespace CoolapkLite.Helpers
             int temp = FindIndexFromSupportLanguageCodes(language);
             return temp == -1 ? FallbackLanguageCode : SupportLanguages[temp];
         }
+
+        public static void SetCLRLanguage()
+        {
+            string language = ApplicationLanguages.PrimaryLanguageOverride;
+            if (!string.IsNullOrWhiteSpace(language))
+            {
+                int temp = FindIndexFromSupportLanguageCodes(language);
+                if (temp != -1)
+                {
+                    CultureInfo culture = SupportCultures[temp];
+                    CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = culture;
+                }
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Windows.ApplicationModel.Resources;
 
 namespace CoolapkLite.Models.Feeds
 {
@@ -95,7 +96,7 @@ namespace CoolapkLite.Models.Feeds
                 Rusername = rusername.ToString();
             }
 
-            Windows.ApplicationModel.Resources.ResourceLoader loader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("Feed");
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("Feed");
 
             if (token.TryGetValue("message", out JToken message))
             {

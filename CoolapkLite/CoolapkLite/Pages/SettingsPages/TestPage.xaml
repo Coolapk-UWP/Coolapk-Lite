@@ -247,7 +247,7 @@
                     IsEnabled="{x:Bind Provider.IsGetElementVisualSupported}"
                     IsOn="{x:Bind Provider.IsUseCompositor, Mode=TwoWay}" />
                 <ComboBox
-                    Header="切换语言 (需要重启)"
+                    Header="切换语言 (需要新窗口)"
                     ItemsSource="{x:Bind Provider.SupportCultures}"
                     Loaded="ComboBox_Loaded"
                     SelectionChanged="ComboBox_SelectionChanged"

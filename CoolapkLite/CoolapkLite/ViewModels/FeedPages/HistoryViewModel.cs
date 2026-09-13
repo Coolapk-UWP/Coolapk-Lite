@@ -11,7 +11,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public sealed class HistoryViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("History");
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("History");
 
         public HistoryViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {

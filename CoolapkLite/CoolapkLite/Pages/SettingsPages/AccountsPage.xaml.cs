@@ -3,6 +3,7 @@ using CoolapkLite.Models.Network;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.SettingsPages;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -36,25 +37,26 @@ namespace CoolapkLite.Pages.SettingsPages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is FrameworkElement element)) { return; }
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("AccountsPage");
             switch (element.Name)
             {
                 case nameof(AddAccount) when SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account:
                     switch (Provider.AddOrReplace(new Credential(account.UID, account.Token)))
                     {
                         case ReplaceStatus.Duplicated:
-                            _ = this.ShowMessageAsync($"账号 {account.UID} 已存在");
+                            _ = this.ShowMessageAsync(string.Format(loader.GetString("Duplicated"), account.UID));
                             break;
                         case ReplaceStatus.Replaced:
-                            _ = this.ShowMessageAsync($"账号 {account.UID} 信息已更新");
+                            _ = this.ShowMessageAsync(string.Format(loader.GetString("Replaced"), account.UID));
                             break;
                         case ReplaceStatus.Added:
-                            _ = this.ShowMessageAsync($"账号 {account.UID} 添加成功");
+                            _ = this.ShowMessageAsync(string.Format(loader.GetString("Added"), account.UID));
                             break;
                     }
                     break;
                 case "RemoveAccount" when element.Tag is Credential credential:
                     Provider.Remove(credential);
-                    _ = this.ShowMessageAsync($"账号 {credential.UID} 已移除");
+                    _ = this.ShowMessageAsync(string.Format(loader.GetString("Removed"), credential.UID));
                     break;
             }
         }

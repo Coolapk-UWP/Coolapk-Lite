@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using Microsoft.Toolkit;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -339,13 +340,13 @@ namespace CoolapkLite.Models.Images
 
         public async void CopyPic()
         {
-            DataPackage dataPackage = await GetImageDataPackageAsync("复制图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(ResourceLoader.GetForViewIndependentUse("ShowImagePage").GetString("CopyImage"));
             Clipboard.SetContentWithOptions(dataPackage, null);
         }
 
         public async void SharePic()
         {
-            DataPackage dataPackage = await GetImageDataPackageAsync("分享图片");
+            DataPackage dataPackage = await GetImageDataPackageAsync(ResourceLoader.GetForViewIndependentUse("ShowImagePage").GetString("ShareImage"));
             if (dataPackage != null)
             {
                 DataTransferManager dataTransferManager = DataTransferManager.GetForCurrentView();
@@ -381,13 +382,13 @@ namespace CoolapkLite.Models.Images
                 {
                     index = fileEx.IndexOfAny(new[] { '?', '%', '&' });
                     fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
-                    fileSavePicker.FileTypeChoices.Add($"{fileEx} 文件", new[] { $".{fileEx}" });
+                    fileSavePicker.FileTypeChoices.Add(string.Format(ResourceLoader.GetForViewIndependentUse().GetString("FileExtDescription"), fileEx), new[] { $".{fileEx}" });
                 }
             }
 
             if (fileSavePicker.FileTypeChoices.Count <= 0)
             {
-                fileSavePicker.FileTypeChoices.Add("png 文件", new[] { ".png" });
+                fileSavePicker.FileTypeChoices.Add(string.Format(ResourceLoader.GetForViewIndependentUse().GetString("FileExtDescription"), "png"), new[] { ".png" });
             }
 
             StorageFile file = await fileSavePicker.PickSaveFileAsync();
@@ -398,7 +399,7 @@ namespace CoolapkLite.Models.Images
                     using (Stream ImageStream = await image.OpenStreamForReadAsync())
                     {
                         await ImageStream.CopyToAsync(FolderStream).ConfigureAwait(false);
-                        _ = Dispatcher.ShowMessageAsync($"图片已保存到 {file.Path}");
+                        _ = Dispatcher.ShowMessageAsync(string.Format(ResourceLoader.GetForViewIndependentUse("ShowImagePage").GetString("SaveSucceed"), file.Path));
                     }
                 }
             }

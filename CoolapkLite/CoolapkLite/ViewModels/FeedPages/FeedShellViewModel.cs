@@ -270,7 +270,6 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         public string ID;
         public List<string> ItemSource { get; private set; }
-        private readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedShellPage");
 
         private bool toggleIsOn;
         public bool ToggleIsOn
@@ -320,6 +319,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public ReplyItemSource(string id)
         {
             ID = id;
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("FeedShellPage");
             ItemSource = new List<string>(3)
             {
                 loader.GetString("lastupdate_desc"),

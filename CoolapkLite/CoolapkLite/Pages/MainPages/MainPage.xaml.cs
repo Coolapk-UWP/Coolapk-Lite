@@ -466,10 +466,9 @@ namespace CoolapkLite.Pages
 
         public MenuItem(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
 
-        protected static readonly ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
-
         public static MenuItem[] GetMainItems(CoreDispatcher dispatcher)
         {
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
             MenuItem[] items = new[]
             {
                 new MenuItem(dispatcher) { Icon = "\uE80F", Name = loader.GetString("Home"), PageType = typeof(IndexPage), Index = 0 },
@@ -482,6 +481,7 @@ namespace CoolapkLite.Pages
 
         public static (MenuItem[], PersonMenuItem) GetOptionsItems(CoreDispatcher dispatcher)
         {
+            ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
             PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
             MenuItem[] items = new[]
             {
@@ -559,7 +559,7 @@ namespace CoolapkLite.Pages
             }
             else
             {
-                Name = loader.GetString("Login");
+                Name = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Login");
                 Image = null;
                 PageType = typeof(BrowserPage);
                 ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);

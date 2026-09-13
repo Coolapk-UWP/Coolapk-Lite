@@ -117,28 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BackButton.Content" xml:space="preserve">
-    <value>嘗試獲取token</value>
+  <data name="AddAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>添加当前账号</value>
   </data>
-  <data name="BackButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>如果登錄成功后沒有自動返回上一頁，請點這裡。 如果獲取token失敗，請右擊嘗試手動登錄。</value>
+  <data name="Added" xml:space="preserve">
+    <value>账号 {0} 添加成功</value>
+    <comment>{0} 表示 UID</comment>
   </data>
-  <data name="CannotGetToken" xml:space="preserve">
-    <value>沒有獲取到token，請嘗試重新登錄</value>
+  <data name="Duplicated" xml:space="preserve">
+    <value>账号 {0} 已存在</value>
+    <comment>{0} 表示 UID</comment>
   </data>
-  <data name="Logging" xml:space="preserve">
-    <value>正在登入……</value>
+  <data name="ExportAccount.Text" xml:space="preserve">
+    <value>导出</value>
   </data>
-  <data name="LoginFailed" xml:space="preserve">
-    <value>登入失敗</value>
+  <data name="ExportFailed" xml:space="preserve">
+    <value>Windows Hello 验证失败，取消导出账号列表</value>
   </data>
-  <data name="LoginSuccessfully" xml:space="preserve">
-    <value>登入成功</value>
+  <data name="ExportSucceed" xml:space="preserve">
+    <value>账号列表已导出到 {0}</value>
+    <comment>{0} 表示路径</comment>
   </data>
-  <data name="ManualLoginButton.Text" xml:space="preserve">
-    <value>手動登錄</value>
+  <data name="ImportAccount.Text" xml:space="preserve">
+    <value>导入</value>
   </data>
-  <data name="OpenInBrowserButton.Content" xml:space="preserve">
-    <value>在瀏覽器中打開</value>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>导入的文件中没有有效的账号信息</value>
+  </data>
+  <data name="ImportSucceed" xml:space="preserve">
+    <value>成功导入 {0} 个账号</value>
+    <comment>{0} 表示账号个数</comment>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>当前没有已保存的账号</value>
+  </data>
+  <data name="RemoveAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="RemoveAccountConfirm.Content" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="RemoveAccountTitle.Text" xml:space="preserve">
+    <value>您确定删除此账号吗？</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>账号 {0} 已移除</value>
+    <comment>{0} 表示 UID</comment>
+  </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>账号 {0} 信息已更新</value>
+    <comment>{0} 表示 UID</comment>
   </data>
 </root>

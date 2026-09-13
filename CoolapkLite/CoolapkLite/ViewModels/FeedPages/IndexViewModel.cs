@@ -13,7 +13,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 {
     public sealed class IndexViewModel : EntityItemSource, IViewModel
     {
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Home");
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Home");
 
         public IndexViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {

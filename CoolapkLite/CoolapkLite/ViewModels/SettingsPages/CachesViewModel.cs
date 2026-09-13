@@ -12,7 +12,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public sealed class CachesViewModel : DataSourceBase<StorageFile>, IViewModel
     {
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Caches");
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Caches");
 
         private List<StorageFile> Images { get; set; }
 

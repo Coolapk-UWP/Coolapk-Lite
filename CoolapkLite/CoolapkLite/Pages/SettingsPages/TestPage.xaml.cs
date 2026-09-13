@@ -277,11 +277,13 @@ namespace CoolapkLite.Pages.SettingsPages
             if (culture.Name != LanguageHelper.GetCurrentLanguage())
             {
                 ApplicationLanguages.PrimaryLanguageOverride = culture.Name;
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = culture;
                 SettingsHelper.Set(SettingsHelper.CurrentLanguage, culture.Name);
             }
             else
             {
                 ApplicationLanguages.PrimaryLanguageOverride = string.Empty;
+                CultureInfo.DefaultThreadCurrentCulture = CultureInfo.DefaultThreadCurrentUICulture = null;
                 SettingsHelper.Set(SettingsHelper.CurrentLanguage, LanguageHelper.AutoLanguageCode);
             }
         }

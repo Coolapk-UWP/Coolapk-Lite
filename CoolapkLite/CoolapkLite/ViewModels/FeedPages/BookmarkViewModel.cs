@@ -18,7 +18,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     {
         private static readonly AsyncLock locker = new AsyncLock();
 
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Bookmark");
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Bookmark");
 
         public BookmarkViewModel(CoreDispatcher dispatcher) : base(dispatcher) { }
 
@@ -138,7 +138,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                 {
                     SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
                     SuggestedFileName = $"Coolapk-Bookmarks_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}",
-                    FileTypeChoices = { { "json 文件", new[] { ".json" } } }
+                    FileTypeChoices = { { string.Format(ResourceLoader.GetForViewIndependentUse().GetString("FileExtDescription"), "json"), new[] { ".json" } } }
                 };
 
                 StorageFile file = await fileSavePicker.PickSaveFileAsync();

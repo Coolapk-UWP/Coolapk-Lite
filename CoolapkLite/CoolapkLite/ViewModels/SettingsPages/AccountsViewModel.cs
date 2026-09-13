@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Resources;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography;
 using Windows.Storage;
@@ -19,7 +20,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         private static readonly PasswordVault vault = new PasswordVault();
 
-        public string Title => "切换账号";
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Accounts");
 
         private static int selectedIndex = -1;
         public int SelectedIndex
@@ -149,7 +150,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             catch
             {
-                _ = Dispatcher.ShowMessageAsync("当前没有已保存的账号");
+                _ = Dispatcher.ShowMessageAsync(ResourceLoader.GetForViewIndependentUse("AccountsPage").GetString("NoAccount"));
             }
             return Task.CompletedTask;
         }
@@ -169,6 +170,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 if (file != null)
                 {
                     string content = await FileIO.ReadTextAsync(file);
+                    ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("AccountsPage");
                     List<Credential> accounts = JsonConvert.DeserializeObject<List<Credential>>(content, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }).Where(x => !x.IsEmpty).ToList();
                     if (accounts?.Count > 0)
                     {
@@ -182,19 +184,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
                                     count++;
                                 }
                             }
-                            _ = Dispatcher.ShowMessageAsync($"成功导入 {count} 个账号");
+                            _ = Dispatcher.ShowMessageAsync(string.Format(loader.GetString("ImportSucceed"), count));
                         }
                         else
                         {
                             AddRange(accounts);
                             accounts.ForEach(x => vault.Add(x));
-                            _ = Dispatcher.ShowMessageAsync($"成功导入 {accounts.Count} 个账号");
+                            _ = Dispatcher.ShowMessageAsync(string.Format(loader.GetString("ImportSucceed"), accounts.Count));
                             SetSelectedIndex(Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account _account ? FindIndex(x => x.UID == _account.UID) : -1);
                         }
                     }
                     else
                     {
-                        _ = Dispatcher.ShowMessageAsync("导入的文件中没有有效的账号信息");
+                        _ = Dispatcher.ShowMessageAsync(loader.GetString("ImportFailed"));
                     }
                 }
             }
@@ -208,6 +210,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             try
             {
+                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("AccountsPage");
                 if (await CheckWindowsHelloAsync())
                 {
                     string content = JsonConvert.SerializeObject(_items, _items.GetType(), Formatting.Indented, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
@@ -218,19 +221,19 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     {
                         SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
                         SuggestedFileName = $"Coolapk-Accounts_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}",
-                        FileTypeChoices = { { "json 文件", new[] { ".json" } } }
+                        FileTypeChoices = { { string.Format(ResourceLoader.GetForViewIndependentUse().GetString("FileExtDescription"), "json"), new[] { ".json" } } }
                     };
 
                     StorageFile file = await fileSavePicker.PickSaveFileAsync();
                     if (file != null)
                     {
                         await FileIO.WriteTextAsync(file, content);
-                        _ = Dispatcher.ShowMessageAsync($"账号列表已导出到 {file.Path}");
+                        _ = Dispatcher.ShowMessageAsync(string.Format(loader.GetString("ExportSucceed"), file.Path));
                     }
                 }
                 else
                 {
-                    _ = Dispatcher.ShowMessageAsync("Windows Hello 验证失败，取消导出账号列表");
+                    _ = Dispatcher.ShowMessageAsync(loader.GetString("ExportFailed"));
                 }
             }
             catch (Exception ex)
@@ -298,14 +301,15 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 try
                 {
                     Account account = await credential.GetAccountAsync().ConfigureAwait(false);
+                    ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
                     if (!account.IsEmpty)
                     {
                         bool result = await SettingsHelper.LoginAsync(account).ConfigureAwait(false);
-                        _ = Dispatcher.ShowMessageAsync(result ? "登录成功" : "登录失败");
+                        _ = Dispatcher.ShowMessageAsync(loader.GetString(result ? "LoginSuccessfully" : "LoginFailed"));
                     }
                     else
                     {
-                        _ = Dispatcher.ShowMessageAsync("获取账户信息失败");
+                        _ = Dispatcher.ShowMessageAsync(loader.GetString("GetUserInfoFailed"));
                     }
                 }
                 finally

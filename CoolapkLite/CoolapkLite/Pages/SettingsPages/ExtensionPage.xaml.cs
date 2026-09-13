@@ -17,7 +17,7 @@ namespace CoolapkLite.Pages.SettingsPages
     {
         private readonly ExtensionManager Provider = new ExtensionManager(ExtensionManager.OSSUploader);
 
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Extension");
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Extension");
 
         public ExtensionPage() => InitializeComponent();
 

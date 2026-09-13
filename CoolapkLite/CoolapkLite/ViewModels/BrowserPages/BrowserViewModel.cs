@@ -7,11 +7,9 @@ namespace CoolapkLite.ViewModels.BrowserPages
 {
     public sealed class BrowserViewModel : ViewModelBase
     {
-        private readonly ResourceLoader _loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
-
         public bool IsChangeBrowserUA { get; } = SettingsHelper.Get<bool>(SettingsHelper.IsChangeBrowserUA);
 
-        private string title;
+        private string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Browser");
         public string Title
         {
             get => title;
@@ -37,7 +35,6 @@ namespace CoolapkLite.ViewModels.BrowserPages
             if (!url.Contains("://")) { url = $"https://{url}"; }
             Uri = url.TryGetUri();
             IsLoginPage = url == UriHelper.LoginUri;
-            Title = _loader.GetString("Title");
         }
 
         public bool IsEqual(BrowserViewModel other) => Uri == other.Uri;

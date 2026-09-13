@@ -16,7 +16,7 @@ namespace CoolapkLite.ViewModels.FeedPages
     public sealed class ProfileViewModel : EntityItemSource, IViewModel
     {
         public string UID = string.Empty;
-        public string Title { get; } = ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
+        public string Title => ResourceLoader.GetForViewIndependentUse("ProfilePage").GetString("Title");
 
         private bool isLogin;
         public bool IsLogin

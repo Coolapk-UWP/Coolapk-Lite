@@ -36,21 +36,21 @@
                         </Grid.ColumnDefinitions>
                         <control:AccountCard Margin="4,0,0,0" UID="{x:Bind UID}" />
                         <Button
+                            x:Uid="/AccountsPage/RemoveAccount"
                             Grid.Column="1"
                             Content="&#xE74D;"
-                            Style="{StaticResource TitleBarIconButtonStyle}"
-                            ToolTipService.ToolTip="删除">
+                            Style="{StaticResource TitleBarIconButtonStyle}">
                             <Button.Flyout>
                                 <Flyout helpers:FlyoutBaseHelper.ShouldConstrainToRootBounds="False">
                                     <StackPanel>
                                         <TextBlock
+                                            x:Uid="/AccountsPage/RemoveAccountTitle"
                                             Margin="0,0,0,12"
-                                            Style="{ThemeResource BaseTextBlockStyle}"
-                                            Text="确定删除此账号？" />
+                                            Style="{ThemeResource BaseTextBlockStyle}" />
                                         <Button
                                             x:Name="RemoveAccount"
+                                            x:Uid="/AccountsPage/RemoveAccountConfirm"
                                             Click="Button_Click"
-                                            Content="删除"
                                             Tag="{x:Bind}" />
                                     </StackPanel>
                                 </Flyout>
@@ -69,25 +69,25 @@
             RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}">
             <Button
                 x:Name="AddAccount"
+                x:Uid="/AccountsPage/AddAccount"
                 helpers:FocusVisualHelper.FocusVisualMargin="0"
                 Click="Button_Click"
                 Content="&#xE710;"
-                Style="{StaticResource TitleBarIconButtonStyle}"
-                ToolTipService.ToolTip="添加当前账号">
+                Style="{StaticResource TitleBarIconButtonStyle}">
                 <helpers:UIElementHelper.ContextFlyout>
                     <MenuFlyout>
                         <MenuFlyoutItem
+                            x:Uid="/AccountsPage/ExportAccount"
                             Click="MenuFlyoutItem_Click"
-                            Tag="ExportAccount"
-                            Text="导出">
+                            Tag="ExportAccount">
                             <helpers:FlyoutBaseHelper.Icon>
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEDE1;" />
                             </helpers:FlyoutBaseHelper.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutItem
+                            x:Uid="/AccountsPage/ImportAccount"
                             Click="MenuFlyoutItem_Click"
-                            Tag="ImportAccount"
-                            Text="导入">
+                            Tag="ImportAccount">
                             <helpers:FlyoutBaseHelper.Icon>
                                 <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B5;" />
                             </helpers:FlyoutBaseHelper.Icon>

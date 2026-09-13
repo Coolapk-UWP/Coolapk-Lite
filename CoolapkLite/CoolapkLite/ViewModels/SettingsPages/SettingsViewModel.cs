@@ -28,8 +28,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public sealed class SettingsViewModel : CachedViewModelBase<SettingsViewModel>
     {
-        private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
-        public string Title => title;
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
 
         private static readonly string versionTextBlockText = $"{ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName} v{Package.Current.Id.Version.ToFormattedString(3)}";
         public string VersionTextBlockText => versionTextBlockText;

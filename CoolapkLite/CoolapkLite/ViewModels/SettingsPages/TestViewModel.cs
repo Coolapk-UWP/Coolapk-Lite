@@ -37,8 +37,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         private static readonly Array backdropTypes = Enum.GetValues(typeof(BackdropType));
         public Array BackdropTypes => backdropTypes;
 
-        private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
-        public string Title => title;
+        public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
 
         public bool IsAppWindowSupported => WindowHelper.IsAppWindowSupported;
 

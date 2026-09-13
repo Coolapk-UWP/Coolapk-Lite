@@ -117,6 +117,10 @@ namespace CoolapkLite.Controls.Dialogs
                     UserName = WebUtility.UrlEncode(results.UserName);
                 }
             }
+            else
+            {
+                this.ShowMessageAsync(ResourceLoader.GetForViewIndependentUse("BrowserPage").GetString("GetUserInfoFailed"));
+            }
         }
     }
 }
