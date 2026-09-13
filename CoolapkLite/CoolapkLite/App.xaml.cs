@@ -191,26 +191,52 @@ namespace CoolapkLite
         {
             if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
             {
-                JumpList JumpList = await JumpList.LoadCurrentAsync();
-                JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+                JumpList list = await JumpList.LoadCurrentAsync();
+                list.SystemGroupKind = JumpListSystemGroupKind.None;
 
-                if (!JumpList.Items.Any(x => x.GroupName == "导航"))
+                if (list.Items.Count <= 0)
                 {
-                    ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("home", loader.GetString("Home")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Home.png")));
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("circle", loader.GetString("Circle")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/People.png")));
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("favorites", loader.GetString("Bookmark")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/FavoriteStar.png")));
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("history", loader.GetString("History")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Calendar.png")));
+                    AddJumpList(list);
+                }
+                else
+                {
+                    if (!list.Items.Any(x => x.GroupName == "个人"))
+                    {
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("notifications", "通知").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Message.png")));
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("create", "写动态").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Label.png")));
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("me", "个人空间").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Contact.png")));
+                    }
+
+                    if (!list.Items.Any(x => x.GroupName == "导航"))
+                    {
+                        ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("history", loader.GetString("History")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Calendar.png")));
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("favorites", loader.GetString("Bookmark")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/FavoriteStar.png")));
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("circle", loader.GetString("Circle")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/People.png")));
+                        list.Items.Insert(0, JumpListItem.CreateWithArguments("home", loader.GetString("Home")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Home.png")));
+                    }
                 }
 
-                if (!JumpList.Items.Any(x => x.GroupName == "个人"))
-                {
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("me", "个人空间").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Contact.png")));
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("notifications", "通知").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Message.png")));
-                    JumpList.Items.Add(JumpListItem.CreateWithArguments("create", "写动态").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Label.png")));
-                }
+                await list.SaveAsync();
+            }
+        }
 
-                await JumpList.SaveAsync();
+        public static void AddJumpList(JumpList list)
+        {
+            if (!list.Items.Any(x => x.GroupName == "导航"))
+            {
+                ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
+                list.Items.Add(JumpListItem.CreateWithArguments("home", loader.GetString("Home")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Home.png")));
+                list.Items.Add(JumpListItem.CreateWithArguments("circle", loader.GetString("Circle")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/People.png")));
+                list.Items.Add(JumpListItem.CreateWithArguments("favorites", loader.GetString("Bookmark")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/FavoriteStar.png")));
+                list.Items.Add(JumpListItem.CreateWithArguments("history", loader.GetString("History")).AddGroupNameAndLogo("导航", new Uri("ms-appx:///Assets/Icons/Calendar.png")));
+            }
+
+            if (!list.Items.Any(x => x.GroupName == "个人"))
+            {
+                list.Items.Add(JumpListItem.CreateWithArguments("me", "个人空间").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Contact.png")));
+                list.Items.Add(JumpListItem.CreateWithArguments("notifications", "通知").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Message.png")));
+                list.Items.Add(JumpListItem.CreateWithArguments("create", "写动态").AddGroupNameAndLogo("个人", new Uri("ms-appx:///Assets/Icons/Label.png")));
             }
         }
 

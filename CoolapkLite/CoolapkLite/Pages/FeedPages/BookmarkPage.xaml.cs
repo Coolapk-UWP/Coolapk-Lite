@@ -30,7 +30,7 @@ namespace CoolapkLite.Pages.FeedPages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if (Provider.Bookmarks == null)
+            if (Provider.Count <= 0)
             {
                 _ = Refresh(true);
             }
@@ -46,13 +46,11 @@ namespace CoolapkLite.Pages.FeedPages
                     ContentDialogResult result = await dialog.ShowAsync();
                     if (result == ContentDialogResult.Primary)
                     {
-                        Provider.Bookmarks.Add(new Bookmark(dialog.BookmarkURL, dialog.BookmarkTitle));
-                        _ = Refresh();
+                        Provider.AddOrReplace(new Bookmark(dialog.BookmarkURL, dialog.BookmarkTitle));
                     }
                     break;
                 case "RemoveBookmark":
-                    _ = Provider.Bookmarks.Remove(element.Tag as Bookmark);
-                    _ = Refresh();
+                    _ = Provider.Remove(element.Tag as Bookmark);
                     break;
                 case "NewWindow":
                     _ = Dispatcher.OpenLinkOutsideAsync(element.Tag?.ToString());

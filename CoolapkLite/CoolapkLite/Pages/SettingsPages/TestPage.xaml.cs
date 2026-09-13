@@ -164,15 +164,30 @@ namespace CoolapkLite.Pages.SettingsPages
                     break;
                 case "AddJumpList" when ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported():
                     JumpList list = await JumpList.LoadCurrentAsync();
+                    if (list.Items.Count <= 0) { App.AddJumpList(list); }
                     if (!list.Items.Any(x => x.GroupName == "设置"))
                     {
                         ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
-                        list.Items.Add(JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));
-                        list.Items.Add(JumpListItem.CreateWithArguments("caches", loader.GetString("Caches")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Package.png")));
-                        list.Items.Add(JumpListItem.CreateWithArguments("flags", loader.GetString("Test")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/DeveloperTools.png")));
-                        if (ExtensionManager.IsOSSUploaderSupported)
+                        int index = list.Items.IndexOf(list.Items.FirstOrDefault(x => x.GroupName == "收藏"));
+                        if (index < 0)
                         {
-                            list.Items.Add(JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                            list.Items.Add(JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));
+                            list.Items.Add(JumpListItem.CreateWithArguments("caches", loader.GetString("Caches")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Package.png")));
+                            list.Items.Add(JumpListItem.CreateWithArguments("flags", loader.GetString("Test")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/DeveloperTools.png")));
+                            if (ExtensionManager.IsOSSUploaderSupported)
+                            {
+                                list.Items.Add(JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                            }
+                        }
+                        else
+                        {
+                            if (ExtensionManager.IsOSSUploaderSupported)
+                            {
+                                list.Items.Insert(index, JumpListItem.CreateWithArguments("extensions", loader.GetString("Extension")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/AppIconDefault.png")));
+                            }
+                            list.Items.Insert(index, JumpListItem.CreateWithArguments("flags", loader.GetString("Test")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/DeveloperTools.png")));
+                            list.Items.Insert(index, JumpListItem.CreateWithArguments("caches", loader.GetString("Caches")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Package.png")));
+                            list.Items.Insert(index, JumpListItem.CreateWithArguments("settings", loader.GetString("Setting")).AddGroupNameAndLogo("设置", new Uri("ms-appx:///Assets/Icons/Settings.png")));
                         }
                     }
                     _ = list.SaveAsync();

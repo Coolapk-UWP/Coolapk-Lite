@@ -4,7 +4,6 @@ using CoolapkLite.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -15,33 +14,66 @@ using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public sealed class BookmarkViewModel : ViewModelBase
+    public sealed class BookmarkViewModel : CachedListViewModelBase<BookmarkViewModel, Bookmark>
     {
-        public static Dictionary<CoreDispatcher, BookmarkViewModel> Caches { get; } = new Dictionary<CoreDispatcher, BookmarkViewModel>();
+        private static readonly AsyncLock locker = new AsyncLock();
 
         public string Title { get; } = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Bookmark");
 
-        private ObservableCollection<Bookmark> _bookmarks;
-        public ObservableCollection<Bookmark> Bookmarks
+        public BookmarkViewModel(CoreDispatcher dispatcher) : base(dispatcher) { }
+
+        #region IList<Bookmark> Members
+
+        protected override void SetIndex(int index, Bookmark value)
         {
-            get => _bookmarks;
-            set => SetProperty(ref _bookmarks, value);
+            Bookmark old = _items[index];
+            if (old != value && !_items.Contains(value))
+            {
+                Replace(index, old, value);
+            }
         }
 
-        public BookmarkViewModel(CoreDispatcher dispatcher) : base(dispatcher) => Caches[Dispatcher] = this;
+        protected override void Replace(int index, Bookmark old, Bookmark item)
+        {
+            _ = SaveBookmarks();
+            base.Replace(index, old, item);
+        }
+
+        public override ReplaceStatus AddOrReplace(Bookmark item)
+        {
+            if (_items.Contains(item))
+            {
+                return ReplaceStatus.Duplicated;
+            }
+            else
+            {
+                _ = SaveBookmarks();
+                return base.AddOrReplace(item);
+            }
+        }
+
+        public override void Insert(int index, Bookmark item)
+        {
+            if (!_items.Contains(item))
+            {
+                _ = SaveBookmarks();
+                base.Insert(index, item);
+            }
+        }
+
+        protected override void Remove(int index, Bookmark item)
+        {
+            _ = SaveBookmarks();
+            base.Remove(index, item);
+        }
+
+        #endregion
 
         public override async Task Refresh(bool reset)
         {
-            if (_bookmarks != null)
-            {
-                await SettingsHelper.SetAsync(SettingsHelper.Bookmark, _bookmarks.ToArray()).ConfigureAwait(false);
-            }
-            if (reset)
-            {
-                await ResetAsync().ConfigureAwait(false);
-            }
+            IEnumerable<Bookmark> bookmarks = await SettingsHelper.GetAsync<IEnumerable<Bookmark>>(SettingsHelper.Bookmark).ConfigureAwait(false);
+            Clear(); AddRange(bookmarks);
             await UpdateJumpListAsync().ConfigureAwait(false);
-            RefreshOthers();
         }
 
         public async Task ImportAsync()
@@ -62,14 +94,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                     List<Bookmark> bookmarks = JsonConvert.DeserializeObject<List<Bookmark>>(content, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
                     if (bookmarks?.Count > 0)
                     {
-                        if (_bookmarks.Count > 0)
+                        if (_items.Count > 0)
                         {
                             int count = 0;
                             foreach (Bookmark bookmark in bookmarks)
                             {
-                                if (!_bookmarks.Contains(bookmark))
+                                if (!_items.Contains(bookmark))
                                 {
-                                    _bookmarks.Add(bookmark);
+                                    _items.Add(bookmark);
                                     count++;
                                 }
                             }
@@ -77,7 +109,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                         }
                         else
                         {
-                            _bookmarks.AddRange(bookmarks);
+                            _items.AddRange(bookmarks);
                             _ = Dispatcher.ShowMessageAsync($"成功导入 {bookmarks.Count} 个收藏夹");
                         }
                         await Refresh(false);
@@ -98,7 +130,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             try
             {
-                string content = JsonConvert.SerializeObject(_bookmarks, _bookmarks.GetType(), Formatting.Indented, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+                string content = JsonConvert.SerializeObject(_items, _items.GetType(), Formatting.Indented, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
 
                 string fileName = Title;
                 int index = fileName.LastIndexOf('.');
@@ -122,16 +154,13 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        private async Task ResetAsync() => Bookmarks = await SettingsHelper.GetAsync<Bookmark[]>(SettingsHelper.Bookmark).ContinueWith(x => new ObservableCollection<Bookmark>(x.Result)).ConfigureAwait(false);
-
-        private void RefreshOthers()
+        private async Task SaveBookmarks()
         {
-            foreach (KeyValuePair<CoreDispatcher, BookmarkViewModel> cache in Caches)
+            using (await locker.LockAsync())
             {
-                if (cache.Key != Dispatcher)
-                {
-                    _ = cache.Value.ResetAsync();
-                }
+                await Task.WhenAll(
+                    UpdateJumpListAsync(),
+                    SettingsHelper.SetAsync(SettingsHelper.Bookmark, _items)).ConfigureAwait(false);
             }
         }
 
@@ -139,13 +168,13 @@ namespace CoolapkLite.ViewModels.FeedPages
         {
             if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
             {
-                JumpList JumpList = await JumpList.LoadCurrentAsync();
-                JumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+                JumpList list = await JumpList.LoadCurrentAsync();
 
-                _ = JumpList.Items.RemoveAll(x => x.GroupName == "收藏");
-                JumpList.Items.AddRange(_bookmarks.Take(4).Select(x => JumpListItem.CreateWithArguments(x.Url, x.Title).AddGroupNameAndLogo("收藏", new Uri("ms-appx:///Assets/Icons/KnowledgeArticle.png"))));
+                if (list.Items.Count <= 0) { App.AddJumpList(list); }
+                _ = list.Items.RemoveAll(x => x.GroupName == "收藏");
+                list.Items.AddRange(_items.Take(4).Select(x => JumpListItem.CreateWithArguments(x.Url, x.Title).AddGroupNameAndLogo("收藏", new Uri("ms-appx:///Assets/Icons/KnowledgeArticle.png"))));
 
-                await JumpList.SaveAsync();
+                await list.SaveAsync();
             }
         }
 

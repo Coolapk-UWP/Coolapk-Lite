@@ -137,78 +137,6 @@ namespace CoolapkLite.Common
         }
 
         /// <summary>
-        /// Returns a sequence which invokes the function to calculate the next value
-        /// on each iteration until the function returns <see langword="null"/>.
-        /// </summary>
-        public static IEnumerable<TResult> GenerateSequence<TResult>(Func<TResult> nextFunction)
-        {
-            if (nextFunction == null)
-            {
-                throw new ArgumentNullException(nameof(nextFunction));
-            }
-
-            while (true)
-            {
-                TResult current = nextFunction();
-                if (current == null) { break; }
-                yield return current;
-            }
-        }
-
-        /// <summary>
-        /// Returns a sequence defined by the starting value <paramref name="seed"/> and the function <paramref name="nextFunction"/>,
-        /// which is invoked to calculate the next value based on the previous one on each iteration.
-        /// </summary>
-        public static IEnumerable<TResult> GenerateSequence<TResult>(TResult seed, Func<TResult, TResult> nextFunction)
-        {
-            if (seed == null)
-            {
-                throw new ArgumentNullException(nameof(seed));
-            }
-
-            if (nextFunction == null)
-            {
-                throw new ArgumentNullException(nameof(nextFunction));
-            }
-
-            TResult current = seed;
-            yield return current;
-
-            while (true)
-            {
-                current = nextFunction(current);
-                if (current == null) { break; }
-                yield return current;
-            }
-        }
-
-        /// <summary>
-        /// Returns a sequence defined by the function <paramref name="seedFunction"/>, which is invoked to produce the starting value, and the
-        /// <paramref name="nextFunction"/>, which is invoked to calculate the next value based on the previous one on each iteration.
-        public static IEnumerable<TResult> GenerateSequence<TResult>(Func<TResult> seedFunction, Func<TResult, TResult> nextFunction)
-        {
-            if (seedFunction == null)
-            {
-                throw new ArgumentNullException(nameof(seedFunction));
-            }
-
-            if (nextFunction == null)
-            {
-                throw new ArgumentNullException(nameof(nextFunction));
-            }
-
-            TResult current = seedFunction();
-            yield return current;
-
-            while (true)
-            {
-                current = nextFunction(current);
-                if (current == null) { break; }
-                yield return current;
-            }
-        }
-
-        /// <summary>
         /// Filters the elements of an <see cref="IEnumerable"/> based on a specified type.
         /// </summary>
         /// <typeparam name="TResult">The type to filter the elements of the sequence on.</typeparam>
@@ -377,6 +305,37 @@ namespace CoolapkLite.Common
                     if (--count == 0) { break; }
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines the index of a specific item that satisfies a specified condition in the <see cref="IList{TSource}"/>.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The sequence to return elements from.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <returns>The index of item if found in the list; otherwise, <c>-1</c>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
+        public static int IndexOf<TSource>(this IList<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            for (int i = 0; i < source.Count; i++)
+            {
+                if (predicate(source[i]))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
         }
     }
 }
