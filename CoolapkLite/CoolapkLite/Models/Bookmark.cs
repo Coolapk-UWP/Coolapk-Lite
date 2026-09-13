@@ -1,6 +1,9 @@
-﻿namespace CoolapkLite.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace CoolapkLite.Models
 {
-    public sealed class Bookmark : IHasTitle
+    public sealed class Bookmark : IHasTitle, IEquatable<Bookmark>
     {
         public string Url { get; set; }
         public string Title { get; set; }
@@ -23,5 +26,15 @@
         }
 
         public override string ToString() => string.Join(" - ", Title, Url);
+
+        public override bool Equals(object obj) => Equals(obj as Bookmark);
+
+        public override int GetHashCode() => (Title, Url).GetHashCode();
+
+        public bool Equals(Bookmark other) => other is Bookmark && Title == other.Title && Url == other.Url;
+
+        public static bool operator ==(Bookmark left, Bookmark right) => EqualityComparer<Bookmark>.Default.Equals(left, right);
+
+        public static bool operator !=(Bookmark left, Bookmark right) => !(left == right);
     }
 }

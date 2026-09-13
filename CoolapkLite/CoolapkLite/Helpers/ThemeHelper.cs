@@ -31,7 +31,7 @@ namespace CoolapkLite.Helpers
         public static event Action<ApplicationTheme> UISettingChanged
         {
             add => actions.Add(value);
-            remove => actions.Remove(value);
+            remove => _ = actions.Remove(value);
         }
 
         public static void InvokeUISettingChanged(ApplicationTheme value) => actions.Invoke(value);
@@ -45,7 +45,7 @@ namespace CoolapkLite.Helpers
         public static event Action<bool> NoPicsModeChanged
         {
             add => nopic.Add(value);
-            remove => nopic.Remove(value);
+            remove => _ = nopic.Remove(value);
         }
 
         public static void InvokeNoPicsModeChanged(bool value) => nopic.Invoke(value);

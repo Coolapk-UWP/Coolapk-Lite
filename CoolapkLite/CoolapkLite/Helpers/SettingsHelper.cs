@@ -226,7 +226,7 @@ namespace CoolapkLite.Helpers
         public static event Action<bool> LoginChanged
         {
             add => actions.Add(value);
-            remove => actions.Remove(value);
+            remove => _ = actions.Remove(value);
         }
 
         private static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
@@ -240,7 +240,7 @@ namespace CoolapkLite.Helpers
         public static event Action<ImmutableDictionary<int, string>> UserRemarksChanged
         {
             add => remarks.Add(value);
-            remove => remarks.Remove(value);
+            remove => _ = remarks.Remove(value);
         }
 
         private static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks?.Invoke(args);

@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,9 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Security.Credentials;
+using Windows.Security.Cryptography;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.SettingsPages
@@ -145,7 +149,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     index));
         }
 
-        public void Add(Credential item)
+        public ReplaceStatus AddOrReplace(Credential item)
         {
             int index = _accounts.FindIndex(x => x.UID == item.UID);
             if (index >= 0)
@@ -154,7 +158,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 if (item.Token != old.Token)
                 {
                     Replace(index, old, item);
+                    return ReplaceStatus.Replaced;
                 }
+                return ReplaceStatus.Duplicated;
             }
             else
             {
@@ -167,13 +173,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
                         NotifyCollectionChangedAction.Add,
                         item,
                         index));
-                if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
+                if (selectedIndex < 0
+                    && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
                     && account.UID == item.UID)
                 {
                     SetSelectedIndex(index);
                 }
+                return ReplaceStatus.Added;
             }
         }
+
+        void ICollection<Credential>.Add(Credential item) => _ = AddOrReplace(item);
 
         private void AddRange(IEnumerable<Credential> collection)
         {
@@ -208,7 +218,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
                         NotifyCollectionChangedAction.Add,
                         item,
                         index));
-                if (SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
+                if (selectedIndex < 0
+                    && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
                     && account.UID == item.UID)
                 {
                     SetSelectedIndex(index);
@@ -301,7 +312,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             if (value is Credential item)
             {
-                Add(item);
+                _ = AddOrReplace(item);
             }
             else
             {
@@ -357,6 +368,134 @@ namespace CoolapkLite.ViewModels.SettingsPages
             return Task.CompletedTask;
         }
 
+        public async Task ImportAsync()
+        {
+            try
+            {
+                FileOpenPicker fileOpenPicker = new FileOpenPicker
+                {
+                    SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                    ViewMode = PickerViewMode.List
+                };
+                fileOpenPicker.FileTypeFilter.Add(".json");
+
+                StorageFile file = await fileOpenPicker.PickSingleFileAsync();
+                if (file != null)
+                {
+                    string content = await FileIO.ReadTextAsync(file);
+                    List<Credential> accounts = JsonConvert.DeserializeObject<List<Credential>>(content, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }).Where(x => !x.IsEmpty).ToList();
+                    if (accounts?.Count > 0)
+                    {
+                        if (_accounts.Count > 0)
+                        {
+                            int count = 0;
+                            foreach (Credential account in accounts)
+                            {
+                                if (AddOrReplace(account) != ReplaceStatus.Duplicated)
+                                {
+                                    count++;
+                                }
+                            }
+                            _ = Dispatcher.ShowMessageAsync($"成功导入 {count} 个账号");
+                        }
+                        else
+                        {
+                            AddRange(accounts);
+                            accounts.ForEach(x => vault.Add(x));
+                            _ = Dispatcher.ShowMessageAsync($"成功导入 {accounts.Count} 个账号");
+                            SetSelectedIndex(Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account _account ? FindIndex(x => x.UID == _account.UID) : -1);
+                        }
+                    }
+                    else
+                    {
+                        _ = Dispatcher.ShowMessageAsync("导入的文件中没有有效的账号信息");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(AccountsViewModel)).Error(ex.ExceptionToMessage(), ex);
+            }
+        }
+
+        public async Task ExportAsync()
+        {
+            try
+            {
+                if (await CheckWindowsHelloAsync())
+                {
+                    string content = JsonConvert.SerializeObject(_accounts, _accounts.GetType(), Formatting.Indented, new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore });
+
+                    string fileName = Title;
+                    int index = fileName.LastIndexOf('.');
+                    FileSavePicker fileSavePicker = new FileSavePicker
+                    {
+                        SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
+                        SuggestedFileName = $"Coolapk-Accounts_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}",
+                        FileTypeChoices = { { "json 文件", new[] { ".json" } } }
+                    };
+
+                    StorageFile file = await fileSavePicker.PickSaveFileAsync();
+                    if (file != null)
+                    {
+                        await FileIO.WriteTextAsync(file, content);
+                        _ = Dispatcher.ShowMessageAsync($"账号列表已导出到 {file.Path}");
+                    }
+                }
+                else
+                {
+                    _ = Dispatcher.ShowMessageAsync("Windows Hello 验证失败，取消导出账号列表");
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(AccountsViewModel)).Error(ex.ExceptionToMessage(), ex);
+            }
+        }
+
+        private async Task<bool> CheckWindowsHelloAsync()
+        {
+            try
+            {
+                const string name = "AccountManager";
+
+                // Do we have capability to provide credentials from the device
+                if (await KeyCredentialManager.IsSupportedAsync())
+                {
+                    // Get credentials for current user and app
+                    KeyCredentialRetrievalResult result = await KeyCredentialManager.OpenAsync(name);
+
+                    if (result.Credential != null)
+                    {
+                        KeyCredentialOperationResult signResult = await result.Credential.RequestSignAsync(CryptographicBuffer.ConvertStringToBinary("LoginAuth", BinaryStringEncoding.Utf8));
+                        if (signResult.Status == KeyCredentialStatus.Success)
+                        {
+                            return true;
+                        }
+                    }
+                    // No previous saved credentials found
+                    else
+                    {
+                        KeyCredentialRetrievalResult creationResult = await KeyCredentialManager.RequestCreateAsync(name, KeyCredentialCreationOption.ReplaceExisting);
+                        if (creationResult.Status == KeyCredentialStatus.Success)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                SettingsHelper.LogManager.GetLogger(nameof(AccountsViewModel)).Error(ex.ExceptionToMessage(), ex);
+            }
+
+            return false;
+        }
+
         private void SetSelectedIndex(int index)
         {
             selectedIndex = index;
@@ -399,11 +538,14 @@ namespace CoolapkLite.ViewModels.SettingsPages
     {
         public const string ResourceName = "CoolapkLite";
 
-        public string UID { get; }
-        public string Token { get; }
+        public string UID { get; set; }
+        public string Token { get; set; }
+        [JsonIgnore]
         public bool IsEmpty => string.IsNullOrEmpty(UID) || string.IsNullOrEmpty(Token);
 
-        public Credential(string uid, string password)
+        public Credential() { }
+
+        public Credential(string uid, string password) : this()
         {
             UID = uid;
             Token = password;
@@ -433,5 +575,12 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public static implicit operator Credential(PasswordCredential credential) => new Credential(credential.UserName, credential.Password);
         public static implicit operator PasswordCredential(Credential credential) => new PasswordCredential(ResourceName, credential.UID, credential.Token);
+    }
+
+    public enum ReplaceStatus
+    {
+        Duplicated = -1,
+        Replaced,
+        Added
     }
 }

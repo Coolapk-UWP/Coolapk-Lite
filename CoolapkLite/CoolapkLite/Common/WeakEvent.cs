@@ -169,7 +169,7 @@ namespace CoolapkLite.Common
 
         public static WeakEvent<TEventArgs> operator -(WeakEvent<TEventArgs> weakEvent, Action<TEventArgs> callback)
         {
-            weakEvent.Remove(callback);
+            _ = weakEvent.Remove(callback);
             return weakEvent;
         }
     }

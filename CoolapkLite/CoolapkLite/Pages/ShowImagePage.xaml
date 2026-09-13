@@ -266,6 +266,11 @@
                 </AppBarButton>
             </CommandBar.SecondaryCommands>
         </CommandBar>
+        <ProgressBar
+            x:Name="ProgressBar"
+            VerticalAlignment="Top"
+            Background="{ThemeResource SystemControlTransparentBrush}"
+            IsIndeterminate="False" />
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="HubVisibilityStates">
                 <VisualStateGroup.Transitions>

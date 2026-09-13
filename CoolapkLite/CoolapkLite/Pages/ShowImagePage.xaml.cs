@@ -5,7 +5,10 @@ using CoolapkLite.Models.Images;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.UI;
 using System.ComponentModel;
+using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Phone.UI.Input;
 using Windows.System.Profile;
@@ -25,7 +28,7 @@ namespace CoolapkLite.Pages
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。
     /// </summary>
-    public sealed partial class ShowImagePage : Page
+    public sealed partial class ShowImagePage : Page, IHaveTitleBar
     {
         private bool isShowHub = true;
         private Point _clickPoint = new Point(0, 0);
@@ -72,6 +75,8 @@ namespace CoolapkLite.Pages
         }
 
         #endregion
+
+        public Frame MainFrame => Frame;
 
         public ShowImagePage()
         {
@@ -202,7 +207,8 @@ namespace CoolapkLite.Pages
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Name)
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Name)
             {
                 case nameof(ZoomUp):
                     _ = ScrollViewer.ChangeView(null, null, ScrollViewer.ZoomFactor + 0.1f);
@@ -215,8 +221,8 @@ namespace CoolapkLite.Pages
 
         private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!(FlipView.SelectedItem is ImageModel image)) { return; }
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(FlipView.SelectedItem is ImageModel image) || !(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "Copy":
                     image.CopyPic();
@@ -257,11 +263,7 @@ namespace CoolapkLite.Pages
             ScrollViewer scrollViewer = sender as ScrollViewer;
             if (scrollViewer.FindDescendant<ImageControl>() is ImageControl element)
             {
-                bool isEnable = scrollViewer.ZoomFactor <= 1;
-                if (element.EnableDrag != isEnable)
-                {
-                    element.EnableDrag = isEnable;
-                }
+                element.EnableDrag = scrollViewer.ZoomFactor <= 1;
             }
         }
 
@@ -281,7 +283,8 @@ namespace CoolapkLite.Pages
         {
             if (e?.Handled == true) { return; }
             FrameworkElement element = sender as FrameworkElement;
-            ScrollViewer scrollViewer = element.Parent as ScrollViewer;
+            ScrollViewer scrollViewer = element.FindAscendant<ScrollViewer>();
+            if (scrollViewer == null) { return; }
             PointerPoint pointerPoint = e.GetCurrentPoint(element);
             if (pointerPoint.Properties.IsLeftButtonPressed)
             {
@@ -329,5 +332,69 @@ namespace CoolapkLite.Pages
         private void TitleBar_IsVisibleChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarVisible(sender.IsVisible);
 
         private void TitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args) => UpdateTitleBarLayout(sender);
+
+        #region 进度条
+
+        public async Task ShowProgressBarAsync()
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+        }
+
+        public async Task ShowProgressBarAsync(double value)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.Value = value;
+        }
+
+        public async Task PausedProgressBarAsync()
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = true;
+        }
+
+        public async Task ErrorProgressBarAsync()
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            ProgressBar.Visibility = Visibility.Visible;
+            ProgressBar.IsIndeterminate = true;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.ShowError = true;
+        }
+
+        public async Task HideProgressBarAsync()
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            ProgressBar.Visibility = Visibility.Collapsed;
+            ProgressBar.IsIndeterminate = false;
+            ProgressBar.ShowError = false;
+            ProgressBar.ShowPaused = false;
+            ProgressBar.Value = 0;
+        }
+
+        public async Task ShowMessageAsync(string message = null)
+        {
+            await Dispatcher.ResumeForegroundAsync();
+            if (message == null) {  message = Provider.Title; }
+            AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
+            UpdateTitle(message);
+            if (!isShowHub)
+            {
+                _ = VisualStateManager.GoToState(this, "HubVisible", true);
+                isShowHub = true;
+            }
+        }
+
+        #endregion
     }
 }

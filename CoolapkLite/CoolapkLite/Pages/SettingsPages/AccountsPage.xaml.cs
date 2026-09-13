@@ -1,9 +1,11 @@
-﻿using CoolapkLite.Helpers;
+﻿using CoolapkLite.Controls;
+using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
 using CoolapkLite.ViewModels.SettingsPages;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -38,10 +40,38 @@ namespace CoolapkLite.Pages.SettingsPages
             switch (element.Name)
             {
                 case nameof(AddAccount) when SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account:
-                    Provider.Add(new Credential(account.UID, account.Token));
+                    switch (Provider.AddOrReplace(new Credential(account.UID, account.Token)))
+                    {
+                        case ReplaceStatus.Duplicated:
+                            _ = this.ShowMessageAsync($"账号 {account.UID} 已存在");
+                            break;
+                        case ReplaceStatus.Replaced:
+                            _ = this.ShowMessageAsync($"账号 {account.UID} 信息已更新");
+                            break;
+                        case ReplaceStatus.Added:
+                            _ = this.ShowMessageAsync($"账号 {account.UID} 添加成功");
+                            break;
+                    }
                     break;
                 case "RemoveAccount" when element.Tag is Credential credential:
                     Provider.Remove(credential);
+                    _ = this.ShowMessageAsync($"账号 {credential.UID} 已移除");
+                    break;
+            }
+        }
+
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
+            {
+                case "ExportAccount":
+                    _ = Provider.ExportAsync();
+                    break;
+                case "ImportAccount":
+                    _ = Provider.ImportAsync();
+                    break;
+                default:
                     break;
             }
         }

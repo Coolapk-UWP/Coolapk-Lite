@@ -61,7 +61,8 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "OutPIP":
                     if (this.IsAppWindow())

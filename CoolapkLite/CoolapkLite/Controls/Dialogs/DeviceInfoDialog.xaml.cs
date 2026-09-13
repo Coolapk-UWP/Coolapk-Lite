@@ -74,7 +74,8 @@ namespace CoolapkLite.Controls.Dialogs
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "Copy":
                     DataPackage dataPackage = new DataPackage();

@@ -135,7 +135,7 @@ namespace CoolapkLite.Pages.FeedPages
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             if (!(sender is FrameworkElement element)) { return; }
-            switch (element.Tag?.ToString())
+            switch (element.Tag)
             {
                 case "FeedsButton":
                     _ = this.NavigateAsync(typeof(FeedListPage), FeedListViewModel.GetProvider(FeedListType.UserPageList, Provider.ProfileDetail.EntityID.ToString(), Dispatcher));

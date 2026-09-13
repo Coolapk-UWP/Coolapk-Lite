@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Core;
 using Windows.ApplicationModel.DataTransfer;
@@ -26,7 +25,7 @@ namespace CoolapkLite.Models.Images
 {
     public sealed class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
     {
-        private static readonly AsyncLock ImageModelLocker = new AsyncLock(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
+        private static AsyncLock ImageModelLocker = new AsyncLock(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
 
         public CoreDispatcher Dispatcher { get; private set; }
@@ -243,7 +242,7 @@ namespace CoolapkLite.Models.Images
         public event TypedEventHandler<ImageModel, object> LoadStarted;
         public event TypedEventHandler<ImageModel, object> LoadCompleted;
 
-        public static void SetSemaphoreSlim(int initialCount) => ImageModelLocker.SetSemaphoreSlim(initialCount);
+        public static void SetSemaphoreSlim(int initialCount) => ImageModelLocker = new AsyncLock(initialCount);
 
         private async void OnUISettingChanged(ApplicationTheme mode)
         {
@@ -372,7 +371,7 @@ namespace CoolapkLite.Models.Images
             FileSavePicker fileSavePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.PicturesLibrary,
-                SuggestedFileName = index != -1 ? fileName.Substring(0, index++) : fileName,
+                SuggestedFileName = index != -1 ? fileName.Substring(0, index++) : fileName
             };
 
             if (index != -1)
@@ -382,7 +381,7 @@ namespace CoolapkLite.Models.Images
                 {
                     index = fileEx.IndexOfAny(new[] { '?', '%', '&' });
                     fileEx = fileEx.Substring(0, index == -1 ? fileEx.Length : index);
-                    fileSavePicker.FileTypeChoices.Add($"{fileEx}文件", new[] { $".{fileEx}" });
+                    fileSavePicker.FileTypeChoices.Add($"{fileEx} 文件", new[] { $".{fileEx}" });
                 }
             }
 
@@ -399,6 +398,7 @@ namespace CoolapkLite.Models.Images
                     using (Stream ImageStream = await image.OpenStreamForReadAsync())
                     {
                         await ImageStream.CopyToAsync(FolderStream).ConfigureAwait(false);
+                        _ = Dispatcher.ShowMessageAsync($"图片已保存到 {file.Path}");
                     }
                 }
             }

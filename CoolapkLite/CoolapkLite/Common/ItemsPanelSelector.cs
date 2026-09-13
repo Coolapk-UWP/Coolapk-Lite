@@ -22,15 +22,9 @@ namespace CoolapkLite.Common
             }
         }
 
-        public ItemsPanelSelector()
-        {
-            IsVirtualizingChanged.Add(OnIsVirtualizingChanged);
-        }
+        public ItemsPanelSelector() => IsVirtualizingChanged.Add(OnIsVirtualizingChanged);
 
-        ~ItemsPanelSelector()
-        {
-            IsVirtualizingChanged.Remove(OnIsVirtualizingChanged);
-        }
+        ~ItemsPanelSelector() => _ = IsVirtualizingChanged.Remove(OnIsVirtualizingChanged);
 
         #region VirtualizingTemplate
 

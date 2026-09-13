@@ -60,6 +60,22 @@ namespace CoolapkLite.Pages.FeedPages
             }
         }
 
+        private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
+            {
+                case "ExportBookmark":
+                    _ = Provider.ExportAsync();
+                    break;
+                case "ImportBookmark":
+                    _ = Provider.ImportAsync();
+                    break;
+                default:
+                    break;
+            }
+        }
+
         private void FrameworkElement_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (e?.Handled == true) { return; }

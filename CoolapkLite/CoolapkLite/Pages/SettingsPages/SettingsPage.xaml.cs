@@ -66,7 +66,8 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "Reset":
                     SettingsHelper.LocalObject.Clear();
@@ -139,7 +140,8 @@ namespace CoolapkLite.Pages.SettingsPages
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "ViewCache":
                     _ = Frame.Navigate(typeof(CachesPage));

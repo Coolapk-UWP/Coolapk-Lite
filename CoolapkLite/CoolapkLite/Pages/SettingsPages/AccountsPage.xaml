@@ -73,7 +73,28 @@
                 Click="Button_Click"
                 Content="&#xE710;"
                 Style="{StaticResource TitleBarIconButtonStyle}"
-                ToolTipService.ToolTip="保存当前账号" />
+                ToolTipService.ToolTip="添加当前账号">
+                <helpers:UIElementHelper.ContextFlyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem
+                            Click="MenuFlyoutItem_Click"
+                            Tag="ExportAccount"
+                            Text="导出">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEDE1;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem
+                            Click="MenuFlyoutItem_Click"
+                            Tag="ImportAccount"
+                            Text="导入">
+                            <helpers:FlyoutBaseHelper.Icon>
+                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B5;" />
+                            </helpers:FlyoutBaseHelper.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </helpers:UIElementHelper.ContextFlyout>
+            </Button>
         </control:TitleBar>
     </Grid>
 </Page>

@@ -4,31 +4,16 @@ using System.Threading.Tasks;
 
 namespace CoolapkLite.Common
 {
-    public class AsyncLock
+    public sealed class AsyncLock
     {
-        private SemaphoreSlim m_semaphore;
-        private readonly Task<Releaser> m_releaser;
+        private readonly SemaphoreSlim m_semaphore;
 
-        public AsyncLock(int initialCount = 1)
-        {
-            m_semaphore = new SemaphoreSlim(initialCount);
-            m_releaser = Task.FromResult(new Releaser(this));
-        }
+        public AsyncLock(int initialCount = 1) => m_semaphore = new SemaphoreSlim(initialCount);
 
-        public Task<Releaser> LockAsync()
+        public async Task<Releaser> LockAsync(CancellationToken cancellationToken = default)
         {
-            Task wait = m_semaphore.WaitAsync();
-            return wait.IsCompleted ?
-                m_releaser :
-                wait.ContinueWith((_, state) => new Releaser((AsyncLock)state),
-                    this, CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-        }
-
-        public void SetSemaphoreSlim(int initialCount)
-        {
-            m_semaphore.Dispose();
-            m_semaphore = new SemaphoreSlim(initialCount);
+            await m_semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+            return new Releaser(this);
         }
 
         public readonly struct Releaser : IDisposable
