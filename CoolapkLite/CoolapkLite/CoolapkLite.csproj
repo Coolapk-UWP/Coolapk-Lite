@@ -535,6 +535,7 @@
     <Compile Include="ViewModels\SettingsPages\TestViewModel.cs" />
     <Compile Include="ViewModels\ShowImageViewModel.cs" />
     <Compile Include="ViewModels\ToolsPages\FansAnalyzeViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="$(AppxManifestName)">

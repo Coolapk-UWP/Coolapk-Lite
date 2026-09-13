@@ -121,7 +121,7 @@ namespace CoolapkLite.Controls
                     _ = this.NavigateAsync(typeof(BrowserPage), new BrowserViewModel("https://m.coolapk.com/mp/do?c=userDevice&m=myDevice", Dispatcher));
                     break;
                 case "LogFolder":
-                    _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
+                    _ = Launcher.LaunchFolderAsync(await SettingsHelper.LocalObject.Folder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists));
                     break;
                 case "CleanCache":
                     _ = (Provider?.CleanCacheAsync());

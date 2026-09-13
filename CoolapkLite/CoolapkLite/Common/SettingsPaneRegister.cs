@@ -179,7 +179,7 @@ namespace CoolapkLite.Common
                 new SettingsCommand(
                     "LogFolder",
                     loader.GetString("LogFolder"),
-                    async handler => _ = Launcher.LaunchFolderAsync(await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists))));
+                    async handler => _ = Launcher.LaunchFolderAsync(await SettingsHelper.LocalObject.Folder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists))));
             args.Request.ApplicationCommands.Add(
                 new SettingsCommand(
                     "Translate",

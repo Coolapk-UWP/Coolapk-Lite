@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Controls;
+﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
@@ -12,18 +11,15 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedShellViewModel : IViewModel
+    public abstract class FeedShellViewModel : ViewModelBase
     {
         protected string ID { get; set; }
-
-        public CoreDispatcher Dispatcher { get; }
 
         private string title = string.Empty;
         public string Title
@@ -46,30 +42,9 @@ namespace CoolapkLite.ViewModels.FeedPages
             protected set => SetProperty(ref itemSource, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        protected FeedShellViewModel(string id, CoreDispatcher dispatcher)
+        protected FeedShellViewModel(string id, CoreDispatcher dispatcher) : base(dispatcher)
         {
             if (string.IsNullOrEmpty(id)) { throw new ArgumentException(nameof(id)); }
-            Dispatcher = dispatcher;
             ID = id;
         }
 
@@ -108,7 +83,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public virtual async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset = false)
         {
             if (FeedDetail == null || reset)
             {
@@ -122,7 +97,6 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is FeedShellViewModel model && IsEqual(model);
         public bool IsEqual(FeedShellViewModel other) => ID == other.ID;
     }
 

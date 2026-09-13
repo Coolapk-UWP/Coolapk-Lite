@@ -69,8 +69,6 @@ namespace CoolapkLite.ViewModels.FeedPages
             }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is ProfileViewModel model && IsEqual(model);
-
         public bool IsEqual(ProfileViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
 
         protected override async Task<uint> LoadItemsAsync(uint count)

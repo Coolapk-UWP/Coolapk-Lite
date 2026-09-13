@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
@@ -24,7 +23,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public abstract class FeedListViewModel : IViewModel
+    public abstract class FeedListViewModel : ViewModelBase
     {
         protected const string idName = "id";
 
@@ -32,8 +31,6 @@ namespace CoolapkLite.ViewModels.FeedPages
         public string ID { get; }
         public FeedListType ListType { get; }
         public DataTemplateSelector DataTemplateSelector { get; set; }
-
-        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
@@ -76,29 +73,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             protected set => SetProperty(ref detailDataTemplate, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected FeedListViewModel(string id, FeedListType type, CoreDispatcher dispatcher) : base(dispatcher)
         {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        protected FeedListViewModel(string id, FeedListType type, CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
             ID = string.IsNullOrEmpty(id)
                 ? throw new ArgumentException(nameof(id))
                 : id;
@@ -156,9 +132,6 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public abstract Task<FeedListDetailBase> GetDetailAsync();
 
-        public abstract Task Refresh(bool reset = false);
-
-        bool IViewModel.IsEqual(IViewModel other) => other is FeedListViewModel model && IsEqual(model);
         public bool IsEqual(FeedListViewModel other) => ListType == other.ListType && ID == other.ID;
 
         protected abstract string GetTitleBarText(FeedListDetailBase detail);

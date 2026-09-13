@@ -1,10 +1,7 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.UI.Core;
@@ -12,11 +9,9 @@ using Windows.UI.Xaml;
 
 namespace CoolapkLite.ViewModels.BrowserPages
 {
-    public sealed class HTMLViewModel : IViewModel
+    public sealed class HTMLViewModel : ViewModelBase
     {
         private readonly Uri uri;
-
-        public CoreDispatcher Dispatcher { get; }
 
         private string title;
         public string Title
@@ -47,29 +42,8 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public HTMLViewModel(string url, CoreDispatcher dispatcher) : base(dispatcher)
         {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public HTMLViewModel(string url, CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
             uri = url.TryGetUri();
             ThemeHelper.UISettingChanged += OnUISettingChanged;
         }
@@ -94,7 +68,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset)
         {
             if (uri != null)
             {
@@ -102,7 +76,6 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is HTMLViewModel model && IsEqual(model);
         public bool IsEqual(HTMLViewModel other) => uri == other.uri;
 
         private async Task LoadHtmlAsync(Uri uri)

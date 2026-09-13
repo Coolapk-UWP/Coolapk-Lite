@@ -4,9 +4,7 @@ using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Background;
@@ -28,12 +26,8 @@ using Windows.UI;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public sealed class SettingsViewModel : IViewModel
+    public sealed class SettingsViewModel : CachedViewModelBase<SettingsViewModel>
     {
-        public static Dictionary<CoreDispatcher, SettingsViewModel> Caches { get; } = new Dictionary<CoreDispatcher, SettingsViewModel>();
-
-        public CoreDispatcher Dispatcher { get; }
-
         private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Setting");
         public string Title => title;
 
@@ -170,45 +164,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
             set => SetProperty(ref _aboutTextBlockText, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public SettingsViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
-            if (name != null)
-            {
-                foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
-                {
-                    await cache.Key.ResumeForegroundAsync();
-                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
-                }
-            }
-        }
-
-        private static async void RaisePropertyChangedEvent(params string[] names)
-        {
-            if (names?.Length > 0)
-            {
-                foreach (KeyValuePair<CoreDispatcher, SettingsViewModel> cache in Caches)
-                {
-                    await cache.Key.ResumeForegroundAsync();
-                    names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
-                }
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public SettingsViewModel(CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
-            Caches[dispatcher] = this;
             SettingsHelper.LoginChanged += args => IsLogin = args;
         }
 
@@ -251,7 +208,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             try
             {
                 await ThreadSwitcher.ResumeBackgroundAsync();
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+                StorageFolder folder = await SettingsHelper.LocalObject.Folder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
                 await folder.DeleteAsync();
             }
             catch (Exception ex)
@@ -378,7 +335,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         public async Task<bool> OpenLogFileAsync()
         {
             await ThreadSwitcher.ResumeBackgroundAsync();
-            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
+            StorageFolder folder = await SettingsHelper.LocalObject.Folder.CreateFolderAsync("MetroLogs", CreationCollisionOption.OpenIfExists);
             IReadOnlyList<StorageFile> files = await folder.GetFilesAsync();
             StorageFile file = files.FirstOrDefault();
             return file != null && await Dispatcher.LaunchFileAsync(file).ConfigureAwait(false);
@@ -427,7 +384,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public Task Refresh(bool reset)
+        public override Task Refresh(bool reset)
         {
             if (reset)
             {
@@ -440,11 +397,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(CheckUpdateWhenLaunching),
                     nameof(TileUpdateTime));
             }
-            TestViewModel.Refresh(reset);
+            TestViewModel.Caches.FirstOrDefault().Value?.Refresh(reset);
             return GetAboutTextBlockTextAsync(reset);
         }
-
-        bool IViewModel.IsEqual(IViewModel other) => other is SettingsViewModel model && IsEqual(model);
 
         public bool IsEqual(SettingsViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
     }

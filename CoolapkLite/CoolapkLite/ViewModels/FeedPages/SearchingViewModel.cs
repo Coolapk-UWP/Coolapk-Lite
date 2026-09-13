@@ -1,5 +1,4 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
@@ -8,17 +7,14 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public sealed class SearchingViewModel : IViewModel
+    public sealed class SearchingViewModel : ViewModelBase
     {
         public int PivotIndex = -1;
-
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         private string title = string.Empty;
         public string Title
@@ -48,29 +44,8 @@ namespace CoolapkLite.ViewModels.FeedPages
             private set => SetProperty(ref searchTopicItemSource, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public SearchingViewModel(string keyword, CoreDispatcher dispatcher, int index = -1) : base(dispatcher)
         {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public SearchingViewModel(string keyword, CoreDispatcher dispatcher, int index = -1)
-        {
-            Dispatcher = dispatcher;
             Title = keyword;
             PivotIndex = index;
         }
@@ -79,7 +54,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset = false)
         {
             if (reset)
             {
@@ -119,7 +94,6 @@ namespace CoolapkLite.ViewModels.FeedPages
             if (SearchTopicItemSource != null) { await SearchTopicItemSource.Refresh(reset); }
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is SearchingViewModel model && IsEqual(model);
         public bool IsEqual(SearchingViewModel other) => Title == other.Title;
     }
 

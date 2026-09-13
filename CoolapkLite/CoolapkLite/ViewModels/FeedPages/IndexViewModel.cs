@@ -30,8 +30,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityId");
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is IndexViewModel model && Equals(model);
-
         private IEnumerable<Entity> GetEntities(JObject json)
         {
             if (json.TryGetValue("entityTemplate", out JToken entityTemplate))

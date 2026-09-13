@@ -58,7 +58,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "dateline");
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is ChatViewModel model && IsEqual(model);
         public bool IsEqual(ChatViewModel other) => ID == other.ID;
 
         protected override async Task<uint> LoadItemsAsync(uint count)

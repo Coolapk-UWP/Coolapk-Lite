@@ -4,11 +4,8 @@ using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Network;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
@@ -20,10 +17,8 @@ using Windows.UI.StartScreen;
 
 namespace CoolapkLite.ViewModels.SettingsPages
 {
-    public sealed class TestViewModel : IViewModel
+    public sealed class TestViewModel : CachedViewModelBase<TestViewModel>
     {
-        public static Dictionary<CoreDispatcher, TestViewModel> Caches { get; } = new Dictionary<CoreDispatcher, TestViewModel>();
-
         private static readonly bool isJumpListSupported = ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported();
         public bool IsJumpListSupported => isJumpListSupported;
 
@@ -44,8 +39,6 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         private static readonly string title = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Test");
         public string Title => title;
-
-        public CoreDispatcher Dispatcher { get; }
 
         public bool IsAppWindowSupported => WindowHelper.IsAppWindowSupported;
 
@@ -275,37 +268,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                foreach (KeyValuePair<CoreDispatcher, TestViewModel> cache in Caches)
-                {
-                    await cache.Key.ResumeForegroundAsync();
-                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
-                }
-            }
-        }
-
-        private static async void RaisePropertyChangedEvent(params string[] names)
-        {
-            if (names?.Length > 0)
-            {
-                foreach (KeyValuePair<CoreDispatcher, TestViewModel> cache in Caches)
-                {
-                    await cache.Key.ResumeForegroundAsync();
-                    names.ForEach(name => cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name)));
-                }
-            }
-        }
-
-        public TestViewModel(CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
-            Caches[dispatcher] = this;
-        }
+        public TestViewModel(CoreDispatcher dispatcher) : base(dispatcher) { }
 
         public async Task UpdateBackgroundTask(bool isEnable)
         {
@@ -391,7 +354,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             #endregion
         }
 
-        public static void Refresh(bool reset)
+        public override Task Refresh(bool reset)
         {
             if (reset)
             {
@@ -412,13 +375,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(IsEnableLazyLoading),
                     nameof(SemaphoreSlimCount));
             }
-            userAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
-            RaisePropertyChangedEvent(nameof(UserAgent));
+            UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString();
+            return base.Refresh(reset);
         }
-
-        Task IViewModel.Refresh(bool reset) => Task.Run(() => UserAgent = NetworkHelper.Client.DefaultRequestHeaders.UserAgent.ToString());
-
-        bool IViewModel.IsEqual(IViewModel other) => other is TestViewModel model && IsEqual(model);
 
         public bool IsEqual(TestViewModel other) => Dispatcher == null ? Equals(other) : Dispatcher == other.Dispatcher;
     }

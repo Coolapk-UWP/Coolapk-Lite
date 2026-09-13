@@ -225,8 +225,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                         "uid"), dispatcher);
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is AdaptiveViewModel model && IsEqual(model);
-
         public bool IsEqual(AdaptiveViewModel other) => !string.IsNullOrWhiteSpace(Uri) ? Uri == other.Uri : Provider == other.Provider;
 
         private string GetUri(string uri)

@@ -1,20 +1,15 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using NetworkHelper = Microsoft.Toolkit.Uwp.Connectivity.NetworkHelper;
 
 namespace CoolapkLite.ViewModels
 {
-    public sealed class ShowImageViewModel : IViewModel
+    public sealed class ShowImageViewModel : ViewModelBase
     {
         private string ImageName => index != -1 && Images?.Count > 0 ? Images[Index].Title : string.Empty;
-
-        public CoreDispatcher Dispatcher { get; }
 
         public string Title
         {
@@ -48,29 +43,8 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher) : base(dispatcher)
         {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public ShowImageViewModel(ImageModel image, CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
             if (image.Dispatcher != dispatcher)
             {
                 image = image.Clone(dispatcher);
@@ -94,9 +68,8 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public Task Refresh(bool reset = false) => Images[Index].Refresh(Dispatcher);
+        public override Task Refresh(bool reset = false) => Images[Index].Refresh(Dispatcher);
 
-        bool IViewModel.IsEqual(IViewModel other) => other is ShowImageViewModel model && IsEqual(model);
         public bool IsEqual(ShowImageViewModel other) => Images == other.Images;
     }
 }

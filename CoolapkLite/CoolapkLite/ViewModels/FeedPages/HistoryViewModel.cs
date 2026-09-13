@@ -26,7 +26,6 @@ namespace CoolapkLite.ViewModels.FeedPages
             yield return jo.Value<string>("entityType") == "history" ? new HistoryModel(jo) : null;
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is HistoryViewModel model && IsEqual(model);
         public bool IsEqual(HistoryViewModel other) => Title == other.Title;
     }
 }

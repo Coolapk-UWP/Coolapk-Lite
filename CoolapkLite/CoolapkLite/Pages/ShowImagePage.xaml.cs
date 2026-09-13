@@ -385,7 +385,7 @@ namespace CoolapkLite.Pages
         public async Task ShowMessageAsync(string message = null)
         {
             await Dispatcher.ResumeForegroundAsync();
-            if (message == null) {  message = Provider.Title; }
+            if (message == null) { message = Provider.Title; }
             AppTitle.Text = message ?? ResourceLoader.GetForViewIndependentUse().GetString("AppName") ?? Package.Current.DisplayName;
             UpdateTitle(message);
             if (!isShowHub)

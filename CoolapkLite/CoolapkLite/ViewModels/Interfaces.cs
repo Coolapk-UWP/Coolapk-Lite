@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Core;
@@ -19,9 +21,11 @@ namespace CoolapkLite.ViewModels
 
     public interface IViewModel : INotifyPropertyChanged
     {
-        string Title { get; }
         CoreDispatcher Dispatcher { get; }
         Task Refresh(bool reset);
-        bool IsEqual(IViewModel other);
+    }
+
+    public interface IListViewModel<T> : IViewModel, IList<T>, IList, INotifyCollectionChanged
+    {
     }
 }

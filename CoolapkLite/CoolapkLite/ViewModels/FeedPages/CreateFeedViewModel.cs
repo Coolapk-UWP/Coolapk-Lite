@@ -9,9 +9,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Graphics.Imaging;
@@ -22,7 +20,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
 using CoolapkLite.Models.Network;
 
-
 #if !NETCORE463
 using System.IO;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -30,7 +27,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
-    public sealed class CreateFeedViewModel : IViewModel
+    public sealed class CreateFeedViewModel : ViewModelBase
     {
         public static string[] ImageTypes = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".tif", ".heif", ".heic" };
 
@@ -39,8 +36,6 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public readonly ObservableCollection<WriteableBitmap> Pictures = new ObservableCollection<WriteableBitmap>();
 
-        public CoreDispatcher Dispatcher { get; }
-
         private string title = string.Empty;
         public string Title
         {
@@ -48,35 +43,12 @@ namespace CoolapkLite.ViewModels.FeedPages
             set => SetProperty(ref title, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        public CreateFeedViewModel(CoreDispatcher dispatcher) : base(dispatcher)
         {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
         }
 
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public CreateFeedViewModel(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
-
-        public async Task Refresh(bool reset)
-        {
-            await CreateUserItemSource.Refresh(reset).ConfigureAwait(false);
-            await CreateTopicItemSource.Refresh(reset).ConfigureAwait(false);
-        }
-
-        bool IViewModel.IsEqual(IViewModel other) => other is CreateFeedViewModel model && Equals(model);
+        public override Task Refresh(bool reset) =>
+            Task.WhenAll(CreateUserItemSource.Refresh(reset), CreateTopicItemSource.Refresh(reset));
 
         public async Task ReadFileAsync(IStorageFile file)
         {

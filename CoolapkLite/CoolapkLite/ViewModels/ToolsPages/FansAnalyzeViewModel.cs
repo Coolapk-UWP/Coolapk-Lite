@@ -6,21 +6,18 @@ using CoolapkLite.ViewModels.Providers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.ToolsPages
 {
-    public sealed class FansAnalyzeViewModel : IViewModel
+    public sealed class FansAnalyzeViewModel : ViewModelBase
     {
         private readonly CoolapkListProvider Provider;
 
         public string ID { get; }
-        public CoreDispatcher Dispatcher { get; } = UIHelper.TryGetForCurrentCoreDispatcher();
 
         public string CachedSortedColumn { get; set; }
         public List<ContactModel> ContactModels { get; set; } = new List<ContactModel>();
@@ -46,30 +43,9 @@ namespace CoolapkLite.ViewModels.ToolsPages
             set => SetProperty(ref filteredContactModel, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public FansAnalyzeViewModel(string uid, CoreDispatcher dispatcher)
+        public FansAnalyzeViewModel(string uid, CoreDispatcher dispatcher) : base(dispatcher)
         {
             ID = uid;
-            Dispatcher = dispatcher;
             Provider = new CoolapkListProvider(
                 (p, firstItem, lastItem) =>
                 UriHelper.GetUri(
@@ -83,11 +59,9 @@ namespace CoolapkLite.ViewModels.ToolsPages
                 "fuid");
         }
 
-        bool IViewModel.IsEqual(IViewModel other) => other is FansAnalyzeViewModel model && IsEqual(model);
-
         public bool IsEqual(FansAnalyzeViewModel other) => !string.IsNullOrWhiteSpace(ID) ? ID == other.ID : Provider == other.Provider;
 
-        public async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset)
         {
             _ = Dispatcher.ShowProgressBarAsync();
             try
