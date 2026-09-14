@@ -124,6 +124,16 @@
                 Background="{ThemeResource ApplicationPivotBackgroundBrush}">
                 <AppBarButton
                     Click="AppBarButton_Click"
+                    Label="主页"
+                    Tag="Home"
+                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"
+                    Visibility="{Binding Visibility, ElementName=PivotContentFrame}">
+                    <AppBarButton.Icon>
+                        <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE80F;" />
+                    </AppBarButton.Icon>
+                </AppBarButton>
+                <AppBarButton
+                    Click="AppBarButton_Click"
                     Label="书签"
                     Tag="Bookmark"
                     ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
@@ -144,9 +154,19 @@
                     Click="AppBarButton_Click"
                     Label="用户"
                     Tag="User"
-                    ToolTipService.ToolTip="{Binding Label, RelativeSource={RelativeSource Mode=Self}}">
+                    ToolTipService.ToolTip="{x:Bind PersonMenuItem.Name, Mode=OneWay}">
                     <helpers:UIElementHelper.ContextFlyout>
                         <MenuFlyout>
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/CreateFeed"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="CreateFeed"
+                                Visibility="{x:Bind PersonMenuItem.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE932;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutSeparator Visibility="{x:Bind PersonMenuItem.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
                             <MenuFlyoutItem
                                 x:Uid="/MainPage/SwitchUser"
                                 Click="MenuFlyoutItem_Click"
@@ -155,8 +175,37 @@
                                     <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
                                 </helpers:FlyoutBaseHelper.Icon>
                             </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                x:Uid="/MainPage/Logout"
+                                Click="MenuFlyoutItem_Click"
+                                Tag="Logout"
+                                Visibility="{x:Bind PersonMenuItem.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE711;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </helpers:UIElementHelper.ContextFlyout>
+                    <helpers:AppBarButtonHelper.Icon>
+                        <Grid>
+                            <controls:PersonPicture
+                                Width="20"
+                                Height="20"
+                                DisplayName="{x:Bind PersonMenuItem.Name, Mode=OneWay}"
+                                EnableLazyLoading="False"
+                                Source="{x:Bind PersonMenuItem.Image, Mode=OneWay}" />
+                            <Viewbox
+                                Width="8"
+                                Height="8"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                                <controls:InfoBadge
+                                    ToolTipService.ToolTip="{Binding Value, RelativeSource={RelativeSource Mode=Self}}"
+                                    Visibility="{x:Bind PersonMenuItem.NotificationsModel.BadgeNum, Converter={StaticResource DoubleToVisibilityConverter}, FallbackValue='Collapsed', Mode=OneWay}"
+                                    Value="{x:Bind PersonMenuItem.NotificationsModel.BadgeNum, Mode=OneWay}" />
+                            </Viewbox>
+                        </Grid>
+                    </helpers:AppBarButtonHelper.Icon>
                     <AppBarButton.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE77B;" />
                     </AppBarButton.Icon>

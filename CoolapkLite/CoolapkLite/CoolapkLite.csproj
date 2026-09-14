@@ -310,6 +310,7 @@
     <Compile Include="Controls\TitleBar\TitleBarTemplateSettings.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelper.cs" />
     <Compile Include="Controls\TwoPaneView\DisplayRegionHelperInfo.cs" />
+    <Compile Include="Helpers\Controls\AppBarButtonHelper.cs" />
     <Compile Include="Helpers\Controls\ListViewHelper.cs" />
     <Compile Include="Helpers\Converters\ColorToHexNameConverter.cs" />
     <Compile Include="Helpers\Converters\EmptyImageModelToObjectConverter.cs" />

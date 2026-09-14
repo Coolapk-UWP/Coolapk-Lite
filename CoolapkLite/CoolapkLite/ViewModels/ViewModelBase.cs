@@ -19,7 +19,7 @@ namespace CoolapkLite.ViewModels
 
         protected void PropertyChangedInvoke([CallerMemberName] string name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        protected virtual async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -28,7 +28,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        protected virtual void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (!property?.Equals(value) ?? (value != null))
             {
@@ -46,7 +46,7 @@ namespace CoolapkLite.ViewModels
     {
         public static Dictionary<CoreDispatcher, TSelf> Caches { get; } = new Dictionary<CoreDispatcher, TSelf>();
 
-        protected override async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected static new async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
@@ -55,6 +55,15 @@ namespace CoolapkLite.ViewModels
                     await cache.Key.ResumeForegroundAsync();
                     cache.Value.PropertyChangedInvoke(name);
                 }
+            }
+        }
+
+        protected override void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        {
+            if (!property?.Equals(value) ?? (value != null))
+            {
+                property = value;
+                RaisePropertyChangedEvent(name);
             }
         }
 

@@ -38,6 +38,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public AccountsViewModel(CoreDispatcher dispatcher) : base(dispatcher) { }
 
+        static AccountsViewModel() => SettingsHelper.LoginChanged += isLogin => SetSelectedIndex(isLogin && _items.Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account ? _items.FindIndex(x => x.UID == account.UID) : -1);
+
         #region IList<Credential> Members
 
         protected override void SetIndex(int index, Credential value)
@@ -285,7 +287,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             return false;
         }
 
-        private void SetSelectedIndex(int index)
+        private static void SetSelectedIndex(int index)
         {
             selectedIndex = index;
             RaisePropertyChangedEvent(nameof(SelectedIndex));

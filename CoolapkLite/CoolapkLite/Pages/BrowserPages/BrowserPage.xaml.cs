@@ -117,7 +117,7 @@ namespace CoolapkLite.Pages.BrowserPages
         private async Task CheckLoginAsync()
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("BrowserPage");
-            _ = this.ShowMessageAsync(loader.GetString("Logging"));
+            //_ = this.ShowMessageAsync(loader.GetString("Logging"));
             if (await SettingsHelper.LoginAsync())
             {
                 if (Frame.CanGoBack)

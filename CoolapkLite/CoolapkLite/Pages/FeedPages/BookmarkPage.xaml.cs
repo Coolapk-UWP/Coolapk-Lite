@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using CoolapkLite.ViewModels.FeedPages;
 using System;
 using System.Threading.Tasks;
@@ -41,6 +42,10 @@ namespace CoolapkLite.Pages.FeedPages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Name)
             {
+                case nameof(Collection):
+                    string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
+                    if (!string.IsNullOrEmpty(uid)) { _ = Frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
+                    break;
                 case nameof(AddBookmark):
                     BookmarkDialog dialog = new BookmarkDialog();
                     ContentDialogResult result = await dialog.ShowAsync();

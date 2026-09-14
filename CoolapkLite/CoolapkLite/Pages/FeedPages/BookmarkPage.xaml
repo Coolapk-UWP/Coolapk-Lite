@@ -95,33 +95,43 @@
             IsRefreshButtonVisible="True"
             IsRefreshEnabled="True"
             RefreshRequested="{x:Bind FrameworkElement_RefreshEvent}">
-            <Button
-                x:Name="AddBookmark"
-                helpers:FocusVisualHelper.FocusVisualMargin="0"
-                Click="Button_Click"
-                Content="&#xE710;"
-                Style="{StaticResource TitleBarIconButtonStyle}">
-                <helpers:UIElementHelper.ContextFlyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem
-                            Click="MenuFlyoutItem_Click"
-                            Tag="ExportBookmark"
-                            Text="导出">
-                            <helpers:FlyoutBaseHelper.Icon>
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEDE1;" />
-                            </helpers:FlyoutBaseHelper.Icon>
-                        </MenuFlyoutItem>
-                        <MenuFlyoutItem
-                            Click="MenuFlyoutItem_Click"
-                            Tag="ImportBookmark"
-                            Text="导入">
-                            <helpers:FlyoutBaseHelper.Icon>
-                                <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B5;" />
-                            </helpers:FlyoutBaseHelper.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </helpers:UIElementHelper.ContextFlyout>
-            </Button>
+            <StackPanel>
+                <Button
+                    x:Name="Collection"
+                    helpers:FocusVisualHelper.FocusVisualMargin="0"
+                    Click="Button_Click"
+                    Content="&#xE7BC;"
+                    Style="{StaticResource TitleBarIconButtonStyle}"
+                    ToolTipService.ToolTip="我的收藏单"
+                    Visibility="{x:Bind Provider.IsLogin, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                <Button
+                    x:Name="AddBookmark"
+                    helpers:FocusVisualHelper.FocusVisualMargin="0"
+                    Click="Button_Click"
+                    Content="&#xE710;"
+                    Style="{StaticResource TitleBarIconButtonStyle}">
+                    <helpers:UIElementHelper.ContextFlyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem
+                                Click="MenuFlyoutItem_Click"
+                                Tag="ExportBookmark"
+                                Text="导出">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEDE1;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem
+                                Click="MenuFlyoutItem_Click"
+                                Tag="ImportBookmark"
+                                Text="导入">
+                                <helpers:FlyoutBaseHelper.Icon>
+                                    <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE8B5;" />
+                                </helpers:FlyoutBaseHelper.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </helpers:UIElementHelper.ContextFlyout>
+                </Button>
+            </StackPanel>
         </control:TitleBar>
     </Grid>
 </Page>

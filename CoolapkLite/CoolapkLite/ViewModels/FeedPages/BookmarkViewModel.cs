@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Network;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,12 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Bookmark");
 
+        private static bool isLogin = !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
+        public bool IsLogin => isLogin;
+
         public BookmarkViewModel(CoreDispatcher dispatcher) : base(dispatcher) { }
+
+        static BookmarkViewModel() => SettingsHelper.LoginChanged += isLogin => { BookmarkViewModel.isLogin = isLogin; RaisePropertyChangedEvent(nameof(IsLogin)); };
 
         #region IList<Bookmark> Members
 

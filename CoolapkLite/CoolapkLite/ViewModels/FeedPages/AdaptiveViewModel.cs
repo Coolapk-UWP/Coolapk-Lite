@@ -136,7 +136,7 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         o => new FeedReplyModel(o).AsEnumerable(),
                         "uid"),
-                    $"热门回复",
+                    "热门回复",
                     dispatcher);
         }
 
@@ -222,7 +222,9 @@ namespace CoolapkLite.ViewModels.FeedPages
                                 string.IsNullOrEmpty(firstItem) ? string.Empty : $"&firstItem={firstItem}",
                                 string.IsNullOrEmpty(lastItem) ? string.Empty : $"&lastItem={lastItem}"),
                         EntityTemplateSelector.GetEntities,
-                        "uid"), dispatcher);
+                        "uid"),
+                    "收藏单",
+                    dispatcher);
         }
 
         public bool IsEqual(AdaptiveViewModel other) => !string.IsNullOrWhiteSpace(Uri) ? Uri == other.Uri : Provider == other.Provider;

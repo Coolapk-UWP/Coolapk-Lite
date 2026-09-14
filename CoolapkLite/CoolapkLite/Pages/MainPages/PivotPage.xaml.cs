@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.BackgroundTasks;
 using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
@@ -13,6 +14,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
@@ -42,8 +44,8 @@ namespace CoolapkLite.Pages
         private bool isLoaded;
         private Action Refresh;
 
+        public PersonMenuItem PersonMenuItem;
         public Frame MainFrame => PivotContentFrame;
-        private static bool IsLogin => !SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty;
 
         public PivotPage()
         {
@@ -57,6 +59,8 @@ namespace CoolapkLite.Pages
             { UpdateTitleBarVisible(false); }
             _ = NotificationsModel.UpdateAsync();
             _ = LiveTileTask.UpdateTileAsync();
+            PersonMenuItem = new PersonMenuItem(Dispatcher) { Icon = "\uE77B", Name = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Login") };
+            _ = PersonMenuItem.InitializeAsync();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -79,7 +83,7 @@ namespace CoolapkLite.Pages
                 deferral?.Complete();
                 isLoaded = true;
             }
-            SettingsHelper.LoginChanged += OnLoginChanged;
+            PersonMenuItem.PropertyChanged += Provider_PropertyChanged;
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -102,13 +106,20 @@ namespace CoolapkLite.Pages
             if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed -= System_BackPressed; }
             PivotContentFrame.Navigated -= On_Navigated;
-            SettingsHelper.LoginChanged -= OnLoginChanged;
+            PersonMenuItem.PropertyChanged -= Provider_PropertyChanged;
         }
 
-        private async void OnLoginChanged(bool isLogin)
+        private async void Provider_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            await Dispatcher.ResumeForegroundAsync();
-            Pivot.ItemsSource = GetMainItems(isLogin);
+            switch (e.PropertyName)
+            {
+                case nameof(PersonMenuItem.IsLogin):
+                    await Dispatcher.ResumeForegroundAsync();
+                    Pivot.ItemsSource = GetMainItems(PersonMenuItem.IsLogin);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -188,7 +199,20 @@ namespace CoolapkLite.Pages
             if (!Dispatcher.HasThreadAccess || !PivotContentFrame.CanGoBack)
             { return false; }
 
-            if (PivotContentFrame.BackStackDepth > 1)
+            if (PivotContentFrame.Visibility != Visibility.Visible)
+            {
+                Storyboard storyboard = new Storyboard();
+                storyboard.Children.Add(new DrillOutThemeAnimation
+                {
+                    EntranceTarget = PivotContentFrame,
+                    ExitTarget = Pivot,
+                    FillBehavior = FillBehavior.Stop
+                });
+                storyboard.Begin();
+                Pivot.Visibility = Visibility.Collapsed;
+                PivotContentFrame.Visibility = Visibility.Visible;
+            }
+            else if (PivotContentFrame.BackStackDepth > 1)
             {
                 PivotContentFrame.GoBack();
             }
@@ -239,6 +263,18 @@ namespace CoolapkLite.Pages
         {
             switch ((sender as FrameworkElement).Tag?.ToString())
             {
+                case "Home" when Pivot.Visibility != Visibility.Visible:
+                    Storyboard storyboard = new Storyboard();
+                    storyboard.Children.Add(new DrillInThemeAnimation
+                    {
+                        EntranceTarget = Pivot,
+                        ExitTarget = PivotContentFrame,
+                        FillBehavior = FillBehavior.Stop
+                    });
+                    storyboard.Begin();
+                    Pivot.Visibility = Visibility.Visible;
+                    PivotContentFrame.Visibility = Visibility.Collapsed;
+                    break;
                 case "User":
                     _ = await SettingsHelper.CheckLoginAsync()
                         ? PivotContentFrame.Navigate(typeof(ProfilePage))
@@ -270,6 +306,19 @@ namespace CoolapkLite.Pages
             if (!(sender is FrameworkElement element)) { return; }
             switch (element.Tag)
             {
+                case "Logout":
+                    SettingsHelper.Logout();
+                    break;
+                case "CreateFeed":
+                    new CreateFeedControl
+                    {
+                        FeedType = CreateFeedType.Feed,
+                        PopupTransitions = new TransitionCollection
+                        {
+                            new PopupThemeTransition()
+                        }
+                    }.Show(this);
+                    break;
                 case "SwitchUser":
                     _ = PivotContentFrame.Navigate(typeof(AccountsPage));
                     break;
@@ -405,7 +454,7 @@ namespace CoolapkLite.Pages
 
         #endregion
 
-        public static PivotItem[] GetMainItems() => GetMainItems(IsLogin);
+        public static PivotItem[] GetMainItems() => GetMainItems(!SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).IsEmpty);
 
         public static PivotItem[] GetMainItems(bool isLogin)
         {
