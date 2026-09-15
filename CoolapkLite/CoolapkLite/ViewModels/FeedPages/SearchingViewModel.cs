@@ -6,7 +6,6 @@ using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
@@ -54,7 +53,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (reset)
             {
@@ -97,7 +96,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         public bool IsEqual(SearchingViewModel other) => Title == other.Title;
     }
 
-    public sealed class SearchFeedItemSource : EntityItemSource, INotifyPropertyChanged
+    public sealed class SearchFeedItemSource : EntityItemSource
     {
         private string keyword;
         public string Keyword

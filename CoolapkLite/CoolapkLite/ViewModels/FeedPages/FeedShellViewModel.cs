@@ -9,7 +9,6 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
@@ -83,7 +82,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (FeedDetail == null || reset)
             {
@@ -110,7 +109,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public FeedDetailViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             await base.Refresh(reset);
             if (FeedDetail != null && ItemSource == null)
@@ -165,7 +164,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public QuestionViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             await base.Refresh(reset);
             if (FeedDetail != null && ItemSource == null)
@@ -216,7 +215,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public VoteViewModel(string id, FeedDetailModel feedDetail, CoreDispatcher dispatcher) : base(id, feedDetail, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             await base.Refresh(reset);
             if (FeedDetail != null && ItemSource == null)
@@ -266,7 +265,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public sealed class ReplyItemSource : EntityItemSource, INotifyPropertyChanged, IComboBoxChangeSelectedIndex, IToggleChangeSelectedIndex
+    public sealed class ReplyItemSource : EntityItemSource, IComboBoxChangeSelectedIndex, IToggleChangeSelectedIndex
     {
         public string ID;
         public List<string> ItemSource { get; private set; }

@@ -75,7 +75,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         #endregion
 
-        public override async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset = true)
         {
             IEnumerable<Bookmark> bookmarks = await SettingsHelper.GetAsync<IEnumerable<Bookmark>>(SettingsHelper.Bookmark).ConfigureAwait(false);
             Clear(); AddRange(bookmarks);

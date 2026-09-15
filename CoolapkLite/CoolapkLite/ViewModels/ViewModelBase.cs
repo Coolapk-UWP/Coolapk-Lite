@@ -5,15 +5,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels
 {
-    public abstract class ViewModelBase : IViewModel
+    public abstract class DispatcherNotifyPropertyChanged : IDispatcherNotifyPropertyChanged
     {
         public CoreDispatcher Dispatcher { get; }
+
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -28,7 +31,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        protected virtual void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (!property?.Equals(value) ?? (value != null))
             {
@@ -37,20 +40,29 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public ViewModelBase(CoreDispatcher dispatcher) => Dispatcher = dispatcher ?? UIHelper.TryGetForCurrentCoreDispatcher();
+        #endregion
 
-        public virtual Task Refresh(bool reset) => Task.CompletedTask;
+        public DispatcherNotifyPropertyChanged(CoreDispatcher dispatcher) => Dispatcher = dispatcher ?? UIHelper.TryGetForCurrentCoreDispatcher();
+    }
+
+    public abstract class ViewModelBase : DispatcherNotifyPropertyChanged, IViewModel
+    {
+        public ViewModelBase(CoreDispatcher dispatcher) : base(dispatcher) { }
+
+        public virtual Task Refresh(bool reset = false) => Task.CompletedTask;
     }
 
     public abstract class CachedViewModelBase<TSelf> : ViewModelBase where TSelf : CachedViewModelBase<TSelf>
     {
-        public static Dictionary<CoreDispatcher, TSelf> Caches { get; } = new Dictionary<CoreDispatcher, TSelf>();
+        protected static readonly Dictionary<CoreDispatcher, TSelf> _caches = new Dictionary<CoreDispatcher, TSelf>();
+
+        #region INotifyPropertyChanged
 
         protected static new async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
-                foreach (KeyValuePair<CoreDispatcher, TSelf> cache in Caches)
+                foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
                 {
                     await cache.Key.ResumeForegroundAsync();
                     cache.Value.PropertyChangedInvoke(name);
@@ -58,7 +70,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        protected override void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
+        protected new void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
             if (!property?.Equals(value) ?? (value != null))
             {
@@ -71,7 +83,7 @@ namespace CoolapkLite.ViewModels
         {
             if (names?.Length > 0)
             {
-                foreach (KeyValuePair<CoreDispatcher, TSelf> cache in Caches)
+                foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
                 {
                     await cache.Key.ResumeForegroundAsync();
                     names.ForEach(cache.Value.PropertyChangedInvoke);
@@ -79,7 +91,13 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public CachedViewModelBase(CoreDispatcher dispatcher) : base(dispatcher) => Caches[Dispatcher] = this as TSelf;
+        #endregion
+
+        public CachedViewModelBase(CoreDispatcher dispatcher) : base(dispatcher) => _caches[Dispatcher] = this as TSelf;
+
+        public static bool TryGetCache(CoreDispatcher dispatcher, out TSelf cache) => _caches.TryGetValue(dispatcher, out cache);
+
+        public static TSelf FirstOrDefaultCache() => _caches.Values.FirstOrDefault();
     }
 
     public abstract class CachedListViewModelBase<TSelf, TItem> : CachedViewModelBase<TSelf>, IListViewModel<TItem> where TSelf : CachedListViewModelBase<TSelf, TItem>
@@ -87,17 +105,21 @@ namespace CoolapkLite.ViewModels
         private const string IndexerName = "Item[]";
         protected static readonly List<TItem> _items = new List<TItem>();
 
+        #region INotifyCollectionChanged
+
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         protected async void RaiseCollectionChangedEvent(NotifyCollectionChangedEventArgs e)
         {
-            foreach (KeyValuePair<CoreDispatcher, TSelf> cache in Caches)
+            foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
             {
                 await cache.Key.ResumeForegroundAsync();
                 cache.Value.PropertyChangedInvoke(IndexerName);
                 cache.Value.CollectionChanged?.Invoke(cache.Value, e);
             }
         }
+
+        #endregion
 
         public CachedListViewModelBase(CoreDispatcher dispatcher) : base(dispatcher) { }
 

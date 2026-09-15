@@ -19,9 +19,13 @@ namespace CoolapkLite.ViewModels
         bool ToggleIsOn { get; }
     }
 
-    public interface IViewModel : INotifyPropertyChanged
+    public interface IDispatcherNotifyPropertyChanged : INotifyPropertyChanged
     {
         CoreDispatcher Dispatcher { get; }
+    }
+
+    public interface IViewModel : IDispatcherNotifyPropertyChanged
+    {
         Task Refresh(bool reset);
     }
 

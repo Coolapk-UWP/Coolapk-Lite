@@ -8,7 +8,7 @@ using Windows.UI.Core;
 
 namespace CoolapkLite.ViewModels.DataSource
 {
-    public abstract class EntityItemSource : DataSourceBase<Entity>
+    public abstract class EntityItemSource : DataSourceBase<Entity>, IListViewModel<Entity>
     {
         protected CoolapkListProvider Provider;
         protected CoolapkListProvider SubProvider;

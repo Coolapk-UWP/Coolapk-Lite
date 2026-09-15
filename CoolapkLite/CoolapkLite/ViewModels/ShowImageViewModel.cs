@@ -68,7 +68,7 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        public override Task Refresh(bool reset = false) => Images[Index].Refresh(Dispatcher);
+        public override Task Refresh(bool reset = true) => Images[Index].Refresh(Dispatcher);
 
         public bool IsEqual(ShowImageViewModel other) => Images == other.Images;
     }

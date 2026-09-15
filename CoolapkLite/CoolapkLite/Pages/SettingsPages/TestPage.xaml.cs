@@ -44,7 +44,7 @@ namespace CoolapkLite.Pages.SettingsPages
         public TestPage()
         {
             InitializeComponent();
-            Provider = TestViewModel.Caches.TryGetValue(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
+            Provider = TestViewModel.TryGetCache(Dispatcher, out TestViewModel provider) ? provider : new TestViewModel(Dispatcher);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

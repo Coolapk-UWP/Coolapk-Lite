@@ -12,7 +12,6 @@ using CoolapkLite.ViewModels.Providers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -124,7 +123,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         private void OnLoadMoreCompleted() => _ = Dispatcher.HideProgressBarAsync();
 
-        public virtual Task SearchRefresh(bool reset = false) => SearchItemSource?.Refresh(reset);
+        public virtual Task SearchRefresh(bool reset) => SearchItemSource?.Refresh(reset);
 
         public abstract SearchItemSource GetSearchProvider(string keyword);
 
@@ -147,7 +146,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public UserViewModel(string uid, CoreDispatcher dispatcher) : base(uid, FeedListType.UserPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -296,7 +295,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public TagViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.TagPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -427,7 +426,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public DyhViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.DyhPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -539,7 +538,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public ProductViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.ProductPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -707,7 +706,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public CollectionViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.CollectionPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -839,7 +838,7 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public AppViewModel(string id, CoreDispatcher dispatcher) : base(id, FeedListType.AppPageList, dispatcher) { }
 
-        public override async Task Refresh(bool reset = false)
+        public override async Task Refresh(bool reset)
         {
             if (Detail == null || reset)
             {
@@ -1001,7 +1000,7 @@ namespace CoolapkLite.ViewModels.FeedPages
         }
     }
 
-    public sealed class SearchItemSource : EntityItemSource, INotifyPropertyChanged
+    public sealed class SearchItemSource : EntityItemSource
     {
         public string Keyword;
         public string PageType;

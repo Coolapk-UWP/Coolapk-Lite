@@ -68,7 +68,7 @@ namespace CoolapkLite.ViewModels.BrowserPages
             }
         }
 
-        public override async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset = true)
         {
             if (uri != null)
             {

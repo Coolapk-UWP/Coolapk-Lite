@@ -27,7 +27,7 @@ namespace CoolapkLite.Pages.SettingsPages
         public SettingsPage()
         {
             InitializeComponent();
-            Provider = SettingsViewModel.Caches.TryGetValue(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
+            Provider = SettingsViewModel.TryGetCache(Dispatcher, out SettingsViewModel provider) ? provider : new SettingsViewModel(Dispatcher);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

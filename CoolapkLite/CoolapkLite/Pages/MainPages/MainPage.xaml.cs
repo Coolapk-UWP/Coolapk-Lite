@@ -17,9 +17,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -422,13 +420,11 @@ namespace CoolapkLite.Pages
         #endregion
     }
 
-    public class MenuItem : INotifyPropertyChanged
+    public class MenuItem : DispatcherNotifyPropertyChanged
     {
         public int Index { get; set; }
         public Type PageType { get; set; }
         public IViewModel ViewModels { get; set; }
-
-        public CoreDispatcher Dispatcher { get; }
 
         public string name;
         public string Name
@@ -444,27 +440,7 @@ namespace CoolapkLite.Pages
             set => SetProperty(ref icon, value);
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                await Dispatcher.ResumeForegroundAsync();
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        protected void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
-        public MenuItem(CoreDispatcher dispatcher) => Dispatcher = dispatcher;
+        public MenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
 
         public static MenuItem[] GetMainItems(CoreDispatcher dispatcher)
         {
@@ -553,7 +529,7 @@ namespace CoolapkLite.Pages
                     ViewModels = null;
                     if (NotificationsModel == null)
                     {
-                        NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                        NotificationsModel = NotificationsModel.TryGetCache(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                     }
                 }
             }

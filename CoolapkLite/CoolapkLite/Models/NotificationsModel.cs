@@ -1,11 +1,9 @@
-﻿using CoolapkLite.Common;
-using CoolapkLite.Helpers;
+﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -13,14 +11,10 @@ using mtuc = Microsoft.Toolkit.Uwp.Connectivity;
 
 namespace CoolapkLite.Models
 {
-    public sealed class NotificationsModel : INotifyPropertyChanged
+    public sealed class NotificationsModel : CachedViewModelBase<NotificationsModel>
     {
-        public static Dictionary<CoreDispatcher, NotificationsModel> Caches { get; } = new Dictionary<CoreDispatcher, NotificationsModel>();
-
         private static readonly DispatcherTimer timer;
         private static int badgeNum, followNum, messageNum, atMeNum, atCommentMeNum, commentMeNum, feedLikeNum, cloudInstall, notification;
-
-        public CoreDispatcher Dispatcher { get; }
 
         /// <summary>
         /// 新的消息总数。
@@ -157,29 +151,6 @@ namespace CoolapkLite.Models
             RaisePropertyChangedEvent(nameof(Notification));
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private static async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
-        {
-            if (name != null)
-            {
-                foreach (KeyValuePair<CoreDispatcher, NotificationsModel> cache in Caches)
-                {
-                    await cache.Key.ResumeForegroundAsync();
-                    cache.Value.PropertyChanged?.Invoke(cache.Value, new PropertyChangedEventArgs(name));
-                }
-            }
-        }
-
-        private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
-        {
-            if (property == null ? value != null : !property.Equals(value))
-            {
-                property = value;
-                RaisePropertyChangedEvent(name);
-            }
-        }
-
         static NotificationsModel()
         {
             timer = new DispatcherTimer
@@ -196,11 +167,7 @@ namespace CoolapkLite.Models
             timer.Start();
         }
 
-        public NotificationsModel(CoreDispatcher dispatcher)
-        {
-            Dispatcher = dispatcher;
-            Caches[dispatcher] = this;
-        }
+        public NotificationsModel(CoreDispatcher dispatcher) : base(dispatcher) { }
 
         /// <summary>
         /// 将数字归零。
@@ -342,5 +309,7 @@ namespace CoolapkLite.Models
                     .SetDismissActivation())
                 .Show();
         }
+
+        public override Task Refresh(bool reset = true) => UpdateAsync(false);
     }
 }

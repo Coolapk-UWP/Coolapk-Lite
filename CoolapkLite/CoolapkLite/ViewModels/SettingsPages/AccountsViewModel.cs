@@ -142,7 +142,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public int FindIndex(Predicate<Credential> match) => _items.FindIndex(match);
 
-        public override Task Refresh(bool reset)
+        public override Task Refresh(bool reset = true)
         {
             try
             {

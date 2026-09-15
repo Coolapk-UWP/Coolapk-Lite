@@ -47,14 +47,14 @@ namespace CoolapkLite.ViewModels.FeedPages
                 "entityType");
         }
 
-        public override async Task Refresh(bool reset)
+        public override async Task Refresh(bool reset = true)
         {
             IsLogin = await SettingsHelper.CheckLoginAsync().ConfigureAwait(false);
             if (IsLogin)
             {
                 if (NotificationsModel == null)
                 {
-                    NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                    NotificationsModel = NotificationsModel.TryGetCache(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
                 UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);

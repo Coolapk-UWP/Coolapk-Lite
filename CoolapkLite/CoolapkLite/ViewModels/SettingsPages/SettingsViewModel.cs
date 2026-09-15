@@ -396,7 +396,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     nameof(CheckUpdateWhenLaunching),
                     nameof(TileUpdateTime));
             }
-            TestViewModel.Caches.FirstOrDefault().Value?.Refresh(reset);
+            TestViewModel.FirstOrDefaultCache()?.Refresh(reset);
             return GetAboutTextBlockTextAsync(reset);
         }
 

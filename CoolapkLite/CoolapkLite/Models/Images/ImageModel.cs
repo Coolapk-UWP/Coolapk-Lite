@@ -1,6 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
-using Microsoft.Toolkit;
+using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CoolapkLite.Models.Images
 {
-    public sealed class ImageModel : IEquatable<ImageModel>, INotifyPropertyChanged
+    public sealed class ImageModel : IEquatable<ImageModel>, IViewModel
     {
         private static AsyncLock ImageModelLocker = new AsyncLock(SettingsHelper.Get<int>(SettingsHelper.SemaphoreSlimCount));
         public static bool IsAutoPlaySupported => ApiInfoHelper.IsBitmapImageAutoPlaySupported;
@@ -213,7 +213,7 @@ namespace CoolapkLite.Models.Images
 
         private void SetProperty<TProperty>(ref TProperty property, TProperty value, [CallerMemberName] string name = null)
         {
-            if (property == null ? value != null : !property.Equals(value))
+            if (!property?.Equals(value) ?? (value != null))
             {
                 property = value;
                 RaisePropertyChangedEvent(name);
@@ -484,7 +484,7 @@ namespace CoolapkLite.Models.Images
             return match.Success ? match.Value : $"CoolapkLite_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}";
         }
 
-        public Task Refresh() => GetImageAsync();
+        public Task Refresh(bool reset = true) => GetImageAsync();
 
         public Task Refresh(CoreDispatcher dispatcher)
         {

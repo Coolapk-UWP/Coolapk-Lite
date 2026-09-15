@@ -25,7 +25,7 @@ namespace CoolapkLite.Pages.FeedPages
         public BookmarkPage()
         {
             InitializeComponent();
-            Provider = BookmarkViewModel.Caches.TryGetValue(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
+            Provider = BookmarkViewModel.TryGetCache(Dispatcher, out BookmarkViewModel provider) ? provider : new BookmarkViewModel(Dispatcher);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

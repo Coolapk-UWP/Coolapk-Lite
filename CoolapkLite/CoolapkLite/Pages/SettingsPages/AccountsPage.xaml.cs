@@ -22,7 +22,7 @@ namespace CoolapkLite.Pages.SettingsPages
         public AccountsPage()
         {
             InitializeComponent();
-            Provider = AccountsViewModel.Caches.TryGetValue(Dispatcher, out AccountsViewModel provider) ? provider : new AccountsViewModel(Dispatcher);
+            Provider = AccountsViewModel.TryGetCache(Dispatcher, out AccountsViewModel provider) ? provider : new AccountsViewModel(Dispatcher);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

@@ -51,7 +51,7 @@ namespace CoolapkLite.Pages.FeedPages
             base.OnNavigatedTo(e);
             if (NotificationsModel == null)
             {
-                NotificationsModel = NotificationsModel.Caches.TryGetValue(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
+                NotificationsModel = NotificationsModel.TryGetCache(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
             }
             _ = NotificationsModel.UpdateAsync();
         }
