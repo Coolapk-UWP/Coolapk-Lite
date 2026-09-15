@@ -1,8 +1,8 @@
 ﻿using CoolapkLite.Helpers;
+using CoolapkLite.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -296,7 +296,7 @@ namespace CoolapkLite.Common
                     logo = null;
                 }
 
-                Extension newExtension = new Extension(ext, properties, logo);
+                Extension newExtension = new Extension(ext, properties, logo, _dispatcher);
                 Extensions.Add(newExtension);
 
                 newExtension.MarkAsLoaded();
@@ -406,9 +406,9 @@ namespace CoolapkLite.Common
     }
 
     /// <summary>
-    /// Represents an extension in the ExtensionManager
+    /// Represents an extension in the <see cref="ExtensionManager"/>
     /// </summary>
-    public sealed class Extension : INotifyPropertyChanged
+    public sealed class Extension : DispatcherNotifyPropertyChanged
     {
         #region Member Vars
 
@@ -416,7 +416,12 @@ namespace CoolapkLite.Common
         private string _serviceName;
         private readonly object _sync = new object();
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private BitmapImage _logo;
+        private bool _enabled;
+        private bool _offline;
+        private bool _loaded;
+        private AppExtension _appExtension;
+        private Visibility _visibility;
 
         #endregion
 
@@ -426,7 +431,8 @@ namespace CoolapkLite.Common
         /// <param name="ext">The extension as represented by the system</param>
         /// <param name="properties">Properties about the extension</param>
         /// <param name="logo">The logo associated with the package that the extension is defined in</param>
-        public Extension(AppExtension ext, PropertySet properties, BitmapImage logo)
+        /// <param name="dispatcher">The dispatcher to use for property change notifications</param>
+        public Extension(AppExtension ext, PropertySet properties, BitmapImage logo, CoreDispatcher dispatcher) : base(dispatcher)
         {
             AppExtension = ext;
             _properties = properties;
@@ -455,19 +461,58 @@ namespace CoolapkLite.Common
 
         #region Properties
 
-        public BitmapImage Logo { get; private set; }
+        public BitmapImage Logo
+        {
+            get => _logo;
+            private set => SetProperty(ref _logo, value);
+        }
 
-        public string UniqueId { get; private set; } // the unique id of this extension which will be AppUserModel Id + Extension ID
+        /// <summary>
+        /// The unique id of this extension which will be AppUserModel Id + Extension ID.
+        /// </summary>
+        public string UniqueId { get; }
 
-        public bool Enabled { get; private set; } // whether the user has enabled the extension or not
+        /// <summary>
+        /// Whether the user has enabled the extension or not.
+        /// </summary>
+        public bool Enabled
+        {
+            get => _enabled;
+            private set => SetProperty(ref _enabled, value);
+        }
 
-        public bool Offline { get; private set; } // whether the package containing the extension is offline
+        /// <summary>
+        /// Whether the package containing the extension is offline.
+        /// </summary>
+        public bool Offline
+        {
+            get => _offline;
+            private set => SetProperty(ref _offline, value);
+        }
 
-        public bool Loaded { get; private set; } // whether the package has been loaded or not.
+        /// <summary>
+        /// Whether the package has been loaded or not.
+        /// </summary>
+        public bool Loaded
+        {
+            get => _loaded;
+            private set => SetProperty(ref _loaded, value);
+        }
 
-        public AppExtension AppExtension { get; private set; }
+        public AppExtension AppExtension
+        {
+            get => _appExtension;
+            private set => SetProperty(ref _appExtension, value);
+        }
 
-        public Visibility Visible { get; private set; } // Whether the extension should be visible in the list of extensions
+        /// <summary>
+        /// Whether the extension should be visible in the list of extensions.
+        /// </summary>
+        public Visibility Visible
+        {
+            get => _visibility;
+            private set => SetProperty(ref _visibility, value);
+        }
 
         #endregion
 
@@ -597,7 +642,6 @@ namespace CoolapkLite.Common
 
             Loaded = true;
             Visible = Visibility.Visible;
-            RaisePropertyChanged("Visible");
             Offline = false;
         }
 
@@ -629,7 +673,6 @@ namespace CoolapkLite.Common
 
                     Loaded = false;
                     Visible = Visibility.Collapsed;
-                    RaisePropertyChanged("Visible");
                 }
             }
         }
@@ -644,18 +687,5 @@ namespace CoolapkLite.Common
                 Unload();
             }
         }
-
-        #region PropertyChanged
-
-        /// <summary>
-        /// Typical property changed handler so that the UI will update
-        /// </summary>
-        /// <param name="name"></param>
-        private void RaisePropertyChanged(string name)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
-
-        #endregion
     }
 }

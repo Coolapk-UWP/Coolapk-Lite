@@ -1,5 +1,6 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -58,14 +59,13 @@ namespace CoolapkLite.ViewModels
 
         #region INotifyPropertyChanged
 
-        protected static new async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
+        protected static new void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
             if (name != null)
             {
                 foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
                 {
-                    await cache.Key.ResumeForegroundAsync();
-                    cache.Value.PropertyChangedInvoke(name);
+                    _ = cache.Key.AwaitableRunAsync(() => cache.Value.PropertyChangedInvoke(name));
                 }
             }
         }
@@ -79,14 +79,13 @@ namespace CoolapkLite.ViewModels
             }
         }
 
-        protected static async void RaisePropertyChangedEvent(params string[] names)
+        protected static void RaisePropertyChangedEvent(params string[] names)
         {
             if (names?.Length > 0)
             {
                 foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
                 {
-                    await cache.Key.ResumeForegroundAsync();
-                    names.ForEach(cache.Value.PropertyChangedInvoke);
+                    _ = cache.Key.AwaitableRunAsync(() => names.ForEach(cache.Value.PropertyChangedInvoke));
                 }
             }
         }
@@ -109,13 +108,15 @@ namespace CoolapkLite.ViewModels
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        protected async void RaiseCollectionChangedEvent(NotifyCollectionChangedEventArgs e)
+        protected void RaiseCollectionChangedEvent(NotifyCollectionChangedEventArgs e)
         {
             foreach (KeyValuePair<CoreDispatcher, TSelf> cache in _caches)
             {
-                await cache.Key.ResumeForegroundAsync();
-                cache.Value.PropertyChangedInvoke(IndexerName);
-                cache.Value.CollectionChanged?.Invoke(cache.Value, e);
+                _ = cache.Key.AwaitableRunAsync(() =>
+                {
+                    cache.Value.PropertyChangedInvoke(IndexerName);
+                    cache.Value.CollectionChanged?.Invoke(cache.Value, e);
+                });
             }
         }
 
