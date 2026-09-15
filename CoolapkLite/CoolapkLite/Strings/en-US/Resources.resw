@@ -138,6 +138,10 @@
   <data name="ExceptionThrown" xml:space="preserve">
     <value>There was an error with the program…</value>
   </data>
+  <data name="FileExtDescription" xml:space="preserve">
+    <value>{0} 文件</value>
+    <comment>{0} 表示扩展类型</comment>
+  </data>
   <data name="GoToDevOps" xml:space="preserve">
     <value>Go to DevOps</value>
   </data>

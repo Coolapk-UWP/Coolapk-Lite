@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Accounts" xml:space="preserve">
+    <value>切换账号</value>
+  </data>
   <data name="Bookmark" xml:space="preserve">
     <value>Bookmark</value>
   </data>
@@ -128,6 +131,9 @@
   </data>
   <data name="Circle" xml:space="preserve">
     <value>Circle</value>
+  </data>
+  <data name="CreateFeed.Text" xml:space="preserve">
+    <value>Write Feeds</value>
   </data>
   <data name="Extension" xml:space="preserve">
     <value>Extensions</value>
@@ -147,6 +153,9 @@
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="Logout.Text" xml:space="preserve">
+    <value>注销</value>
+  </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -155,6 +164,9 @@
   </data>
   <data name="Setting" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="SwitchUser.Text" xml:space="preserve">
+    <value>切换用户</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Testing</value>
