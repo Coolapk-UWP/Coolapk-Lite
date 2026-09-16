@@ -148,6 +148,9 @@
     <value>成功导入 {0} 个账号</value>
     <comment>{0} 表示账号个数</comment>
   </data>
+  <data name="Maxed" xml:space="preserve">
+    <value>保存数量已达上限</value>
+  </data>
   <data name="NoAccount" xml:space="preserve">
     <value>当前没有已保存的账号</value>
   </data>
