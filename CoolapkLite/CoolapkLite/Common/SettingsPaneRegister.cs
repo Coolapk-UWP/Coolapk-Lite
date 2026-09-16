@@ -1,8 +1,8 @@
 ﻿using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
-using CoolapkLite.Pages.FeedPages;
-using CoolapkLite.ViewModels.FeedPages;
+using CoolapkLite.Pages.NavigatePages;
+using CoolapkLite.ViewModels.NavigatePages;
 using Microsoft.Toolkit.Uwp.UI;
 using Newtonsoft.Json.Linq;
 using System;

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 
-namespace CoolapkLite.ViewModels.FeedPages
+namespace CoolapkLite.ViewModels.NavigatePages
 {
     public sealed class ProfileViewModel : EntityItemSource, IViewModel
     {

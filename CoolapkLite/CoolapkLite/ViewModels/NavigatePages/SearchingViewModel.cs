@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 
-namespace CoolapkLite.ViewModels.FeedPages
+namespace CoolapkLite.ViewModels.NavigatePages
 {
     public sealed class SearchingViewModel : ViewModelBase
     {

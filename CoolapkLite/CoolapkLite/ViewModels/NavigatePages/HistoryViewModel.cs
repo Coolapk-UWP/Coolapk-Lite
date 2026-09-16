@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
 
-namespace CoolapkLite.ViewModels.FeedPages
+namespace CoolapkLite.ViewModels.NavigatePages
 {
     public sealed class HistoryViewModel : EntityItemSource, IViewModel
     {

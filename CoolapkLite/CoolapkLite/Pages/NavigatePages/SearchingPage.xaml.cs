@@ -2,7 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.ViewModels.DataSource;
-using CoolapkLite.ViewModels.FeedPages;
+using CoolapkLite.ViewModels.NavigatePages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Navigation;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
-namespace CoolapkLite.Pages.FeedPages
+namespace CoolapkLite.Pages.NavigatePages
 {
     /// <summary>
     /// 可用于自身或导航至 Frame 内部的空白页。

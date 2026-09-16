@@ -7,11 +7,11 @@ using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
 using CoolapkLite.Pages.BrowserPages;
-using CoolapkLite.Pages.FeedPages;
+using CoolapkLite.Pages.NavigatePages;
 using CoolapkLite.Pages.SettingsPages;
 using CoolapkLite.ViewModels;
 using CoolapkLite.ViewModels.BrowserPages;
-using CoolapkLite.ViewModels.FeedPages;
+using CoolapkLite.ViewModels.NavigatePages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json.Linq;
 using System;
@@ -154,18 +154,22 @@ namespace CoolapkLite.Pages
                     HamburgerMenu.SelectedIndex = -1;
                     HamburgerMenu.SelectedOptionsIndex = browserViewModel.IsLoginPage == true ? 0 : -1;
                 }
+                else if (e.SourcePageType == typeof(SearchingPage))
+                {
+                    HamburgerMenu.SelectedIndex = HamburgerMenu.SelectedOptionsIndex = -1;
+                }
                 else
                 {
-                    MenuItem item = (HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
-                    if (item != default)
+                    MenuItem item = (HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.IsCurrentPage(e.SourcePageType));
+                    if (item != null)
                     {
                         HamburgerMenu.SelectedOptionsIndex = -1;
                         HamburgerMenu.SelectedIndex = item.Index;
                     }
                     else
                     {
-                        item = (HamburgerMenu.OptionsItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.PageType == e.SourcePageType);
-                        if (item != default)
+                        item = (HamburgerMenu.OptionsItemsSource as IEnumerable<MenuItem>).FirstOrDefault(p => p.IsCurrentPage(e.SourcePageType));
+                        if (item != null)
                         {
                             HamburgerMenu.SelectedIndex = -1;
                             HamburgerMenu.SelectedOptionsIndex = item.Index;
@@ -424,6 +428,7 @@ namespace CoolapkLite.Pages
     {
         public int Index { get; set; }
         public Type PageType { get; set; }
+        public Type[] OtherPageTypes { get; set; }
         public IViewModel ViewModels { get; set; }
 
         public string name;
@@ -442,6 +447,8 @@ namespace CoolapkLite.Pages
 
         public MenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
 
+        public bool IsCurrentPage(Type pageType) => PageType == pageType || (OtherPageTypes?.Any(p => p == pageType) ?? false);
+
         public static MenuItem[] GetMainItems(CoreDispatcher dispatcher)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
@@ -458,11 +465,11 @@ namespace CoolapkLite.Pages
         public static (MenuItem[], PersonMenuItem) GetOptionsItems(CoreDispatcher dispatcher)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
-            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
+            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), OtherPageTypes = new[] { typeof(ProfilePage), typeof(NotificationsPage), typeof(AccountsPage) }, ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
             MenuItem[] items = new[]
             {
                  person,
-                 new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), Index = 1 }
+                 new MenuItem(dispatcher) { Icon = "\uE713", Name = loader.GetString("Setting"), PageType = typeof(SettingsPage), OtherPageTypes = new[] { typeof(TestPage), typeof(CachesPage), typeof(ExtensionPage) }, Index = 1 }
             };
             return (items, person);
         }

@@ -371,19 +371,19 @@
     <Compile Include="Pages\BrowserPages\HTMLPage.xaml.cs">
       <DependentUpon>HTMLPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\BookmarkPage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\BookmarkPage.xaml.cs">
       <DependentUpon>BookmarkPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedPages\ChatPage.xaml.cs">
       <DependentUpon>ChatPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\NotificationsPage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\NotificationsPage.xaml.cs">
       <DependentUpon>NotificationsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\ProfilePage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\ProfilePage.xaml.cs">
       <DependentUpon>ProfilePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\SearchingPage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\SearchingPage.xaml.cs">
       <DependentUpon>SearchingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\SettingsPages\AccountsPage.xaml.cs">
@@ -485,16 +485,16 @@
     <Compile Include="Pages\FeedPages\AdaptivePage.xaml.cs">
       <DependentUpon>AdaptivePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\CirclePage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\CirclePage.xaml.cs">
       <DependentUpon>CirclePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\FeedPages\FeedListPage.xaml.cs">
       <DependentUpon>FeedListPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\HistoryPage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\HistoryPage.xaml.cs">
       <DependentUpon>HistoryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\FeedPages\IndexPage.xaml.cs">
+    <Compile Include="Pages\NavigatePages\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\MainPages\MainPage.xaml.cs">
@@ -519,15 +519,15 @@
     <Compile Include="ViewModels\DataSource\EntityItemSource.cs" />
     <Compile Include="ViewModels\DataSource\IncrementalLoadingBase.cs" />
     <Compile Include="ViewModels\FeedPages\AdaptiveViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\BookmarkViewModel.cs" />
+    <Compile Include="ViewModels\NavigatePages\BookmarkViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\ChatViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\CreateFeedViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedListViewModel.cs" />
     <Compile Include="ViewModels\FeedPages\FeedShellViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\HistoryViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\IndexViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\ProfileViewModel.cs" />
-    <Compile Include="ViewModels\FeedPages\SearchingViewModel.cs" />
+    <Compile Include="ViewModels\NavigatePages\HistoryViewModel.cs" />
+    <Compile Include="ViewModels\NavigatePages\IndexViewModel.cs" />
+    <Compile Include="ViewModels\NavigatePages\ProfileViewModel.cs" />
+    <Compile Include="ViewModels\NavigatePages\SearchingViewModel.cs" />
     <Compile Include="ViewModels\Interfaces.cs" />
     <Compile Include="ViewModels\Providers\CoolapkListProvider.cs" />
     <Compile Include="ViewModels\SettingsPages\AccountsViewModel.cs" />
@@ -1330,7 +1330,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\BookmarkPage.xaml">
+    <Page Include="Pages\NavigatePages\BookmarkPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1338,15 +1338,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\NotificationsPage.xaml">
+    <Page Include="Pages\NavigatePages\NotificationsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\ProfilePage.xaml">
+    <Page Include="Pages\NavigatePages\ProfilePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\SearchingPage.xaml">
+    <Page Include="Pages\NavigatePages\SearchingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1434,7 +1434,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\CirclePage.xaml">
+    <Page Include="Pages\NavigatePages\CirclePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -1442,11 +1442,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\HistoryPage.xaml">
+    <Page Include="Pages\NavigatePages\HistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\FeedPages\IndexPage.xaml">
+    <Page Include="Pages\NavigatePages\IndexPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

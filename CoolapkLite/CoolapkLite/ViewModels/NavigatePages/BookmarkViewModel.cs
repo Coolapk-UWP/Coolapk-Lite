@@ -13,7 +13,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.Core;
 using Windows.UI.StartScreen;
 
-namespace CoolapkLite.ViewModels.FeedPages
+namespace CoolapkLite.ViewModels.NavigatePages
 {
     public sealed class BookmarkViewModel : CachedListViewModelBase<BookmarkViewModel, Bookmark>
     {
