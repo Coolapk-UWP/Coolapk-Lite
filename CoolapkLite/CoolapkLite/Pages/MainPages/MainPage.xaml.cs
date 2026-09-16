@@ -447,7 +447,7 @@ namespace CoolapkLite.Pages
 
         public MenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
 
-        public bool IsCurrentPage(Type pageType) => PageType == pageType || (OtherPageTypes?.Any(p => p == pageType) ?? false);
+        public bool IsCurrentPage(Type pageType) => PageType == pageType || (OtherPageTypes?.Any(p => p == pageType) == true);
 
         public static MenuItem[] GetMainItems(CoreDispatcher dispatcher)
         {

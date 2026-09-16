@@ -229,7 +229,7 @@ namespace CoolapkLite.Helpers
             remove => _ = actions.Remove(value);
         }
 
-        private static void InvokeLoginChanged(bool args) => actions?.Invoke(args);
+        private static void InvokeLoginChanged(bool args) => actions.Invoke(args);
 
         #endregion
 
@@ -243,7 +243,7 @@ namespace CoolapkLite.Helpers
             remove => _ = remarks.Remove(value);
         }
 
-        private static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks?.Invoke(args);
+        private static void InvokeUserRemarksChanged(ImmutableDictionary<int, string> args) => remarks.Invoke(args);
 
         #endregion
 

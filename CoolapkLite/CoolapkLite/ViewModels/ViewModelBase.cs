@@ -313,8 +313,9 @@ namespace CoolapkLite.ViewModels
 
     public enum ReplaceStatus
     {
-        Duplicated = -1,
-        Replaced,
-        Added
+        Maxed = 0x161,
+        Duplicated = 0x34,
+        Replaced = Added + 1,
+        Added = 0x0
     }
 }

@@ -17,7 +17,7 @@ namespace CoolapkLite.Common
                 if (isVirtualizing != value)
                 {
                     isVirtualizing = value;
-                    IsVirtualizingChanged?.Invoke(value);
+                    IsVirtualizingChanged.Invoke(value);
                 }
             }
         }

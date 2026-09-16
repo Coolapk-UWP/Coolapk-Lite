@@ -52,6 +52,9 @@ namespace CoolapkLite.Pages.SettingsPages
                         case ReplaceStatus.Added:
                             _ = this.ShowMessageAsync(string.Format(loader.GetString("Added"), account.UID));
                             break;
+                        case ReplaceStatus.Maxed:
+                            _ = this.ShowMessageAsync(loader.GetString("Maxed"));
+                            break;
                     }
                     break;
                 case "RemoveAccount" when element.Tag is Credential credential:

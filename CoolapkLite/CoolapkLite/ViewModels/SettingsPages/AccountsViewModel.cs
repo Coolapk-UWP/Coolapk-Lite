@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Resources;
 using Windows.Security.Credentials;
 using Windows.Security.Cryptography;
@@ -18,7 +19,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 {
     public sealed class AccountsViewModel : CachedListViewModelBase<AccountsViewModel, Credential>
     {
-        private static readonly PasswordVault vault = new PasswordVault();
+        public static readonly PasswordVault PasswordVault = new PasswordVault();
 
         public string Title => ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Accounts");
 
@@ -76,13 +77,17 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         protected override void Replace(int index, Credential old, Credential item)
         {
-            vault.Remove(old);
-            vault.Add(item);
+            PasswordVault.Remove(old);
+            PasswordVault.Add(item);
             base.Replace(index, old, item);
         }
 
         public override ReplaceStatus AddOrReplace(Credential item)
         {
+            if (_items.Count >= 20)
+            {
+                return ReplaceStatus.Maxed;
+            }
             int index = _items.FindIndex(x => x.UID == item.UID);
             if (index >= 0)
             {
@@ -96,7 +101,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             else
             {
-                vault.Add(item);
+                PasswordVault.Add(item);
                 ReplaceStatus status = base.AddOrReplace(item);
                 if (selectedIndex < 0
                     && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
@@ -121,7 +126,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             }
             else
             {
-                vault.Add(item);
+                PasswordVault.Add(item);
                 base.Insert(index, item);
                 if (selectedIndex < 0
                     && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account
@@ -134,7 +139,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         protected override void Remove(int index, Credential item)
         {
-            vault.Remove(item);
+            PasswordVault.Remove(item);
             base.Remove(index, item);
         }
 
@@ -146,8 +151,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             try
             {
-                IReadOnlyList<PasswordCredential> credentials = vault.FindAllByResource(Credential.ResourceName);
-                Clear(); AddRange(credentials.Select<PasswordCredential, Credential>(x => vault.Retrieve(Credential.ResourceName, x.UserName)));
+                IReadOnlyList<PasswordCredential> credentials = PasswordVault.FindAllByResource(Credential.ResourceName);
+                Clear(); AddRange(credentials.Select<PasswordCredential, Credential>(x => x));
                 SetSelectedIndex(Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account account ? FindIndex(x => x.UID == account.UID) : -1);
             }
             catch
@@ -181,7 +186,8 @@ namespace CoolapkLite.ViewModels.SettingsPages
                             int count = 0;
                             foreach (Credential account in accounts)
                             {
-                                if (AddOrReplace(account) != ReplaceStatus.Duplicated)
+                                ReplaceStatus status = AddOrReplace(account);
+                                if (status == ReplaceStatus.Added || status == ReplaceStatus.Replaced)
                                 {
                                     count++;
                                 }
@@ -191,7 +197,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                         else
                         {
                             AddRange(accounts);
-                            accounts.ForEach(x => vault.Add(x));
+                            accounts.ForEach(x => PasswordVault.Add(x));
                             _ = Dispatcher.ShowMessageAsync(string.Format(loader.GetString("ImportSucceed"), accounts.Count));
                             SetSelectedIndex(Count > 0 && SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount) is Account _account ? FindIndex(x => x.UID == _account.UID) : -1);
                         }
@@ -326,12 +332,27 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
     public sealed class Credential : IEquatable<Credential>
     {
-        public const string ResourceName = "CoolapkLite";
+        public static readonly string ResourceName = Package.Current.Id.Name;
 
         public string UID { get; set; }
-        public string Token { get; set; }
+
+        private string token;
+        public string Token
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(UID))
+                {
+                    try { token = AccountsViewModel.PasswordVault.Retrieve(ResourceName, UID).Password; }
+                    catch (Exception ex) { SettingsHelper.LogManager.GetLogger(nameof(Credential)).Error(ex.ExceptionToMessage(), ex); }
+                }
+                return token;
+            }
+            set => token = value;
+        }
+
         [JsonIgnore]
-        public bool IsEmpty => string.IsNullOrEmpty(UID) || string.IsNullOrEmpty(Token);
+        public bool IsEmpty => string.IsNullOrEmpty(UID);
 
         public Credential() { }
 
