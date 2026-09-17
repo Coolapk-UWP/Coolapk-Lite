@@ -46,7 +46,7 @@ namespace CoolapkLite.Pages.NavigatePages
             {
                 case nameof(Collection):
                     string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
-                    if (!string.IsNullOrEmpty(uid)) { _ = Frame.NavigateAsync(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
+                    if (!string.IsNullOrEmpty(uid)) { _ = Frame.Navigate(typeof(AdaptivePage), AdaptiveViewModel.GetUserCollectionListProvider(uid, element.Dispatcher)); }
                     break;
                 case nameof(AddBookmark):
                     BookmarkDialog dialog = new BookmarkDialog();

@@ -66,16 +66,16 @@ namespace CoolapkLite.Pages
             if (!isLoaded)
             {
                 Deferral deferral = null;
-                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
-                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs commandLineActivatedEventArgs)
+                { deferral = commandLineActivatedEventArgs.Operation.GetDeferral(); }
                 HamburgerMenu.ItemsSource = MenuItem.GetMainItems(Dispatcher);
                 (MenuItem[] options, PersonMenuItem person) = MenuItem.GetOptionsItems(Dispatcher);
                 HamburgerMenu.OptionsItemsSource = options;
                 _ = person.InitializeAsync();
                 _ = NotificationsModel.UpdateAsync();
                 _ = LiveTileTask.UpdateTileAsync();
-                if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
+                if (e.Parameter is IActivatedEventArgs activatedEventArgs)
+                { await OpenActivatedEventArgsAsync(activatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
                 { await OpenLinkAsync(factory); }
                 else { HamburgerMenu_Navigate((HamburgerMenu.ItemsSource as IEnumerable<MenuItem>).FirstOrDefault(), new EntranceNavigationTransitionInfo()); }
@@ -201,32 +201,28 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private void HamburgerMenu_Navigate(MenuItem MenuItem, NavigationTransitionInfo TransitionInfo, object vs = null)
+        private void HamburgerMenu_Navigate(MenuItem item, NavigationTransitionInfo transitionInfo, object vs = null)
         {
-            Type _page;
-            if (MenuItem.PageType != null)
-            {
-                _page = MenuItem.PageType;
-            }
-            else
+            if (!(item.PageType is Type _page))
             {
                 return;
             }
+
             // Get the page type before navigation so you can prevent duplicate
             // entries in the back stack.
-            Type PreNavPageType = HamburgerMenuFrame.CurrentSourcePageType;
+            Type preNavPageType = HamburgerMenuFrame.CurrentSourcePageType;
 
             // Only navigate if the selected page isn't currently loaded.
-            if (_page != null && !Equals(PreNavPageType, _page))
+            if (preNavPageType != _page)
             {
-                _ = HamburgerMenuFrame.Navigate(_page, vs ?? MenuItem.ViewModels, TransitionInfo);
+                _ = HamburgerMenuFrame.Navigate(_page, vs ?? item.ViewModel, transitionInfo);
             }
         }
 
         private void HamburgerMenu_ItemInvoked(object sender, ItemClickEventArgs e)
         {
-            MenuItem MenuItem = e.ClickedItem as MenuItem;
-            HamburgerMenu_Navigate(MenuItem, null);
+            MenuItem item = e.ClickedItem as MenuItem;
+            HamburgerMenu_Navigate(item, null);
             if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.CompactInline)
             {
                 HamburgerMenu.IsPaneOpen = false;
@@ -242,17 +238,17 @@ namespace CoolapkLite.Pages
             return AppViewBackButtonVisibility.Visible;
         }
 
-        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
+        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar titleBar)
         {
-            CustomTitleBar.Opacity = TitleBar.SystemOverlayLeftInset > 48 ? 0 : 1;
-            LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
+            CustomTitleBar.Opacity = titleBar.SystemOverlayLeftInset > 48 ? 0 : 1;
+            LeftPaddingColumn.Width = new GridLength(titleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(titleBar.SystemOverlayRightInset);
         }
 
-        private void UpdateTitleBarVisible(bool IsVisible)
+        private void UpdateTitleBarVisible(bool isVisible)
         {
-            TopPaddingRow.Height = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? new GridLength(32) : new GridLength(0);
-            CustomTitleBar.Visibility = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
+            TopPaddingRow.Height = isVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? new GridLength(32) : new GridLength(0);
+            CustomTitleBar.Visibility = isVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void AppWindow_Changed(AppWindow sender, AppWindowChangedEventArgs args) => UpdateTitleBarVisible(sender.TitleBar.IsVisible);
@@ -429,7 +425,7 @@ namespace CoolapkLite.Pages
         public int Index { get; set; }
         public Type PageType { get; set; }
         public Type[] OtherPageTypes { get; set; }
-        public IViewModel ViewModels { get; set; }
+        public IViewModel ViewModel { get; set; }
 
         public string name;
         public string Name
@@ -465,7 +461,7 @@ namespace CoolapkLite.Pages
         public static (MenuItem[], PersonMenuItem) GetOptionsItems(CoreDispatcher dispatcher)
         {
             ResourceLoader loader = ResourceLoader.GetForViewIndependentUse("MainPage");
-            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), PageType = typeof(BrowserPage), OtherPageTypes = new[] { typeof(ProfilePage), typeof(NotificationsPage), typeof(AccountsPage) }, ViewModels = new BrowserViewModel(UriHelper.LoginUri, dispatcher), Index = 0 };
+            PersonMenuItem person = new PersonMenuItem(dispatcher) { Icon = "\uE77B", Name = loader.GetString("Login"), Index = 0 };
             MenuItem[] items = new[]
             {
                  person,
@@ -498,7 +494,12 @@ namespace CoolapkLite.Pages
             private set => SetProperty(ref _notificationsModel, value);
         }
 
-        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher) { }
+        public PersonMenuItem(CoreDispatcher dispatcher) : base(dispatcher)
+        {
+            PageType = typeof(BrowserPage);
+            OtherPageTypes = new[] { typeof(ProfilePage), typeof(NotificationsPage), typeof(AccountsPage) };
+            ViewModel = new BrowserViewModel(UriHelper.LoginUri, dispatcher);
+        }
 
         ~PersonMenuItem() => SettingsHelper.LoginChanged -= OnLoginChanged;
 
@@ -531,9 +532,10 @@ namespace CoolapkLite.Pages
                     if (results.UID.ToString() != uid) { return; }
                     Name = results.UserName;
                     PageType = typeof(ProfilePage);
+                    OtherPageTypes = new[] { typeof(NotificationsPage), typeof(AccountsPage) };
                     await Dispatcher.ResumeForegroundAsync();
                     Image = results.UserAvatar;
-                    ViewModels = null;
+                    ViewModel = null;
                     if (NotificationsModel == null)
                     {
                         NotificationsModel = NotificationsModel.TryGetCache(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
@@ -545,7 +547,8 @@ namespace CoolapkLite.Pages
                 Name = ResourceLoader.GetForViewIndependentUse("MainPage").GetString("Login");
                 Image = null;
                 PageType = typeof(BrowserPage);
-                ViewModels = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);
+                OtherPageTypes = new[] { typeof(ProfilePage), typeof(NotificationsPage), typeof(AccountsPage) };
+                ViewModel = new BrowserViewModel(UriHelper.LoginUri, Dispatcher);
                 NotificationsModel = null;
             }
         }

@@ -76,8 +76,8 @@ namespace CoolapkLite.Pages.NavigatePages
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
-            if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
+            if (!(Pivot.SelectedItem is PivotItem menuItem)) { return; }
+            if (menuItem.Content is ListView listView && listView.ItemsSource is EntityItemSource ItemsSource)
             {
                 Refresh = reset => ItemsSource.Refresh(reset);
             }

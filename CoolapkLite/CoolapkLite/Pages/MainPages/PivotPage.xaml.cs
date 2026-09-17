@@ -4,15 +4,14 @@ using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
-using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.FeedPages;
 using CoolapkLite.Pages.NavigatePages;
 using CoolapkLite.Pages.SettingsPages;
-using CoolapkLite.ViewModels.BrowserPages;
 using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.NavigatePages;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -75,11 +74,11 @@ namespace CoolapkLite.Pages
             if (!isLoaded)
             {
                 Deferral deferral = null;
-                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs CommandLineActivatedEventArgs)
-                { deferral = CommandLineActivatedEventArgs.Operation.GetDeferral(); }
+                if (ApiInfoHelper.IsICommandLineActivatedEventArgsSupported && e.Parameter is ICommandLineActivatedEventArgs commandLineActivatedEventArgs)
+                { deferral = commandLineActivatedEventArgs.Operation.GetDeferral(); }
                 Pivot.ItemsSource = GetMainItems();
-                if (e.Parameter is IActivatedEventArgs ActivatedEventArgs)
-                { await OpenActivatedEventArgsAsync(ActivatedEventArgs); }
+                if (e.Parameter is IActivatedEventArgs activatedEventArgs)
+                { await OpenActivatedEventArgsAsync(activatedEventArgs); }
                 else if (e.Parameter is OpenLinkFactory factory)
                 { await OpenLinkAsync(factory); }
                 deferral?.Complete();
@@ -101,9 +100,9 @@ namespace CoolapkLite.Pages
             {
                 Window.Current.SetTitleBar(null);
                 SystemNavigationManager.GetForCurrentView().BackRequested -= System_BackRequested;
-                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-                TitleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
-                TitleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
+                CoreApplicationViewTitleBar titleBar = CoreApplication.GetCurrentView().TitleBar;
+                titleBar.LayoutMetricsChanged -= TitleBar_LayoutMetricsChanged;
+                titleBar.IsVisibleChanged -= TitleBar_IsVisibleChanged;
             }
             if (ApiInfoHelper.IsHardwareButtonsSupported)
             { HardwareButtons.BackPressed -= System_BackPressed; }
@@ -136,10 +135,10 @@ namespace CoolapkLite.Pages
             {
                 Window.Current.SetTitleBar(CustomTitleBar);
                 SystemNavigationManager.GetForCurrentView().BackRequested += System_BackRequested;
-                CoreApplicationViewTitleBar TitleBar = CoreApplication.GetCurrentView().TitleBar;
-                TitleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
-                TitleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
-                UpdateTitleBarLayout(TitleBar);
+                CoreApplicationViewTitleBar titleBar = CoreApplication.GetCurrentView().TitleBar;
+                titleBar.LayoutMetricsChanged += TitleBar_LayoutMetricsChanged;
+                titleBar.IsVisibleChanged += TitleBar_IsVisibleChanged;
+                UpdateTitleBarLayout(titleBar);
             }
         }
 
@@ -179,20 +178,24 @@ namespace CoolapkLite.Pages
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
-            if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
+            if (!(Pivot.SelectedItem is PivotItem menuItem)) { return; }
+            if (menuItem.Content is Frame frame)
             {
-                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
-                    MenuItem.Tag.ToString() == "indexV8"
-                        ? "/main/indexV8"
-                        : MenuItem.Tag.ToString().Contains('V')
-                            ? $"/page?url={MenuItem.Tag}"
-                            : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
-                Refresh = () => (Frame.Content as AdaptivePage).Refresh(true);
-            }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
-            {
-                Refresh = () => AdaptivePage.Refresh(true);
+                switch (frame.Content)
+                {
+                    case AdaptivePage adaptivePage:
+                        Refresh = () => adaptivePage.Refresh(true);
+                        break;
+                    case null:
+                        _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
+                            menuItem.Tag.ToString() == "indexV8"
+                                ? "/main/indexV8"
+                                : menuItem.Tag.ToString().Contains('V')
+                                    ? $"/page?url={menuItem.Tag}"
+                                    : $"/page?url=V9_HOME_TAB_FOLLOW&type={menuItem.Tag}", Dispatcher));
+                        Refresh = () => (Frame.Content as AdaptivePage).Refresh(true);
+                        break;
+                }
             }
         }
 
@@ -236,17 +239,17 @@ namespace CoolapkLite.Pages
             return true;
         }
 
-        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar TitleBar)
+        private void UpdateTitleBarLayout(CoreApplicationViewTitleBar titleBar)
         {
-            CustomTitleBar.Opacity = TitleBar.SystemOverlayLeftInset > 48 ? 0 : 1;
-            LeftPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayLeftInset);
-            RightPaddingColumn.Width = new GridLength(TitleBar.SystemOverlayRightInset);
+            CustomTitleBar.Opacity = titleBar.SystemOverlayLeftInset > 48 ? 0 : 1;
+            LeftPaddingColumn.Width = new GridLength(titleBar.SystemOverlayLeftInset);
+            RightPaddingColumn.Width = new GridLength(titleBar.SystemOverlayRightInset);
         }
 
-        private void UpdateTitleBarVisible(bool IsVisible)
+        private void UpdateTitleBarVisible(bool isVisible)
         {
-            TopPaddingRow.Height = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? new GridLength(32) : new GridLength(0);
-            CustomTitleBar.Visibility = IsVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
+            TopPaddingRow.Height = isVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? new GridLength(32) : new GridLength(0);
+            CustomTitleBar.Visibility = isVisible && !UIHelper.HasStatusBar && !UIHelper.HasTitleBar ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
@@ -255,9 +258,9 @@ namespace CoolapkLite.Pages
             {
                 Refresh();
             }
-            else if ((Pivot.SelectedItem as PivotItem).Content is ListView ListView && ListView.ItemsSource is EntityItemSource ItemsSource)
+            else if ((Pivot.SelectedItem as PivotItem).Content is ListView listView && listView.ItemsSource is EntityItemSource itemsSource)
             {
-                _ = ItemsSource.Refresh(true);
+                _ = itemsSource.Refresh(true);
             }
         }
 
@@ -278,9 +281,7 @@ namespace CoolapkLite.Pages
                     PivotContentFrame.Visibility = Visibility.Collapsed;
                     break;
                 case "User":
-                    _ = await SettingsHelper.CheckLoginAsync()
-                        ? PivotContentFrame.Navigate(typeof(ProfilePage))
-                        : PivotContentFrame.Navigate(typeof(BrowserPage), new BrowserViewModel(UriHelper.LoginUri, Dispatcher));
+                    _ = PivotContentFrame.Navigate(PersonMenuItem.PageType, PersonMenuItem.ViewModel);
                     break;
                 case "History":
                     _ = PivotContentFrame.Navigate(typeof(HistoryPage));

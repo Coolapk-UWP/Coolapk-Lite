@@ -60,15 +60,19 @@ namespace CoolapkLite.Pages.NavigatePages
 
         private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PivotItem MenuItem = Pivot.SelectedItem as PivotItem;
-            if ((Pivot.SelectedItem as PivotItem).Content is Frame Frame && Frame.Content is null)
+            if (!(Pivot.SelectedItem is PivotItem menuItem)) { return; }
+            if (menuItem.Content is Frame frame)
             {
-                _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(MenuItem.Tag.ToString().Contains('V') ? $"/page?url={MenuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={MenuItem.Tag}", Dispatcher));
-                Refresh = reset => (Frame.Content as AdaptivePage)?.Refresh(reset);
-            }
-            else if ((Pivot.SelectedItem as PivotItem).Content is Frame frame && frame.Content is AdaptivePage AdaptivePage)
-            {
-                Refresh = reset => AdaptivePage.Refresh(reset);
+                switch (frame.Content)
+                {
+                    case AdaptivePage adaptivePage:
+                        Refresh = reset => adaptivePage.Refresh(reset);
+                        break;
+                    case null:
+                        _ = frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(menuItem.Tag.ToString().Contains('V') ? $"/page?url={menuItem.Tag}" : $"/page?url=V9_HOME_TAB_FOLLOW&type={menuItem.Tag}", Dispatcher));
+                        Refresh = reset => (frame.Content as AdaptivePage)?.Refresh(reset);
+                        break;
+                }
             }
         }
 
