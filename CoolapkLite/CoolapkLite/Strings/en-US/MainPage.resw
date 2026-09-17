@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Accounts" xml:space="preserve">
-    <value>切换账号</value>
+    <value>Switch Account</value>
   </data>
   <data name="Bookmark" xml:space="preserve">
     <value>Bookmark</value>
@@ -154,7 +154,7 @@
     <value>Login</value>
   </data>
   <data name="Logout.Text" xml:space="preserve">
-    <value>注销</value>
+    <value>Logout</value>
   </data>
   <data name="Search.Text" xml:space="preserve">
     <value>Search</value>
@@ -166,7 +166,7 @@
     <value>Settings</value>
   </data>
   <data name="SwitchUser.Text" xml:space="preserve">
-    <value>切换用户</value>
+    <value>Switch User</value>
   </data>
   <data name="Test" xml:space="preserve">
     <value>Testing</value>
