@@ -127,7 +127,7 @@
     <value>Unable to get token. Try to Sign in again.</value>
   </data>
   <data name="GetUserInfoFailed" xml:space="preserve">
-    <value>获取账户信息失败</value>
+    <value>Could not fetch account information</value>
   </data>
   <data name="Logging" xml:space="preserve">
     <value>Logging in...</value>
