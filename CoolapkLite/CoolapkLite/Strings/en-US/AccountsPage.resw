@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AddAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>添加当前账号</value>
+    <value>Add Current Account</value>
   </data>
   <data name="Added" xml:space="preserve">
     <value>账号 {0} 添加成功</value>
@@ -129,30 +129,30 @@
     <comment>{0} 表示 UID</comment>
   </data>
   <data name="ExportAccount.Text" xml:space="preserve">
-    <value>导出</value>
+    <value>Export</value>
   </data>
   <data name="ExportFailed" xml:space="preserve">
-    <value>Windows Hello 验证失败，取消导出账号列表</value>
+    <value>Windows Hello authentication failed, account list export cancelled</value>
   </data>
   <data name="ExportSucceed" xml:space="preserve">
-    <value>账号列表已导出到 {0}</value>
+    <value>Account list exported to {0}</value>
     <comment>{0} 表示路径</comment>
   </data>
   <data name="ImportAccount.Text" xml:space="preserve">
-    <value>导入</value>
+    <value>Import</value>
   </data>
   <data name="ImportFailed" xml:space="preserve">
-    <value>导入的文件中没有有效的账号信息</value>
+    <value>The imported file does not contain valid account information</value>
   </data>
   <data name="ImportSucceed" xml:space="preserve">
     <value>成功导入 {0} 个账号</value>
     <comment>{0} 表示账号个数</comment>
   </data>
   <data name="Maxed" xml:space="preserve">
-    <value>保存数量已达上限</value>
+    <value>The maximum number of accounts has been reached</value>
   </data>
   <data name="NoAccount" xml:space="preserve">
-    <value>当前没有已保存的账号</value>
+    <value>There are currently no saved accounts</value>
   </data>
   <data name="RemoveAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Delete</value>
