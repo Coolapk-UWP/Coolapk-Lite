@@ -254,14 +254,13 @@ namespace CoolapkLite.Common
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="collection"/> is null.</exception>
         public static int RemoveRange<TSource>(this ICollection<TSource> source, IEnumerable<TSource> collection)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return collection == null
-                ? throw new ArgumentNullException(nameof(collection))
-                : source is TSource[] array ? array.RemoveAll(collection.Contains) : collection.Select(source.Remove).Count(x => x);
+            return source == null
+                ? throw new ArgumentNullException(nameof(source))
+                : collection == null
+                    ? throw new ArgumentNullException(nameof(collection))
+                    : source is TSource[] array
+                        ? array.RemoveAll(collection.Contains)
+                        : collection.Select(source.Remove).Count(x => x);
         }
 
         /// <summary>

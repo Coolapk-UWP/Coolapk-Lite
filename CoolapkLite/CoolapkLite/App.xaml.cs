@@ -7,7 +7,6 @@ using CoolapkLite.Pages;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -187,15 +186,6 @@ namespace CoolapkLite
 
             // 确保当前窗口处于活动状态
             window.Activate();
-        }
-
-        private void SetCulture(CultureInfo culture)
-        {
-            if (culture.Name != LanguageHelper.GetCurrentLanguage())
-            {
-                CultureInfo.DefaultThreadCurrentCulture = culture;
-                CultureInfo.DefaultThreadCurrentUICulture = culture;
-            }
         }
 
         private static async Task CreateJumpListAsync()

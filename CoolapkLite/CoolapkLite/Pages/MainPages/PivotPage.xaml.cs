@@ -11,7 +11,6 @@ using CoolapkLite.ViewModels.DataSource;
 using CoolapkLite.ViewModels.FeedPages;
 using CoolapkLite.ViewModels.NavigatePages;
 using Microsoft.Toolkit.Uwp.Helpers;
-using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.ObjectModel;
@@ -187,13 +186,13 @@ namespace CoolapkLite.Pages
                         Refresh = () => adaptivePage.Refresh(true);
                         break;
                     case null:
-                        _ = Frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
+                        _ = frame.Navigate(typeof(AdaptivePage), new AdaptiveViewModel(
                             menuItem.Tag.ToString() == "indexV8"
                                 ? "/main/indexV8"
                                 : menuItem.Tag.ToString().Contains('V')
                                     ? $"/page?url={menuItem.Tag}"
                                     : $"/page?url=V9_HOME_TAB_FOLLOW&type={menuItem.Tag}", Dispatcher));
-                        Refresh = () => (Frame.Content as AdaptivePage).Refresh(true);
+                        Refresh = () => (frame.Content as AdaptivePage).Refresh(true);
                         break;
                 }
             }
@@ -264,9 +263,10 @@ namespace CoolapkLite.Pages
             }
         }
 
-        private async void AppBarButton_Click(object sender, RoutedEventArgs e)
+        private void AppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            switch ((sender as FrameworkElement).Tag?.ToString())
+            if (!(sender is FrameworkElement element)) { return; }
+            switch (element.Tag)
             {
                 case "Home" when Pivot.Visibility != Visibility.Visible:
                     Storyboard storyboard = new Storyboard();
