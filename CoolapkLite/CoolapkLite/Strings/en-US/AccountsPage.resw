@@ -121,11 +121,11 @@
     <value>Add Current Account</value>
   </data>
   <data name="Added" xml:space="preserve">
-    <value>账号 {0} 添加成功</value>
+    <value>Account {0} added successfully</value>
     <comment>{0} 表示 UID</comment>
   </data>
   <data name="Duplicated" xml:space="preserve">
-    <value>账号 {0} 已存在</value>
+    <value>Account {0} already exists</value>
     <comment>{0} 表示 UID</comment>
   </data>
   <data name="ExportAccount.Text" xml:space="preserve">
@@ -145,7 +145,7 @@
     <value>The imported file does not contain valid account information</value>
   </data>
   <data name="ImportSucceed" xml:space="preserve">
-    <value>成功导入 {0} 个账号</value>
+    <value>Successfully imported {0} account(s)</value>
     <comment>{0} 表示账号个数</comment>
   </data>
   <data name="Maxed" xml:space="preserve">
@@ -161,14 +161,14 @@
     <value>Delete</value>
   </data>
   <data name="RemoveAccountTitle.Text" xml:space="preserve">
-    <value>您确定删除此账号吗？</value>
+    <value>Are you sure you want to delete this account?</value>
   </data>
   <data name="Removed" xml:space="preserve">
-    <value>账号 {0} 已移除</value>
+    <value>Account {0} removed</value>
     <comment>{0} 表示 UID</comment>
   </data>
   <data name="Replaced" xml:space="preserve">
-    <value>账号 {0} 信息已更新</value>
+    <value>Account {0} updated</value>
     <comment>{0} 表示 UID</comment>
   </data>
 </root>
