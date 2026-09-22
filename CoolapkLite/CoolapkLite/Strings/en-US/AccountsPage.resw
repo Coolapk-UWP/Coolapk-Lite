@@ -59,46 +59,46 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
               </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
             <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
             <xsd:complexType>
               <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
             </xsd:complexType>
           </xsd:element>
         </xsd:choice>
@@ -117,44 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CopyImage" xml:space="preserve">
-    <value>复制图片</value>
+  <data name="AddAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Add Current Account</value>
   </data>
-  <data name="CopyMenuItem.Text" xml:space="preserve">
-    <value>Копіювати</value>
+  <data name="Added" xml:space="preserve">
+    <value>Account {0} added successfully</value>
+    <comment>{0} 表示 UID</comment>
   </data>
-  <data name="OriginButton.Label" xml:space="preserve">
-    <value>查看原图</value>
+  <data name="Duplicated" xml:space="preserve">
+    <value>Account {0} already exists</value>
+    <comment>{0} 表示 UID</comment>
   </data>
-  <data name="OriginMenuItem.Text" xml:space="preserve">
-    <value>查看原图</value>
+  <data name="ExportAccount.Text" xml:space="preserve">
+    <value>Export</value>
   </data>
-  <data name="RefreshButton.Label" xml:space="preserve">
-    <value>Оновити</value>
+  <data name="ExportFailed" xml:space="preserve">
+    <value>Windows Hello authentication failed, account list export cancelled</value>
   </data>
-  <data name="RefreshMenuItem.Text" xml:space="preserve">
-    <value>Оновити</value>
-  </data>
-  <data name="SaveButton.Label" xml:space="preserve">
-    <value>保存</value>
-  </data>
-  <data name="SaveMenuItem.Text" xml:space="preserve">
-    <value>保存</value>
-  </data>
-  <data name="SaveSucceed" xml:space="preserve">
-    <value>图片已保存到 {0}</value>
+  <data name="ExportSucceed" xml:space="preserve">
+    <value>Account list exported to {0}</value>
     <comment>{0} 表示路径</comment>
   </data>
-  <data name="ShareButton.Label" xml:space="preserve">
-    <value>Поділитися</value>
+  <data name="ImportAccount.Text" xml:space="preserve">
+    <value>Import</value>
   </data>
-  <data name="ShareImage" xml:space="preserve">
-    <value>分享图片</value>
+  <data name="ImportFailed" xml:space="preserve">
+    <value>The imported file does not contain valid account information</value>
   </data>
-  <data name="ShareMenuItem.Text" xml:space="preserve">
-    <value>Поділитися</value>
+  <data name="ImportSucceed" xml:space="preserve">
+    <value>Successfully imported {0} account(s)</value>
+    <comment>{0} 表示账号个数</comment>
   </data>
-  <data name="ShowMenuItem.Text" xml:space="preserve">
-    <value>查看</value>
+  <data name="Maxed" xml:space="preserve">
+    <value>The maximum number of accounts has been reached</value>
+  </data>
+  <data name="NoAccount" xml:space="preserve">
+    <value>There are currently no saved accounts</value>
+  </data>
+  <data name="RemoveAccount.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="RemoveAccountConfirm.Content" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="RemoveAccountTitle.Text" xml:space="preserve">
+    <value>Are you sure you want to delete this account?</value>
+  </data>
+  <data name="Removed" xml:space="preserve">
+    <value>Account {0} removed</value>
+    <comment>{0} 表示 UID</comment>
+  </data>
+  <data name="Replaced" xml:space="preserve">
+    <value>Account {0} updated</value>
+    <comment>{0} 表示 UID</comment>
   </data>
 </root>
