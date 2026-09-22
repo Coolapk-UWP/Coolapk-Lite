@@ -75,7 +75,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void ListView_Loaded(object sender, RoutedEventArgs e)
         {
-            Provider.IsShowTitle = this.FindAscendant<Pivot>() is null;
+            Provider.IsShowTitle = this.FindAscendant<Pivot>() == null;
             ListView.UpdatePadding(Provider.IsShowTitle ? (Thickness)Application.Current.Resources["StackPanelMargin"] : default);
         }
     }

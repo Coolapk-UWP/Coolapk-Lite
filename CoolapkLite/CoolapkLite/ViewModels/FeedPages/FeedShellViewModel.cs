@@ -54,10 +54,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri($"{UriHelper.BaseUri}v6/feed/{id}"), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
-            if (!isSucceed) { return null; }
-
-            if (result is JObject detail)
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
+            if (isSucceed && result is JObject detail)
             {
                 FeedDetailModel model = await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail));
                 return model.IsQuestionFeed
@@ -71,11 +69,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(new Uri($"{UriHelper.BaseUri}v6/feed/{id}"), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
-            if (!isSucceed) { return null; }
-
-            JObject detail = (JObject)result;
-            return detail != null ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
+            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
+            return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
         }
 
         protected void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();

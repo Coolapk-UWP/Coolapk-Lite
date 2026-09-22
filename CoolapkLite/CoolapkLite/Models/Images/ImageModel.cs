@@ -3,7 +3,6 @@ using CoolapkLite.Helpers;
 using CoolapkLite.ViewModels;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
@@ -498,9 +497,9 @@ namespace CoolapkLite.Models.Images
 
         public override int GetHashCode() => (uri, type, Dispatcher).GetHashCode();
 
-        public bool Equals(ImageModel other) => other is ImageModel && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher;
+        public bool Equals(ImageModel other) => (object)this == other || (other is ImageModel && uri == other.uri && type == other.type && Dispatcher == other.Dispatcher);
 
-        public static bool operator ==(ImageModel left, ImageModel right) => EqualityComparer<ImageModel>.Default.Equals(left, right);
+        public static bool operator ==(ImageModel left, ImageModel right) => left?.Equals(right) ?? (right is null);
 
         public static bool operator !=(ImageModel left, ImageModel right) => !(left == right);
     }

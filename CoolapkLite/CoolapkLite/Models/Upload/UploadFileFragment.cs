@@ -61,7 +61,7 @@ namespace CoolapkLite.Models.Upload
 
         public override bool Equals(object obj) => Equals(obj as UploadFileFragment);
 
-        public bool Equals(UploadFileFragment other) => other != null && MD5.Equals(other.MD5);
+        public bool Equals(UploadFileFragment other) => this == other || (other != null && MD5 == other.MD5);
 
         public override int GetHashCode() => MD5.GetHashCode();
     }

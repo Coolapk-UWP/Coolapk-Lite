@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace CoolapkLite.Models
 {
@@ -31,9 +30,9 @@ namespace CoolapkLite.Models
 
         public override int GetHashCode() => (Title, Url).GetHashCode();
 
-        public bool Equals(Bookmark other) => other is Bookmark && Title == other.Title && Url == other.Url;
+        public bool Equals(Bookmark other) => (object)this == other || (other is Bookmark && Title == other.Title && Url == other.Url);
 
-        public static bool operator ==(Bookmark left, Bookmark right) => EqualityComparer<Bookmark>.Default.Equals(left, right);
+        public static bool operator ==(Bookmark left, Bookmark right) => left?.Equals(right) ?? (right is null);
 
         public static bool operator !=(Bookmark left, Bookmark right) => !(left == right);
     }

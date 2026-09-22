@@ -168,7 +168,7 @@ namespace CoolapkLite.Controls
 
         private void InvalidateLazyLoading()
         {
-            if (Source == null || Source.IsEmpty || !GetIsLoaded())
+            if (Source is null || Source.IsEmpty || !GetIsLoaded())
             {
                 return;
             }
@@ -211,7 +211,7 @@ namespace CoolapkLite.Controls
 
         private void SetSource()
         {
-            if (Source == null || Source.IsEmpty)
+            if (Source is null || Source.IsEmpty)
             {
                 RemoveSource();
                 return;

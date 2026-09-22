@@ -374,17 +374,17 @@ namespace CoolapkLite.Pages
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion is AppModel app)
+            switch (args.ChosenSuggestion)
             {
-                _ = PivotContentFrame.OpenLinkAsync(app.Url);
-            }
-            else if (args.ChosenSuggestion is SearchWord word)
-            {
-                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
-            }
-            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
-            {
-                _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
+                case AppModel app:
+                    _ = PivotContentFrame.OpenLinkAsync(app.Url);
+                    break;
+                case SearchWord word:
+                    _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
+                    break;
+                case null when !string.IsNullOrEmpty(sender.Text):
+                    _ = PivotContentFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
+                    break;
             }
         }
 

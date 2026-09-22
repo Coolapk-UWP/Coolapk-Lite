@@ -365,7 +365,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     if (time < 15)
                     {
                         // If background task is not registered, do nothing
-                        if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                        if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name == LiveTileTask))
                         { return; }
 
                         // Unregister (Single Process)

@@ -21,6 +21,7 @@ namespace CoolapkLite.Helpers
         public const string GetProductDetail = "/v6/product/detail?id={0}";
         public const string GetProductDetailByName = "/v6/product/detail?name={0}";
         public const string GetProductFeeds = "/v6/page/dataList?url=/page?url=/product/feedList?type={4}&id={0}&page={1}{2}{3}";
+        public const string GetFeed = "/v6/feed/{0}";
         public const string GetFeedDetail = "/v6/feed/detail?id={0}";
         public const string GetFeedReplies = "/v6/feed/replyList?id={0}&listType={1}&page={2}{3}{4}&discussMode=1&feedType=feed&fromFeedAuthor={5}";
         public const string GetVoteComments = "/v6/vote/commentList?fid={0}{1}&page={2}{3}{4}";

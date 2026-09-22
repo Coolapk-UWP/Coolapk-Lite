@@ -327,21 +327,19 @@ namespace CoolapkLite.Pages
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion is AppModel app)
+            switch (args.ChosenSuggestion)
             {
-                _ = HamburgerMenuFrame.OpenLinkAsync(app.Url);
-            }
-            else if (args.ChosenSuggestion is SearchWord word)
-            {
-                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
-            }
-            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
-            {
-                _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
-            }
-            else
-            {
-                return;
+                case AppModel app:
+                    _ = HamburgerMenuFrame.OpenLinkAsync(app.Url);
+                    break;
+                case SearchWord word:
+                    _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(word.ToString(), Dispatcher));
+                    break;
+                case null when !string.IsNullOrEmpty(sender.Text):
+                    _ = HamburgerMenuFrame.Navigate(typeof(SearchingPage), new SearchingViewModel(sender.Text, Dispatcher));
+                    break;
+                default:
+                    return;
             }
 
             if (HamburgerMenu.DisplayMode != SplitViewDisplayMode.CompactInline)

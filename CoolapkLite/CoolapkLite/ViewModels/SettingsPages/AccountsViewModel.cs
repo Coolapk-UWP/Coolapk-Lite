@@ -378,9 +378,9 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         public override int GetHashCode() => (UID, Token).GetHashCode();
 
-        public bool Equals(Credential other) => other is Credential && UID == other.UID && Token == other.Token;
+        public bool Equals(Credential other) => (object)this == other || (other is Credential && UID == other.UID && Token == other.Token);
 
-        public static bool operator ==(Credential left, Credential right) => EqualityComparer<Credential>.Default.Equals(left, right);
+        public static bool operator ==(Credential left, Credential right) => left?.Equals(right) ?? (right is null);
 
         public static bool operator !=(Credential left, Credential right) => !(left == right);
 

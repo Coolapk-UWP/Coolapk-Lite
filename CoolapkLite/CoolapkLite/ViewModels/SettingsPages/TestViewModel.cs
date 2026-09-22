@@ -307,7 +307,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 }
 
                 // If background task is already registered, do nothing
-                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name == LiveTileTask))
                 { return; }
 
                 // Register (Single Process)
@@ -317,7 +317,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             void UnregisterLiveTileTask()
             {
                 // If background task is not registered, do nothing
-                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(LiveTileTask)))
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name == LiveTileTask))
                 { return; }
 
                 // Unregister (Single Process)
@@ -333,7 +333,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             void RegisterNotificationsTask()
             {
                 // If background task is already registered, do nothing
-                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                if (BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name == NotificationsTask))
                 { return; }
 
                 // Register (Single Process)
@@ -343,7 +343,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
             void UnregisterNotificationsTask()
             {
                 // If background task is not registered, do nothing
-                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name.Equals(NotificationsTask)))
+                if (!BackgroundTaskRegistration.AllTasks.Any(i => i.Value.Name == NotificationsTask))
                 { return; }
 
                 // Unregister (Single Process)

@@ -321,7 +321,7 @@ namespace CoolapkLite.Helpers
             try
             {
                 await frame.Dispatcher.ResumeForegroundAsync();
-                return infoOverride is null
+                return infoOverride == null
                     ? frame.Navigate(pageType, parameter)
                     : frame.Navigate(pageType, parameter, infoOverride);
             }

@@ -124,7 +124,7 @@ namespace CoolapkLite.Common
                 }
             }
 
-            if (m_activeIndicator is null && e.RemovedItems.Count == 1)
+            if (m_activeIndicator == null && e.RemovedItems.Count == 1)
             {
                 m_activeIndicator = FindSelectionIndicator(e.RemovedItems.FirstOrDefault());
             }

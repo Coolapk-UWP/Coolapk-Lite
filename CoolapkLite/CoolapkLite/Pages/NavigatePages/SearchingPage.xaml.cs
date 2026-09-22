@@ -151,19 +151,19 @@ namespace CoolapkLite.Pages.NavigatePages
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion is AppModel app)
+            switch (args.ChosenSuggestion)
             {
-                _ = Frame.OpenLinkAsync(app.Url);
-            }
-            else if (args.ChosenSuggestion is SearchWord word)
-            {
-                Provider.Title = word.ToString();
-                _ = Provider.Refresh(true);
-            }
-            else if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
-            {
-                Provider.Title = sender.Text;
-                _ = Provider.Refresh(true);
+                case AppModel app:
+                    _ = Frame.OpenLinkAsync(app.Url);
+                    break;
+                case SearchWord word:
+                    Provider.Title = word.ToString();
+                    _ = Provider.Refresh(true);
+                    break;
+                case null when !string.IsNullOrEmpty(sender.Text):
+                    Provider.Title = sender.Text;
+                    _ = Provider.Refresh(true);
+                    break;
             }
         }
 

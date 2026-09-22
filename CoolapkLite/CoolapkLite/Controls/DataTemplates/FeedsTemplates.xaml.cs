@@ -193,7 +193,7 @@ namespace CoolapkLite.Controls.DataTemplates
         {
             FrameworkElement UserControl = sender as FrameworkElement;
             FrameworkElement StackPanel = UserControl.FindChild("BtnsPanel");
-            double width = e is null ? UserControl.Width : e.NewSize.Width;
+            double width = e == null ? UserControl.Width : e.NewSize.Width;
             StackPanel?.SetValue(Grid.RowProperty, width > 600 ? 1 : 20);
         }
     }

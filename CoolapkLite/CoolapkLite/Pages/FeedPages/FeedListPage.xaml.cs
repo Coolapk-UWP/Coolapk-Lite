@@ -301,7 +301,7 @@ namespace CoolapkLite.Pages.FeedPages
 
         private void AutoSuggestBox_QuerySubmitted(AutoSuggestBox sender, AutoSuggestBoxQuerySubmittedEventArgs args)
         {
-            if (args.ChosenSuggestion is null && !string.IsNullOrEmpty(sender.Text))
+            if (args.ChosenSuggestion == null && !string.IsNullOrEmpty(sender.Text))
             {
                 _ = Provider.SearchQuerySubmittedAsync(sender.Text);
             }

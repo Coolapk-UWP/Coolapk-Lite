@@ -32,9 +32,10 @@ namespace CoolapkLite.Common
             }
 
             public bool Equals(Method other) =>
-                other != null
-                    && _reference.Target == other._reference.Target
-                    && _method == other._method;
+                this == other ||
+                    (other != null
+                        && _reference.Target == other._reference.Target
+                        && _method == other._method);
 
             public bool Equals(Action<TEventArgs> callback) =>
                 callback != null
