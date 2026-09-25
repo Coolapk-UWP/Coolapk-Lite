@@ -8,6 +8,7 @@ using System;
 using System.Collections.Immutable;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
@@ -255,18 +256,27 @@ namespace CoolapkLite.Helpers
 
         private static void SetLoginCookie()
         {
-            if (Get<Account>(CurrentAccount) is Account account && !account.IsEmpty)
+            Account account = Get<Account>(CurrentAccount);
+            if (!account.IsEmpty)
             {
-                using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                try
                 {
-                    HttpCookieManager cookieManager = filter.CookieManager;
-                    HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
-                    HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
-                    HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
-                    (uid.Value, username.Value, token.Value) = account;
-                    cookieManager.SetCookie(uid);
-                    cookieManager.SetCookie(username);
-                    cookieManager.SetCookie(token);
+                    using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
+                    {
+                        HttpCookieManager cookieManager = filter.CookieManager;
+                        HttpCookie uid = new HttpCookie("uid", ".coolapk.com", "/");
+                        HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
+                        HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
+                        (uid.Value, username.Value, token.Value) = account;
+                        cookieManager.SetCookie(uid);
+                        cookieManager.SetCookie(username);
+                        cookieManager.SetCookie(token);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LogManager.GetLogger(nameof(SettingsHelper)).Error(ex.ExceptionToMessage(), ex);
+                    if (!CheckLogin(out Account current) || current != account) { return; }
                 }
                 InvokeLoginChanged(true);
             }
@@ -277,34 +287,34 @@ namespace CoolapkLite.Helpers
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                Account account = new Account();
                 foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
                 {
                     switch (item.Name)
                     {
                         case "uid":
-                            uid = item.Value;
+                            account.UID = item.Value;
                             break;
                         case "username":
-                            userName = item.Value;
+                            account.UserName = item.Value;
                             break;
                         case "token":
-                            token = item.Value;
+                            account.Token = item.Value;
                             break;
                         default:
                             break;
                     }
                 }
-                if (string.IsNullOrEmpty(uid) || string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userName) || !await RequestHelper.CheckLoginAsync().ConfigureAwait(false))
+                if (account.IsEmpty || !await RequestHelper.CheckLoginAsync().ConfigureAwait(false))
                 {
                     Logout();
                     return false;
                 }
                 else
                 {
-                    Set(CurrentAccount, new Account(uid, userName, token));
+                    Set(CurrentAccount, account);
                     InvokeLoginChanged(true);
-                    _ = RemarkModel.GetRemarkDictionary(uid).ContinueWith(x => UserRemarks = x.Result);
+                    _ = RemarkModel.GetRemarkDictionary(account.UID).ContinueWith(x => UserRemarks = x.Result);
                     return true;
                 }
             }
@@ -341,37 +351,34 @@ namespace CoolapkLite.Helpers
             return false;
         }
 
-        public static async Task<bool> CheckLoginAsync()
+        public static bool CheckLogin(out Account account)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())
             {
                 HttpCookieManager cookieManager = filter.CookieManager;
-                string uid = string.Empty, token = string.Empty, userName = string.Empty;
+                account = new Account();
                 foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.CoolapkUri))
                 {
                     switch (item.Name)
                     {
                         case "uid":
-                            uid = item.Value;
+                            account.UID = item.Value;
                             break;
                         case "username":
-                            userName = item.Value;
+                            account.UserName = item.Value;
                             break;
                         case "token":
-                            token = item.Value;
+                            account.Token = item.Value;
                             break;
                         default:
                             break;
                     }
                 }
-                bool value = !string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token) && !string.IsNullOrEmpty(userName) && await RequestHelper.CheckLoginAsync().ConfigureAwait(false);
-                if (value && UserRemarks == null)
-                {
-                    _ = RemarkModel.GetRemarkDictionary(uid).ContinueWith(x => UserRemarks = x.Result);
-                }
-                return value;
+                return !account.IsEmpty;
             }
         }
+
+        public static Task<bool> CheckLoginAsync() => RequestHelper.CheckLoginAsync();
 
         public static void Logout()
         {
@@ -386,6 +393,19 @@ namespace CoolapkLite.Helpers
             Set(CurrentAccount, new Account());
             InvokeLoginChanged(false);
             UserRemarks = null;
+        }
+
+        public static async Task ClearAsync()
+        {
+            LocalObject.Clear();
+            SetDefaultSettings();
+            if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
+            {
+                JumpList JumpList = await JumpList.LoadCurrentAsync();
+                JumpList.Items.Clear();
+                await JumpList.SaveAsync();
+            }
+            Logout();
         }
     }
 

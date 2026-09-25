@@ -8,7 +8,6 @@ using System;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.System;
-using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -70,15 +69,7 @@ namespace CoolapkLite.Pages.SettingsPages
             switch (element.Tag)
             {
                 case "Reset":
-                    SettingsHelper.LocalObject.Clear();
-                    SettingsHelper.SetDefaultSettings();
-                    if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
-                    {
-                        JumpList JumpList = await JumpList.LoadCurrentAsync();
-                        JumpList.Items.Clear();
-                        _ = JumpList.SaveAsync();
-                    }
-                    await SettingsHelper.CheckLoginAsync();
+                    await SettingsHelper.ClearAsync();
                     if (Reset.Flyout is Flyout flyout_reset)
                     {
                         flyout_reset.Hide();
