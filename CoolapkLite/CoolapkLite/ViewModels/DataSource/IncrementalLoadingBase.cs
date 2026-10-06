@@ -59,7 +59,7 @@ namespace CoolapkLite.ViewModels.DataSource
             set => SetProperty(ref isLoading, value);
         }
 
-        protected override event PropertyChangedEventHandler PropertyChanged;
+        protected sealed override event PropertyChangedEventHandler PropertyChanged;
 
         protected async void RaisePropertyChangedEvent([CallerMemberName] string name = null)
         {
@@ -116,7 +116,7 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
 
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected sealed override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {

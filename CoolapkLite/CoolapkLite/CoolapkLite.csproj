@@ -157,6 +157,7 @@
     <Compile Include="Common\AsyncLock.cs" />
     <Compile Include="Common\CustomBrushResource.cs" />
     <Compile Include="Common\CustomControlResource.cs" />
+    <Compile Include="Common\DebounceAwaiter.cs" />
     <Compile Include="Common\DefaultInterpolatedStringHandler.cs" />
     <Compile Include="Common\Enumerable.cs" />
     <Compile Include="Common\ExtensionManager.cs" />

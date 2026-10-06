@@ -62,7 +62,7 @@ namespace CoolapkLite.Helpers
                 {
                     while (await itemsPresenter.Dispatcher.AwaitableRunAsync(() => itemsPresenter.FindDescendant<Panel>() == null))
                     {
-                        await Task.Delay(100).ConfigureAwait(false);
+                        await Task.Delay(168).ConfigureAwait(false);
                         if (tokenSource.IsCancellationRequested)
                         {
                             await element.Dispatcher.ResumeForegroundAsync();

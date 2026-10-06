@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Network;
@@ -208,36 +209,45 @@ namespace CoolapkLite.Pages.NavigatePages
 
         #region 界面模式切换
 
-        private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
+        private readonly DebounceAwaiter debounce = new DebounceAwaiter(83);
+
+        private async void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
-            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+            await debounce;
+
+            double pageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
 
             // Remove details content from it's parent panel.
-            if (DetailControl.Parent != null)
+            void MoveDetailControl(Panel target)
             {
-                (DetailControl.Parent as Panel).Children.Remove(DetailControl);
-            }
-            else
-            {
-                Pane1Grid.Children.Remove(DetailControl);
-                Pane2Grid.Children.Remove(DetailControl);
+                if (DetailControl.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(DetailControl);
+                }
+                else
+                {
+                    Pane1Grid.Children.Remove(DetailControl);
+                    Pane2Grid.Children.Remove(DetailControl);
+                }
+                target.Children.Add(DetailControl);
             }
 
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 HeaderHeight = double.NaN;
-                HeaderMargin = PageTitleHeight;
+                HeaderMargin = pageTitleHeight;
                 // Add the details content to Pane1.
-                Pane2Grid.Children.Add(DetailControl);
+                MoveDetailControl(Pane2Grid);
             }
             // Dual pane.
             else
             {
                 HeaderMargin = 0d;
-                HeaderHeight = PageTitleHeight;
+                HeaderHeight = pageTitleHeight;
                 // Put details content in Pane2.
-                Pane1Grid.Children.Add(DetailControl);
+                MoveDetailControl(Pane1Grid);
             }
         }
 

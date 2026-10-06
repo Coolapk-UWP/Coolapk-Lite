@@ -212,24 +212,21 @@ namespace CoolapkLite.Controls
             if (_isThreshold != isThreshold)
             {
                 _isThreshold = isThreshold;
+                MoveHeader(isThreshold ? _outerFlyoutHeaderGrid : _innerFlyoutHeaderGrid);
 
-                if (_flyoutHeader.Parent != null)
+                void MoveHeader(Panel target)
                 {
-                    (_flyoutHeader.Parent as Panel).Children.Remove(_flyoutHeader);
-                }
-                else
-                {
-                    _innerFlyoutHeaderGrid.Children.Remove(_flyoutHeader);
-                    _outerFlyoutHeaderGrid.Children.Remove(_flyoutHeader);
-                }
-
-                if (isThreshold)
-                {
-                    _outerFlyoutHeaderGrid.Children.Add(_flyoutHeader);
-                }
-                else
-                {
-                    _innerFlyoutHeaderGrid.Children.Add(_flyoutHeader);
+                    if (_flyoutHeader.Parent is Panel panel)
+                    {
+                        if (panel == target) { return; }
+                        panel.Children.Remove(_flyoutHeader);
+                    }
+                    else
+                    {
+                        _innerFlyoutHeaderGrid.Children.Remove(_flyoutHeader);
+                        _outerFlyoutHeaderGrid.Children.Remove(_flyoutHeader);
+                    }
+                    target.Children.Add(_flyoutHeader);
                 }
             }
         }

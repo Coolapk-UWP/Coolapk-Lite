@@ -191,8 +191,12 @@ namespace CoolapkLite.Pages.FeedPages
 
         #region 界面模式切换
 
-        private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
+        private readonly DebounceAwaiter debounce = new DebounceAwaiter(83);
+
+        private async void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
+            await debounce;
+
             if ((DetailControl.MediaPlayerElementEx.MediaElement is MediaElement mediaElement
                 && mediaElement.IsFullWindow)
                     || (MediaPlayerElementEx.IsMediaPlayerElementSupported
@@ -200,62 +204,77 @@ namespace CoolapkLite.Pages.FeedPages
                     && mediaPlayerElement.IsFullWindow))
             { return; }
 
-            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+            double pageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
 
             // Remove details content from it's parent panel.
-            if (DetailControl.Parent != null)
+            void MoveDetailControl(Panel target)
             {
-                (DetailControl.Parent as Panel).Children.Remove(DetailControl);
-            }
-            else
-            {
-                Pane1Grid.Children.Remove(DetailControl);
-                Pane2Grid.Children.Remove(DetailControl);
-            }
-
-            if (BtnsPanel.Parent != null)
-            {
-                (BtnsPanel.Parent as Panel).Children.Remove(BtnsPanel);
-            }
-            else
-            {
-                LeftGrid.Children.Remove(BtnsPanel);
-                RightGrid.Children.Remove(BtnsPanel);
+                if (DetailControl.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(DetailControl);
+                }
+                else
+                {
+                    Pane1Grid.Children.Remove(DetailControl);
+                    Pane2Grid.Children.Remove(DetailControl);
+                }
+                target.Children.Add(DetailControl);
             }
 
-            if (TitleBar.Parent != null)
+            void MoveBtnsPanel(Panel target)
             {
-                (TitleBar.Parent as Panel).Children.Remove(TitleBar);
+                if (BtnsPanel.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(BtnsPanel);
+                }
+                else
+                {
+                    LeftGrid.Children.Remove(BtnsPanel);
+                    RightGrid.Children.Remove(BtnsPanel);
+                }
+                target.Children.Add(BtnsPanel);
             }
-            else
+
+            void MoveTitleBar(Panel target)
             {
-                LeftGrid.Children.Remove(TitleBar);
-                RightGrid.Children.Remove(TitleBar);
+                if (TitleBar.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(TitleBar);
+                }
+                else
+                {
+                    LeftGrid.Children.Remove(TitleBar);
+                    RightGrid.Children.Remove(TitleBar);
+                }
+                target.Children.Add(TitleBar);
             }
 
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 ListControl.HeaderHeight = 40;
-                ListControl.HeaderMargin = PageTitleHeight;
+                ListControl.HeaderMargin = pageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = true;
                 ListControl.RefreshButtonVisibility = Visibility.Collapsed;
                 // Add the details content to Pane1.
-                RightGrid.Children.Add(TitleBar);
-                RightGrid.Children.Add(BtnsPanel);
-                Pane2Grid.Children.Add(DetailControl);
+                MoveTitleBar(RightGrid);
+                MoveBtnsPanel(RightGrid);
+                MoveDetailControl(Pane2Grid);
             }
             // Dual pane.
             else
             {
                 ListControl.HeaderMargin = 0d;
-                ListControl.HeaderHeight = PageTitleHeight;
+                ListControl.HeaderHeight = pageTitleHeight;
                 TitleBar.IsRefreshButtonVisible = false;
                 ListControl.RefreshButtonVisibility = Visibility.Visible;
                 // Put details content in Pane2.
-                LeftGrid.Children.Add(TitleBar);
-                LeftGrid.Children.Add(BtnsPanel);
-                Pane1Grid.Children.Add(DetailControl);
+                MoveTitleBar(LeftGrid);
+                MoveBtnsPanel(LeftGrid);
+                MoveDetailControl(Pane1Grid);
             }
         }
 

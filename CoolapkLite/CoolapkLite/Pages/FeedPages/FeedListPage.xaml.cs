@@ -1,4 +1,5 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
 using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
@@ -325,85 +326,105 @@ namespace CoolapkLite.Pages.FeedPages
 
         #region 界面模式切换
 
-        private void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
+        private readonly DebounceAwaiter debounce = new DebounceAwaiter(83);
+
+        private async void TwoPaneView_ModeChanged(TwoPaneView sender, object args)
         {
-            double PageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
+            await debounce;
+
+            double pageTitleHeight = (double)Application.Current.Resources["PageTitleHeight"];
 
             // Remove details content from it's parent panel.
-            if (DetailControl.Parent != null)
+            void MoveDetailControl(Panel target)
             {
-                (DetailControl.Parent as Panel).Children.Remove(DetailControl);
-            }
-            else
-            {
-                Pane1Grid.Children.Remove(DetailControl);
-                Pane2Grid.Children.Remove(DetailControl);
-            }
-
-            if (TitleBar.Parent != null)
-            {
-                (TitleBar.Parent as Panel).Children.Remove(TitleBar);
-            }
-            else
-            {
-                LeftGrid.Children.Remove(TitleBar);
-                RightGrid.Children.Remove(TitleBar);
+                if (DetailControl.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(DetailControl);
+                }
+                else
+                {
+                    Pane1Grid.Children.Remove(DetailControl);
+                    Pane2Grid.Children.Remove(DetailControl);
+                }
+                target.Children.Add(DetailControl);
             }
 
-            if (SearchBox.Parent != null)
+            void MoveTitleBar(Panel target)
             {
-                (SearchBox.Parent as Panel).Children.Remove(SearchBox);
+                if (TitleBar.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(TitleBar);
+                }
+                else
+                {
+                    LeftGrid.Children.Remove(TitleBar);
+                    RightGrid.Children.Remove(TitleBar);
+                }
+                target.Children.Add(TitleBar);
             }
-            else
+
+            void MoveSearchBox(Panel target)
             {
-                SearchBoxGrid.Children.Remove(SearchBox);
-                Pane1Grid.Children.Remove(SearchBox);
+                if (SearchBox.Parent is Panel panel)
+                {
+                    if (panel == target) { return; }
+                    panel.Children.Remove(SearchBox);
+                }
+                else
+                {
+                    SearchBoxGrid.Children.Remove(SearchBox);
+                    DetailFlyoutHeader.Children.Remove(SearchBox);
+                }
+                target.Children.Add(SearchBox);
             }
 
             // Single pane
             if (sender.Mode == TwoPaneViewMode.SinglePane)
             {
                 HeaderHeight = 40;
-                HeaderMargin = PageTitleHeight;
+                HeaderMargin = pageTitleHeight;
                 DetailListView.HeaderHeight = 0;
                 TitleBar.IsRefreshButtonVisible = true;
                 RefreshButton.Visibility = Visibility.Collapsed;
                 SearchButton.Visibility = Visibility.Visible;
                 SearchBoxGrid.Visibility = Visibility.Visible;
-                // Add the details content to Pane1.
-                RightGrid.Children.Add(TitleBar);
-                Pane2Grid.Children.Add(DetailControl);
-                SearchBoxGrid.Children.Add(SearchBox);
 
-                Thickness StackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
-                ItemsStackPanel StackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
-                if (StackPanel != null)
+                // Add the details content to Pane1.
+                MoveTitleBar(RightGrid);
+                MoveDetailControl(Pane2Grid);
+                MoveSearchBox(SearchBoxGrid);
+
+                Thickness stackPanelMargin = (Thickness)Application.Current.Resources["StackPanelMargin"];
+                ItemsStackPanel stackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
+                if (stackPanel != null)
                 {
-                    StackPanel.Margin = StackPanelMargin;
-                    StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    stackPanel.Margin = stackPanelMargin;
+                    stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
             }
             // Dual pane.
             else
             {
                 HeaderMargin = 0d;
-                HeaderHeight = PageTitleHeight;
+                HeaderHeight = pageTitleHeight;
                 DetailListView.HeaderHeight = 40;
                 TitleBar.IsRefreshButtonVisible = false;
                 RefreshButton.Visibility = Visibility.Visible;
                 SearchButton.Visibility = Visibility.Collapsed;
                 SearchBoxGrid.Visibility = Visibility.Collapsed;
                 // Put details content in Pane2.
-                LeftGrid.Children.Add(TitleBar);
-                Pane1Grid.Children.Add(DetailControl);
-                DetailFlyoutHeader.Children.Add(SearchBox);
+                MoveTitleBar(LeftGrid);
+                MoveDetailControl(Pane1Grid);
+                MoveSearchBox(DetailFlyoutHeader);
 
-                Thickness StackPanelMargin = new Thickness();
-                ItemsStackPanel StackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
-                if (StackPanel != null)
+                Thickness stackPanelMargin = new Thickness();
+                ItemsStackPanel stackPanel = DetailListView.FindDescendant<ItemsStackPanel>();
+                if (stackPanel != null)
                 {
-                    StackPanel.Margin = StackPanelMargin;
-                    StackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                    stackPanel.Margin = stackPanelMargin;
+                    stackPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
                 }
             }
         }

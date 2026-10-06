@@ -76,7 +76,7 @@ namespace CoolapkLite.ViewModels.DataSource
             }
         }
 
-        public override async Task Reset()
+        public sealed override async Task Reset()
         {
             //reset
             _currentPage = 1;

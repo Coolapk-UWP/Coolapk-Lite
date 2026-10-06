@@ -69,7 +69,7 @@ namespace CoolapkLite.ViewModels.DataSource
             return count;
         }
 
-        protected override bool HasMoreItemsOverride() => _hasMoreItems;
+        protected sealed override bool HasMoreItemsOverride() => _hasMoreItems;
 
         protected abstract Task<uint> LoadItemsAsync(uint count);
 
