@@ -270,6 +270,31 @@ namespace CoolapkLite.Models.Images
             }
         }
 
+        private async Task<BitmapImage> GetBitmapImageAsync()
+        {
+            using (await ImageModelLocker.LockAsync().ConfigureAwait(false))
+            {
+                BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher).ConfigureAwait(false);
+                if (bitmapImage != null)
+                {
+                    if (bitmapImage.Dispatcher != Dispatcher)
+                    {
+                        StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri).ConfigureAwait(false);
+                        using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
+                        {
+                            return await Dispatcher.AwaitableRunAsync(async () =>
+                            {
+                                BitmapImage image = new BitmapImage();
+                                await image.SetSourceAsync(stream);
+                                return image;
+                            });
+                        }
+                    }
+                }
+                return bitmapImage;
+            }
+        }
+
         private async Task GetImageAsync()
         {
             if (Dispatcher == null) { return; }
@@ -277,59 +302,43 @@ namespace CoolapkLite.Models.Images
             try
             {
                 await ThreadSwitcher.ResumeBackgroundAsync();
-                using (await ImageModelLocker.LockAsync().ConfigureAwait(false))
+                if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
                 {
-                    if (SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
+                    if (!isNoPic)
                     {
-                        if (!isNoPic)
-                        {
-                            Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
-                            IsNoPic = true;
-                        }
-                        return;
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                        IsNoPic = true;
                     }
-                    BitmapImage bitmapImage = await ImageCacheHelper.GetImageAsync(type, uri, Dispatcher).ConfigureAwait(false);
-                    if (bitmapImage != null)
-                    {
-                        if (bitmapImage.Dispatcher != Dispatcher)
-                        {
-                            StorageFile file = await ImageCacheHelper.GetImageFileAsync(type, uri).ConfigureAwait(false);
-                            using (IRandomAccessStreamWithContentType stream = await file.OpenReadAsync())
-                            {
-                                bitmapImage = await Dispatcher.AwaitableRunAsync(async () =>
-                                {
-                                    BitmapImage image = new BitmapImage();
-                                    await image.SetSourceAsync(stream);
-                                    return image;
-                                });
-                            }
-                        }
-                        Pic = bitmapImage;
-                        IsNoPic = false;
-                        await bitmapImage.Dispatcher.ResumeForegroundAsync();
-                        double PixelWidth = bitmapImage.PixelWidth;
-                        double PixelHeight = bitmapImage.PixelHeight;
-                        Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
-                            ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
-                            : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
-                        IsLongPic = ((PixelHeight * Bounds.Width) > PixelWidth * Bounds.Height * 1.5)
-                                    && PixelHeight > PixelWidth * 1.5;
-                        IsWidePic = ((PixelWidth * Bounds.Height) > PixelHeight * Bounds.Width * 1.5)
-                                    && PixelWidth > PixelHeight * 1.5;
-                        IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
-                        IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
-                    }
-                    else
-                    {
-                        if (!isNoPic)
-                        {
-                            Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
-                            IsNoPic = true;
-                        }
-                        IsLongPic = IsWidePic = false;
-                        IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
-                    }
+                    return;
                 }
+                BitmapImage bitmapImage = await GetBitmapImageAsync().ConfigureAwait(false);
+                if (bitmapImage != null)
+                {
+                    Pic = bitmapImage;
+                    IsNoPic = false;
+                    await bitmapImage.Dispatcher.ResumeForegroundAsync();
+                    double pixelWidth = bitmapImage.PixelWidth;
+                    double pixelHeight = bitmapImage.PixelHeight;
+                    Rect Bounds = CoreWindow.GetForCurrentThread() is CoreWindow window
+                        ? await window.Dispatcher.AwaitableRunAsync(() => window.Bounds)
+                        : await CoreApplication.MainView.Dispatcher.AwaitableRunAsync(() => CoreApplication.MainView.CoreWindow.Bounds);
+                    IsLongPic = ((pixelHeight * Bounds.Width) > pixelWidth * Bounds.Height * 1.5)
+                                && pixelHeight > pixelWidth * 1.5;
+                    IsWidePic = ((pixelWidth * Bounds.Height) > pixelHeight * Bounds.Width * 1.5)
+                                && pixelWidth > pixelHeight * 1.5;
+                    IsGif = IsAutoPlaySupported && !type.HasFlag(ImageType.Small) ? bitmapImage.IsAnimatedBitmap : uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                }
+                else
+                {
+                    if (!isNoPic)
+                    {
+                        Pic = await ImageCacheHelper.GetNoPicAsync(Dispatcher).ConfigureAwait(false);
+                        IsNoPic = true;
+                    }
+                    IsLongPic = IsWidePic = false;
+                    IsGif = uri.EndsWith(".gif", StringComparison.OrdinalIgnoreCase);
+                }
+                IsLivePhoto = !isGif && uri.Contains("livepic", StringComparison.OrdinalIgnoreCase);
             }
             finally
             {

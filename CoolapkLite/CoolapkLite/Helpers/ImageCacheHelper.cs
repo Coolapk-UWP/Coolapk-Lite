@@ -42,9 +42,9 @@ namespace CoolapkLite.Helpers
         private static Dictionary<CoreDispatcher, BitmapImage> DarkNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
         private static Dictionary<CoreDispatcher, BitmapImage> WhiteNoPicMode { get; set; } = new Dictionary<CoreDispatcher, BitmapImage>();
 
-        static ImageCacheHelper() => ImageCache.Factory = () => new ImageCache(NetworkHelper.Client) { CacheDuration = TimeSpan.FromHours(8) };
+        static ImageCacheHelper() => ImageCache.Factory = () => new ImageCache(NetworkHelper.Client);
 
-        public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher, bool isForce = false)
+        public static async Task<BitmapImage> GetImageAsync(ImageType type, string url, CoreDispatcher dispatcher)
         {
             Uri uri = type.HasFlag(ImageType.Message)
                 ? await GetMessageImageUriAsync(type, url).ConfigureAwait(false)
@@ -56,10 +56,6 @@ namespace CoolapkLite.Helpers
             {
                 await dispatcher.ResumeForegroundAsync();
                 return new BitmapImage(uri);
-            }
-            else if (!isForce && SettingsHelper.Get<bool>(SettingsHelper.IsNoPicsMode))
-            {
-                return null;
             }
             else
             {
@@ -168,13 +164,12 @@ namespace CoolapkLite.Helpers
             if (!DarkNoPicMode.ContainsKey(dispatcher))
             {
                 if (!dispatcher.HasThreadAccess) { return null; }
-                DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
-                WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                BitmapImage dark = DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                BitmapImage light = WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                return ThemeHelper.IsDarkTheme() ? dark : light;
             }
 
-            return ThemeHelper.IsDarkTheme()
-                ? DarkNoPicMode[dispatcher]
-                : WhiteNoPicMode[dispatcher];
+            return ThemeHelper.IsDarkTheme() ? DarkNoPicMode[dispatcher] : WhiteNoPicMode[dispatcher];
         }
 
         public static async Task<BitmapImage> GetNoPicAsync(CoreDispatcher dispatcher)
@@ -183,8 +178,9 @@ namespace CoolapkLite.Helpers
 
             if (!DarkNoPicMode.ContainsKey(dispatcher))
             {
-                DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
-                WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                BitmapImage dark = DarkNoPicMode[dispatcher] = new BitmapImage(DarkNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                BitmapImage light = WhiteNoPicMode[dispatcher] = new BitmapImage(WhiteNoPicUri) { DecodePixelHeight = 768, DecodePixelWidth = 768 };
+                return await ThemeHelper.IsDarkThemeAsync().ConfigureAwait(false) ? dark : light;
             }
 
             return await ThemeHelper.IsDarkThemeAsync().ConfigureAwait(false)
