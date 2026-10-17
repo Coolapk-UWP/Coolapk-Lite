@@ -54,10 +54,8 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
-            if (isSucceed && result is JObject detail)
+            if (await GetFeedDetailAsync(id, dispatcher).ConfigureAwait(false) is FeedDetailModel model)
             {
-                FeedDetailModel model = await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail));
                 return model.IsQuestionFeed
                     ? new QuestionViewModel(id, model, dispatcher)
                     : model.IsVoteFeed
@@ -67,10 +65,22 @@ namespace CoolapkLite.ViewModels.FeedPages
             return null;
         }
 
-        protected virtual async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
+        protected static async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
         {
-            (bool isSucceed, JToken result) = await (id.Contains("changeHistoryDetail") ? RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true) : RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true)).ConfigureAwait(false);
-            return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
+            if (id.Contains("changeHistoryDetail"))
+            {
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true);
+                return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
+            }
+            else
+            {
+                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true).ConfigureAwait(false);
+                if (!isSucceed)
+                {
+                    (isSucceed, result) = await RequestHelper.GetDataAsync($"https://www.coolapk.com/feed/{id}".TryGetUri(), true).ConfigureAwait(false);
+                }
+                return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
+            }
         }
 
         protected void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();

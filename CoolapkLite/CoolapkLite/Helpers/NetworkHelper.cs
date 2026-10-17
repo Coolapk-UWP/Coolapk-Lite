@@ -353,7 +353,7 @@ namespace CoolapkLite.Helpers
 
         public static Uri TryGetUri(this string url)
         {
-            url.TryGetUri(out Uri uri);
+            _ = url.TryGetUri(out Uri uri);
             return uri;
         }
 

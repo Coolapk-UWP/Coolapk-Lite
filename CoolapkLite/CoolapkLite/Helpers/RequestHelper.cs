@@ -13,7 +13,6 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media.Imaging;
 using CoolapkLite.Models.Network;
 
-
 #if NETCORE463
 using System.Linq;
 #else
