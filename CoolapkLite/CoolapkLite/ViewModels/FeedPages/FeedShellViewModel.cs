@@ -1,6 +1,9 @@
-﻿using CoolapkLite.Controls;
+﻿using CoolapkLite.Common;
+using CoolapkLite.Controls;
+using CoolapkLite.Controls.Dialogs;
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
+using CoolapkLite.Models.Exceptions;
 using CoolapkLite.Models.Feeds;
 using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.DataSource;
@@ -13,6 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 
 namespace CoolapkLite.ViewModels.FeedPages
 {
@@ -67,20 +71,30 @@ namespace CoolapkLite.ViewModels.FeedPages
 
         protected static async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
         {
-            if (id.Contains("changeHistoryDetail"))
+            bool isHistoryDetail = id.Contains("changeHistoryDetail");
+            Uri uri = isHistoryDetail ? UriHelper.GetUri(UriType.GetFeed, id) : UriHelper.GetUri(UriType.GetFeedDetail, id);
+        start:
+            (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(uri, true).ConfigureAwait(false);
+            if (!isSucceed)
             {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeed, id), true);
-                return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
-            }
-            else
-            {
-                (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetFeedDetail, id), true).ConfigureAwait(false);
-                if (!isSucceed)
+                CoolapkMessageException cex = new CoolapkMessageException(result as JObject);
+                if (cex.IsRequestCaptchaV2)
                 {
-                    (isSucceed, result) = await RequestHelper.GetDataAsync($"https://www.coolapk.com/feed/{id}".TryGetUri(), true).ConfigureAwait(false);
+                    await dispatcher.ResumeForegroundAsync();
+                    CaptchaV2Dialog dialog = new CaptchaV2Dialog(cex.GetCaptchaChallenge());
+                    ContentDialogResult dialogResult = await dialog.ShowAsync();
+                    if (dialogResult == ContentDialogResult.Primary)
+                    {
+                        NetworkHelper.UpdateCaptchaV2Cookie(dialog.CaptchaToken);
+                        goto start;
+                    }
+                    else if (!isHistoryDetail)
+                    {
+                        (isSucceed, result) = await RequestHelper.GetDataAsync($"https://www.coolapk.com/feed/{id}".TryGetUri(), true).ConfigureAwait(false);
+                    }
                 }
-                return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
             }
+            return isSucceed && result is JObject detail ? await dispatcher.AwaitableRunAsync(() => new FeedDetailModel(detail)) : null;
         }
 
         protected void OnLoadMoreStarted() => _ = Dispatcher.ShowProgressBarAsync();

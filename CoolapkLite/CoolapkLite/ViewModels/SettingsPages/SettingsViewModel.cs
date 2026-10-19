@@ -295,7 +295,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                 {
                     MenuFlyout menuFlyout = new MenuFlyout();
                     MenuFlyoutSubItem menuFlyoutSubItem = new MenuFlyoutSubItem { Text = "下载安装包" };
-                    FlyoutBaseHelper.SetIcon(menuFlyoutSubItem, new FontIcon { Glyph = "\uE896", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] });
+                    menuFlyoutSubItem.SetIcon(new FontIcon { Glyph = "\uE896", FontFamily = (FontFamily)Application.Current.Resources["SymbolThemeFontFamily"] });
                     foreach (Asset asset in info.Assets)
                     {
                         MenuFlyoutItem menuFlyoutItem = new MenuFlyoutItem { Text = asset.Name };
@@ -304,7 +304,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
                         menuFlyoutSubItem.Items.Add(menuFlyoutItem);
                     }
                     menuFlyout.Items.Add(menuFlyoutSubItem);
-                    UIElementHelper.SetContextFlyout(dialog, menuFlyout);
+                    dialog.SetContextFlyout(menuFlyout);
                 }
 
                 dialog.SetXAMLRoot(element);

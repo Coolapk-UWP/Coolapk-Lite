@@ -16,12 +16,12 @@ namespace CoolapkLite.Helpers
                 typeof(WebViewHelper),
                 new PropertyMetadata(null, OnIsEnableChanged));
 
-        public static bool GetIsEnable(WebView element)
+        public static bool GetIsEnable(this WebView element)
         {
             return (bool)element.GetValue(IsEnableProperty);
         }
 
-        public static void SetIsEnable(WebView element, bool value)
+        public static void SetIsEnable(this WebView element, bool value)
         {
             element.SetValue(IsEnableProperty, value);
         }
@@ -43,10 +43,10 @@ namespace CoolapkLite.Helpers
 
         private static void OnNavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            Thickness margin = GetMargin(sender);
-            if (margin != null) { UpdateMargin(sender, margin); }
-            bool isVerticalStretch = GetIsVerticalStretch(sender);
-            UpdateIsVerticalStretch(sender, isVerticalStretch);
+            Thickness margin = sender.GetMargin();
+            if (margin != null) { sender.UpdateMargin(margin); }
+            bool isVerticalStretch = sender.GetIsVerticalStretch();
+            sender.UpdateIsVerticalStretch(isVerticalStretch);
         }
 
         #endregion
@@ -60,12 +60,12 @@ namespace CoolapkLite.Helpers
                 typeof(WebViewHelper),
                 new PropertyMetadata(null, OnMarginChanged));
 
-        public static Thickness GetMargin(WebView element)
+        public static Thickness GetMargin(this WebView element)
         {
             return (Thickness)element.GetValue(MarginProperty);
         }
 
-        public static void SetMargin(WebView element, Thickness value)
+        public static void SetMargin(this WebView element, Thickness value)
         {
             element.SetValue(MarginProperty, value);
         }
@@ -75,11 +75,11 @@ namespace CoolapkLite.Helpers
             if (!(d is WebView element)) { return; }
             if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
-                UpdateMargin(element, (Thickness)e.NewValue);
+                element.UpdateMargin((Thickness)e.NewValue);
             }
         }
 
-        private static void UpdateMargin(WebView element, Thickness margin)
+        private static void UpdateMargin(this WebView element, Thickness margin)
         {
             try
             {
@@ -103,12 +103,12 @@ namespace CoolapkLite.Helpers
                 typeof(WebViewHelper),
                 new PropertyMetadata(null, OnIsVerticalStretchChanged));
 
-        public static bool GetIsVerticalStretch(WebView element)
+        public static bool GetIsVerticalStretch(this WebView element)
         {
             return (bool)element.GetValue(IsVerticalStretchProperty);
         }
 
-        public static void SetIsVerticalStretch(WebView element, bool value)
+        public static void SetIsVerticalStretch(this WebView element, bool value)
         {
             element.SetValue(IsVerticalStretchProperty, value);
         }
@@ -118,11 +118,11 @@ namespace CoolapkLite.Helpers
             if (!(d is WebView element)) { return; }
             if (ApiInfoHelper.IsFrameworkElementIsLoadedSupported && element.IsLoaded)
             {
-                UpdateIsVerticalStretch(element, e.NewValue is true);
+                element.UpdateIsVerticalStretch(e.NewValue is true);
             }
         }
 
-        private static async void UpdateIsVerticalStretch(WebView element, bool isVerticalStretch)
+        private static async void UpdateIsVerticalStretch(this WebView element, bool isVerticalStretch)
         {
             if (isVerticalStretch)
             {
@@ -158,8 +158,8 @@ namespace CoolapkLite.Helpers
             if (!double.IsNaN(webView.Height)) { webView.Height = double.NaN; }
             else
             {
-                bool isVerticalStretch = GetIsVerticalStretch(webView);
-                UpdateIsVerticalStretch(webView, isVerticalStretch);
+                bool isVerticalStretch = webView.GetIsVerticalStretch();
+                webView.UpdateIsVerticalStretch(isVerticalStretch);
             }
         }
 
@@ -181,12 +181,12 @@ namespace CoolapkLite.Helpers
                 typeof(WebViewHelper),
                 new PropertyMetadata(null, OnHTMLChanged));
 
-        public static string GetHTML(WebView element)
+        public static string GetHTML(this WebView element)
         {
             return (string)element.GetValue(HTMLProperty);
         }
 
-        public static void SetHTML(WebView element, string value)
+        public static void SetHTML(this WebView element, string value)
         {
             element.SetValue(HTMLProperty, value);
         }

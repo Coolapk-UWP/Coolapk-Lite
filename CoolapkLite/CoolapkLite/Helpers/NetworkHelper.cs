@@ -120,6 +120,21 @@ namespace CoolapkLite.Helpers
 
         public static void UpdateCoolapkCookie() => ClientHandler.CookieContainer.ReplaceCoolapkCookie();
 
+        public static void UpdateCaptchaV2Cookie(string captchaToken)
+        {
+            CookieContainer container = ClientHandler.CookieContainer;
+            Uri host = new Uri("http://coolapk.com");
+            container.GetCookies(host).OfType<Cookie>().Where(x => x.Name == "validate").ForEach(x => x.Expired = true);
+            container.Add(
+#if !NETCORE463
+                host,
+#endif
+                new Cookie(
+                    "validate",
+                    Uri.EscapeDataString(captchaToken),
+                    "/", ".coolapk.com"));
+        }
+
         private static HttpCookieCollection GetCoolapkCookies(Uri uri)
         {
             using (HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter())

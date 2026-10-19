@@ -69,9 +69,9 @@ namespace CoolapkLite.Controls.Writers
                 textBlockEx.ImageArrayBuilder.Add(imageModel);
                 image.Tapped += (sender, args) => textBlockEx.OnImageClicked(imageModel, args);
 
-                Grid Grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
+                Grid grid = new Grid { Padding = new Thickness(0, 12, 0, 12) };
 
-                UIElementHelper.SetContextFlyout(Grid, CreateMenuFlyout(imageModel, textBlockEx));
+                grid.SetContextFlyout(CreateMenuFlyout(imageModel, textBlockEx));
 
                 StackPanel IsGIFPanel = new StackPanel
                 {
@@ -149,13 +149,13 @@ namespace CoolapkLite.Controls.Writers
                     viewBox.MaxWidth = width;
                 }
 
-                Grid.Children.Add(viewBox);
-                Grid.Children.Add(PicSizePanel);
+                grid.Children.Add(viewBox);
+                grid.Children.Add(PicSizePanel);
 
                 if (!string.IsNullOrEmpty(alt))
                 {
-                    Grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-                    Grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                    grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
                     TextBlock textBlock = new TextBlock
                     {
                         Text = WebUtility.HtmlDecode(alt),
@@ -166,10 +166,10 @@ namespace CoolapkLite.Controls.Writers
                     textBlock.SetBinding(TextBlock.IsTextSelectionEnabledProperty, CreateBinding(textBlockEx, nameof(textBlockEx.IsTextSelectionEnabled)));
                     textBlock.SetBinding(TextBlock.FontSizeProperty, CreateBinding(textBlockEx, nameof(textBlockEx.FontSize)));
                     textBlock.SetValue(Grid.RowProperty, 1);
-                    Grid.Children.Add(textBlock);
+                    grid.Children.Add(textBlock);
                 }
 
-                return Grid;
+                return grid;
             }
         }
 
@@ -197,27 +197,27 @@ namespace CoolapkLite.Controls.Writers
         {
             MenuFlyout menuFlyout = new MenuFlyout();
             MenuFlyoutItem refreshButton = new MenuFlyoutItem { Text = "刷新" };
-            FlyoutBaseHelper.SetIcon(refreshButton, CreateFontIcon("\uE72C", textBlockEx));
+            refreshButton.SetIcon(CreateFontIcon("\uE72C", textBlockEx));
             refreshButton.Click += (sender, args) => _ = image.Refresh(refreshButton.Dispatcher);
             menuFlyout.Items.Add(refreshButton);
 
             MenuFlyoutItem copyButton = new MenuFlyoutItem { Text = "复制" };
-            FlyoutBaseHelper.SetIcon(copyButton, CreateFontIcon("\uE8C8", textBlockEx));
+            copyButton.SetIcon(CreateFontIcon("\uE8C8", textBlockEx));
             copyButton.Click += (sender, args) => image.CopyPic();
             menuFlyout.Items.Add(copyButton);
 
             MenuFlyoutItem shareButton = new MenuFlyoutItem { Text = "分享" };
-            FlyoutBaseHelper.SetIcon(shareButton, CreateFontIcon("\uE72D", textBlockEx));
+            shareButton.SetIcon(CreateFontIcon("\uE72D", textBlockEx));
             shareButton.Click += (sender, args) => image.SharePic();
             menuFlyout.Items.Add(shareButton);
 
             MenuFlyoutItem saveButton = new MenuFlyoutItem { Text = "保存" };
-            FlyoutBaseHelper.SetIcon(saveButton, CreateFontIcon("\uE74E", textBlockEx));
+            saveButton.SetIcon(CreateFontIcon("\uE74E", textBlockEx));
             saveButton.Click += (sender, args) => image.SavePic();
             menuFlyout.Items.Add(saveButton);
 
             MenuFlyoutItem originButton = new MenuFlyoutItem { Text = "查看原图" };
-            FlyoutBaseHelper.SetIcon(originButton, CreateFontIcon("\uEB9F", textBlockEx));
+            originButton.SetIcon(CreateFontIcon("\uEB9F", textBlockEx));
             originButton.Click += (sender, args) => image.Type &= (ImageType)0xFE;
             menuFlyout.Items.Add(originButton);
 

@@ -24,7 +24,7 @@ namespace CoolapkLite.Helpers
         /// Provides margin values for the focus visual. The default value is a default Thickness
         /// with all properties (dimensions) equal to 0.
         /// </returns>
-        public static Thickness GetFocusVisualMargin(FrameworkElement element)
+        public static Thickness GetFocusVisualMargin(this FrameworkElement element)
         {
             return (Thickness)element.GetValue(FocusVisualMarginProperty);
         }
@@ -34,7 +34,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the attached property.</param>
         /// <param name="value">The property value to set.</param>
-        public static void SetFocusVisualMargin(FrameworkElement element, Thickness value)
+        public static void SetFocusVisualMargin(this FrameworkElement element, Thickness value)
         {
             element.SetValue(FocusVisualMarginProperty, value);
         }

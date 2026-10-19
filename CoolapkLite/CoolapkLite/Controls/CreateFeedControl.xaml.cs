@@ -280,22 +280,16 @@ namespace CoolapkLite.Controls
             }
 
         post:
-            try
+            (bool isSucceed, JToken token) = await (type == UriType.CreateFeed
+                ? RequestHelper.PostDataAsync(UriHelper.GetUri(type), content)
+                : RequestHelper.PostDataAsync(UriHelper.GetUri(type, ReplyID), content));
+            if (isSucceed)
             {
-                (bool isSucceed, JToken token) = await (type == UriType.CreateFeed
-                    ? RequestHelper.PostDataAsync(UriHelper.GetUri(type), content)
-                    : RequestHelper.PostDataAsync(UriHelper.GetUri(type, ReplyID), content));
-                if (isSucceed)
-                {
-                    SendSuccessful();
-                }
-                else if (token != null)
-                {
-                    throw new CoolapkMessageException(token as JObject);
-                }
+                SendSuccessful();
             }
-            catch (CoolapkMessageException cex)
+            else if (token != null)
             {
+                CoolapkMessageException cex = new CoolapkMessageException(token as JObject);
                 if (cex.IsRequestCaptcha)
                 {
                 captcha:

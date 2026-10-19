@@ -23,7 +23,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element from which to read the property value.</param>
         /// <returns>The Icon.</returns>
-        public static object GetIcon(AppBarButton control)
+        public static object GetIcon(this AppBarButton control)
         {
             return control.GetValue(IconProperty);
         }
@@ -33,7 +33,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element on which to set the attached property.</param>
         /// <param name="value">The property value to set.</param>
-        public static void SetIcon(AppBarButton control, object value)
+        public static void SetIcon(this AppBarButton control, object value)
         {
             control.SetValue(IconProperty, value);
         }

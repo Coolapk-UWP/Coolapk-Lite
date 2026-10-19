@@ -1,0 +1,44 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+    <title>图形验证码</title>
+    <style>
+        body {
+            background-color: transparent;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="captcha"></div>
+    <script>
+        const script = document.createElement("script");
+        const element = document.getElementById("captcha");
+        script.src = "https://cstaticdun.126.net/load.min.js";
+        script.onload = function () {
+            if (typeof initNECaptcha !== "function") {
+                element.textContent = "网易易盾初始化函数不可用";
+                return;
+            }
+            initNECaptcha({
+                captchaId: captchaId,
+                element: element,
+                mode: "embed",
+                protocol: "https",
+                apiVersion: 2,
+                onVerify: function (err, data) {
+                    if (!err && data && data.validate) {
+                        window.external.notify(data.validate);
+                    }
+                }
+            });
+        };
+        document.head.appendChild(script);
+    </script>
+</body>
+
+</html>

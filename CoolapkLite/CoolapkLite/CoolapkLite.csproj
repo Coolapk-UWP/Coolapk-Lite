@@ -196,6 +196,9 @@
     <Compile Include="Controls\Dialogs\CaptchaDialog.xaml.cs">
       <DependentUpon>CaptchaDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Dialogs\CaptchaV2Dialog.xaml.cs">
+      <DependentUpon>CaptchaV2Dialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Dialogs\DeviceInfoDialog.xaml.cs">
       <DependentUpon>DeviceInfoDialog.xaml</DependentUpon>
     </Compile>
@@ -1163,6 +1166,7 @@
     <Content Include="Assets\StoreLogo.scale-150.png" />
     <Content Include="Assets\StoreLogo.scale-200.png" />
     <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\WebView\CaptchaV2.html" />
     <Content Include="Assets\WebView\HTMLView.Dark.css" />
     <Content Include="Assets\WebView\HTMLView.html" />
     <Content Include="Assets\WebView\HTMLView.Light.css" />
@@ -1216,6 +1220,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Dialogs\CaptchaDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Dialogs\CaptchaV2Dialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -29,7 +29,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element from which the property value is read.</param>
         /// <returns>The flyout associated with this element, if any; otherwise, <see langword="null"/>. The default is <see langword="null"/>.</returns>
-        public static FlyoutBase GetContextFlyout(UIElement element)
+        public static FlyoutBase GetContextFlyout(this UIElement element)
         {
             return (FlyoutBase)element.GetValue(ContextFlyoutProperty);
         }
@@ -39,7 +39,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the attached property.</param>
         /// <param name="value">The flyout associated with this element.</param>
-        public static void SetContextFlyout(UIElement element, FlyoutBase value)
+        public static void SetContextFlyout(this UIElement element, FlyoutBase value)
         {
             element.SetValue(ContextFlyoutProperty, value);
         }
@@ -127,7 +127,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element from which the property value is read.</param>
         /// <returns>The degree to which the corners are rounded, expressed as values of the CornerRadius structure.</returns>
-        public static CornerRadius GetCornerRadius(Control element)
+        public static CornerRadius GetCornerRadius(this Control element)
         {
             return (CornerRadius)element.GetValue(CornerRadiusProperty);
         }
@@ -137,7 +137,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the attached property.</param>
         /// <param name="value">The flyout associated with this element.</param>
-        public static void SetCornerRadius(Control element, CornerRadius value)
+        public static void SetCornerRadius(this Control element, CornerRadius value)
         {
             element.SetValue(CornerRadiusProperty, value);
         }
@@ -147,7 +147,7 @@ namespace CoolapkLite.Helpers
             if (!(d is Control element)) { return; }
             if (ApiInfoHelper.IsCornerRadiusSupported)
             {
-                element.CornerRadius = GetCornerRadius(element);
+                element.CornerRadius = element.GetCornerRadius();
             }
         }
 
@@ -170,7 +170,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element from which the property value is read.</param>
         /// <returns>A value that indicates whether the element automatically gets focus when the user interacts with it.</returns>
-        public static bool GetAllowFocusOnInteraction(FrameworkElement element)
+        public static bool GetAllowFocusOnInteraction(this FrameworkElement element)
         {
             return (bool)element.GetValue(AllowFocusOnInteractionProperty);
         }
@@ -180,7 +180,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the attached property.</param>
         /// <param name="value">A value that indicates whether the element automatically gets focus when the user interacts with it.</param>
-        public static void SetAllowFocusOnInteraction(FrameworkElement element, bool value)
+        public static void SetAllowFocusOnInteraction(this FrameworkElement element, bool value)
         {
             element.SetValue(AllowFocusOnInteractionProperty, value);
         }
@@ -215,7 +215,7 @@ namespace CoolapkLite.Helpers
         /// <returns>
         /// The value of the property, as obtained from the property store.
         /// </returns>
-        public static bool GetCanContentRenderOutsideBounds(DependencyObject element)
+        public static bool GetCanContentRenderOutsideBounds(this DependencyObject element)
         {
             return (bool)element.GetValue(CanContentRenderOutsideBoundsProperty);
         }
@@ -225,7 +225,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the property value.</param>
         /// <param name="value">The value to set.</param>
-        public static void SetCanContentRenderOutsideBounds(DependencyObject element, bool value)
+        public static void SetCanContentRenderOutsideBounds(this DependencyObject element, bool value)
         {
             element.SetValue(CanContentRenderOutsideBoundsProperty, value);
         }
@@ -253,11 +253,21 @@ namespace CoolapkLite.Helpers
         #region BackgroundTransition
 
         /// <summary>
+        /// Identifies the BackgroundTransition dependency property.
+        /// </summary>
+        public static readonly DependencyProperty BackgroundTransitionProperty =
+            DependencyProperty.RegisterAttached(
+                "BackgroundTransition",
+                typeof(bool),
+                typeof(UIElementHelper),
+                new PropertyMetadata(false, OnBackgroundTransitionChanged));
+
+        /// <summary>
         /// Gets an instance of BrushTransition to automatically animate changes to the Background property.
         /// </summary>
         /// <param name="element">The element from which to read the property value.</param>
         /// <returns>An instance of BrushTransition to automatically animate changes to the Background; otherwise, <see langword="null"/>. The default is <see langword="null"/>.</returns>
-        public static bool GetBackgroundTransition(UIElement element)
+        public static bool GetBackgroundTransition(this UIElement element)
         {
             return (bool)element.GetValue(BackgroundTransitionProperty);
         }
@@ -267,20 +277,10 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="element">The element on which to set the attached property.</param>
         /// <param name="value">The instance of BrushTransition to automatically animate changes to the Background property.</param>
-        public static void SetBackgroundTransition(UIElement element, bool value)
+        public static void SetBackgroundTransition(this UIElement element, bool value)
         {
             element.SetValue(BackgroundTransitionProperty, value);
         }
-
-        /// <summary>
-        /// Identifies the BackgroundTransition dependency property.
-        /// </summary>
-        public static readonly DependencyProperty BackgroundTransitionProperty =
-            DependencyProperty.RegisterAttached(
-                "BackgroundTransition",
-                typeof(bool),
-                typeof(UIElementHelper),
-                new PropertyMetadata(false, OnBackgroundTransitionChanged));
 
         private static void OnBackgroundTransitionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

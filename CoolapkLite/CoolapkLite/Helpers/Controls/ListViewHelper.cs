@@ -29,12 +29,12 @@ namespace CoolapkLite.Helpers
                 typeof(ListViewHelper),
                 new PropertyMetadata(null, OnPaddingChanged));
 
-        public static Thickness GetPadding(ListViewBase element)
+        public static Thickness GetPadding(this ListViewBase element)
         {
             return (Thickness)element.GetValue(PaddingProperty);
         }
 
-        public static void SetPadding(ListViewBase element, Thickness value)
+        public static void SetPadding(this ListViewBase element, Thickness value)
         {
             element.SetValue(PaddingProperty, value);
         }
@@ -43,7 +43,7 @@ namespace CoolapkLite.Helpers
         {
             if (!(d is ListViewBase element)) { return; }
             await element.ResumeOnLoadedAsync(() => element.FindDescendant<ScrollViewer>() != null);
-            UpdatePadding(element, (Thickness)e.NewValue);
+            element.UpdatePadding((Thickness)e.NewValue);
             element.RegisterPropertyChangedCallback(ItemsControl.ItemsPanelProperty, OnItemsPanelChanged);
         }
 
@@ -74,7 +74,7 @@ namespace CoolapkLite.Helpers
 
                 await element.Dispatcher.ResumeForegroundAsync();
             end:
-                UpdatePadding(element, GetPadding(element));
+                element.UpdatePadding(element.GetPadding());
             }
         }
 
@@ -103,12 +103,12 @@ namespace CoolapkLite.Helpers
                 typeof(ListViewHelper),
                 new PropertyMetadata(false, OnEnableIncrementalLoadingChanged));
 
-        public static bool GetEnableIncrementalLoading(ItemsControl element)
+        public static bool GetEnableIncrementalLoading(this ItemsControl element)
         {
             return (bool)element.GetValue(EnableIncrementalLoadingProperty);
         }
 
-        public static void SetEnableIncrementalLoading(ItemsControl element, bool value)
+        public static void SetEnableIncrementalLoading(this ItemsControl element, bool value)
         {
             element.SetValue(EnableIncrementalLoadingProperty, value);
         }
@@ -146,12 +146,12 @@ namespace CoolapkLite.Helpers
                     if (!(listViewBase.ItemsSource is ISupportIncrementalLoading source)) { return; }
                 check:
                     if (listViewBase.Items.Count > 0 && !source.HasMoreItems) { return; }
-                    if (GetIsIncrementallyLoading(listViewBase)) { return; }
+                    if (listViewBase.GetIsIncrementallyLoading()) { return; }
                     if (((_scrollViewer.ExtentHeight - _scrollViewer.VerticalOffset) / _scrollViewer.ViewportHeight) - 1.0 <= loadingThreshold)
                     {
                         try
                         {
-                            SetIsIncrementallyLoading(listViewBase, true);
+                            listViewBase.SetIsIncrementallyLoading(true);
                             await source.LoadMoreItemsAsync(20);
                             goto check;
                         }
@@ -161,7 +161,7 @@ namespace CoolapkLite.Helpers
                         }
                         finally
                         {
-                            SetIsIncrementallyLoading(listViewBase, false);
+                            listViewBase.SetIsIncrementallyLoading(false);
                         }
                     }
                 }
@@ -179,12 +179,12 @@ namespace CoolapkLite.Helpers
                 typeof(ListViewHelper),
                 new PropertyMetadata(false));
 
-        private static bool GetIsIncrementallyLoading(ItemsControl element)
+        private static bool GetIsIncrementallyLoading(this ItemsControl element)
         {
             return (bool)element.GetValue(IsIncrementallyLoadingProperty);
         }
 
-        private static void SetIsIncrementallyLoading(ItemsControl element, bool value)
+        private static void SetIsIncrementallyLoading(this ItemsControl element, bool value)
         {
             element.SetValue(IsIncrementallyLoadingProperty, value);
         }
@@ -200,12 +200,12 @@ namespace CoolapkLite.Helpers
                 typeof(ListViewHelper),
                 new PropertyMetadata(true, OnIsSelectionEnabledChanged));
 
-        public static bool GetIsSelectionEnabled(ListViewBase element)
+        public static bool GetIsSelectionEnabled(this ListViewBase element)
         {
             return (bool)element.GetValue(IsSelectionEnabledProperty);
         }
 
-        public static void SetIsSelectionEnabled(ListViewBase element, bool value)
+        public static void SetIsSelectionEnabled(this ListViewBase element, bool value)
         {
             element.SetValue(IsSelectionEnabledProperty, value);
         }
@@ -243,12 +243,12 @@ namespace CoolapkLite.Helpers
                 typeof(ListViewHelper),
                 new PropertyMetadata(false, OnIsItemClickEnabledChanged));
 
-        public static bool GetIsItemClickEnabled(ListViewBase element)
+        public static bool GetIsItemClickEnabled(this ListViewBase element)
         {
             return (bool)element.GetValue(IsItemClickEnabledProperty);
         }
 
-        public static void SetIsItemClickEnabled(ListViewBase element, bool value)
+        public static void SetIsItemClickEnabled(this ListViewBase element, bool value)
         {
             element.SetValue(IsItemClickEnabledProperty, value);
         }

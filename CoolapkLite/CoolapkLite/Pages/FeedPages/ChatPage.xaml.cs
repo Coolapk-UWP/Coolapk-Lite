@@ -139,44 +139,38 @@ namespace CoolapkLite.Pages.FeedPages
                 string id = Provider.ID.Substring(Provider.ID.IndexOf('_') + 1);
                 if (string.IsNullOrWhiteSpace(id)) { return; }
             post:
-                try
+                using (MultipartFormDataContent content = new MultipartFormDataContent())
                 {
-                    using (MultipartFormDataContent content = new MultipartFormDataContent())
+                    using (StringContent message = new StringContent(contentText))
                     {
-                        using (StringContent message = new StringContent(contentText))
+                        content.Add(message, "message");
+                        (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
+                        if (isSucceed)
                         {
-                            content.Add(message, "message");
-                            (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
-                            if (isSucceed)
-                            {
-                                MessageModel messageModel = new MessageModel(results.First as JObject);
-                                await Provider.AddAsync(messageModel);
-                                InputBox.Document.SetText(TextSetOptions.None, string.Empty);
-                            }
-                            else if (results != null)
-                            {
-                                throw new CoolapkMessageException(results as JObject);
-                            }
+                            MessageModel messageModel = new MessageModel(results.First as JObject);
+                            await Provider.AddAsync(messageModel);
+                            InputBox.Document.SetText(TextSetOptions.None, string.Empty);
                         }
-                    }
-                }
-                catch (CoolapkMessageException cex)
-                {
-                    if (cex.IsRequestCaptcha)
-                    {
-                        if (cex.IsRequestCaptcha)
+                        else if (results != null)
                         {
-                        captcha:
-                            CaptchaDialog captchaDialog = new CaptchaDialog();
-                            if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
+                            CoolapkMessageException cex = new CoolapkMessageException(results as JObject);
+                            if (cex.IsRequestCaptcha)
                             {
-                                if (await captchaDialog.RequestValidateAsync())
+                                if (cex.IsRequestCaptcha)
                                 {
-                                    goto post;
-                                }
-                                else
-                                {
-                                    goto captcha;
+                                captcha:
+                                    CaptchaDialog captchaDialog = new CaptchaDialog();
+                                    if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
+                                    {
+                                        if (await captchaDialog.RequestValidateAsync())
+                                        {
+                                            goto post;
+                                        }
+                                        else
+                                        {
+                                            goto captcha;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -205,29 +199,38 @@ namespace CoolapkLite.Pages.FeedPages
                 }
                 int index = pic.IndexOf("/message/");
                 if (index != -1) { pic = pic.Substring(index); }
-                try
+                using (MultipartFormDataContent content = new MultipartFormDataContent())
                 {
-                    using (MultipartFormDataContent content = new MultipartFormDataContent())
+                    using (StringContent message_pic = new StringContent(pic))
                     {
-                        using (StringContent message_pic = new StringContent(pic))
+                        content.Add(message_pic, "message_pic");
+                    post:
+                        (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
+                        if (isSucceed)
                         {
-                            content.Add(message_pic, "message_pic");
-                            (bool isSucceed, JToken results) = await RequestHelper.PostDataAsync(UriHelper.GetUri(UriType.SendMessage, id), content);
-                            if (isSucceed)
+                            MessageModel messageModel = new MessageModel(results.First as JObject);
+                            await Provider.AddAsync(messageModel);
+                        }
+                        else
+                        {
+                            CoolapkMessageException cex = new CoolapkMessageException(results as JObject);
+                            if (cex.IsRequestCaptcha)
                             {
-                                MessageModel messageModel = new MessageModel(results.First as JObject);
-                                await Provider.AddAsync(messageModel);
+                            captcha:
+                                CaptchaDialog captchaDialog = new CaptchaDialog();
+                                if (await captchaDialog.ShowAsync() == ContentDialogResult.Primary)
+                                {
+                                    if (await captchaDialog.RequestValidateAsync())
+                                    {
+                                        goto post;
+                                    }
+                                    else
+                                    {
+                                        goto captcha;
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-                catch (CoolapkMessageException cex)
-                {
-                    _ = this.ShowMessageAsync(cex.Message);
-                    if (cex.IsRequestCaptcha)
-                    {
-                        //CaptchaDialog dialog = new CaptchaDialog();
-                        //_ = await dialog.ShowAsync();
                     }
                 }
             }

@@ -23,7 +23,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element from which to read the property value.</param>
         /// <returns>The graphic content of the menu flyout item.</returns>
-        public static IconElement GetIcon(MenuFlyoutItemBase control)
+        public static IconElement GetIcon(this MenuFlyoutItemBase control)
         {
             return (IconElement)control.GetValue(IconProperty);
         }
@@ -33,7 +33,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element on which to set the attached property.</param>
         /// <param name="value">The property value to set.</param>
-        public static void SetIcon(MenuFlyoutItemBase control, IconElement value)
+        public static void SetIcon(this MenuFlyoutItemBase control, IconElement value)
         {
             control.SetValue(IconProperty, value);
         }
@@ -82,7 +82,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element from which to read the property value.</param>
         /// <returns>A value that indicates whether the flyout should be shown within the bounds of the XAML root.</returns>
-        public static bool GetShouldConstrainToRootBounds(FlyoutBase control)
+        public static bool GetShouldConstrainToRootBounds(this FlyoutBase control)
         {
             return (bool)control.GetValue(ShouldConstrainToRootBoundsProperty);
         }
@@ -92,7 +92,7 @@ namespace CoolapkLite.Helpers
         /// </summary>
         /// <param name="control">The element on which to set the attached property.</param>
         /// <param name="value">The property value to set.</param>
-        public static void SetShouldConstrainToRootBounds(FlyoutBase control, bool value)
+        public static void SetShouldConstrainToRootBounds(this FlyoutBase control, bool value)
         {
             control.SetValue(ShouldConstrainToRootBoundsProperty, value);
         }
