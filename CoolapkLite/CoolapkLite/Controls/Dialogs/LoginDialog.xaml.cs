@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Users;
+using System;
 using System.Net;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Controls;
@@ -97,6 +98,7 @@ namespace CoolapkLite.Controls.Dialogs
                         uid.Value = UID;
                         username.Value = UserName;
                         token.Value = Token;
+                        uid.Expires = username.Expires = token.Expires = DateTimeOffset.MaxValue;
                         cookieManager.SetCookie(uid);
                         cookieManager.SetCookie(username);
                         cookieManager.SetCookie(token);

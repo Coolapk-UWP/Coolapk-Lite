@@ -23,10 +23,7 @@ namespace CoolapkLite.Common
             }
         }
 
-        ~AccentColorResource()
-        {
-            _uiSettings.ColorValuesChanged -= OnColorValuesChanged;
-        }
+        ~AccentColorResource() => _uiSettings.ColorValuesChanged -= OnColorValuesChanged;
 
         public void UpdateSystemAccentColors(UISettings sender)
         {

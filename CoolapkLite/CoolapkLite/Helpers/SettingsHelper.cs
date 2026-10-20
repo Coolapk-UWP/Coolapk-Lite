@@ -89,7 +89,7 @@ namespace CoolapkLite.Helpers
             }
             if (!LocalObject.KeyExists(APIVersion))
             {
-                LocalObject.Save(APIVersion, APIVersions.V13);
+                LocalObject.Save(APIVersion, APIVersions.V16);
             }
             if (!LocalObject.KeyExists(DeviceInfo))
             {
@@ -268,6 +268,7 @@ namespace CoolapkLite.Helpers
                         HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
                         HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
                         (uid.Value, username.Value, token.Value) = account;
+                        uid.Expires = username.Expires = token.Expires = DateTimeOffset.MaxValue;
                         cookieManager.SetCookie(uid);
                         cookieManager.SetCookie(username);
                         cookieManager.SetCookie(token);
@@ -331,6 +332,7 @@ namespace CoolapkLite.Helpers
                     HttpCookie username = new HttpCookie("username", ".coolapk.com", "/");
                     HttpCookie token = new HttpCookie("token", ".coolapk.com", "/");
                     (uid.Value, username.Value, token.Value) = account;
+                    uid.Expires = username.Expires = token.Expires = DateTimeOffset.MaxValue;
                     cookieManager.SetCookie(uid);
                     cookieManager.SetCookie(username);
                     cookieManager.SetCookie(token);
@@ -378,7 +380,7 @@ namespace CoolapkLite.Helpers
             }
         }
 
-        public static Task<bool> CheckLoginAsync() => RequestHelper.CheckLoginAsync();
+        public static async Task<bool> CheckLoginAsync() => CheckLogin(out _) && await RequestHelper.CheckLoginAsync().ConfigureAwait(false);
 
         public static void Logout()
         {
@@ -387,7 +389,10 @@ namespace CoolapkLite.Helpers
                 HttpCookieManager cookieManager = filter.CookieManager;
                 foreach (HttpCookie item in cookieManager.GetCookies(UriHelper.Base2Uri))
                 {
-                    cookieManager.DeleteCookie(item);
+                    if (item.Name != "validate")
+                    {
+                        cookieManager.DeleteCookie(item);
+                    }
                 }
             }
             Set(CurrentAccount, new Account());
@@ -401,9 +406,9 @@ namespace CoolapkLite.Helpers
             SetDefaultSettings();
             if (ApiInfoHelper.IsJumpListSupported && JumpList.IsSupported())
             {
-                JumpList JumpList = await JumpList.LoadCurrentAsync();
-                JumpList.Items.Clear();
-                await JumpList.SaveAsync();
+                JumpList jumpList = await JumpList.LoadCurrentAsync();
+                jumpList.Items.Clear();
+                await jumpList.SaveAsync();
             }
             Logout();
         }

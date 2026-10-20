@@ -1,4 +1,4 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -6,15 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
     <title>图形验证码</title>
     <style>
-        body {
-            background-color: transparent;
-            margin: 0;
+        .win-ring::-ms-fill {
+            border-style: none;
+            animation-name: -ms-ring;
         }
     </style>
+    <script>
+        document.title = Windows.ApplicationModel.Resources.ResourceLoader.getForViewIndependentUse("ContentDialog").getString("CaptchaDialog/Title");
+        const settings = new Windows.UI.ViewManagement.UISettings();
+        const style = document.createElement("style");
+        function updateSystemAccentColors() {
+            const color = settings.getColorValue(Windows.UI.ViewManagement.UIColorType.accent);
+            const accent = "rgba(" + color.r + ", " + color.g + ", " + color.b + ", 1)";
+            style.textContent = ".win-ring { color: " + accent + "; }";
+        }
+        updateSystemAccentColors();
+        settings.addEventListener("colorvalueschanged", updateSystemAccentColors);
+        document.head.appendChild(style);
+    </script>
 </head>
 
-<body>
-    <div id="captcha"></div>
+<body style="background-color: transparent; margin: 0;">
+    <div id="captcha">
+        <progress class="win-ring" style="top: 50%; left: 50%; width: 64px; height: 64px; position: absolute; transform: translate(-50%, -50%);"></progress>
+    </div>
     <script>
         const script = document.createElement("script");
         const element = document.getElementById("captcha");
