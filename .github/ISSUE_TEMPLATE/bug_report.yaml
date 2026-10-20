@@ -34,6 +34,8 @@ body:
       label: App version
       description: Specify the version of Coolapk Lite you're using.
       options:
+        - Latest Source
+        - Canary (yy.MMdd.build)
         - 0.0.3
         - 0.0.2
         - 0.0.1
