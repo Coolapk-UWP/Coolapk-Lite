@@ -5,6 +5,7 @@ using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Background;
@@ -32,6 +33,10 @@ namespace CoolapkLite.ViewModels.SettingsPages
 
         private static readonly string versionTextBlockText = $"{ResourceLoader.GetForViewIndependentUse()?.GetString("AppName") ?? Package.Current.DisplayName} v{Package.Current.Id.Version.ToFormattedString(3)}";
         public string VersionTextBlockText => versionTextBlockText;
+
+        private static readonly string commitHash = GetCurrentCommitHash();
+        public string CommitHash => commitHash?.Length > 7 ? commitHash.Substring(0, 7) : commitHash;
+        public string CommitHashURL => $"https://github.com/Coolapk-UWP/Coolapk-Lite/commit/{commitHash}";
 
         public bool IsTileActivatedInfoSupported => ApiInfoHelper.IsTileActivatedInfoSupported;
 
@@ -182,6 +187,24 @@ namespace CoolapkLite.ViewModels.SettingsPages
                     AboutTextBlockText = markdown;
                 }
             }
+        }
+
+        private static string GetCurrentCommitHash()
+        {
+            string informationalVersion = typeof(BCrypt.Net.HashType).GetTypeInfo().Assembly
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
+                .InformationalVersion;
+
+            if (informationalVersion != null)
+            {
+                int plusIndex = informationalVersion.IndexOf('+');
+                if (plusIndex >= 0)
+                {
+                    return informationalVersion.Substring(plusIndex + 1);
+                }
+            }
+
+            return null;
         }
 
         public async Task CleanCacheAsync()
