@@ -5,15 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="using:CoolapkLite.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
     x:Uid="/ContentDialog/CaptchaDialog"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     IsPrimaryButtonEnabled="False"
     mc:Ignorable="d">
     <WebView
         x:Name="WebView"
-        VerticalAlignment="Top"
-        ui:FrameworkElementExtensions.EnableActualSizeBinding="True"
+        VerticalAlignment="Center"
         DefaultBackgroundColor="Transparent"
         Loaded="{x:Bind SetWebViewHeight}"
         ScriptNotify="WebView_ScriptNotify"
