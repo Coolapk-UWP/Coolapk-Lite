@@ -57,7 +57,7 @@ namespace CoolapkLite.ViewModels.NavigatePages
                     NotificationsModel = NotificationsModel.TryGetCache(Dispatcher, out NotificationsModel model) ? model : new NotificationsModel(Dispatcher);
                 }
                 UID = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
-                ProfileDetail = await GetFeedDetailAsync(UID).ConfigureAwait(false);
+                ProfileDetail = await GetProfileDetailAsync(UID).ConfigureAwait(false);
                 await NotificationsModel.UpdateAsync().ConfigureAwait(false);
                 await Reset().ConfigureAwait(false);
             }
@@ -83,7 +83,7 @@ namespace CoolapkLite.ViewModels.NavigatePages
             return result;
         }
 
-        private static async Task<ProfileDetailModel> GetFeedDetailAsync(string id)
+        public static async Task<ProfileDetailModel> GetProfileDetailAsync(string id)
         {
             (bool isSucceed, JToken result) = await RequestHelper.GetDataAsync(UriHelper.GetUri(UriType.GetUserProfile, id), true).ConfigureAwait(false);
             if (!isSucceed) { return null; }

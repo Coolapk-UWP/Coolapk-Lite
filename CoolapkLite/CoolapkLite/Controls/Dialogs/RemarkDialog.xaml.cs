@@ -1,7 +1,9 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.NavigatePages;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -40,7 +42,7 @@ namespace CoolapkLite.Controls.Dialogs
             if (uid != null)
             {
                 UIDTextBox.IsReadOnly = true;
-                _ = NetworkHelper.GetUserInfoByNameAsync(uid, true).ContinueWith(x => RemarkTextBox.SetValueAsync(TextBox.PlaceholderTextProperty, x.Result?.UserName ?? name)).Unwrap();
+                _ = ProfileViewModel.GetProfileDetailAsync(uid).ContinueWith(x => RemarkTextBox.SetValueAsync(TextBox.PlaceholderTextProperty, x.Result?.UserName ?? name)).Unwrap();
             }
             else if (name != null)
             {
@@ -66,7 +68,7 @@ namespace CoolapkLite.Controls.Dialogs
                 }
 
                 _ = this.ShowProgressBarAsync();
-                if (await NetworkHelper.GetUserInfoByNameAsync(UID) is UserInfoModel results)
+                if (await ProfileViewModel.GetProfileDetailAsync(UID) is ProfileDetailModel results)
                 {
                     string id = results.UID.ToString();
                     using (MultipartFormDataContent content = new MultipartFormDataContent())

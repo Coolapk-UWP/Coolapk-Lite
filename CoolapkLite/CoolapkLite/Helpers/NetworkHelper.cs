@@ -318,34 +318,6 @@ namespace CoolapkLite.Helpers
 
     public static partial class NetworkHelper
     {
-        /// <summary>
-        /// 通过用户名或 UID 获取用户信息。
-        /// </summary>
-        /// <param name="name">要获取信息的用户名或 UID 。</param>
-        /// <param name="isBackground">是否通知错误。</param>
-        /// <returns>用户信息</returns>
-        public static async Task<UserInfoModel> GetUserInfoByNameAsync(string name, bool isBackground = false)
-        {
-            string str = string.Empty;
-            try
-            {
-                str = await GetStringAsync(new Uri($"https://www.coolapk.com/n/{name}"), XMLHttpRequest, isBackground).ConfigureAwait(false);
-                JObject token = JObject.Parse(str);
-                if (token.TryGetValue("dataRow", out JToken v1))
-                {
-                    JObject dataRow = (JObject)v1;
-                    return new UserInfoModel(dataRow);
-                }
-                return null;
-            }
-            catch (HttpRequestException e)
-            {
-                SettingsHelper.LogManager.GetLogger(nameof(NetworkHelper)).Error(e.ExceptionToMessage(), e);
-                if (!isBackground) { _ = UIHelper.ShowHttpExceptionMessageAsync(e); }
-                return null;
-            }
-        }
-
         public static async Task<Uri> ExpandShortUrlAsync(this Uri shortUrl)
         {
             if (shortUrl.Host == "s.click.taobao.com")

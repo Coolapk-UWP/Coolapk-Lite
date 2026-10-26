@@ -1,6 +1,7 @@
-﻿using CoolapkLite.Helpers;
-using CoolapkLite.Helpers.Converters;
+﻿using CoolapkLite.Helpers.Converters;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.NavigatePages;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -41,13 +42,13 @@ namespace CoolapkLite.Controls
         public static readonly DependencyProperty UserInfoProperty =
             DependencyProperty.Register(
                 nameof(UserInfo),
-                typeof(UserInfoModel),
+                typeof(ProfileDetailModel),
                 typeof(AccountCard),
                 null);
 
-        public UserInfoModel UserInfo
+        public ProfileDetailModel UserInfo
         {
-            get => (UserInfoModel)GetValue(UserInfoProperty);
+            get => (ProfileDetailModel)GetValue(UserInfoProperty);
             private set => SetValue(UserInfoProperty, value);
         }
 
@@ -62,7 +63,7 @@ namespace CoolapkLite.Controls
         {
             if (!string.IsNullOrEmpty(uid))
             {
-                if (await NetworkHelper.GetUserInfoByNameAsync(uid) is UserInfoModel results)
+                if (await ProfileViewModel.GetProfileDetailAsync(uid) is ProfileDetailModel results)
                 {
                     UserInfo = results;
                     return;

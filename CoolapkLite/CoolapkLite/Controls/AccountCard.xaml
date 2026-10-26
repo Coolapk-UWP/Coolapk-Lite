@@ -45,7 +45,7 @@
             <Run Text="{x:Bind UserInfo.UserName, Mode=OneWay}" />
             <Run Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{x:Bind UserInfo.UID, Mode=OneWay}" />
             <Span FontSize="12">
-                Lv.<Run Text="{x:Bind UserInfo.Level, Mode=OneWay}" /></Span>
+                Lv.<Run Text="{x:Bind UserInfo.LevelNum, Mode=OneWay}" /></Span>
         </TextBlock>
         <TextBlock
             Grid.Row="0"

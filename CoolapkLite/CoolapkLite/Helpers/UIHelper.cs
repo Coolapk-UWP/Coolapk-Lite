@@ -550,8 +550,7 @@ namespace CoolapkLite.Helpers
             {
                 return async frame =>
                 {
-                    string url = link.Substring(3, "?");
-                    string uid = int.TryParse(url, out _) ? url : await NetworkHelper.GetUserInfoByNameAsync(url).ContinueWith(x => x.Result.UID.ToString());
+                    string uid = link.Substring(3, "?");
                     return FeedListViewModel.GetProvider(FeedListType.UserPageList, uid, frame.Dispatcher) is FeedListViewModel provider
                         && await frame.NavigateAsync(typeof(FeedListPage), provider).ConfigureAwait(false);
                 };

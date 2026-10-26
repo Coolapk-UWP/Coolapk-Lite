@@ -2,6 +2,7 @@
 using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.NavigatePages;
 using CoolapkLite.ViewModels.Providers;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace CoolapkLite.ViewModels.ToolsPages
                 if (reset)
                 {
                     OrderedPointList.Clear();
-                    Title = await NetworkHelper.GetUserInfoByNameAsync(ID).ContinueWith(x => $"{x.Result.UserName}的粉丝分析");
+                    Title = await ProfileViewModel.GetProfileDetailAsync(ID).ContinueWith(x => $"{x.Result.UserName}的粉丝分析");
                     await GetContactModelsAsync();
                     await GetOrderedPointListAsync();
                 }

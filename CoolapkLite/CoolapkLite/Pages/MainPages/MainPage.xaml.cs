@@ -5,6 +5,7 @@ using CoolapkLite.Helpers;
 using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.NavigatePages;
@@ -526,8 +527,7 @@ namespace CoolapkLite.Pages
                 string uid = SettingsHelper.Get<Account>(SettingsHelper.CurrentAccount).UID;
                 if (!string.IsNullOrEmpty(uid))
                 {
-                    UserInfoModel results = await NetworkHelper.GetUserInfoByNameAsync(uid).ConfigureAwait(false);
-                    if (results.UID.ToString() != uid) { return; }
+                    ProfileDetailModel results = await ProfileViewModel.GetProfileDetailAsync(uid).ConfigureAwait(false);
                     Name = results.UserName;
                     PageType = typeof(ProfilePage);
                     OtherPageTypes = new[] { typeof(NotificationsPage), typeof(AccountsPage) };

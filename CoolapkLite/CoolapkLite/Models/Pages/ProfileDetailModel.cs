@@ -7,6 +7,11 @@ namespace CoolapkLite.Models.Pages
 {
     public sealed class ProfileDetailModel : Entity, ISourceUserModel
     {
+        public int UID { get; private set; }
+        public int RegDate { get; private set; }
+        public int LoginTime { get; private set; }
+        public int BlockStatus { get; private set; }
+
         public int FansNum { get; private set; }
         public int FeedNum { get; private set; }
         public int LevelNum { get; private set; }
@@ -14,6 +19,8 @@ namespace CoolapkLite.Models.Pages
 
         public string Url { get; private set; }
         public string UserName { get; private set; }
+        public string LoginText { get; private set; }
+        public string VerifyTitle { get; private set; }
         public string LevelTodayMessage { get; private set; }
         public string NextLevelNowExperience { get; private set; }
 
@@ -21,10 +28,16 @@ namespace CoolapkLite.Models.Pages
         public long NextLevelExperience { get; private set; }
         public double NextLevelPercentage { get; private set; }
 
+        public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
 
         public ProfileDetailModel(JObject token) : base(token)
         {
+            if (token.TryGetValue("cover", out JToken cover))
+            {
+                Cover = new ImageModel(cover.ToString(), ImageType.OriginImage);
+            }
+
             if (token.TryGetValue("userAvatar", out JToken userAvatar))
             {
                 UserAvatar = new ImageModel(userAvatar.ToString(), ImageType.BigAvatar);
@@ -50,9 +63,35 @@ namespace CoolapkLite.Models.Pages
                 LevelNum = level.ToObject<int>();
             }
 
+            if (token.TryGetValue("uid", out JToken uid))
+            {
+                UID = uid.ToObject<int>();
+            }
+
             if (token.TryGetValue("username", out JToken username))
             {
                 UserName = username.ToString();
+            }
+
+            if (token.TryGetValue("regdate", out JToken regdate))
+            {
+                RegDate = regdate.ToObject<int>();
+            }
+
+            if (token.TryGetValue("logintime", out JToken logintime))
+            {
+                LoginTime = logintime.ToObject<int>();
+                LoginText = $"{logintime.ToObject<long>().ConvertUnixTimeStampToReadable()}活跃";
+            }
+
+            if (token.TryGetValue("block_status", out JToken block_status))
+            {
+                BlockStatus = block_status.ToObject<int>();
+            }
+
+            if (token.TryGetValue("verify_title", out JToken verify_title))
+            {
+                VerifyTitle = verify_title.ToString();
             }
 
             if (token.TryGetValue("follow", out JToken follow))

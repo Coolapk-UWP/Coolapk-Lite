@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.NavigatePages;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -366,7 +368,7 @@ namespace CoolapkLite.ViewModels.SettingsPages
         {
             if (!string.IsNullOrEmpty(UID))
             {
-                if (await NetworkHelper.GetUserInfoByNameAsync(UID) is UserInfoModel results)
+                if (await ProfileViewModel.GetProfileDetailAsync(UID) is ProfileDetailModel results)
                 {
                     return new Account(results.UID.ToString(), WebUtility.UrlEncode(results.UserName), Token);
                 }

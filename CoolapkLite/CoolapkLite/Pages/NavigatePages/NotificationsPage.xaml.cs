@@ -171,11 +171,10 @@ namespace CoolapkLite.Pages.NavigatePages
             }
         }
 
-        private async Task Refresh(bool reset = false)
-        {
-            await NotificationsModel.UpdateAsync().ConfigureAwait(false);
-            await RefreshTask(reset).ConfigureAwait(false);
-        }
+        private Task Refresh(bool reset = false) =>
+            Task.WhenAll(
+                NotificationsModel.UpdateAsync(),
+                RefreshTask(reset));
 
         private void Pivot_SizeChanged(object sender, SizeChangedEventArgs e) => Block.Width = this.GetXAMLRootSize().Width > 640 ? 0 : 48;
 

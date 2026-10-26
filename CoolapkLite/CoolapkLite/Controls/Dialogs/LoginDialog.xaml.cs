@@ -1,6 +1,8 @@
 ﻿using CoolapkLite.Helpers;
 using CoolapkLite.Models.Network;
+using CoolapkLite.Models.Pages;
 using CoolapkLite.Models.Users;
+using CoolapkLite.ViewModels.NavigatePages;
 using System;
 using System.Net;
 using Windows.ApplicationModel.Resources;
@@ -111,7 +113,7 @@ namespace CoolapkLite.Controls.Dialogs
 
         private void GetText(string name)
         {
-            if (NetworkHelper.GetUserInfoByNameAsync(name).AwaitByTaskCompleteSource() is UserInfoModel results)
+            if (ProfileViewModel.GetProfileDetailAsync(name).AwaitByTaskCompleteSource() is ProfileDetailModel results)
             {
                 UID = results.UID.ToString();
                 if (!string.IsNullOrWhiteSpace(results.UserName))
