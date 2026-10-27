@@ -1,6 +1,5 @@
 ﻿using CoolapkLite.Helpers.Converters;
 using CoolapkLite.Models.Pages;
-using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.NavigatePages;
 using System;
 using System.Net;

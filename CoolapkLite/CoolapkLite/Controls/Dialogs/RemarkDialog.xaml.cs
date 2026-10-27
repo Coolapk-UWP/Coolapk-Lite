@@ -2,7 +2,6 @@
 using CoolapkLite.Models;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Pages;
-using CoolapkLite.Models.Users;
 using CoolapkLite.ViewModels.NavigatePages;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;

@@ -56,18 +56,14 @@ namespace CoolapkLite.ViewModels.FeedPages
             FeedDetail = feedDetail;
         }
 
-        public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher)
-        {
-            if (await GetFeedDetailAsync(id, dispatcher).ConfigureAwait(false) is FeedDetailModel model)
-            {
-                return model.IsQuestionFeed
+        public static async Task<FeedShellViewModel> GetProviderAsync(string id, CoreDispatcher dispatcher) =>
+            await GetFeedDetailAsync(id, dispatcher).ConfigureAwait(false) is FeedDetailModel model
+                ? model.IsQuestionFeed
                     ? new QuestionViewModel(id, model, dispatcher)
                     : model.IsVoteFeed
                         ? new VoteViewModel(id, model, dispatcher)
-                        : (FeedShellViewModel)new FeedDetailViewModel(id, model, dispatcher);
-            }
-            return null;
-        }
+                        : (FeedShellViewModel)new FeedDetailViewModel(id, model, dispatcher)
+                : null;
 
         protected static async Task<FeedDetailModel> GetFeedDetailAsync(string id, CoreDispatcher dispatcher)
         {
@@ -87,10 +83,6 @@ namespace CoolapkLite.ViewModels.FeedPages
                     {
                         NetworkHelper.UpdateCaptchaV2Cookie(dialog.CaptchaToken);
                         goto start;
-                    }
-                    else if (!isHistoryDetail)
-                    {
-                        (isSucceed, result) = await RequestHelper.GetDataAsync($"https://www.coolapk.com/feed/{id}".TryGetUri(), true).ConfigureAwait(false);
                     }
                 }
             }

@@ -1,7 +1,5 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Models.Network;
-using CoolapkLite.Models.Users;
-using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
@@ -131,7 +129,9 @@ namespace CoolapkLite.Helpers
                     Expires = DateTimeOffset.MaxValue
                 };
                 Uri host = new Uri("http://coolapk.com");
-                ClientHandler.CookieContainer.Add(
+                CookieContainer container = ClientHandler.CookieContainer;
+                if (container.GetCookies(host)["validate"] is Cookie cookie) { cookie.Expired = true; }
+                container.Add(
 #if !NETCORE463
                     host,
 #endif

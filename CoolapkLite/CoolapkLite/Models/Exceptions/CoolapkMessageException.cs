@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
-using Windows.Foundation.Metadata;
 
 namespace CoolapkLite.Models.Exceptions
 {
@@ -59,9 +58,9 @@ namespace CoolapkLite.Models.Exceptions
                 {
                     string _id = captchaId.ToString();
                     if (_id.Length >= 16 && _id.Length <= 64 &&
-                        _id.All(x => x >= 'a' && x <= 'z' ||
-                                     x >= '0' && x <= '9' ||
-                                     x >= 'A' && x <= 'Z' ))
+                        _id.All(x => (x >= 'a' && x <= 'z') ||
+                                     (x >= '0' && x <= '9') ||
+                                     (x >= 'A' && x <= 'Z')))
                     {
                         id = _id;
                     }
@@ -72,9 +71,9 @@ namespace CoolapkLite.Models.Exceptions
                     if (_field.Length > 1 && _field.Length <= 64 &&
                         _field[0] == '_' &&
                         _field.Skip(1).All(x =>
-                            x >= 'a' && x <= 'z' ||
-                            x >= '0' && x <= '9' ||
-                            x >= 'A' && x <= 'Z' || x == '_'))
+                            (x >= 'a' && x <= 'z') ||
+                            (x >= '0' && x <= '9') ||
+                            (x >= 'A' && x <= 'Z') || x == '_'))
                     {
                         field = _field;
                     }

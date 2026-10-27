@@ -108,11 +108,8 @@ namespace CoolapkLite.Common
         {
             if (Position != position)
             {
-                if (_inputStream != null)
-                {
-                    _inputStream.Dispose();
-                    _inputStream = null;
-                }
+                _inputStream?.Dispose();
+                _inputStream = null;
 
                 Position = position;
             }
@@ -168,17 +165,10 @@ namespace CoolapkLite.Common
             if (disposing)
             {
                 _isDisposing = true;
-                if (_inputStream != null)
-                {
-                    _inputStream.Dispose();
-                    _inputStream = null;
-                }
-
-                if (_client != null)
-                {
-                    _client.Dispose();
-                    _client = null;
-                }
+                _inputStream?.Dispose();
+                _inputStream = null;
+                _client?.Dispose();
+                _client = null;
             }
         }
 

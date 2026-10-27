@@ -6,7 +6,6 @@ using CoolapkLite.Models;
 using CoolapkLite.Models.Images;
 using CoolapkLite.Models.Network;
 using CoolapkLite.Models.Pages;
-using CoolapkLite.Models.Users;
 using CoolapkLite.Pages.BrowserPages;
 using CoolapkLite.Pages.NavigatePages;
 using CoolapkLite.Pages.SettingsPages;
