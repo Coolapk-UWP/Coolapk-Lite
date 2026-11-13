@@ -51,7 +51,7 @@ namespace CoolapkLite.Helpers
             HttpRequestHeaders headers = client.DefaultRequestHeaders;
 
             headers.Clear();
-            headers.Add("X-Sdk-Int", "36");
+            headers.Add("X-Sdk-Int", "37");
             headers.Add("X-Sdk-Locale", LanguageHelper.GetPrimaryLanguage());
             headers.Add("X-App-Mode", "universal");
             headers.Add("X-App-Channel", "coolapk");

@@ -33,8 +33,8 @@ namespace CoolapkLite.Controls.DataTemplates
                     return User;
                 case FeedReplyModel _:
                     return FeedReply;
-                case IndexPageHasEntitiesModel IndexPageHasEntitiesModel:
-                    switch (IndexPageHasEntitiesModel.EntitiesType)
+                case IndexPageHasEntitiesModel indexPageHasEntitiesModel:
+                    switch (indexPageHasEntitiesModel.EntitiesType)
                     {
                         case EntityType.Image: return Images;
                         default: return Others;
@@ -47,7 +47,7 @@ namespace CoolapkLite.Controls.DataTemplates
                     return MessageNotify;
                 case AtCommentMeNotificationModel _:
                     return AtCommentMe;
-                case IHasDescription _ when item is IHasSubtitle:
+                case IHasSubtitle _:
                     return SubtitleList;
                 case IHasDescription _:
                     return List;
@@ -70,20 +70,18 @@ namespace CoolapkLite.Controls.DataTemplates
         {
             switch (item)
             {
-                case IndexPageHasEntitiesModel IndexPageHasEntitiesModel:
-                    switch (IndexPageHasEntitiesModel.EntitiesType)
+                case IndexPageHasEntitiesModel indexPageHasEntitiesModel:
+                    switch (indexPageHasEntitiesModel.EntitiesType)
                     {
                         case EntityType.TextLinks: return TextLinkList;
                         default: return ImageTextScrollCard;
                     }
-
-                case IndexPageOperationCardModel IndexPageOperationCardModel:
-                    switch (IndexPageOperationCardModel.OperationType)
+                case IndexPageOperationCardModel indexPageOperationCardModel:
+                    switch (indexPageOperationCardModel.OperationType)
                     {
                         case OperationType.ShowTitle: return TitleCard;
                         default: return Others;
                     }
-
                 default:
                     return Others;
             }
@@ -106,8 +104,8 @@ namespace CoolapkLite.Controls.DataTemplates
             {
                 case CollectionModel _:
                     return Collection;
-                case IndexPageModel IndexPageModel:
-                    switch (IndexPageModel?.EntityType)
+                case IndexPageModel indexPageModel:
+                    switch (indexPageModel.EntityType)
                     {
                         case "topic":
                         case "recentHistory": return IconLink;

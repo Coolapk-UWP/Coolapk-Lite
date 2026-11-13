@@ -1,4 +1,5 @@
 ﻿using CoolapkLite.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -20,9 +21,8 @@ namespace CoolapkLite.Models.Network
             }
         }
 
-        public APIVersion() { }
-
-        public APIVersion(string version, int versionCode) : this()
+        [JsonConstructor]
+        public APIVersion(string version, int versionCode)
         {
             Version = version;
             VersionCode = versionCode;
@@ -72,7 +72,7 @@ namespace CoolapkLite.Models.Network
                 case APIVersions.V15:
                     return new APIVersion("15.9.5", 2601051);
                 case APIVersions.V16:
-                    return new APIVersion("16.6.4", 2609291);
+                    return new APIVersion("16.7.3", 2611121);
                 default:
                     goto case APIVersions.Custom;
             }

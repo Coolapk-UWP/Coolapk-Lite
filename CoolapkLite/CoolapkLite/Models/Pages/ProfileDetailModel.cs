@@ -22,11 +22,11 @@ namespace CoolapkLite.Models.Pages
         public string LoginText { get; private set; }
         public string VerifyTitle { get; private set; }
         public string LevelTodayMessage { get; private set; }
-        public string NextLevelNowExperience { get; private set; }
 
         public long Experience { get; private set; }
         public long NextLevelExperience { get; private set; }
         public double NextLevelPercentage { get; private set; }
+        public string NextLevelNowExperience => $"{NextLevelPercentage / 100 * NextLevelExperience:F0}/{NextLevelExperience}";
 
         public ImageModel Cover { get; private set; }
         public ImageModel UserAvatar { get; private set; }
@@ -99,14 +99,14 @@ namespace CoolapkLite.Models.Pages
                 FollowNum = follow.ToObject<int>();
             }
 
-            if (token.TryGetValue("level_today_message", out JToken level_today_message))
-            {
-                LevelTodayMessage = level_today_message.ToString();
-            }
-
             if (token.TryGetValue("experience", out JToken experience))
             {
                 Experience = experience.ToObject<long>();
+            }
+
+            if (token.TryGetValue("level_today_message", out JToken level_today_message))
+            {
+                LevelTodayMessage = level_today_message.ToString();
             }
 
             if (token.TryGetValue("next_level_experience", out JToken next_level_experience))

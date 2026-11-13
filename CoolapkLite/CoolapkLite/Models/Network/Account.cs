@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace CoolapkLite.Models.Network
 {
@@ -10,7 +11,8 @@ namespace CoolapkLite.Models.Network
 
         public bool IsEmpty => string.IsNullOrEmpty(UID) || string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Token);
 
-        public Account(string uid, string username, string token) : this()
+        [JsonConstructor]
+        public Account(string uid, string username, string token)
         {
             UID = uid;
             UserName = username;

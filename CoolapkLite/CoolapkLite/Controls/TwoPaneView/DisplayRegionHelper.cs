@@ -11,7 +11,7 @@ namespace CoolapkLite.Controls
 {
     public sealed class DisplayRegionHelper
     {
-        private static DisplayRegionHelper Instance;
+        private static DisplayRegionHelper instance;
 
         // TODO: Remove once ApplicationViewMode::Spanning is available in the SDK
         private const int c_ApplicationViewModeSpanning = 2;
@@ -21,11 +21,11 @@ namespace CoolapkLite.Controls
 
         public static DisplayRegionHelper GetDisplayRegionHelperInstance()
         {
-            if (Instance == null)
+            if (instance == null)
             {
-                Instance = new DisplayRegionHelper();
+                instance = new DisplayRegionHelper();
             }
-            return Instance;
+            return instance;
         }
 
         public static DisplayRegionHelperInfo GetRegionInfo(UIElement element)

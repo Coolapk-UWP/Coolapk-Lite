@@ -1,6 +1,7 @@
 ﻿using CoolapkLite.Common;
 using CoolapkLite.Helpers;
 using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Text;
@@ -24,15 +25,15 @@ namespace CoolapkLite.Models.Network
             {
                 EasClientDeviceInformation deviceInfo = new EasClientDeviceInformation();
                 return new DeviceInfo
-                {
-                    AndroidID = random,
-                    MAC = random,
-                    Manufactory = deviceInfo.SystemManufacturer,
-                    Brand = deviceInfo.SystemManufacturer,
-                    Model = deviceInfo.SystemProductName,
-                    BuildNumber = SystemInformation.Instance.OperatingSystemVersion.ToString(),
-                    OAID = random
-                };
+                (
+                    androidId: random,
+                    mac: random,
+                    manufactory: deviceInfo.SystemManufacturer,
+                    brand: deviceInfo.SystemManufacturer,
+                    model: deviceInfo.SystemProductName,
+                    buildNumber: SystemInformation.Instance.OperatingSystemVersion.ToString(),
+                    oaid: random
+                );
             }
         }
 
@@ -44,11 +45,10 @@ namespace CoolapkLite.Models.Network
         public string BuildNumber { get; set; }
         public string OAID { get; set; } = "null";
 
-        public DeviceInfo() { }
-
-        public DeviceInfo(string aid, string mac, string manufactory, string brand, string model, string buildNumber = "", string oaid = "null") : this()
+        [JsonConstructor]
+        public DeviceInfo(string androidId, string mac, string manufactory, string brand, string model, string buildNumber = "", string oaid = "null")
         {
-            AndroidID = aid;
+            AndroidID = androidId;
             MAC = mac;
             Manufactory = manufactory;
             Brand = brand;

@@ -13,16 +13,16 @@ namespace CoolapkLite.Common
         public async Task<Releaser> LockAsync(CancellationToken cancellationToken = default)
         {
             await m_semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-            return new Releaser(this);
+            return new Releaser(m_semaphore);
         }
 
         public readonly struct Releaser : IDisposable
         {
-            private readonly AsyncLock m_toRelease;
+            private readonly SemaphoreSlim m_semaphore;
 
-            internal Releaser(AsyncLock toRelease) => m_toRelease = toRelease;
+            internal Releaser(SemaphoreSlim semaphore) => m_semaphore = semaphore;
 
-            public void Dispose() => m_toRelease?.m_semaphore.Release();
+            public void Dispose() => m_semaphore.Release();
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using Windows.ApplicationModel;
 
 namespace CoolapkLite.Models.Network
 {
     public readonly struct SystemVersionInfo : IComparable, IEquatable<SystemVersionInfo>, IComparable<SystemVersionInfo>, IFormattable
     {
+        [JsonConstructor]
         public SystemVersionInfo(int major, int minor, int build, int revision = 0)
         {
             Major = major;
